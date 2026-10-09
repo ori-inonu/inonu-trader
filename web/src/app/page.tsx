@@ -15,21 +15,21 @@ export default function Page() {
   const feed = useFeed(API_URL);
 
   return (
-    <div className="card">
+    <main className="card">
       <Header meta={feed.meta} latest={feed.latest} connection={feed.connection} />
       <StatsRow latest={feed.latest} avgLatencyMs={feed.avgLatencyMs} meta={feed.meta} />
       <div className={styles.main}>
-        <div className={styles.left}>
-          <WalletPanel />
-          <div className={styles.chartWrap}>
-            <FlowChart events={feed.events} latest={feed.latest} />
-          </div>
+        <div className={styles.chartWrap}>
+          <FlowChart
+            events={feed.events}
+            latest={feed.latest}
+            market={feed.meta?.market ?? ""}
+          />
         </div>
-        <div className={styles.right}>
-          <DecisionPanel latest={feed.latest} />
-          <Feed events={feed.events} />
-        </div>
+        <div className={styles.decision}><DecisionPanel latest={feed.latest} /></div>
+        <div className={styles.wallet}><WalletPanel /></div>
+        <div className={styles.feed}><Feed events={feed.events} /></div>
       </div>
-    </div>
+    </main>
   );
 }

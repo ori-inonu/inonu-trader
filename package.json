@@ -1,5 +1,5 @@
 {
-  "name": "jev-trader",
+  "name": "inonu-trader",
   "module": "src/index.ts",
   "type": "module",
   "private": true,

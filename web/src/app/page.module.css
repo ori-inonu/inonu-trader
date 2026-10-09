@@ -1,82 +1,67 @@
-/* Page shell. Component-level styling lives with each component; this file only
-   owns the two-column main row.
-
-   Desktop (>= 900px): the card is a fixed-height flex column (see globals.css)
-   and this row is its only flexible child, so nothing can push the page past
-   the viewport. Below 900px everything falls back to normal document flow. */
-
 .main {
+  display: grid;
+  min-width: 0;
   flex: 1;
-  min-height: 0;
-  display: flex;
-  gap: 16px;
-  padding: 0 24px;
+  grid-template-areas:
+    "chart decision"
+    "wallet feed";
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
+  grid-template-rows: auto auto;
   align-items: stretch;
+  gap: 16px;
 }
 
-/* left column: the chart, filling all remaining height */
-.left {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  gap: 12px;
-  overflow-y: auto;
-}
-
-/* the FlowChart root is width/height 100% of this box */
 .chartWrap {
-  flex: 1;
+  grid-area: chart;
+  display: flex;
   min-width: 0;
-  min-height: 220px;
-  display: flex;
+  min-height: 380px;
   flex-direction: column;
 }
 
-/* right column: decision panel (fixed) + feed (fills, clips) */
-.right {
-  width: 470px;
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  overflow: hidden;
+.decision {
+  grid-area: decision;
+  min-width: 0;
+  align-self: start;
 }
 
-/* the decision panel keeps its natural height ... */
-.right > :first-child {
-  flex: none;
+.wallet {
+  grid-area: wallet;
+  min-width: 0;
+  align-self: start;
 }
 
-/* ... and the feed takes whatever is left, clipping its own overflow */
-.right > :last-child {
-  flex: 1;
-  min-height: 0;
+.feed {
+  grid-area: feed;
+  min-width: 0;
+  min-height: 340px;
 }
 
 @media (max-width: 899.98px) {
   .main {
-    flex: none;
-    flex-direction: column;
-    padding: 0 16px;
+    grid-template-areas:
+      "chart"
+      "decision"
+      "wallet"
+      "feed";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    gap: 14px;
   }
 
-  .left {
-    flex: none;
-    overflow-y: visible;
-  }
-
-  /* no viewport-driven height down here, so give the chart a shape */
   .chartWrap {
-    flex: none;
-    min-height: 0;
-    aspect-ratio: 4 / 3;
+    min-height: 360px;
   }
 
-  .right {
+  .decision,
+  .wallet,
+  .feed {
     width: 100%;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .chartWrap {
+    min-height: 344px;
   }
 }

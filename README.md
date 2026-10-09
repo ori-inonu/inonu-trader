@@ -1,7 +1,12 @@
-# jev-trader
+# Inonu Trader
 
-One decision every Monad block. A TypeSafe Jev model watches the Kuru MON-USDC order book and answers buy or sell every ~300 ms. Every block posts a real post-only limit order on that side, one tick inside the touch, replacing the last one. Fills happen when a taker hits it, so the bot earns the spread instead of paying it. A small server streams every block to the dashboard.
+A market dashboard with an Inonu visual identity, interactive block inspection and a read-only OKX Web3 wallet panel. Built on [jev-trader](https://github.com/jarrodwatts/jev-trader), preserving the original MIT license and credit to Jarrod Watts.
 
+The dashboard separates reported feed activity, simulation and browser-wallet state. Connecting OKX does not activate trading. A fast model response or a displayed spread does not establish profitable execution; this fork makes no claim of guaranteed or continuous returns.
+
+See [frontend setup](web/README.md), [OKX wallet setup](web/OKX-WALLET.md) and [contribution instructions](CONTRIBUTING.md).
+
+The backend documentation below describes the inherited MON-USDC implementation. It contains a separate private-key executor; this visual contribution does not qualify it for use with real funds.
 ## Run
 
     cp .env.example .env
