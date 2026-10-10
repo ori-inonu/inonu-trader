@@ -83,10 +83,12 @@ describe("L1 normalCdf", () => {
   });
 
   test("L1 is continuous where the series hands over to the continued fraction (x = |z|/sqrt(2) = 2)", () => {
+    // Two points on each side of the switch (x = 1.99998, 1.999995 use the series; x = 2.000002, 2.00005 use the continued fraction).
     const around: readonly (readonly [number, number])[] = [
-      [-2.8284, 0.0023389259284345], [-2.82842, 0.0023388970417207], [-2.82843, 0.0023388906096586], [-2.8285, 0.0023388456049438],
+      [-2.8284, 0.0023390656954665997], [-2.82842, 0.0023389195507331883], [-2.82843, 0.0023388464814666117], [-2.8285, 0.002338335054464852],
+      [-2 * Math.SQRT2, 0.0023388674905236327],
     ];
-    for (const [z, expected] of around) nearRelative(`Phi(${z})`, normalCdf(z), expected, 1e-9);
+    for (const [z, expected] of around) nearRelative(`Phi(${z})`, normalCdf(z), expected, 1e-11);
     const left = normalCdf(-2 * Math.SQRT2 + 1e-12);
     const right = normalCdf(-2 * Math.SQRT2 - 1e-12);
     expect(Math.abs(left - right) / left).toBeLessThan(1e-9);
@@ -239,7 +241,9 @@ describe("L4 liquidation touch probability", () => {
     near("20x 4% 7d", touchLiquidationProbability(20, 0.04, 7), 0.637, 0.002);
     near("2x 6% 30d", touchLiquidationProbability(2, 0.06, 30), 0.128, 0.002);
     near("3x 6% 30d", touchLiquidationProbability(3, 0.06, 30), 0.31, 0.002);
-    near("5x 6% 30d", touchLiquidationProbability(5, 0.06, 30), 0.54, 0.002);
+    // R3 Table C prints 54,3% for this same cell (L=5, sigma=6%, 30 d); 0.54 was a truncation that the
+    // 0.002 absolute tolerance of this test could not hold.
+    near("5x 6% 30d", touchLiquidationProbability(5, 0.06, 30), 0.543, 0.002);
   });
 
   test("L4 a maintenance margin shrinks the distance: 1.25% at sigma 4% over 30 days gives 14.3%, 39.2% and 69.0%", () => {
@@ -533,7 +537,9 @@ describe("deriveLimits", () => {
   });
 
   test("L13 USD values are exact integers of micro-dollars: capital in cents gives amount = cents x basis points / 1e6", () => {
-    const cents = [100, 8_000, 10_000, 12_345, 99_999, 100_000_000, 123_456_789_012];
+    // The largest capital here is 99999999.999 USD, inside the documented 0 < capitalUsd <= 1e9 domain.
+    // A larger fixture (1234567890.12 USD) would contradict L14, which requires 1000000000.01 USD to be refused.
+    const cents = [100, 8_000, 10_000, 12_345, 99_999, 100_000_000, 99_999_999_999];
     for (const c of cents) {
       const capitalUsd = c / 100;
       for (const [phase, orderBps] of [["fase-1", 100], ["fase-2", 200]] as const) {
@@ -552,25 +558,29 @@ describe("deriveLimits", () => {
   test("L13 across random capitals and volatilities nothing is NaN or infinite, USD has at most 6 decimals, and no cap is ever rounded up", () => {
     const random = mulberry32(20261010);
     for (let round = 0; round < 400; round += 1) {
-      const capitalUsd = Math.round(random() * 10 ** (1 + Math.floor(random() * 6)) * 1_000_000) / 1_000_000 + 0.000001;
+      // Capital that is a whole number of micro-dollars (the unit the module reads), from cents to millions of dollars.
+      const capitalMicro = Math.max(1, Math.round(random() * 10 ** (1 + Math.floor(random() * 6)) * 1_000_000));
+      const capitalUsd = capitalMicro / 1_000_000;
       const sigmaDaily = 0.002 + random() * 0.2;
       for (const phase of ["fase-1", "fase-2"] as const) {
         const limits = deriveLimits({ capitalUsd, sigmaDaily, phase, kellyLowerBound: random() * 10 });
         const exactFraction = Math.min(0.25, 0.02 / (2 * sigmaDaily));
+        // Each USD value is compared with the exact amount for the fraction it was derived from.
         const usd: readonly (readonly [string, number | null, number])[] = [
           ["orderCapUsd", limits.orderCapUsd, capitalUsd * PHASES[phase].orderFraction],
           ["dailyStopUsd", limits.dailyStopUsd, capitalUsd * 0.02],
           ["weeklyStopUsd", limits.weeklyStopUsd, capitalUsd * 0.05],
           ["drawdownStopUsd", limits.drawdownStopUsd, capitalUsd * 0.1],
-          ["exposureCapUsd", limits.exposureCapUsd, capitalUsd * exactFraction],
+          ["exposureCapUsd", limits.exposureCapUsd, capitalUsd * limits.exposureFraction],
         ];
         for (const [name, value, exact] of usd) {
           const shown = { name, capitalUsd, sigmaDaily, phase };
           expect({ ...shown, finite: Number.isFinite(value) }).toEqual({ ...shown, finite: true });
           expect({ ...shown, sixDecimals: Number(value!.toFixed(6)) === value }).toEqual({ ...shown, sixDecimals: true });
           expect({ ...shown, notAbove: value! <= exact + 1e-9 * Math.max(1, exact) }).toEqual({ ...shown, notAbove: true });
-          expect({ ...shown, closeBelow: exact - value! <= 2.5e-6 + 1e-9 * Math.max(1, exact) }).toEqual({ ...shown, closeBelow: true });
+          expect({ ...shown, closeBelow: exact - value! <= 1.5e-6 + 1e-9 * Math.max(1, exact) }).toEqual({ ...shown, closeBelow: true });
         }
+        expect(limits.exposureCapUsd).toBeLessThanOrEqual(capitalUsd * exactFraction + 1e-9 * Math.max(1, capitalUsd));
         expect(limits.exposureFraction).toBeLessThanOrEqual(exactFraction + 1e-12);
         expect(limits.exposureFraction).toBeGreaterThan(exactFraction - 1.0001e-4);
         const exactFloor = Math.max(0.35, 2.5 * sigmaDaily * Math.sqrt(7));
@@ -738,7 +748,7 @@ describe("checkSettings", () => {
     ["dailyStopPct", ["0.02", 0, -0.02, Number.NaN, Infinity, true]],
     ["weeklyStopPct", ["0.05", 0, -0.05, Number.NaN, true]],
     ["drawdownStopPct", ["0.1", 0, -0.1, Number.NaN, true]],
-    ["killSwitchConfigured", ["true", 1, "yes", null === undefined, {}]],
+    ["killSwitchConfigured", ["true", 1, 0, "yes", {}]],
     ["dedicatedWallet", ["true", 1, 0, "yes", []]],
   ];
 
@@ -818,7 +828,7 @@ describe("checkSettings", () => {
   test("L19 the boundary itself is accepted and float noise does not create violations", () => {
     expect(checkSettings({ ...PHASE_1_OK, leverage: 1 + 1e-12 }, "fase-1").ok).toBe(true);
     expect(checkSettings({ ...PHASE_1_OK, maxCapitalFractionPerPlan: 0.1 * 0.1 }, "fase-1").ok).toBe(true);
-    expect(checkSettings({ ...PHASE_1_OK, capitalUsd: 30, maxPlanUsd: 0.1 + 0.2 }, "fase-1").ok).toBe(true);
+    expect(checkSettings({ ...PHASE_1_OK, capitalUsd: 30, maxPlanUsd: 0.1 + 0.2, maxDailyNotionalUsd: 5 }, "fase-1").ok).toBe(true);
     expect(checkSettings({ ...PHASE_1_OK, capitalUsd: 80, maxPlanUsd: 80 * 0.01, maxDailyNotionalUsd: 20 }, "fase-1").ok).toBe(true);
     expect(checkSettings({ ...PHASE_1_OK, maxDailyNotionalUsd: 25 }, "fase-1").ok).toBe(true);
     expect(ids(checkSettings({ ...PHASE_1_OK, maxPlanUsd: 1.000002 }, "fase-1").violations)).toEqual(["maxPlanUsd"]);
@@ -1038,7 +1048,7 @@ describe("text hygiene and traceability", () => {
     for (const id of ALL_PHASES) expect(DOC).toContain(id);
     for (const name of Object.keys(envelope).filter((key) => /^[a-z]/.test(key))) expect({ name, documented: DOC.includes(name) }).toEqual({ name, documented: true });
     for (const field of POLICY_SETTINGS_FIELDS) expect({ field, documented: DOC.includes(`\`${field}\``) }).toEqual({ field, documented: true });
-    for (const token of ["900000", "86400000", "259200000", "0,25", "35%", "raiz(7)", "2 * sigma", "RangeError", "grantsPermission"]) {
+    for (const token of ["900000", "86400000", "259200000", "0,25", "35%", "raiz(7)", "(2*sigma)", "RangeError", "grantsPermission"]) {
       expect({ token, documented: DOC.includes(token) }).toEqual({ token, documented: true });
     }
     expect(DOC).toContain(`${PHASES["fase-1"].cooldowns!.operationStopMs}`);

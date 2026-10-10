@@ -5,9 +5,9 @@ Data: 2026-10-10. Estado: especificação do módulo `src/policy/envelope.ts`, d
 ## 0. Avisos que não mudam
 
 1. O módulo **só calcula e compara**. Não executa, não assina, não envia, não aprova, não deposita, não monta calldata e não decide comprar ou vender (isso continua sendo do Jev, dentro dos limites). Não lê variáveis de ambiente, não abre arquivos, não usa rede, relógio nem aleatoriedade: o mesmo argumento dá sempre o mesmo resultado.
-2. `ok=true` significa apenas que **a configuração informada cabe no envelope da fase escolhida**. Não é autorização para operar, não levanta o bloqueio de `Market.init()`, não substitui `bun run qualify:live` nem a decisão do dono (decisão D11 da arquitetura).
+2. `ok=true` significa apenas que **a configuração informada cabe no envelope da fase escolhida**. Isso não é autorização para operar: não levanta o bloqueio de `Market.init()`, não substitui `bun run qualify:live` nem a decisão do dono (decisão D11 da arquitetura).
 3. A fase é sempre uma escolha **explícita** de quem chama. Nada aqui detecta, promove ou rebaixa fase sozinho, e o padrão é a fase 0 (paper e leitura, alavancagem zero, nenhuma exposição).
-4. Nenhuma fase cria lucro. Elas limitam perda, exposição e velocidade de reentrada. Alavancagem é um botão de risco, não de lucro (decisão D4): sem vantagem validada, toda alavancagem acima de zero reduz a mediana.
+4. Nenhuma fase cria lucro. Elas limitam perda, exposição e velocidade de reentrada. Alavancagem é um botão de risco, não de lucro (decisão D4): sem vantagem validada, toda alavancagem acima de zero reduz a mediana. Tudo aqui é cálculo de engenharia de risco: não é aconselhamento de investimento nem previsão.
 5. As quatro alegações do demo (Jev decide a partir do feed, trades reais de carteira real, uma ordem por bloco de 300 ms na Kuru, o painel ao vivo) não são tocadas por este módulo. Ele é uma biblioteca de limites: não altera cadência, modelo, carteira nem o painel, e nunca decide "a cada N blocos".
 
 ## 1. O que é e o que não é
@@ -85,7 +85,7 @@ teto_L(F2) = min(2, 0.25 * L*_lb)                                      deriveLim
 - `kellyLowerBound` usa o erro padrão `1/(sigma*sqrt(N))` de `L*` estimado (R3 seção 4.1) e dois erros padrão. É positivo se e somente se `t = mu*sqrt(N)/sigma > 2`, o mesmo critério de promoção de R3 ("limite inferior do retorno líquido diário acima de zero com t >= 2").
 - A fração `0,25` de Kelly vem de R3 (seção 4.3): um quarto de Kelly tem 0,8% de chance de, em algum momento, perder metade do capital (Kelly pleno: 50%).
 - `Phi` usa `erfc` com dois métodos: série de Kummer (todos os termos positivos) abaixo de `x = 2` e fração contínua de Laplace acima, com `x = |z|/raiz(2)`. Nenhuma dependência.
-- `f_max` e o parágrafo do envelope: se a perda diária de uma posição for `f*sigma` e o limite diário de perda for `DLL`, `f <= DLL/(2*sigma)` deixa a parada diária a dois desvios de distância.
+- Racional de `f_max`: se o desvio padrão da perda diária de uma posição de fração `f` é `f*sigma` e o limite diário de perda é `DLL`, escolher `f <= DLL/(2*sigma)` deixa a parada diária a pelo menos dois desvios de distância. Com `f = 1` e `DLL = 2%`, a parada dispara em 15,9%, 30,9% e 36,9% dos dias para `sigma` de 2%, 4% e 6% (R3, seção 4.8).
 
 ## 4. As três fases
 
