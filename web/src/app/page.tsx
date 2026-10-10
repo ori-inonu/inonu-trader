@@ -7,6 +7,8 @@ import Header from "@/components/Header/Header";
 import StatsRow from "@/components/StatsRow/StatsRow";
 import WalletPanel from "@/components/WalletPanel/WalletPanel";
 import DexReportPanel from "@/components/DexReportPanel/DexReportPanel";
+import MultichainPanel from "@/components/MultichainPanel/MultichainPanel";
+import DecisionCenter from "@/components/DecisionCenter/DecisionCenter";
 import { useFeed } from "@/lib/useFeed";
 import styles from "./page.module.css";
 
@@ -28,7 +30,8 @@ export default function Page() {
           />
         </div>
         <div className={styles.decision}><DecisionPanel latest={feed.latest} /></div>
-        <div className={styles.wallet}><WalletPanel /><DexReportPanel /></div>
+        <div className={styles.center}><DecisionCenter /></div>
+        <div className={styles.wallet}><WalletPanel /><MultichainPanel /><DexReportPanel /></div>
         <div className={styles.feed}><Feed events={feed.events} /></div>
       </div>
     </main>
