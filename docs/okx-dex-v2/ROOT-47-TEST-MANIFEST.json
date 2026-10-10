@@ -1,0 +1,596 @@
+{
+  "purpose": "Intended integration execution snapshot; does not assert root is integrated or approved.",
+  "createdUtc": "2026-10-09T23:24:13.92937Z",
+  "sourceRoot": "C:\\Users\\gabri\\jev-trader",
+  "coordinatorManifest": {
+    "path": "C:\\Users\\gabri\\.codex\\tmp\\jev-trader-01a1216a\\okx-ecosystem\\docs\\DEX-V2-ROOT-PREINTEGRATION-MANIFEST.json",
+    "sha256": "3041A684C07BADDF57C39CBE52202A96E3B5BF6C65D610FDE2EE8F037413DB79",
+    "validatedEntries": 31,
+    "sourceFiles": [
+      {
+        "path": "src/trades.ts",
+        "source": "root",
+        "sha256": "1FF0DFD30C7F7BDAAA59569957EEC6870C5AA2AAF37C824C24101D5F657CC962"
+      },
+      {
+        "path": "src/trader.ts",
+        "source": "root",
+        "sha256": "61C441D1D13E9816F572A3F2D473C76062C941D8C7D594EB86DFDBE83E7603D9"
+      },
+      {
+        "path": "src/trader.test.ts",
+        "source": "root",
+        "sha256": "50B1366883B51E41B28C686DF1E549D201C31A6D54234550DBF3FEF4359897A0"
+      },
+      {
+        "path": "src/server.ts",
+        "source": "root",
+        "sha256": "56511E042A178B730429E2E7CDD338F6FCCD34870F8D6A8EC1920B3397240EA4"
+      },
+      {
+        "path": "src/risk.ts",
+        "source": "root",
+        "sha256": "57BFBB0A2A4180EFD682E6226C70EB200B32F3A446EA67B489ABC3239CA80008"
+      },
+      {
+        "path": "src/risk.test.ts",
+        "source": "root",
+        "sha256": "9A886F27EF18635133C0B946398E81CFB29E68A4508707C416194C852C122303"
+      },
+      {
+        "path": "src/okx-opportunities.ts",
+        "source": "root",
+        "sha256": "848C98E1A478F5C21B71A5EB1F88DAE5F6C660889A0E462C60BC5CDEEEE50D8B"
+      },
+      {
+        "path": "src/okx-opportunities.test.ts",
+        "source": "root",
+        "sha256": "492D9507D60B7575F08D91801BEFF5811185FD717660F1F48DE66DA9E738E3BE"
+      },
+      {
+        "path": "src/okx-market/okx-scan.ts",
+        "source": "root",
+        "sha256": "C95FE7C87EC92DDD6F038C797F04B174775FA2DCA55C69751CD2789117E701F8"
+      },
+      {
+        "path": "src/okx-market/okx-scan.test.ts",
+        "source": "root",
+        "sha256": "B2AFC7D64FD937FBC9ED290FF7166A525EB290F45DAF9F5AFC9F79BC4F884466"
+      },
+      {
+        "path": "src/okx-market/okx-opportunities.ts",
+        "source": "root",
+        "sha256": "F7361B23520CDD03E623C1F35B5AFE488D3E4F5E28959718359832DE03B0BE3E"
+      },
+      {
+        "path": "src/okx-market/okx-opportunities.test.ts",
+        "source": "root",
+        "sha256": "CCE1D7D2C21DBE50ECF4275538CDA0DEFB6286FBD15637866EAAEE4D5B45CC99"
+      },
+      {
+        "path": "src/okx-market/okx-fixture.ts",
+        "source": "root",
+        "sha256": "875FC8C6D09ACC8CD8B79B4CE00D626B8BC174C383E7A2C1486B9B13178F580D"
+      },
+      {
+        "path": "src/okx-market/okx-cli.test.ts",
+        "source": "root",
+        "sha256": "C2B81FBEE948DA29BAD8025F88D634C343432D59C9964F52C6BDB788DA723F15"
+      },
+      {
+        "path": "src/okx-market/okx-api.ts",
+        "source": "root",
+        "sha256": "A0F454D1D7CD0AD13C8E6CCDE8FBE3C1B754945C08D420606A61EE1CE0053393"
+      },
+      {
+        "path": "src/okx-market/okx-api.test.ts",
+        "source": "root",
+        "sha256": "DA967F4F93CAB356EF996E612DF3A2326437D68DA8B08A4294326769BA9192A1"
+      },
+      {
+        "path": "src/okx-api.ts",
+        "source": "root",
+        "sha256": "A789473DAB0D10A300A8FB29255D8794E21E7B3779B1D5719FC41E843E10D4B4"
+      },
+      {
+        "path": "src/okx-api.test.ts",
+        "source": "root",
+        "sha256": "85FFF55E5ECF7B86D48A294452902713A8CA3405A50E94F48488EE0F275038B2"
+      },
+      {
+        "path": "src/model.ts",
+        "source": "root",
+        "sha256": "B2F0C1508E981F2E172EDE0952086C29B16FD2AD9B53C978292C0B999C459381"
+      },
+      {
+        "path": "src/model.test.ts",
+        "source": "root",
+        "sha256": "3E3C979FBBCFB1D9489C35EFF19B2EA631B3643B62B32F7B1013E26EA27913DB"
+      },
+      {
+        "path": "src/market.ts",
+        "source": "root",
+        "sha256": "F8ADB13592316506B449261370489AD978C7D4AC9E5ACF45B8E85C9C4A9DD5FB"
+      },
+      {
+        "path": "src/index.ts",
+        "source": "root",
+        "sha256": "FE4C66F9C12E28F6EB4FDC2A24076C090B97101A5DBBA4F0A7D5688A05E6747A"
+      },
+      {
+        "path": "src/economics.ts",
+        "source": "root",
+        "sha256": "BF3ED7488BD1A2B3FDDCD22404A2775B2A863736FCD1ED79011D904C8B19B74E"
+      },
+      {
+        "path": "src/economics.test.ts",
+        "source": "root",
+        "sha256": "1E1B972DAA4FC3C8209BEE5C71B2A8EF9DA25E762E21CD8AECD5D0FC1887506B"
+      },
+      {
+        "path": "src/doctor.test.ts",
+        "source": "root",
+        "sha256": "78B7654523C7BBB5E9378BE4529E455C4062383ACF3337BE64EF51472F4B212B"
+      },
+      {
+        "path": "src/config.ts",
+        "source": "root",
+        "sha256": "92DD7A44A786676FB456DA019660871B2E77DD273FE148271F2C1541F43A2693"
+      },
+      {
+        "path": "src/config.test.ts",
+        "source": "root",
+        "sha256": "5F69B0E86EA1E5157CEC53F46631EDC5CF85631F690553ADECEC181994DC6340"
+      },
+      {
+        "path": "src/chain.ts",
+        "source": "root",
+        "sha256": "B94A062562B5B6B018FB58C8F9987681E2BBAF8437B7ABAE0E514B175DA22CB5"
+      },
+      {
+        "path": "src/book.ts",
+        "source": "root",
+        "sha256": "3C737C7A51D208296D6D4542A49B69CB4F45D17C4637E122099F28514C1834C5"
+      },
+      {
+        "path": "src/backtest.ts",
+        "source": "root",
+        "sha256": "C8B91EE5690C153FA07FBC90B813A7F7E4AB81283156833C4F986D67B005BF1F"
+      },
+      {
+        "path": "src/backtest.test.ts",
+        "source": "root",
+        "sha256": "48D7BFDA58B9D2EC09B7CE61D28639382A3CB0D927F658BCE24D0527718B6261"
+      }
+    ]
+  },
+  "recoveryManifest": {
+    "path": "C:\\Users\\gabri\\.codex\\tmp\\jev-trader-01a1216a\\okx-dex-review-v4-recovery\\REVIEW-MANIFEST.json",
+    "sha256": "D609A9C6534E843CFAC52222C6DB52ACAA4FE12599152C569B1576DFA29DC36D",
+    "validatedEntries": 53
+  },
+  "preservedRootDoctor": {
+    "path": "src/doctor.test.ts",
+    "sha256": "78B7654523C7BBB5E9378BE4529E455C4062383ACF3337BE64EF51472F4B212B",
+    "preservedTimeoutSetting": "15 seconds per test"
+  },
+  "copiedFiles": [
+    {
+      "path": "src/trades.ts",
+      "source": "root",
+      "sha256": "1FF0DFD30C7F7BDAAA59569957EEC6870C5AA2AAF37C824C24101D5F657CC962"
+    },
+    {
+      "path": "src/trader.ts",
+      "source": "root",
+      "sha256": "61C441D1D13E9816F572A3F2D473C76062C941D8C7D594EB86DFDBE83E7603D9"
+    },
+    {
+      "path": "src/trader.test.ts",
+      "source": "root",
+      "sha256": "50B1366883B51E41B28C686DF1E549D201C31A6D54234550DBF3FEF4359897A0"
+    },
+    {
+      "path": "src/server.ts",
+      "source": "root",
+      "sha256": "56511E042A178B730429E2E7CDD338F6FCCD34870F8D6A8EC1920B3397240EA4"
+    },
+    {
+      "path": "src/risk.ts",
+      "source": "root",
+      "sha256": "57BFBB0A2A4180EFD682E6226C70EB200B32F3A446EA67B489ABC3239CA80008"
+    },
+    {
+      "path": "src/risk.test.ts",
+      "source": "root",
+      "sha256": "9A886F27EF18635133C0B946398E81CFB29E68A4508707C416194C852C122303"
+    },
+    {
+      "path": "src/okx-opportunities.ts",
+      "source": "root",
+      "sha256": "848C98E1A478F5C21B71A5EB1F88DAE5F6C660889A0E462C60BC5CDEEEE50D8B"
+    },
+    {
+      "path": "src/okx-opportunities.test.ts",
+      "source": "root",
+      "sha256": "492D9507D60B7575F08D91801BEFF5811185FD717660F1F48DE66DA9E738E3BE"
+    },
+    {
+      "path": "src/okx-market/okx-scan.ts",
+      "source": "root",
+      "sha256": "C95FE7C87EC92DDD6F038C797F04B174775FA2DCA55C69751CD2789117E701F8"
+    },
+    {
+      "path": "src/okx-market/okx-scan.test.ts",
+      "source": "root",
+      "sha256": "B2AFC7D64FD937FBC9ED290FF7166A525EB290F45DAF9F5AFC9F79BC4F884466"
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.ts",
+      "source": "root",
+      "sha256": "F7361B23520CDD03E623C1F35B5AFE488D3E4F5E28959718359832DE03B0BE3E"
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.test.ts",
+      "source": "root",
+      "sha256": "CCE1D7D2C21DBE50ECF4275538CDA0DEFB6286FBD15637866EAAEE4D5B45CC99"
+    },
+    {
+      "path": "src/okx-market/okx-fixture.ts",
+      "source": "root",
+      "sha256": "875FC8C6D09ACC8CD8B79B4CE00D626B8BC174C383E7A2C1486B9B13178F580D"
+    },
+    {
+      "path": "src/okx-market/okx-cli.test.ts",
+      "source": "root",
+      "sha256": "C2B81FBEE948DA29BAD8025F88D634C343432D59C9964F52C6BDB788DA723F15"
+    },
+    {
+      "path": "src/okx-market/okx-api.ts",
+      "source": "root",
+      "sha256": "A0F454D1D7CD0AD13C8E6CCDE8FBE3C1B754945C08D420606A61EE1CE0053393"
+    },
+    {
+      "path": "src/okx-market/okx-api.test.ts",
+      "source": "root",
+      "sha256": "DA967F4F93CAB356EF996E612DF3A2326437D68DA8B08A4294326769BA9192A1"
+    },
+    {
+      "path": "src/okx-api.ts",
+      "source": "root",
+      "sha256": "A789473DAB0D10A300A8FB29255D8794E21E7B3779B1D5719FC41E843E10D4B4"
+    },
+    {
+      "path": "src/okx-api.test.ts",
+      "source": "root",
+      "sha256": "85FFF55E5ECF7B86D48A294452902713A8CA3405A50E94F48488EE0F275038B2"
+    },
+    {
+      "path": "src/model.ts",
+      "source": "root",
+      "sha256": "B2F0C1508E981F2E172EDE0952086C29B16FD2AD9B53C978292C0B999C459381"
+    },
+    {
+      "path": "src/model.test.ts",
+      "source": "root",
+      "sha256": "3E3C979FBBCFB1D9489C35EFF19B2EA631B3643B62B32F7B1013E26EA27913DB"
+    },
+    {
+      "path": "src/market.ts",
+      "source": "root",
+      "sha256": "F8ADB13592316506B449261370489AD978C7D4AC9E5ACF45B8E85C9C4A9DD5FB"
+    },
+    {
+      "path": "src/index.ts",
+      "source": "root",
+      "sha256": "FE4C66F9C12E28F6EB4FDC2A24076C090B97101A5DBBA4F0A7D5688A05E6747A"
+    },
+    {
+      "path": "src/economics.ts",
+      "source": "root",
+      "sha256": "BF3ED7488BD1A2B3FDDCD22404A2775B2A863736FCD1ED79011D904C8B19B74E"
+    },
+    {
+      "path": "src/economics.test.ts",
+      "source": "root",
+      "sha256": "1E1B972DAA4FC3C8209BEE5C71B2A8EF9DA25E762E21CD8AECD5D0FC1887506B"
+    },
+    {
+      "path": "src/doctor.test.ts",
+      "source": "root",
+      "sha256": "78B7654523C7BBB5E9378BE4529E455C4062383ACF3337BE64EF51472F4B212B"
+    },
+    {
+      "path": "src/config.ts",
+      "source": "root",
+      "sha256": "92DD7A44A786676FB456DA019660871B2E77DD273FE148271F2C1541F43A2693"
+    },
+    {
+      "path": "src/config.test.ts",
+      "source": "root",
+      "sha256": "5F69B0E86EA1E5157CEC53F46631EDC5CF85631F690553ADECEC181994DC6340"
+    },
+    {
+      "path": "src/chain.ts",
+      "source": "root",
+      "sha256": "B94A062562B5B6B018FB58C8F9987681E2BBAF8437B7ABAE0E514B175DA22CB5"
+    },
+    {
+      "path": "src/book.ts",
+      "source": "root",
+      "sha256": "3C737C7A51D208296D6D4542A49B69CB4F45D17C4637E122099F28514C1834C5"
+    },
+    {
+      "path": "src/backtest.ts",
+      "source": "root",
+      "sha256": "C8B91EE5690C153FA07FBC90B813A7F7E4AB81283156833C4F986D67B005BF1F"
+    },
+    {
+      "path": "src/backtest.test.ts",
+      "source": "root",
+      "sha256": "48D7BFDA58B9D2EC09B7CE61D28639382A3CB0D927F658BCE24D0527718B6261"
+    },
+    {
+      "path": "src/okx-market/round-trip.ts",
+      "source": "recovery-v4",
+      "sha256": "1B4C142C47F3CC3BB20DA1D50B47A813461773C7E5B1F20309C04805CB846FB8"
+    },
+    {
+      "path": "src/okx-market/round-trip.test.ts",
+      "source": "recovery-v4",
+      "sha256": "10514623993A9F34C6BAF55E22BF47FF2D2C3612D576052A5507E28E3B7BF4FA"
+    },
+    {
+      "path": "src/okx-market/okx-dex.ts",
+      "source": "recovery-v4",
+      "sha256": "F2005D5FD3C81B8ADC72CEBA8F06BEC9E0AFD021E69095A818C8C5F020097394"
+    },
+    {
+      "path": "src/okx-market/okx-dex.test.ts",
+      "source": "recovery-v4",
+      "sha256": "8187560D6CB6D029F4BA8EEFBF0EA3B26277509CDFAEFD69A880EDF5A8BC94E8"
+    },
+    {
+      "path": "src/okx-market/dex-fixture.ts",
+      "source": "recovery-v4",
+      "sha256": "BD63DC6C5235D6C038E5CCA1E0DBEA71FC9FBE987398B304AC51E7B24F76473C"
+    },
+    {
+      "path": "src/okx-market/dex-cli.test.ts",
+      "source": "recovery-v4",
+      "sha256": "D4BF3641848475D3AA9C7CEB91B5771BE8316F3F9842B2E19E8657791352DDD8"
+    },
+    {
+      "path": "scripts/okx-dex-quote.ts",
+      "source": "recovery-v4",
+      "sha256": "8996D0A409F1B099159BBF0F863C66B2FF7A67F1F8C054CEABE57E0B1D220D59"
+    },
+    {
+      "path": "package.json",
+      "source": "recovery-v4",
+      "sha256": "ACEB326352D5A7E15D8220C9F9A7FF2609999A3FEA5592FE24BEF07F692B70D1"
+    },
+    {
+      "path": "tsconfig.json",
+      "source": "recovery-v4",
+      "sha256": "547FA219173F4EB0ED6E672AFF33733B59E6FE75C635CF59A7699474F2037C84"
+    },
+    {
+      "path": "scripts/doctor.ts",
+      "source": "root",
+      "sha256": "1763E1402A09038BBA1831A0226CB5C4A3DE97EFB842F328BFE2188C26DB95FB"
+    },
+    {
+      "path": "scripts/capture.ts",
+      "source": "root",
+      "sha256": "40F918B2E723E724120B239AB5893E34F433DEDF68FC33A70D6AD0C347DBF62A"
+    },
+    {
+      "path": "scripts/okx-market-scan.ts",
+      "source": "root",
+      "sha256": "5D3D1DE12BB59BCDC816A1AB109A86D4B87B18DEFDE8CA19F22C6EAAB8F9ED2E"
+    },
+    {
+      "path": "scripts/backtest.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "sha256": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8"
+    },
+    {
+      "path": "src/backtest-evidence.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "sha256": "4A21F47A26EC57EEE68AB721A17DE1C702F9C32474A43A859D99048280D7153E"
+    },
+    {
+      "path": "src/backtest-evidence.test.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "sha256": "A2ECCF72DB3F10E392A1AEAA04C1A45F4B10F0AA3989171E0F1AD9403F5455D1"
+    },
+    {
+      "path": "src/backtest-evidence-cli.test.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "sha256": "94B273BDEC5BC1E3C2357225A3ACCA03B93665DC15C46A83F75B9AF445A0F8FC"
+    }
+  ],
+  "dexAdditions": [
+    {
+      "path": "src/okx-market/round-trip.ts",
+      "source": "recovery-v4",
+      "sha256": "1B4C142C47F3CC3BB20DA1D50B47A813461773C7E5B1F20309C04805CB846FB8"
+    },
+    {
+      "path": "src/okx-market/round-trip.test.ts",
+      "source": "recovery-v4",
+      "sha256": "10514623993A9F34C6BAF55E22BF47FF2D2C3612D576052A5507E28E3B7BF4FA"
+    },
+    {
+      "path": "src/okx-market/okx-dex.ts",
+      "source": "recovery-v4",
+      "sha256": "F2005D5FD3C81B8ADC72CEBA8F06BEC9E0AFD021E69095A818C8C5F020097394"
+    },
+    {
+      "path": "src/okx-market/okx-dex.test.ts",
+      "source": "recovery-v4",
+      "sha256": "8187560D6CB6D029F4BA8EEFBF0EA3B26277509CDFAEFD69A880EDF5A8BC94E8"
+    },
+    {
+      "path": "src/okx-market/dex-fixture.ts",
+      "source": "recovery-v4",
+      "sha256": "BD63DC6C5235D6C038E5CCA1E0DBEA71FC9FBE987398B304AC51E7B24F76473C"
+    },
+    {
+      "path": "src/okx-market/dex-cli.test.ts",
+      "source": "recovery-v4",
+      "sha256": "D4BF3641848475D3AA9C7CEB91B5771BE8316F3F9842B2E19E8657791352DDD8"
+    },
+    {
+      "path": "scripts/okx-dex-quote.ts",
+      "source": "recovery-v4",
+      "sha256": "8996D0A409F1B099159BBF0F863C66B2FF7A67F1F8C054CEABE57E0B1D220D59"
+    }
+  ],
+  "recoveryConfig": [
+    {
+      "path": "package.json",
+      "source": "recovery-v4",
+      "sha256": "ACEB326352D5A7E15D8220C9F9A7FF2609999A3FEA5592FE24BEF07F692B70D1"
+    },
+    {
+      "path": "tsconfig.json",
+      "source": "recovery-v4",
+      "sha256": "547FA219173F4EB0ED6E672AFF33733B59E6FE75C635CF59A7699474F2037C84"
+    }
+  ],
+  "rootScriptsIncluded": [
+    {
+      "path": "scripts/doctor.ts",
+      "source": "root",
+      "sha256": "1763E1402A09038BBA1831A0226CB5C4A3DE97EFB842F328BFE2188C26DB95FB"
+    },
+    {
+      "path": "scripts/capture.ts",
+      "source": "root",
+      "sha256": "40F918B2E723E724120B239AB5893E34F433DEDF68FC33A70D6AD0C347DBF62A"
+    },
+    {
+      "path": "scripts/okx-market-scan.ts",
+      "source": "root",
+      "sha256": "5D3D1DE12BB59BCDC816A1AB109A86D4B87B18DEFDE8CA19F22C6EAAB8F9ED2E"
+    },
+    {
+      "path": "scripts/backtest.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "sha256": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8"
+    }
+  ],
+  "rootScriptsOmitted": [],
+  "dependencyJunction": {
+    "path": "node_modules",
+    "target": "C:\\Users\\gabri\\jev-trader\\node_modules",
+    "copied": false
+  },
+  "excluded": [
+    "environment files and samples",
+    "receipts",
+    "caches",
+    "dependency copies"
+  ],
+  "preexistingConcurrentRootScript": {
+    "path": "scripts/backtest.ts",
+    "rootSha256BeforeCopy": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8",
+    "rootSha256AfterCopy": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8",
+    "snapshotSha256": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8",
+    "recoveryV4ExpectedSha256": "22FB1282920FC7F43B4ACA16DFAA6DC2E8407ADE39E70A790AE1C9E08FDEFD0B",
+    "disposition": "included current root bytes; recovery V4 left unchanged"
+  },
+  "finalSnapshotFileCount": 47,
+  "verification": {
+    "tests": {
+      "command": "C:\\Users\\gabri\\.bun\\bin\\bun.exe --no-env-file test --parallel=1 src",
+      "snapshotFileCount": 43,
+      "exitCode": 0,
+      "executorWallSeconds": 6.7087523000000004,
+      "bunSummary": "105 pass; 0 fail; 1003 expect() calls; Ran 105 tests across 16 files. [6.24s]",
+      "captureNote": "Captured before scripts/backtest.ts was added; command targets src."
+    },
+    "dexCli": {
+      "command": "C:\\Users\\gabri\\.bun\\bin\\bun.exe --no-env-file run okx:dex-quote",
+      "snapshotFileCount": 43,
+      "exitCode": 0,
+      "executorWallSeconds": 0.619704,
+      "path": "default synthetic",
+      "captureNote": "Captured before scripts/backtest.ts was added."
+    },
+    "finalTypecheck": {
+      "command": "C:\\Users\\gabri\\.bun\\bin\\bun.exe --no-env-file run typecheck",
+      "snapshotFileCount": 44,
+      "exitCode": 1,
+      "executorWallSeconds": 0.792548,
+      "stdout": "$ tsc --noEmit\nscripts/backtest.ts(3,38): error TS2307: Cannot find module '../src/backtest-evidence.ts' or its corresponding type declarations.\nerror: script \"typecheck\" exited with code 1\n",
+      "note": "scripts/backtest.ts imports src/backtest-evidence.ts, present in root but omitted from the 31-file source manifest and absent from this exact snapshot."
+    },
+    "finalHashGuards": {
+      "rootSourceFiles": {
+        "count": 31,
+        "mismatches": 0
+      },
+      "recoveryV4Files": {
+        "count": 53,
+        "mismatches": 0
+      },
+      "snapshotFiles": {
+        "count": 47,
+        "mismatches": 0
+      },
+      "backtestScriptSha256BeforeCopy": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8",
+      "backtestScriptSha256AfterCopy": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8",
+      "backtestSnapshotSha256": "F5D928A623D9995E95AEEB5132FA479E90CA4216636AF13867794A73191441E8",
+      "concurrentRootEvidenceSources": {
+        "count": 3,
+        "mismatches": 0
+      }
+    },
+    "tests47": {
+      "command": "Remove-Item Env:OKX_WEB3_API_KEY,Env:OKX_WEB3_API_SECRET,Env:OKX_WEB3_API_PASSPHRASE -ErrorAction SilentlyContinue; & 'C:\\Users\\gabri\\.bun\\bin\\bun.exe' --no-env-file test --parallel=1 src",
+      "snapshotFileCount": 47,
+      "exitCode": 0,
+      "executorWallSeconds": 7.0454474,
+      "bunSummary": "129 pass; 0 fail; 1120 expect() calls; Ran 129 tests across 18 files. [6.60s]",
+      "stdoutPath": "docs/ROOT-INTEGRATION-47-TEST-STDOUT.txt",
+      "stdoutSha256": "7EEDE9BDB296AFEE19934EA0358B9040995F82435898D6296EEE404A4053493F",
+      "environment": "OKX_WEB3_API_KEY, OKX_WEB3_API_SECRET, and OKX_WEB3_API_PASSPHRASE removed from the child environment; Bun --no-env-file",
+      "timeout": "default"
+    },
+    "typecheck47": {
+      "command": "Remove-Item Env:OKX_WEB3_API_KEY,Env:OKX_WEB3_API_SECRET,Env:OKX_WEB3_API_PASSPHRASE -ErrorAction SilentlyContinue; & 'C:\\Users\\gabri\\.bun\\bin\\bun.exe' --no-env-file run typecheck",
+      "snapshotFileCount": 47,
+      "exitCode": 0,
+      "executorWallSeconds": 0.7522812,
+      "stdout": "$ tsc --noEmit",
+      "environment": "OKX_WEB3_API_KEY, OKX_WEB3_API_SECRET, and OKX_WEB3_API_PASSPHRASE removed from the child environment; Bun --no-env-file"
+    }
+  },
+  "concurrentRootEvidenceSources": [
+    {
+      "path": "src/backtest-evidence.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "rootSha256BeforeCopy": "4A21F47A26EC57EEE68AB721A17DE1C702F9C32474A43A859D99048280D7153E",
+      "rootSha256AfterCopy": "4A21F47A26EC57EEE68AB721A17DE1C702F9C32474A43A859D99048280D7153E",
+      "snapshotSha256": "4A21F47A26EC57EEE68AB721A17DE1C702F9C32474A43A859D99048280D7153E"
+    },
+    {
+      "path": "src/backtest-evidence.test.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "rootSha256BeforeCopy": "A2ECCF72DB3F10E392A1AEAA04C1A45F4B10F0AA3989171E0F1AD9403F5455D1",
+      "rootSha256AfterCopy": "A2ECCF72DB3F10E392A1AEAA04C1A45F4B10F0AA3989171E0F1AD9403F5455D1",
+      "snapshotSha256": "A2ECCF72DB3F10E392A1AEAA04C1A45F4B10F0AA3989171E0F1AD9403F5455D1"
+    },
+    {
+      "path": "src/backtest-evidence-cli.test.ts",
+      "source": "root-preexisting-concurrent-preserved",
+      "rootSha256BeforeCopy": "94B273BDEC5BC1E3C2357225A3ACCA03B93665DC15C46A83F75B9AF445A0F8FC",
+      "rootSha256AfterCopy": "94B273BDEC5BC1E3C2357225A3ACCA03B93665DC15C46A83F75B9AF445A0F8FC",
+      "snapshotSha256": "94B273BDEC5BC1E3C2357225A3ACCA03B93665DC15C46A83F75B9AF445A0F8FC"
+    }
+  ],
+  "supplementalVerificationUtc": "2026-10-09T23:42:46.2455372Z"
+}

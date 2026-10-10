@@ -1,0 +1,39 @@
+{
+  "status": "assessed",
+  "receiptId": "0e19142b-5b0f-43f4-97cb-42d65158e28b",
+  "inputDigest": "15a82d4af091594697b5df95ff8bd306b2b16552871d22320c9fe98c4bbf1023",
+  "rubricVersion": "batch-2026-09-26.2",
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 557,
+    "output_tokens": 63
+  },
+  "costUsd": null,
+  "answers": {
+    "review_strategy": {
+      "type": "choice",
+      "domain": "task",
+      "providerChoice": "independent_snapshot",
+      "bestCandidate": "independent_snapshot",
+      "probabilities": {
+        "independent_snapshot": 1,
+        "self_review_only": 0,
+        "more_research": 0,
+        "insufficient_evidence": 0
+      },
+      "confidence": 1,
+      "disposition": "recommendation",
+      "recommendation": "independent_snapshot",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "authority": "advisory_only",
+  "approved_by": "jev_delegated",
+  "human_response": false
+}

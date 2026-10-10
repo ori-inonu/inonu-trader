@@ -1,0 +1,57 @@
+{
+  "status": "assessed",
+  "answers": {
+    "layout": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "dedicated_namespace",
+      "bestCandidate": "dedicated_namespace",
+      "probabilities": {
+        "dedicated_namespace": 0.99,
+        "rename_each_collision": 0.01,
+        "merge_concurrent_modules": 0,
+        "insufficient_evidence": 0
+      },
+      "confidence": 0.99,
+      "disposition": "recommendation",
+      "recommendation": "dedicated_namespace",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "baseline": {
+      "type": "choice",
+      "domain": "task",
+      "providerChoice": "preserve_and_report",
+      "bestCandidate": "preserve_and_report",
+      "probabilities": {
+        "preserve_and_report": 1,
+        "fix_unowned_test_now": 0,
+        "insufficient_evidence": 0
+      },
+      "confidence": 1,
+      "disposition": "recommendation",
+      "recommendation": "preserve_and_report",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "receiptId": "fd349fc5-4fb7-42f1-922b-ddc79e8ef3e3",
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 708,
+    "output_tokens": 113
+  },
+  "costUsd": null,
+  "approved_by": "jev_delegated",
+  "human_response": false
+}

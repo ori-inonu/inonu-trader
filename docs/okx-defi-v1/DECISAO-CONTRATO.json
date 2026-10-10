@@ -1,0 +1,88 @@
+{
+  "status": "assessed",
+  "receiptId": "53b039b0-3af5-4a07-a59f-930cfeaed409",
+  "inputDigest": "457083e514fcfa7c946eb9bfee400430ca1f6c0c150097effcbd3a5b6da01642",
+  "model": "jev-1.13.0",
+  "answers": {
+    "capture_shape": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "bounded_raw_capture",
+      "bestCandidate": "bounded_raw_capture",
+      "probabilities": {
+        "bounded_raw_capture": 0.59,
+        "normalized_dto": 0.02,
+        "defer": 0.15,
+        "insufficient_evidence": 0.24
+      },
+      "confidence": 0.45,
+      "disposition": "abstained",
+      "reasonCode": "low_confidence",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "yield_semantics": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "separate_observations",
+      "bestCandidate": "separate_observations",
+      "probabilities": {
+        "separate_observations": 0.73,
+        "search_only": 0.06,
+        "defer": 0.16,
+        "insufficient_evidence": 0.05
+      },
+      "confidence": 0.64,
+      "disposition": "recommendation",
+      "recommendation": "separate_observations",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "delivery_seam": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "research_only",
+      "bestCandidate": "research_only",
+      "probabilities": {
+        "pure_report_and_offline_cli": 0.21,
+        "pure_report_only": 0.1,
+        "research_only": 0.67,
+        "insufficient_evidence": 0.02
+      },
+      "confidence": 0.56,
+      "disposition": "abstained",
+      "reasonCode": "low_confidence",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 1067,
+    "output_tokens": 181
+  },
+  "receiptPersisted": true,
+  "human_response": false,
+  "cost_usd": null,
+  "applied": {
+    "yield_semantics": "separate_observations"
+  },
+  "deferred": [
+    "capture_shape",
+    "delivery_seam"
+  ]
+}

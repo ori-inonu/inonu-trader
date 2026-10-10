@@ -1,0 +1,38 @@
+{
+  "status": "abstained",
+  "reasonCode": "low_confidence",
+  "receiptId": "8a05ab54-35f0-4c67-9985-5e7668a02188",
+  "answers": {
+    "protocol": {
+      "type": "choice",
+      "domain": "general",
+      "providerChoice": "explicit",
+      "bestCandidate": "explicit",
+      "probabilities": {
+        "explicit": 0.58,
+        "first": 0.09,
+        "all": 0,
+        "insufficient_evidence": 0.33
+      },
+      "confidence": 0.44,
+      "disposition": "abstained",
+      "reasonCode": "low_confidence",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 496,
+    "output_tokens": 51
+  },
+  "billedCost": null,
+  "human_response": false,
+  "appliedDecisionSource": "local_requirement_gate",
+  "rationale": "JEV abstained. A reversible explicit single protocol input is directly grounded in unchanged E2 prohibition of implicit protocol-wide scan; no execution or external publication is added."
+}

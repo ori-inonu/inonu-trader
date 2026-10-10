@@ -1,113 +1,150 @@
 .panel {
-  flex: none;
-  display: flex;
-  flex-direction: column;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--panel);
 }
 
-.section {
-  padding: 18px;
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
 
-.sectionLabel {
-  font-family: var(--font-sans), Inter, system-ui, sans-serif;
-  font-weight: 500;
-  font-size: 11px;
-  line-height: 1.2;
-  letter-spacing: 0.1em;
-  color: var(--muted-2);
+.eyebrow {
+  color: var(--cyan);
+  font: 600 12px/1.3 var(--font-sans), sans-serif;
+  letter-spacing: 0.09em;
 }
 
-.sectionLabelGap {
-  margin-bottom: 10px;
+.title {
+  margin-top: 4px;
+  color: var(--ink);
+  font: 600 18px/1.25 var(--font-sans), sans-serif;
 }
 
-/* ---- (1) standing order ---- */
-
-.order {
-  margin-top: 6px;
-  font-family: var(--font-mono), "Geist Mono", ui-monospace, monospace;
-  font-weight: 400;
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--ink-2);
+.block {
+  color: var(--muted);
+  font: 500 12px/1.4 var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
-/* ---- (2) the decision: headline + bars ---- */
+.content {
+  display: grid;
+  gap: 12px;
+  padding-top: 14px;
+}
 
 .headline {
   display: flex;
   align-items: baseline;
-  gap: 14px;
-  margin-bottom: 14px;
-  transition: color 0.3s;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink);
+  font: 600 25px/1.15 var(--font-sans), sans-serif;
 }
 
-.headlineWord {
-  font-family: var(--font-sans), Inter, system-ui, sans-serif;
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-}
+.buy { color: var(--buy); }
+.sell { color: var(--sell); }
+.hold { color: var(--gold); }
+.late { color: var(--sell); }
+.waiting { color: var(--muted); }
 
 .headlinePct {
-  font-family: var(--font-mono), "Geist Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 1.1;
+  color: var(--ink);
+  font: 500 18px/1.2 var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
 }
 
+.orderState {
+  width: fit-content;
+  border: 1px solid var(--border-control);
+  border-radius: 999px;
+  padding: 5px 10px;
+  color: var(--ink-2);
+  font: 500 12px/1.3 var(--font-sans), sans-serif;
+}
+
+.rows {
+  display: grid;
+  gap: 10px;
+}
+
 .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) 92px;
   align-items: center;
-  gap: 12px;
-  padding: 4px 0;
+  gap: 10px;
 }
 
 .label {
-  width: 44px;
-  flex: none;
-  display: inline-block;
-  font-family: var(--font-sans), Inter, system-ui, sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 1.2;
-  transition: opacity 0.3s;
+  color: var(--ink-2);
+  font: 500 12px/1.3 var(--font-sans), sans-serif;
 }
 
 .track {
-  flex: 1;
-  min-width: 0;
-  height: 16px;
-  border-radius: 99px;
-  background: var(--track);
+  display: flex;
+  height: 12px;
   overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--canvas);
 }
 
 .fill {
   height: 100%;
-  border-radius: 99px;
-  transition: width 0.25s linear, background 0.25s;
+  border-radius: inherit;
+  transition: width 160ms ease;
 }
 
+.fill.buy { background: var(--buy); }
+.fill.sell { background: var(--sell); }
+.fill.hold { background: var(--gold); }
+.fill.active { box-shadow: inset 0 0 0 1px var(--ink); }
+
 .pct {
-  width: 46px;
-  flex: none;
-  text-align: right;
-  font-family: var(--font-mono), "Geist Mono", ui-monospace, monospace;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 1.2;
+  overflow-wrap: anywhere;
   color: var(--ink);
+  font: 500 12px/1.3 var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.disclaimer,
+.details p {
+  color: var(--muted);
+  font: 400 12px/1.5 var(--font-sans), sans-serif;
+}
+
+.details {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.details summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--cyan);
+  font: 500 12px/1.35 var(--font-sans), sans-serif;
+  cursor: pointer;
+}
+
+.details p {
+  padding: 2px 0 4px;
+}
+
+@media (max-width: 420px) {
+  .panel { padding: 15px; }
+  .row { grid-template-columns: 68px minmax(0, 1fr) 84px; gap: 8px; }
+  .headline { font-size: 22px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .headline,
-  .label,
-  .fill {
-    transition: none;
-  }
+  .fill { transition: none; }
 }

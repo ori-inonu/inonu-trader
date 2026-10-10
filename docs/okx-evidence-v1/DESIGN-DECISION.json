@@ -1,0 +1,120 @@
+{
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "costUsd": null,
+  "inputAndTestSeam": {
+    "status": "assessed",
+    "receiptId": "46ae8b54-7cf4-4842-a301-9139320d7962",
+    "inputDigest": "7c25bf017bc03195a38b1ca03d3f5919db072108d3ed13a33acc5f1eff6ce666",
+    "rubricVersion": "batch-2026-09-26.2",
+    "model": "jev-1.13.0",
+    "answers": {
+      "input_seam": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "bounded_json_reports",
+        "bestCandidate": "bounded_json_reports",
+        "probabilities": {
+          "bounded_json_reports": 0.95,
+          "typed_in_memory_only": 0.05,
+          "insufficient_evidence": 0
+        },
+        "confidence": 0.92,
+        "disposition": "recommendation",
+        "recommendation": "bounded_json_reports",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      },
+      "validation_strategy": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "red_green_boundary_and_invariants",
+        "bestCandidate": "red_green_boundary_and_invariants",
+        "probabilities": {
+          "red_green_boundary_and_invariants": 0.98,
+          "core_properties_and_cli_smoke": 0,
+          "insufficient_evidence": 0.02
+        },
+        "confidence": 0.97,
+        "disposition": "recommendation",
+        "recommendation": "red_green_boundary_and_invariants",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 886,
+      "output_tokens": 112
+    },
+    "latencyMs": 336,
+    "receiptPersisted": true
+  },
+  "assessment": {
+    "status": "assessed",
+    "receiptId": "306aa37f-1dd9-4240-9d46-3f941be64760",
+    "inputDigest": "ed066dc1d622b226a0632fb824f1b84fec44e606ee72824204ea25247a4b4263",
+    "rubricVersion": "batch-2026-09-26.2",
+    "model": "jev-1.13.0",
+    "answers": {
+      "assessment": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "recalculate_whitelisted",
+        "bestCandidate": "recalculate_whitelisted",
+        "probabilities": {
+          "recalculate_whitelisted": 0.92,
+          "past_label_only": 0.07,
+          "insufficient_evidence": 0.01
+        },
+        "confidence": 0.88,
+        "disposition": "recommendation",
+        "recommendation": "recalculate_whitelisted",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      },
+      "duplicate": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "group_signals_reject_duplicate_scanner",
+        "bestCandidate": "group_signals_reject_duplicate_scanner",
+        "probabilities": {
+          "group_signals_reject_duplicate_scanner": 0.68,
+          "retain_all_as_ambiguous": 0.29,
+          "insufficient_evidence": 0.03
+        },
+        "confidence": 0.52,
+        "disposition": "abstained",
+        "reasonCode": "low_confidence",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 699,
+      "output_tokens": 121
+    },
+    "latencyMs": 302,
+    "receiptPersisted": true
+  },
+  "duplicateDisposition": "Advisory abstained. No delegated duplicate answer recorded. Existing normalized scanner removes duplicate identities; import validator will require that generator contract and preserve all legitimate signal events."
+}
