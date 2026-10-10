@@ -21,6 +21,7 @@
     "start": "bun run src/index.ts",
     "dev": "bun --watch run src/index.ts",
     "doctor": "bun run scripts/doctor.ts",
+    "qualify:live": "bun run scripts/qualify-live.ts",
     "capture": "bun run scripts/capture.ts",
     "backtest": "bun run scripts/backtest.ts",
     "test": "bun --no-env-file test --parallel=1 --timeout 15000 ./src ./scripts",
