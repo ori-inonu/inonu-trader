@@ -1,0 +1,1645 @@
+{
+  "schema_version": 1,
+  "status": "draft_comparison_not_approved",
+  "author_id": "01a12585-fb20-73a2-8882-ba3fa62b8cdb",
+  "integrator_id": "01a1221e-root-integrator",
+  "prepared_from_local_sources_read_at_utc": "2026-10-10T17:59:07.245230+00:00",
+  "objective": "Comparar dois contratos candidatos de observação patrimonial para relatório local futuro; reunir base para decisão sem escolher prioridade ou implementar.",
+  "authorization_limits": {
+    "writes_only": [
+      "CONTRACT-COMPARISON.md",
+      "CONTRACT-COMPARISON.json"
+    ],
+    "preserve_root_file": "PREPARATION-DECISION.json",
+    "implementation_approved": false,
+    "priority_selected": false,
+    "reconciliation_qualified": false,
+    "live_qualified": false,
+    "financial_qualified": false,
+    "network_or_authenticated_requests": 0,
+    "project_code_read": false,
+    "tests_executed": false
+  },
+  "runtime": {
+    "configured_model": "GPT-6.1 Sol",
+    "configured_reasoning": "xhigh",
+    "effective_model": null,
+    "effective_reasoning": null,
+    "effective_tier": null,
+    "effective_sandbox": null
+  },
+  "inputs": [
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\okx-portfolio-v1\\RESEARCH.md",
+      "sha256": "3e15783a382e34a6017378064d91bcb4301e74a7eeaeac042c01a2d80092ca13",
+      "bytes": 6030
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\okx-portfolio-v1\\SOURCES.json",
+      "sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9",
+      "bytes": 13167
+    }
+  ],
+  "public_evidence": [
+    {
+      "source_id": "S1",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/balance-api-all-token-balances",
+      "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+      "retrieved_at_utc": "2026-10-10T17:25:41.805821+00:00",
+      "publication_date": null,
+      "method": "GET",
+      "path": "/api/v6/dex/balance/all-token-balances-by-address",
+      "locators": {
+        "request": "Request URL / Request Parameters, rendered lines 66–79",
+        "response": "Response Parameters, rendered lines 83–91",
+        "auth_and_envelope": "Request Example / Response Example, lines 98–113"
+      },
+      "source_archive_path": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/SOURCES.json",
+      "source_archive_sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9",
+      "live_behavior_observed": false,
+      "literal_evidence_inherited": [
+        {
+          "field": "tokenPrice",
+          "excerpt": "Token unit value, priced in USD",
+          "rendered_line": 90,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "rawBalance",
+          "excerpt": "For unsupported chains, this field is empty.",
+          "rendered_line": 89,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "http_body_retrieved_in_this_preparation": false
+    },
+    {
+      "source_id": "S2",
+      "url": "https://web3.okx.com/onchainos/dev-docs/market/tx-history-transactions-by-address",
+      "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+      "retrieved_at_utc": "2026-10-10T17:25:41.811522+00:00",
+      "publication_date": null,
+      "method": "GET",
+      "path": "/api/v6/dex/post-transaction/transactions-by-address",
+      "locators": {
+        "coverage": "Introduction, rendered line 93",
+        "request": "Request Parameters, lines 103–111",
+        "response": "Response Parameters, lines 115–137",
+        "discrepancies": "Request Example line 143; Response Example lines 154–159"
+      },
+      "source_archive_path": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/SOURCES.json",
+      "source_archive_sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9",
+      "live_behavior_observed": false,
+      "literal_evidence_inherited": [
+        {
+          "field": "coverage",
+          "excerpt": "6 months",
+          "rendered_line": 93,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "begin/end",
+          "excerpt": "Unix timestamp, in milliseconds",
+          "rendered_lines": [
+            106,
+            107
+          ],
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "txTime",
+          "excerpt": "Transaction time in Unix timestamp format, in milliseconds",
+          "rendered_line": 124,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "txFee",
+          "excerpt": "Transaction fee",
+          "rendered_line": 134,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "http_body_retrieved_in_this_preparation": false
+    },
+    {
+      "source_id": "S3",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-user-asset-platform-list",
+      "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+      "retrieved_at_utc": "2026-10-10T17:25:41.816945+00:00",
+      "publication_date": null,
+      "method": "POST",
+      "path": "/api/v6/defi/user/asset/platform/list",
+      "locators": {
+        "purpose_and_request": "Introduction / Request Parameters, rendered lines 60–72",
+        "response": "Response Parameters, lines 112–131",
+        "examples": "Response Example, lines 137–139, 203–208"
+      },
+      "source_archive_path": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/SOURCES.json",
+      "source_archive_sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9",
+      "live_behavior_observed": false,
+      "literal_evidence_inherited": [
+        {
+          "field": "currencyAmount",
+          "excerpt": "Protocol total assets (USD)",
+          "rendered_line": 117,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "totalAssets",
+          "excerpt": "Wallet total assets (USD)",
+          "rendered_line": 129,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "updateAt",
+          "excerpt": "Update timestamp (milliseconds)",
+          "rendered_line": 130,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "assetStatus",
+          "excerpt": "1=updated, 2=updating",
+          "rendered_line": 131,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "http_body_retrieved_in_this_preparation": false
+    },
+    {
+      "source_id": "S4",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-user-asset-platform-detail",
+      "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+      "retrieved_at_utc": "2026-10-10T17:25:41.824270+00:00",
+      "publication_date": null,
+      "method": "POST",
+      "path": "/api/v6/defi/user/asset/platform/detail",
+      "locators": {
+        "request": "Request Parameters, rendered lines 67–73",
+        "identity_units": "Response Parameters, lines 98–189",
+        "example_only_token_metadata": "Response Example, lines 238–246 and 306–314",
+        "identifier_discrepancy": "Response Parameters lines 108,112; example lines 211,213"
+      },
+      "source_archive_path": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/SOURCES.json",
+      "source_archive_sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9",
+      "live_behavior_observed": false,
+      "literal_evidence_inherited": [
+        {
+          "field": "settlementTime",
+          "excerpt": "Settlement time (second-level timestamp)",
+          "rendered_line": 132,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "yieldYesterday",
+          "excerpt": "Yesterday's yield (USD)",
+          "rendered_line": 160,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "totalEarnings",
+          "excerpt": "Total earnings (USD)",
+          "rendered_line": 161,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "tokenPrecision (example only)",
+          "excerpt": "\"tokenPrecision\": 18",
+          "rendered_line": 312,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "coinAmount (example only)",
+          "excerpt": "\"coinAmount\": \"0.0001\"",
+          "rendered_line": 310,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "http_body_retrieved_in_this_preparation": false
+    }
+  ],
+  "evidence_scope": "Only the two approved local research files were reread; public facts/hashes are inherited observations, not new HTTP retrievals or authenticated response observations.",
+  "shared_requirements": [
+    {
+      "id": "C1",
+      "statement": "Relatório estritamente local/offline; toda entrada tem origem declarada, digest do arquivo, seletor e clocks locais separados do relógio do provedor.",
+      "evidence_refs": [
+        {
+          "source_id": "S1",
+          "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+          "locator": "auth_and_envelope"
+        },
+        {
+          "source_id": "S2",
+          "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+          "locator": "discrepancies"
+        }
+      ],
+      "independent_acceptance": "Fixture sintética e material documental são identificados; clocks locais não são apresentados como confirmação de feed/autenticação.",
+      "verification_case_ids": [
+        "C-CASE-1"
+      ],
+      "status": "draft_not_approved"
+    },
+    {
+      "id": "C2",
+      "statement": "Preservar valores e tipos originais, ausências, unidades desconhecidas e conflitos de documentação; nenhuma conversão econômica ou alias silencioso.",
+      "evidence_refs": [
+        {
+          "source_id": "S1",
+          "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+          "locator": "response"
+        },
+        {
+          "source_id": "S2",
+          "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+          "locator": "response"
+        },
+        {
+          "source_id": "S3",
+          "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+          "locator": "response"
+        },
+        {
+          "source_id": "S4",
+          "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+          "locator": "identity_units"
+        }
+      ],
+      "independent_acceptance": "Nenhuma quantidade é escalada a partir de um nome/exemplo; campo vazio permanece vazio com diagnóstico e valor derivado null.",
+      "verification_case_ids": [
+        "C-CASE-2"
+      ],
+      "status": "draft_not_approved"
+    },
+    {
+      "id": "C3",
+      "statement": "Associação/deduplicação econômica exige chave e fronteira patrimonial verificadas; locator/digest local identifica observação, não ativo/movimento econômico.",
+      "evidence_refs": [
+        {
+          "source_id": "S1",
+          "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+          "locator": "response"
+        },
+        {
+          "source_id": "S2",
+          "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+          "locator": "response"
+        },
+        {
+          "source_id": "S3",
+          "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+          "locator": "response"
+        },
+        {
+          "source_id": "S4",
+          "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+          "locator": "identity_units"
+        }
+      ],
+      "independent_acceptance": "Mesmo token/posição/transação em fontes distintas não é somado nem eliminado como equivalente por coincidência de rótulo ou txHash.",
+      "verification_case_ids": [
+        "C-CASE-3"
+      ],
+      "status": "draft_not_approved"
+    },
+    {
+      "id": "C4",
+      "statement": "Estado de cada grupo/página e diagnóstico de erro ou cobertura parcial permanece visível; retorno líquido realizado, PnL realizado, fluxo externo classificado e qualificação live/financeira permanecem desconhecidos/não qualificados.",
+      "evidence_refs": [
+        {
+          "source_id": "S2",
+          "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+          "locator": "coverage"
+        },
+        {
+          "source_id": "S3",
+          "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+          "locator": "examples"
+        },
+        {
+          "source_id": "S4",
+          "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+          "locator": "identity_units"
+        }
+      ],
+      "independent_acceptance": "Saídas derivadas correspondentes são null; nonzero valores USD, earnings ou movimentos não produzem uma conclusão de retorno.",
+      "verification_case_ids": [
+        "C-CASE-2",
+        "C-CASE-3"
+      ],
+      "status": "draft_not_approved"
+    },
+    {
+      "id": "C5",
+      "statement": "Nenhum contrato candidato autoriza implementação, consulta autenticada, wallet, signing, transação, claim, egress ou mudança de prioridade.",
+      "evidence_refs": [],
+      "independent_acceptance": "Ambos permanecem draft; a aceitação será aplicada por revisor independente aos bytes futuros aprovados, sem certificar estes rascunhos.",
+      "verification_case_ids": [
+        "C-CASE-1"
+      ],
+      "status": "draft_not_approved"
+    }
+  ],
+  "report_contract_proposal": {
+    "mode": "local_offline_draft",
+    "input_origin": {
+      "allowed_for_proposed_verification": [
+        "synthetic_fixture",
+        "published_document_example"
+      ],
+      "must_preserve": [
+        "input_file_digest",
+        "source_id",
+        "source_http_body_sha256",
+        "method_path",
+        "request_selector_raw",
+        "response_raw",
+        "json_locator",
+        "local_import_clock"
+      ],
+      "live_input_authorized": false
+    },
+    "observation_identity": "source_id + local file/payload digest + JSON locator identifies a local observation only",
+    "report_states": [
+      "documentary_or_synthetic",
+      "unverified",
+      "partial",
+      "contract_conflict",
+      "error",
+      "not_qualified"
+    ],
+    "unknown_semantics": {
+      "value": null,
+      "state": "unknown",
+      "reason_required": true
+    },
+    "economic_outputs": {
+      "portfolio_total": null,
+      "realized_pnl": null,
+      "external_capital_flows": null,
+      "total_costs": null,
+      "realized_net_return": null,
+      "financial_qualified": false,
+      "live_qualified": false
+    },
+    "source_clocks_and_local_clocks_separate": true,
+    "source_schema_aliasing": false,
+    "economic_deduplication": false,
+    "request_or_response_example_is_live_observation": false
+  },
+  "candidates": [
+    {
+      "id": "V",
+      "title": "Observações de valuation/saldos",
+      "status": "draft_not_approved",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4"
+      ],
+      "scope": "S1 balances plus optional independent S3/S4 provider-value/position groups; no combined portfolio or price-times-unqualified-amount calculation.",
+      "request_contracts": [
+        {
+          "source_id": "S1",
+          "method": "GET",
+          "path": "/api/v6/dex/balance/all-token-balances-by-address",
+          "fields": [
+            {
+              "name": "address",
+              "documented_type": "String",
+              "required": true
+            },
+            {
+              "name": "chains",
+              "documented_type": "Array in table; CSV in description",
+              "required": true,
+              "documented_max_chains": 50,
+              "resolution": null
+            },
+            {
+              "name": "excludeRiskToken",
+              "documented_type": "String",
+              "required": false,
+              "published_values": {
+                "0": "filter; published default",
+                "1": "do not filter"
+              },
+              "omission_distinct_from_observed_default": true
+            }
+          ],
+          "evidence_ref": {
+            "source_id": "S1",
+            "locator": "request"
+          }
+        },
+        {
+          "source_id": "S3",
+          "method": "POST",
+          "path": "/api/v6/defi/user/asset/platform/list",
+          "body_shape": "object",
+          "fields": [
+            "walletAddressList Array required",
+            "walletAddressList.chainIndex String required",
+            "walletAddressList.walletAddress String required",
+            "walletAddressList.pubKey String optional for BTC",
+            "tag String optional"
+          ],
+          "documented_constraint": "one address per chain",
+          "evidence_ref": {
+            "source_id": "S3",
+            "locator": "purpose_and_request"
+          }
+        },
+        {
+          "source_id": "S4",
+          "method": "POST",
+          "path": "/api/v6/defi/user/asset/platform/detail",
+          "body_shape": "object",
+          "fields": [
+            "walletAddressList as S3",
+            "platformList Array required",
+            "platformList.chainIndex String optional in table",
+            "platformList.analysisPlatformId String optional in table"
+          ],
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "request"
+          }
+        }
+      ],
+      "published_example_envelopes": [
+        {
+          "source_id": "S1",
+          "code_type": "String",
+          "code_example": "0",
+          "data_shape": "Array containing tokenAssets",
+          "authority": "published_example"
+        },
+        {
+          "source_id": "S3",
+          "code_type": "Number",
+          "code_example": 0,
+          "data_shape": "object containing walletIdPlatformList, updateAt, assetStatus",
+          "authority": "published_example"
+        },
+        {
+          "source_id": "S4",
+          "code_type": "String",
+          "code_example": "0",
+          "data_shape": "Array containing walletIdPlatformDetailList and analysisPlatformId",
+          "authority": "published_example"
+        }
+      ],
+      "field_groups": [
+        {
+          "documented_type": "String",
+          "unit": "identifier",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S1",
+            "locator": "response"
+          },
+          "limitations": [
+            "Preserve exact raw values; no canonical chain/address case conversion or economic association."
+          ],
+          "field_names": [
+            "S1.chainIndex",
+            "S1.tokenContractAddress",
+            "S1.address"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "String",
+          "unit": "label",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S1",
+            "locator": "response"
+          },
+          "limitations": [
+            "Not a unique asset key."
+          ],
+          "field_names": [
+            "S1.symbol"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "String",
+          "unit": null,
+          "certainty": "field_published_quantity_scale_unknown",
+          "evidence_ref": {
+            "source_id": "S1",
+            "locator": "response"
+          },
+          "limitations": [
+            "rawBalance may be empty on unsupported chains.",
+            "No decimals or formal scale relation in this source."
+          ],
+          "field_names": [
+            "S1.balance",
+            "S1.rawBalance"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "String",
+          "unit": "USD per token",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S1",
+            "locator": "response"
+          },
+          "limitations": [
+            "Price-as-of time unknown; quantity scale does not follow from the unit price."
+          ],
+          "field_names": [
+            "S1.tokenPrice"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "Boolean",
+          "unit": "provider_risk_flag",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S1",
+            "locator": "response"
+          },
+          "limitations": [
+            "Honeypot filtering coverage ETH/BSC/SOL/BASE; not complete personal risk/eligibility."
+          ],
+          "field_names": [
+            "S1.isRiskToken"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "identifier",
+          "certainty": "fields_published_association_unknown",
+          "evidence_ref": {
+            "source_id": "S3",
+            "locator": "response"
+          },
+          "limitations": [
+            "No wallet/account linkage to the selector inferred."
+          ],
+          "field_names": [
+            "S3.walletId",
+            "S3.accountId",
+            "S3.analysisPlatformId",
+            "S3.chainIndex"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "count",
+          "certainty": "published_field_type_not_pinned",
+          "evidence_ref": {
+            "source_id": "S3",
+            "locator": "response"
+          },
+          "limitations": [
+            "No proof of protocol completeness."
+          ],
+          "field_names": [
+            "S3.investmentCount"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "USD",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S3",
+            "locator": "response"
+          },
+          "limitations": [
+            "Protocol and wallet aggregate levels kept separate; no sum with wallet/position details."
+          ],
+          "field_names": [
+            "S3.currencyAmount",
+            "S3.totalAssets"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "String in table; Number in example",
+          "unit": "milliseconds",
+          "certainty": "published_unit_type_conflict",
+          "evidence_ref": {
+            "source_id": "S3",
+            "locator": "response"
+          },
+          "limitations": [
+            "No staleness SLA; original type preserved."
+          ],
+          "field_names": [
+            "S3.updateAt"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "provider_state_enum",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S3",
+            "locator": "response"
+          },
+          "limitations": [
+            "1=updated, 2=updating; neither certifies freshness or completeness."
+          ],
+          "field_names": [
+            "S3.assetStatus"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "Mixed/unpinned; investmentId and aggregateProductId String in table/Number in example",
+          "unit": "identifier",
+          "certainty": "published_with_type_conflicts",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "identity_units"
+          },
+          "limitations": [
+            "NFT tokenId is not alone a cross-chain unique position key; no auto association."
+          ],
+          "field_names": [
+            "S4.chainIndex",
+            "S4.analysisPlatformId",
+            "S4.investmentId",
+            "S4.aggregateProductId",
+            "S4.specialPositionAssetKey",
+            "S4.tokenId"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "USD",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "identity_units"
+          },
+          "limitations": [
+            "Keep totalAssert spelling.",
+            "Earnings/yield realization, acquisition basis and all-cost deductions are unknown."
+          ],
+          "field_names": [
+            "S4.totalAssert",
+            "S4.totalValue",
+            "S4.yieldYesterday",
+            "S4.totalEarnings"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": null,
+          "certainty": "field_published_currency_semantics_not_uniform",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "identity_units"
+          },
+          "limitations": [
+            "currentPrice may be a token-to-token ratio; rewards currencyAmount currency not explicit."
+          ],
+          "field_names": [
+            "S4.currentPrice",
+            "S4.availableRewards.currencyAmount"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "seconds",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "identity_units"
+          },
+          "limitations": [
+            "Settlement clock is not a valuation/as-of clock."
+          ],
+          "field_names": [
+            "S4.settlementTime"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": null,
+          "certainty": "field_published_unit_unknown",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "identity_units"
+          },
+          "limitations": [],
+          "field_names": [
+            "S4.maturityTime"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "Examples only; string amount/address and numeric precision shown",
+          "unit": null,
+          "certainty": "published_example_not_normative_quantity_scale",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "example_only_token_metadata"
+          },
+          "limitations": [
+            "No quantity scaling or full token-item schema inferred from examples."
+          ],
+          "field_names": [
+            "S4.coinAmount",
+            "S4.tokenPrecision",
+            "S4.tokenAddress"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": null,
+          "certainty": "field_published_not_total_cost",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "identity_units"
+          },
+          "limitations": [
+            "Refers to Uni V3; total cost unknown."
+          ],
+          "field_names": [
+            "S4.feeRate"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "provider_capability_flag",
+          "certainty": "published_field_group_not_personal_eligibility",
+          "evidence_ref": {
+            "source_id": "S4",
+            "locator": "identity_units"
+          },
+          "limitations": [
+            "No personal claim/investment eligibility inferred."
+          ],
+          "field_names": [],
+          "exact_nested_json_paths_pinned": false,
+          "documented_group_description": "Support/claim flags mentioned in approved research; exact field names not pinned by that research."
+        }
+      ],
+      "identity": {
+        "economic_asset_key": null,
+        "economic_position_key": null,
+        "association_status": "unverified",
+        "local_observation_key": "source+payload_digest+json_locator"
+      },
+      "units": {
+        "quantity_scale": null,
+        "token_price_s1": "USD per token",
+        "provider_values_s3_s4": "USD only for explicitly named fields",
+        "net_return": null
+      },
+      "clocks": {
+        "local_import_at": "local clock, not source freshness",
+        "price_as_of": null,
+        "s3_update_at": "milliseconds with table/example type discrepancy",
+        "s4_settlement_time": "seconds",
+        "s4_maturity_time": null,
+        "freshness_policy": null
+      },
+      "coverage": {
+        "requested_chain_cap_s1": 50,
+        "risk_selection_must_be_recorded": true,
+        "historical_completeness": null,
+        "protocol_completeness": null,
+        "pagination_s1_s3_s4": null,
+        "provider_example_partial": true
+      },
+      "deduplication": {
+        "economic_rule": null,
+        "allowed_local_repeat_annotation": "identical input/payload digest is transport_repeat; retain provenance and do not infer economic duplicates",
+        "prohibited": [
+          "wallet_plus_defi_sum",
+          "protocol_plus_position_sum",
+          "symbol_only_join",
+          "walletId_accountId_association_by_assumption"
+        ]
+      },
+      "requirements": [
+        {
+          "id": "V1",
+          "statement": "Aceitar somente observações documentadas de S1; S3/S4 são grupos opcionais separados, nunca ampliações silenciosas de saldo da carteira.",
+          "evidence_refs": [
+            {
+              "source_id": "S1",
+              "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+              "locator": "response"
+            },
+            {
+              "source_id": "S3",
+              "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+              "locator": "response"
+            },
+            {
+              "source_id": "S4",
+              "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+              "locator": "identity_units"
+            }
+          ],
+          "independent_acceptance": "Cada grupo identifica endpoint, seleção e variante de envelope; ausencia de DeFi não significa zero posições.",
+          "verification_case_ids": [
+            "V-CASE-1"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "V2",
+          "statement": "Registrar request e response raw. S1 chains mantém discrepância Array/CSV e seleção de excludeRiskToken; S3/S4 wallet/protocolo/rede não recebem associação automática.",
+          "evidence_refs": [
+            {
+              "source_id": "S1",
+              "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+              "locator": "request"
+            },
+            {
+              "source_id": "S3",
+              "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+              "locator": "purpose_and_request"
+            },
+            {
+              "source_id": "S4",
+              "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+              "locator": "request"
+            }
+          ],
+          "independent_acceptance": "Seletores omitidos e publicados defaults são estados distintos; associação divergente/incompleta é unverified e impede união dos grupos.",
+          "verification_case_ids": [
+            "V-CASE-2"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "V3",
+          "statement": "Mostrar balance/rawBalance/coinAmount como quantidades raw de escala desconhecida; tokenPrecision exemplar não resolve a escala.",
+          "evidence_refs": [
+            {
+              "source_id": "S1",
+              "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+              "locator": "response"
+            },
+            {
+              "source_id": "S4",
+              "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+              "locator": "example_only_token_metadata"
+            }
+          ],
+          "independent_acceptance": "Nenhum balance*tokenPrice, rawBalance/10^decimals ou coinAmount escalado é calculado. rawBalance vazio não vira 0.",
+          "verification_case_ids": [
+            "V-CASE-3"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "V4",
+          "statement": "Mostrar tokenPrice S1 e valores explícitos USD S3/S4 como observações independentes do provedor; preservar spelling totalAssert. currentPrice, rewards.currencyAmount e earnings não ganham semântica econômica adicional.",
+          "evidence_refs": [
+            {
+              "source_id": "S1",
+              "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+              "locator": "response"
+            },
+            {
+              "source_id": "S3",
+              "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+              "locator": "response"
+            },
+            {
+              "source_id": "S4",
+              "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+              "locator": "identity_units"
+            }
+          ],
+          "independent_acceptance": "Valores USD não são somados entre níveis agregados/detalhados nem entre carteira/DeFi; currentPrice não recebe USD e totalEarnings não vira líquido realizado.",
+          "verification_case_ids": [
+            "V-CASE-4"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "V5",
+          "statement": "Separar clocks: ausência de price_as_of em S1; updateAt ms e assetStatus 1/2 em S3; settlementTime segundos e maturityTime desconhecido em S4.",
+          "evidence_refs": [
+            {
+              "source_id": "S1",
+              "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+              "locator": "response"
+            },
+            {
+              "source_id": "S3",
+              "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+              "locator": "response"
+            },
+            {
+              "source_id": "S4",
+              "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+              "locator": "identity_units"
+            }
+          ],
+          "independent_acceptance": "updated não implica fresh; tipo String/número de updateAt e diferenças s/ms permanecem diagnósticos. Sem SLA ou threshold aprovado, freshness=unknown.",
+          "verification_case_ids": [
+            "V-CASE-5"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "V6",
+          "statement": "Cobertura de ativos/protocolos e deduplicação entre wallet/DeFi permanecem desconhecidas; valores agrupados não constituem patrimônio total.",
+          "evidence_refs": [
+            {
+              "source_id": "S1",
+              "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+              "locator": "response"
+            },
+            {
+              "source_id": "S3",
+              "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+              "locator": "examples"
+            },
+            {
+              "source_id": "S4",
+              "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+              "locator": "identity_units"
+            }
+          ],
+          "independent_acceptance": "Filtro de risco, grupo ausente ou exemplo parcial impedem alegação de completude; queda de saldo/valuation não é perda realizada.",
+          "verification_case_ids": [
+            "V-CASE-6"
+          ],
+          "status": "draft_not_approved"
+        }
+      ],
+      "observable_report": "Separate source-bound balance/provider-USD groups, raw identity/quantity/unit/time fields and uncertainties, including partial/error/updating/type-conflict cases. No combined total or derived return.",
+      "utility_for_net_return": "Potential state/valuation observations, not acquisition basis, capital flows, realized proceeds or all costs.",
+      "dependencies": [
+        "Quantity scales/decimals and price-as-of clock",
+        "Wallet/token/protocol/position association and overlap",
+        "Coverage/completeness and staleness policy",
+        "Economic boundary, capital flows, realization and all costs before net return",
+        "Auth/access/tier/quota/cost unknown; no authenticated implementation authorized"
+      ],
+      "demonstrable_change_surface": "Only these two draft documents. Possible future parser/report/fixture contracts are proposed responsibilities; no existing code seam, command, path or file count was inspected or claimed."
+    },
+    {
+      "id": "T",
+      "title": "Histórico parcial de transações",
+      "status": "draft_not_approved",
+      "source_ids": [
+        "S2"
+      ],
+      "scope": "Source-bound page/event observations for a published six-month window; no full economic ledger.",
+      "request_contract": {
+        "method": "GET",
+        "path": "/api/v6/dex/post-transaction/transactions-by-address",
+        "fields": [
+          {
+            "name": "address",
+            "documented_type": "String",
+            "required": true,
+            "example_conflict": "addresses"
+          },
+          {
+            "name": "chains",
+            "documented_type": "String CSV",
+            "required": false,
+            "documented_max_chains": 50
+          },
+          {
+            "name": "tokenContractAddress",
+            "documented_type": "String",
+            "required": false,
+            "empty_string_meaning": "native currency",
+            "omitted_meaning": "all"
+          },
+          {
+            "name": "begin",
+            "documented_type": "String",
+            "unit": "Unix milliseconds",
+            "required": false
+          },
+          {
+            "name": "end",
+            "documented_type": "String",
+            "unit": "Unix milliseconds",
+            "required": false
+          },
+          {
+            "name": "cursor",
+            "documented_type": "String",
+            "required": false,
+            "completion_semantics": null
+          },
+          {
+            "name": "limit",
+            "documented_type": "String",
+            "required": false,
+            "documented_default": 20,
+            "documented_max_single_chain": 20,
+            "documented_max_multi_chain": 100
+          }
+        ],
+        "evidence_ref": {
+          "source_id": "S2",
+          "locator": "request"
+        }
+      },
+      "published_example_envelope": {
+        "code_type": "String",
+        "code_example": "0",
+        "data_shape": "Array containing cursor and transactionList",
+        "table_field": "transactions",
+        "resolution": null,
+        "authority": "published_example_and_response_table_conflict",
+        "evidence_ref": {
+          "source_id": "S2",
+          "locator": "discrepancies"
+        }
+      },
+      "field_groups": [
+        {
+          "documented_type": null,
+          "unit": "transaction_anchor",
+          "certainty": "fields_published_movement_uniqueness_unknown",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [
+            "Pair can distinguish raw transaction references, not uniquely identify all economic movements."
+          ],
+          "field_names": [
+            "S2.chainIndex",
+            "S2.txHash"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "identifier_or_label",
+          "certainty": "published_fields_identity_normalization_unknown",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [
+            "No chain/address normalization or symbol-only join."
+          ],
+          "field_names": [
+            "S2.tokenContractAddress",
+            "S2.symbol",
+            "S2.from.address",
+            "S2.to.address"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": null,
+          "certainty": "published_fields_quantity_units_unknown",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [],
+          "field_names": [
+            "S2.amount",
+            "S2.from.amount",
+            "S2.to.amount"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": null,
+          "certainty": "published_fee_field_currency_payer_unknown",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [
+            "Empty fee is not zero; failure can have unknown costs."
+          ],
+          "field_names": [
+            "S2.txFee"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "Unix milliseconds",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [
+            "Missing/invalid clock remains unverified; no magnitude heuristic."
+          ],
+          "field_names": [
+            "S2.txTime"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "String",
+          "unit": "technical_transfer_enum",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [
+            "0 external native-currency transfer;1 internal contract transfer;2 token.",
+            "Technical external is not economic external capital."
+          ],
+          "field_names": [
+            "S2.itype"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "provider_status_enum",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [
+            "success/fail/pending preserved; unknown values diagnostic.",
+            "Success does not identify acquisition/realization or all fees."
+          ],
+          "field_names": [
+            "S2.txStatus"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "technical_metadata",
+          "certainty": "published",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [
+            "Not unique movement identity."
+          ],
+          "field_names": [
+            "S2.methodId",
+            "S2.nonce"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": null,
+          "unit": "pagination_marker",
+          "certainty": "published_field_completion_unknown",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "response"
+          },
+          "limitations": [],
+          "field_names": [
+            "S2.cursor"
+          ],
+          "exact_nested_json_paths_pinned": false
+        },
+        {
+          "documented_type": "table array versus example array",
+          "unit": "response_variant",
+          "certainty": "published_contract_conflict",
+          "evidence_ref": {
+            "source_id": "S2",
+            "locator": "discrepancies"
+          },
+          "limitations": [
+            "Never silently alias or concatenate."
+          ],
+          "field_names": [
+            "S2.transactions",
+            "S2.transactionList"
+          ],
+          "exact_nested_json_paths_pinned": false
+        }
+      ],
+      "identity": {
+        "economic_movement_key": null,
+        "transaction_anchor": "raw chainIndex + raw txHash; not movement identity",
+        "asset_key": null,
+        "wealth_boundary": null,
+        "local_observation_key": "source+page_payload_digest+variant+json_locator"
+      },
+      "units": {
+        "amount": null,
+        "from_to_amount": null,
+        "tx_fee_currency": null,
+        "tx_fee_scale": null,
+        "fee_payer": null,
+        "usd_conversion": null
+      },
+      "clocks": {
+        "query_begin_end": "Unix milliseconds",
+        "tx_time": "Unix milliseconds",
+        "local_import_at": "local clock distinct from event/source freshness",
+        "provider_as_of": null,
+        "freshness_policy": null
+      },
+      "coverage": {
+        "documented_history_window": "6 months",
+        "documented_order": "descending",
+        "default_records": 20,
+        "single_chain_max_records": 20,
+        "multi_chain_max_records": 100,
+        "max_requested_chains": 50,
+        "cursor_completion": null,
+        "economic_coverage": "partial_unknown",
+        "older_history": "not qualified by this source"
+      },
+      "deduplication": {
+        "economic_rule": null,
+        "tx_hash_only_prohibited": true,
+        "chain_tx_hash_not_sufficient_for_movement": true,
+        "allowed_local_repeat_annotation": "transport_repeat only; no economic row deletion",
+        "page_repeat_handling": "diagnostic; no complete-assembly claim"
+      },
+      "requirements": [
+        {
+          "id": "T1",
+          "statement": "Representar S2 como histórico parcial de observações/páginas com method/path, seletores, cursor e limite documentados; não como ledger econômico completo.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "coverage"
+            },
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "request"
+            }
+          ],
+          "independent_acceptance": "Registrar seis meses, ordem descendente, padrão20/máximo20 single-chain ou100 multi-chain como limites publicados; não como quantidades obtidas.",
+          "verification_case_ids": [
+            "T-CASE-1"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "T2",
+          "statement": "Não resolver address/addresses nem transactions/transactionList por suposição; listar variantes explicitamente com contract_conflict, sem alias/concatenação/canonicalização silenciosa.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "discrepancies"
+            },
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "request"
+            },
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "response"
+            }
+          ],
+          "independent_acceptance": "Variante table_transactions e example_transactionList têm origem separada; duas listas não são fundidas; query_example addresses não recebe validade de address.",
+          "verification_case_ids": [
+            "T-CASE-2"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "T3",
+          "statement": "Manter chainIndex+txHash apenas como âncora da transação; tokenContractAddress, from/to e nonce não fornecem ID único do movimento documentado.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "response"
+            }
+          ],
+          "independent_acceptance": "Mesmo txHash em rede distinta ou vários movimentos da mesma transação não são deduplicados economicamente. Repetição idêntica de arquivo/payload é só transport_repeat, preservada.",
+          "verification_case_ids": [
+            "T-CASE-3"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "T4",
+          "statement": "Mostrar amount, from/to.amount e txFee como valores raw com unidade/currency/payer desconhecidos.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "response"
+            }
+          ],
+          "independent_acceptance": "Taxa vazia, omitida ou inválida não vira zero; não há soma de fees/quantidades nem conversão USD.",
+          "verification_case_ids": [
+            "T-CASE-4"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "T5",
+          "statement": "Interpretar somente begin/end/txTime como clocks Unix ms documentados; relógio local de importação não amplia precisão/frescor/completude.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "request"
+            },
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "response"
+            }
+          ],
+          "independent_acceptance": "Clock ausente/inválido gera time_unverified; não se infere unidade por magnitude. Critério de frescor sem política aprovada fica unknown.",
+          "verification_case_ids": [
+            "T-CASE-5"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "T6",
+          "statement": "Preservar txStatus success/fail/pending e valores desconhecidos; itype 0/1/2 é classificação técnica, sem reclassificar capital externo ou depósitos/saques.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "response"
+            }
+          ],
+          "independent_acceptance": "Fail/pending não entram em movimento realizado; fail não implica fee zero. Transferência entre endereços próprios não é aporte/saque sem fronteira verificável.",
+          "verification_case_ids": [
+            "T-CASE-6"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "T7",
+          "statement": "Manter cada cursor/página, erros, repetição e truncamento; conclusão da paginação e cobertura temporal/econômica não são inferidas do cursor vazio.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "coverage"
+            },
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "request"
+            },
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "response"
+            }
+          ],
+          "independent_acceptance": "Cursor repetido/erro de página produz diagnóstico e bloqueia alegação de assembly completo; limite/última página não estabelecem ledger integral.",
+          "verification_case_ids": [
+            "T-CASE-7"
+          ],
+          "status": "draft_not_approved"
+        },
+        {
+          "id": "T8",
+          "statement": "Não produzir reconciliação, custo-base, depósitos/saques econômicos, PnL ou retorno líquido a partir destes eventos.",
+          "evidence_refs": [
+            {
+              "source_id": "S2",
+              "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+              "locator": "response"
+            }
+          ],
+          "independent_acceptance": "Sem fronteira patrimonial, unidades, unicidade, aquisições/realizações, cobertura e custos totais, todo resultado econômico correspondente é null.",
+          "verification_case_ids": [
+            "T-CASE-4",
+            "T-CASE-6",
+            "T-CASE-7"
+          ],
+          "status": "draft_not_approved"
+        }
+      ],
+      "observable_report": "Pages and response variants with raw events, technical status/types, source-selected interval/cursors/caps, units/identity unknowns and errors; no economic ledger totals or realized return.",
+      "utility_for_net_return": "Potential evidence of event time and raw transfer references, but economic amount/cost/flow/realization classification not established.",
+      "dependencies": [
+        "Resolve address/addresses and transactions/transactionList with explicit contract evidence",
+        "Movement uniqueness, token identity and exact amount/fee units/payer",
+        "Cursor semantics and temporal/economic coverage including acquisition history",
+        "Defined wealth boundary and classification of own transfers versus external capital",
+        "Realized proceeds, acquisition basis and all costs",
+        "Auth/access/tier/quota/cost unknown; no authenticated implementation authorized"
+      ],
+      "demonstrable_change_surface": "Only these two draft documents. Possible future parser/page-observation/report/fixtures are responsibilities, not asserted existing code/file counts."
+    }
+  ],
+  "verification_cases": [
+    {
+      "id": "C-CASE-1",
+      "candidate": "both",
+      "given": "Entrada documental ou fixture local sintética com origem/digest e clock de importação.",
+      "expected": "Report mostra origem, sintético/documental e clocks distintos; nenhum acesso/feed live observado é inferido.",
+      "status": "not_executed"
+    },
+    {
+      "id": "C-CASE-2",
+      "candidate": "both",
+      "given": "Quantidade sem unidade, valor vazio, tipo discrepante ou envelope de erro.",
+      "expected": "Raw e diagnósticos preservados; derivação econômica null; nenhum zero, scaling ou successful response inventado.",
+      "status": "not_executed"
+    },
+    {
+      "id": "C-CASE-3",
+      "candidate": "both",
+      "given": "Duas observações com rótulo coincidente em fontes/níveis/redes distintos.",
+      "expected": "Sem agregação/deduplicação econômica ou retorno pessoal; relação permanece unverified.",
+      "status": "not_executed"
+    },
+    {
+      "id": "V-CASE-1",
+      "candidate": "V",
+      "given": "S1 tokenAssets e S3/S4 opcionais; S3 exemplo code numérico/data objeto e S4 code string/data array.",
+      "expected": "Grupos e envelope/type variants separados; ausência de grupo não implica zero.",
+      "status": "not_executed"
+    },
+    {
+      "id": "V-CASE-2",
+      "candidate": "V",
+      "given": "chains Array versus CSV; filtro omitido versus0/1; walletId/accountId sem vínculo explícito ao seletor.",
+      "expected": "Divergência/seleção registrada; default documentado distinto de estado observado; associação unverified.",
+      "status": "not_executed"
+    },
+    {
+      "id": "V-CASE-3",
+      "candidate": "V",
+      "given": "balance/rawBalance strings; rawBalance vazio; coinAmount/tokenPrecision só exemplares.",
+      "expected": "Valores raw com escala unknown; nenhum produto saldo/preço ou conversão de precisão.",
+      "status": "not_executed"
+    },
+    {
+      "id": "V-CASE-4",
+      "candidate": "V",
+      "given": "tokenPrice USD, currencyAmount/totalAssets USD e totalAssert/totalValue USD ao lado de currentPrice/earnings/rewards.",
+      "expected": "Somente USD explícito rotulado; níveis separados; sem total combinado/realizado líquido; spelling preservado.",
+      "status": "not_executed"
+    },
+    {
+      "id": "V-CASE-5",
+      "candidate": "V",
+      "given": "updateAt String ou número, assetStatus1/2, settlementTime segundos, maturityTime sem unidade.",
+      "expected": "Clocks/origens separados; updating visível; freshness unknown; nenhum cast ou substituição de clock resolve discrepância.",
+      "status": "not_executed"
+    },
+    {
+      "id": "V-CASE-6",
+      "candidate": "V",
+      "given": "Resposta filtrada por risco; DeFi parcial ou duas observações temporais com valores diferentes.",
+      "expected": "Cobertura unknown/partial explicitada; sem patrimônio completo, fluxo de capital ou perda/lucro realizado deduzidos.",
+      "status": "not_executed"
+    },
+    {
+      "id": "T-CASE-1",
+      "candidate": "T",
+      "given": "Seleção uma rede ou múltiplas; intervalos/cursor/limit presente ou ausente.",
+      "expected": "Limites documentados20/100 e seis meses preservados separadamente de observações; cobertura apenas parcial.",
+      "status": "not_executed"
+    },
+    {
+      "id": "T-CASE-2",
+      "candidate": "T",
+      "given": "transactions, transactionList, ambas ou nenhuma; request exemplar addresses.",
+      "expected": "Variante/diagnóstico contract_conflict explícitos; arrays nunca fundidos; nenhuma decisão de contrato live.",
+      "status": "not_executed"
+    },
+    {
+      "id": "T-CASE-3",
+      "candidate": "T",
+      "given": "Mesmo txHash em redes distintas; vários tokens/from/to na mesma tx; páginas repetidas.",
+      "expected": "Nenhum movimento econômico eliminado por txHash; transport_repeat não certifica duplicata econômica.",
+      "status": "not_executed"
+    },
+    {
+      "id": "T-CASE-4",
+      "candidate": "T",
+      "given": "amount sem escala e txFee vazio/omitido/desconhecido.",
+      "expected": "amount/fee raw, units/currency/payer unknown; total_costs e retorno null, não zero.",
+      "status": "not_executed"
+    },
+    {
+      "id": "T-CASE-5",
+      "candidate": "T",
+      "given": "txTime válido, ausente ou inválido; begin/end Unix ms; clock local posterior.",
+      "expected": "Somente unidade publicada ms; time_unverified quando necessário; sem promessa de frescor por relógio local.",
+      "status": "not_executed"
+    },
+    {
+      "id": "T-CASE-6",
+      "candidate": "T",
+      "given": "success/fail/pending/unknown e itype0/1/2; remetente/destinatário sem fronteira econômica.",
+      "expected": "Status preservado; fail/pending não realizado; capital externo/depósito/saque unknown, taxas não zeradas.",
+      "status": "not_executed"
+    },
+    {
+      "id": "T-CASE-7",
+      "candidate": "T",
+      "given": "Cursor vazio/repetido, resposta no cap ou falha em página posterior.",
+      "expected": "Páginas e erro visíveis; coverage/assembly não ganham completude; nenhum ledger ou retorno calculado.",
+      "status": "not_executed"
+    }
+  ],
+  "verification_status": "No project code or tests executed; these are proposed independent checks, not passing evidence.",
+  "non_goals": [
+    "Implementation or new web/data API access",
+    "Choosing V versus T or a financial priority",
+    "Balance-times-price profit or combined portfolio",
+    "Economic reconciliation, complete transaction ledger, acquisition basis or realized net return",
+    "Wallet connection, signing, trades, claims, personal eligibility",
+    "Auth/quota/fees inference or live/financial qualification"
+  ],
+  "missing_facts_before_economic_use": [
+    "Quantity/fee scales, currencies and payer",
+    "Asset/position/movement identity and wallet association",
+    "Valuation clocks, staleness policy and complete coverage",
+    "Capital boundary, deposits/withdrawals/own transfers, acquisition basis and realizations",
+    "Total transaction/protocol/service costs",
+    "Account access/auth/tier/quota/current pricing"
+  ],
+  "source_hashes_before": [
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\okx-portfolio-v1\\RESEARCH.md",
+      "sha256": "3e15783a382e34a6017378064d91bcb4301e74a7eeaeac042c01a2d80092ca13"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\okx-portfolio-v1\\SOURCES.json",
+      "sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9"
+    }
+  ],
+  "source_hashes_after": [
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\okx-portfolio-v1\\RESEARCH.md",
+      "sha256": "3e15783a382e34a6017378064d91bcb4301e74a7eeaeac042c01a2d80092ca13"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\okx-portfolio-v1\\SOURCES.json",
+      "sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9"
+    }
+  ],
+  "source_hash_stability": {
+    "unchanged": true,
+    "before_at_utc": "2026-10-10T17:59:07.245230+00:00",
+    "after_at_utc": "2026-10-10T18:08:37.748383+00:00",
+    "scope": "Only the two approved local input files; no new HTTP retrieval or project-wide certification"
+  },
+  "selection": {
+    "choice": null,
+    "reason": "Comparison only; neither candidate approved or selected",
+    "approval_source": null,
+    "human_response": null,
+    "advice_is_authority": false
+  },
+  "limits": "Prepared from fixed approved research only; published examples are not live observations. This author does not independently approve these candidate requirements.",
+  "workflow_advice": {
+    "receipt_id": "9a7bb31f-4e10-446a-bdde-fa253d2b8532",
+    "choice": "compare_observation_contracts",
+    "confidence": 0.91,
+    "origin": "parent-provided receipt metadata; receipt not independently reread by this preparer",
+    "human_response": false,
+    "technical_preparation_only": true,
+    "priority_selected": false,
+    "authority": false
+  },
+  "paired_markdown": {
+    "path": "C:/Users/gabri/.codex/tmp/okx-portfolio-contracts-20261010-01a1221e/CONTRACT-COMPARISON.md",
+    "sha256": "7b1998956a0f29e511b2ab75a0099c7be5589e56b20674399f677f6574558ea0",
+    "bytes": 11956,
+    "words": 1202
+  },
+  "preparation_completed_at_utc": "2026-10-10T18:08:37.748383+00:00",
+  "requirements_kind": "proposed_engineering_behavior_not_provider_norm",
+  "evidence_reference_resolution": "All evidence_refs/evidence_ref resolve source_id+locator through public_evidence; that entry fixes URL, archived HTTP SHA256, exact locator and local SOURCES.json SHA256. Requirement references additionally pin the HTTP hash. Literal excerpts are inherited from that fixed archive, not newly retrieved."
+}
+

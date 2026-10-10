@@ -1,21 +1,95 @@
-/* FlowChart: the hero. A calm, responsive price flow drawn by hand in SVG. */
-
 .wrap {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
   width: 100%;
   height: 100%;
-  min-height: 0;
-  min-width: 0;
-  display: flex;
   flex-direction: column;
+  gap: 8px;
+}
+
+.toolbar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.eyebrow {
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.title {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.windows {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+.windowButton,
+.inspectButton {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--control-border);
+  border-radius: 10px;
+  background: var(--raised);
+  color: var(--secondary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.windowButton[aria-pressed="true"] {
+  border-color: var(--cyan);
+  background: var(--cyan);
+  color: var(--canvas);
+}
+
+.windowButton:hover,
+.inspectButton:hover:not(:disabled) {
+  border-color: var(--cyan);
+  background: var(--raised-hover);
+  color: var(--ink);
+}
+
+.windowButton[aria-pressed="true"]:hover {
+  background: #83ebf7;
+  color: var(--canvas);
+}
+
+.availability {
+  min-height: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
 .panel {
   position: relative;
+  min-width: 0;
+  min-height: 300px;
   flex: 1;
-  min-height: 0;
-  background: var(--panel);
-  border-radius: 20px;
   overflow: hidden;
+  border: 1px solid var(--divider);
+  border-radius: 18px;
+  background: var(--panel);
+  touch-action: pan-y;
 }
 
 .svg {
@@ -24,225 +98,220 @@
   display: block;
   width: 100%;
   height: 100%;
-}
-
-/* the sliding group: exactly one 10px step left per block */
-.slide {
-  transition: transform 0.3s linear;
+  cursor: crosshair;
 }
 
 .line {
   fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.6;
-  stroke-linejoin: round;
+  stroke: var(--cyan);
+  stroke-width: 2;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .grid {
-  stroke: #efede8;
+  stroke: var(--divider);
   stroke-width: 1;
 }
 
 .tick {
-  font: 400 10px var(--font-mono), monospace;
-  fill: var(--muted-2);
+  fill: var(--muted);
+  font: 500 12px var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
-}
-
-/* last-price tag: tracks the line end vertically */
-.tag {
-  transition: transform 0.3s linear;
-}
-
-.tagText {
-  font: 500 11px var(--font-mono), monospace;
-  font-variant-numeric: tabular-nums;
-  fill: #fff;
 }
 
 .guide {
-  stroke: var(--muted-2);
-  stroke-width: 1;
-  stroke-dasharray: 1 3;
-  stroke-linecap: round;
-  opacity: 0.7;
+  stroke: var(--gold);
+  stroke-width: 1.5;
 }
 
-/* soft halo behind the end dot (transform/opacity only) */
-.halo {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: halo 2.2s ease-out infinite;
-  pointer-events: none;
+.tagText {
+  fill: var(--canvas);
+  font: 600 12px var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
 }
 
-@keyframes halo {
-  0% { transform: scale(1); opacity: 0.3; }
-  70%, 100% { transform: scale(3); opacity: 0; }
-}
-
-/* hover crosshair */
 .cross {
-  stroke: var(--ink);
+  stroke: var(--secondary);
   stroke-width: 1;
-  opacity: 0.18;
+  stroke-dasharray: 4 4;
 }
 
 .crossDot {
-  fill: var(--bg);
-  stroke: var(--ink);
-  stroke-width: 1.6;
+  fill: var(--gold);
+  stroke: var(--canvas);
+  stroke-width: 2;
 }
 
-.tip {
-  fill: var(--bg);
-  stroke: var(--border-2);
-  stroke-width: 1;
-}
-
-.tipBlock {
-  font: 400 10px var(--font-mono), monospace;
-  font-variant-numeric: tabular-nums;
-  fill: var(--muted);
-}
-
-.tipPrice {
-  font: 500 14px var(--font-mono), monospace;
-  font-variant-numeric: tabular-nums;
-  fill: var(--ink);
-}
-
-.tipSide {
-  font: 500 11px var(--font-sans), sans-serif;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-}
-
-.tipMeta {
-  font: 400 10px var(--font-mono), monospace;
-  font-variant-numeric: tabular-nums;
-  fill: var(--muted-2);
-}
-
-.fade {
+.priceOverlay,
+.statusOverlay {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 64px;
-  background: linear-gradient(90deg, var(--panel), transparent);
+  top: 14px;
+  display: flex;
+  max-width: 52%;
+  flex-direction: column;
+  gap: 2px;
   pointer-events: none;
 }
 
-.tl {
-  position: absolute;
-  top: 18px;
-  left: 22px;
-  pointer-events: none;
+.priceOverlay {
+  left: 16px;
 }
 
-.tr {
-  position: absolute;
-  top: 18px;
-  right: 22px;
+.statusOverlay {
+  right: 16px;
+  align-items: flex-end;
   text-align: right;
-  pointer-events: none;
 }
 
-.price {
-  font: 500 34px var(--font-mono), monospace;
-  letter-spacing: -0.02em;
+.priceOverlay strong {
+  overflow-wrap: anywhere;
   color: var(--ink);
+  font: 600 26px/1.15 var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0.45; }
-  to { opacity: 1; }
+.priceOverlay span,
+.statusOverlay span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
-.sub {
+.action {
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.buy { color: var(--buy); }
+.sell { color: var(--sell); }
+.hold { color: var(--gold); }
+.late { color: var(--sell); }
+.waiting { color: var(--secondary); }
+
+.positionSummary {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   gap: 4px 12px;
-  margin-top: 6px;
-  font: 400 12px var(--font-sans), sans-serif;
+  color: var(--secondary);
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
-  color: var(--muted);
-  white-space: nowrap;
+  line-height: 1.45;
 }
 
-.tr .sub {
-  justify-content: flex-end;
+.positionSummary span {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
-
-.word {
-  font: 300 30px var(--font-sans), sans-serif;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  transition: color 0.3s;
-  white-space: nowrap;
-}
-
-/* one-shot trade cues: every animated node is keyed by block, so it plays once on mount */
-.ripple, .beadPop, .cellPop, .cellGlow {
-  transform-box: fill-box;
-  transform-origin: center;
-  pointer-events: none;
-}
-
-.ripple { vector-effect: non-scaling-stroke; animation: ripple 0.7s ease-out forwards; }
-@keyframes ripple { from { transform: scale(1); opacity: 0.9; } to { transform: scale(5.3); opacity: 0; } }
-
-.beadPop { animation: beadPop 0.3s ease-out; }
-@keyframes beadPop { from { transform: scale(1.8); } to { transform: scale(1); } }
-
-/* riser: joins the new strip cell to its bead on the line */
-.riser { stroke-width: 1; pointer-events: none; animation: riser 0.9s ease-out forwards; }
-@keyframes riser { from { opacity: 0.35; } to { opacity: 0; } }
-
-.cellPop { animation: cellPop 0.25s ease-out; }
-@keyframes cellPop { from { transform: scale(1.6); } to { transform: scale(1); } }
-
-.cellGlow { animation: cellGlow 0.6s ease-out forwards; }
-@keyframes cellGlow { from { transform: scale(1.4); opacity: 0.35; } to { transform: scale(2.3); opacity: 0; } }
-
-.wordPop { transform-origin: right center; animation: wordPop 0.25s ease-out; }
-@keyframes wordPop { from { transform: scale(1.06); } to { transform: scale(1); } }
 
 .empty {
   position: absolute;
   inset: 0;
-  display: flex;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--secondary);
+  font-size: 14px;
+  text-align: center;
+}
+
+.inspector {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: center;
-  font: 400 13px var(--font-sans), sans-serif;
-  color: var(--muted-2);
+  gap: 8px;
+}
+
+.inspectButton {
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.inspectButton:disabled {
+  cursor: not-allowed;
+  color: var(--muted);
+}
+
+.inspectSummary {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--secondary);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.inspectSummary strong {
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.inspectSummary span {
+  overflow-wrap: anywhere;
+}
+
+.windowButton:focus-visible,
+.inspectButton:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+@media (max-width: 899.98px) {
+  .panel {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 520px) {
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .windows {
+    width: 100%;
+  }
+
+  .windowButton {
+    flex: 1;
+  }
+
+  .priceOverlay,
+  .statusOverlay {
+    top: 12px;
+    max-width: 48%;
+  }
+
+  .priceOverlay { left: 12px; }
+  .statusOverlay { right: 12px; }
+
+  .priceOverlay strong { font-size: 21px; }
+  .action { font-size: 16px; }
+
+  .inspector {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .inspectSummary {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide,
-  .tag,
-  .word {
+  .windowButton,
+  .inspectButton {
     transition: none;
-  }
-  .halo,
-  .price,
-  .ripple,
-  .beadPop,
-  .riser,
-  .cellPop,
-  .cellGlow,
-  .wordPop {
-    animation: none;
-  }
-  .halo,
-  .ripple,
-  .riser,
-  .cellGlow {
-    opacity: 0;
   }
 }

@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "question": "Qual a finalidade oficial, interface e contrato público explícito do Alpha Radar da OKX Wallet?",
+  "researcher_id": "01a12585-fb20-73a2-8882-ba3fa62b8cdb",
+  "task_path": "/root/signals_contract",
+  "created_utc": "2026-10-10T17:37:25.832058Z",
+  "scope": {
+    "public_official_sources_only": true,
+    "implementation": false,
+    "priority_decision": false,
+    "financial_advice": false,
+    "live_feed_observed": false,
+    "account_access": null,
+    "personal_eligibility": null,
+    "model_configured": "GPT-6.1 Sol",
+    "reasoning_configured": "xhigh",
+    "effective_model": null,
+    "effective_tier": null,
+    "effective_sandbox": null
+  },
+  "counts": {
+    "search_queries": 2,
+    "search_tool_calls": 1,
+    "canonical_target_pages": 4,
+    "web_open_or_click_page_reads": 4,
+    "direct_http_logical_fetch_attempts": 9,
+    "direct_http_recorded_successful_article_bodies": 3,
+    "direct_http_recorded_rejections": 2,
+    "direct_http_unrecorded_results_due_to_output_encoding_failure": 4,
+    "redirect_hop_request_count": null,
+    "data_api_requests": 0,
+    "authenticated_requests": 0
+  },
+  "search_queries": [
+    {
+      "q": "site:okx.com \"Alpha Radar\""
+    },
+    {
+      "q": "site:web3.okx.com \"Alpha Radar\" API"
+    }
+  ],
+  "search_observed_at_utc": "2026-10-10T17:33:25Z",
+  "web_page_read_clock_utc": "2026-10-10T17:35:07Z",
+  "hash_method": "SHA-256 of exact HTTP response bytes read with Python standard-library urllib; HTTP bodies are dynamic retrieval observations, not immutable document versions. Raw HTML is not retained. Web extraction and direct HTTP are separate observations.",
+  "limits": [
+    "Two searches and four canonical targets only; scoped absence is not universal absence.",
+    "No product hydration, data endpoints, login, wallet, authenticated calls, private repository code or transactions inspected.",
+    "HTTP redirect for the Europe article yielded pt-br 404; its error-body hash must not be used as the article-content hash.",
+    "Product HTML is primarily a navigation shell; adjacent Tracker labels do not establish Alpha Radar field schema.",
+    "Generic Onchain OS integration methods do not establish a documented Alpha Radar API or CLI mapping.",
+    "Promotional smart-money, early-discovery and multi-chain claims do not establish accuracy, account entitlement, realized net returns or execution capability."
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://web3.okx.com/learn/onchain-weekly-22",
+      "title": "See The Signal, Make Your Move | OKX Wallet",
+      "published_at": "2025-08-14T15:17:28.038Z",
+      "updated_at": "2025-08-21T03:35:15.916Z",
+      "publication_date_evidence": "Public HTML JSON-LD datePublished/dateModified; web extraction lines46–48",
+      "retrieval": "2026-10-10T17:36:17.398647+00:00",
+      "retrieval_finished": "2026-10-10T17:36:17.956620+00:00",
+      "http_status": 200,
+      "final_url": "https://web3.okx.com/learn/onchain-weekly-22",
+      "canonical_url": "https://web3.okx.com/learn/onchain-weekly-22",
+      "body_sha256": "b711cab866feb41f56ce42ff5f8f66b553bb6ee1b840230a08f4b8c47d2113b2",
+      "body_bytes": 84943,
+      "content_type": "text/html; charset=utf-8",
+      "literal_evidence": [
+        {
+          "excerpt": "select tokens of interest, and identify smart money or influential wallets holding that token",
+          "locator": "Article section 2. Alpha Radar; web extraction line63; present in stripped public HTML"
+        }
+      ],
+      "facts": [
+        "Alpha Radar enables selecting tokens and identifying smart-money or influential wallets holding them.",
+        "Signal and Tracker have separate sections; their triggers/positions/PnL statements are not an Alpha Radar schema.",
+        "Site navigation links Alpha radar to /address-radar."
+      ],
+      "unknowns": [
+        "Smart-money definition/ranking thresholds",
+        "Exact token/wallet identity fields",
+        "Alpha Radar-specific units, time windows, freshness, coverage and API"
+      ]
+    },
+    {
+      "id": "S2",
+      "url": "https://www.okx.com/learn/wallet-and-onchain-services-available-in-europe",
+      "title": "Wallet & Onchain Services Available in Europe",
+      "published_at": "2025-08-29",
+      "updated_at": "2025-09-01",
+      "publication_date_evidence": "Web extraction lines67–69, publication clock/timezone not provided",
+      "web_extraction_observed_clock_utc": "2026-10-10T17:35:07Z",
+      "web_extraction_page_lines": 208,
+      "article_body_sha256": null,
+      "article_body_hash_unknown_reason": "Direct HTTP request redirected to a locale URL and returned 404. The article text was available via the web tool; no raw successful article body was obtained.",
+      "literal_evidence": [
+        {
+          "excerpt": "With our smart money tracking tools like Signal and Alpha Radar",
+          "locator": "Web extraction line108; joint attribution"
+        },
+        {
+          "excerpt": "Not all products are offered in all regions.",
+          "locator": "Web extraction line145"
+        }
+      ],
+      "facts": [
+        "The article jointly associates Signal and Alpha Radar with whale monitoring, holdings, recent transactions and behavioral patterns.",
+        "Its 140+ chain statements concern multiple intelligence tools or Wallet services, not an exclusive Alpha Radar chain contract.",
+        "Product availability is qualified by regional restrictions."
+      ],
+      "http_rejection": {
+        "requested_url": "https://www.okx.com/learn/wallet-and-onchain-services-available-in-europe",
+        "final_url": "https://www.okx.com/pt-br/learn/wallet-and-onchain-services-available-in-europe",
+        "retrieved_started_utc": "2026-10-10T17:36:43.311473+00:00",
+        "retrieved_finished_utc": "2026-10-10T17:36:44.108948+00:00",
+        "http_status": 404,
+        "body_sha256": "edf246337b325a4d17e0f0eb106bb674665733ccd70d21f5409bba10bb91fbb8",
+        "body_bytes": 66165,
+        "content_type": "text/html; charset=utf-8",
+        "hash_scope": "HTTP response body; only an article hash when status is 200",
+        "article_content_hash": false
+      },
+      "unknowns": [
+        "Current article raw bytes for this requester",
+        "Which jointly described fields belong exclusively to Alpha Radar",
+        "Individual account access and Alpha Radar-specific regional conditions"
+      ]
+    },
+    {
+      "id": "S3",
+      "url": "https://web3.okx.com/address-radar",
+      "title": "Smart Money Address Radar | Find Top Meme Coin Traders | OKX Wallet",
+      "published_at": null,
+      "updated_at": null,
+      "publication_date_evidence": "No datePublished/dateModified metadata or visible publication date found in collected public HTML",
+      "retrieval": "2026-10-10T17:36:17.402535+00:00",
+      "retrieval_finished": "2026-10-10T17:36:17.945250+00:00",
+      "http_status": 200,
+      "final_url": "https://web3.okx.com/address-radar",
+      "canonical_url": "https://web3.okx.com/address-radar",
+      "body_sha256": "faa1c534c6b104df5a0cbe5523dc001df1d2a128f1338c2ffbdce586b06711cf",
+      "body_bytes": 80121,
+      "content_type": "text/html; charset=utf-8",
+      "literal_evidence": [
+        {
+          "excerpt": "Alpha radar Set token filters, find top addresses",
+          "locator": "Navigation; web extraction line4; present in stripped public HTML"
+        }
+      ],
+      "facts": [
+        "Official navigation identifies this URL as Alpha radar.",
+        "Public text primarily contains navigation and Wallet Tracker labels; it does not expose a specific Alpha Radar field/API schema."
+      ],
+      "unknowns": [
+        "Filter names/types/ranges/defaults",
+        "Results/ranking/pagination limits",
+        "Quantity/price/valuation/PnL currencies and units",
+        "Timestamps/windows/cache/freshness",
+        "Chain/token/address schema",
+        "Auth/account/wallet requirements, entitlement, quota, cost, API, CLI and export contracts"
+      ]
+    },
+    {
+      "id": "S4",
+      "url": "https://web3.okx.com/onchainos/dev-docs/home/what-is-onchainos",
+      "title": "What is Onchain OS | Introduction | Overview | Onchain OS Docs | OKX Wallet",
+      "published_at": null,
+      "updated_at": null,
+      "publication_date_evidence": "No datePublished/dateModified metadata or visible publication date found in collected public HTML",
+      "retrieval": "2026-10-10T17:36:17.403620+00:00",
+      "retrieval_finished": "2026-10-10T17:36:17.935766+00:00",
+      "http_status": 200,
+      "final_url": "https://web3.okx.com/onchainos/dev-docs/home/what-is-onchainos",
+      "canonical_url": "https://web3.okx.com/onchainos/dev-docs/home/what-is-onchainos",
+      "body_sha256": "f559f0cf0ef136aa02a5a342e6192da28689a540a66dfe85c11dc5c55b03b249",
+      "body_bytes": 58166,
+      "content_type": "text/html; charset=utf-8",
+      "literal_evidence": [
+        {
+          "excerpt": "Open API: Programmatically access capabilities of Onchain OS with precision.",
+          "locator": "Two Integration Methods; web extraction line38; present in stripped public HTML"
+        }
+      ],
+      "facts": [
+        "Onchain OS describes Skills and Open API as general integration methods.",
+        "This overview page does not identify Alpha Radar or a dedicated mapping to its product interface."
+      ],
+      "unknowns": [
+        "Any Alpha Radar-specific API method/path/schema/auth/quota/fees/CLI beyond the surface consulted"
+      ]
+    }
+  ],
+  "contract_status": {
+    "public_interface_url": "https://web3.okx.com/address-radar",
+    "alpha_radar_specific_api": {
+      "method": null,
+      "path": null,
+      "query": null,
+      "body": null,
+      "response_schema": null,
+      "authentication": null,
+      "pagination": null,
+      "quota": null,
+      "fees": null,
+      "cli": null,
+      "status": "not_found_in_consulted_surface"
+    },
+    "identity_units_time": {
+      "chain_key": null,
+      "token_key": null,
+      "address_normalization": null,
+      "amount_unit": null,
+      "price_currency": null,
+      "value_currency": null,
+      "pnl_definition": null,
+      "timestamp_unit": null,
+      "observation_clock": null,
+      "freshness": null,
+      "coverage": null
+    },
+    "ui_fields": [
+      "Token selection and finding influential holders are described; exact typed filters/results remain unknown."
+    ],
+    "equivalence": {
+      "signals": false,
+      "meme_pump": false,
+      "tracker": false,
+      "status": "No explicit equivalence demonstrated by these sources; false marks unestablished equivalence, not proven inequivalence."
+    }
+  },
+  "candidate_requirements_not_certified": [
+    {
+      "id": "R1",
+      "requirement": "Preserve source URL, retrieval and source hash with any Alpha Radar reference; distinguish interface linkage from API integration.",
+      "independent_acceptance": "A reviewer verifies the official navigation binding and checks no generic/adjacent module contract is substituted."
+    },
+    {
+      "id": "R2",
+      "requirement": "Keep identity, units, valuation/PnL definition, timestamps, coverage and entitlement unknown until explicit evidence.",
+      "independent_acceptance": "Missing/conflicting facts remain unknown; synthetic fixtures cannot establish production contracts or live freshness."
+    },
+    {
+      "id": "R3",
+      "requirement": "No gain claim or live/financial qualification from this public-document research.",
+      "independent_acceptance": "Output records no observed feed, authenticated access, transaction or realized return."
+    }
+  ],
+  "real_alternatives_not_selected": [
+    {
+      "option": "Documentary/manual interface reference",
+      "dependency": "No automated field/API assumptions; evidence remains limited to the consulted public surface."
+    },
+    {
+      "option": "Automated adapter",
+      "dependency": "Requires an explicit official Alpha Radar contract and separately authorized validation before field/API equivalence or live qualification."
+    }
+  ],
+  "local_capture_error": {
+    "exit_code": 1,
+    "error_exact": "Traceback (most recent call last):\r\n  File \"<string>\", line 31, in <module>\r\n    print(json.dumps(results,ensure_ascii=False))\r\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Python314\\Lib\\encodings\\cp1252.py\", line 19, in encode\r\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\r\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nUnicodeEncodeError: 'charmap' codec can't encode characters in position 7431-7432: character maps to <undefined>",
+    "resolution": "Repeat same four target URLs using JSON ensure_ascii=True. Subsequent rejection-body capture used the same Europe target and preserved the 404 response hash."
+  },
+  "skills": [
+    {
+      "path": "C:\\Users\\gabri\\.agents\\skills\\research\\SKILL.md",
+      "sha256": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\skills\\codex-desktop-harness\\SKILL.md",
+      "sha256": "4d438885fe9c0646725bc82652cec4309baed5a1a570be73c0ed2b7141399b11"
+    }
+  ],
+  "output_policy": "Only RESEARCH.md and SOURCES.json in the assigned isolated directory; no repository/state integration or implementation."
+}

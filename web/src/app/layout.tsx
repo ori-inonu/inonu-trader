@@ -17,19 +17,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jev Trader",
-  description: "One AI trade decision every Monad block.",
+  title: "INONU TRADER",
+  description: "Inteligência de mercado. Estado visível.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#F0EEE9",
+  themeColor: "#07111F",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${geistMono.variable}`}>
+    <html lang="pt-BR" className={`${inter.variable} ${geistMono.variable}`}>
       <body>{children}</body>
     </html>
   );

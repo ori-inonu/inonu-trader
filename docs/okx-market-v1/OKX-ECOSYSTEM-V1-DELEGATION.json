@@ -1,0 +1,15 @@
+{
+  "receiptId": "6a0abacc-7e51-4583-97b1-f96ac39f51eb",
+  "status": "assessed",
+  "choice": "split",
+  "model": "jev-1.13.0",
+  "confidence": 0.95,
+  "usage": {
+    "input_tokens": 913,
+    "output_tokens": 52
+  },
+  "billedCost": null,
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "authority": "advisory_only"
+}

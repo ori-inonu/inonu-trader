@@ -1,0 +1,25 @@
+{
+  "status": "assessed",
+  "receiptId": "6697b02b-4166-480f-b9b8-2d65209447f1",
+  "inputDigest": "20184bf02362fc24666cc9acd3f6769c1bbbc029cc6f7217a54f9c4689068963",
+  "rubricVersion": "decision-2026-09-26.2",
+  "model": "jev-1.13.0",
+  "confidence": 0.81,
+  "usage": {
+    "input_tokens": 1347,
+    "output_tokens": 87
+  },
+  "latencyMs": 297,
+  "receiptPersisted": true,
+  "choice": "consolidate_guide_and_draft",
+  "disposition": "recommendation",
+  "probabilities": {
+    "consolidate_guide_and_draft": 0.85,
+    "research_capture_seam": 0.1,
+    "defer_defi_consolidate_only": 0.03,
+    "abstain": 0.01,
+    "insufficient_evidence": 0.01
+  },
+  "human_response": false,
+  "cost_usd": null
+}

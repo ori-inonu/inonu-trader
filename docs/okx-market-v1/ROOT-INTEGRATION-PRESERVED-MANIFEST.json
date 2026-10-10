@@ -1,0 +1,97 @@
+{
+  "capturedAt": "2026-10-09T22:02:14.6186838Z",
+  "files": [
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\backtest.test.ts",
+      "sha256": "48d7bfda58b9d2ec09b7ce61d28639382a3cb0d927f658bce24d0527718b6261"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\backtest.ts",
+      "sha256": "c8b91ee5690c153fa07fbc90b813a7f7e4ab81283156833c4f986d67b005bf1f"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\book.ts",
+      "sha256": "3c737c7a51d208296d6d4542a49b69cb4f45d17c4637e122099f28514c1834c5"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\chain.ts",
+      "sha256": "b94a062562b5b6b018fb58c8f9987681e2bbaf8437b7abae0e514b175da22cb5"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\config.test.ts",
+      "sha256": "5f69b0e86ea1e5157cec53f46631edc5cf85631f690553adecec181994dc6340"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\config.ts",
+      "sha256": "92dd7a44a786676fb456da019660871b2e77dd273fe148271f2c1541f43a2693"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\doctor.test.ts",
+      "sha256": "3a501ae0d209d302e3ac7f3629535261a0cf505ecc0828cc231dcf02789c8b23"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\economics.test.ts",
+      "sha256": "1e1b972daa4fc3c8209bee5c71b2a8ef9da25e762e21cd8aecd5d0fc1887506b"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\economics.ts",
+      "sha256": "bf3ed7488bd1a2b3fddcd22404a2775b2a863736fcd1ed79011d904c8b19b74e"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\index.ts",
+      "sha256": "fe4c66f9c12e28f6eb4fdc2a24076c090b97101a5dbba4f0a7d5688a05e6747a"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\market.ts",
+      "sha256": "f8adb13592316506b449261370489ad978c7d4ac9e5acf45b8e85c9c4a9dd5fb"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\model.test.ts",
+      "sha256": "3e3c979fbbcfb1d9489c35eff19b2ea631b3643b62b32f7b1013e26ea27913db"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\model.ts",
+      "sha256": "b2f0c1508e981f2e172ede0952086c29b16fd2ad9b53c978292c0b999c459381"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\okx-api.test.ts",
+      "sha256": "85fff55e5ecf7b86d48a294452902713a8ca3405a50e94f48488ee0f275038b2"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\okx-api.ts",
+      "sha256": "a789473dab0d10a300a8fb29255d8794e21e7b3779b1d5719fc41e843e10d4b4"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\okx-opportunities.test.ts",
+      "sha256": "492d9507d60b7575f08d91801beff5811185fd717660f1f48de66da9e738e3be"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\okx-opportunities.ts",
+      "sha256": "848c98e1a478f5c21b71a5eb1f88dae5f6c660889a0e462c60bc5cdeeee50d8b"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\risk.test.ts",
+      "sha256": "9a886f27ef18635133c0b946398e81cfb29e68a4508707c416194c852c122303"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\risk.ts",
+      "sha256": "57bfbb0a2a4180efd682e6226c70eb200b32f3a446ea67b489abc3239ca80008"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\server.ts",
+      "sha256": "56511e042a178b730429e2e7cdd338f6fccd34870f8d6a8ec1920b3397240ea4"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\trader.test.ts",
+      "sha256": "50b1366883b51e41b28c686df1e549d201c31a6d54234550dbf3fef4359897a0"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\trader.ts",
+      "sha256": "61c441d1d13e9816f572a3f2d473c76062c941d8c7d594eb86dfdbe83e7603d9"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\src\\trades.ts",
+      "sha256": "1ff0dfd30c7f7bdaaa59569957eec6870c5aa2aaf37c824c24101d5f657cc962"
+    }
+  ]
+}

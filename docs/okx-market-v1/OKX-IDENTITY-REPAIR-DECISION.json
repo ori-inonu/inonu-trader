@@ -1,0 +1,15 @@
+{
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "status": "assessed",
+  "receiptId": "14b594ef-b347-4035-88eb-769196b04037",
+  "choice": "targeted_public_fixes",
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 916,
+    "output_tokens": 70
+  },
+  "billedCostUsd": null,
+  "inputDigest": "a07740897a0a72e7fe03c30cce0d570de8f3696d47490f5ebf5176c20dc358a6",
+  "rubricVersion": "decision-2026-09-26.2"
+}
