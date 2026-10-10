@@ -1,6 +1,14 @@
 import { afterAll, expect, mock, test } from "bun:test";
 
-const repoRoot = "C:/Users/gabri/jev-trader-release-v0.0.2-receipt-safety";
+// NOT INTEGRATED. This is a conformance suite for the receipt-safety variant (branch hermes/release-v0.0.2-receipt-safety):
+// strict receipt witness validation, "unverified" quarantine and quote provenance. main's Market does not implement that
+// hardening, so these tests cannot pass against main. Set RECEIPT_SAFETY_SOURCE to a checkout of that branch (with its
+// dependencies installed) to run them, alone and never inside the full suite because they mock modules by path.
+// Without it the whole file is one skipped test. They stay as the specification for porting the hardening.
+const repoRoot = process.env.RECEIPT_SAFETY_SOURCE;
+if (!repoRoot) {
+  test.skip("receipt-safety Market conformance (set RECEIPT_SAFETY_SOURCE to run; hardening not integrated in main)", () => {});
+} else {
 const { ethers: actualEthers } = await import(`${repoRoot}/node_modules/ethers/lib/index.js`);
 const orderBookArtifact = await import(`${repoRoot}/node_modules/@kuru-labs/kuru-sdk/abi/OrderBook.json`);
 const orderBookInterface = new actualEthers.utils.Interface(orderBookArtifact.default.abi);
@@ -432,3 +440,4 @@ test("a lost Market submission quarantines later sends before signing", async ()
   expect(fixture.submissions).toHaveLength(1);
   expect(result[0]?.quote.txHash).toBe(firstQuote.txHash);
 });
+}

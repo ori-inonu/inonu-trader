@@ -6,7 +6,15 @@ import type { Book, Market, Quote, QuoteResult, Side } from "./market";
 import type { Action, Decision, Model, TradeState } from "./model";
 import type { BlockEvent } from "./trader";
 
-const repoRoot = "C:/Users/gabri/jev-trader-release-v0.0.2-receipt-safety";
+// NOT INTEGRATED. Conformance suite for the receipt-safety variant (branch hermes/release-v0.0.2-receipt-safety):
+// quarantine of later sends after an unverified or lost receipt, without rewriting the decision. main's Trader uses a
+// different latch (pending, unknown and ambiguous receipts), so these tests cannot pass against main. Set
+// RECEIPT_SAFETY_SOURCE to a checkout of that branch (dependencies installed) to run them, alone and never inside the full
+// suite because they mock modules by path. Without it the file is one skipped test and stays as the porting specification.
+const repoRoot = process.env.RECEIPT_SAFETY_SOURCE;
+if (!repoRoot) {
+  test.skip("receipt-safety Trader conformance (set RECEIPT_SAFETY_SOURCE to run; hardening not integrated in main)", () => {});
+} else {
 mock.module(`${repoRoot}/src/config.ts`, () => ({
   config: {
     tradeSizeMon: 200,
@@ -144,3 +152,4 @@ test("lost receipt outcomes retain risk and quarantine the next eligible directi
   expect(events[1]?.totals.gasMon).toBe(0);
   expect(trader.history[0]?.quote?.status).toBe("lost");
 });
+}
