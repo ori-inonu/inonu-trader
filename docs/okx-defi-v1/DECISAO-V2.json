@@ -1,0 +1,261 @@
+{
+  "schema": "okx_defi_decisions_v2",
+  "recordedAtUtc": "2026-10-10T15:33:53.379Z",
+  "specSha256": "6b0ccced23bd76e39586a402b762c3301b21f9ae054a967745171955f761ea99",
+  "decision_source": "jev",
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "observed_billed_cost_usd": null,
+  "financial_authorization": false,
+  "receipts": [
+    {
+      "file": "defi-contract-decision-v2.json",
+      "sha256": "8cb217e615fa063396654dd15b73d8d79581a4cb5bdcce19740ab158e6680e79",
+      "decision": {
+        "status": "assessed",
+        "receiptId": "13053fc4-6e47-408f-a948-8f104eecd2f1",
+        "inputDigest": "70a455c426dcb68d5f12503030cbe16628844975f2ded83ff178b60e3b63e1b5",
+        "rubricVersion": "batch-2026-09-26.2",
+        "model": "jev-1.13.0",
+        "answers": {
+          "capture_shape": {
+            "type": "choice",
+            "domain": "strategy",
+            "providerChoice": "bounded_raw_capture",
+            "bestCandidate": "bounded_raw_capture",
+            "probabilities": {
+              "bounded_raw_capture": 1,
+              "normalized_dto": 0,
+              "abstain": 0,
+              "insufficient_evidence": 0
+            },
+            "confidence": 1,
+            "disposition": "recommendation",
+            "recommendation": "bounded_raw_capture",
+            "policy": {
+              "version": "decision-policy-2026-09-26.1",
+              "mode": "conservative",
+              "minConfidence": 0.6,
+              "minProbability": 0.6,
+              "calibration": "not_locally_calibrated"
+            }
+          },
+          "delivery_seam": {
+            "type": "choice",
+            "domain": "strategy",
+            "providerChoice": "offline_cli",
+            "bestCandidate": "offline_cli",
+            "probabilities": {
+              "pure_offline_report": 0.02,
+              "offline_cli": 0.98,
+              "research_only": 0,
+              "abstain": 0,
+              "insufficient_evidence": 0
+            },
+            "confidence": 0.97,
+            "disposition": "recommendation",
+            "recommendation": "offline_cli",
+            "policy": {
+              "version": "decision-policy-2026-09-26.1",
+              "mode": "conservative",
+              "minConfidence": 0.6,
+              "minProbability": 0.6,
+              "calibration": "not_locally_calibrated"
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 1333,
+          "output_tokens": 125
+        },
+        "latencyMs": 341,
+        "receiptPersisted": true,
+        "decision_source": "jev",
+        "human_response": false,
+        "approved_by": "jev_delegated",
+        "observedBilledCostUsd": null,
+        "application": "bounded_raw_capture and offline_cli within existing local engineering objective; separate search/detail observations retained; no external authorization; immutable SPEC still pending",
+        "supersedesOnlyPendingChoicesOf": "53b039b0-3af5-4a07-a59f-930cfeaed409"
+      }
+    },
+    {
+      "file": "defi-validation-decision.json",
+      "sha256": "e7191f6cbe4fdab57493cc44477173ae23bafb6f9fdaadd5c21a772912afda79",
+      "decision": {
+        "status": "assessed",
+        "receiptId": "f4d034a6-5e74-4160-9828-5326e6bdf34b",
+        "inputDigest": "aedea69d20394bc9ca9e8801d65dddf529c197ee94e2b1682799215474fd02a1",
+        "rubricVersion": "batch-2026-09-26.2",
+        "model": "jev-1.13.0",
+        "answers": {
+          "identity_representation": {
+            "type": "choice",
+            "domain": "strategy",
+            "providerChoice": "exact_text_and_safe_integer",
+            "bestCandidate": "exact_text_and_safe_integer",
+            "probabilities": {
+              "exact_text_and_safe_integer": 0.94,
+              "text_only": 0.05,
+              "abstain": 0,
+              "insufficient_evidence": 0.01
+            },
+            "confidence": 0.92,
+            "disposition": "recommendation",
+            "recommendation": "exact_text_and_safe_integer",
+            "policy": {
+              "version": "decision-policy-2026-09-26.1",
+              "mode": "conservative",
+              "minConfidence": 0.6,
+              "minProbability": 0.6,
+              "calibration": "not_locally_calibrated"
+            }
+          },
+          "optional_field_policy": {
+            "type": "choice",
+            "domain": "strategy",
+            "providerChoice": "field_unknown_with_finite_issue",
+            "bestCandidate": "field_unknown_with_finite_issue",
+            "probabilities": {
+              "field_unknown_with_finite_issue": 0.91,
+              "reject_any_malformed_optional": 0.08,
+              "abstain": 0,
+              "insufficient_evidence": 0.01
+            },
+            "confidence": 0.88,
+            "disposition": "recommendation",
+            "recommendation": "field_unknown_with_finite_issue",
+            "policy": {
+              "version": "decision-policy-2026-09-26.1",
+              "mode": "conservative",
+              "minConfidence": 0.6,
+              "minProbability": 0.6,
+              "calibration": "not_locally_calibrated"
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 997,
+          "output_tokens": 134
+        },
+        "latencyMs": 315,
+        "receiptPersisted": true,
+        "observedBilledCostUsd": null,
+        "decision_source": "jev",
+        "human_response": false,
+        "approved_by": "jev_delegated"
+      }
+    },
+    {
+      "file": "defi-association-decision.json",
+      "sha256": "bfba9af019b1e0380b86c81421138873ea122ab89b1cb591a7bc6fc92a81e1ef",
+      "decision": {
+        "status": "assessed",
+        "receiptId": "b2c140a5-c98d-44c6-a952-70bfa62801b4",
+        "inputDigest": "ba2656ee02400e84e13ff91f0af11b988ba6e8f369aff27deac8c48cb1e23ca5",
+        "rubricVersion": "batch-2026-09-26.2",
+        "model": "jev-1.13.0",
+        "answers": {
+          "association": {
+            "type": "choice",
+            "domain": "strategy",
+            "providerChoice": "exact_pair_correlation_unverified",
+            "bestCandidate": "exact_pair_correlation_unverified",
+            "probabilities": {
+              "exact_pair_correlation_unverified": 0.96,
+              "no_cross_source_correlation": 0.01,
+              "require_platform_id_on_both": 0.02,
+              "insufficient_evidence": 0.01
+            },
+            "confidence": 0.95,
+            "disposition": "recommendation",
+            "recommendation": "exact_pair_correlation_unverified",
+            "policy": {
+              "version": "decision-policy-2026-09-26.1",
+              "mode": "conservative",
+              "minConfidence": 0.6,
+              "minProbability": 0.6,
+              "calibration": "not_locally_calibrated"
+            }
+          },
+          "detail_yield_unit": {
+            "type": "choice",
+            "domain": "strategy",
+            "providerChoice": "preserve_label_unknown_unit",
+            "bestCandidate": "preserve_label_unknown_unit",
+            "probabilities": {
+              "preserve_label_unknown_unit": 0.98,
+              "inherit_search_fraction": 0,
+              "omit_detail_yield": 0.01,
+              "insufficient_evidence": 0.01
+            },
+            "confidence": 0.97,
+            "disposition": "recommendation",
+            "recommendation": "preserve_label_unknown_unit",
+            "policy": {
+              "version": "decision-policy-2026-09-26.1",
+              "mode": "conservative",
+              "minConfidence": 0.6,
+              "minProbability": 0.6,
+              "calibration": "not_locally_calibrated"
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 705,
+          "output_tokens": 139
+        },
+        "latencyMs": 315,
+        "receiptPersisted": true,
+        "decision_source": "jev",
+        "human_response": false,
+        "approved_by": "jev_delegated",
+        "observedBilledCostUsd": null
+      }
+    },
+    {
+      "file": "defi-spec-confirmation-decision.json",
+      "sha256": "4a5b33898b6d0dc3b3d0fb26a30e6057233b689163b710d846e0509ba0f74898",
+      "decision": {
+        "status": "assessed",
+        "receiptId": "efa35248-d858-441b-b379-401b462a2ecd",
+        "inputDigest": "dac58b23dc91fb4546bc65423ed84f969c686ec9349fd842bb9b24f7b1946325",
+        "rubricVersion": "batch-2026-09-26.2",
+        "model": "jev-1.13.0",
+        "answers": {
+          "specification_confirmation": {
+            "type": "choice",
+            "domain": "strategy",
+            "providerChoice": "freeze_offline_contract_and_tdd",
+            "bestCandidate": "freeze_offline_contract_and_tdd",
+            "probabilities": {
+              "freeze_offline_contract_and_tdd": 0.95,
+              "defer_for_live_unit_qualification": 0.04,
+              "research_more_schema_before_freezing": 0,
+              "insufficient_evidence": 0.01
+            },
+            "confidence": 0.93,
+            "disposition": "recommendation",
+            "recommendation": "freeze_offline_contract_and_tdd",
+            "policy": {
+              "version": "decision-policy-2026-09-26.1",
+              "mode": "conservative",
+              "minConfidence": 0.6,
+              "minProbability": 0.6,
+              "calibration": "not_locally_calibrated"
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 571,
+          "output_tokens": 79
+        },
+        "latencyMs": 283,
+        "receiptPersisted": true,
+        "decision_source": "jev",
+        "approved_by": "jev_delegated",
+        "human_response": false,
+        "observed_billed_cost_usd": null
+      }
+    }
+  ]
+}

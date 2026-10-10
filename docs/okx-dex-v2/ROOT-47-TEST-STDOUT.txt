@@ -1,0 +1,171 @@
+bun test v1.3.14 (0d9b296a) 1x PARALLEL
+
+src\backtest-evidence-cli.test.ts:
+(pass) backtest evidence CLI > keeps a valid accounting replay when a supplied manifest is malformed [152.68ms]
+(pass) backtest evidence CLI > preserves the journal-only invocation and adds an accounting-only assessment [131.43ms]
+(pass) backtest evidence CLI > classifies an unreadable optional manifest without leaking its path [120.97ms]
+(pass) backtest evidence CLI > reports an invalid journal through the legacy JSON error channel [118.99ms]
+
+src\backtest-evidence.test.ts:
+(pass) analyzeReplayJournal > preserves the replay and labels an unfilled mark gain as accounting only [2.25ms]
+(pass) analyzeReplayJournal > reports malformed manifest input as invalid without discarding replay accounting [0.16ms]
+(pass) analyzeReplayJournal > rejects a manifest that names a different observed journal hash [1.01ms]
+(pass) analyzeReplayJournal > classifies declared horizons against observed duration and market gap [1.76ms]
+(pass) analyzeReplayJournal > accepts a structurally complete declaration without granting qualification [0.63ms]
+(pass) analyzeReplayJournal > marks declared price units mismatch invalid with stable accounting-only reasons [1.58ms]
+(pass) analyzeReplayJournal > returns identical assessments for repeated inputs without mutating the manifest [2.99ms]
+(pass) analyzeReplayJournal > diagnoses selection and held-out intervals outside observation independently of overlap [0.32ms]
+(pass) analyzeReplayJournal > marks a non-boolean evaluation flag invalid instead of treating it as a false declaration [0.30ms]
+(pass) analyzeReplayJournal > preserves the replay journal error before validating the caller-supplied engine digest [0.22ms]
+(pass) analyzeReplayJournal > keeps all source labels accounting-only even when the replay marks a gain [0.48ms]
+(pass) analyzeReplayJournal > preserves a hand-calculated negative paper replay without upgrading it to authority [0.54ms]
+(pass) analyzeReplayJournal > counts only block events as market samples and includes the trailing gap [0.47ms]
+(pass) analyzeReplayJournal > keeps horizons unknown when the journal has no market samples [0.40ms]
+(pass) analyzeReplayJournal > marks an unknown cost category incomplete instead of treating zero as known [0.33ms]
+(pass) analyzeReplayJournal > distinguishes overlapping evaluation intervals from explicitly false evaluation flags [1.66ms]
+(pass) analyzeReplayJournal > reports absent availability evidence, baseline kinds, and scenarios as incomplete [0.82ms]
+(pass) analyzeReplayJournal > accepts a well-formed baseline journal hash that differs from the strategy journal [0.82ms]
+(pass) analyzeReplayJournal > requires a non-empty assumption even for an unknown cost [0.60ms]
+(pass) analyzeReplayJournal > computes the maximum market gap for long journals without spreading an unbounded argument list [314.29ms]
+
+src\backtest.test.ts:
+(pass) replayJournal > replays funded spot fills and charges each recorded cost once [1.33ms]
+(pass) replayJournal > tracks peak-to-trough drawdown from each recorded mark [0.25ms]
+(pass) replayJournal > rejects empty, malformed, and unfunded journals [0.35ms]
+(pass) replayJournal > does not charge unconfirmed sent gas and labels synthetic fills [0.50ms]
+(pass) replayJournal > rejects header-only or malformed quote journals [0.27ms]
+(pass) replayJournal > keeps delayed fills in journal arrival order even when their block is older [0.16ms]
+(pass) replayJournal > rejects duplicate fill identities and fills that contradict session provenance [0.41ms]
+(pass) replayJournal > charges a confirmed cancellation once when its transaction hash is shared with a receipt [0.32ms]
+(pass) replayJournal > requires a transaction hash and finite nonnegative cancellation gas [0.22ms]
+(pass) replayJournal > rejects conflicting gas values when a cancellation repeats a receipt transaction [0.13ms]
+
+src\config.test.ts:
+(pass) configuration is paper by default and credentials alone never enable live [0.27ms]
+(pass) malformed financial inputs and modes fail closed [0.11ms]
+
+src\doctor.test.ts:
+(pass) read-only doctor redacts provider errors from a credential-bearing endpoint [2065.84ms]
+
+src\economics.test.ts:
+(pass) two-leg maker costs reject narrow spreads and invalid estimates [0.66ms]
+
+src\model.test.ts:
+(pass) hold is valid and malformed decisions fail closed [0.57ms]
+
+src\okx-api.test.ts:
+(pass) requires explicit credentials and never sends without them [0.40ms]
+(pass) keeps live requests disabled unless explicitly enabled [1.14ms]
+(pass) signs the exact fixed GET request path, including its query [3.08ms]
+(pass) signs the exact serialized POST body used on the wire [1.32ms]
+(pass) uses only the five read-only documented endpoints and validates their response shapes [2.68ms]
+(pass) rejects invalid limits, stages, token identities, and batches before network access [0.65ms]
+(pass) fails closed on HTTP, API, JSON, and shape errors without exposing response bodies [1.32ms]
+(pass) reports timeout without exposing fetch errors [33.61ms]
+(pass) does not retry a failed API call [0.75ms]
+
+src\okx-opportunities.test.ts:
+(pass) missing market and risk data remains unknown and never qualifies [0.52ms]
+(pass) normalizes a matching token and admits only a fully screened research candidate [0.43ms]
+(pass) scenario costs are explicit, break-even is reported, and equality with the minimum does not pass [0.39ms]
+(pass) rejects invalid economic inputs instead of treating them as zero [0.18ms]
+(pass) invalid screening thresholds fail before a scan can run [0.11ms]
+(pass) empty tags and risk level zero remain unknown rather than becoming safe defaults [0.12ms]
+(pass) OKX market tags do not prove honeypot safety without an explicit assessment [0.16ms]
+(pass) an explicit positive honeypot assessment blocks research screening [0.20ms]
+(pass) a documented honeypot token tag is a positive block even without a separate assessment [0.08ms]
+(pass) per-pool screening honors the Jev-selected one-pool rule and blocks stale or unsafe evidence [0.64ms]
+
+src\risk.test.ts:
+(pass) spot inventory is funded and all costs reduce equity [0.43ms]
+(pass) price changes mark inventory losses and drawdown [0.06ms]
+
+src\trader.test.ts:
+(pass) an overlapping newer block invalidates a delayed model result [12.89ms]
+(pass) an overlapping block clears an existing paper order while inference is pending [17.42ms]
+(pass) spending latch prevents new orders after the threshold [4.83ms]
+(pass) hold never sends an order and mock incurs no Jev bill [1.27ms]
+(pass) economically infeasible spread makes no inference or order call [1.73ms]
+(pass) paper gas reduces P&L and interval suppresses another decision [1.57ms]
+
+src\okx-market\dex-cli.test.ts:
+(pass) DEX CLI defaults to synthetic paired quotes without fetch or credential dependencies [116.55ms]
+(pass) live DEX scope and complete credentials are mandatory before any fetch [1642.85ms]
+
+src\okx-market\okx-api.test.ts:
+(pass) createOkxReadOnlyClient > discovers protocols with the fixed host and a signature over the exact GET path [1.88ms]
+(pass) createOkxReadOnlyClient > requires an explicit stage and applies the local limit without sending pagination or wallet data [1.48ms]
+(pass) createOkxReadOnlyClient > a fresh protocol discovery removes prior chain coverage before the next list request [0.62ms]
+(pass) createOkxReadOnlyClient > validates positive numeric chain indexes for meme-pump listings before fetch [0.75ms]
+(pass) createOkxReadOnlyClient > uses the positive numeric chain contract for all identity-based methods before fetch [2.29ms]
+(pass) createOkxReadOnlyClient > prices send at most 30 identities with EVM lowercase and Solana case preserved [2.78ms]
+(pass) createOkxReadOnlyClient > rejects invalid chain and token address text before fetch without imposing address format [0.66ms]
+(pass) createOkxReadOnlyClient > advanced and pool lookups use the fixed paths and sign the exact identity query [1.57ms]
+(pass) createOkxReadOnlyClient > rejects top-liquidity records that do not contain the requested token [1.00ms]
+(pass) createOkxReadOnlyClient > treats advanced-info data as one object and rejects an array [0.94ms]
+(pass) createOkxReadOnlyClient > advanced lookups distinguish valid identity mismatches and preserve Solana case [1.11ms]
+(pass) createOkxReadOnlyClient > pools reject malformed identity-bearing asset entries as schema errors [0.76ms]
+(pass) createOkxReadOnlyClient > Solana pool assets match case-sensitively while EVM asset casing is normalized [1.13ms]
+(pass) createOkxReadOnlyClient > validates local limits before fetch and redacts HTTP, API, and transport failures [1.68ms]
+(pass) createOkxReadOnlyClient > aborts a hung request after the finite timeout without retrying [13.68ms]
+(pass) createOkxReadOnlyClient > times out a pending response body after fetch resolves without retrying or exposing body errors [12.02ms]
+
+src\okx-market\okx-cli.test.ts:
+(pass) CLI defaults to an explicitly synthetic finite scan with no environment or network dependency [119.86ms]
+(pass) live mode rejects incomplete credentials and ambiguous or invalid scope before any network call [1069.49ms]
+
+src\okx-market\okx-dex.test.ts:
+(pass) OKX DEX read-only client > signs the exact supported-chain GET path and returns data [1.86ms]
+(pass) OKX DEX read-only client > uses only the fixed exact-in quote query and lowercases EVM token addresses [1.35ms]
+(pass) OKX DEX read-only client > preserves Solana token address case [0.53ms]
+(pass) OKX DEX read-only client > validates chain, addresses, atomic amount and protection before fetch [0.47ms]
+(pass) OKX DEX read-only client > rejects an invalid clock before fetch [0.46ms]
+(pass) OKX DEX read-only client > rejects invalid credentials and timing bounds at construction [0.30ms]
+(pass) OKX DEX read-only client > spaces concurrent request starts by the configured interval [0.77ms]
+(pass) OKX DEX read-only client > applies the timeout across the JSON body and does not retry [16.36ms]
+(pass) OKX DEX read-only client > sanitizes invalid JSON [4.44ms]
+(pass) OKX DEX read-only client > sanitizes network and HTTP/API failures without retrying or exposing bodies [1.09ms]
+(pass) OKX DEX read-only client > rejects malformed data arrays without exposing response content [0.61ms]
+(pass) OKX DEX read-only client > requires a string message in the documented response envelope [1.19ms]
+
+src\okx-market\okx-opportunities.test.ts:
+(pass) opportunity identity and market facts > keeps unknown fields unknown and rejects price from another asset [0.86ms]
+(pass) opportunity identity and market facts > normalizes public USD, percentage and timestamp units without adding pool liquidity [0.87ms]
+(pass) opportunity identity and market facts > matches EVM case but preserves Solana case and invalid facts [0.25ms]
+(pass) opportunity identity and market facts > rejects advanced and pool facts for another token and keeps absent membership unknown [0.45ms]
+(pass) hypothetical two-leg economics > rejects every omitted scenario field instead of treating absence as zero [0.61ms]
+(pass) hypothetical two-leg economics > subtracts both legs and fixed costs, reporting breakeven without execution authority [0.55ms]
+(pass) hypothetical two-leg economics > charges all six proportional costs and a realized loss cannot pass [0.26ms]
+(pass) research qualification, never execution qualification > distinguishes candidate, critical unknown and known blockers with explicit policy [1.34ms]
+(pass) research qualification, never execution qualification > rejects incomplete policy and treats invalid discrete facts as unknown [0.60ms]
+
+src\okx-market\okx-scan.test.ts:
+(pass) scans finite public facts through discovered coverage without authorizing execution [1.59ms]
+(pass) joins reordered prices by identity and rejects conflicts and unrequested assets [1.58ms]
+(pass) checks gates before provider calls, rejects malformed listed identities, caps work and sanitizes failures [1.84ms]
+(pass) does not choose arbitrarily among duplicate listing or advanced identities [0.98ms]
+(pass) preserves explicit identity conflicts across the HTTP client and scanner [4.94ms]
+(pass) missing HTTP advanced identity remains unknown and remote error text stays private [1.51ms]
+
+src\okx-market\round-trip.test.ts:
+(pass) paired public quotes preserve exact atomic amounts and expose only a gross quantity delta [2.18ms]
+(pass) invalid caller scope and atomic units fail before any provider method [0.87ms]
+(pass) missing or ambiguous network coverage suppresses dependent quotes without fabricating a delta [1.88ms]
+(pass) malformed supported-chain metadata suppresses dependent quotes [0.73ms]
+(pass) global quote identity, exact input and decimals gate every dependent amount [1.86ms]
+(pass) honeypot and signed impact uncertainty prevent dependent quotes on either leg [2.80ms]
+(pass) decimal impact above the policy cannot pass through binary rounding on either leg [0.73ms]
+(pass) a decimal tax above one remains unknown instead of rounding into the valid interval [0.83ms]
+(pass) exact decimal boundaries work when the numeric policy renders with an exponent [1.30ms]
+(pass) missing taxes and network estimates remain unknown without deducting them twice [1.43ms]
+(pass) local timing includes coverage and rejects stale or invalid clocks before dependent requests [1.61ms]
+(pass) reports discard caller extras and never expose a provider error payload [0.69ms]
+(pass) Solana preserves contract case and valid negative deltas remain gross quoted losses [0.45ms]
+(pass) manual complete-cost hypotheses use exact integers and require net strictly above buffer [0.39ms]
+(pass) manual economics rejects incomplete, negative or non-atomic hypotheses [0.76ms]
+(pass) the real read-only adapter composes with the quote validator using an injected transport [2.81ms]
+
+ 129 pass
+ 0 fail
+ 1120 expect() calls
+Ran 129 tests across 18 files. [6.60s]

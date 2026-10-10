@@ -1,0 +1,1388 @@
+{
+  "schema": "defi_implementation_baseline_v1",
+  "createdAtUtc": "2026-10-10T14:58:58.331Z",
+  "conversation": "01a1221e-d419-7770-a8e9-4983b7be5a25",
+  "root": "C:\\Users\\gabri\\jev-trader",
+  "candidate": "C:\\Users\\gabri\\.codex\\tmp\\okx-defi-20261010-01a1221e",
+  "priorHeadRead": "b587759e459ea049590102e54a0b07800864cdc3",
+  "noNewGitRead": true,
+  "plannedNewFiles": [
+    "src/okx-defi/report.ts",
+    "src/okx-defi/report.test.ts",
+    "src/okx-defi/fixture.ts",
+    "scripts/okx-defi.ts",
+    "scripts/okx-defi.test.ts",
+    "docs/okx-defi-v1/SPEC.md",
+    "docs/okx-defi-v1/GUIA.md",
+    "docs/okx-defi-v1/BASELINE.json",
+    "docs/okx-defi-v1/DECISAO-V2.json"
+  ],
+  "sharedIntegratorFiles": [
+    "package.json",
+    "README.md"
+  ],
+  "sources": [
+    {
+      "path": "CLAUDE.md",
+      "sha256": "5f6d2f4a727726f78697402ee4777794165e3bea86cef8319a4eb9ec0394307d",
+      "bytes": 3555
+    },
+    {
+      "path": "README.md",
+      "sha256": "eaaeaa86df3709875a8ad9abb550cc3725e8f57729173e13fbe8f97a46c2708f",
+      "bytes": 7123
+    },
+    {
+      "path": "docs/BACKTEST-EVIDENCE.md",
+      "sha256": "97bea3ec9bb7bd6d1b8b41f4147205065f9da2a0ee6533422cd8d0f0d1e70b57",
+      "bytes": 5329
+    },
+    {
+      "path": "docs/CONTRIBUICAO.md",
+      "sha256": "51b9dc6f9d242cc32434f7a16fd210e995eda1bf4395b4744ec8ff5de1305ee5",
+      "bytes": 1344
+    },
+    {
+      "path": "docs/FUNDING-RESEARCH.md",
+      "sha256": "7d68fdd273f4b92451cf44f30975b9bc75d0f6e4c22860ed4cc34f2718ae213b",
+      "bytes": 22884
+    },
+    {
+      "path": "docs/GOAL-INONU-TRADER.md",
+      "sha256": "968b888890679baa5b0d2d358c36d5bb7fc8ecce690e455fdcddf6da891a35fc",
+      "bytes": 2556
+    },
+    {
+      "path": "docs/INONU-DESIGN-SPEC.md",
+      "sha256": "184d31ac33e0b83734047d9d73f8cf2b7b4c46dafc9cabf9379ba8b8af6016a7",
+      "bytes": 18156
+    },
+    {
+      "path": "docs/INONU-PROPOSAL.md",
+      "sha256": "07ae8d6a6a0d08340d2b3726deb83a7e8cc49bab90bafdc5d28aff54c414445a",
+      "bytes": 1915
+    },
+    {
+      "path": "docs/JEV-WINDOWS.md",
+      "sha256": "de0d0aa364017a3e617648a884ebc4e0f32f4aa1444b1f82a8a7acf2ac9db5cc",
+      "bytes": 4216
+    },
+    {
+      "path": "docs/LOCALHOST-INTEGRATION-DIAGNOSIS-20261010.md",
+      "sha256": "a692e4b49c1fec41cc197faa2bf2429debd42a4b3f564728b00ffc2b452a3c73",
+      "bytes": 5296
+    },
+    {
+      "path": "docs/OKX-EARN-RESEARCH.md",
+      "sha256": "7aa6c1229724dff806307cbaf0b77648cc0f02cdd5c0ffe70079faa75e621e53",
+      "bytes": 14282
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-PLAN.md",
+      "sha256": "6d9e3edbad5ae26edcfc414763786b76d93b798bec500af2a2530cf0d310e409",
+      "bytes": 1971
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-SPEC.md",
+      "sha256": "c0c0ca088fed47c7e37d495134d53ebd1e63e7360bdaddbc2ce2f08235525946",
+      "bytes": 6161
+    },
+    {
+      "path": "docs/OKX-INVESTIGACAO.md",
+      "sha256": "7fc01773dbc3553f8312132d92e6c87370406897e3835d11e9bdf8b7d9979286",
+      "bytes": 9381
+    },
+    {
+      "path": "docs/OKX-PROPOSAL.md",
+      "sha256": "00a4da44b59584d3b3d1e6b35ce1cb21286e4dc6f26a054933a54cc75a2f5e41",
+      "bytes": 3930
+    },
+    {
+      "path": "docs/OKX-SPEC.md",
+      "sha256": "09b01feac2e94cf7b7461ef0295155ce41cebb07b368caefdad44592777edabd",
+      "bytes": 7069
+    },
+    {
+      "path": "docs/OPERACAO-BRASIL.md",
+      "sha256": "53d4ba133a29cfa42caa5882203ec27f4b1e475fd3760476c701996451591d2d",
+      "bytes": 5934
+    },
+    {
+      "path": "docs/OPPORTUNITY-ARCHITECTURE.md",
+      "sha256": "0846a394b945d7006a87393b099a50d0a31e34c722ec29b1c23c2bfb72a112c7",
+      "bytes": 12267
+    },
+    {
+      "path": "docs/PAPER-CAPITAL.md",
+      "sha256": "8563f986b5fff078b00350fdbea08c9eca066b0e4584cd347b0dfaaee15dae31",
+      "bytes": 4921
+    },
+    {
+      "path": "docs/PAPER-SUPERVISOR.md",
+      "sha256": "d8e3cf4c3c628b1b89657f59b017e068702e1e50090e326baf84154053f0120b",
+      "bytes": 4186
+    },
+    {
+      "path": "docs/PROFIT-SPEC.md",
+      "sha256": "268e005d5891a53b7f540faa2c34da3fef440f207e2fefcac6ae113cd5bb52a8",
+      "bytes": 1422
+    },
+    {
+      "path": "docs/PUBLIC-MARKET-CAPTURE.md",
+      "sha256": "dd8e213c404042bdefa5ec28513095e51e491c86870ce2f3d3a810ea8bf3136c",
+      "bytes": 14243
+    },
+    {
+      "path": "docs/READINESS-SPEC.md",
+      "sha256": "a21f516ff056656db1b4e6579e10f1c38184b0f26f4aecca4886cae4b623af41",
+      "bytes": 5112
+    },
+    {
+      "path": "docs/RISCO-E-BACKTEST.md",
+      "sha256": "b96f0a9813eac46536161d632b89af3a5ef13fea9f2a5bf9ec4574c98ed36718",
+      "bytes": 6503
+    },
+    {
+      "path": "docs/VERIFICACAO.md",
+      "sha256": "de0fb45b7af1f9a9d7bfd61a197013509eb25e606921b91cea3fb5ed2919ada5",
+      "bytes": 3521
+    },
+    {
+      "path": "docs/WALLET-OPPORTUNITIES-SPEC.md",
+      "sha256": "2f36fdaa60961851afa2f39cf6eb969872dd3fc7c1b3c9252119c35c6c22dff8",
+      "bytes": 8181
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-DELIVERY-SPEC.md",
+      "sha256": "dce6610f5fdaffbe98cadd2de35f1bf84cd8a274566657e3a5d163a1d9431515",
+      "bytes": 4666
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-READINESS.md",
+      "sha256": "487474af4a49218659e7f9dd67338c78ef231e26fd7b56d75513a34496e4f7d8",
+      "bytes": 15484
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-REVIEW-REMEDIATION.md",
+      "sha256": "fd14cc486f22b7cfc8c60c5e51fb36aceaf93d7612affe3b47d41576b016402d",
+      "bytes": 10081
+    },
+    {
+      "path": "docs/evidence/backtest-20261009.json",
+      "sha256": "3009fb763893b004068be10cda7e7f8cb7de5d031d057d33d655d722d7ce7594",
+      "bytes": 2301
+    },
+    {
+      "path": "docs/evidence/capture-20261009.json",
+      "sha256": "1c7d932ff00f49bb0f7d3d9bc9f37c2a65403e18e4efbfe85582879a7fd922b1",
+      "bytes": 703
+    },
+    {
+      "path": "docs/evidence/completion-check.json",
+      "sha256": "c3e44b6a037c94f7f15d7d0f3226f624594990c538f4101cd2bdaca71b2a5e39",
+      "bytes": 780
+    },
+    {
+      "path": "docs/evidence/doctor-20261009.json",
+      "sha256": "8ba50b2cf6b54041c1e4079bbf8108a4554f3f0431873f79ecde67c8a2c67a7a",
+      "bytes": 1062
+    },
+    {
+      "path": "docs/evidence/doctor-final-20261009.json",
+      "sha256": "c9bce67ec601987c3a85369304f64ae25ea066fc5b8019806460c17d0c973327",
+      "bytes": 1555
+    },
+    {
+      "path": "docs/evidence/doctor-jev-windows-20261009.json",
+      "sha256": "db013831af95703fd7cab2aadeb51091d5ef37f334b210b18cdf1b403b9d84d4",
+      "bytes": 1481
+    },
+    {
+      "path": "docs/evidence/economic-gate-backtest-20261009.json",
+      "sha256": "7b3590e064288df21f0a9f1918768a359bb347a821212e8f08952bc71f390965",
+      "bytes": 2284
+    },
+    {
+      "path": "docs/evidence/economic-gate-capture-20261009.json",
+      "sha256": "7a9aa337dbd5127a2f533d82a3e51929da1b9a2ddea3076e70cd5310f5bcf0da",
+      "bytes": 700
+    },
+    {
+      "path": "docs/evidence/github-preparation.json",
+      "sha256": "b0fb37adc196ed80148ad78d592bda785a1ad43815fe38a9092a9ec128ca4fea",
+      "bytes": 692
+    },
+    {
+      "path": "docs/evidence/independent-reviews.json",
+      "sha256": "1267bc2847b1f1486cbf3530192ae2fe2d18f857d0baf710b1ddc1a3f3f3bcbb",
+      "bytes": 22689
+    },
+    {
+      "path": "docs/evidence/jev-decisions.json",
+      "sha256": "fdc9cdc6fd34c8a004f974f9ee81952063f5f9e9a69e981273b162b3052f2133",
+      "bytes": 6055
+    },
+    {
+      "path": "docs/evidence/jev-windows-key-20261009.backtest.json",
+      "sha256": "281ad7803cb178e5452776fcaeaff467f613f7310d4290cfb2aa8c7e8d843084",
+      "bytes": 2289
+    },
+    {
+      "path": "docs/evidence/jev-windows-key-20261009.jsonl.summary.json",
+      "sha256": "7b67865f53649fa2ad5c1d928a0251e8ad7cb2f07da04fc1cd01935f37213f42",
+      "bytes": 724
+    },
+    {
+      "path": "docs/evidence/jev-windows-key-20261009.run.json",
+      "sha256": "f1e66b412eb7fab7fafb39e2a2fe6528c37dd48e12da33ae32771d6be39d6f0a",
+      "bytes": 897
+    },
+    {
+      "path": "docs/evidence/lifecycle-final-backtest-20261009.json",
+      "sha256": "7cfa72a9aad5dea221a4a095ddf8843b53d028512f3def8994bbf2ac42e2be22",
+      "bytes": 2229
+    },
+    {
+      "path": "docs/evidence/lifecycle-final-capture-20261009.json",
+      "sha256": "2cd410fa0e12437c8f4cf597a01442af80fe645bbaf49c3b4d03a2279d4623c1",
+      "bytes": 698
+    },
+    {
+      "path": "docs/evidence/okx-baseline.json",
+      "sha256": "f1da6fe4ef95ceb598eac86936c79cd0a6e3531e55031ee5a992927bbc0b47c6",
+      "bytes": 16488
+    },
+    {
+      "path": "docs/evidence/okx-coordination.md",
+      "sha256": "69df83ce43103df1af370d2bf029479db4de85eced4fef98caa67be43c362466",
+      "bytes": 1523
+    },
+    {
+      "path": "docs/evidence/okx-cycle-context.json",
+      "sha256": "eb9b366cd2962cca19ca03d15c0d5faf613c2758218ff0f1948d6982eb1d7417",
+      "bytes": 1728
+    },
+    {
+      "path": "docs/evidence/okx-cycle-review.json",
+      "sha256": "01d861f7ff6c483702dc1eb08fa0df047708d8c3baa0c60a1b85951690f2ac25",
+      "bytes": 1350
+    },
+    {
+      "path": "docs/evidence/okx-cycle-template.json",
+      "sha256": "0edf98e4b9ff931df61964e01524d465ef38b3d0ae2fd0b44320feea7b896ba5",
+      "bytes": 439
+    },
+    {
+      "path": "docs/evidence/okx-dex-unit-policy-jev-20261009.json",
+      "sha256": "7c86e069a50898d6176d2a2187aaf80898bead127c73a2cca7e01fe5ed12f0e8",
+      "bytes": 1574
+    },
+    {
+      "path": "docs/evidence/okx-dex-unit-policy-jev-input-20261009.json",
+      "sha256": "2ff0245610f363a707a81ff3d8ead3cf7d1ecf78d32943f0fbb2aba8617e6306",
+      "bytes": 1932
+    },
+    {
+      "path": "docs/evidence/okx-implementation.md",
+      "sha256": "af9f5847cb63a0720cfa9ef30455d9db676301485cffe28621f3a1544863d185",
+      "bytes": 5828
+    },
+    {
+      "path": "docs/evidence/okx-jev-decisions.json",
+      "sha256": "fbaf01ba5d76c11120306d4f9d9b14a4f2d2a6a8b55f5008eb67369b3f40090f",
+      "bytes": 7366
+    },
+    {
+      "path": "docs/evidence/okx-opportunities-jev-decision.json",
+      "sha256": "c8e8f37ed718f37ec1408e3e94a28c0e52e5b709313f995b679ada3bd7a47b38",
+      "bytes": 1134
+    },
+    {
+      "path": "docs/evidence/okx-research.md",
+      "sha256": "885bd6a0a047201089817355c8e8218371b8f8c52fcea81fb9f3c4d1a028f24a",
+      "bytes": 11222
+    },
+    {
+      "path": "docs/evidence/okx-spec-review-result.json",
+      "sha256": "61eea821f3106586dd3cf921ee5843eb479553ff757cc9b89bbb1d194a87791e",
+      "bytes": 30768
+    },
+    {
+      "path": "docs/evidence/okx-spec-review-result.md",
+      "sha256": "1a04b38b93ed2ec59fec5af6475c6c02849f9cec057407b8639305c33cb03df8",
+      "bytes": 2731
+    },
+    {
+      "path": "docs/evidence/okx-standards-followup-result.json",
+      "sha256": "0b1d2df6aa99be4d858523daae7a1c186c3c9e7eff2fb96730660ce6c29d9c6c",
+      "bytes": 1898
+    },
+    {
+      "path": "docs/evidence/okx-standards-followup-result.md",
+      "sha256": "cf9737fe51fb8e784677e06511f95fbc53ef18b04c080fc05f6e4bcba5524030",
+      "bytes": 1125
+    },
+    {
+      "path": "docs/evidence/okx-standards-network-followup.json",
+      "sha256": "5bc4b6276640f68f87bf2ec09c77c07284422dab07b00357d467063134a61e3b",
+      "bytes": 3776
+    },
+    {
+      "path": "docs/evidence/okx-standards-network-followup.md",
+      "sha256": "a73befdf7e5443ddd5c2739586d742965c0bcfb27e8e0daef64cf6bff5ba0742",
+      "bytes": 1127
+    },
+    {
+      "path": "docs/evidence/okx-standards-review-result.json",
+      "sha256": "4bdd1a7c33c7bf3fc5853fe6941b69461aa8e93f266e96fdee29894cdb30f91d",
+      "bytes": 5047
+    },
+    {
+      "path": "docs/evidence/okx-standards-review-result.md",
+      "sha256": "41c7da4dd6703ae7bd7ff415dea5ac25cd26982ae43de3e85465bfbd9cd8995a",
+      "bytes": 1544
+    },
+    {
+      "path": "docs/evidence/okx-verification.md",
+      "sha256": "6aa5b1729f77f643a02fc606048a89e4de0d060a5752c34b6dd5b5df917106d3",
+      "bytes": 3633
+    },
+    {
+      "path": "docs/evidence/public-health-20261009.json",
+      "sha256": "4446074265be8d5e433c7687c44da05e117a32fce42a557ffc3fc8671eeb26b3",
+      "bytes": 1191
+    },
+    {
+      "path": "docs/evidence/review-manifest.json",
+      "sha256": "af533da3d3fc23ee9e566b15f4d02c40b3918181946266d30f35279cb6f55ac3",
+      "bytes": 12704
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/exact-snapshot-review.json",
+      "sha256": "a1b8d85b751390e917b6dd0c62f5a86cbf10cdc80afc08dd56ccd65b1265c8ad",
+      "bytes": 6704
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/fresh-build.json",
+      "sha256": "38f7a954db3e43440960b6d2f5fdd917107ff4f76f7c013a26bb878ed83b923c",
+      "bytes": 12733
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/fresh-commands.json",
+      "sha256": "621f20c8ec94c4c1c946650c5f96b275041b8dfff78a410f1156bfcbe0b0cffc",
+      "bytes": 12493
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/fresh-runtime.json",
+      "sha256": "3749a4e4e81c475ac90f4ba44353ade5fa8b964208ef270b4e3d97bfc4c20c5c",
+      "bytes": 475
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/fresh-supervisor.json",
+      "sha256": "2805af81dc4f1d6aec941c28ffeb6190021adc082cb4f128deca1d8dcf44b7a9",
+      "bytes": 12499
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/fresh-tests.json",
+      "sha256": "47a52e3d27fe1130b4fa60b1b373b50f789ac5d1949ff2617b16eac13a299fe0",
+      "bytes": 12970
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/fresh-types.json",
+      "sha256": "6985395b88756a752b4267e29419696f49b31f8c26d48eb54c9c646d5596fe77",
+      "bytes": 12691
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/interim-remediation-verification-20261010T125436Z.json",
+      "sha256": "06d1df64f13134a5a7aac2e0a5b932b18b4d99507d9c12a6efd40fd51be7db8d",
+      "bytes": 4155
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/inventory-seam-20261010/REPORT.md",
+      "sha256": "4025f3a927228bb6a75fa0d2f65be254e9983113b13d351df1aa10ad9758c1a8",
+      "bytes": 7252
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/inventory-seam-20261010/audit.ts",
+      "sha256": "0d37769f71322c748fa7ce6560d0e19002aacdcc97cb62807bfe89a833575f35",
+      "bytes": 8994
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/inventory-seam-20261010/canonical-verification.json",
+      "sha256": "d1ac3500922c8de8791080d06ccf4ae66ef678bf77123028b9c11c065ca68552",
+      "bytes": 1202
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/inventory-seam-20261010/observed.json",
+      "sha256": "ce5c6660aeaec1785f6a9db72ce8dc055aa5a6b6afc542a9436f4700cf78858f",
+      "bytes": 2696
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/postbatch-20261010T134726Z/implementer-evidence.json",
+      "sha256": "87a3245641a8dee06278205a45c859202937d032d8d47acec34e100109d4345f",
+      "bytes": 23228
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/postbatch-20261010T134726Z/parent-verification.json",
+      "sha256": "8a0757f8e2e79abbca00a2cccd49738635865743d72746d39589cd3fec84a85c",
+      "bytes": 17131
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/postbatch-20261010T134726Z/served-surface/observations.json",
+      "sha256": "7ea7b3a6ee4ed78fa499482a5c3a867c268976cdd6f64b7b474e9767bc8af0c3",
+      "bytes": 21835
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/postbatch-20261010T134726Z/served-surface/qa-receipt.json",
+      "sha256": "1af7ef550986796ddf9ff2ea8e6abe232c6981b0bbdce5e9e33119a836fdcd11",
+      "bytes": 2562
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/postbatch-20261010T134726Z/served-surface/summary.json",
+      "sha256": "a9ac628e92058cb3e11471310fcfa7bec23c9fb472aff060354e882428b1d500",
+      "bytes": 899
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/served-surface/REPORT.md",
+      "sha256": "103ff64e15a5f9278fb989495817e6f850a04305a18f79c5e92b2ced1e95605c",
+      "bytes": 7044
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/served-surface/mobile-followup.json",
+      "sha256": "1d6dc060245b60702422f44e56ddda32a84c78396fd4576a39dd3cf72e9145e9",
+      "bytes": 6702
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/served-surface/observations.json",
+      "sha256": "69d4429399cc55b50ed2aa34a971f23b5cdfe89abf4f546edd43d6c348b0efab",
+      "bytes": 66666
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/served-surface/qa-summary.json",
+      "sha256": "59cd3638044b44c20dc3ab11ad0ec502a629e978ca7daa653ed04dc3fcb00f51",
+      "bytes": 6110
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/supervisor-gain-create.json",
+      "sha256": "1911bff42604f694d66a75277427e5b10ee7d9f7cfde7752a0e424025771d53d",
+      "bytes": 2266
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/supervisor-gain-resume.json",
+      "sha256": "f669a39db15492c3c04b1cfed1d61c11b7329e2557c425d12c2e829c70bea5fb",
+      "bytes": 2210
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/supervisor-incomplete-cost-create.json",
+      "sha256": "be3eda9074f5b1ad774d80db7069fabe9fd6cb9a5ca2889c4e44c3fa05e911e8",
+      "bytes": 2505
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/supervisor-incomplete-cost-resume.json",
+      "sha256": "1f1f414b8229e86e7284698d6274071448bdfc30c33764f706e16db1d5acc567",
+      "bytes": 2505
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/supervisor-pending-create.json",
+      "sha256": "b33db9165019a2b9c2dc3e61c26b7435155787a8557a1f92c1c460e053fa370c",
+      "bytes": 2469
+    },
+    {
+      "path": "docs/evidence/web3-integration-20261010/supervisor-pending-resume.json",
+      "sha256": "70378528e176c93c165080b2be1d27b8dc15b0b8f77bd5a0e7d2990351847ebe",
+      "bytes": 2459
+    },
+    {
+      "path": "docs/evidence/windows-key-config-20261009.json",
+      "sha256": "2a2e26234b741f194420c1d505d1379600aa190dbe214af9959e73745ccf4053",
+      "bytes": 372
+    },
+    {
+      "path": "docs/evidence/windows-key-decision-20261009.json",
+      "sha256": "35abec7eb15c1a288f5037e02de3aafb6388b383d5e55182548b49426989a38f",
+      "bytes": 2678
+    },
+    {
+      "path": "docs/evidence/windows-key-review-20261009.json",
+      "sha256": "436f6e5607ddfcd21fed0a9dc7758f30c4a1de5c5387c707f919dce343f691bb",
+      "bytes": 5004
+    },
+    {
+      "path": "docs/okx-defi-v1/DECISAO-CONTRATO.json",
+      "sha256": "fac4335433dd95f277c6f571a00739aba1d5fe4f798596a4afc2edbe475dc70e",
+      "bytes": 2475
+    },
+    {
+      "path": "docs/okx-defi-v1/PROPOSTA.md",
+      "sha256": "bc3d243e4a0a760ceedf0cedf0ed280d4a259770c49dc8301cda73f71ec6aa19",
+      "bytes": 4984
+    },
+    {
+      "path": "docs/okx-defi-v1/RESEARCH.md",
+      "sha256": "a1b3d9834417f55a862e2b03093b3dc0550b7724ffd2aadac0e5b31de1bdc4be",
+      "bytes": 4394
+    },
+    {
+      "path": "docs/okx-defi-v1/SOURCES.json",
+      "sha256": "ebdee85ee3adef260118c332e12eeeca79ecd215ce84423b5a641528d26690c3",
+      "bytes": 2661
+    },
+    {
+      "path": "docs/okx-dex-units-v3/RESEARCH.md",
+      "sha256": "f51e61d8c4c975e0638f66eccbffe2783c8e0f65bd2a3c63659944d4323b7610",
+      "bytes": 4093
+    },
+    {
+      "path": "docs/okx-dex-units-v3/SOURCES.json",
+      "sha256": "b2e560e8ee15b47b65192f829ee31b0472f379d384200e6e9020ce9a0c3e340b",
+      "bytes": 14551
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-QUOTE-CONTRACT-20261009.md",
+      "sha256": "4ce9b26ed0dd15e6cb52bd8057f0a6f9186a2ad7f8c970e81a984817febe87cb",
+      "bytes": 18157
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-GUIDE.md",
+      "sha256": "8a6aaba1f5dacb35597176e1483d2018a13d09356d00a6458c10957126648c73",
+      "bytes": 6541
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-PLAN.md",
+      "sha256": "307d9a749c4b16ae191a1b8022afc5534216792abe5bb0bbf41c9654f296c4dd",
+      "bytes": 2333
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-SPEC.md",
+      "sha256": "b6cdb5629a1899e22d7d54f0461d75fa4d56fd4a16284ce872f271981d2f469b",
+      "bytes": 9354
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V4-INDEPENDENT-REVIEW.md",
+      "sha256": "df641e8de3efc1b70585aaa76d6829266e1d834fbeea33e6234a7e6b97467015",
+      "bytes": 6830
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-47-TEST-MANIFEST.json",
+      "sha256": "d4d0aeb1722264e651fed37d7e64b94a309eeaf1adb7bbd409d2fd00242615e6",
+      "bytes": 22165
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-47-VERIFICATION.md",
+      "sha256": "8e6d147dda461c35b591d68be409df13d4bf3626c6dd2160e61e9fc5db166c89",
+      "bytes": 20449
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-COMPLETE-MANIFEST.json",
+      "sha256": "5349ed3f2b7fc79190fd3db83d52f57ef1ee5551cb18e01f04f43f851da4a325",
+      "bytes": 6177
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-INTEGRATED-MANIFEST.json",
+      "sha256": "891df564d744d84802b0793773fb7b8826c89a71275595225353b30ce42f94c0",
+      "bytes": 5761
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-INTEGRATION.md",
+      "sha256": "578915ef13d2e59259b9fd886db67cfc63380b94243c04e0e0b93b77d63cf0b9",
+      "bytes": 2003
+    },
+    {
+      "path": "docs/okx-dex-v2/SCHEMA-REGRESSION-COMPARISON.md",
+      "sha256": "815c94c0fba92ec7d8b2422cc1aa1c1d6e0bd2da71ee704d946aa68025b5ac61",
+      "bytes": 11080
+    },
+    {
+      "path": "docs/okx-dex-v2/SYNTHETIC-REPORT.json",
+      "sha256": "c88ad1f7f56cdeabc5f9fe58c2d91856193247f98b6f85f94c2d1245e8acc049",
+      "bytes": 1719
+    },
+    {
+      "path": "docs/okx-ecosystem/DECISAO.json",
+      "sha256": "52f22d359d0887d25ef614831e0852f679180cbe8058fef63a12c27a978d8333",
+      "bytes": 696
+    },
+    {
+      "path": "docs/okx-ecosystem/GUIA.md",
+      "sha256": "d24b6f82ad576f0014b207c287b7d2242cfe439c74f663f87773f3100aa3707d",
+      "bytes": 5230
+    },
+    {
+      "path": "docs/okx-evidence-v1/AUDITORIA.md",
+      "sha256": "c97447110140ea145cc019204f7d910b46c4aefe7c23dec3a025b2a1fe8ad9f1",
+      "bytes": 1667
+    },
+    {
+      "path": "docs/okx-evidence-v1/BASELINE.json",
+      "sha256": "6aa00ce4be4f48d1dc97ff697929f03828150a708bca89645e588b4e557d9681",
+      "bytes": 13491
+    },
+    {
+      "path": "docs/okx-evidence-v1/CYCLE-REVIEW.json",
+      "sha256": "db65a0c41f2e0d8ba007051daa6c894dec2875ea65d91bb18f14e3be3864942c",
+      "bytes": 1486
+    },
+    {
+      "path": "docs/okx-evidence-v1/CYCLE-REVIEW.md",
+      "sha256": "6fff2a8c3832b1dee73a6c9d8cdec5c6555727528ff39c25bc1d22549c26daab",
+      "bytes": 3037
+    },
+    {
+      "path": "docs/okx-evidence-v1/DECISAO.json",
+      "sha256": "edfab912da851f4a799e3c63a2c7a001b1f3356069bd9d8b623b7f4700f74c4e",
+      "bytes": 1205
+    },
+    {
+      "path": "docs/okx-evidence-v1/DESIGN-DECISION.json",
+      "sha256": "54bf2d9717352ed60149325f3ba1511d2f6bbc77b589c60d1e211060dea84bbd",
+      "bytes": 4051
+    },
+    {
+      "path": "docs/okx-evidence-v1/GUIA.md",
+      "sha256": "ef140832bbc76d033e0fd621d8cea833c4592592cfb4f54b144b104f72246d88",
+      "bytes": 3020
+    },
+    {
+      "path": "docs/okx-evidence-v1/PROPOSTA.md",
+      "sha256": "121eaa5632154b4f2ce57f261316a9005d9e402dd86bcafd12469e973525da95",
+      "bytes": 2997
+    },
+    {
+      "path": "docs/okx-evidence-v1/SPEC.md",
+      "sha256": "7b33b878cfeccb543b1ae01e7fa06aa92dc6994d24086cfe29a05e6a6e5200d8",
+      "bytes": 8371
+    },
+    {
+      "path": "docs/okx-evidence-v1/VERIFICACAO.md",
+      "sha256": "2b5ef0a251f048fb2194e861c3246316858c9650d894598b0a56a7597e2efb3b",
+      "bytes": 1669
+    },
+    {
+      "path": "docs/okx-exit-security-v1/RESEARCH.md",
+      "sha256": "3c4da0b6a6ed6d00bba9dc0cacba4382b5602916406e3e740e8991318e74606b",
+      "bytes": 3872
+    },
+    {
+      "path": "docs/okx-exit-security-v1/SOURCES.json",
+      "sha256": "6cc88f12c4d2d6f12c5f349b77d47d95a1017e7c484125ce2621a7fff854bb27",
+      "bytes": 1068
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-FIX-DECISION.json",
+      "sha256": "6bc4dd45c7645128a198e7808ec59618b3eeebad94952d769894eec6f30a7eec",
+      "bytes": 398
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-IDENTITY-FIX.md",
+      "sha256": "70e8e34c4867e17323b4603bd302e78cbdac72c58e9141681417b576e278750b",
+      "bytes": 2684
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-TDD-EVIDENCE.md",
+      "sha256": "a552f27fae21111d6393da6a33c29f785ff5a53e60ddf8b890091f5fd2ef7310",
+      "bytes": 7020
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-CONFIGURATION-READINESS.md",
+      "sha256": "f40f4032cc071f5323744b2203aa429cde967cc1baa7af3f82e2a0fbf0c2ca3c",
+      "bytes": 2246
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-DEX-V2-CONTRACT-AMENDMENT-DRAFT-20261009.md",
+      "sha256": "3a3814a3e22e1f438e4b54c81454218d64d31f5051888feecf94b81bf83a96b7",
+      "bytes": 5785
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-15-WORKSTREAMS-20261009.md",
+      "sha256": "526839556c01b6523cab6669292f0067564d75b237198c2e85aa08af5e30c27e",
+      "bytes": 11864
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-BASELINE.md",
+      "sha256": "e7db0940523893e7ec8510fc590fccda3e8a03a3e2cbed7214058dff82018aa7",
+      "bytes": 1123
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-CONTRACT-ERRATA.md",
+      "sha256": "ccb28dfc2935a03034edc60780d0cfc6f7567d0e189f4138f0f1eedfff1b9da9",
+      "bytes": 1339
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-DECISIONS.json",
+      "sha256": "8dd21c70d5cf36a829739814958794687c930b4d53411f392cf7827c38ea5760",
+      "bytes": 3306
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-DELEGATION.json",
+      "sha256": "2f528680228305d325ed85a04ce56d377310ba4f037cce6b77b2251430aff52b",
+      "bytes": 332
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-PROTOCOL-SCOPE.json",
+      "sha256": "6d68492503992216be3f874e20118fe6dcffac285addb3ae1f68067996ecabad",
+      "bytes": 1137
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-SPEC.md",
+      "sha256": "13ba216cca87b8fd139d95895cd84a30df536788602fa4679201b8307aa856cb",
+      "bytes": 11017
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-IDENTITY-REPAIR-DECISION.json",
+      "sha256": "74ff50ce8762cb98e0d0833618529408ab9dcf0cfe24a53c4867a16fbecba425",
+      "bytes": 426
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+      "sha256": "c83291232ea82f0a9505f647e0caeff14a4a494fce44f11392159c5eb69fdfa0",
+      "bytes": 28081
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-LONG-GOAL-CHECKPOINT.md",
+      "sha256": "eb67fe455a1543c94408f1464fd5a3b04bb580c42481ae328f6fa05d2309754b",
+      "bytes": 6458
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-INTEGRATION-DECISION.json",
+      "sha256": "272f6771682dceb4b03331d575d57d0912b8c4d32607c02306d4bd6df6edc977",
+      "bytes": 1638
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-INTEGRATION-VERIFICATION.md",
+      "sha256": "6be2e675ab1614259f61bd69d9eb6ed4718a4037aa949dbb284faa4627d12ea9",
+      "bytes": 2807
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-LAYOUT-ADDENDUM.md",
+      "sha256": "9d4982cf930fc0c7ecab3b2bfbb4f0ac575074701399c951df16b99518806469",
+      "bytes": 1513
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-NAMESPACE-DECISION.json",
+      "sha256": "1f8498c8340a72cf75544705e80f59b0d5ad167f1fb255f0eee5d5a3e2600b19",
+      "bytes": 1587
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-REVIEW-DECISION.json",
+      "sha256": "583372b1e0b9a24201117bb2a0f66f06e4f62aef4dbfc1052cfd94bcd1d102d1",
+      "bytes": 1097
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-TDD-EVIDENCE.md",
+      "sha256": "bacf9e6bd60745dd5b8f96bfc6f64ede505180257170f2fba9a2b2f647ad87c4",
+      "bytes": 6238
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-WEB3-INTEGRATION.md",
+      "sha256": "3659778d374ca4cf863c5aa3624c784a65f0a9b70f5175f07b573de48079ed06",
+      "bytes": 10393
+    },
+    {
+      "path": "docs/okx-market-v1/REVIEW-MANIFEST.json",
+      "sha256": "5bf978da1ab411b134c1a67b1cc8477b8bfc94ad464e98853a3627b6732d505d",
+      "bytes": 20064
+    },
+    {
+      "path": "docs/okx-market-v1/REVIEW-V3.md",
+      "sha256": "740bcfe7737dcc348d5e288c740a290c3153c4d8e55dbc389199785d6ee369d0",
+      "bytes": 6557
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-PRESERVED-MANIFEST.json",
+      "sha256": "9908b8568d8da425058c628071642756f2c23e8e17d5e842aa71735b493f2140",
+      "bytes": 3868
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-REVIEW-CORRECTED.md",
+      "sha256": "b12bada9a4a126d64260aee88a7f1db7a742ac0a06f52b91e67fc1a1d0700c71",
+      "bytes": 8665
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-REVIEW.md",
+      "sha256": "5d4ab5fc5e9b8222f3e75d226371fd9b09af752905a615683df4787444df3511",
+      "bytes": 7772
+    },
+    {
+      "path": "docs/okx-rewards-v1/RESEARCH.md",
+      "sha256": "20a3f05d0e7dd2cd3c6f776d3c1c892f16841035c30883fdd7a4e33d19d2cdf9",
+      "bytes": 3968
+    },
+    {
+      "path": "docs/okx-rewards-v1/SOURCES.json",
+      "sha256": "825e1aa5b407e12e55ac00a78efd4495087d7888bbb5383728c9ca6173d88ae6",
+      "bytes": 8755
+    },
+    {
+      "path": "docs/okx-signals-v1/AUDITORIA.md",
+      "sha256": "b1d9d777fe0f1f353eb4af585b9c986b27335adeb229a2bb2610d91f1d100f2f",
+      "bytes": 2578
+    },
+    {
+      "path": "docs/okx-signals-v1/BASELINE.json",
+      "sha256": "a718f2cf0555d8fc697fd0c3b729705e2e3363b97767cbf7c2b362b630780b58",
+      "bytes": 10465
+    },
+    {
+      "path": "docs/okx-signals-v1/GUIA.md",
+      "sha256": "a586f8282536dfd4abe96a2d12b73c68444ab31984477ac7df7528d38b56c25c",
+      "bytes": 8069
+    },
+    {
+      "path": "docs/okx-signals-v1/SPEC.md",
+      "sha256": "b24bbe99a962220fe3fffd93d705fc441576d9100478bea001836594e287f70f",
+      "bytes": 5443
+    },
+    {
+      "path": "docs/okx-signals-v1/VERIFICACAO.md",
+      "sha256": "a352662bc9d8b79fd014892aa5a6dbe52a22da8522a1d3cebfa17e9f62f215a6",
+      "bytes": 3765
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-09-okx-readonly.md",
+      "sha256": "872e88aa914939d26405f7f8c6010e4327a6a03e58750c2cbee4bd6641e3710a",
+      "bytes": 6558
+    },
+    {
+      "path": "docs/wallet-opportunity-research.md",
+      "sha256": "21a2d58636f38cdbdabb9fa53e745122974f4e7623918745cc3ccae4d4ce2205",
+      "bytes": 31803
+    },
+    {
+      "path": "package.json",
+      "sha256": "d4cbfdc7686e16119daf0407d29c90b2c9d84c79663f2ff4f19101bf013a983d",
+      "bytes": 1305
+    },
+    {
+      "path": "scripts/abi-selectors.ts",
+      "sha256": "df71e5489c204855c3169b694238728e83068c672a176987eb8d6a6ecaea3558",
+      "bytes": 516
+    },
+    {
+      "path": "scripts/backtest.ts",
+      "sha256": "f5d928a623d9995e95aeeb5132fa479e90ca4216636af13867794a73191441e8",
+      "bytes": 1768
+    },
+    {
+      "path": "scripts/bench-read.ts",
+      "sha256": "9a07bb0ba81dc8f9f9aec48069e1cb20a7385c56a1a1ad0282f728da5b013bb9",
+      "bytes": 6582
+    },
+    {
+      "path": "scripts/capture.ts",
+      "sha256": "40f918b2e723e724120b239ab5893e34f433dedf68fc33a70d6ad0c347dbf62a",
+      "bytes": 2309
+    },
+    {
+      "path": "scripts/doctor.ts",
+      "sha256": "1763e1402a09038bba1831a0226cb5c4a3de97efb842f328bfe2188c26db95fb",
+      "bytes": 3432
+    },
+    {
+      "path": "scripts/dry-encode.ts",
+      "sha256": "56071bbda6145a4d687152c22efd38cc5277c59e8ad38587bb909ad1de88d8ec",
+      "bytes": 3849
+    },
+    {
+      "path": "scripts/fixtures/okx-scan-synthetic.json",
+      "sha256": "d961e033fdc44c8c634b1eda6cc5da0a3ceac46a6a290a7c9f9e68cdf4f09449",
+      "bytes": 754
+    },
+    {
+      "path": "scripts/okx-dex-quote.ts",
+      "sha256": "8d3d9714e11bbcdaaeb32f3406b40469d2d93000f110a02dfc7bada39b302ad6",
+      "bytes": 4681
+    },
+    {
+      "path": "scripts/okx-evidence.test.ts",
+      "sha256": "2fe06da4589695621303c33ef69ab9640c973918a559a77dddbdfda0b9032b58",
+      "bytes": 4888
+    },
+    {
+      "path": "scripts/okx-evidence.ts",
+      "sha256": "62f85b13fa83424b209b73509b624ad8976eeb127e3f993c74ba576afd23b2f4",
+      "bytes": 3317
+    },
+    {
+      "path": "scripts/okx-market-scan.ts",
+      "sha256": "5d3d1de12bb59bcdc816a1ab109a86d4b87b18defde8ca19f22c6eaab8f9ed2e",
+      "bytes": 3483
+    },
+    {
+      "path": "scripts/okx-scan.test.ts",
+      "sha256": "1cbad2bd61c0276a989fba6c966798c98008c86cacbdfe4f87f9d416744f3a79",
+      "bytes": 5097
+    },
+    {
+      "path": "scripts/okx-scan.ts",
+      "sha256": "d62b80fe5d3fdc2633fab3b8295dea63d19e30a6a052a3daa6eadc74bde35bc3",
+      "bytes": 11530
+    },
+    {
+      "path": "scripts/okx-signals.test.ts",
+      "sha256": "fc04c6e9d26a800c28842598cd97fa79196fa403ba703ba8368a0a137c0676b5",
+      "bytes": 2192
+    },
+    {
+      "path": "scripts/okx-signals.ts",
+      "sha256": "9747244d1d4dbee3584ca23254224dc5b17cc5a863e13d000bb70b8ee02095bf",
+      "bytes": 2662
+    },
+    {
+      "path": "scripts/probe-book.ts",
+      "sha256": "3c85e6c06e4ad70eaa2f86b963d161bc0d867e219c01b5d7c0cbb819b624975f",
+      "bytes": 1062
+    },
+    {
+      "path": "scripts/probe-book2.ts",
+      "sha256": "d6608792d3cb4a72ea72fcf12d220ae0fd1a2f19d87082d3212a8aeba65456fe",
+      "bytes": 1188
+    },
+    {
+      "path": "scripts/probe-estimategas.ts",
+      "sha256": "2249be9eab42e16f7e0f2c5ed817f051cc42ca951513df4bdb9adf4a1234cd02",
+      "bytes": 1368
+    },
+    {
+      "path": "scripts/probe-poll.ts",
+      "sha256": "b023951d683de3b4a9f665c16d33d9d439d4f5ac4cae3e55f555c229658275c5",
+      "bytes": 855
+    },
+    {
+      "path": "scripts/probe-read.ts",
+      "sha256": "b770206630f5179f6dcb4ff5526c2366371e367813705f652f4f89526ddb0f5e",
+      "bytes": 693
+    },
+    {
+      "path": "scripts/probe-rpc-caps.ts",
+      "sha256": "98884337dd355e9c7f960842d41b9b14280a58225ff6eb5763ba7a85ab80b243",
+      "bytes": 3024
+    },
+    {
+      "path": "scripts/public-market-capture.ts",
+      "sha256": "83fadebad1b91a9b9a0c9ccb1cd16bb3d2af2f4ed2b872df1c74ee1b90bd71ed",
+      "bytes": 2765
+    },
+    {
+      "path": "scripts/rpc-result.test.ts",
+      "sha256": "eb04dd377fac0d150dac788eafd32b43b2d52f8060a15a6426f04819aa0ee0db",
+      "bytes": 759
+    },
+    {
+      "path": "scripts/rpc-result.ts",
+      "sha256": "0a7086687259b52fbd01004aa126b2822448baaf71e723e78acb42e33744cd1c",
+      "bytes": 519
+    },
+    {
+      "path": "scripts/trace-rpc.ts",
+      "sha256": "cb43caa93968c7fc88080f6779a8bcfba87d2fc8601bfbf291d0d269f7503aa3",
+      "bytes": 6857
+    },
+    {
+      "path": "scripts/trades-smoke.ts",
+      "sha256": "31725cd3204487b1c6bbf98c43fa97765c173ee0fc92e9731e992a7b91aa5add",
+      "bytes": 1427
+    },
+    {
+      "path": "src/backtest-evidence-cli.test.ts",
+      "sha256": "94b273bdec5bc1e3c2357225a3acca03b93665dc15c46a83f75b9af445a0f8fc",
+      "bytes": 6759
+    },
+    {
+      "path": "src/backtest-evidence.test.ts",
+      "sha256": "fdffa05e9bbe371c0f01f4f2fe2b7d74c681afb20959c1bb91a2fb56b1609062",
+      "bytes": 18948
+    },
+    {
+      "path": "src/backtest-evidence.ts",
+      "sha256": "4a21f47a26ec57eee68ab721a17de1c702f9c32474a43a859d99048280d7153e",
+      "bytes": 18312
+    },
+    {
+      "path": "src/backtest.test.ts",
+      "sha256": "424d3bb21e98ef66127a64a3cf546cccf36b8a217e045907add8626a3a6218b8",
+      "bytes": 12031
+    },
+    {
+      "path": "src/backtest.ts",
+      "sha256": "4874ad83cb3a1d3d4d98861bf4ee8d203b09d949af6aafc55ce8e54688d49dad",
+      "bytes": 24909
+    },
+    {
+      "path": "src/book.ts",
+      "sha256": "3c737c7a51d208296d6d4542a49b69cb4f45d17c4637e122099f28514c1834c5",
+      "bytes": 10502
+    },
+    {
+      "path": "src/chain.ts",
+      "sha256": "b94a062562b5b6b018fb58c8f9987681e2bbaf8437b7abae0e514b175da22cb5",
+      "bytes": 2103
+    },
+    {
+      "path": "src/config.test.ts",
+      "sha256": "5f69b0e86ea1e5157cec53f46631edc5cf85631f690553adecec181994dc6340",
+      "bytes": 586
+    },
+    {
+      "path": "src/config.ts",
+      "sha256": "92dd7a44a786676fb456da019660871b2e77dd273fe148271f2c1541f43a2693",
+      "bytes": 4779
+    },
+    {
+      "path": "src/doctor.test.ts",
+      "sha256": "78b7654523c7bbb5e9378be4529e455c4062383acf3337be64ef51472f4b212b",
+      "bytes": 1293
+    },
+    {
+      "path": "src/economics.test.ts",
+      "sha256": "1e1b972daa4fc3c8209bee5c71b2a8ef9da25e762e21cd8aecd5d0fc1887506b",
+      "bytes": 663
+    },
+    {
+      "path": "src/economics.ts",
+      "sha256": "bf3ed7488bd1a2b3fddcd22404a2775b2a863736fcd1ed79011d904c8b19b74e",
+      "bytes": 812
+    },
+    {
+      "path": "src/index.ts",
+      "sha256": "7275a80b361e5d9a9700a4196518cc3d64d2244bfa7e23b25052a3e73336ecfa",
+      "bytes": 2517
+    },
+    {
+      "path": "src/market.test.ts",
+      "sha256": "476cf86404522bbfdb555165f0a08422506859f7b49621db292a25d600d335b9",
+      "bytes": 3490
+    },
+    {
+      "path": "src/market.ts",
+      "sha256": "45496f458f3e265e6a665eb035f7799ed36ee9e0f5d2a2447dde98bc8eccc758",
+      "bytes": 18917
+    },
+    {
+      "path": "src/model-adapter.test.ts",
+      "sha256": "1590e7d245e65784214d872fc03fbf3a87cbd1b9452e1820653b29613c90565e",
+      "bytes": 1285
+    },
+    {
+      "path": "src/model.test.ts",
+      "sha256": "3e3c979fbbcfb1d9489c35eff19b2ea631b3643b62b32f7b1013e26ea27913db",
+      "bytes": 620
+    },
+    {
+      "path": "src/model.ts",
+      "sha256": "2c076f42e33261619a7e791479fe9200ed6865213406314344ea0772a657185d",
+      "bytes": 5912
+    },
+    {
+      "path": "src/okx-api.test.ts",
+      "sha256": "85fff55e5ecf7b86d48a294452902713a8ca3405a50e94f48488ee0f275038b2",
+      "bytes": 9653
+    },
+    {
+      "path": "src/okx-api.ts",
+      "sha256": "a789473dab0d10a300a8fb29255d8794e21e7b3779b1d5719fc41e843e10d4b4",
+      "bytes": 11788
+    },
+    {
+      "path": "src/okx-evidence/fixture.ts",
+      "sha256": "b09c56feb5b7b4392372166d589d30a3e5861267547f83b89bee96d26dbc7e17",
+      "bytes": 991
+    },
+    {
+      "path": "src/okx-evidence/report.test.ts",
+      "sha256": "51a9a9e4e5fc8bada2d35b791297d97c70f4604de3f5291910e5073db5336e78",
+      "bytes": 11298
+    },
+    {
+      "path": "src/okx-evidence/report.ts",
+      "sha256": "4b93ed9361a159102c9482cce355bbc94b62b091850cb7961bb4c69c61e4efff",
+      "bytes": 10400
+    },
+    {
+      "path": "src/okx-market/dex-cli.test.ts",
+      "sha256": "267785090c19f6551e0ae83e4dba40fa263215afb68c5c59ba88b78d8b7a034c",
+      "bytes": 5451
+    },
+    {
+      "path": "src/okx-market/dex-fixture.ts",
+      "sha256": "bd63dc6c5235d6c038e5cca1e0dbea71fc9fbe987398b304ac51e7b24f76473c",
+      "bytes": 1387
+    },
+    {
+      "path": "src/okx-market/okx-api.test.ts",
+      "sha256": "325b63d117738e659811776017ef2cc2f143665b45dbaa94e1e69acabb380d3d",
+      "bytes": 21859
+    },
+    {
+      "path": "src/okx-market/okx-api.ts",
+      "sha256": "d4e1378df7ed48a408cd400e7dc2ad921cb82966dd651c00951ee5911b470e9b",
+      "bytes": 12606
+    },
+    {
+      "path": "src/okx-market/okx-cli.test.ts",
+      "sha256": "c2b81fbee948da29bad8025f88d634c343432d59c9964f52c6bdb788da723f15",
+      "bytes": 3326
+    },
+    {
+      "path": "src/okx-market/okx-dex.test.ts",
+      "sha256": "66936735ebab3b621b88a7cda87ed17427fdd35eb6e0cc99963c9192f9e4473f",
+      "bytes": 11269
+    },
+    {
+      "path": "src/okx-market/okx-dex.ts",
+      "sha256": "53ada8598eead8f8ccf78169c5fee4fb910b34d313165427089f5138680b7519",
+      "bytes": 12027
+    },
+    {
+      "path": "src/okx-market/okx-fixture.ts",
+      "sha256": "875fc8c6d09acc8cd8b79b4ce00d626b8bc174c383e7a2c1486b9b13178f580d",
+      "bytes": 1603
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.test.ts",
+      "sha256": "cce1d7d2c21dbe50ecf4275538cda0defb6286fbd15637866eaaee4d5b45cc99",
+      "bytes": 8777
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.ts",
+      "sha256": "e138e1fb7586a03a9aa35fd3903a306dd8e2588882048f911445b621712eddce",
+      "bytes": 9289
+    },
+    {
+      "path": "src/okx-market/okx-scan.test.ts",
+      "sha256": "f0d74efdba2d74af0167121958e7d771b9f2f61998a5ae7a41934b2713ee45d9",
+      "bytes": 11005
+    },
+    {
+      "path": "src/okx-market/okx-scan.ts",
+      "sha256": "6fc0263ccac39aa95f913e49dfffe31abc6a844a6faef5b1a089754c5e3b432d",
+      "bytes": 5094
+    },
+    {
+      "path": "src/okx-market/round-trip.test.ts",
+      "sha256": "6119ee4974a90941c0c800e1a005b97385b182e9ee9cb130032a82273ed66190",
+      "bytes": 26934
+    },
+    {
+      "path": "src/okx-market/round-trip.ts",
+      "sha256": "d236829f2cf646d26ce793ad97958416d13797dfcaad2f30f7dc6053c4d2cbff",
+      "bytes": 12264
+    },
+    {
+      "path": "src/okx-market/synthetic-round-trip.ts",
+      "sha256": "edd4d85c5f907c00fe3601c472625e995f1520f7f0f0068b87f0d9f12fce7d13",
+      "bytes": 2093
+    },
+    {
+      "path": "src/okx-market/token-identity.ts",
+      "sha256": "a101e9bf29bcde08654f4ddd07fc3aae56c3f7d0c2b2f528cdb70b4acc7fa0db",
+      "bytes": 648
+    },
+    {
+      "path": "src/okx-opportunities.test.ts",
+      "sha256": "e42477ab10e560d70485a239e0167c498b58bbec360800b8064e478d0143b20c",
+      "bytes": 10065
+    },
+    {
+      "path": "src/okx-opportunities.ts",
+      "sha256": "902a8873cb69aad3203e2e348496664b0311f54ee78680956653c5cec2a78481",
+      "bytes": 12377
+    },
+    {
+      "path": "src/okx-signals/client.test.ts",
+      "sha256": "60eca0ac7dee9ad6810470be3f64e3de469d65303f8643ae874d17664b39b060",
+      "bytes": 5199
+    },
+    {
+      "path": "src/okx-signals/client.ts",
+      "sha256": "e62382918ed3d30dbb3b73b7518a9c699f0a6525b3afbab82ab31556cfc67ea9",
+      "bytes": 3294
+    },
+    {
+      "path": "src/okx-signals/fixture.ts",
+      "sha256": "b01ad5153451bfe4a02168f26a2ae76a22ea45f8bcacf1449d174c4dcd4b75e0",
+      "bytes": 1183
+    },
+    {
+      "path": "src/okx-signals/report.test.ts",
+      "sha256": "38eba8065411be3e3867837a0adb719095cd1a08e2e47b89f0fdbd9a3520718f",
+      "bytes": 8923
+    },
+    {
+      "path": "src/okx-signals/report.ts",
+      "sha256": "910793b9fa3c654a6635b87ee427918d71c0fd29d40f00d47fc577a1db186b97",
+      "bytes": 6420
+    },
+    {
+      "path": "src/paper-capital.test.ts",
+      "sha256": "25e987f9828767d755307d9a91e83f57f7023199f82201b5c2ac3ca8585ac3d7",
+      "bytes": 32601
+    },
+    {
+      "path": "src/paper-capital.ts",
+      "sha256": "428b72a38b4d6ad176e7034c403deb3f2b2279c71d0ceb571ad5eacc830fcdee",
+      "bytes": 23792
+    },
+    {
+      "path": "src/paper-supervisor-runner.test.ts",
+      "sha256": "76acb38f88ed44b4e7fcf000d0707097fba3f0713a5d9af42649f70c5bff5d01",
+      "bytes": 52753
+    },
+    {
+      "path": "src/paper-supervisor-runner.ts",
+      "sha256": "90ab7e81d5bade67d12ee829aaac9e471a146ffe5b423608fc3c05b6c6852537",
+      "bytes": 18986
+    },
+    {
+      "path": "src/paper-supervisor-store.test.ts",
+      "sha256": "65b63d4eadbac261da65447b7856d31b67457ce665175bf5126b6973a15576a7",
+      "bytes": 14448
+    },
+    {
+      "path": "src/paper-supervisor-store.ts",
+      "sha256": "cbab51fd6eb7a6a91754df4c2d84ca3644b7fc58889a1e1d787e8bb64e3ae3bc",
+      "bytes": 18879
+    },
+    {
+      "path": "src/paper-supervisor.test.ts",
+      "sha256": "ce2fed2db1810af4bc0dcf4dd2321e0398e88eafdbfc01aab0512f83393954f0",
+      "bytes": 69531
+    },
+    {
+      "path": "src/paper-supervisor.ts",
+      "sha256": "3461087a2d4a2a264e98d40a86eea1d1895fcacd9b75613150d3df38e8397eab",
+      "bytes": 55926
+    },
+    {
+      "path": "src/public-market-capture/capture.test.ts",
+      "sha256": "641ba5b928b4321036a621fbcf90dadf885efbcc57e197f256e5e543ac6ddc59",
+      "bytes": 11864
+    },
+    {
+      "path": "src/public-market-capture/cli.test.ts",
+      "sha256": "ab9338768ac47b57757200626243fd52b81b5f38665299baef2fcfbc06db5bb6",
+      "bytes": 2990
+    },
+    {
+      "path": "src/public-market-capture/index.ts",
+      "sha256": "3127b05de8cf6c7d67a2d16e7f526c00b54b17198c4f30cf711833e0eb52d3b4",
+      "bytes": 356
+    },
+    {
+      "path": "src/public-market-capture/ingress.test.ts",
+      "sha256": "e1dd31defa9e519b7f36139fb09ec8f57db18c8acb3d3541f81111407c3588a0",
+      "bytes": 6132
+    },
+    {
+      "path": "src/public-market-capture/ingress.ts",
+      "sha256": "fd574dce5038761ded816965009eeaaf36fb569974d3c5697a5eb5c992267756",
+      "bytes": 9707
+    },
+    {
+      "path": "src/public-market-capture/lifecycle.test.ts",
+      "sha256": "04c4af7330e4f430b603ed21e10efdf7fc7f776778b43204c2f2e1927132b571",
+      "bytes": 19157
+    },
+    {
+      "path": "src/public-market-capture/limits.test.ts",
+      "sha256": "1dde93781c68c14e52a6d07f5dcc5466738dc112a122882c6d13ca6f301abc73",
+      "bytes": 7038
+    },
+    {
+      "path": "src/public-market-capture/metadata.test.ts",
+      "sha256": "d8a692dd6ccae4b73ddcdec1425d74abafdc8e231607268e33844cc4856f4edf",
+      "bytes": 9865
+    },
+    {
+      "path": "src/public-market-capture/node-adapter.test.ts",
+      "sha256": "42f6e0e2442f8f8d2345d283ddd9236f3ea30a068e32347bd6ded34db9965d67",
+      "bytes": 2184
+    },
+    {
+      "path": "src/public-market-capture/node-adapter.ts",
+      "sha256": "fb3851965b537dc6298ab19c9076b0cc7b304537ad6a7141b5c57efc206f4f9c",
+      "bytes": 8517
+    },
+    {
+      "path": "src/public-market-capture/observations.ts",
+      "sha256": "77cdaeabd1f2a0cc7f01de7b2ddef4b48ead4a08ef246b481d6b8024a0e4f2d7",
+      "bytes": 10736
+    },
+    {
+      "path": "src/public-market-capture/plan.ts",
+      "sha256": "746c8ef5a34872af1a9ce2b84678c7080b0f25a8aa18c1fe5956b0f7e08991d1",
+      "bytes": 5937
+    },
+    {
+      "path": "src/public-market-capture/recovery.test.ts",
+      "sha256": "437c85c2dde170ac9cb9d01151d8fafc38f3943b28f8cf9cf1e4c08df5d56231",
+      "bytes": 6069
+    },
+    {
+      "path": "src/public-market-capture/reporting.test.ts",
+      "sha256": "34220bc7d7ac90e53048d8e9da976454f7b7626c99ca063bc4ec076ff7bb3444",
+      "bytes": 1173
+    },
+    {
+      "path": "src/public-market-capture/runner.ts",
+      "sha256": "969fa53cd017372766489950377a3eeacca8bd5f539100d4b8b8eee04bbfedee",
+      "bytes": 21542
+    },
+    {
+      "path": "src/public-market-capture/sequence.test.ts",
+      "sha256": "43ddfc2d3ed260ab2af0f5f85495b8b021b8cac1f134e62e651ef74585ae1f4e",
+      "bytes": 6646
+    },
+    {
+      "path": "src/public-market-capture/store.ts",
+      "sha256": "05b2bf3043d12207d7f561e422a75c6a6cc60bdb81779fa257e29d844d1e5dbe",
+      "bytes": 17107
+    },
+    {
+      "path": "src/risk.test.ts",
+      "sha256": "9a886f27ef18635133c0b946398e81cfb29e68a4508707c416194c852c122303",
+      "bytes": 617
+    },
+    {
+      "path": "src/risk.ts",
+      "sha256": "57bfbb0a2a4180efd682e6226c70eb200b32f3a446ea67b489abc3239ca80008",
+      "bytes": 2036
+    },
+    {
+      "path": "src/server.ts",
+      "sha256": "56511e042a178b730429e2e7cdd338f6fccd34870f8d6a8ec1920b3397240ea4",
+      "bytes": 2425
+    },
+    {
+      "path": "src/trader.test.ts",
+      "sha256": "0a9a6fce28e707d6f7f28e9b1f2cb3dbfd454cc51ad85db1a67925da16922a72",
+      "bytes": 17009
+    },
+    {
+      "path": "src/trader.ts",
+      "sha256": "d0b859256bab5c10bf3cc2660bae6b6bee858eefaea40c49051eb2f35f42bccd",
+      "bytes": 33799
+    },
+    {
+      "path": "src/trades.ts",
+      "sha256": "1ff0dfd30c7f7bdaaa59569957eec6870c5aa2aaf37c824c24101d5f657cc962",
+      "bytes": 7302
+    },
+    {
+      "path": "src/verification-commands.test.ts",
+      "sha256": "193d11b46a0be979382308e9d37824321f4408e09919341ac5d1f2f5e81f5403",
+      "bytes": 2658
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "547fa219173f4eb0ed6e672aff33733b59e6fe75c635cf59a7699474f2037c84",
+      "bytes": 913
+    },
+    {
+      "path": "tsconfig.verification.json",
+      "sha256": "3fe968e0c3b6341a7978a861d78047b3a292ff61c3a91d8b2d0099db8643608f",
+      "bytes": 68
+    }
+  ],
+  "network": false,
+  "credentialReads": false
+}

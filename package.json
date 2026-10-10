@@ -1,5 +1,6 @@
 {
-  "name": "jev-trader",
+  "name": "inonu-trader",
+  "version": "0.0.2",
   "module": "src/index.ts",
   "type": "module",
   "private": true,
@@ -18,6 +19,19 @@
   },
   "scripts": {
     "start": "bun run src/index.ts",
-    "dev": "bun --watch run src/index.ts"
+    "dev": "bun --watch run src/index.ts",
+    "doctor": "bun run scripts/doctor.ts",
+    "capture": "bun run scripts/capture.ts",
+    "backtest": "bun run scripts/backtest.ts",
+    "test": "bun --no-env-file test --parallel=1 --timeout 15000 ./src ./scripts",
+    "test:all": "bun --no-env-file run test && bun --no-env-file run --cwd web test",
+    "typecheck": "tsc --noEmit -p tsconfig.verification.json",
+    "typecheck:all": "bun --no-env-file run typecheck && bun --no-env-file run --cwd web typecheck",
+    "build": "bun --no-env-file run --cwd web build",
+    "okx:market-scan": "bun --no-env-file run scripts/okx-market-scan.ts",
+    "okx:dex-quote": "bun --no-env-file run scripts/okx-dex-quote.ts",
+    "okx:signals": "bun --no-env-file run scripts/okx-signals.ts",
+    "okx:evidence": "bun --no-env-file run scripts/okx-evidence.ts",
+    "okx:defi": "bun --no-env-file run scripts/okx-defi.ts"
   }
 }

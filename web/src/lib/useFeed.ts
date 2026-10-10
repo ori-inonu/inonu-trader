@@ -175,14 +175,17 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-function parseMeta(raw: Record<string, unknown> | null): Meta | null {
+export function parseMeta(raw: Record<string, unknown> | null): Meta | null {
   if (!raw) return null;
   return {
     model: typeof raw.model === "string" ? raw.model : "",
     wallet: typeof raw.wallet === "string" ? raw.wallet : null,
-    dryRun: Boolean(raw.dryRun),
-    market: typeof raw.market === "string" ? raw.market : "MON/USDC",
-    startedAt: typeof raw.startedAt === "number" ? raw.startedAt : Date.now(),
+    dryRun: raw.dryRun === true,
+    ...(typeof raw.mode === "string" ? { mode: raw.mode } : {}),
+    ...(typeof raw.dataSource === "string" ? { dataSource: raw.dataSource } : {}),
+    market: typeof raw.market === "string" ? raw.market : "",
+    startedAt: typeof raw.startedAt === "number" && Number.isFinite(raw.startedAt) && raw.startedAt >= 0
+      ? raw.startedAt : null,
   };
 }
 

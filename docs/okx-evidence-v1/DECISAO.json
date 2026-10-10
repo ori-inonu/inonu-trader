@@ -1,0 +1,41 @@
+{
+  "status": "assessed",
+  "receiptId": "700226d7-e4b6-47aa-ae6e-9c492a4aa0e2",
+  "inputDigest": "6e0f2d91aa40c319a3f8172ce1bb131c0af97a2ec13b9c73dbf7e764ac361937",
+  "rubricVersion": "batch-2026-09-26.2",
+  "model": "jev-1.13.0",
+  "answers": {
+    "next_bounded_improvement": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "offline_evidence_join",
+      "bestCandidate": "offline_evidence_join",
+      "probabilities": {
+        "offline_evidence_join": 0.91,
+        "read_only_portfolio_research": 0.01,
+        "public_rewards_research": 0.07,
+        "insufficient_evidence": 0.01
+      },
+      "confidence": 0.88,
+      "disposition": "recommendation",
+      "recommendation": "offline_evidence_join",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 820,
+    "output_tokens": 76
+  },
+  "latencyMs": 327,
+  "receiptPersisted": true,
+  "decision_source": "jev",
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "observed_cost_usd": null
+}

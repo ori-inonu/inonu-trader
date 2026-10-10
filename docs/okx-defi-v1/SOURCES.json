@@ -1,0 +1,78 @@
+{
+  "purpose": "Bounded public primary-source DeFi research; no implementation",
+  "retrieval_date_utc": "2026-10-10",
+  "consultation_recorded_at_utc": "2026-10-10T14:03:57Z",
+  "queries_used": 2,
+  "queries_limit": 2,
+  "queries": [
+    "site:okx.com/web3/build/docs \"DeFi\" \"product\" \"APY\"",
+    "site:okx.com/web3/build/docs \"DeFi\" \"redeem\" \"API\""
+  ],
+  "canonical_pages_read": 3,
+  "canonical_pages_limit": 3,
+  "sources": [
+    {
+      "id": "D1",
+      "title": "Investment Product Search",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-product-search",
+      "primary": true,
+      "published_at": null,
+      "updated_at": null,
+      "supporting_lines": [[60,72],[134,196]],
+      "method": "POST",
+      "path": "/api/v6/defi/product/search"
+    },
+    {
+      "id": "D2",
+      "title": "Get Product Details",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-product-detail",
+      "primary": true,
+      "published_at": null,
+      "updated_at": null,
+      "supporting_lines": [[60,104],[110,161]],
+      "method": "GET",
+      "path": "/api/v6/defi/product/detail"
+    },
+    {
+      "id": "D3",
+      "title": "Redemption",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-transaction-exit",
+      "primary": true,
+      "published_at": null,
+      "updated_at": null,
+      "supporting_lines": [[60,81],[152,169],[202,202]],
+      "method": "POST",
+      "path": "/api/v6/defi/transaction/exit"
+    }
+  ],
+  "unknowns": {
+    "personal_api_access": null,
+    "local_installation": null,
+    "personal_eligibility": null,
+    "complete_fee_basis_and_total_cost": null,
+    "apr_conversion_or_compounding_formula": null,
+    "deposit_endpoint_contract": null,
+    "lockup_or_redemption_completion_horizon": null,
+    "personal_available_redemption_liquidity": null,
+    "wallet_rewards_campaign_contract": null,
+    "effective_model": null,
+    "effective_tier": null,
+    "effective_sandbox": null
+  },
+  "authorization_boundary": {
+    "public_documentation_only": true,
+    "implementation_authorized_by_this_report": false,
+    "transaction_authorized_by_this_report": false,
+    "authentication_examples_copied": false,
+    "private_repo_or_snapshot_modified": false
+  },
+  "technical_direction_receipt": {
+    "provenance": "provided_by_coordinator; not re-executed or independently recovered",
+    "receipt_id": "d6d7c216-738d-4482-9bc9-fa03e89c3f25",
+    "choice": "defi_yield_contract",
+    "confidence": 0.79,
+    "human_response": false,
+    "cost_usd": null
+  },
+  "next_cut": "Offline observational search/detail contract; no implementation or financial execution"
+}

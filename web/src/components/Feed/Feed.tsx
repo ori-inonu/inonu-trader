@@ -1,145 +1,158 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { BlockEvent } from "@/lib/types";
+import { filterFeedEvents, type FeedSideFilter, type FeedTypeFilter } from "@/lib/presentation";
 import { fmtInt, fmtPrice, shortTx, txUrl } from "@/lib/format";
 import styles from "./Feed.module.css";
 
-/** Must match `.row { height }` in Feed.module.css. */
-const ROW_H = 26;
-/** Hard ceiling, so a very tall viewport does not render an absurd list. */
+const ROW_H = 72;
 const MAX_ROWS = 40;
 
-type Kind = "buy" | "sell" | "late";
+type Kind = "buy" | "sell" | "hold" | "late" | "waiting";
 
 function kindOf(event: BlockEvent): Kind {
-  const d = event.decision;
-  if (!d || d.late) return "late";
-  if (d.action === "buy") return "buy";
-  if (d.action === "sell") return "sell";
-  return "late";
+  const decision = event.decision;
+  if (!decision) return "waiting";
+  if (decision.late) return "late";
+  return decision.action;
 }
 
-function fmtSize(size: number): string {
-  return size.toLocaleString("en-US", { maximumFractionDigits: 2 });
-}
-
-const KIND_CLASS: Record<Kind, string> = {
-  buy: styles.kindBuy,
-  sell: styles.kindSell,
-  late: styles.kindLate,
+const KIND_LABEL: Record<Kind, string> = {
+  buy: "Compra",
+  sell: "Venda",
+  hold: "Manter",
+  late: "Resposta tardia",
+  waiting: "Sem decisão",
 };
 
-const WORD: Record<Kind, string> = { buy: "BUY", sell: "SELL", late: "LATE" };
+function fmtSize(size: number): string {
+  return Number.isFinite(size) ? size.toLocaleString("en-US", { maximumFractionDigits: 2 }) : "Indisponível";
+}
 
-/**
- * One row per block. The word is the side the model picked, the detail is the order that went on
- * the book (bid or ask at its price), and when a taker hit one of our orders in that block the
- * detail becomes the fill instead. The tx column is the order's transaction: dim while pending,
- * "rev" if the book moved through the price before it landed.
- */
+function confidence(event: BlockEvent): string {
+  const probabilities = event.decision?.probabilities;
+  if (!probabilities) return "Indisponível";
+  const values = [probabilities.buy, probabilities.sell, probabilities.hold];
+  if (values.some((value) => !Number.isFinite(value) || value < 0 || value > 1)) return "Indisponível";
+  return `${Math.round(Math.max(...values) * 100)}%`;
+}
+
+function orderStatus(status: NonNullable<BlockEvent["quote"]>["status"]): string {
+  switch (status) {
+    case "sent": return "Pendente";
+    case "placed": return "Registrada";
+    case "reverted": return "Revertida";
+    case "lost": return "Sem confirmação";
+    case "sim": return "Simulado";
+  }
+}
+
 export default function Feed({ events }: { events: BlockEvent[] }) {
   const listRef = useRef<HTMLDivElement | null>(null);
-  // How many whole 26px rows fit in the box the layout gives us. The list
-  // itself clips, so a wrong guess is never a half-drawn row, only a hidden one.
+  const sideId = useId();
+  const typeId = useId();
   const [capacity, setCapacity] = useState(MAX_ROWS);
+  const [sideFilter, setSideFilter] = useState<FeedSideFilter>("all");
+  const [typeFilter, setTypeFilter] = useState<FeedTypeFilter>("all");
 
   useEffect(() => {
-    const el = listRef.current;
-    if (!el) return;
-
+    const element = listRef.current;
+    if (!element) return;
     const measure = () => {
-      const fits = Math.max(1, Math.min(MAX_ROWS, Math.floor(el.clientHeight / ROW_H)));
-      setCapacity((prev) => (prev === fits ? prev : fits));
+      const fits = Math.max(1, Math.min(MAX_ROWS, Math.floor(element.clientHeight / ROW_H)));
+      setCapacity((previous) => (previous === fits ? previous : fits));
     };
-
     measure();
     if (typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
   }, []);
 
-  const rows = events.slice(-capacity).reverse();
+  const filtered = filterFeedEvents(events, sideFilter, typeFilter);
+  const rows = filtered.slice(-capacity).reverse();
+  const defaultSelection = sideFilter === "all" && typeFilter === "all";
+  const emptyMessage = events.length === 0 && defaultSelection
+    ? "Aguardando dados do feed"
+    : "Nenhum evento para estes filtros";
 
   return (
-    <section className={styles.feed}>
-      <div className={styles.label}>FEED</div>
-      <div className={styles.list} ref={listRef}>
+    <section className={styles.feed} aria-labelledby="feed-title">
+      <header className={styles.header}>
+        <div>
+          <p className={styles.eyebrow}>ATIVIDADE</p>
+          <h2 id="feed-title" className={styles.title}>Feed de eventos</h2>
+        </div>
+        <span className={styles.count}>{filtered.length} encontrados</span>
+      </header>
+
+      <div className={styles.filters}>
+        <label className={styles.filter} htmlFor={sideId}>
+          <span>Lado</span>
+          <select id={sideId} value={sideFilter} onChange={(event) => setSideFilter(event.target.value as FeedSideFilter)}>
+            <option value="all">Todos</option>
+            <option value="buy">Compra</option>
+            <option value="sell">Venda</option>
+            <option value="hold">Manter</option>
+          </select>
+        </label>
+        <label className={styles.filter} htmlFor={typeId}>
+          <span>Tipo</span>
+          <select id={typeId} value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as FeedTypeFilter)}>
+            <option value="all">Todos</option>
+            <option value="orders">Ordens</option>
+            <option value="fills">Execuções</option>
+          </select>
+        </label>
+      </div>
+
+      {filtered.length > rows.length ? (
+        <p className={styles.range}>Exibindo os {rows.length} eventos mais recentes de {filtered.length} correspondências.</p>
+      ) : null}
+
+      <div className={styles.list} ref={listRef} role="list" aria-label="Eventos do feed">
         {rows.length === 0 ? (
-          <div className={styles.empty}>no blocks yet</div>
-        ) : (
-          rows.map((event, i) => {
-            const kind = kindOf(event);
-            const decision = event.decision;
-            const quote = event.quote;
-            const fill = event.fill;
-            const decided = kind !== "late";
-            const kindClass = KIND_CLASS[kind];
+          <p className={styles.empty}>{emptyMessage}</p>
+        ) : rows.map((event) => {
+          const kind = kindOf(event);
+          const decision = event.decision;
+          const quote = event.quote;
+          const fill = event.fill;
+          const detail = fill
+            ? `${fill.simulated ? "Simulado" : "Execução informada"}: ${fmtSize(fill.size)} @ ${fmtPrice(fill.price)}`
+            : quote
+              ? `${quote.side === "buy" ? "Compra" : "Venda"} ${fmtSize(quote.size)} @ ${fmtPrice(quote.price)}${quote.capped ? " com limite" : ""}`
+              : "Sem ordem ou execução informada";
+          const status = fill?.simulated || quote?.status === "sim"
+            ? "Simulado"
+            : quote
+              ? orderStatus(quote.status)
+              : null;
+          const txHash = fill && !fill.simulated ? fill.txHash : quote && quote.status !== "sim" ? quote.txHash : null;
 
-            const conf =
-              !decided || !decision
-                ? ""
-                : "conf " +
-                  Math.max(
-                    decision.probabilities.buy,
-                    decision.probabilities.sell,
-                    decision.probabilities.hold,
-                  ).toFixed(2);
-
-            const lat = !decided || !decision ? "" : `${decision.latencyMs}ms`;
-
-            let detail = "";
-            let detailMuted = false;
-            if (fill && fill.size > 0) {
-              detail = `FILL ${fmtSize(fill.size)} @ ${fmtPrice(fill.price)}`;
-            } else if (decided && quote) {
-              const word = quote.side === "buy" ? "bid" : "ask";
-              detail = `${word} ${fmtSize(quote.size)} @ ${fmtPrice(quote.price)}${quote.capped ? " cap" : ""}`;
-              detailMuted = quote.status === "reverted" || quote.status === "lost";
-            } else if (decided) {
-              detail = "no quote";
-              detailMuted = true;
-            }
-
-            const rowClass = [styles.row, kindClass, i === 0 ? styles.newest : "", fill ? styles.filled : ""]
-              .filter(Boolean)
-              .join(" ");
-
-            return (
-              <div key={event.block} className={rowClass}>
-                <span className={`${styles.cell} ${styles.block}`}>{fmtInt(event.block)}</span>
-                <span className={`${styles.cell} ${styles.word}`}>{WORD[kind]}</span>
-                <span className={`${styles.cell} ${styles.conf}`}>{conf}</span>
-                <span className={`${styles.cell} ${styles.lat}`}>{lat}</span>
-                <span
-                  className={`${styles.cell} ${styles.detail}${detailMuted ? ` ${styles.muted}` : ""}`}
-                >
-                  {detail}
-                </span>
-                <span className={`${styles.cell} ${styles.tx}`}>
-                  {fill && !fill.simulated && fill.txHash ? (
-                    <a href={txUrl(fill.txHash)} target="_blank" rel="noreferrer" title="the taker's transaction">
-                      {shortTx(fill.txHash)}
-                    </a>
-                  ) : quote && quote.status === "sim" ? (
-                    <span className={styles.muted}>sim</span>
-                  ) : quote && quote.txHash ? (
-                    <a
-                      className={quote.status === "sent" ? styles.pending : quote.status === "placed" ? undefined : styles.muted}
-                      title={quote.status}
-                      href={txUrl(quote.txHash)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {quote.status === "reverted" ? "rev" : quote.status === "lost" ? "lost" : shortTx(quote.txHash)}
-                    </a>
-                  ) : null}
+          return (
+            <article className={`${styles.row} ${styles[kind]}`} key={event.block} role="listitem">
+              <div className={styles.rowTop}>
+                <span className={styles.block}>Bloco {fmtInt(event.block)}</span>
+                <span className={styles.kind}>{KIND_LABEL[kind]}</span>
+                <span className={styles.meta}>
+                  {decision ? `Confiança ${confidence(event)}` : "Confiança indisponível"}
+                  {decision && !decision.late && Number.isFinite(decision.latencyMs) ? `, ${Math.round(decision.latencyMs)} ms` : ""}
                 </span>
               </div>
-            );
-          })
-        )}
+              <div className={styles.rowBottom}>
+                <span className={styles.detail}>{detail}</span>
+                {status ? <span className={styles.status}>{status}</span> : null}
+                {txHash ? (
+                  <a href={txUrl(txHash)} target="_blank" rel="noreferrer" aria-label={`Abrir transação ${txHash}`}>
+                    {shortTx(txHash)}
+                  </a>
+                ) : null}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

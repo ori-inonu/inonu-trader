@@ -1,0 +1,393 @@
+{
+  "head": "b587759e459ea049590102e54a0b07800864cdc3",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "e0d68c8e981400c991a6dc1775a616f75fec7fef08c8144a78a85f7acd2fbcaf"
+    },
+    {
+      "path": "docs/okx-dex-units-v3/RESEARCH.md",
+      "sha256": "f51e61d8c4c975e0638f66eccbffe2783c8e0f65bd2a3c63659944d4323b7610"
+    },
+    {
+      "path": "docs/okx-dex-units-v3/SOURCES.json",
+      "sha256": "b2e560e8ee15b47b65192f829ee31b0472f379d384200e6e9020ce9a0c3e340b"
+    },
+    {
+      "path": "docs/okx-evidence-v1/CYCLE-REVIEW.json",
+      "sha256": "db65a0c41f2e0d8ba007051daa6c894dec2875ea65d91bb18f14e3be3864942c"
+    },
+    {
+      "path": "docs/okx-evidence-v1/CYCLE-REVIEW.md",
+      "sha256": "6fff2a8c3832b1dee73a6c9d8cdec5c6555727528ff39c25bc1d22549c26daab"
+    },
+    {
+      "path": "docs/okx-evidence-v1/DECISAO.json",
+      "sha256": "edfab912da851f4a799e3c63a2c7a001b1f3356069bd9d8b623b7f4700f74c4e"
+    },
+    {
+      "path": "docs/okx-evidence-v1/DESIGN-DECISION.json",
+      "sha256": "54bf2d9717352ed60149325f3ba1511d2f6bbc77b589c60d1e211060dea84bbd"
+    },
+    {
+      "path": "docs/okx-evidence-v1/PROPOSTA.md",
+      "sha256": "121eaa5632154b4f2ce57f261316a9005d9e402dd86bcafd12469e973525da95"
+    },
+    {
+      "path": "docs/okx-evidence-v1/SPEC.md",
+      "sha256": "899260372a4b07ae5adcf37df148fe682e6873652396906c7da7f3707d492d76"
+    },
+    {
+      "path": "docs/okx-signals-v1/AUDITORIA.md",
+      "sha256": "b1d9d777fe0f1f353eb4af585b9c986b27335adeb229a2bb2610d91f1d100f2f"
+    },
+    {
+      "path": "docs/okx-signals-v1/BASELINE.json",
+      "sha256": "a718f2cf0555d8fc697fd0c3b729705e2e3363b97767cbf7c2b362b630780b58"
+    },
+    {
+      "path": "docs/okx-signals-v1/GUIA.md",
+      "sha256": "a586f8282536dfd4abe96a2d12b73c68444ab31984477ac7df7528d38b56c25c"
+    },
+    {
+      "path": "docs/okx-signals-v1/SPEC.md",
+      "sha256": "b24bbe99a962220fe3fffd93d705fc441576d9100478bea001836594e287f70f"
+    },
+    {
+      "path": "docs/okx-signals-v1/VERIFICACAO.md",
+      "sha256": "a352662bc9d8b79fd014892aa5a6dbe52a22da8522a1d3cebfa17e9f62f215a6"
+    },
+    {
+      "path": "package.json",
+      "sha256": "55986128cea427e1cb027dc2c5f13c3fba816cff90cb8d9cdf5b26efceef91b9"
+    },
+    {
+      "path": "scripts/abi-selectors.ts",
+      "sha256": "df71e5489c204855c3169b694238728e83068c672a176987eb8d6a6ecaea3558"
+    },
+    {
+      "path": "scripts/backtest.ts",
+      "sha256": "f5d928a623d9995e95aeeb5132fa479e90ca4216636af13867794a73191441e8"
+    },
+    {
+      "path": "scripts/bench-read.ts",
+      "sha256": "9a07bb0ba81dc8f9f9aec48069e1cb20a7385c56a1a1ad0282f728da5b013bb9"
+    },
+    {
+      "path": "scripts/capture.ts",
+      "sha256": "40f918b2e723e724120b239ab5893e34f433dedf68fc33a70d6ad0c347dbf62a"
+    },
+    {
+      "path": "scripts/doctor.ts",
+      "sha256": "1763e1402a09038bba1831a0226cb5c4a3de97efb842f328bfe2188c26db95fb"
+    },
+    {
+      "path": "scripts/dry-encode.ts",
+      "sha256": "56071bbda6145a4d687152c22efd38cc5277c59e8ad38587bb909ad1de88d8ec"
+    },
+    {
+      "path": "scripts/fixtures/okx-scan-synthetic.json",
+      "sha256": "d961e033fdc44c8c634b1eda6cc5da0a3ceac46a6a290a7c9f9e68cdf4f09449"
+    },
+    {
+      "path": "scripts/okx-dex-quote.ts",
+      "sha256": "d0898dd2e46052f09c7de31b78d20791848acd3ed65d3e00b18a6936bec59803"
+    },
+    {
+      "path": "scripts/okx-market-scan.ts",
+      "sha256": "5d3d1de12bb59bcdc816a1ab109a86d4b87b18defde8ca19f22c6eaab8f9ed2e"
+    },
+    {
+      "path": "scripts/okx-scan.test.ts",
+      "sha256": "1cbad2bd61c0276a989fba6c966798c98008c86cacbdfe4f87f9d416744f3a79"
+    },
+    {
+      "path": "scripts/okx-scan.ts",
+      "sha256": "d62b80fe5d3fdc2633fab3b8295dea63d19e30a6a052a3daa6eadc74bde35bc3"
+    },
+    {
+      "path": "scripts/okx-signals.test.ts",
+      "sha256": "fc04c6e9d26a800c28842598cd97fa79196fa403ba703ba8368a0a137c0676b5"
+    },
+    {
+      "path": "scripts/okx-signals.ts",
+      "sha256": "9747244d1d4dbee3584ca23254224dc5b17cc5a863e13d000bb70b8ee02095bf"
+    },
+    {
+      "path": "scripts/probe-book.ts",
+      "sha256": "3c85e6c06e4ad70eaa2f86b963d161bc0d867e219c01b5d7c0cbb819b624975f"
+    },
+    {
+      "path": "scripts/probe-book2.ts",
+      "sha256": "d6608792d3cb4a72ea72fcf12d220ae0fd1a2f19d87082d3212a8aeba65456fe"
+    },
+    {
+      "path": "scripts/probe-estimategas.ts",
+      "sha256": "2249be9eab42e16f7e0f2c5ed817f051cc42ca951513df4bdb9adf4a1234cd02"
+    },
+    {
+      "path": "scripts/probe-poll.ts",
+      "sha256": "b023951d683de3b4a9f665c16d33d9d439d4f5ac4cae3e55f555c229658275c5"
+    },
+    {
+      "path": "scripts/probe-read.ts",
+      "sha256": "b770206630f5179f6dcb4ff5526c2366371e367813705f652f4f89526ddb0f5e"
+    },
+    {
+      "path": "scripts/probe-rpc-caps.ts",
+      "sha256": "98884337dd355e9c7f960842d41b9b14280a58225ff6eb5763ba7a85ab80b243"
+    },
+    {
+      "path": "scripts/rpc-result.test.ts",
+      "sha256": "eb04dd377fac0d150dac788eafd32b43b2d52f8060a15a6426f04819aa0ee0db"
+    },
+    {
+      "path": "scripts/rpc-result.ts",
+      "sha256": "0a7086687259b52fbd01004aa126b2822448baaf71e723e78acb42e33744cd1c"
+    },
+    {
+      "path": "scripts/trace-rpc.ts",
+      "sha256": "cb43caa93968c7fc88080f6779a8bcfba87d2fc8601bfbf291d0d269f7503aa3"
+    },
+    {
+      "path": "scripts/trades-smoke.ts",
+      "sha256": "31725cd3204487b1c6bbf98c43fa97765c173ee0fc92e9731e992a7b91aa5add"
+    },
+    {
+      "path": "src/backtest-evidence-cli.test.ts",
+      "sha256": "94b273bdec5bc1e3c2357225a3acca03b93665dc15c46a83f75b9af445a0f8fc"
+    },
+    {
+      "path": "src/backtest-evidence.test.ts",
+      "sha256": "a2eccf72db3f10e392a1aeaa04c1a45f4b10f0aa3989171e0f1ad9403f5455d1"
+    },
+    {
+      "path": "src/backtest-evidence.ts",
+      "sha256": "4a21f47a26ec57eee68ab721a17de1c702f9c32474a43a859d99048280d7153e"
+    },
+    {
+      "path": "src/backtest.test.ts",
+      "sha256": "48d7bfda58b9d2ec09b7ce61d28639382a3cb0d927f658bce24d0527718b6261"
+    },
+    {
+      "path": "src/backtest.ts",
+      "sha256": "c8b91ee5690c153fa07fbc90b813a7f7e4ab81283156833c4f986d67b005bf1f"
+    },
+    {
+      "path": "src/book.ts",
+      "sha256": "3c737c7a51d208296d6d4542a49b69cb4f45d17c4637e122099f28514c1834c5"
+    },
+    {
+      "path": "src/chain.ts",
+      "sha256": "b94a062562b5b6b018fb58c8f9987681e2bbaf8437b7abae0e514b175da22cb5"
+    },
+    {
+      "path": "src/config.test.ts",
+      "sha256": "5f69b0e86ea1e5157cec53f46631edc5cf85631f690553adecec181994dc6340"
+    },
+    {
+      "path": "src/config.ts",
+      "sha256": "92dd7a44a786676fb456da019660871b2e77dd273fe148271f2c1541f43a2693"
+    },
+    {
+      "path": "src/doctor.test.ts",
+      "sha256": "78b7654523c7bbb5e9378be4529e455c4062383acf3337be64ef51472f4b212b"
+    },
+    {
+      "path": "src/economics.test.ts",
+      "sha256": "1e1b972daa4fc3c8209bee5c71b2a8ef9da25e762e21cd8aecd5d0fc1887506b"
+    },
+    {
+      "path": "src/economics.ts",
+      "sha256": "bf3ed7488bd1a2b3fddcd22404a2775b2a863736fcd1ed79011d904c8b19b74e"
+    },
+    {
+      "path": "src/index.ts",
+      "sha256": "fe4c66f9c12e28f6eb4fdc2a24076c090b97101a5dbba4f0a7d5688a05e6747a"
+    },
+    {
+      "path": "src/market.ts",
+      "sha256": "f8adb13592316506b449261370489ad978c7d4ac9e5acf45b8e85c9c4a9dd5fb"
+    },
+    {
+      "path": "src/model-adapter.test.ts",
+      "sha256": "1590e7d245e65784214d872fc03fbf3a87cbd1b9452e1820653b29613c90565e"
+    },
+    {
+      "path": "src/model.test.ts",
+      "sha256": "3e3c979fbbcfb1d9489c35eff19b2ea631b3643b62b32f7b1013e26ea27913db"
+    },
+    {
+      "path": "src/model.ts",
+      "sha256": "b2f0c1508e981f2e172ede0952086c29b16fd2ad9b53c978292c0b999c459381"
+    },
+    {
+      "path": "src/okx-api.test.ts",
+      "sha256": "85fff55e5ecf7b86d48a294452902713a8ca3405a50e94f48488ee0f275038b2"
+    },
+    {
+      "path": "src/okx-api.ts",
+      "sha256": "a789473dab0d10a300a8fb29255d8794e21e7b3779b1d5719fc41e843e10d4b4"
+    },
+    {
+      "path": "src/okx-market/dex-cli.test.ts",
+      "sha256": "267785090c19f6551e0ae83e4dba40fa263215afb68c5c59ba88b78d8b7a034c"
+    },
+    {
+      "path": "src/okx-market/dex-fixture.ts",
+      "sha256": "bd63dc6c5235d6c038e5cca1e0dbea71fc9fbe987398b304ac51e7b24f76473c"
+    },
+    {
+      "path": "src/okx-market/okx-api.test.ts",
+      "sha256": "325b63d117738e659811776017ef2cc2f143665b45dbaa94e1e69acabb380d3d"
+    },
+    {
+      "path": "src/okx-market/okx-api.ts",
+      "sha256": "d4e1378df7ed48a408cd400e7dc2ad921cb82966dd651c00951ee5911b470e9b"
+    },
+    {
+      "path": "src/okx-market/okx-cli.test.ts",
+      "sha256": "c2b81fbee948da29bad8025f88d634c343432d59c9964f52c6bdb788da723f15"
+    },
+    {
+      "path": "src/okx-market/okx-dex.test.ts",
+      "sha256": "66936735ebab3b621b88a7cda87ed17427fdd35eb6e0cc99963c9192f9e4473f"
+    },
+    {
+      "path": "src/okx-market/okx-dex.ts",
+      "sha256": "2163e14494d9732ad438463472a65ec320d09d450011b05501fe1c6908e5fb5d"
+    },
+    {
+      "path": "src/okx-market/okx-fixture.ts",
+      "sha256": "875fc8c6d09acc8cd8b79b4ce00d626b8bc174c383e7a2c1486b9b13178f580d"
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.test.ts",
+      "sha256": "cce1d7d2c21dbe50ecf4275538cda0defb6286fbd15637866eaaee4d5b45cc99"
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.ts",
+      "sha256": "e138e1fb7586a03a9aa35fd3903a306dd8e2588882048f911445b621712eddce"
+    },
+    {
+      "path": "src/okx-market/okx-scan.test.ts",
+      "sha256": "f0d74efdba2d74af0167121958e7d771b9f2f61998a5ae7a41934b2713ee45d9"
+    },
+    {
+      "path": "src/okx-market/okx-scan.ts",
+      "sha256": "6fc0263ccac39aa95f913e49dfffe31abc6a844a6faef5b1a089754c5e3b432d"
+    },
+    {
+      "path": "src/okx-market/round-trip.test.ts",
+      "sha256": "701ef5a4153163647e101ef28b5a8fc11cb9e9cdf3d5912790cb73ad63bb3445"
+    },
+    {
+      "path": "src/okx-market/round-trip.ts",
+      "sha256": "7ceecf472342efc6ee9aaa86769a9c62cbcebfa82111a07da2cd9a53badd6ca4"
+    },
+    {
+      "path": "src/okx-market/token-identity.ts",
+      "sha256": "a101e9bf29bcde08654f4ddd07fc3aae56c3f7d0c2b2f528cdb70b4acc7fa0db"
+    },
+    {
+      "path": "src/okx-opportunities.test.ts",
+      "sha256": "e42477ab10e560d70485a239e0167c498b58bbec360800b8064e478d0143b20c"
+    },
+    {
+      "path": "src/okx-opportunities.ts",
+      "sha256": "902a8873cb69aad3203e2e348496664b0311f54ee78680956653c5cec2a78481"
+    },
+    {
+      "path": "src/okx-signals/client.test.ts",
+      "sha256": "60eca0ac7dee9ad6810470be3f64e3de469d65303f8643ae874d17664b39b060"
+    },
+    {
+      "path": "src/okx-signals/client.ts",
+      "sha256": "e62382918ed3d30dbb3b73b7518a9c699f0a6525b3afbab82ab31556cfc67ea9"
+    },
+    {
+      "path": "src/okx-signals/fixture.ts",
+      "sha256": "b01ad5153451bfe4a02168f26a2ae76a22ea45f8bcacf1449d174c4dcd4b75e0"
+    },
+    {
+      "path": "src/okx-signals/report.test.ts",
+      "sha256": "38eba8065411be3e3867837a0adb719095cd1a08e2e47b89f0fdbd9a3520718f"
+    },
+    {
+      "path": "src/okx-signals/report.ts",
+      "sha256": "910793b9fa3c654a6635b87ee427918d71c0fd29d40f00d47fc577a1db186b97"
+    },
+    {
+      "path": "src/paper-capital.test.ts",
+      "sha256": "25e987f9828767d755307d9a91e83f57f7023199f82201b5c2ac3ca8585ac3d7"
+    },
+    {
+      "path": "src/paper-capital.ts",
+      "sha256": "428b72a38b4d6ad176e7034c403deb3f2b2279c71d0ceb571ad5eacc830fcdee"
+    },
+    {
+      "path": "src/paper-supervisor-runner.test.ts",
+      "sha256": "76acb38f88ed44b4e7fcf000d0707097fba3f0713a5d9af42649f70c5bff5d01"
+    },
+    {
+      "path": "src/paper-supervisor-runner.ts",
+      "sha256": "90ab7e81d5bade67d12ee829aaac9e471a146ffe5b423608fc3c05b6c6852537"
+    },
+    {
+      "path": "src/paper-supervisor-store.test.ts",
+      "sha256": "65b63d4eadbac261da65447b7856d31b67457ce665175bf5126b6973a15576a7"
+    },
+    {
+      "path": "src/paper-supervisor-store.ts",
+      "sha256": "cbab51fd6eb7a6a91754df4c2d84ca3644b7fc58889a1e1d787e8bb64e3ae3bc"
+    },
+    {
+      "path": "src/paper-supervisor.test.ts",
+      "sha256": "ce2fed2db1810af4bc0dcf4dd2321e0398e88eafdbfc01aab0512f83393954f0"
+    },
+    {
+      "path": "src/paper-supervisor.ts",
+      "sha256": "3461087a2d4a2a264e98d40a86eea1d1895fcacd9b75613150d3df38e8397eab"
+    },
+    {
+      "path": "src/risk.test.ts",
+      "sha256": "9a886f27ef18635133c0b946398e81cfb29e68a4508707c416194c852c122303"
+    },
+    {
+      "path": "src/risk.ts",
+      "sha256": "57bfbb0a2a4180efd682e6226c70eb200b32f3a446ea67b489abc3239ca80008"
+    },
+    {
+      "path": "src/server.ts",
+      "sha256": "56511e042a178b730429e2e7cdd338f6fccd34870f8d6a8ec1920b3397240ea4"
+    },
+    {
+      "path": "src/trader.test.ts",
+      "sha256": "f78696f0baedc32ec3adb8cdaa9ed8475cc763aebc0f7ae980d6a88d4fdfca66"
+    },
+    {
+      "path": "src/trader.ts",
+      "sha256": "770d9c584a8e26e85e732c748a02e29b50b628da9cf710aca7881ee803e6b145"
+    },
+    {
+      "path": "src/trades.ts",
+      "sha256": "1ff0dfd30c7f7bdaaa59569957eec6870c5aa2aaf37c824c24101d5f657cc962"
+    },
+    {
+      "path": "src/verification-commands.test.ts",
+      "sha256": "193d11b46a0be979382308e9d37824321f4408e09919341ac5d1f2f5e81f5403"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "547fa219173f4eb0ed6e672aff33733b59e6fe75c635cf59a7699474f2037c84"
+    },
+    {
+      "path": "tsconfig.verification.json",
+      "sha256": "3fe968e0c3b6341a7978a861d78047b3a292ff61c3a91d8b2d0099db8643608f"
+    },
+    {
+      "path": "web/package.json",
+      "sha256": "a6b49e451094c6e6874e8750f1095b8279bccfde083f602b4991fc09be62629f"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-10-10T13:55:10Z",
+  "scope": { "publicSearches": 2, "canonicalPages": 3, "authenticatedCalls": 0 },
+  "sources": [
+    { "id": "simulation", "url": "https://web3.okx.com/onchainos/dev-docs/wallet/onchain-gateway-api-simulate-transaction", "locators": ["Request URL", "Request Parameters", "Response Parameters", "Request Example", "Response Example"], "providerTimestamp": null },
+    { "id": "advanced_info", "url": "https://web3.okx.com/onchainos/dev-docs/market/market-token-advanced-info", "locators": ["Request URL", "Response Parameters", "Response Example"], "providerTimestamp": null },
+    { "id": "quote", "url": "https://web3.okx.com/onchainos/dev-docs/trade/dex-get-quote", "locators": ["Request Parameters", "Response Parameters", "Response Example"], "providerTimestamp": null }
+  ],
+  "advisory": { "receiptId": "bcda7bc8-8585-4d93-bdec-5adbb4fdabbd", "choice": "exit_security_contract_research", "approved_by": "jev_delegated", "human_response": false },
+  "accountAccess": "unknown",
+  "rawAuthenticatedDataCollected": false
+}

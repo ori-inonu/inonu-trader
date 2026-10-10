@@ -1,0 +1,15 @@
+{
+  "status": "assessed",
+  "receiptId": "3479d2c6-1cc1-4468-a6f2-20ab2970bcc2",
+  "choice": "isolated_api_fix",
+  "model": "jev-1.13.0",
+  "confidence": 0.98,
+  "usage": {
+    "input_tokens": 759,
+    "output_tokens": 56
+  },
+  "costUsd": null,
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "scope": "isolated public API deadline/cache validation fixes; no financial execution"
+}

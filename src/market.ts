@@ -21,6 +21,7 @@ export interface Book {
 }
 
 export type Side = "buy" | "sell";
+export type GasEvidence = "estimate" | "pending" | "observed" | "unknown";
 
 /**
  * This block's order: a post-only limit order resting on Kuru's book, replacing last block's.
@@ -32,7 +33,11 @@ export interface Quote {
   price: number; // USDC per MON, tick aligned
   size: number; // MON
   txHash: string | null;
-  gasMon: number; // gasLimit x gas price: Monad charges the limit, not gasUsed
+  /** Observed receipt gas, or a paper estimate. Null until a cost is actually established. */
+  gasMon: number | null;
+  /** Separate estimate retained while a live receipt is pending or unresolved. */
+  gasEstimateMon: number | null;
+  gasEvidence: GasEvidence;
   cancel: number[]; // resting order ids this tx cancels
   status: "sent" | "placed" | "reverted" | "lost" | "sim";
   orderId: number | null;
@@ -50,7 +55,7 @@ export interface Fill {
   simulated: boolean;
 }
 
-export interface QuoteResult { block: number; quote: Quote; canceled: number[] }
+export interface QuoteResult { block: number; quote: Quote; canceled: number[]; kind?: "quote" | "cancel" }
 
 const ERC20_ABI = [
   "function allowance(address,address) view returns (uint256)",
@@ -62,7 +67,17 @@ const gwei = (n: number) => ethers.utils.parseUnits(String(n), "gwei");
 const BN = ethers.BigNumber;
 const ZERO_ADDRESS = ethers.constants.AddressZero;
 
-interface Pending { block: number; quote: Quote; gasLimit: ethers.BigNumber }
+interface Pending { block: number; quote: Quote; gasLimit: ethers.BigNumber; kind?: "quote" | "cancel"; lostReported?: boolean }
+
+export class AmbiguousBroadcastError extends Error {
+  override readonly name = "AmbiguousBroadcastError";
+  readonly txHash: string;
+
+  constructor(readonly quote: Quote, readonly kind: "quote" | "cancel") {
+    super("Broadcast acknowledgement outcome is ambiguous");
+    this.txHash = quote.txHash!;
+  }
+}
 
 /** Kuru MON-USDC market: read the book, post one limit order per block, confirm asynchronously. */
 export class Market {
@@ -86,11 +101,14 @@ export class Market {
   private get tickUnits() { return Number(this.params.tickSize.toString()); }
 
   async init() {
+    if (this.wallet) throw new Error("Live execution is not qualified: reconcile existing orders, wallet/margin balances and restart capital baseline first. Use DRY_RUN=true.");
+    if (parseInt(await rpc<string>("eth_chainId", [], config.rpcUrl), 16) !== config.chainId || parseInt(await rpc<string>("eth_chainId", [], config.readRpcUrl), 16) !== config.chainId) throw new Error("RPC chain mismatch");
     this.params = await Kuru.ParamFetcher.getMarketParams(this.provider, config.market);
+    if (!this.params.makerFeeBps.isZero()) throw new Error("Nonzero on-chain maker fee requires qualified fee semantics before paper/live evaluation");
     await this.refresh();
     if (!this.wallet) return;
     await this.resyncNonce();
-    await this.ensureMargin();
+    if (config.autoDeposit) await this.ensureMargin();
     await this.initGasLimit();
   }
 
@@ -134,42 +152,58 @@ export class Market {
    */
   async send(block: number, side: Side, sizeMon: number, book: Book, cancel: number[], capped: boolean): Promise<Quote> {
     const price = this.quotePrice(side, book);
-    if (!this.wallet) return { side, price, size: sizeMon, txHash: null, gasMon: 0, cancel, status: "sim", orderId: null, capped };
+    const gasEstimateMon = this.gasMon(BN.from(config.gasLimit ?? config.gasLimitFallback), this.feeWei);
+    if (!this.wallet) return { side, price, size: sizeMon, txHash: null, gasMon: gasEstimateMon, gasEstimateMon, gasEvidence: "estimate", cancel, status: "sim", orderId: null, capped };
 
     const tx = this.buildTx(side, sizeMon, price, cancel);
     const signed = await this.wallet.signTransaction(tx);
-    let hash: string;
-    try {
-      hash = await rpc<string>("eth_sendRawTransaction", [signed]);
-      this.nonce++;
-    } catch (e) {
-      await this.resyncNonce().catch(() => {});
-      throw e;
-    }
-    const quote: Quote = { side, price, size: sizeMon, txHash: hash, gasMon: this.gasMon(this.gasLimit, this.feeWei), cancel, status: "sent", orderId: null, capped };
-    this.pending.set(hash, { block, quote, gasLimit: this.gasLimit });
-    return quote;
+    const quote: Quote = { side, price, size: sizeMon, txHash: null, gasMon: null, gasEstimateMon: this.gasMon(this.gasLimit, this.feeWei), gasEvidence: "pending", cancel: [...cancel], status: "sent", orderId: null, capped };
+    return this.broadcastSigned(block, quote, "quote", signed);
   }
 
   /** One eth_getTransactionReceipt per in-flight tx. Returns whatever resolved (or timed out). */
   async pollPending(block: number): Promise<QuoteResult[]> {
     if (!this.pending.size) return [];
     const out: QuoteResult[] = [];
-    let lost = false;
     await Promise.all([...this.pending].map(async ([hash, p]) => {
       const receipt = await rpc<any>("eth_getTransactionReceipt", [hash]).catch(() => null);
       if (!this.pending.has(hash)) return; // an overlapping poll already resolved it
       if (receipt) {
-        this.pending.delete(hash);
-        out.push(this.parseReceipt(receipt, p));
-      } else if (block - p.block >= config.pendingBlocks) {
-        this.pending.delete(hash);
-        lost = true;
-        out.push({ block: p.block, quote: { ...p.quote, status: "lost", gasMon: 0 }, canceled: [] });
+        if (!this.matchesPendingReceipt(hash, p, receipt)) {
+          if (!p.lostReported) out.push(this.unresolvedReceipt(hash, p));
+          p.lostReported = true;
+          return;
+        }
+        const result = this.parseReceipt(receipt, p, hash);
+        if (result.quote.status !== "lost") this.pending.delete(hash);
+        else p.lostReported = true; // malformed execution status remains retryable for reconciliation
+        out.push(result);
+      } else if (block - p.block >= config.pendingBlocks && !p.lostReported) {
+        // Keep the hash pending: a delayed receipt must still be reconcilable, and nonce/exposure
+        // cannot safely be reset just because one bounded receipt poll returned no result.
+        p.lostReported = true;
+        out.push({ block: p.block, quote: { ...p.quote, status: "lost", gasMon: null, gasEvidence: "unknown" }, canceled: [], kind: p.kind ?? "quote" });
       }
     }));
-    if (lost) await this.resyncNonce().catch(() => {});
     return out;
+  }
+
+  private matchesPendingReceipt(hash: string, p: Pending, receipt: unknown): boolean {
+    if (!isTransactionHash(hash) || !isTransactionHash(p.quote.txHash) || p.quote.txHash.toLowerCase() !== hash.toLowerCase()) return false;
+    if (receipt === null || typeof receipt !== "object") return false;
+    let receiptHash: unknown;
+    try { receiptHash = (receipt as { transactionHash?: unknown }).transactionHash; }
+    catch { return false; }
+    return isTransactionHash(receiptHash) && receiptHash.toLowerCase() === hash.toLowerCase();
+  }
+
+  private unresolvedReceipt(hash: string, p: Pending): QuoteResult {
+    return {
+      block: p.block,
+      quote: { ...p.quote, txHash: hash, status: "lost", orderId: null, gasMon: null, gasEvidence: "unknown" },
+      canceled: [],
+      kind: p.kind ?? "quote",
+    };
   }
 
   /** The exact transaction the hot loop signs: no pre-send RPC, hardcoded gas limit, static type-2 fees. */
@@ -181,6 +215,47 @@ export class Market {
     };
   }
 
+  estimatedGasMon() { return this.gasMon(BN.from(config.gasLimit ?? config.gasLimitFallback), this.feeWei); }
+
+  /** Cancellation-only transaction; failure remains visible to the risk latch. */
+  async cancelOrders(ids: number[], block = 0): Promise<{ gasMon: number | null; gasEstimateMon: number; gasEvidence: GasEvidence; status: "sent"; txHash: string }> {
+    if (!this.wallet || !ids.length) throw new Error("No live cancellation to send");
+    const tx = this.buildTx("buy", config.tradeSizeMon, 1, []);
+    tx.data = this.iface.encodeFunctionData("batchUpdate", [[], [], [], [], ids, true]);
+    const signed = await this.wallet.signTransaction(tx);
+    const quote: Quote = {
+      side: "buy", price: 1, size: config.tradeSizeMon, txHash: null,
+      gasMon: null, gasEstimateMon: this.gasMon(this.gasLimit, this.feeWei), gasEvidence: "pending",
+      cancel: [...ids], status: "sent", orderId: null, capped: false,
+    };
+    const sent = await this.broadcastSigned(block, quote, "cancel", signed);
+    return { gasMon: sent.gasMon, gasEstimateMon: sent.gasEstimateMon!, gasEvidence: sent.gasEvidence, status: "sent", txHash: sent.txHash! };
+  }
+
+  private async broadcastSigned(block: number, quote: Quote, kind: "quote" | "cancel", signed: string): Promise<Quote> {
+    const txHash = ethers.utils.keccak256(signed);
+    const sent = { ...quote, txHash };
+    let acknowledgement: unknown;
+    try {
+      acknowledgement = await rpc<unknown>("eth_sendRawTransaction", [signed]);
+    } catch {
+      this.nonce++;
+      throw this.rememberAmbiguousBroadcast(block, sent, kind);
+    }
+    this.nonce++;
+    if (typeof acknowledgement !== "string" || !/^0x[0-9a-f]{64}$/i.test(acknowledgement) || acknowledgement.toLowerCase() !== txHash.toLowerCase()) {
+      throw this.rememberAmbiguousBroadcast(block, sent, kind);
+    }
+    this.pending.set(txHash, { block, quote: sent, gasLimit: this.gasLimit, kind, lostReported: false });
+    return sent;
+  }
+
+  private rememberAmbiguousBroadcast(block: number, quote: Quote, kind: "quote" | "cancel"): AmbiguousBroadcastError {
+    const unresolved = { ...quote, status: "lost" as const, gasMon: null, gasEvidence: "unknown" as const };
+    this.pending.set(quote.txHash!, { block, quote: unresolved, gasLimit: this.gasLimit, kind, lostReported: true });
+    return new AmbiguousBroadcastError(unresolved, kind);
+  }
+
   /** batchUpdate(buyPrices, buySizes, sellPrices, sellSizes, orderIdsToCancel, postOnly). Funds come from the margin account, so value is 0. */
   encode(side: Side, sizeMon: number, price: number, cancel: number[]): string {
     const priceU = BN.from(Math.round(price * 10 ** this.priceDec));
@@ -190,21 +265,56 @@ export class Market {
   }
 
   /** OrderCreated for our address gives the new order id; OrdersCanceled lists what the tx removed. status 0x0: nothing changed on the book. */
-  private parseReceipt(r: any, p: Pending): QuoteResult {
-    if (r.effectiveGasPrice) this.feeWei = BN.from(r.effectiveGasPrice);
-    const gasMon = this.gasMon(p.gasLimit, BN.from(r.effectiveGasPrice ?? this.feeWei));
+  private parseReceipt(r: any, p: Pending, hash: string): QuoteResult {
+    let gasMon: number | null = null;
+    let gasEvidence: GasEvidence = "unknown";
+    try {
+      if (r.effectiveGasPrice !== undefined && r.effectiveGasPrice !== null) {
+        const effectiveGasPrice = BN.from(r.effectiveGasPrice);
+        if (!effectiveGasPrice.lt(0)) {
+          const measured = this.gasMon(p.gasLimit, effectiveGasPrice);
+          if (Number.isFinite(measured) && measured >= 0) {
+            gasMon = measured;
+            gasEvidence = "observed";
+            this.feeWei = effectiveGasPrice;
+          }
+        }
+      }
+    } catch { /* invalid/missing receipt price is unknown, never the configured estimate */ }
     const me = this.wallet!.address.toLowerCase();
-    let orderId: number | null = null;
+    const marketAddress = config.market.toLowerCase();
+    const orderIds: number[] = [];
     const canceled: number[] = [];
-    if (r.status !== "0x0") {
-      for (const log of r.logs ?? []) {
+    let invalidOwnerOrderId = false;
+    const status = parseReceiptStatus(r.status);
+    if (status === 1 && Array.isArray(r.logs)) {
+      for (const log of r.logs) {
+        if (!log || typeof log !== "object" || typeof log.address !== "string" || log.address.toLowerCase() !== marketAddress) continue;
         let ev; try { ev = this.iface.parseLog(log); } catch { continue; }
-        if (ev.name === "OrderCreated" && String(ev.args.owner).toLowerCase() === me) orderId = Number(ev.args.orderId);
-        if (ev.name === "OrdersCanceled" && String(ev.args.owner).toLowerCase() === me) for (const id of ev.args.orderId) canceled.push(Number(id));
+        const owner = ev.args.owner;
+        if (typeof owner !== "string" || owner.toLowerCase() !== me) continue;
+        if (ev.name === "OrderCreated") {
+          try {
+            const parsedId = BN.from(ev.args.orderId);
+            if (parsedId.gt(0) && parsedId.lte(Number.MAX_SAFE_INTEGER.toString())) orderIds.push(parsedId.toNumber());
+            else invalidOwnerOrderId = true;
+          } catch { invalidOwnerOrderId = true; }
+        }
+        if (ev.name === "OrdersCanceled" && Array.isArray(ev.args.orderId)) {
+          for (const rawId of ev.args.orderId) {
+            try {
+              const parsedId = BN.from(rawId);
+              if (parsedId.gt(0) && parsedId.lte(Number.MAX_SAFE_INTEGER.toString())) canceled.push(parsedId.toNumber());
+            } catch { /* malformed cancellation id cannot reconcile a requested order */ }
+          }
+        }
       }
     }
-    const status: Quote["status"] = r.status === "0x0" ? "reverted" : "placed";
-    return { block: p.block, quote: { ...p.quote, status, orderId, gasMon }, canceled };
+    const kind = p.kind ?? "quote";
+    const hasOrderIdentity = orderIds.length === 1 && !invalidOwnerOrderId;
+    const quoteStatus: Quote["status"] = status === 0 ? "reverted" : status === 1 && (kind === "cancel" || hasOrderIdentity) ? "placed" : "lost";
+    const quote: Quote = { ...p.quote, txHash: hash, status: quoteStatus, orderId: hasOrderIdentity ? orderIds[0]! : null, gasMon, gasEvidence };
+    return { block: p.block, quote, canceled, kind };
   }
 
   /** Top the margin account up to MARGIN_MON / MARGIN_USDC. Runs once at startup, awaiting each receipt. */
@@ -235,7 +345,7 @@ export class Market {
       const dep = have.lt(amt) ? have : amt;
       if (dep.gt(0)) {
         const allowance: ethers.BigNumber = await token.allowance(w.address, config.marginAccount);
-        if (allowance.lt(dep)) { const tx = await token.approve(config.marginAccount, ethers.constants.MaxUint256, { nonce: this.nonce++ }); await tx.wait(1); }
+        if (allowance.lt(dep)) { const tx = await token.approve(config.marginAccount, dep, { nonce: this.nonce++ }); await tx.wait(1); }
         console.log(`margin: depositing ${ethers.utils.formatUnits(dep, quoteDec)} USDC`);
         await deposit(this.params.quoteAssetAddress, dep, false);
       }
@@ -278,4 +388,27 @@ export class Market {
   private async resyncNonce() {
     this.nonce = parseInt(await rpc<string>("eth_getTransactionCount", [this.wallet!.address, "latest"]), 16);
   }
+}
+
+function parseReceiptStatus(value: unknown): 0 | 1 | null {
+  if (value === 0 || value === "0" || (typeof value === "string" && /^0x0+$/i.test(value))) return 0;
+  if (value === 1 || value === "1" || (typeof value === "string" && /^0x0*1$/i.test(value))) return 1;
+  return null;
+}
+
+function isTransactionHash(value: unknown): value is string {
+  return typeof value === "string" && /^0x[0-9a-fA-F]{64}$/.test(value);
+}
+
+export function formatQuoteGas(value: unknown): string {
+  if (value === null || typeof value !== "object") return "unknown gas evidence";
+  const quote = value as Record<string, unknown>;
+  const evidence = quote.gasEvidence;
+  const amount = quote.gasMon;
+  const estimate = quote.gasEstimateMon;
+  const show = (n: unknown) => typeof n === "number" && Number.isFinite(n) && n >= 0 ? n.toFixed(6) : null;
+  if (evidence === "estimate") return show(amount) === null ? "unknown estimate" : `${show(amount)} MON estimate`;
+  if (evidence === "pending") return show(estimate) === null ? "receipt pending" : `receipt pending (estimate ${show(estimate)} MON)`;
+  if (evidence === "observed") return show(amount) === null ? "unknown observed gas" : `${show(amount)} MON observed`;
+  return "unknown gas cost";
 }

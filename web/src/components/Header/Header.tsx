@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { BlockEvent, ConnectionState, Meta } from "@/lib/types";
 import { fmtInt, shortAddr } from "@/lib/format";
+import { presentFeed } from "@/lib/presentation";
+import BrandMark from "@/components/BrandMark/BrandMark";
 import styles from "./Header.module.css";
 
 export interface HeaderProps {
@@ -11,15 +13,10 @@ export interface HeaderProps {
   connection: ConnectionState;
 }
 
-/** Only shown when we are NOT live. Live is the silent, default state. */
-const OFFLINE_LABEL: Partial<Record<ConnectionState, string>> = {
-  connecting: "connecting",
-  reconnecting: "reconnecting",
-};
-
 export default function Header({ meta, latest, connection }: HeaderProps) {
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("");
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wallet = meta?.wallet ?? null;
 
   useEffect(
     () => () => {
@@ -28,58 +25,60 @@ export default function Header({ meta, latest, connection }: HeaderProps) {
     [],
   );
 
-  const wallet = meta?.wallet ?? null;
-
-  const onCopy = useCallback(() => {
+  const onCopy = useCallback(async () => {
     if (!wallet) return;
     try {
-      void navigator.clipboard?.writeText(wallet)?.catch(() => {});
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard indisponível");
+      await navigator.clipboard.writeText(wallet);
+      setCopyStatus("Copiado");
     } catch {
-      /* clipboard unavailable, still flash "copied" so the click feels alive */
+      setCopyStatus("Não foi possível copiar");
     }
-    setCopied(true);
     if (copyTimer.current) clearTimeout(copyTimer.current);
-    copyTimer.current = setTimeout(() => setCopied(false), 1200);
+    copyTimer.current = setTimeout(() => setCopyStatus(""), 1800);
   }, [wallet]);
 
-  const model = meta?.model ?? null;
-  const isJev = (model ?? "").toLowerCase().startsWith("jev");
-  const offline = OFFLINE_LABEL[connection] ?? null;
+  const presentation = presentFeed(meta, connection);
+  const model = meta?.model?.trim();
 
   return (
-    <div className={styles.header}>
-      <span className={styles.brand}>‖ Jev Trader</span>
+    <header className={styles.header}>
+      <div className={styles.brandRow}>
+        <div className={styles.brand}>
+          <BrandMark decorative />
+          <div className={styles.brandCopy}>
+            <h1>INONU TRADER</h1>
+            <p>Inteligência de mercado. Estado visível.</p>
+          </div>
+        </div>
+        <div className={styles.block}>
+          <span>Bloco observado</span>
+          <strong>{latest ? fmtInt(latest.block) : "Aguardando"}</strong>
+        </div>
+      </div>
 
-      <span className={styles.block}>block {latest ? fmtInt(latest.block) : "-"}</span>
-
-      <span className={styles.spacer} />
-
-      {offline ? <span className={styles.offline}>{offline}</span> : null}
-
-      <button
-        type="button"
-        className={styles.wallet}
-        onClick={onCopy}
-        disabled={!wallet}
-        title={wallet ?? "no wallet, dry run"}
-        aria-label={wallet ? `Copy wallet address ${wallet}` : "Dry run"}
-      >
-        {copied ? "copied" : wallet ? shortAddr(wallet) : "dry run"}
-      </button>
-
-      {model ? (
-        <span
-          className={styles.badge}
-          style={{
-            background: isJev
-              ? "var(--badge-jev-bg)"
-              : "var(--badge-standin-bg)",
-            color: isJev ? "var(--badge-jev-fg)" : "var(--badge-standin-fg)",
-          }}
-        >
-          {model}
+      <div className={styles.statusRow}>
+        <span className={`${styles.statusBadge} ${presentation.executionLabel === "Simulação" ? styles.simulation : styles.unknown}`}>
+          {presentation.executionLabel}
         </span>
-      ) : null}
-    </div>
+        <span className={`${styles.statusBadge} ${styles.connection}`} aria-live="polite">
+          {presentation.connectionLabel}
+        </span>
+        <span className={`${styles.statusBadge} ${styles.source}`}>{presentation.sourceLabel}</span>
+        <span className={styles.context}>{model ? `Modelo: ${model}` : "Modelo não informado"}</span>
+        <span className={styles.context}>{meta?.market || "Mercado não informado"}</span>
+        <button
+          type="button"
+          className={styles.wallet}
+          onClick={() => void onCopy()}
+          disabled={!wallet}
+          title={wallet ?? "Endereço da carteira não informado"}
+          aria-label={wallet ? `Copiar endereço ${wallet}` : "Endereço da carteira não informado"}
+        >
+          {wallet ? shortAddr(wallet) : "Carteira não informada"}
+        </button>
+        <span className={styles.copyStatus} aria-live="polite">{copyStatus}</span>
+      </div>
+    </header>
   );
 }

@@ -1,0 +1,11 @@
+# Plano mínimo de implementação DEX V2
+
+Dependência inicial: scanner E1–E8 integrado, revisado e auditado; parecer independente de escopo vinculado ao próximo ciclo; SPEC D1–D8 congelada. Até cumprir isso, este plano não inicia implementação.
+
+1. Cliente de leitura em workspace isolado. Implementador owns somente src/okx-market/okx-dex.ts, okx-dex.test.ts e DEX-API-TDD.md. Exercitar duas rotas, HMAC, queries, validação pré-fetch, intervalo local, timeout inteiro e erros sanitizados. Relacionado D1, D5, D6, D7. Entrega: fontes por hash, RED/GREEN real e typecheck.
+2. Composição e cenário hipotético pelo integrador. Arquivos exclusivos: src/okx-market/round-trip.ts, round-trip.test.ts e dex-fixture.ts. Criar testes públicos antes de comportamento; conferir cobertura, identidade/decimais/inteiros grandes e duas pernas exatas, tempos/impacto/honeypot e desconhecidos. Net de quote permanece null; cenário manual não prova completude dos custos. Relacionado D2–D4, D6, D7.
+3. CLI e documentação pelo integrador. Arquivos exclusivos: scripts/okx-dex-quote.ts, src/okx-market/dex-cli.test.ts, docs/OKX-DEX-V2-GUIDE.md e docs/OKX-DEX-V2-VERIFICATION.md. Somente o integrador acrescenta comando/include aos arquivos compartilhados. Testar processo default sem rede e gates live sem executar live. Relacionado D5–D8.
+4. Integrar os bytes do cliente pela hash; executar pipeline real com fetch fixture, suíte pertinente e typecheck. Criar snapshot independente sem .env/credenciais. Revisor distinto verifica D1–D8 e preservação dos oito módulos Market, escrevendo só relatório. Corrigir achados com regressão real e repetir apenas a verificação afetada. Relacionado D1–D8.
+5. Após revisão aprovada, copiar apenas arquivos novos/seams mínimos ao checkout principal, confirmar hashes e executar testes/build pertinentes. Registrar cobertura atual, revisão e auditoria no harness; salvar checkpoint da própria conversa. Nenhum staging, push, assinatura, ordem ou transferência pertence ao ciclo.
+
+Condição de conclusão: D1–D8 cobertos por evidência atual, cópia principal verificável e revisão independente aprovada. Pendências externas ficam explícitas; elas não são substituídas por mocks. O objetivo nativo maior continua ativo se houver trabalho autorizado elegível.
