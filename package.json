@@ -33,6 +33,7 @@
     "okx:dex-quote": "bun --no-env-file run scripts/okx-dex-quote.ts",
     "okx:signals": "bun --no-env-file run scripts/okx-signals.ts",
     "okx:evidence": "bun --no-env-file run scripts/okx-evidence.ts",
-    "okx:defi": "bun --no-env-file run scripts/okx-defi.ts"
+    "okx:defi": "bun --no-env-file run scripts/okx-defi.ts",
+    "okx:operator": "bun run scripts/okx-operator.ts"
   }
 }

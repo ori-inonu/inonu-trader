@@ -4,9 +4,10 @@
   flex: 1;
   grid-template-areas:
     "chart decision"
+    "center center"
     "wallet feed";
   grid-template-columns: minmax(0, 1fr) minmax(360px, 420px);
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
   align-items: stretch;
   gap: 16px;
 }
@@ -23,6 +24,11 @@
   grid-area: decision;
   min-width: 0;
   align-self: start;
+}
+
+.center {
+  grid-area: center;
+  min-width: 0;
 }
 
 .wallet {
@@ -42,6 +48,7 @@
     grid-template-areas:
       "chart"
       "decision"
+      "center"
       "wallet"
       "feed";
     grid-template-columns: minmax(0, 1fr);

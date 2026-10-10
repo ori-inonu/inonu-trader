@@ -1,4 +1,6 @@
 import { config } from "./config";
+import { existsSync, readFileSync } from "node:fs";
+import { computeInsights, parseCycleLines } from "./operator/insights";
 import type { Fill, Quote } from "./market";
 import type { BlockEvent } from "./trader";
 
@@ -23,6 +25,23 @@ export function startServer(meta: Meta, history: () => BlockEvent[]) {
       if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
       if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null });
       if (pathname === "/history") return json(history());
+      if (pathname === "/operator") {
+        // Latest operator cycle written by scripts/okx-operator.ts; redacted before persisting.
+        const statePath = process.env.OPERATOR_STATE_PATH ?? "data/operator/latest.json";
+        if (!existsSync(statePath)) return json({ error: "operator state not found", statePath }, 404);
+        try { return json(JSON.parse(readFileSync(statePath, "utf8"))); } catch { return json({ error: "operator state unreadable" }, 500); }
+      }
+      if (pathname === "/operator/history" || pathname === "/operator/insights") {
+        // Operator journal (one redacted cycle per line) and descriptive statistics over it.
+        const journalPath = process.env.OPERATOR_JOURNAL_PATH ?? "data/operator/cycles.jsonl";
+        if (!existsSync(journalPath)) return json({ error: "operator journal not found", journalPath }, 404);
+        let cycles: ReturnType<typeof parseCycleLines>;
+        try { cycles = parseCycleLines(readFileSync(journalPath, "utf8")); } catch { return json({ error: "operator journal unreadable" }, 500); }
+        if (pathname === "/operator/insights") return json(computeInsights(cycles));
+        const limitRaw = Number(new URL(req.url).searchParams.get("limit") ?? "50");
+        const limit = Number.isSafeInteger(limitRaw) && limitRaw > 0 ? Math.min(limitRaw, 500) : 50;
+        return json(cycles.slice(-limit));
+      }
       if (pathname === "/events") {
         const stream = new ReadableStream<Uint8Array>({
           start(c) { clients.add(c); send(c, "snapshot", { ...meta, history: history() }); },
