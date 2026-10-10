@@ -20,6 +20,12 @@ Escopo: leitura de `src/operator/{config,plan,executor,cycle}.ts`, `src/okx-wall
 | 5 | Docstring maior que o codigo | O comentario diz que a tx preparada e conferida com a cotacao do candidato dentro do slippage; o codigo so checa `minReceiveAmount !== null` e a validade. | Cotacao mudou entre o candidato e a tx preparada. | Comparar `minReceiveAmount` com a saida cotada menos o slippage e abortar se for pior. |
 | 6 | Endereco e custodia | Inventario e tamanho usam `OPERATOR_ADDRESS`; a execucao usa `evmSigner.address` da `PRIVATE_KEY`, sem checagem de igualdade. Gas: 120000 fixo no approve e 1,5x a estimativa no swap, sem teto de `maxFeePerGas`. | Dimensionar com o saldo de uma carteira e executar com outra; perda de gas em pico. | Exigir igualdade entre os dois enderecos, teto de taxa por tx e uma carteira dedicada com saldo maximo definido pelo dono, nunca a chave principal. |
 
+## Status informado pela outra sessao (nao verificado aqui)
+
+Em 2026-10-10 a sessao que desenvolve o operador respondeu que esta corrigindo os 6 achados e as divergencias K1 a K3 da pesquisa R1: livro de orcamento persistente com teto diario de notional e de planos, cooldown e kill switch por arquivo; chave de idempotencia sem janela de tempo e persistida; maquina de estados das pernas que bloqueia novos planos; allowlist de router por chain e aprovacao com calldata gerado localmente e valor exato; comparacao do `minReceiveAmount` com a saida cotada; igualdade entre `OPERATOR_ADDRESS` e o assinante, teto de taxa e carteira dedicada. Tambem informou que round trips via API da OKX ficam `research_only` ate `OPERATOR_TRUST_QUOTE_UNITS=true` (padrao false) e que pontes ficam `research_only` ate `OPERATOR_TRUST_BRIDGE_API=true`. Nada disso foi relido por esta revisao: ela deve ser repetida sobre o codigo final antes de qualquer qualificacao.
+
+Referencia numerica para os limites (ver R3, secao 6): ordem individual de ate 1% do capital operacional e parada diaria de -2%, semanal de -5% e de drawdown de -10% na fase de micro-live spot, com cooldowns de 15 min, 24 h e 72 h. Os padroes `maxCapitalFraction=0.25` e `maxPlanUsd=25` do operador sao mais folgados que isso.
+
 ## Condicao para qualificar
 
 Os controles 1 a 6 sao pre-requisitos para o estagio 3 do plano de qualificacao (execucao limitada). Eles tambem se aplicam a qualquer futuro executor de futuros ou emprestimo. Sem eles, a execucao deve permanecer em dry run.
