@@ -87,7 +87,7 @@ function Gauge({ label, used, max, unit }: { label: string; used: number; max: n
         <span className={styles.mono}>{used.toFixed(unit === "USD" ? 2 : 0)}{max !== null ? ` / ${max}` : ""} {unit}</span>
       </div>
       <div className={styles.track} role="img" aria-label={`${label}: ${Math.round(ratio * 100)}% usado`}>
-        <span className={`${styles.fill} ${ratio >= 0.9 ? styles.fillHot : ""}`} style={{ width: `${ratio * 100}%` }} />
+        <span className={`${styles.fill} ${ratio >= 0.9 ? styles.fillHot : ""}`} style={{ transform: `scaleX(${ratio})` }} />
       </div>
     </div>
   );
@@ -103,7 +103,7 @@ function ProbabilityBars({ cycle }: { cycle: OperatorCycleView }) {
         <div key={key} className={styles.row}>
           <span className={styles.rowLabel}>{labelFor(key)}</span>
           <div className={styles.track} role="img" aria-label={`${labelFor(key)}: ${Math.round(value * 100)}%`}>
-            <span className={`${styles.fill} ${key === cycle.decision!.choice ? styles.fillChosen : ""}`} style={{ width: `${value * 100}%` }} />
+            <span className={`${styles.fill} ${key === cycle.decision!.choice ? styles.fillChosen : ""}`} style={{ transform: `scaleX(${value})` }} />
           </div>
           <span className={styles.mono}>{Math.round(value * 100)}%</span>
         </div>
@@ -124,7 +124,7 @@ function Sparkline({ insights }: { insights: OperatorInsightsView }) {
     <svg className={styles.spark} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Patrimônio conhecido nos últimos ${points.length} ciclos, de ${min.toFixed(2)} a ${max.toFixed(2)} USD`}>
       <path d={path} fill="none" stroke="currentColor" strokeWidth="2" />
       {points.map((point, index) => point.choice && point.choice !== "hold" ? (
-        <circle key={index} cx={(index / (points.length - 1)) * width} cy={height - ((point.knownValueUsd - min) / span) * (height - 8) - 4} r="3" fill={point.execution === "completed" ? "var(--buy)" : "var(--gold)"} />
+        <circle key={index} cx={(index / (points.length - 1)) * width} cy={height - ((point.knownValueUsd - min) / span) * (height - 8) - 4} r="3" fill={point.execution === "completed" ? "var(--buy)" : "var(--hold)"} />
       ) : null)}
     </svg>
   );

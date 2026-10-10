@@ -1,22 +1,17 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import type { BlockEvent } from "@/lib/types";
+import { memo, useEffect, useId, useRef, useState } from "react";
+import type { BlockEvent, ConnectionState } from "@/lib/types";
 import { filterFeedEvents, type FeedSideFilter, type FeedTypeFilter } from "@/lib/presentation";
 import { fmtInt, fmtPrice, shortTx, txUrl } from "@/lib/format";
-import styles from "./Feed.module.css";
+import { feedFrameState } from "@/lib/feed-frame";
+import styles from "./TelemetryStream.module.css";
 
-const ROW_H = 72;
+const ROW_H = 64;
 const MAX_ROWS = 40;
+const STAGGER_CAP = 8;
 
 type Kind = "buy" | "sell" | "hold" | "late" | "waiting";
-
-function kindOf(event: BlockEvent): Kind {
-  const decision = event.decision;
-  if (!decision) return "waiting";
-  if (decision.late) return "late";
-  return decision.action;
-}
 
 const KIND_LABEL: Record<Kind, string> = {
   buy: "Compra",
@@ -26,16 +21,14 @@ const KIND_LABEL: Record<Kind, string> = {
   waiting: "Sem decisão",
 };
 
-function fmtSize(size: number): string {
-  return Number.isFinite(size) ? size.toLocaleString("en-US", { maximumFractionDigits: 2 }) : "Indisponível";
+function kindOf(event: BlockEvent): Kind {
+  if (!event.decision) return "waiting";
+  if (event.decision.late) return "late";
+  return event.decision.action;
 }
 
-function confidence(event: BlockEvent): string {
-  const probabilities = event.decision?.probabilities;
-  if (!probabilities) return "Indisponível";
-  const values = [probabilities.buy, probabilities.sell, probabilities.hold];
-  if (values.some((value) => !Number.isFinite(value) || value < 0 || value > 1)) return "Indisponível";
-  return `${Math.round(Math.max(...values) * 100)}%`;
+function fmtSize(size: number): string {
+  return Number.isFinite(size) ? size.toLocaleString("en-US", { maximumFractionDigits: 2 }) : "Indisponível";
 }
 
 function orderStatus(status: NonNullable<BlockEvent["quote"]>["status"]): string {
@@ -48,11 +41,24 @@ function orderStatus(status: NonNullable<BlockEvent["quote"]>["status"]): string
   }
 }
 
-export default function Feed({ events }: { events: BlockEvent[] }) {
+export interface TelemetryStreamProps {
+  events: BlockEvent[];
+  connection: ConnectionState;
+  capacity?: number;
+  reducedMotion?: boolean;
+}
+
+/**
+ * Restyled successor to Feed.
+ * Side filter, type filter, filterFeedEvents, the ResizeObserver capacity measurement and both
+ * empty-state strings are carried over unchanged. Only the presentation differs: a two-line entry
+ * with a tone rail instead of coloured text.
+ */
+function TelemetryStreamView({ events, connection, capacity: capacityProp, reducedMotion = false }: TelemetryStreamProps) {
   const listRef = useRef<HTMLDivElement | null>(null);
   const sideId = useId();
   const typeId = useId();
-  const [capacity, setCapacity] = useState(MAX_ROWS);
+  const [measured, setMeasured] = useState<number | null>(null);
   const [sideFilter, setSideFilter] = useState<FeedSideFilter>("all");
   const [typeFilter, setTypeFilter] = useState<FeedTypeFilter>("all");
 
@@ -61,7 +67,7 @@ export default function Feed({ events }: { events: BlockEvent[] }) {
     if (!element) return;
     const measure = () => {
       const fits = Math.max(1, Math.min(MAX_ROWS, Math.floor(element.clientHeight / ROW_H)));
-      setCapacity((previous) => (previous === fits ? previous : fits));
+      setMeasured((previous) => (previous === fits ? previous : fits));
     };
     measure();
     if (typeof ResizeObserver === "undefined") return;
@@ -70,19 +76,22 @@ export default function Feed({ events }: { events: BlockEvent[] }) {
     return () => observer.disconnect();
   }, []);
 
+  const capacity = capacityProp ?? measured ?? MAX_ROWS;
   const filtered = filterFeedEvents(events, sideFilter, typeFilter);
   const rows = filtered.slice(-capacity).reverse();
   const defaultSelection = sideFilter === "all" && typeFilter === "all";
   const emptyMessage = events.length === 0 && defaultSelection
     ? "Aguardando dados do feed"
     : "Nenhum evento para estes filtros";
+  const frame = feedFrameState(connection);
+  const stale = frame.held;
 
   return (
-    <section className={styles.feed} aria-labelledby="feed-title">
+    <section className={`${styles.stream} ${stale ? styles.stale : ""}`} aria-labelledby="stream-title">
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>ATIVIDADE</p>
-          <h2 id="feed-title" className={styles.title}>Feed de eventos</h2>
+          <p className={styles.eyebrow}>TELEMETRIA</p>
+          <h2 className={styles.title} id="stream-title">Fluxo de eventos</h2>
         </div>
         <span className={styles.count}>{filtered.length} encontrados</span>
       </header>
@@ -114,7 +123,7 @@ export default function Feed({ events }: { events: BlockEvent[] }) {
       <div className={styles.list} ref={listRef} role="list" aria-label="Eventos do feed">
         {rows.length === 0 ? (
           <p className={styles.empty}>{emptyMessage}</p>
-        ) : rows.map((event) => {
+        ) : rows.map((event, index) => {
           const kind = kindOf(event);
           const decision = event.decision;
           const quote = event.quote;
@@ -130,22 +139,27 @@ export default function Feed({ events }: { events: BlockEvent[] }) {
               ? orderStatus(quote.status)
               : null;
           const txHash = fill && !fill.simulated ? fill.txHash : quote && quote.status !== "sim" ? quote.txHash : null;
+          const latency = decision && !decision.late && Number.isFinite(decision.latencyMs)
+            ? `${Math.round(decision.latencyMs)} ms`
+            : "Indisponível";
 
           return (
-            <article className={`${styles.row} ${styles[kind]}`} key={event.block} role="listitem">
+            <article
+              className={`${styles.row} ${styles[kind]}`}
+              key={event.block}
+              role="listitem"
+              style={reducedMotion ? undefined : { animationDelay: `${Math.min(index, STAGGER_CAP) * 26}ms` }}
+            >
               <div className={styles.rowTop}>
-                <span className={styles.block}>Bloco {fmtInt(event.block)}</span>
+                <span className={styles.block}>[{fmtInt(event.block)}]</span>
                 <span className={styles.kind}>{KIND_LABEL[kind]}</span>
-                <span className={styles.meta}>
-                  {decision ? `Confiança ${confidence(event)}` : "Confiança indisponível"}
-                  {decision && !decision.late && Number.isFinite(decision.latencyMs) ? `, ${Math.round(decision.latencyMs)} ms` : ""}
-                </span>
+                <span className={styles.latency}>{latency}</span>
               </div>
               <div className={styles.rowBottom}>
                 <span className={styles.detail}>{detail}</span>
                 {status ? <span className={styles.status}>{status}</span> : null}
                 {txHash ? (
-                  <a href={txUrl(txHash)} target="_blank" rel="noreferrer" aria-label={`Abrir transação ${txHash}`}>
+                  <a className={styles.tx} href={txUrl(txHash)} target="_blank" rel="noreferrer" aria-label={`Abrir transação ${txHash}`}>
                     {shortTx(txHash)}
                   </a>
                 ) : null}
@@ -154,6 +168,11 @@ export default function Feed({ events }: { events: BlockEvent[] }) {
           );
         })}
       </div>
+
+      {frame.notice ? <span className={styles.staleChip}>{frame.notice}</span> : null}
     </section>
   );
 }
+
+export default memo(TelemetryStreamView);
+export { TelemetryStreamView };

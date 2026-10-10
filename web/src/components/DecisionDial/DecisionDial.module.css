@@ -1,0 +1,85 @@
+.dial {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.svg {
+  display: block;
+  overflow: visible;
+}
+
+.bed {
+  fill: var(--bg-well);
+  stroke: var(--edge);
+  stroke-width: 1;
+}
+
+/* Dash offsets transition rather than keyframe, so a new probability settles instead of replaying. */
+.arc {
+  transition: stroke-dasharray var(--dur-slow) var(--ease-out-expo), stroke var(--dur-slow) var(--ease-out-expo);
+}
+
+.arcStatic {
+  transition: none;
+}
+
+.bowl {
+  opacity: 0.5;
+}
+
+.needle {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 480ms var(--ease-out-back);
+}
+
+.needleStatic {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: none;
+}
+
+.word {
+  position: absolute;
+  font: var(--fs-lg);
+  color: var(--ink);
+  text-align: center;
+}
+
+.unknown .word {
+  color: var(--ink-3);
+}
+
+.buy .word {
+  color: var(--buy);
+}
+
+.sell .word {
+  color: var(--sell);
+}
+
+.hold .word {
+  color: var(--hold);
+}
+
+.late .word {
+  color: var(--late);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc,
+  .needle {
+    transition: none;
+  }
+}

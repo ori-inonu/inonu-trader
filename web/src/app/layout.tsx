@@ -4,7 +4,7 @@ import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
   variable: "--font-inter",
   display: "swap",
 });
@@ -17,14 +17,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "INONU TRADER",
-  description: "Inteligência de mercado. Estado visível.",
+  title: "JEV TRADER",
+  description: "Decisao do agente. Execucao real no livro on-chain da Kuru.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#07111F",
+  themeColor: "#05080d",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

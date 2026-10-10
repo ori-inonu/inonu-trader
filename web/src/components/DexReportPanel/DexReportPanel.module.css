@@ -1,9 +1,9 @@
 .panel {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--divider);
+  border: 1px solid var(--edge);
   border-radius: 18px;
-  background: var(--panel);
+  background: var(--bg-deck);
   color: var(--ink);
 }
 
@@ -14,7 +14,7 @@
   justify-content: space-between;
   gap: 14px;
   padding: 18px 20px 14px;
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid var(--edge);
 }
 
 .headingGroup {
@@ -31,7 +31,7 @@
 
 .description {
   margin: 5px 0 0;
-  color: var(--secondary);
+  color: var(--ink-2);
   font-size: 12px;
   line-height: 1.5;
 }
@@ -58,21 +58,21 @@
 
 .status,
 .loading {
-  color: var(--secondary);
+  color: var(--ink-2);
   font-weight: 500;
 }
 
 .note,
 .help,
 .age {
-  color: var(--muted);
+  color: var(--ink-3);
 }
 
 .safety {
   padding: 11px 12px;
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--edge-strong);
   border-radius: 10px;
-  color: var(--secondary);
+  color: var(--ink-2);
 }
 
 .error {
@@ -104,7 +104,7 @@
   min-width: 0;
   min-height: 44px;
   grid-column: 1 / -1;
-  color: var(--secondary);
+  color: var(--ink-2);
   font-family: var(--font-mono), monospace;
   font-size: 12px;
 }
@@ -113,9 +113,9 @@
   min-width: 44px;
   min-height: 44px;
   margin-right: 9px;
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--edge-strong);
   border-radius: 9px;
-  background: var(--raised);
+  background: var(--bg-deck-2);
   color: var(--ink);
   font: inherit;
   cursor: pointer;
@@ -140,30 +140,30 @@
 }
 
 .primaryButton {
-  border: 1px solid var(--cyan);
-  background: var(--cyan);
-  color: var(--canvas);
+  border: 1px solid var(--signal);
+  background: var(--signal);
+  color: var(--bg-well);
 }
 
 .secondaryButton {
-  border: 1px solid var(--control-border);
-  background: var(--raised);
+  border: 1px solid var(--edge-strong);
+  background: var(--bg-deck-2);
   color: var(--ink);
 }
 
 .primaryButton:hover {
-  background: #83ebf7;
+  background: var(--signal);
 }
 
 .secondaryButton:hover {
-  border-color: var(--cyan);
+  border-color: var(--signal);
 }
 
 .primaryButton:focus-visible,
 .secondaryButton:focus-visible,
 .fileInput:focus-visible,
 .fileInput::file-selector-button:focus-visible {
-  outline: 3px solid var(--gold);
+  outline: 3px solid var(--hold);
   outline-offset: 2px;
 }
 
@@ -186,10 +186,10 @@
   min-width: 0;
   min-height: 32px;
   align-items: center;
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--edge-strong);
   border-radius: 999px;
   padding: 5px 9px;
-  color: var(--gold);
+  color: var(--hold);
   font-family: var(--font-mono), monospace;
   font-size: 11px;
   line-height: 1.35;
@@ -202,8 +202,8 @@
   gap: 8px;
   margin: 0;
   padding: 11px 0;
-  border-top: 1px solid var(--divider);
-  border-bottom: 1px solid var(--divider);
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
 }
 
 .detailRow {
@@ -223,7 +223,7 @@
 }
 
 .detailRow dt {
-  color: var(--muted);
+  color: var(--ink-3);
   font-size: 12px;
 }
 
@@ -236,7 +236,7 @@
 
 .deltaRow dt,
 .deltaRow dd {
-  color: var(--gold);
+  color: var(--hold);
   font-weight: 600;
 }
 
@@ -268,20 +268,20 @@
   display: grid;
   min-width: 0;
   gap: 6px;
-  border: 1px solid var(--divider);
+  border: 1px solid var(--edge);
   border-radius: 11px;
   padding: 11px;
 }
 
 .reasons li {
   min-width: 0;
-  color: var(--secondary);
+  color: var(--ink-2);
   font-size: 12px;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 379.98px) {
   .header,
   .content {
     padding-right: 14px;

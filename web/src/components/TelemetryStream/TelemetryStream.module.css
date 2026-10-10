@@ -1,0 +1,254 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-fade-rise-sm {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stream {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  min-height: 340px;
+  max-height: 560px;
+  flex-direction: column;
+  gap: var(--s2);
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+  transition: opacity var(--dur-base) var(--ease-out-expo);
+}
+
+.stale {
+  opacity: 0.6;
+}
+
+.header {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.count {
+  flex: none;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s2);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2);
+}
+
+.filter {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s2);
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.filter select {
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  padding: var(--s1) var(--s2);
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  font: var(--fs-xs);
+  cursor: pointer;
+}
+
+.range {
+  min-width: 0;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.list {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--s1);
+  overflow-y: auto;
+  scrollbar-color: var(--edge-strong) transparent;
+}
+
+.empty {
+  padding: var(--s5) var(--s3);
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  text-align: center;
+}
+
+/* The tone rail carries the colour, so the text itself stays neutral and legible. */
+.row {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 64px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid var(--edge);
+  border-left: 3px solid var(--edge-strong);
+  border-radius: var(--r-xs);
+  padding: var(--s2) var(--s3);
+  background: var(--bg-deck-2);
+  animation: jev-fade-rise-sm 200ms var(--ease-out-expo) both;
+}
+
+.row.buy {
+  border-left-color: var(--buy);
+}
+
+.row.sell {
+  border-left-color: var(--sell);
+}
+
+.row.hold {
+  border-left-color: var(--hold);
+}
+
+.row.late {
+  border-left-color: var(--late);
+}
+
+.row.waiting {
+  border-left-color: var(--ink-4);
+}
+
+.rowTop {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.block,
+.latency {
+  flex: none;
+  color: var(--ink-3);
+  font: 400 11px/1.3 var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.kind {
+  min-width: 0;
+  flex: 1;
+  color: var(--ink);
+  font: var(--fs-xs);
+  overflow-wrap: anywhere;
+}
+
+.rowBottom {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.detail {
+  min-width: 0;
+  flex: 1 1 180px;
+  color: var(--ink-2);
+  font: 400 11px/1.35 var(--font-mono), monospace;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  flex: none;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 1px var(--s2);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.tx {
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--signal);
+  font: 400 11px/1.3 var(--font-mono), monospace;
+}
+
+.staleChip {
+  position: absolute;
+  top: var(--s3);
+  right: var(--s3);
+  border: 1px solid var(--hold);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s3);
+  background: var(--bg-deck);
+  color: var(--hold);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+@media (max-width: 899.98px) {
+  .filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 379.98px) {
+  .stream {
+    padding: var(--s3);
+  }
+
+  .filter {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .stream {
+    animation: none;
+    transition: none;
+  }
+}

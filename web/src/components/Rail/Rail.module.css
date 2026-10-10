@@ -1,0 +1,213 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-rule-draw {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  to {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+.rail {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s3);
+  padding-top: var(--s1);
+  transition: opacity var(--dur-base) var(--ease-out-expo);
+}
+
+/* While the feed is reconnecting the frame dims but keeps its last values. */
+.stale {
+  opacity: 0.6;
+}
+
+.brandRow {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s4);
+}
+
+.brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.brandCopy {
+  min-width: 0;
+}
+
+.brandCopy h1 {
+  color: var(--ink);
+  font: var(--fs-lg);
+  letter-spacing: 0.04em;
+}
+
+.brandCopy p {
+  margin-top: 2px;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.digest {
+  display: grid;
+  min-width: 0;
+  justify-items: end;
+  gap: 2px;
+}
+
+.digestLabel {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.digestValue {
+  color: var(--ink);
+  font: var(--fs-readout);
+  font-variant-numeric: tabular-nums;
+}
+
+.digestMeta {
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, var(--edge-strong), transparent);
+  transform-origin: left center;
+  animation: jev-rule-draw 520ms var(--ease-out-expo) both;
+}
+
+.statusRow {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.statusBadge {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s3);
+  color: var(--ink-2);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.simulation {
+  border-color: var(--late);
+  color: var(--late);
+}
+
+.unknown {
+  border-color: var(--edge);
+  color: var(--ink-3);
+}
+
+.connection {
+  border-color: var(--edge-focus);
+  color: var(--signal);
+}
+
+.source {
+  border-color: var(--edge);
+  color: var(--ink-3);
+}
+
+.context {
+  min-width: 0;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.wallet {
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  font: var(--fs-xs);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out-expo), border-color var(--dur-fast) var(--ease-out-expo);
+}
+
+.wallet:hover:not(:disabled) {
+  border-color: var(--edge-focus);
+  background: var(--bg-deck-3);
+}
+
+.wallet:disabled {
+  color: var(--ink-4);
+  cursor: not-allowed;
+}
+
+.copyStatus {
+  min-width: 0;
+  color: var(--buy);
+  font: var(--fs-xs);
+}
+
+/* Static chip, no dot and no pulse, because no new value is arriving. */
+.staleChip {
+  align-self: flex-start;
+  border: 1px solid var(--hold);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s3);
+  color: var(--hold);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+@media (max-width: 899.98px) {
+  .brandRow {
+    flex-direction: column;
+    gap: var(--s3);
+  }
+
+  .digest {
+    justify-items: start;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .statusRow {
+    gap: var(--s1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail,
+  .wallet {
+    transition: none;
+  }
+
+  .rule {
+    animation: none;
+  }
+}

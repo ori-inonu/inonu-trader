@@ -1,0 +1,93 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-mesh-drift {
+  from {
+    transform: rotate(-8deg);
+  }
+
+  to {
+    transform: rotate(8deg);
+  }
+}
+
+.backdrop {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--bg-hull) 0%, var(--bg-void) 62%),
+    var(--bg-void);
+}
+
+/* Oversized so the rotation never exposes an edge, and pre-composited so the animation is compositor only. */
+.mesh {
+  inset: -30%;
+  width: 160%;
+  height: 160%;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  animation: jev-mesh-drift 48s linear infinite alternate;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: none;
+  opacity: 0.5;
+}
+
+.blobPrimary {
+  top: 4%;
+  left: 8%;
+  width: 46%;
+  height: 46%;
+  background: radial-gradient(circle at 50% 50%, var(--signal-deep) 0%, transparent 68%);
+}
+
+.blobSecondary {
+  right: 4%;
+  bottom: 6%;
+  width: 42%;
+  height: 42%;
+  background: radial-gradient(circle at 50% 50%, var(--bg-deck-2) 0%, transparent 70%);
+}
+
+.blobAccent {
+  top: 46%;
+  left: 42%;
+  width: 34%;
+  height: 34%;
+  background: radial-gradient(circle at 50% 50%, var(--backdrop-accent) 0%, transparent 72%);
+  transition: background var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.backdrop[data-tone="neutral"] {
+  --backdrop-accent: var(--signal-deep);
+}
+
+.backdrop[data-tone="buy"] {
+  --backdrop-accent: var(--buy);
+}
+
+.backdrop[data-tone="sell"] {
+  --backdrop-accent: var(--sell);
+}
+
+.backdrop[data-tone="hold"] {
+  --backdrop-accent: var(--hold);
+}
+
+.backdrop[data-tone="late"] {
+  --backdrop-accent: var(--late);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh,
+  .blobAccent {
+    animation: none;
+    transition: none;
+  }
+}

@@ -1,3 +1,30 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-block-grow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom center;
+  }
+
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom center;
+  }
+}
+
+@keyframes jev-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .wrap {
   display: flex;
   min-width: 0;
@@ -21,7 +48,7 @@
 }
 
 .eyebrow {
-  color: var(--cyan);
+  color: var(--signal);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -45,10 +72,10 @@
 .inspectButton {
   min-width: 44px;
   min-height: 44px;
-  border: 1px solid var(--control-border);
+  border: 1px solid var(--edge-strong);
   border-radius: 10px;
-  background: var(--raised);
-  color: var(--secondary);
+  background: var(--bg-deck-2);
+  color: var(--ink-2);
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
@@ -56,28 +83,43 @@
 }
 
 .windowButton[aria-pressed="true"] {
-  border-color: var(--cyan);
-  background: var(--cyan);
-  color: var(--canvas);
+  border-color: var(--signal);
+  background: var(--signal);
+  color: var(--bg-well);
 }
 
 .windowButton:hover,
 .inspectButton:hover:not(:disabled) {
-  border-color: var(--cyan);
-  background: var(--raised-hover);
+  border-color: var(--signal);
+  background: var(--bg-deck-3);
   color: var(--ink);
 }
 
 .windowButton[aria-pressed="true"]:hover {
-  background: #83ebf7;
-  color: var(--canvas);
+  background: var(--signal);
+  color: var(--bg-well);
 }
 
 .availability {
   min-height: 18px;
-  color: var(--muted);
+  color: var(--ink-3);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
+}
+
+.floor {
+  fill: var(--bg-well);
+}
+
+.corners path {
+  fill: none;
+  stroke: var(--edge-strong);
+  stroke-width: 1;
+}
+
+.blockCell {
+  transform-origin: center bottom;
+  animation: jev-block-grow 200ms var(--ease-out-expo) both;
 }
 
 .panel {
@@ -86,9 +128,11 @@
   min-height: 300px;
   flex: 1;
   overflow: hidden;
-  border: 1px solid var(--divider);
+  border-radius: var(--r-sm);
+  box-shadow: var(--elev-2);
+  border: 1px solid var(--edge);
   border-radius: 18px;
-  background: var(--panel);
+  background: var(--bg-deck);
   touch-action: pan-y;
 }
 
@@ -103,43 +147,43 @@
 
 .line {
   fill: none;
-  stroke: var(--cyan);
+  stroke: var(--signal);
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .grid {
-  stroke: var(--divider);
+  stroke: var(--edge);
   stroke-width: 1;
 }
 
 .tick {
-  fill: var(--muted);
+  fill: var(--ink-3);
   font: 500 12px var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
 }
 
 .guide {
-  stroke: var(--gold);
+  stroke: var(--hold);
   stroke-width: 1.5;
 }
 
 .tagText {
-  fill: var(--canvas);
+  fill: var(--bg-well);
   font: 600 12px var(--font-mono), monospace;
   font-variant-numeric: tabular-nums;
 }
 
 .cross {
-  stroke: var(--secondary);
+  stroke: var(--ink-2);
   stroke-width: 1;
   stroke-dasharray: 4 4;
 }
 
 .crossDot {
-  fill: var(--gold);
-  stroke: var(--canvas);
+  fill: var(--hold);
+  stroke: var(--bg-well);
   stroke-width: 2;
 }
 
@@ -173,7 +217,7 @@
 
 .priceOverlay span,
 .statusOverlay span {
-  color: var(--muted);
+  color: var(--ink-3);
   font-size: 12px;
   line-height: 1.35;
 }
@@ -187,16 +231,16 @@
 
 .buy { color: var(--buy); }
 .sell { color: var(--sell); }
-.hold { color: var(--gold); }
+.hold { color: var(--hold); }
 .late { color: var(--sell); }
-.waiting { color: var(--secondary); }
+.waiting { color: var(--ink-2); }
 
 .positionSummary {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 4px 12px;
-  color: var(--secondary);
+  color: var(--ink-2);
   font-family: var(--font-mono), monospace;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
@@ -216,7 +260,7 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  color: var(--secondary);
+  color: var(--ink-2);
   font-size: 14px;
   text-align: center;
 }
@@ -227,6 +271,7 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
+  animation: jev-fade-rise var(--dur-base) var(--ease-out-expo) both;
 }
 
 .inspectButton {
@@ -236,7 +281,7 @@
 
 .inspectButton:disabled {
   cursor: not-allowed;
-  color: var(--muted);
+  color: var(--ink-3);
 }
 
 .inspectSummary {
@@ -244,7 +289,7 @@
   min-width: 0;
   flex-direction: column;
   gap: 2px;
-  color: var(--secondary);
+  color: var(--ink-2);
   font-size: 12px;
   line-height: 1.4;
   text-align: center;
@@ -262,7 +307,7 @@
 
 .windowButton:focus-visible,
 .inspectButton:focus-visible {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid var(--signal);
   outline-offset: 3px;
 }
 
@@ -270,9 +315,7 @@
   .panel {
     min-height: 240px;
   }
-}
 
-@media (max-width: 520px) {
   .toolbar {
     align-items: flex-start;
     flex-direction: column;

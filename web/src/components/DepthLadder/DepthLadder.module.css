@@ -1,0 +1,212 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-ladder-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scaleY(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes jev-ladder-settle {
+  0% {
+    transform: scaleX(1);
+  }
+
+  60% {
+    transform: scaleX(1.08);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+}
+
+.header {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.badge {
+  flex: none;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s2);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.availability {
+  min-width: 0;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.frame {
+  position: relative;
+  min-width: 0;
+  min-height: 220px;
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-well);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 220px;
+}
+
+.deck {
+  fill: var(--bg-deck-2);
+  stroke: var(--edge);
+  stroke-width: 1;
+}
+
+.plane {
+  transform-origin: left center;
+}
+
+.planeIn {
+  animation: jev-ladder-in var(--dur-base) var(--ease-out-expo) both;
+}
+
+.planeSettle {
+  animation: jev-ladder-settle 320ms var(--ease-out-back) both;
+}
+
+.bar {
+  fill: var(--edge-strong);
+}
+
+.cap {
+  fill: var(--ink-4);
+}
+
+.bid .bar {
+  fill: var(--buy);
+  fill-opacity: 0.4;
+}
+
+.bid .cap {
+  fill: var(--buy);
+}
+
+.ask .bar {
+  fill: var(--sell);
+  fill-opacity: 0.4;
+}
+
+.ask .cap {
+  fill: var(--sell);
+}
+
+.mid .bar {
+  fill: var(--hold);
+  fill-opacity: 0.28;
+}
+
+.mid .cap {
+  fill: var(--hold);
+}
+
+.price {
+  fill: var(--ink-2);
+  font: 400 11px/1.2 var(--font-mono), monospace;
+}
+
+.size {
+  fill: var(--ink-4);
+  font: 400 10px/1.2 var(--font-mono), monospace;
+}
+
+.legend {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-3);
+  font: 400 11px/1.35 var(--font-mono), monospace;
+}
+
+.legend .bid {
+  color: var(--buy);
+}
+
+.legend .ask {
+  color: var(--sell);
+}
+
+.legend .mid {
+  color: var(--hold);
+}
+
+.empty {
+  color: var(--ink-4);
+}
+
+.still .plane {
+  animation: none;
+}
+
+/* Below the tablet breakpoint the isometric projection becomes a flat ladder, because a squashed
+   isometric view is unreadable on a narrow column. */
+@media (max-width: 899.98px) {
+  .svg {
+    height: 200px;
+  }
+
+  .plane {
+    transform: none;
+  }
+
+  .bar,
+  .cap {
+    fill-opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plane {
+    animation: none;
+  }
+}

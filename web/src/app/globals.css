@@ -1,34 +1,253 @@
 :root {
-  --canvas: #07111f;
-  --page-bg: #07111f;
-  --panel: #0c1d31;
-  --raised: #122941;
-  --panel-raised: #122941;
-  --raised-hover: #122941;
-  --ink: #f3f7fc;
-  --ink-2: #c7d8e8;
-  --secondary: #c7d8e8;
-  --muted: #93aec4;
-  --muted-2: #93aec4;
-  --cyan: #5fe1f5;
-  --gold: #e9c677;
-  --buy: #67e6b1;
-  --buy-ink: #67e6b1;
-  --sell: #ff9c98;
-  --sell-ink: #ff9c98;
-  --pnl-pos: #67e6b1;
-  --pnl-neg: #ff9c98;
-  --control-border: #5c7d98;
-  --border-control: #5c7d98;
-  --divider: #25435e;
-  --border: #25435e;
-  --border-2: #5c7d98;
-  --track: #07111f;
+  /* Structure ramp: void (page backdrop) < hull (console shell) < deck (panel) < deck-2 (raised, table header, control rest) < deck-3 (control hover, table stripe). Well is recessed. */
+  --bg-void: #05080d;
+  --bg-hull: #0a1018;
+  --bg-deck: #0d1622;
+  --bg-deck-2: #121d2b;
+  --bg-deck-3: #1a2739;
+  --bg-well: #070c14;
+
+  /* Borders */
+  --edge: #1e2c3f;
+  --edge-strong: #2a3d55;
+  --edge-focus: #3f6288;
+
+  /* Text. --ink-4 is for hairlines and disabled controls only, never body text. */
+  --ink: #e9f1fa;
+  --ink-2: #b6c8dc;
+  --ink-3: #7f95ac;
+  --ink-4: #55697e;
+
+  /* Signal and state. --late covers LATE decisions and every simulated state. */
+  --signal: #4fd6e8;
+  --signal-deep: #1b7f92;
+  --buy: #3ddc97;
+  --sell: #ff6b81;
+  --hold: #f2c14e;
+  --late: #b07cff;
+
+  --track: var(--bg-well);
 
   --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --card-max: 1440px;
+  --card-max: 1600px;
+
+  /* Spacing, 4px base */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s7: 32px;
+  --s8: 40px;
+  --s9: 56px;
+
+  /* Radius encodes rank */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* Elevation: inset top highlight plus a growing neutral ambient shadow, never a tinted glow */
+  --elev-0: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --elev-1: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --elev-2: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 6px rgba(0, 0, 0, 0.45), 0 12px 24px -12px rgba(0, 0, 0, 0.7);
+  --elev-3: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 4px 12px rgba(0, 0, 0, 0.5), 0 32px 64px -24px rgba(0, 0, 0, 0.85);
+
+  /* Type scale */
+  --fs-micro: 600 10px/12px var(--font-sans);
+  --track-micro: 0.16em;
+  --fs-xs: 500 11px/15px var(--font-sans);
+  --fs-sm: 400 12px/17px var(--font-sans);
+  --fs-base: 400 13px/19px var(--font-sans);
+  --fs-md: 500 15px/22px var(--font-sans);
+  --fs-lg: 600 18px/24px var(--font-sans);
+  --fs-readout: 500 22px/26px var(--font-mono);
+  --fs-hero: 500 34px/36px var(--font-mono);
+  --fs-mega: 400 52px/54px var(--font-mono);
+
+  /* Motion */
+  --dur-instant: 90ms;
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 420ms;
+  --dur-cinematic: 620ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --stagger-step: 26ms;
+  --stagger-cap: 208ms;
 }
+
+/* Keyframes are global on purpose. postcss-modules-local-by-default only rewrites names
+   declared in the same CSS module, so a module referencing one of these names resolves
+   it against the global declaration. Only jev-mesh-drift and jev-scan are infinite and
+   neither carries state, so nothing that shows state can loop. */
+@keyframes jev-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jev-fade-rise-sm {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jev-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.965);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes jev-core-turn {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(34deg);
+  }
+}
+
+@keyframes jev-block-grow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom center;
+  }
+
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom center;
+  }
+}
+
+@keyframes jev-bar-grow {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  to {
+    transform: scaleX(var(--p, 1));
+    transform-origin: left center;
+  }
+}
+
+@keyframes jev-ladder-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scaleY(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes jev-ladder-settle {
+  0% {
+    transform: scaleX(1);
+  }
+
+  60% {
+    transform: scaleX(1.08);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes jev-rule-draw {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  to {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+@keyframes jev-mesh-drift {
+  from {
+    transform: rotate(-8deg);
+  }
+
+  to {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes jev-scan {
+  from {
+    transform: translateX(-10%);
+  }
+
+  to {
+    transform: translateX(110%);
+  }
+}
+
+@keyframes jev-shake {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes jev-flip {
+  from {
+    transform: rotateX(-90deg);
+  }
+
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+/* Canonical declarations for the keyframes above. Duration and easing live at the call site
+   so reduced motion can override them from one place.
+   jev-fade-rise:  animation jev-fade-rise var(--dur-base) var(--ease-out-expo)
+   jev-fade-rise-sm: animation jev-fade-rise-sm 200ms var(--ease-out-expo)
+   jev-scale-in:   animation jev-scale-in 240ms var(--ease-out-back)
+   jev-core-turn:  animation jev-core-turn var(--dur-cinematic) var(--ease-out-expo)
+   jev-block-grow: animation jev-block-grow 200ms var(--ease-out-expo)
+   jev-bar-grow:   animation jev-bar-grow var(--dur-slow) var(--ease-out-expo)  with --p set
+   jev-ladder-in:  animation jev-ladder-in var(--dur-base) var(--ease-out-expo)
+   jev-ladder-settle: animation jev-ladder-settle 320ms var(--ease-out-back)
+   jev-rule-draw:  animation jev-rule-draw 520ms var(--ease-out-expo)
+   jev-shake:      animation jev-shake 240ms var(--ease-out-back)
+   jev-flip:       animation jev-flip 180ms var(--ease-out-expo)
+   jev-mesh-drift and jev-scan are the only infinite animations and are declared by the hooks below. */
 
 *,
 *::before,
@@ -50,11 +269,11 @@ html {
 
 body {
   overflow-x: clip;
-  background: var(--canvas);
+  background: var(--bg-void);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.46;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -98,10 +317,11 @@ svg {
 }
 
 :focus-visible {
-  outline: 2px solid var(--cyan);
+  outline: 2px solid var(--signal);
   outline-offset: 3px;
 }
 
+/* Console shell: hull surface plus a static deck grain that kills banding on large dark fields. */
 .card {
   display: flex;
   width: 100%;
@@ -109,20 +329,69 @@ svg {
   min-height: 100vh;
   min-height: 100svh;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--s6);
   margin-inline: auto;
-  padding: 16px 24px 24px;
+  padding: var(--s4) var(--s6) var(--s6);
+  background-color: var(--bg-hull);
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(233, 241, 250, 0.03) 0px,
+    rgba(233, 241, 250, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
 }
 
 @media (max-width: 899.98px) {
   .card {
-    padding: 12px 16px 24px;
+    padding: var(--s3) var(--s4) var(--s6);
   }
 }
 
 @media (max-width: 379.98px) {
   .card {
-    padding-inline: 12px;
+    padding-inline: var(--s3);
+  }
+}
+
+/* Compositor only backdrop hooks for the next phase. Neither carries state. */
+.meshLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  animation: jev-mesh-drift 48s linear infinite alternate;
+}
+
+.scanline {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scanline::after {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 40%;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(79, 214, 232, 0.04), transparent);
+  will-change: transform;
+  animation: jev-scan 6s ease-inout infinite alternate;
+}
+
+html[data-tab-hidden="true"] .meshLayer,
+html[data-tab-hidden="true"] .scanline {
+  animation-play-state: paused;
+}
+
+/* Hero numbers must stay readable if background-clip text is unsupported. */
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .clippedText {
+    color: var(--ink);
+    -webkit-text-fill-color: currentColor;
   }
 }
 
@@ -138,5 +407,11 @@ svg {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     transition-delay: 0ms !important;
+  }
+
+  .meshLayer,
+  .scanline,
+  .scanline::after {
+    animation: none !important;
   }
 }

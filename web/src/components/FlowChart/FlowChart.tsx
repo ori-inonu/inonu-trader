@@ -19,7 +19,7 @@ function cellFill(event: BlockEvent): string {
   const side = event.fill?.side ?? event.decision?.action;
   if (side === "buy") return "var(--buy)";
   if (side === "sell") return "var(--sell)";
-  return "var(--muted)";
+  return "var(--ink-3)";
 }
 
 function confidence(event: BlockEvent): string {
@@ -240,10 +240,23 @@ export default function FlowChart({
             <svg className={styles.svg} viewBox={`0 0 ${size.w} ${size.h}`} width={size.w} height={size.h} aria-hidden="true">
               <defs>
                 <linearGradient id={`area${gid}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#5FE1F5" stopOpacity="0.14" />
-                  <stop offset="100%" stopColor="#5FE1F5" stopOpacity="0" />
+                  <stop offset="0%" stopColor="var(--signal)" stopOpacity="0.14" />
+                  <stop offset="100%" stopColor="var(--signal)" stopOpacity="0" />
                 </linearGradient>
               </defs>
+              <rect
+                x="0"
+                y={PAD_TOP - 12}
+                width={size.w}
+                height={model.base - PAD_TOP + 12}
+                className={styles.floor}
+              />
+              <g className={styles.corners} aria-hidden="true">
+                <path d={`M0 ${PAD_TOP - 12} L14 ${PAD_TOP - 12} M0 ${PAD_TOP - 12} L0 ${PAD_TOP + 2}`} />
+                <path d={`M${size.w} ${PAD_TOP - 12} L${size.w - 14} ${PAD_TOP - 12} M${size.w} ${PAD_TOP - 12} L${size.w} ${PAD_TOP + 2}`} />
+                <path d={`M0 ${model.base} L14 ${model.base} M0 ${model.base} L0 ${model.base - 14}`} />
+                <path d={`M${size.w} ${model.base} L${size.w - 14} ${model.base} M${size.w} ${model.base} L${size.w} ${model.base - 14}`} />
+              </g>
               {model.ticks.map((tick) => (
                 <line key={tick.y} className={styles.grid} x1="0" x2={size.w} y1={tick.y} y2={tick.y} />
               ))}
@@ -255,13 +268,14 @@ export default function FlowChart({
               {model.cells.map((cell) => (
                 <rect
                   key={cell.key}
+                  className={styles.blockCell}
                   x={cell.x - 2.5}
                   y={size.h - 36}
                   width="5"
                   height="16"
                   rx="2"
                   fill={cell.fill}
-                  stroke={inspected?.block === cell.key ? "#F3F7FC" : "none"}
+                  stroke={inspected?.block === cell.key ? "var(--ink)" : "none"}
                   strokeWidth="1.5"
                 />
               ))}
@@ -278,8 +292,8 @@ export default function FlowChart({
               ))}
               <g className={styles.tag} style={{ transform: `translateY(${model.endY.toFixed(1)}px)` }}>
                 <line className={styles.guide} x1={size.w - 72} x2={size.w - TAG_W - 10} y1="0" y2="0" />
-                <circle cx={size.w - 82} cy="0" r="4" fill="#E9C677" />
-                <rect x={size.w - TAG_W - 8} y="-10" width={TAG_W} height="20" rx="999" fill="#5FE1F5" />
+                <circle cx={size.w - 82} cy="0" r="4" fill="var(--hold)" />
+                <rect x={size.w - TAG_W - 8} y="-10" width={TAG_W} height="20" rx="999" fill="var(--signal)" />
                 <text className={styles.tagText} x={size.w - 8 - TAG_W / 2} y="4" textAnchor="middle">
                   {fmtPrice(model.last.mid)}
                 </text>

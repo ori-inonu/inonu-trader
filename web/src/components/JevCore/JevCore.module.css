@@ -1,0 +1,310 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-core-turn {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(34deg);
+  }
+}
+
+@keyframes jev-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.965);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes jev-shake {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes jev-fade-rise-sm {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.core {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s3);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-lg);
+  padding: var(--s5);
+  background: var(--bg-deck);
+  /* The only element on the page at --elev-3. */
+  box-shadow: var(--elev-3);
+  transition: opacity var(--dur-base) var(--ease-out-expo);
+}
+
+.core.stale {
+  opacity: 0.6;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.orbHost {
+  min-width: 0;
+}
+
+.orbWrap {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  /* Reserved so a null latest never shifts the layout. */
+  min-height: 220px;
+}
+
+.orbWrap > :first-child {
+  grid-area: 1 / 1;
+}
+
+.orbWrap > :last-child {
+  grid-area: 1 / 1;
+}
+
+/* The only perspective on the page. */
+.perspective {
+  display: grid;
+  place-items: center;
+  width: 220px;
+  height: 220px;
+  perspective: 900px;
+}
+
+.orb {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  position: relative;
+  display: grid;
+  width: 220px;
+  height: 220px;
+  place-items: center;
+  border-radius: 50%;
+  transform: rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
+  transform-style: preserve-3d;
+  background: radial-gradient(circle at 38% 32%, var(--bg-deck-3) 0%, var(--bg-deck) 58%, var(--bg-well) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 0 60px rgba(0, 0, 0, 0.6);
+  will-change: transform;
+}
+
+.ring {
+  position: absolute;
+  inset: 14px;
+  border: 2px solid var(--signal-deep);
+  border-radius: 50%;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transform: translateZ(24px);
+}
+
+/* The ring turns once per new block, because the key is the block number. */
+.ring {
+  animation: jev-core-turn var(--dur-cinematic) var(--ease-out-expo) both;
+}
+
+.orbStill .ring {
+  animation: none;
+}
+
+.coreDisc {
+  position: absolute;
+  inset: 52px;
+  border: 1px solid var(--edge);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, var(--bg-well) 0%, var(--bg-deck-2) 100%);
+  transform: translateZ(12px);
+}
+
+.buy .ring {
+  border-color: var(--buy);
+}
+
+.sell .ring {
+  border-color: var(--sell);
+}
+
+.hold .ring {
+  border-color: var(--hold);
+}
+
+.late .ring {
+  border-color: var(--late);
+}
+
+.unknown .ring {
+  border-color: var(--edge-strong);
+}
+
+.actionWord {
+  min-height: 40px;
+  color: var(--ink);
+  font: var(--fs-hero);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.actionEnter {
+  animation: jev-scale-in 240ms var(--ease-out-back) both;
+}
+
+.shake {
+  animation: jev-shake 240ms var(--ease-out-back) both;
+}
+
+.buy .actionWord {
+  color: var(--buy);
+}
+
+.sell .actionWord {
+  color: var(--sell);
+}
+
+.hold .actionWord {
+  color: var(--hold);
+}
+
+.late .actionWord {
+  color: var(--late);
+}
+
+.readouts {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2);
+  margin: 0;
+}
+
+.readout {
+  display: flex;
+  min-width: 0;
+  min-height: 52px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  padding: var(--s2) var(--s3);
+  background: var(--bg-deck-2);
+}
+
+.readout dt {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.readout dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink-2);
+  font: var(--fs-readout);
+  overflow-wrap: anywhere;
+}
+
+.order {
+  min-height: 32px;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: var(--s2) var(--s3);
+  background: var(--bg-deck-2);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  text-align: center;
+}
+
+.order.buy {
+  border-color: var(--buy);
+  color: var(--buy);
+}
+
+.order.sell {
+  border-color: var(--sell);
+  color: var(--sell);
+}
+
+.order.hold {
+  border-color: var(--hold);
+  color: var(--hold);
+}
+
+.order.late {
+  border-color: var(--late);
+  color: var(--late);
+}
+
+.staleChip {
+  border: 1px solid var(--hold);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s3);
+  color: var(--hold);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.core :global(details) {
+  animation: jev-fade-rise-sm 200ms var(--ease-out-expo) both;
+}
+
+@media (max-width: 899.98px) {
+  .core {
+    position: static;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .core {
+    padding: var(--s4);
+  }
+
+  .readouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .core,
+  .ring,
+  .actionWord,
+  .shake {
+    transition: none;
+    animation: none;
+  }
+}

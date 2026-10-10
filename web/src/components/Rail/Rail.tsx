@@ -4,26 +4,40 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { BlockEvent, ConnectionState, Meta } from "@/lib/types";
 import { fmtInt, shortAddr } from "@/lib/format";
 import { presentFeed } from "@/lib/presentation";
+import { feedFrameState } from "@/lib/feed-frame";
+import { flashValue } from "@/lib/motion";
 import BrandMark from "@/components/BrandMark/BrandMark";
-import styles from "./Header.module.css";
+import styles from "./Rail.module.css";
 
-export interface HeaderProps {
+export interface RailProps {
   meta: Meta | null;
   latest: BlockEvent | null;
   connection: ConnectionState;
+  uptimeText: string;
+  reducedMotion?: boolean;
 }
 
-export default function Header({ meta, latest, connection }: HeaderProps) {
+export default function Rail({ meta, latest, connection, uptimeText, reducedMotion = false }: RailProps) {
   const [copyStatus, setCopyStatus] = useState("");
-  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const counterRef = useRef<HTMLSpanElement | null>(null);
   const wallet = meta?.wallet ?? null;
+  const frame = feedFrameState(connection);
+  const stale = frame.held;
 
   useEffect(
     () => () => {
-      if (copyTimer.current) clearTimeout(copyTimer.current);
+      clearTimeout(copyTimer.current);
     },
     [],
   );
+
+  const blockLabel = latest ? fmtInt(latest.block) : "Aguardando";
+  const block = latest?.block ?? null;
+
+  useEffect(() => {
+    flashValue(counterRef.current, reducedMotion || stale);
+  }, [block, reducedMotion, stale]);
 
   const onCopy = useCallback(async () => {
     if (!wallet) return;
@@ -34,7 +48,7 @@ export default function Header({ meta, latest, connection }: HeaderProps) {
     } catch {
       setCopyStatus("Não foi possível copiar");
     }
-    if (copyTimer.current) clearTimeout(copyTimer.current);
+    clearTimeout(copyTimer.current);
     copyTimer.current = setTimeout(() => setCopyStatus(""), 1800);
   }, [wallet]);
 
@@ -42,20 +56,23 @@ export default function Header({ meta, latest, connection }: HeaderProps) {
   const model = meta?.model?.trim();
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.rail} ${stale ? styles.stale : ""}`}>
       <div className={styles.brandRow}>
         <div className={styles.brand}>
           <BrandMark decorative />
           <div className={styles.brandCopy}>
-            <h1>INONU TRADER</h1>
-            <p>Inteligência de mercado. Estado visível.</p>
+            <h1>JEV TRADER</h1>
+            <p>Decisao do agente. Execucao real a cada bloco.</p>
           </div>
         </div>
-        <div className={styles.block}>
-          <span>Bloco observado</span>
-          <strong>{latest ? fmtInt(latest.block) : "Aguardando"}</strong>
+        <div className={styles.digest}>
+          <span className={styles.digestLabel}>Bloco observado</span>
+          <span className={styles.digestValue} ref={counterRef}>{blockLabel}</span>
+          <span className={styles.digestMeta}>{uptimeText} observado</span>
         </div>
       </div>
+
+      <span className={styles.rule} aria-hidden="true" />
 
       <div className={styles.statusRow}>
         <span className={`${styles.statusBadge} ${presentation.executionLabel === "Simulação" ? styles.simulation : styles.unknown}`}>
@@ -79,6 +96,8 @@ export default function Header({ meta, latest, connection }: HeaderProps) {
         </button>
         <span className={styles.copyStatus} aria-live="polite">{copyStatus}</span>
       </div>
+
+      {frame.notice ? <span className={styles.staleChip}>{frame.notice}</span> : null}
     </header>
   );
 }
