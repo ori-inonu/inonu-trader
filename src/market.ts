@@ -86,11 +86,14 @@ export class Market {
   private get tickUnits() { return Number(this.params.tickSize.toString()); }
 
   async init() {
+    if (this.wallet) throw new Error("Live execution is not qualified: reconcile existing orders, wallet/margin balances and restart capital baseline first. Use DRY_RUN=true.");
+    if (parseInt(await rpc<string>("eth_chainId", [], config.rpcUrl), 16) !== config.chainId || parseInt(await rpc<string>("eth_chainId", [], config.readRpcUrl), 16) !== config.chainId) throw new Error("RPC chain mismatch");
     this.params = await Kuru.ParamFetcher.getMarketParams(this.provider, config.market);
+    if (!this.params.makerFeeBps.isZero()) throw new Error("Nonzero on-chain maker fee requires qualified fee semantics before paper/live evaluation");
     await this.refresh();
     if (!this.wallet) return;
     await this.resyncNonce();
-    await this.ensureMargin();
+    if (config.autoDeposit) await this.ensureMargin();
     await this.initGasLimit();
   }
 
@@ -134,7 +137,7 @@ export class Market {
    */
   async send(block: number, side: Side, sizeMon: number, book: Book, cancel: number[], capped: boolean): Promise<Quote> {
     const price = this.quotePrice(side, book);
-    if (!this.wallet) return { side, price, size: sizeMon, txHash: null, gasMon: 0, cancel, status: "sim", orderId: null, capped };
+    if (!this.wallet) return { side, price, size: sizeMon, txHash: null, gasMon: this.gasMon(BN.from(config.gasLimit ?? config.gasLimitFallback), this.feeWei), cancel, status: "sim", orderId: null, capped };
 
     const tx = this.buildTx(side, sizeMon, price, cancel);
     const signed = await this.wallet.signTransaction(tx);
@@ -179,6 +182,20 @@ export class Market {
       maxFeePerGas: gwei(config.maxFeeGwei), maxPriorityFeePerGas: gwei(config.priorityFeeGwei),
       data: this.encode(side, sizeMon, price, cancel), value: BN.from(0),
     };
+  }
+
+  estimatedGasMon() { return this.gasMon(BN.from(config.gasLimit ?? config.gasLimitFallback), this.feeWei); }
+
+  /** Cancellation-only transaction; failure remains visible to the risk latch. */
+  async cancelOrders(ids: number[]): Promise<{ gasMon: number; txHash: string }> {
+    if (!this.wallet || !ids.length) throw new Error("No live cancellation to send");
+    const tx = this.buildTx("buy", config.tradeSizeMon, 1, []);
+    tx.data = this.iface.encodeFunctionData("batchUpdate", [[], [], [], [], ids, true]);
+    const signed = await this.wallet.signTransaction(tx);
+    const hash = await rpc<string>("eth_sendRawTransaction", [signed]); this.nonce++;
+    const receipt = await this.provider.waitForTransaction(hash, 1, 15000);
+    if (!receipt || receipt.status !== 1) throw new Error("Cancellation unconfirmed or reverted");
+    return { gasMon: this.gasMon(this.gasLimit, receipt.effectiveGasPrice), txHash: hash };
   }
 
   /** batchUpdate(buyPrices, buySizes, sellPrices, sellSizes, orderIdsToCancel, postOnly). Funds come from the margin account, so value is 0. */
@@ -235,7 +252,7 @@ export class Market {
       const dep = have.lt(amt) ? have : amt;
       if (dep.gt(0)) {
         const allowance: ethers.BigNumber = await token.allowance(w.address, config.marginAccount);
-        if (allowance.lt(dep)) { const tx = await token.approve(config.marginAccount, ethers.constants.MaxUint256, { nonce: this.nonce++ }); await tx.wait(1); }
+        if (allowance.lt(dep)) { const tx = await token.approve(config.marginAccount, dep, { nonce: this.nonce++ }); await tx.wait(1); }
         console.log(`margin: depositing ${ethers.utils.formatUnits(dep, quoteDec)} USDC`);
         await deposit(this.params.quoteAssetAddress, dep, false);
       }

@@ -1,0 +1,32 @@
+{
+  "source": "synthetic_fixture",
+  "policy": {
+    "maxPriceAgeMs": 60000,
+    "minPoolLiquidityUsd": 10000,
+    "minHolders": 100,
+    "maxTop10HolderPercent": 50,
+    "maxRiskControlLevel": 2
+  },
+  "tokens": [
+    {
+      "identity": {
+        "chainIndex": "1",
+        "tokenContractAddress": "0xsynthetic00000000000000000000000000000001"
+      },
+      "addressComparison": "case-insensitive",
+      "price": "1.25",
+      "priceAgeMs": 0,
+      "holders": "1000",
+      "tokenTags": ["smartMoneyBuy"],
+      "top10HoldPercent": "20",
+      "riskControlLevel": "1",
+      "pools": [
+        {
+          "poolAddress": "synthetic-pool-1",
+          "liquidityUsd": "20000"
+        }
+      ],
+      "honeypotAssessment": "not_detected"
+    }
+  ]
+}

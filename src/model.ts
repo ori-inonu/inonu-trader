@@ -2,7 +2,7 @@ import { experimental_evaluate } from "ai";
 import { typeSafeAi } from "@ai-sdk/typesafe-ai";
 import { config } from "./config";
 
-/** Models answer buy or sell. `hold` only appears on late blocks (no decision was made). */
+/** Model probabilities are decision weights, not calibrated win rates. */
 export type Action = "buy" | "sell" | "hold";
 
 /** What the model sees. Compact, relative, human-readable. */
@@ -39,18 +39,26 @@ export interface Model {
   decide(state: TradeState): Promise<Decision>;
 }
 
+export function validateDecision(d: Decision): Decision {
+  if (!["buy", "sell", "hold"].includes(d.action) || ![d.inputTokens, d.latencyMs, d.upIn10].every(Number.isFinite) || d.inputTokens < 0 || d.latencyMs < 0 || d.upIn10 < 0 || d.upIn10 > 1) throw new Error("Invalid model decision");
+  const p = [d.probabilities.buy, d.probabilities.sell, d.probabilities.hold];
+  if (!p.every(x => Number.isFinite(x) && x >= 0 && x <= 1) || Math.abs(p.reduce((a, b) => a + b, 0) - 1) > 0.01) throw new Error("Invalid model probabilities");
+  return d;
+}
+
 const QUESTIONS = {
   direction: {
     type: "choice",
     instructions: {
-      question: "Will MON be higher or lower than the current mid after `horizonBlocks` more blocks?",
-      goal: "Trade MON-USDC on Kuru. Blocks are ~300ms; `horizonBlocks` (~30 s) is the horizon. A decision is made every few blocks and held until the next one. The trade crosses the spread (`spreadBps`), so the move must beat that cost.",
-      timing: "The order executes as an immediate-or-cancel market order in the next block.",
-      inputs: "Taker flow is the strongest signal: `trades.cvdMon` (taker buys minus taker sells over the horizon), `trades.lastSide` and `recentTrades` show who is hitting the book. `depth` and `book` show resting liquidity per side at several distances from mid; thin depth on one side means price moves easily that way. `returnsBps` and `recentMids` show the path over the horizon. If `allowed.buy` is false the trade will be a sell regardless, and vice versa.",
+      question: "Should a funded spot maker post a buy, post a sell, or hold over the horizon?",
+      goal: "Trade MON-USDC with funded inventory, gas and maker fees. Preserve capital; no borrowing. Prefer hold when estimated edge is uncertain or inadequate after costs and adverse selection.",
+      timing: "Execution is a post-only resting limit order near the touch. It may not fill; a fill can occur after the prediction horizon. Cancellation and replacement cost gas. It is not immediate-or-cancel.",
+      inputs: "Flow, depth and recent returns are noisy observations, not guarantees. An unavailable allowed side cannot execute. A sell spends existing MON inventory. Probabilities are uncalibrated decision weights.",
     },
     criteria: {
       buy: "Buy MON now: mid more likely to be higher after `horizonBlocks` blocks, by more than the spread.",
       sell: "Sell MON now: mid more likely to be lower after `horizonBlocks` blocks, by more than the spread.",
+      hold: "Do not place an order: edge is uncertain, costs exceed opportunity, or neither funded side is allowed.",
     },
   },
 } as const;
@@ -66,13 +74,13 @@ export class JevModel implements Model {
     const a = r.answers.direction;
     const p = a.probabilities ?? { buy: 0, sell: 0, [a.choice]: 1 };
     const buy = p.buy ?? 0, sell = p.sell ?? 0;
-    return {
+    return validateDecision({
       action: a.choice as Action,
-      probabilities: { buy, sell, hold: 0 },
+      probabilities: { buy, sell, hold: p.hold ?? 0 },
       upIn10: buy,
       latencyMs: performance.now() - t0,
       inputTokens: r.usage?.inputTokens ?? 0,
-    };
+    });
   }
 }
 

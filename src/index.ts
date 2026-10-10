@@ -5,9 +5,14 @@ import { createModel } from "./model";
 import { Trader } from "./trader";
 import { log10 } from "./book";
 import { startServer } from "./server";
+import { existsSync } from "node:fs";
+
+if (existsSync(config.journalPath)) throw new Error("Set JOURNAL_PATH to a new session file; do not overwrite or mix sessions");
 
 const market = new Market();
 await market.init();
+const minimum = Number(market.params.minSize.toString()) / 10 ** log10(market.params.sizePrecision);
+if (config.tradeSizeMon < minimum) throw new Error(`TRADE_SIZE_MON below current market minimum ${minimum}`);
 const model = createModel();
 
 const server = startServer(

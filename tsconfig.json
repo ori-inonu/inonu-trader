@@ -28,5 +28,5 @@
     "noPropertyAccessFromIndexSignature": false
   }
 ,
-  "include": ["src"]
+  "include": ["src", "scripts/doctor.ts", "scripts/capture.ts", "scripts/backtest.ts", "scripts/okx-market-scan.ts", "scripts/okx-dex-quote.ts"]
 }
