@@ -57,6 +57,7 @@ export class Trader {
   readonly history: BlockEvent[] = [];
   private mids: number[] = [];
   private busy = false;
+  private quarantined = false;
   private lastBook: Book | null = null;
   private trades: TradeFeed | null = null;
   /** Orders we know are resting on the book (live: from receipts; dry run: last block's simulated order). */
@@ -102,16 +103,13 @@ export class Trader {
       this.trades?.poll(block).then(() => this.harvest()); // off the hot path: eth_getLogs for prints (and our fills) since the last poll
 
       const decision = await this.model.decide(this.buildState(block, book));
-      const wanted: Side = decision.action === "sell" ? "sell" : "buy";
-      const other: Side = wanted === "buy" ? "sell" : "buy";
-      // The position cap (and, live, margin funds) can only pick the reducing side. The probabilities still show the model's call.
-      const side: Side | null = this.allowed(wanted, book) ? wanted : this.allowed(other, book) ? other : null;
+      const wanted: Side | null = decision.action === "buy" || decision.action === "sell" ? decision.action : null;
+      const side: Side | null = wanted && this.allowed(wanted, book) ? wanted : null;
       this.totals.decisions++;
       this.totals.jevUsd += (decision.inputTokens / 1e6) * config.jevUsdPerMTok;
 
       let quote: Quote | null = null;
-      if (side) {
-        decision.action = side;
+      if (side && !this.quarantined) {
         const cancel = [...this.orders.keys()].filter((id) => id > 0); // simulated orders have negative ids
         quote = await this.market.send(block, side, config.tradeSizeMon, book, cancel, side !== wanted);
         this.totals.quotes++;
@@ -138,10 +136,12 @@ export class Trader {
   }
 
   private applyQuoteResult({ block, quote, canceled }: QuoteResult) {
-    if (quote.txHash) this.inflight.delete(quote.txHash);
-    this.totals.gasMon += quote.gasMon; // charged on reverts too
+    const uncertain = quote.status === "unverified" || quote.status === "lost";
+    if (uncertain) this.quarantined = true;
+    if (quote.txHash && !uncertain) this.inflight.delete(quote.txHash);
+    if (!uncertain) this.totals.gasMon += quote.gasMon; // trusted receipt fees are charged on reverts too
     if (quote.status === "reverted") this.totals.reverted++;
-    for (const id of canceled) this.orders.delete(id);
+    if (quote.status === "placed") for (const id of canceled) this.orders.delete(id);
     if (quote.status === "placed" && quote.orderId !== null) this.orders.set(quote.orderId, { side: quote.side, price: quote.price, size: quote.size, block });
     const e = this.history.find((h) => h.block === block);
     if (e) e.quote = quote;

@@ -1,7 +1,8 @@
 export type Action = "buy" | "sell" | "hold";
 export type Side = "buy" | "sell";
+export interface QuoteProvenance { originBlock: number; snapshotBlock: number; target: null; inclusion: { blockNumber: number; blockHash: string; transactionHash: string } | null; finality: "unobserved" }
 /** This block's post-only limit order. `sent` until its receipt lands, then `placed` or `reverted`. */
-export interface Quote { side: Side; price: number; size: number; txHash: string | null; gasMon: number; cancel: number[]; status: "sent" | "placed" | "reverted" | "lost" | "sim"; orderId: number | null; capped: boolean }
+export interface Quote { side: Side; price: number; size: number; txHash: string | null; gasMon: number; cancel: number[]; status: "sent" | "placed" | "reverted" | "unverified" | "lost" | "sim"; orderId: number | null; provenance?: QuoteProvenance; capped: boolean }
 /** A taker hit one of our resting orders. */
 export interface Fill { side: Side; size: number; price: number; txHash: string | null; orderId: number; simulated: boolean }
 export interface Decision { action: Action; probabilities: { buy: number; sell: number; hold: number }; upIn10: number; latencyMs: number; late: boolean }

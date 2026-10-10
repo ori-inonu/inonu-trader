@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import * as Kuru from "@kuru-labs/kuru-sdk";
 import { readBook, buildBook, abiBytesPayload, decodeVaultParams, readVaultParams, vaultActive, SEL_GET_L2_BOOK, SEL_GET_VAULT_PARAMS } from "../src/book";
 import type { Book } from "../src/market";
+type ComparedBook = Pick<Book, "block" | "bid" | "ask" | "mid" | "spreadBps" | "imbalance">;
 
 const RPC = process.argv[2] ?? "https://rpc.monad.xyz";
 const N = Number(process.argv[3] ?? 10);
@@ -12,14 +13,14 @@ const provider = new ethers.providers.StaticJsonRpcProvider(RPC, 143);
 const params = await Kuru.ParamFetcher.getMarketParams(provider, MARKET);
 
 // Same reduction market.ts applies to the SDK book.
-function sdkToBook(b: Awaited<ReturnType<typeof Kuru.OrderBook.getFormattedL2OrderBook>>): Book {
+function sdkToBook(b: Awaited<ReturnType<typeof Kuru.OrderBook.getFormattedL2OrderBook>>): ComparedBook {
   const ask = b.asks.at(-1)![0]!, bid = b.bids[0]![0]!, mid = (bid + ask) / 2;
   const near = (levels: number[][]) => levels.filter((l) => Math.abs(l[0]! - mid) / mid < 0.01).reduce((s, l) => s + l[1]!, 0);
   const bd = near(b.bids), ad = near(b.asks);
   return { block: b.blockNumber, bid, ask, mid, spreadBps: ((ask - bid) / mid) * 10_000, imbalance: bd + ad ? (bd - ad) / (bd + ad) : 0 };
 }
-const same = (a: Book, b: Book) => a.block === b.block && a.bid === b.bid && a.ask === b.ask && a.mid === b.mid && a.spreadBps === b.spreadBps && a.imbalance === b.imbalance;
-const fmt = (b: Book) => `blk=${b.block} bid=${b.bid} ask=${b.ask} mid=${b.mid} spr=${b.spreadBps.toFixed(3)} imb=${b.imbalance.toFixed(6)}`;
+const same = (a: ComparedBook, b: ComparedBook) => a.block === b.block && a.bid === b.bid && a.ask === b.ask && a.mid === b.mid && a.spreadBps === b.spreadBps && a.imbalance === b.imbalance;
+const fmt = (b: ComparedBook) => `blk=${b.block} bid=${b.bid} ask=${b.ask} mid=${b.mid} spr=${b.spreadBps.toFixed(3)} imb=${b.imbalance.toFixed(6)}`;
 const stats = (xs: number[]) => { const s = [...xs].sort((a, b) => a - b); return `min=${s[0]!.toFixed(0)} p50=${s[s.length >> 1]!.toFixed(0)} mean=${(xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(0)} max=${s.at(-1)!.toFixed(0)} ms`; };
 
 const vp = await readVaultParams(provider, MARKET);

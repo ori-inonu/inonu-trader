@@ -44,9 +44,9 @@ const QUESTIONS = {
     type: "choice",
     instructions: {
       question: "Will MON be higher or lower than the current mid after `horizonBlocks` more blocks?",
-      goal: "Trade MON-USDC on Kuru. Blocks are ~300ms; `horizonBlocks` (~30 s) is the horizon. A decision is made every few blocks and held until the next one. The trade crosses the spread (`spreadBps`), so the move must beat that cost.",
-      timing: "The order executes as an immediate-or-cancel market order in the next block.",
-      inputs: "Taker flow is the strongest signal: `trades.cvdMon` (taker buys minus taker sells over the horizon), `trades.lastSide` and `recentTrades` show who is hitting the book. `depth` and `book` show resting liquidity per side at several distances from mid; thin depth on one side means price moves easily that way. `returnsBps` and `recentMids` show the path over the horizon. If `allowed.buy` is false the trade will be a sell regardless, and vice versa.",
+      goal: "Trade MON-USDC on Kuru using a fresh buy or sell decision from this price feed every Monad block (~300ms). `horizonBlocks` (~30 s) is the price-move horizon, not a decision interval. Each block replaces the prior resting quote with a post-only limit order, aiming to earn the spread when a taker fills it; placement does not guarantee a fill or profit.",
+      timing: "The execution path attempts a post-only limit-order replacement in the current block, inside the touch subject to spread, balance and position constraints. It cancels the prior resting quote in the same batch. Limits, lateness or failure never grant financial authority.",
+      inputs: "Taker flow is the strongest signal: `trades.cvdMon` (taker buys minus taker sells over the horizon), `trades.lastSide` and `recentTrades` show who is hitting the book. `depth` and `book` show resting liquidity per side at several distances from mid; thin depth on one side means price moves easily that way. `returnsBps` and `recentMids` show the path over the horizon. If the model's chosen direction is not allowed by existing cap or balance constraints, no opposite-side trade is substituted.",
     },
     criteria: {
       buy: "Buy MON now: mid more likely to be higher after `horizonBlocks` blocks, by more than the spread.",

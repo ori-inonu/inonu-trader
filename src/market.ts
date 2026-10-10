@@ -22,6 +22,14 @@ export interface Book {
 
 export type Side = "buy" | "sell";
 
+export interface QuoteProvenance {
+  originBlock: number;
+  snapshotBlock: number;
+  target: null;
+  inclusion: { blockNumber: number; blockHash: string; transactionHash: string } | null;
+  finality: "unobserved";
+}
+
 /**
  * This block's order: a post-only limit order resting on Kuru's book, replacing last block's.
  * `sent` until the receipt lands, then `placed` (with its orderId) or `reverted` (the book moved
@@ -34,8 +42,10 @@ export interface Quote {
   txHash: string | null;
   gasMon: number; // gasLimit x gas price: Monad charges the limit, not gasUsed
   cancel: number[]; // resting order ids this tx cancels
-  status: "sent" | "placed" | "reverted" | "lost" | "sim";
+  status: "sent" | "placed" | "reverted" | "unverified" | "lost" | "sim";
   orderId: number | null;
+  /** Optional to keep historical quote fixtures source-compatible. */
+  provenance?: QuoteProvenance;
   /** The position cap or margin funds picked this side; the model's probabilities still show its call. */
   capped: boolean;
 }
@@ -61,6 +71,47 @@ const ERC20_ABI = [
 const gwei = (n: number) => ethers.utils.parseUnits(String(n), "gwei");
 const BN = ethers.BigNumber;
 const ZERO_ADDRESS = ethers.constants.AddressZero;
+const isHash = (value: unknown): value is string => typeof value === "string" && /^0x[0-9a-fA-F]{64}$/.test(value);
+const isAddress = (value: unknown): value is string => typeof value === "string" && /^0x[0-9a-fA-F]{40}$/.test(value);
+const isHexData = (value: unknown): value is string => typeof value === "string" && /^0x(?:[0-9a-fA-F]{2})*$/.test(value);
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
+const parseQuantity = (value: unknown): number | null => {
+  if (typeof value === "number") return Number.isSafeInteger(value) && value >= 0 ? value : null;
+  if (typeof value !== "string" || !/^0x(?:0|[1-9a-fA-F][0-9a-fA-F]*)$/.test(value)) return null;
+  const parsed = Number.parseInt(value.slice(2), 16);
+  return Number.isSafeInteger(parsed) ? parsed : null;
+};
+const safeOrderId = (value: unknown): number | null => {
+  const text = typeof value === "number" ? String(value) : value && typeof value === "object" && "toString" in value ? String(value) : "";
+  if (!/^[1-9][0-9]*$/.test(text)) return null;
+  const parsed = Number(text);
+  return Number.isSafeInteger(parsed) ? parsed : null;
+};
+
+interface ReceiptLog {
+  address: string;
+  topics: string[];
+  data: string;
+  blockNumber: unknown;
+  blockHash: string;
+  transactionHash: string;
+  transactionIndex: unknown;
+  logIndex: unknown;
+  removed: boolean;
+}
+
+const isReceiptLog = (value: unknown): value is ReceiptLog => {
+  if (!isRecord(value)) return false;
+  return isAddress(value.address)
+    && Array.isArray(value.topics) && value.topics.every(isHash)
+    && isHexData(value.data)
+    && parseQuantity(value.blockNumber) !== null
+    && isHash(value.blockHash)
+    && isHash(value.transactionHash)
+    && parseQuantity(value.transactionIndex) !== null
+    && parseQuantity(value.logIndex) !== null
+    && typeof value.removed === "boolean";
+};
 
 interface Pending { block: number; quote: Quote; gasLimit: ethers.BigNumber }
 
@@ -79,6 +130,7 @@ export class Market {
   private gasLimit = BN.from(config.gasLimitFallback);
   private useVault = false;
   private pending = new Map<string, Pending>();
+  private quarantined = false;
 
   get address() { return this.wallet?.address ?? null; }
   private get priceDec() { return log10(this.params.pricePrecision); }
@@ -133,6 +185,7 @@ export class Market {
    * order. Returns as soon as the RPC has the hash. `pollPending` resolves placed/reverted later.
    */
   async send(block: number, side: Side, sizeMon: number, book: Book, cancel: number[], capped: boolean): Promise<Quote> {
+    if (this.quarantined) throw new Error("Market is quarantined after an uncertain transaction outcome");
     const price = this.quotePrice(side, book);
     if (!this.wallet) return { side, price, size: sizeMon, txHash: null, gasMon: 0, cancel, status: "sim", orderId: null, capped };
 
@@ -146,7 +199,10 @@ export class Market {
       await this.resyncNonce().catch(() => {});
       throw e;
     }
-    const quote: Quote = { side, price, size: sizeMon, txHash: hash, gasMon: this.gasMon(this.gasLimit, this.feeWei), cancel, status: "sent", orderId: null, capped };
+    const quote: Quote = {
+      side, price, size: sizeMon, txHash: hash, gasMon: this.gasMon(this.gasLimit, this.feeWei), cancel, status: "sent", orderId: null, capped,
+      provenance: { originBlock: block, snapshotBlock: book.block, target: null, inclusion: null, finality: "unobserved" },
+    };
     this.pending.set(hash, { block, quote, gasLimit: this.gasLimit });
     return quote;
   }
@@ -160,11 +216,16 @@ export class Market {
       const receipt = await rpc<any>("eth_getTransactionReceipt", [hash]).catch(() => null);
       if (!this.pending.has(hash)) return; // an overlapping poll already resolved it
       if (receipt) {
+        let result: QuoteResult;
+        try { result = this.parseReceipt(receipt, p); }
+        catch { result = this.unverifiedReceipt(p); }
         this.pending.delete(hash);
-        out.push(this.parseReceipt(receipt, p));
+        if (result.quote.status === "unverified") this.quarantined = true;
+        out.push(result);
       } else if (block - p.block >= config.pendingBlocks) {
         this.pending.delete(hash);
         lost = true;
+        this.quarantined = true;
         out.push({ block: p.block, quote: { ...p.quote, status: "lost", gasMon: 0 }, canceled: [] });
       }
     }));
@@ -191,20 +252,94 @@ export class Market {
 
   /** OrderCreated for our address gives the new order id; OrdersCanceled lists what the tx removed. status 0x0: nothing changed on the book. */
   private parseReceipt(r: any, p: Pending): QuoteResult {
-    if (r.effectiveGasPrice) this.feeWei = BN.from(r.effectiveGasPrice);
-    const gasMon = this.gasMon(p.gasLimit, BN.from(r.effectiveGasPrice ?? this.feeWei));
-    const me = this.wallet!.address.toLowerCase();
-    let orderId: number | null = null;
-    const canceled: number[] = [];
-    if (r.status !== "0x0") {
-      for (const log of r.logs ?? []) {
-        let ev; try { ev = this.iface.parseLog(log); } catch { continue; }
-        if (ev.name === "OrderCreated" && String(ev.args.owner).toLowerCase() === me) orderId = Number(ev.args.orderId);
-        if (ev.name === "OrdersCanceled" && String(ev.args.owner).toLowerCase() === me) for (const id of ev.args.orderId) canceled.push(Number(id));
+    if (!isRecord(r)) return this.unverifiedReceipt(p);
+    const receiptStatus: 0 | 1 | null = r.status === "0x0" || r.status === 0 ? 0 : r.status === "0x1" || r.status === 1 ? 1 : null;
+    if (receiptStatus === null) return this.unverifiedReceipt(p);
+    if (!isHash(p.quote.txHash) || !isHash(r.transactionHash) || r.transactionHash.toLowerCase() !== p.quote.txHash.toLowerCase()) {
+      return this.unverifiedReceipt(p);
+    }
+    const inclusionBlock = parseQuantity(r.blockNumber);
+    if (inclusionBlock === null || !isHash(r.blockHash)) {
+      return this.unverifiedReceipt(p);
+    }
+    const provenance: QuoteProvenance = {
+      ...(p.quote.provenance ?? { originBlock: p.block, snapshotBlock: p.block, target: null, inclusion: null, finality: "unobserved" }),
+      inclusion: { blockNumber: inclusionBlock, blockHash: r.blockHash, transactionHash: r.transactionHash },
+    };
+
+    if (!Array.isArray(r.logs)) return this.unverifiedReceipt(p, provenance);
+    for (const value of r.logs) {
+      if (!isReceiptLog(value) || value.removed
+        || parseQuantity(value.blockNumber) !== inclusionBlock
+        || value.blockHash.toLowerCase() !== r.blockHash.toLowerCase()
+        || value.transactionHash.toLowerCase() !== p.quote.txHash.toLowerCase()) {
+        return this.unverifiedReceipt(p, provenance);
       }
     }
-    const status: Quote["status"] = r.status === "0x0" ? "reverted" : "placed";
-    return { block: p.block, quote: { ...p.quote, status, orderId, gasMon }, canceled };
+
+    let feeWei = this.feeWei;
+    if (Object.prototype.hasOwnProperty.call(r, "effectiveGasPrice")) {
+      const value = r.effectiveGasPrice;
+      try {
+        if (BN.isBigNumber(value)) feeWei = value;
+        else if (typeof value === "number" && Number.isSafeInteger(value) && value >= 0) feeWei = BN.from(value);
+        else if (typeof value === "string" && /^0x(?:0|[1-9a-fA-F][0-9a-fA-F]*)$/.test(value)) feeWei = BN.from(value);
+        else return this.unverifiedReceipt(p, provenance);
+      } catch { return this.unverifiedReceipt(p, provenance); }
+    }
+
+    if (receiptStatus === 0) {
+      this.feeWei = feeWei;
+      const gasMon = this.gasMon(p.gasLimit, feeWei);
+      return { block: p.block, quote: { ...p.quote, status: "reverted", orderId: null, gasMon, provenance }, canceled: [] };
+    }
+
+    const me = this.wallet!.address.toLowerCase();
+    const market = config.market.toLowerCase();
+    let orderId: number | null = null;
+    let ownOrderWitnesses = 0;
+    const canceled: number[] = [];
+    for (const log of r.logs as ReceiptLog[]) {
+      let ev;
+      try { ev = this.iface.parseLog(log); }
+      catch {
+        const topic = log.topics[0]?.toLowerCase();
+        if (topic === this.iface.getEventTopic("OrderCreated").toLowerCase() || topic === this.iface.getEventTopic("OrdersCanceled").toLowerCase()) {
+          return this.unverifiedReceipt(p, provenance);
+        }
+        continue;
+      }
+      if (ev.name === "OrderCreated" && log.address.toLowerCase() === market) {
+        if (!isAddress(ev.args.owner)) return this.unverifiedReceipt(p, provenance);
+        if (ev.args.owner.toLowerCase() === me) {
+          const parsedOrderId = safeOrderId(ev.args.orderId);
+          if (parsedOrderId === null) return this.unverifiedReceipt(p, provenance);
+          orderId = parsedOrderId;
+          ownOrderWitnesses++;
+        }
+      }
+      if (ev.name === "OrdersCanceled" && log.address.toLowerCase() === market) {
+        if (!isAddress(ev.args.owner)) return this.unverifiedReceipt(p, provenance);
+        if (ev.args.owner.toLowerCase() === me) {
+          if (!Array.isArray(ev.args.orderId)) return this.unverifiedReceipt(p, provenance);
+          for (const id of ev.args.orderId) {
+            const parsedId = safeOrderId(id);
+            if (parsedId === null) return this.unverifiedReceipt(p, provenance);
+            canceled.push(parsedId);
+          }
+        }
+      }
+    }
+    if (ownOrderWitnesses !== 1) return this.unverifiedReceipt(p, provenance);
+    this.feeWei = feeWei;
+    const gasMon = this.gasMon(p.gasLimit, feeWei);
+    return { block: p.block, quote: { ...p.quote, status: "placed", orderId, gasMon, provenance }, canceled };
+  }
+
+  private unverifiedReceipt(p: Pending, provenance = p.quote.provenance): QuoteResult {
+    const quote = { ...p.quote, status: "unverified" as const, orderId: null, gasMon: 0 };
+    if (provenance) quote.provenance = provenance;
+    return { block: p.block, quote, canceled: [] };
   }
 
   /** Top the margin account up to MARGIN_MON / MARGIN_USDC. Runs once at startup, awaiting each receipt. */
