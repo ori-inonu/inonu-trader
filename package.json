@@ -1,5 +1,6 @@
 {
   "name": "jev-trader",
+  "version": "0.0.2",
   "module": "src/index.ts",
   "type": "module",
   "private": true,
@@ -18,6 +19,11 @@
   },
   "scripts": {
     "start": "bun run src/index.ts",
-    "dev": "bun --watch run src/index.ts"
+    "dev": "bun --watch run src/index.ts",
+    "test": "bun --no-env-file test --parallel=1 --timeout 15000 ./src ./scripts",
+    "test:all": "bun --no-env-file run test && bun --no-env-file run --cwd web test",
+    "typecheck": "tsc --noEmit -p tsconfig.verification.json",
+    "typecheck:all": "bun --no-env-file run typecheck && bun --no-env-file run --cwd web typecheck",
+    "build": "bun --no-env-file run --cwd web build"
   }
 }
