@@ -7,3 +7,7 @@ data/
 .scratch/
 docs/evidence/
 NUL
+
+# Throwaway browser profiles left by headless render proofs and smoke runs
+web/.keyframe-proof/
+web/.smoke-profile/
