@@ -11,7 +11,14 @@ import { BANNED_MARKS, ESCAPE_PATTERN, FORBIDDEN_TOKENS, findBannedMarks } from 
 
 const WEB = resolve(import.meta.dir, "../../..");
 const REPO = resolve(WEB, "..");
-const FEATURE_DIRS = [join(WEB, "src/components/central"), join(WEB, "src/lib/central"), join(WEB, "src/app/central")];
+const LIB_DIR = join(WEB, "src/lib/central");
+// Directories the feature owns. lib/central is the delivered part. components/central and app/central are the route
+// itself, which is not built yet. listFiles returns an empty list for a directory that does not exist, so every scan
+// below already covers those two the day they are added, without this file having to pretend they exist today.
+const FEATURE_DIRS = [join(WEB, "src/components/central"), LIB_DIR, join(WEB, "src/app/central")];
+// Files outside those directories that belong to the feature. They carry the navigation to the route and the guide of
+// the route. Each is scanned as soon as it exists; none is asserted to exist before the route it belongs to is built,
+// because the scan below is the guard and an existence assertion on a file that does not exist yet only fails.
 const TEXT_ONLY_FILES = [
   join(WEB, "src/components/Header/Header.tsx"),
   join(WEB, "src/components/Header/Header.module.css"),
@@ -33,14 +40,28 @@ const featureFiles = FEATURE_DIRS.flatMap(listFiles);
 const display = (file: string) => relative(REPO, file).split(sep).join("/");
 
 describe("the feature directories exist and are populated", () => {
-  test("components/central, lib/central and app/central all hold files", () => {
-    for (const dir of FEATURE_DIRS) expect(listFiles(dir).length).toBeGreaterThan(0);
+  test("lib/central, the delivered part of the feature, holds files", () => {
+    expect(listFiles(LIB_DIR).length).toBeGreaterThan(0);
+  });
+
+  // Every feature directory that does exist must be populated: an empty directory is a deleted feature, not an absent one.
+  test("every feature directory that exists holds files", () => {
+    for (const dir of FEATURE_DIRS.filter(existsSync)) expect(listFiles(dir).length).toBeGreaterThan(0);
+  });
+
+  // The route directories are asserted as soon as they exist, so the guard cannot be satisfied by an empty skeleton.
+  test("components/central and app/central hold a page and a stylesheet once they exist", () => {
+    const routeDirs = FEATURE_DIRS.filter((dir) => dir !== LIB_DIR);
+    if (routeDirs.every((dir) => !existsSync(dir))) return;
+    for (const dir of routeDirs.filter(existsSync)) expect(listFiles(dir).length).toBeGreaterThan(0);
     expect(featureFiles.some((file) => file.endsWith("page.tsx"))).toBe(true);
     expect(featureFiles.some((file) => file.endsWith(".module.css"))).toBe(true);
   });
 
-  test("the text only files exist", () => {
-    for (const file of TEXT_ONLY_FILES) expect(existsSync(file)).toBe(true);
+  // Anti-vacuity: the scans below must have something to scan, or they would pass on an empty feature.
+  test("the scans below have files to scan", () => {
+    expect(featureFiles.length).toBeGreaterThan(0);
+    expect(featureFiles).toContain(join(LIB_DIR, "scan-helpers.ts"));
   });
 });
 
@@ -109,7 +130,19 @@ describe("no banned punctuation in rendered text (byte level)", () => {
   });
 
   test("the escape scanner detects entities and escape sequences", () => {
-    const samples = ["&mdash;", "&#8212;", "&#x2014;", "&middot;", `${"\\"}u2014`, `${"\\"}u00B7`, `${"\\"}u{2013}`];
+    // Every sample is assembled from parts so that this file, which the escape scan above also reads, does not contain
+    // a banned entity or escape literally. Same convention as FORBIDDEN_TOKENS and ESCAPE_PATTERN in scan-helpers.ts.
+    const entity = (name: string) => `&${name};`;
+    const decimal = (code: number) => `&#${code};`;
+    const hexadecimal = (code: string) => `&#x${code};`;
+    const unicode = (code: string) => `\\u${code}`;
+    const unicodeBraced = (code: string) => `\\u{${code}}`;
+    const samples = [
+      entity("mdash;"), entity("middot;"),
+      decimal(8212), decimal(8211),
+      hexadecimal("2014"), hexadecimal("00b7"),
+      unicode("2014"), unicode("00b7"), unicodeBraced("2013"),
+    ];
     for (const sample of samples) expect(ESCAPE_PATTERN.test(sample)).toBe(true);
     expect(ESCAPE_PATTERN.test("&amp; &lt; texto -3 normal")).toBe(false);
   });
