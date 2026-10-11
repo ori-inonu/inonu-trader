@@ -190,6 +190,26 @@ describe("LB5 the decision window is a trap for the future", () => {
     }
   });
 
+  test("LB5 every attempt to read the future inside a window is counted, even when the caller catches the error", () => {
+    const { source, t } = fresh();
+    expect(source.leakAttempts()).toBe(0);
+    source.asOf(t + HOUR_MS);
+    source.future(t, t + HOUR_MS);
+    expect(source.leakAttempts()).toBe(0);
+    source.openDecision(t);
+    try {
+      source.asOf(t);
+      source.asOf(t - 1);
+      expect(source.leakAttempts()).toBe(0);
+      try { source.future(t, t + HOUR_MS); } catch { /* swallowed on purpose */ }
+      try { source.asOf(t + 1); } catch { /* swallowed on purpose */ }
+      expect(source.leakAttempts()).toBe(2);
+    } finally {
+      source.closeDecision();
+    }
+    expect(source.leakAttempts()).toBe(2);
+  });
+
   test("LB5 opening twice, or closing without opening, is a programming error", () => {
     const { source, t } = fresh();
     expect(() => source.closeDecision()).toThrow();

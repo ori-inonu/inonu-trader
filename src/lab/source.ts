@@ -66,6 +66,8 @@ export interface DataSource {
   future(t0: number, t1: number, kinds?: readonly CaptureKind[], insts?: readonly string[]): FutureWindow;
   openDecision(t: number): void;
   closeDecision(): void;
+  /** How many reads of the future were attempted during decision windows. A caught LeakError still counts. */
+  leakAttempts(): number;
 }
 
 interface Stream {
@@ -120,6 +122,7 @@ export class RecordStore implements DataSource {
   private readonly streams = new Map<string, Stream>();
   private readonly extrasByTime: ReadonlyMap<number, Readonly<Record<string, number>>>;
   private decisionCap: number | null = null;
+  private leaks = 0;
 
   constructor(records: readonly CaptureRecord[], options: StoreOptions) {
     if (records.length === 0) throw new RangeError("a capture needs at least one record");
@@ -152,9 +155,16 @@ export class RecordStore implements DataSource {
     this.decisionCap = null;
   }
 
+  leakAttempts(): number {
+    return this.leaks;
+  }
+
   asOf(t: number): PointInTimeView {
     requireFiniteTime(t, "t");
-    if (this.decisionCap !== null && t > this.decisionCap) throw new LeakError("asOf() de um instante posterior ao da decisão durante a janela de decisão");
+    if (this.decisionCap !== null && t > this.decisionCap) {
+      this.leaks += 1;
+      throw new LeakError("asOf() de um instante posterior ao da decisão durante a janela de decisão");
+    }
     const cap = t;
     const streams = this.streams;
     const extras = this.extrasByTime.get(cap) ?? NO_EXTRAS;
@@ -188,7 +198,10 @@ export class RecordStore implements DataSource {
     requireFiniteTime(t0, "t0");
     requireFiniteTime(t1, "t1");
     if (t1 < t0) throw new RangeError("t1 must not be before t0");
-    if (this.decisionCap !== null) throw new LeakError("future() chamado durante a janela de decisão");
+    if (this.decisionCap !== null) {
+      this.leaks += 1;
+      throw new LeakError("future() chamado durante a janela de decisão");
+    }
     const wantedKinds = kinds === undefined ? null : new Set<CaptureKind>(kinds);
     const wantedInsts = insts === undefined ? null : new Set<string>(insts);
     const chunks: CaptureRecord[][] = [];
