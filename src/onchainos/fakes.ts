@@ -3,6 +3,7 @@
  * Nothing here touches the network, the environment or the disk. Specification: docs/OKX-ONCHAINOS-DADOS-SPEC.md.
  */
 
+import type { CaptureFs } from "./capture-types.ts";
 import { createOnchainosHttp, type FetchInit, type FetchLike, type FetchResponseLike, type OnchainosHttp, type OnchainosHttpOptions } from "./http.ts";
 
 export interface FakeClock {
@@ -153,16 +154,70 @@ export function makeStack(script: FakeScript, extra: Partial<OnchainosHttpOption
 }
 
 // ---------------------------------------------------------------------------
-// In-memory file port for the capture recorder tests (same shape as the real one)
+// In-memory file port for the capture recorder tests (same contract as the real one)
 // ---------------------------------------------------------------------------
 
 export interface MemoryFsState {
   readonly files: Map<string, string>;
   readonly directories: Set<string>;
-  /** Names of the operations performed, in order, for assertions about atomicity. */
+  /** Operations performed, in order, as "<operation>:<file name>" (for assertions about atomicity). */
   readonly log: string[];
 }
 
 export function makeMemoryFsState(): MemoryFsState {
   return { files: new Map(), directories: new Set(), log: [] };
+}
+
+export interface MemoryFsHooks {
+  /** Called before an operation; throwing simulates a crash at that point. `count` is how many times this operation ran on this file. */
+  readonly before?: (operation: string, path: string, count: number) => void;
+}
+
+function baseName(path: string): string {
+  const parts = path.split(/[\\/]/);
+  return parts[parts.length - 1] ?? path;
+}
+
+/** An in memory implementation of the recorder file port, with optional fault injection. Sizes and cuts are in BYTES. */
+export function makeMemoryFs(state: MemoryFsState = makeMemoryFsState(), hooks: MemoryFsHooks = {}): CaptureFs {
+  const counts = new Map<string, number>();
+  const note = (operation: string, path: string): void => {
+    const key = `${operation}:${baseName(path)}`;
+    const count = counts.get(key) ?? 0;
+    counts.set(key, count + 1);
+    hooks.before?.(operation, baseName(path), count);
+    state.log.push(key);
+  };
+  const need = (path: string): string => {
+    const value = state.files.get(path);
+    if (value === undefined) throw new Error(`arquivo ausente: ${baseName(path)}`);
+    return value;
+  };
+  return {
+    exists: (path) => state.files.has(path) || state.directories.has(path),
+    isDirectory: (path) => state.directories.has(path),
+    mkdirp: (path) => {
+      note("mkdirp", path);
+      state.directories.add(path);
+    },
+    readBytes: (path) => new Uint8Array(Buffer.from(need(path), "utf8")),
+    size: (path) => Buffer.byteLength(need(path), "utf8"),
+    append: (path, text) => {
+      note("append", path);
+      state.files.set(path, need(path) + text);
+    },
+    writeAtomic: (path, text) => {
+      note("writeAtomic", path);
+      state.files.set(path, text);
+    },
+    createExclusive: (path, text) => {
+      note("createExclusive", path);
+      if (state.files.has(path)) throw new Error(`já existe: ${baseName(path)}`);
+      state.files.set(path, text);
+    },
+    truncate: (path, size) => {
+      note("truncate", path);
+      state.files.set(path, Buffer.from(need(path), "utf8").subarray(0, size).toString("utf8"));
+    },
+  };
 }
