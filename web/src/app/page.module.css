@@ -4,12 +4,13 @@
   display: grid;
   min-width: 0;
   grid-template-columns: minmax(0, 1fr) 400px;
-  grid-template-rows: auto auto auto minmax(560px, 1fr) auto auto;
+  grid-template-rows: auto auto auto minmax(560px, 1fr) auto auto auto;
   grid-template-areas:
     "rail rail"
     "command command"
     "kpi kpi"
     "stage core"
+    "growth growth"
     "dock dock"
     "reveal reveal";
   /* One gutter for the whole console: every panel group inside a row uses the same value. */
@@ -80,6 +81,11 @@
   grid-area: stream;
 }
 
+.growth {
+  grid-area: growth;
+  min-width: 0;
+}
+
 .dock {
   grid-area: dock;
   display: grid;
@@ -120,6 +126,7 @@
       "kpi"
       "core"
       "stage"
+      "growth"
       "dock"
       "reveal";
     padding: var(--s3) var(--s4) var(--s6);

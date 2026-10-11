@@ -291,10 +291,10 @@ export default function CommandCenter({ meta, latest, events, connection, operat
                 }}
                 className={`${styles.satellite} ${styles[`sat_${satellite.role}`]} ${styles[`satTone_${value.tone}`] ?? ""}`}
                 style={{
-                  ["--sx" as string]: `${(p.x / FRAME.width) * 100}%`,
-                  ["--sy" as string]: `${(p.y / FRAME.height) * 100}%`,
-                  ["--sscale" as string]: rest.scale,
-                  ["--sopacity" as string]: rest.opacity,
+                  ["--sx" as string]: `${((p.x / FRAME.width) * 100).toFixed(3)}%`,
+                  ["--sy" as string]: `${((p.y / FRAME.height) * 100).toFixed(3)}%`,
+                  ["--sscale" as string]: rest.scale.toFixed(3),
+                  ["--sopacity" as string]: rest.opacity.toFixed(3),
                 }}
                 data-satellite={satellite.id}
               >

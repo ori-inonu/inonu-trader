@@ -8,6 +8,7 @@ import DepthLadder from "@/components/DepthLadder/DepthLadder";
 import DexReportPanel from "@/components/DexReportPanel/DexReportPanel";
 import Disclosure from "@/components/Disclosure/Disclosure";
 import FlowChart from "@/components/FlowChart/FlowChart";
+import GrowthDeck from "@/components/GrowthDeck/GrowthDeck";
 import InstrumentRow, { type InstrumentItem } from "@/components/InstrumentRow/InstrumentRow";
 import JevCore from "@/components/JevCore/JevCore";
 import KpiSurface from "@/components/KpiSurface/KpiSurface";
@@ -148,6 +149,10 @@ export default function Page() {
               reducedMotion={reducedMotion}
             />
           </div>
+        </section>
+
+        <section className={styles.growth}>
+          <GrowthDeck reducedMotion={reducedMotion} />
         </section>
 
         <section className={styles.dock}>
