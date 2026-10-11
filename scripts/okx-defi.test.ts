@@ -1,11 +1,16 @@
-import { expect, test } from "bun:test";
+import { afterAll, expect, setDefaultTimeout, test } from "bun:test";
 import { spawnSync } from "node:child_process";
-import { afterAll } from "bun:test";
 import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { DEFI_DEMO_NOW_MS, syntheticDefiCaptures } from "../src/okx-defi/fixture.ts";
+
+/* Every test here starts a child bun process. Under a loaded machine (parallel verifications,
+   builds, agents) a child can take well over the ten seconds it needs when idle, so the child
+   timeout and the per test timeout are both raised. No assertion changes. */
+const CHILD_TIMEOUT_MS = 45_000;
+setDefaultTimeout(60_000);
 
 const cli = fileURLToPath(new URL("./okx-defi.ts", import.meta.url));
 const cwd = fileURLToPath(new URL("../", import.meta.url));
@@ -26,7 +31,7 @@ afterAll(() => {
 });
 
 function run(args: string[] = [], packageRoute = false) {
-  return spawnSync(process.execPath, ["--no-env-file", "run", packageRoute ? "okx:defi" : cli, ...args], { cwd, env, encoding: "utf8", timeout: 10000 });
+  return spawnSync(process.execPath, ["--no-env-file", "run", packageRoute ? "okx:defi" : cli, ...args], { cwd, env, encoding: "utf8", timeout: CHILD_TIMEOUT_MS });
 }
 
 test("D5/D7: real CLI demo is deterministic synthetic JSON without execution qualification", () => {
@@ -152,11 +157,11 @@ test("D6/D7: the actual package route preserves both no-env-file wrappers", () =
       scripts: { "okx:defi": inner ? script : script.replace("--no-env-file ", "") },
     }));
     return spawnSync(process.execPath, ["--no-env-file", "run", "okx:defi"], {
-      cwd: directory, env, encoding: "utf8", timeout: 10000,
+      cwd: directory, env, encoding: "utf8", timeout: CHILD_TIMEOUT_MS,
     });
   }
   const loaderControl = spawnSync(process.execPath, ["run", "scripts/okx-defi.ts"], {
-    cwd: directory, env, encoding: "utf8", timeout: 10000,
+    cwd: directory, env, encoding: "utf8", timeout: CHILD_TIMEOUT_MS,
   });
   for (const control of [loaderControl, canary(false)]) {
     expect(control.error).toBeUndefined();
@@ -213,7 +218,7 @@ test("D5: synthetic filesystem boundary faults exercise same-fd growth and NUL r
       await import(${JSON.stringify(pathToFileURL(cli).href)});
       original.writeFileSync(${JSON.stringify(metadata)}, JSON.stringify(trace));
     `;
-    const result = spawnSync(process.execPath, ["--no-env-file", "--eval", script], { cwd, env, encoding: "utf8", timeout: 10000 });
+    const result = spawnSync(process.execPath, ["--no-env-file", "--eval", script], { cwd, env, encoding: "utf8", timeout: CHILD_TIMEOUT_MS });
     expect(result.error).toBeUndefined();
     expect(result.status).toBe(1);
     expect(result.stdout).toBe("");
@@ -230,7 +235,7 @@ test("D5: synthetic filesystem boundary faults exercise same-fd growth and NUL r
   }
   // OS argv cannot contain NUL. This synthetic argv seam reaches that validator.
   const nulScript = `process.argv = [process.execPath, ${JSON.stringify(cli)}, "--search", "capture\\0.json", "--detail", "never-read", "--max-age-ms", "1"]; await import(${JSON.stringify(pathToFileURL(cli).href)});`;
-  const nulResult = spawnSync(process.execPath, ["--no-env-file", "--eval", nulScript], { cwd, env, encoding: "utf8", timeout: 10000 });
+  const nulResult = spawnSync(process.execPath, ["--no-env-file", "--eval", nulScript], { cwd, env, encoding: "utf8", timeout: CHILD_TIMEOUT_MS });
   expect(nulResult.status).toBe(1);
   expect(nulResult.stdout).toBe("");
   expect(nulResult.stderr).toBe("okx-defi: invalid_file\n");
