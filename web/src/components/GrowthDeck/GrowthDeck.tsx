@@ -48,6 +48,15 @@ function phaseCellText(cell: PhaseCell): string {
   }
 }
 
+export function PhaseLimitCell({ cell }: { cell: PhaseCell }) {
+  return (
+    <td className={styles.num}>
+      {phaseCellText(cell)}
+      {"note" in cell && cell.note ? <span className={styles.cellNote}>{cell.note}</span> : null}
+    </td>
+  );
+}
+
 /**
  * The growth deck: what Jev may move, under which permission tier and with which limits. Three
  * views switch in place; the active one flips in once. Every number is arithmetic from R2 and
@@ -89,8 +98,21 @@ export default function GrowthDeck({ reducedMotion = false }: GrowthDeckProps) {
               id={`${baseId}-tab-${entry.id}`}
               aria-selected={view === entry.id}
               aria-controls={`${baseId}-panel-${entry.id}`}
+              tabIndex={view === entry.id ? 0 : -1}
               className={`${styles.tab} ${view === entry.id ? styles.tabActive : ""}`}
               onClick={() => setView(entry.id)}
+              onKeyDown={(event) => {
+                const index = DECK_VIEWS.findIndex((item) => item.id === entry.id);
+                const target = event.key === "Home" ? 0
+                  : event.key === "End" ? DECK_VIEWS.length - 1
+                  : event.key === "ArrowRight" ? (index + 1) % DECK_VIEWS.length
+                  : event.key === "ArrowLeft" ? (index + DECK_VIEWS.length - 1) % DECK_VIEWS.length
+                  : null;
+                if (target === null) return;
+                event.preventDefault();
+                setView(DECK_VIEWS[target].id);
+                event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[target]?.focus();
+              }}
             >
               {entry.label}
             </button>
@@ -145,7 +167,7 @@ export default function GrowthDeck({ reducedMotion = false }: GrowthDeckProps) {
             </div>
 
             <div className={styles.chartWrap}>
-              <div className={styles.chart} role="img" aria-label={`Mediana do patrimonio e chance de tocar a liquidacao por alavancagem, capital ${formatUsd(capital)}, ${days} dias`}>
+              <div className={styles.chart} role="img" aria-label={`Mediana do patrimonio e chance de tocar a liquidacao por alavancagem, capital ${formatUsd(capital)}, ${days} dias. ${bars.map((bar) => `Alavancagem ${bar.leverageText}: mediana ${bar.medianText}, chance de tocar a liquidacao ${bar.touchText}.`).join(" ")}`}>
                 <span className={styles.baseline} style={{ bottom: `${BASELINE * 100}%` }} aria-hidden="true">
                   <span className={styles.baselineLabel}>1x, capital preservado</span>
                 </span>
@@ -180,7 +202,7 @@ export default function GrowthDeck({ reducedMotion = false }: GrowthDeckProps) {
 
             <div className={styles.reading}>
               <p className={styles.readingKelly}>{reading.kellyText}</p>
-              <p className={styles.readingVerdict}>{reading.verdict}</p>
+              <p className={styles.readingVerdict}>Cenario de referencia: 2x. {reading.verdict}</p>
               <p className={styles.note}>
                 Modelo de R3 4.1: movimento browniano geometrico sem saltos, rebalanceamento continuo, sem custos. Subestima as caudas. E aritmetica, nao previsao e nao recomendacao.
               </p>
@@ -226,7 +248,7 @@ export default function GrowthDeck({ reducedMotion = false }: GrowthDeckProps) {
                         <span className={styles.rowBasis}>{row.basis}</span>
                       </th>
                       {row.cells.map((cell, index) => (
-                        <td key={index} className={styles.num}>{phaseCellText(cell)}</td>
+                        <PhaseLimitCell key={index} cell={cell} />
                       ))}
                     </tr>
                   ))}
