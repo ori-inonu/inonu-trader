@@ -2870,7 +2870,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/wallet/onchain-gateway-api-chains",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/gateway.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P3",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -2891,8 +2894,8 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-wallet/trade.ts",
-        "mode": "caminho_registrado"
+        "file": "src/okx-wallet/trade.ts; src/onchainos/gateway.ts",
+        "mode": "somente_leitura"
       },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
@@ -3139,7 +3142,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-product-supported-chains",
       "docRead": "sim",
       "r1Coverage": "new",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/defi-read.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3159,7 +3165,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-product-supported-platforms",
       "docRead": "sim",
       "r1Coverage": "new",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/defi-read.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3180,7 +3189,7 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-wallet/defi.ts",
+        "file": "src/okx-wallet/defi.ts; src/onchainos/defi-read.ts",
         "mode": "somente_leitura"
       },
       "priority": "P1",
@@ -3203,8 +3212,8 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-defi/report.ts",
-        "mode": "fixture"
+        "file": "src/okx-defi/report.ts; src/onchainos/defi-read.ts",
+        "mode": "somente_leitura"
       },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
@@ -3245,7 +3254,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-product-rate-chart",
       "docRead": "sim",
       "r1Coverage": "new",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/defi-read.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3265,7 +3277,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-product-tvl-chart",
       "docRead": "sim",
       "r1Coverage": "new",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/defi-read.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3285,7 +3300,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-product-depth-price-chart",
       "docRead": "sim",
       "r1Coverage": "new",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/defi-read.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P3",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3448,7 +3466,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-price-chains",
       "docRead": "sim",
       "r1Coverage": "partial",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-price.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3468,7 +3489,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-price",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-price.ts; src/onchainos/capture-sources.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P0",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3488,7 +3512,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-trades",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-price.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3508,7 +3535,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-candlesticks",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-price.ts; src/onchainos/capture-sources.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P0",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3528,7 +3558,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-candlesticks-history",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-price.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3548,7 +3581,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/index-price",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-price.ts; src/onchainos/capture-sources.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P0",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3568,7 +3604,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/historical-index-price",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-price.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3588,7 +3627,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-search",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3608,7 +3650,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-basic-info",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P1",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3629,7 +3674,7 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-api.ts; src/okx-market/okx-api.ts",
+        "file": "src/okx-api.ts; src/okx-market/okx-api.ts; src/onchainos/market-token.ts",
         "mode": "somente_leitura"
       },
       "priority": "P1",
@@ -3652,7 +3697,7 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-api.ts; src/okx-market/okx-api.ts",
+        "file": "src/okx-api.ts; src/okx-market/okx-api.ts; src/onchainos/market-token.ts",
         "mode": "somente_leitura"
       },
       "priority": "P1",
@@ -3675,7 +3720,7 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-api.ts; src/okx-market/okx-api.ts",
+        "file": "src/okx-api.ts; src/okx-market/okx-api.ts; src/onchainos/market-token.ts",
         "mode": "somente_leitura"
       },
       "priority": "P0",
@@ -3697,7 +3742,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-hot-token",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3717,7 +3765,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-holder",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3737,7 +3788,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-top-trader",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3757,7 +3811,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-cluster-supported-chain",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P3",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3777,7 +3834,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-cluster-overview",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3797,7 +3857,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-cluster-list",
       "docRead": "parcial",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P3",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3817,7 +3880,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-token-cluster-top-holders",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/market-token.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P3",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3878,7 +3944,7 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-signals/client.ts",
+        "file": "src/okx-signals/client.ts; src/onchainos/signals.ts",
         "mode": "somente_leitura"
       },
       "priority": "P1",
@@ -3901,7 +3967,7 @@
       "docRead": "sim",
       "r1Coverage": "covered",
       "repoCoverage": {
-        "file": "src/okx-signals/client.ts; src/okx-signals/report.ts; src/okx-evidence/report.ts",
+        "file": "src/okx-signals/client.ts; src/okx-signals/report.ts; src/okx-evidence/report.ts; src/onchainos/signals.ts",
         "mode": "somente_leitura"
       },
       "priority": "P1",
@@ -3923,7 +3989,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-signal-leaderboard-supported-chain",
       "docRead": "so_listado",
       "r1Coverage": "partial",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/signals.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P3",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -3943,7 +4012,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-signal-leaderboard-list",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/signals.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -4183,7 +4255,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-social-sentiment-symbol",
       "docRead": "sim",
       "r1Coverage": "covered",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/social.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -4223,7 +4298,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-social-vibe-timeline",
       "docRead": "sim",
       "r1Coverage": "contradicts",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/social.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P2",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -4243,7 +4321,10 @@
       "docUrl": "https://web3.okx.com/onchainos/dev-docs/market/market-social-vibe-top-kols",
       "docRead": "sim",
       "r1Coverage": "contradicts",
-      "repoCoverage": null,
+      "repoCoverage": {
+        "file": "src/onchainos/social.ts",
+        "mode": "somente_leitura"
+      },
       "priority": "P3",
       "safetyClass": "automatable-readonly",
       "blocker": ""
@@ -9510,7 +9591,7 @@
       "docRead": "nao_lido_nesta_pesquisa",
       "r1Coverage": "new",
       "repoCoverage": {
-        "file": "src/operator/funding.ts",
+        "file": "src/operator/funding.ts; src/onchainos/public-okx.ts; src/onchainos/capture-sources.ts",
         "mode": "somente_leitura"
       },
       "priority": "P2",
@@ -9533,7 +9614,7 @@
       "docRead": "nao_lido_nesta_pesquisa",
       "r1Coverage": "new",
       "repoCoverage": {
-        "file": "src/public-market-capture/node-adapter.ts; src/public-market-capture/plan.ts",
+        "file": "src/public-market-capture/node-adapter.ts; src/public-market-capture/plan.ts; src/onchainos/public-okx.ts",
         "mode": "somente_leitura"
       },
       "priority": "P1",

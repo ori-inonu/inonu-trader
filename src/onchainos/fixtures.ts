@@ -662,6 +662,23 @@ export const FIXTURES = {
     data: null,
   }),
 
+  "market.price.historical-candles/doc": fixture("doc-example", `${DOCS}/market/market-candlesticks-history`, `${DOC_NOTE}; mesmas duas velas do exemplo de candles (mesmo ts nas duas, defeito da página); a página diz que o histórico não inclui velas abertas mas o exemplo traz confirm 0`, {
+    code: "0",
+    msg: "",
+    data: [
+      ["1597026383085", "3.721", "3.743", "3.677", "3.708", "22698348.04828491", "226348.0482", "0"],
+      ["1597026383085", "3.731", "3.799", "3.494", "3.72", "67632347.24399722", "6767.2439", "1"],
+    ],
+  }),
+  "public.history-candles/synthetic": fixture("synthetic", `${LIVE}/api/v5/market/history-candles`, "mesma forma de nove colunas das velas recentes (a documentação do espelho oficial descreve o mesmo formato); valores inventados e ordem do mais recente ao mais antigo", {
+    code: "0",
+    msg: "",
+    data: [
+      ["1700000120000", "100.5", "101", "100", "100.8", "12", "1.2", "1210", "1"],
+      ["1700000060000", "100", "100.6", "99.9", "100.5", "9", "0.9", "905", "1"],
+    ],
+  }),
+
   // ---- OKX Exchange v5 pública: respostas reais sem chave ------------------------------------
   "public.instruments.swap/live": fixture("live-keyless", `${LIVE}/api/v5/public/instruments?instType=SWAP&instId=BTC-USDT-SWAP`, "BTC-USDT-SWAP, linear, ctVal 0.01 BTC; obtido sem chave em 2026-10-11; cortado a poucas linhas", {
       "code": "0",

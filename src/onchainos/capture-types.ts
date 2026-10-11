@@ -37,7 +37,7 @@ export class CaptureError extends Error {
   }
 }
 
-/** The file port of the recorder. The real one uses node:fs; the tests also use an in memory one. */
+/** The file port of the recorder. The real one lives in capture.ts; the tests also use an in memory one. */
 export interface CaptureFs {
   exists(path: string): boolean;
   isDirectory(path: string): boolean;

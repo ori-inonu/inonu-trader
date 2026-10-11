@@ -4,7 +4,7 @@
  * One source of truth for: the request path and method, the plan tier (from the Market plan page when it lists the
  * endpoint, "unknown" otherwise), the documentation page that was actually read, the per call limit, and the id of the
  * R6 catalog item (docs/research/R6-onchain-os-catalogo.json). The tests keep this list, the tables of the specification
- * and the catalog in agreement. Nothing here is a trade, signing or calldata path.
+ * and the catalog in agreement. Nothing here is a trade, signing or funds movement path.
  */
 
 import type { HttpMethod, Tier } from "./http.ts";
