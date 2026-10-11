@@ -2,7 +2,7 @@
 
 Baseline local: `96d30cc387a6520aba23199e25d0d4ec71a7ad88`. Remotos consultados com sucesso, sem push: `origin` e `upstream`. Ambos os `main` remotos apontavam para `b587759e459ea049590102e54a0b07800864cdc3`, já contido no main local. Dois históricos adicionais foram encontrados: `codex/okx-readonly` (`ed005440ff09b46fc5b10ae1d4ed74e94f70b494`) e seu filho `codex/inonu-trader-ui` (`0620787aae1ba2ef1b0cf217cbd65670463ac48a`).
 
-Esses commits de 9 de outubro introduzem a interface Inonu, gráfico interativo, filtros de atividade, documentação de contribuição e carteira OKX somente para leitura. As capacidades já foram integradas em `c352f82755862f4a4619d5e0d4411e2194f8d6a8` e evoluíram desde então. O merge registra os dois históricos e preserva a central Jev atual. Nenhuma alteração nos inputs de execução, teste ou build é necessária para reconciliar esses históricos.
+Esses commits de 9 de outubro introduzem a interface Inonu, gráfico interativo, filtros de atividade, documentação de contribuição e carteira OKX somente para leitura. As capacidades já foram integradas em `c352f82755862f4a4619d5e0d4411e2194f8d6a8` e evoluíram desde então. O merge registra os dois históricos e preserva a central Jev atual. A reconciliação de histórico foi documental; a revisão independente identificou uma alegação preexistente de execução incondicional nas descrições, corrigida no acompanhamento deste merge com testes renderizados.
 
 O inventário completo tem 35 caminhos: 19 blobs remotos são idênticos aos da integração `c352f827`; 7 ainda são idênticos ao baseline local; 8 componentes antigos foram removidos pela substituição da interface em `4df9c05`. A resolução usa comparações por caminho e comportamento; a identidade global de árvores, sozinha, não demonstra cobertura das alterações de origem.
 
@@ -19,7 +19,7 @@ O inventário completo tem 35 caminhos: 19 blobs remotos são idênticos aos da 
 | `web/README.md` | Gráfico, filtros, estados de feed e wallet preservados; comandos refletem bundler nativo já verificado e suporte a X Layer. |
 | `web/package.json` | Next/React e scripts preservados; descoberta de toda a suíte substitui lista fixa de três arquivos. Versão posterior do projeto permanece. |
 | `web/src/app/globals.css` | Blob remoto integrado em c352f827; tokens e regras atuais são os da central, com movimento reduzido. |
-| `web/src/app/layout.tsx` | Fontes e layout Next preservados; branding da central atual substitui o título antigo. |
+| `web/src/app/layout.tsx` | Fontes e layout Next preservados; branding da central atual substitui o título antigo. A descrição estática passa a indicar acompanhamento de operações sem prometer execução. |
 | `web/src/app/page.module.css` | Blob remoto integrado em c352f827; grid atual acomoda os painéis Jev e adaptações de tela posteriores. |
 | `web/src/app/page.tsx` | Página atual compõe Rail, JevCore, CommandCenter, KpiSurface, FlowChart, TelemetryStream e WalletPanel; inclui GrowthDeck, SystemOne, decisões e multichain. |
 | `web/src/components/BrandMark/BrandMark.tsx` | Marca abstrata e atributos acessíveis preservados, com identidade atual. |
@@ -30,7 +30,7 @@ O inventário completo tem 35 caminhos: 19 blobs remotos são idênticos aos da 
 | `web/src/components/FlowChart/FlowChart.module.css` | Integrado anteriormente; estilos posteriores preservam inspeção e controles, com melhorias de interação e movimento reduzido. |
 | `web/src/components/FlowChart/FlowChart.tsx` | Janelas 32/64/128 e inspeção por teclado/pointer preservadas; valores não finitos ou desconhecidos permanecem indisponíveis em vez de serem apresentados como PnL válido. |
 | `web/src/components/Header/Header.module.css` | Integrado anteriormente; substituído pelos estilos de Rail. |
-| `web/src/components/Header/Header.tsx` | Rail mantém marca, modelo, estado do feed e distinção de simulação/execução; a capitalização antiga não substitui o branding atual. |
+| `web/src/components/Header/Header.tsx` | Rail mantém marca, modelo e estado do feed. A revisão encontrou a frase incondicional de execução no baseline: Rail e CommandCenter passam a descrever observação/decisão; badges de simulação e execução não verificada e rótulos de ordens/fills preservam sua evidência. |
 | `web/src/components/StatsRow/StatsRow.module.css` | Integrado anteriormente; substituído por KpiSurface/InstrumentRow. |
 | `web/src/components/StatsRow/StatsRow.tsx` | Métricas migram para KpiSurface/InstrumentRow e helpers; custos e PnL desconhecidos permanecem explícitos. |
 | `web/src/components/WalletPanel/WalletPanel.module.css` | Integrado anteriormente; superfície atual acompanha a central. |
@@ -46,6 +46,8 @@ O inventário completo tem 35 caminhos: 19 blobs remotos são idênticos aos da 
 
 Decisão técnica delegada ao Jev: recibo `d1cb3f79-6f5a-47f3-acd7-fb0d8cf63df8`, modelo `jev-1.13.0`, recomendação `reconcile`, confiança 0.84, 613 tokens de entrada/65 de saída, custo desconhecido. `approved_by=jev_delegated`; não é aprovação humana nem evidência de execução.
 
-A integração exige revisão independente antes de atualizar main. Evidências anteriores do mesmo conteúdo: 1969 testes backend e 408 frontend aprovados, dois skips, zero falhas; análise de tipos e build Next nativo aprovados. Reutilização exige conferir hashes dos logs e identidade dos inputs com o baseline. Nenhuma ordem, credencial, push ou deploy é parte desta entrega.
+A integração exige revisão independente antes de atualizar main. Evidências anteriores ao ajuste de descrições: 1969 testes backend e 408 frontend aprovados, dois skips, zero falhas; análise de tipos e build Next nativo aprovados. Backend sem alteração permite reutilização mediante hashes/identidade; frontend, tipos e build devem ser verificados novamente para o ajuste. Oito regressões renderizadas falharam antes da correção nos estados de feed ausente, simulação, hold e fill real. Nenhuma ordem, credencial, push ou deploy é parte desta entrega.
+
+Correção de veracidade: escolha técnica Jev `neutral`, recibo `ef9218aa-4321-426c-abc2-1206bfa946c5`, confiança .88, 594 tokens de entrada/54 de saída; custo desconhecido, `approved_by=jev_delegated`, `human_response=false`. Textos neutros não alteram contratos, estados de ordem, configuração ou execução financeira. C1–C6, RI1–RI5 e EC1–EC4 permanecem requisitos de verificação.
 
 A abertura do navegador foi recusada pela revisão automática, com indicação de recusa do usuário; a inicialização da prévia local foi bloqueada pela política de execução. Não foram repetidas nem contornadas. Aceite visual desktop/mobile e disponibilidade da prévia continuam pendentes; um merge de histórico não comprova esses critérios.

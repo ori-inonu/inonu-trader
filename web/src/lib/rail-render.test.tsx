@@ -36,7 +36,6 @@ describe("Rail rendering", () => {
     );
 
     expect(markup).toContain("INONU TRADER");
-    expect(markup).toContain("Decisao do agente. Execucao real a cada bloco.");
     expect(markup).not.toContain("JEV TRADER");
   });
 

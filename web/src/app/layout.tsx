@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "INONU TRADER",
-  description: "Decisao do agente. Execucao real no livro on-chain da Kuru.",
+  description: "Central Jev de decisoes e acompanhamento das operacoes.",
 };
 
 export const viewport: Viewport = {

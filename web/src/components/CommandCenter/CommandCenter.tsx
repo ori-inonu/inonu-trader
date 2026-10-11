@@ -228,7 +228,7 @@ export default function CommandCenter({ meta, latest, events, connection, operat
           <p className={styles.eyebrow}>Central de decisoes e operacoes</p>
           <h2 className={styles.title} id="command-center-title">Jev no comando</h2>
           <p className={styles.lede}>
-            Le o feed de preco, decide entre compra e venda e coloca a ordem no livro on-chain da Kuru em cada bloco da Monad.
+            Acompanha os dados informados pelo feed e apresenta as decisoes do Jev, com o estado observado de cada ordem.
           </p>
         </div>
         <dl className={styles.headChips}>

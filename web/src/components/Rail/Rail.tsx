@@ -62,7 +62,7 @@ export default function Rail({ meta, latest, connection, uptimeText, reducedMoti
           <BrandMark decorative />
           <div className={styles.brandCopy}>
             <h1>INONU TRADER</h1>
-            <p>Decisao do agente. Execucao real a cada bloco.</p>
+            <p>Decisoes do Jev. Estado observado da operacao.</p>
           </div>
         </div>
         <div className={styles.digest}>
