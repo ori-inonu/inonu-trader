@@ -26,7 +26,7 @@ export function publicSystemOneView(input: unknown): Record<string, unknown> | n
   const started = finiteOrNull(input.startedAtMs), completed = finiteOrNull(input.completedAtMs);
   if (started === null || completed === null || started <= 0 || completed < started || !["blocked", "dry_run"].includes(String(execution.status))) return null;
   if (!requiredNumbers(brief.wallet, "capitalUsd knownValueUsd openNotionalUsd") ||
-      !requiredNumbers(brief.limits, "orderCapUsd exposureCapUsd") || !requiredNumbers(brief.limits, "leverageCeiling", true)) return null;
+      !requiredNumbers(brief.limits, "orderCapUsd exposureCapUsd") || !requiredNumbers(brief.limits, "leverageCeiling", brief.phase !== "fase-0")) return null;
   if (brief.candidates.some(c => isRecord(c) && candidateId(c.id) && !validCandidate(c))) return null;
   if (isRecord(input.chosen) && !validCandidate(input.chosen)) return null;
   const candidates = brief.candidates.slice(0, 8).filter(isRecord).filter(c => candidateId(c.id)).map(c => ({

@@ -118,7 +118,7 @@ export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
   const wallet = brief.wallet;
   const limits = brief.limits;
   if (!requiredNumbers(wallet, "capitalUsd knownValueUsd openNotionalUsd") ||
-      !requiredNumbers(limits, "orderCapUsd exposureCapUsd") || !requiredNumbers(limits, "leverageCeiling", true)) return null;
+      !requiredNumbers(limits, "orderCapUsd exposureCapUsd") || !requiredNumbers(limits, "leverageCeiling", brief.phase !== "fase-0")) return null;
   if (brief.candidates.some(candidate => isRecord(candidate) && /^(long|short)-(1|2|3|5)x$/.test(str(candidate.id)) && !validCandidateNumbers(candidate))) return null;
   const candidates = brief.candidates.map(parseCandidate).filter((candidate): candidate is SystemOneCandidateView => candidate !== null);
   const decisionRaw = value.decision;

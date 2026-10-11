@@ -41,6 +41,32 @@ const cycle = {
 };
 
 describe("parseSystemOneCycle", () => {
+  test("phase 0 preserves known zero limits and all eight blocked candidates", () => {
+    const observing = {
+      ...cycle,
+      brief: {
+        ...cycle.brief,
+        phase: "fase-0",
+        limits: { ...cycle.brief.limits, leverageCeiling: 0, leverageCap: 0, orderCapUsd: 0, exposureCapUsd: 0 },
+        candidates: (["long", "short"] as const).flatMap(side => [1, 2, 3, 5].map(leverage => ({
+          ...candidate(`${side}-${leverage}x`, side, leverage, false), marginUsd: 0, notionalUsd: 0, reasons: ["phase_0_observes_only"],
+        }))),
+        eligibleIds: [],
+      },
+      chosen: null, decision: null, execution: { status: "blocked", reasons: ["no_eligible_candidate"] },
+    };
+    const parsed = parseSystemOneCycle(observing);
+    expect(parsed?.brief.limits.leverageCeiling).toBe(0);
+    expect(parsed?.brief.candidates).toHaveLength(8);
+    expect(parsed?.brief.candidates.every(candidate => !candidate.eligible && candidate.marginUsd === 0 && candidate.notionalUsd === 0)).toBe(true);
+    expect(parsed?.brief.eligibleIds).toEqual([]);
+    expect(parsed?.chosen).toBeNull();
+    expect(parsed?.execution.status).toBe("blocked");
+    for (const phase of ["fase-1", "fase-2"]) {
+      expect(parseSystemOneCycle({ ...observing, brief: { ...observing.brief, phase } })).toBeNull();
+    }
+  });
+
   test("rejects invalid required financial values and preserves optional unknown risk", () => {
     const locations = [
       ["wallet", "capitalUsd"], ["wallet", "knownValueUsd"], ["wallet", "openNotionalUsd"],
