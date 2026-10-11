@@ -25,6 +25,8 @@
     "policy:envelope": "bun --no-env-file run scripts/policy-envelope.ts",
     "jev:lab": "bun --no-env-file run scripts/jev-lab.ts",
     "test:lab": "bun --no-env-file test src/lab scripts/jev-lab.test.ts",
+    "onchainos:capture": "bun --no-env-file run scripts/onchainos-capture.ts",
+    "onchainos:capture:env": "bun --no-env-file --env-file=data/onchainos.env run scripts/onchainos-capture.ts",
     "capture": "bun run scripts/capture.ts",
     "backtest": "bun run scripts/backtest.ts",
     "test": "bun --no-env-file test --parallel=1 --timeout 15000 ./src ./scripts",
