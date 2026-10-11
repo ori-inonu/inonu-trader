@@ -95,6 +95,8 @@ export interface PublicMarketOptions {
   bar?: keyof typeof BAR_MS;
   candles?: number;
   nowMs: number;
+  /** Live callers sample after the awaited reads; fixed-time callers retain nowMs. */
+  now?: () => number;
 }
 
 function closesOf(rows: readonly PublicCandleRow[], barMs: number, nowMs: number): number[] {
@@ -128,13 +130,14 @@ export async function readPublicMarket(port: GetPort, options: PublicMarketOptio
     readGet(port, "public.candles", { instId, bar, limit }, (data) => parsePublicCandles(data, 300)),
   ]);
 
-  const closes = closesOf(candles.value, barMs, options.nowMs);
+  const evaluatedAtMs = options.now?.() ?? options.nowMs;
+  const closes = closesOf(candles.value, barMs, evaluatedAtMs);
   const volatility = barMs === null ? { sigmaDaily: null, returnsUsed: 0, reason: "bar_unknown" } : realizedVolatility(closes, barMs);
-  const fundingRate = isFreshReading(funding.value.tsMs, options.nowMs) ? toNumber(funding.value.fundingRate) : null;
+  const fundingRate = isFreshReading(funding.value.tsMs, evaluatedAtMs) ? toNumber(funding.value.fundingRate) : null;
   return {
     instId,
     indexPrice: null,
-    markPrice: isFreshReading(mark.value.tsMs, options.nowMs) ? toNumber(mark.value.markPx) : null,
+    markPrice: isFreshReading(mark.value.tsMs, evaluatedAtMs) ? toNumber(mark.value.markPx) : null,
     fundingRate,
     fundingIntervalMs: funding.value.intervalMs,
     realizedSigmaDaily: volatility.sigmaDaily,

@@ -203,6 +203,7 @@
   gap: 2px;
   border: 1px solid var(--edge);
   border-radius: var(--r-xs);
+  padding: var(--s2);
   background: var(--bg-deck);
   box-shadow: var(--elev-1);
   transform-style: preserve-3d;
@@ -233,7 +234,37 @@
 }
 
 .slabRejected {
-  opacity: 0.55;
+  background: var(--bg-well);
+}
+
+.slabStatus {
+  color: var(--ink-2);
+  font: var(--fs-micro);
+}
+
+.slabDetails {
+  width: 100%;
+  min-width: 0;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  overflow-wrap: anywhere;
+}
+
+.slabDetails summary {
+  min-height: 44px;
+  border-radius: var(--r-xs);
+  padding: var(--s2);
+  cursor: pointer;
+}
+
+.slabDetails summary:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.slabDetails p {
+  padding: var(--s2);
+  text-align: left;
 }
 
 .slabChosen {
@@ -306,6 +337,10 @@
 
 @media (max-width: 479.98px) {
   .readouts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ladderSlabs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

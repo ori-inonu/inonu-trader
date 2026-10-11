@@ -94,7 +94,7 @@ const publicHttp = usePublic
 async function once(): Promise<void> {
   const nowMs = Date.now();
   const readings = publicHttp
-    ? { market: await readPublicMarket(publicHttp, { instId, bar, candles, nowMs }), wallet: configuredWallet(capitalUsd, nowMs) }
+    ? { market: await readPublicMarket(publicHttp, { instId, bar, candles, nowMs, now: () => Date.now() }), wallet: configuredWallet(capitalUsd, Date.now()) }
     : syntheticReadings({ nowMs, capitalUsd, instId, candles });
   const cycle = await runSystemOneCycle({ ...readings, phase, horizonDays, kellyLowerBound }, { model, now: () => Date.now() });
   mkdirSync(dirname(statePath), { recursive: true });

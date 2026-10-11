@@ -42,6 +42,32 @@ test("upstream timestamps are preserved and stale mark and funding are unknown",
   expect(market.markPrice).toBeNull();
   expect(market.fundingRate).toBeNull();
 });
+
+test("freshness uses one completion-time clock sample after awaited public reads", async () => {
+  let completedReads = 0;
+  let samples = 0;
+  const source = port(undefined, now + 100);
+  const delayed: GetPort = { async get(endpoint, query) {
+    const result = await source.get(endpoint, query);
+    completedReads += 1;
+    return result;
+  } };
+  const market = await readPublicMarket(delayed, { nowMs: now, now: () => {
+    expect(completedReads).toBe(3);
+    samples += 1;
+    return now + 200;
+  } });
+  expect(market.markPrice).toBe(1);
+  expect(market.fundingRate).toBe(0.001);
+  expect(market.observedAtMs).toBe(now + 100);
+  expect(samples).toBe(1);
+  const future = await readPublicMarket(port(undefined, now + 201), { nowMs: now, now: () => now + 200 });
+  expect(future.markPrice).toBeNull();
+  expect(future.fundingRate).toBeNull();
+  const stale = await readPublicMarket(port(), { nowMs: now, now: () => now + 600_000 });
+  expect(stale.markPrice).toBeNull();
+  expect(stale.fundingRate).toBeNull();
+});
 test.each([now - 600_000, now + 1, NaN])("stale or invalid reading %s cannot produce eligible candidates", timestamp => {
   const input = syntheticReadings({ nowMs: now, capitalUsd: 1000 });
   input.market.observedAtMs = timestamp;
