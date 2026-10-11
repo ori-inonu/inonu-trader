@@ -28,8 +28,10 @@ export type UsdAmount = number;
 export type PercentPoints = number;
 /** Percentage points by NAME and EXAMPLE only: the page does not declare the scale. */
 export type PercentByExample = number;
-/** Ratio from 0 to 1 or decimal fraction, declared: 0.0214 means 2.14 percent. */
+/** Ratio from 0 to 1, declared: 0.629 means 62.9 percent of the mentions. */
 export type FractionOfOne = number;
+/** Decimal fraction, declared: 0.0214 means 2.14 percent. It may exceed 1 or be negative. */
+export type DecimalFraction = number;
 /** Documented as a percent but the example looks like a 0..1 fraction: never compare or threshold without a live check. */
 export type AmbiguousScale = number;
 /** A non negative integer count. */
