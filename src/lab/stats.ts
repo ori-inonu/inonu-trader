@@ -311,17 +311,38 @@ export function trancheEquity(multiples: readonly number[], holdSteps: number): 
   return { final: equity, minEquity, maxDrawdown, path };
 }
 
+/** Fills `target` (length n) with a moving block resample: ceil(n/b) blocks of consecutive indices, truncated to n. */
+function fillMovingBlocks(target: Int32Array, blockLength: number, rng: Rng): void {
+  const n = target.length;
+  const blocks = Math.ceil(n / blockLength);
+  let filled = 0;
+  for (let block = 0; block < blocks; block += 1) {
+    const start = rng.int(n - blockLength + 1);
+    for (let k = 0; k < blockLength && filled < n; k += 1) target[filled++] = start + k;
+  }
+}
+
 /** Indices of a moving block resample of length n: ceil(n/b) blocks of consecutive indices, truncated to n. */
 export function movingBlockResample(n: number, blockLength: number, rng: Rng): number[] {
   if (!Number.isInteger(n) || n < 1) throw new RangeError("n must be a positive integer");
   if (!Number.isInteger(blockLength) || blockLength < 1 || blockLength > n) throw new RangeError("blockLength must be an integer from 1 to n");
-  const out: number[] = [];
-  const blocks = Math.ceil(n / blockLength);
-  for (let block = 0; block < blocks; block += 1) {
-    const start = rng.int(n - blockLength + 1);
-    for (let k = 0; k < blockLength && out.length < n; k += 1) out.push(start + k);
+  const target = new Int32Array(n);
+  fillMovingBlocks(target, blockLength, rng);
+  return Array.from(target);
+}
+
+/** Final and minimum equity of the tranche model over resampled indices, without building the whole path. */
+function trancheFinalAndMin(multiples: ArrayLike<number>, order: Int32Array, holdSteps: number, sizes: Float64Array): { final: number; min: number } {
+  const n = order.length;
+  let equity = 1;
+  let min = 1;
+  for (let j = 0; j < n + holdSteps; j += 1) {
+    const closing = j - holdSteps;
+    if (closing >= 0 && closing < n) equity += (sizes[closing] as number) * ((multiples[order[closing] as number] as number) - 1);
+    if (j < n) sizes[j] = equity / holdSteps;
+    if (equity < min) min = equity;
   }
-  return out;
+  return { final: equity, min };
 }
 
 export interface BootstrapSeries {
@@ -361,17 +382,27 @@ export function bootstrapLeverage(series: readonly BootstrapSeries[], options: B
   if (n < 1) throw new RangeError("the series must have at least one epoch");
   const blockLength = Math.min(options.blockLength, n);
   const rng = new Rng(options.seed, "bootstrap");
+  for (const s of series) for (const m of s.multiples) if (typeof m !== "number" || !Number.isFinite(m) || m < 0) throw new RangeError("equity multiples must be finite numbers at or above zero");
+  if (!Number.isInteger(options.holdSteps) || options.holdSteps < 1) throw new RangeError("holdSteps must be a positive integer");
   const finals = series.map(() => new Array<number>(options.resamples));
   const liquidations = series.map(() => 0);
   const ruins = series.map(() => 0);
+  const indices = new Int32Array(n);
+  const sizes = new Float64Array(n);
   for (let r = 0; r < options.resamples; r += 1) {
-    const indices = movingBlockResample(n, blockLength, rng);
+    fillMovingBlocks(indices, blockLength, rng);
     series.forEach((s, k) => {
-      const picked = indices.map((i) => s.multiples[i] as number);
-      const equity = trancheEquity(picked, options.holdSteps);
+      const equity = trancheFinalAndMin(s.multiples, indices, options.holdSteps, sizes);
       (finals[k] as number[])[r] = equity.final;
-      if (indices.some((i) => s.liquidated[i] === true)) liquidations[k] = (liquidations[k] as number) + 1;
-      if (equity.minEquity <= options.ruinFraction) ruins[k] = (ruins[k] as number) + 1;
+      let any = false;
+      for (let i = 0; i < n; i += 1) {
+        if (s.liquidated[indices[i] as number] === true) {
+          any = true;
+          break;
+        }
+      }
+      if (any) liquidations[k] = (liquidations[k] as number) + 1;
+      if (equity.min <= options.ruinFraction) ruins[k] = (ruins[k] as number) + 1;
     });
   }
   return series.map((s, k) => ({
