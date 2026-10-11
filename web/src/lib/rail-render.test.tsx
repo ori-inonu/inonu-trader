@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import Rail from "@/components/Rail/Rail";
 import BrandMark from "@/components/BrandMark/BrandMark";
-import type { Meta } from "@/lib/types";
+import type { ConnectionState, Meta } from "@/lib/types";
 
 const WALLET = "0x7F3a4c9B21e5D6f8A0b3C4D5e6F708192a3B4c5D6";
 
@@ -18,6 +18,22 @@ function meta(overrides: Partial<Meta> = {}): Meta {
 }
 
 describe("Rail rendering", () => {
+  test.each([
+    [null, "connecting", "Conectando ao feed", "Execução não verificada", "Fonte não informada"],
+    [null, "reconnecting", "Feed desconectado. Reconectando", "Execução não verificada", "Fonte não informada"],
+    [meta({ dryRun: true, mode: "simulation", dataSource: "mock" }), "live", "Feed conectado", "Simulação", "Fonte: mock"],
+    [meta({ mode: "live", dataSource: "Kuru" }), "live", "Feed conectado", "Execução não verificada", "Fonte: Kuru"],
+    [meta({ dryRun: true, mode: "live" }), "live", "Feed conectado", "Execução não verificada", "Fonte não informada"],
+  ] as const)("keeps connection and execution evidence separate (%#)", (metadata: Meta | null, connection: ConnectionState, connectionLabel: string, executionLabel: string, sourceLabel: string) => {
+    const markup = renderToStaticMarkup(
+      <Rail meta={metadata} latest={null} connection={connection} uptimeText="00:00:00" />,
+    );
+    expect(markup).toContain(connectionLabel);
+    expect(markup).toContain(executionLabel);
+    expect(markup).toContain(sourceLabel);
+    expect(markup).not.toContain("Execucao real a cada bloco");
+  });
+
   test("names the public brand mark and keeps decorative marks hidden", () => {
     const publicMark = renderToStaticMarkup(<BrandMark />);
     expect(publicMark).toContain('role="img"');
@@ -36,6 +52,8 @@ describe("Rail rendering", () => {
     );
 
     expect(markup).toContain("INONU TRADER");
+    expect(markup).toContain("Decisoes do Jev. Estado observado da operacao.");
+    expect(markup).not.toContain("Execucao real a cada bloco");
     expect(markup).not.toContain("JEV TRADER");
   });
 

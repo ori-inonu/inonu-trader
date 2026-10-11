@@ -215,7 +215,7 @@ export default function CommandCenter({ meta, latest, events, connection, operat
     );
   }, [actionKey, reducedMotion, stale]);
 
-  const cadence = "Um bloco a cada 300 ms";
+  const cadence = "Cadência não verificada";
 
   return (
     <section
