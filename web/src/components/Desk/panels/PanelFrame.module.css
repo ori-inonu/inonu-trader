@@ -1,0 +1,135 @@
+/* Shared chrome of the desk panels. Built to look the same flat and under a CSS 3D tilt:
+   edges are an inset shadow and a fill step instead of 1px borders, which alias when the
+   plane is rotated, and the frame owns a compositing layer with hidden backfaces. */
+
+.frame {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--r-sm);
+  background: var(--bg-deck);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--edge) 78%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  -webkit-font-smoothing: antialiased;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  contain: layout paint;
+}
+
+.head {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  align-items: center;
+  gap: var(--s2);
+  height: 30px;
+  padding: 0 var(--s3);
+  background: var(--bg-deck-2);
+}
+
+/* In a narrow panel the context (instrument id) gives way first, then the title is cut with an
+   ellipsis. The feed chip never moves out of the header. */
+.title {
+  min-width: 0;
+  flex: 0 1 auto;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.subtitle {
+  min-width: 0;
+  flex: 0 20 auto;
+  overflow: hidden;
+  color: var(--ink-2);
+  font: 500 11px/15px var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spacer {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.right {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  align-items: center;
+}
+
+.chip {
+  --chip: var(--signal);
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  border-radius: var(--r-pill);
+  padding: 1px 7px 1px 6px;
+  background: color-mix(in srgb, var(--chip) 13%, transparent);
+  color: var(--chip);
+  font: 600 10px/14px var(--font-sans);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.chip[data-state="stale"] {
+  --chip: var(--hold);
+}
+
+.chip[data-state="empty"] {
+  --chip: var(--ink-3);
+}
+
+/* A static dot. State is never carried by an animation. */
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.body {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  transition: opacity var(--dur-fast) var(--ease-out-expo);
+}
+
+.frame[data-stale="true"] .body {
+  opacity: 0.5;
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--s4);
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body {
+    transition: none;
+  }
+}

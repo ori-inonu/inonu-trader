@@ -1,0 +1,110 @@
+/* Row height and header height mirror TAPE_ROW_H and TAPE_HEADER_H in lib/desk/ui/tape-model.ts. */
+
+.root {
+  position: absolute;
+  inset: 0;
+  container-type: inline-size;
+}
+
+.table {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.cols,
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr) minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 0 var(--s2);
+  padding: 0 var(--s3);
+  text-align: right;
+}
+
+.cols {
+  height: 18px;
+  flex: none;
+  background: color-mix(in srgb, var(--bg-deck-2) 55%, transparent);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+.rows {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.row {
+  --hc: var(--buy);
+  position: relative;
+  height: 17px;
+  font-size: 11px;
+  line-height: 17px;
+}
+
+.row[data-side="sell"] {
+  --hc: var(--sell);
+}
+
+.time {
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.px {
+  color: var(--hc);
+  white-space: nowrap;
+}
+
+.sz {
+  overflow: hidden;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.side {
+  color: var(--hc);
+  font-weight: 600;
+}
+
+/* Large print: heavier type and a tinted row, a static style. */
+.row[data-large="true"] {
+  background: color-mix(in srgb, var(--hc) 15%, transparent);
+  font-weight: 600;
+}
+
+.row[data-large="true"] .sz,
+.row[data-large="true"] .time {
+  color: var(--ink);
+}
+
+.row[data-large="true"]::before {
+  position: absolute;
+  inset: 2px auto 2px 0;
+  width: 2px;
+  background: var(--hc);
+  content: "";
+}
+
+@container (max-width: 270px) {
+  .cols,
+  .row {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr) minmax(0, 1fr) 20px;
+    padding-inline: var(--s2);
+    gap: 0 var(--s1);
+  }
+}

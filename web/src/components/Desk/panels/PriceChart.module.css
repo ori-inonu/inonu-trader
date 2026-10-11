@@ -1,0 +1,155 @@
+.root {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+}
+
+.toolbar {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  padding: var(--s2) var(--s3) 0;
+}
+
+.bars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.barButton {
+  min-width: 28px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--r-xs);
+  padding: 0 6px;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  font: 500 10.5px/20px var(--font-mono);
+  transition: background-color var(--dur-fast) linear, color var(--dur-fast) linear;
+}
+
+.barButton:hover:not(:disabled) {
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
+.barButton[aria-pressed="true"] {
+  background: var(--bg-deck-3);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--signal);
+}
+
+.barButton:disabled {
+  cursor: default;
+}
+
+.barButton:focus-visible {
+  outline-offset: -2px;
+}
+
+.change {
+  flex: none;
+  color: var(--ink-2);
+  font: 500 11px/20px var(--font-mono);
+  white-space: nowrap;
+}
+
+.change[data-tone="up"] {
+  color: var(--buy);
+}
+
+.change[data-tone="down"] {
+  color: var(--sell);
+}
+
+.micro {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.readout {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s3);
+  min-height: 20px;
+  padding: 2px var(--s3) 0;
+  color: var(--ink-2);
+  font: 500 10.5px/18px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.when {
+  color: var(--ink-3);
+}
+
+.k {
+  margin-right: 4px;
+  color: var(--ink-4);
+  font-weight: 600;
+}
+
+.delta {
+  font-weight: 600;
+}
+
+.delta[data-tone="up"] {
+  color: var(--buy);
+}
+
+.delta[data-tone="down"] {
+  color: var(--sell);
+}
+
+.forming {
+  color: var(--hold);
+  font: 600 10px/18px var(--font-sans);
+  letter-spacing: 0.04em;
+}
+
+.plot {
+  position: relative;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: none;
+  font-family: var(--font-mono);
+}
+
+.plot:focus-visible {
+  outline-offset: -2px;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-mono);
+}
+
+@container (max-width: 340px) {
+  .readout {
+    gap: 0 var(--s2);
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barButton {
+    transition: none;
+  }
+}

@@ -1,0 +1,259 @@
+/* Row height and the fixed bands below mirror LADDER_ROW_H, LADDER_IMBALANCE_H, LADDER_COLUMNS_H
+   and LADDER_SPREAD_H in lib/desk/ui/book-model.ts, which decide how many rows fit. */
+
+.root {
+  position: absolute;
+  inset: 0;
+  container-type: inline-size;
+}
+
+.table {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Depth imbalance */
+.imb {
+  display: flex;
+  height: 34px;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 var(--s3);
+}
+
+.imbLabels {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;
+  font: 500 10.5px/12px var(--font-mono);
+}
+
+.imbBuy {
+  color: var(--buy);
+  text-align: left;
+}
+
+.imbSell {
+  color: var(--sell);
+  text-align: right;
+}
+
+.imbTitle {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.imbTrack {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--sell) 42%, transparent);
+}
+
+.imbTrack[data-known="false"] {
+  background: var(--bg-deck-3);
+}
+
+.imbFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: color-mix(in srgb, var(--buy) 82%, transparent);
+  transition: width var(--dur-fast) var(--ease-out-expo);
+}
+
+.imbTrack[data-known="false"] .imbFill {
+  display: none;
+}
+
+/* Column header */
+.cols {
+  display: grid;
+  height: 18px;
+  flex: none;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 0 var(--s2);
+  padding: 0 var(--s3);
+  background: color-mix(in srgb, var(--bg-deck-2) 55%, transparent);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+/* Ladder sides: asks hug the spread row from above, bids hang from it below. */
+.side {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.side[data-side="ask"] {
+  justify-content: flex-end;
+}
+
+.side[data-side="bid"] {
+  justify-content: flex-start;
+}
+
+.row {
+  --hc: var(--sell);
+  position: relative;
+  display: grid;
+  height: 17px;
+  flex: none;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 0 var(--s2);
+  padding: 0 var(--s3);
+  font-size: 11px;
+  line-height: 17px;
+  text-align: right;
+}
+
+.row[data-side="bid"] {
+  --hc: var(--buy);
+}
+
+.heat {
+  position: absolute;
+  inset: 1px 0 1px auto;
+  width: 100%;
+  background: color-mix(in srgb, var(--hc) var(--a, 12%), transparent);
+  transform: scaleX(var(--w, 0));
+  transform-origin: right center;
+  transition:
+    transform var(--dur-fast) var(--ease-out-expo),
+    background-color var(--dur-fast) linear;
+}
+
+.px,
+.sz,
+.cum {
+  position: relative;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.px {
+  color: var(--hc);
+}
+
+.sz {
+  color: var(--ink-2);
+}
+
+.cum {
+  color: var(--ink-3);
+}
+
+.row[data-wall="true"] .sz {
+  color: var(--ink);
+}
+
+/* Top of book: a short marker on the left edge and a heavier price. */
+.row[data-top="true"] {
+  background: color-mix(in srgb, var(--hc) 7%, transparent);
+}
+
+.row[data-top="true"]::before {
+  position: absolute;
+  inset: 2px auto 2px 0;
+  width: 2px;
+  background: var(--hc);
+  content: "";
+}
+
+.row[data-top="true"] .px {
+  font-weight: 600;
+}
+
+/* Spread row */
+.spread {
+  display: grid;
+  height: 32px;
+  flex: none;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0 var(--s2);
+  padding: 0 var(--s3);
+  background: var(--bg-deck-2);
+}
+
+.spread[data-crossed="true"] {
+  background: color-mix(in srgb, var(--hold) 12%, var(--bg-deck-2));
+}
+
+.spreadCell {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.spreadRight {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.micro {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.spreadValue {
+  overflow: hidden;
+  color: var(--ink-2);
+  font: 500 11px/13px var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mid {
+  color: var(--ink);
+  font: 600 15px/18px var(--font-mono);
+  white-space: nowrap;
+}
+
+@container (max-width: 300px) {
+  .imbTitle {
+    display: none;
+  }
+
+  .row,
+  .cols,
+  .imb,
+  .spread {
+    padding-inline: var(--s2);
+  }
+
+  .mid {
+    font-size: 13px;
+  }
+}
+
+.still .heat,
+.still .imbFill {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heat,
+  .imbFill {
+    transition: none;
+  }
+}
