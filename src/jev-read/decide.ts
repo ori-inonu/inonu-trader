@@ -45,8 +45,9 @@ export function validateTapeDecision(raw: unknown, model: string): TapeDecision 
       weights[key] = value;
       total += value;
     }
-    if (!(total > 0) || !(weights[action] > 0)) return holdOnly(model, latency, "malformed");
+    if (!Number.isFinite(total) || !(total > 0) || !(weights[action] > 0)) return holdOnly(model, latency, "malformed");
     probabilities = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };
+    if (!TAPE_ACTIONS.every((key) => Number.isFinite(probabilities[key])) || !(probabilities[action] > 0)) return holdOnly(model, latency, "malformed");
   }
 
   const tokens = raw.inputTokens;

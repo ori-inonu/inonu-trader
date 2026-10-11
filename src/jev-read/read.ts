@@ -42,14 +42,20 @@ export async function runJevRead(input: TapeInput, deps: ReadDeps): Promise<JevR
   if (!built.ok) return { ...base, state: null, insufficient: built.reasons, decision: null };
   const model = deps.model;
   if (model === null) return { ...base, state: built.state, insufficient: [], decision: null };
+  if (deps.signal?.aborted) return { ...base, state: built.state, insufficient: [], decision: failed(model.name, "error", 0) };
 
   const timeoutMs = Math.min(Math.max(deps.timeoutMs ?? DEFAULT_TIMEOUT_MS, 1), MAX_TIMEOUT_MS);
   const controller = new AbortController();
   const signal = deps.signal ? AbortSignal.any([deps.signal, controller.signal]) : controller.signal;
   const started = performance.now();
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let onAbort: (() => void) | undefined;
   let decision: TapeDecision;
   try {
+    const cancelled = new Promise<never>((_, reject) => {
+      onAbort = () => reject(new Error("cancelled"));
+      deps.signal?.addEventListener("abort", onAbort, { once: true });
+    });
     const deadline = new Promise<never>((_, reject) => {
       timer = setTimeout(() => {
         controller.abort();
@@ -57,12 +63,18 @@ export async function runJevRead(input: TapeInput, deps: ReadDeps): Promise<JevR
       }, timeoutMs);
     });
     // The model gets its own copy: it cannot alter the state that is recorded.
-    const raw = await Promise.race([model.decide(structuredClone(built.state), { signal }), deadline]);
-    decision = validateTapeDecision(raw, model.name);
+    const raw = await Promise.race([model.decide(structuredClone(built.state), { signal }), deadline, cancelled]);
+    const elapsed = performance.now() - started;
+    if (deps.signal?.aborted) decision = failed(model.name, "error", elapsed);
+    else if (elapsed >= timeoutMs) {
+      controller.abort();
+      decision = failed(model.name, "timeout", elapsed);
+    } else decision = validateTapeDecision(raw, model.name);
   } catch {
     decision = failed(model.name, controller.signal.aborted ? "timeout" : "error", performance.now() - started);
   } finally {
     if (timer !== undefined) clearTimeout(timer);
+    if (onAbort !== undefined) deps.signal?.removeEventListener("abort", onAbort);
   }
   return { ...base, state: built.state, insufficient: [], decision };
 }

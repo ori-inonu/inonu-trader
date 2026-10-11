@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { compactTapeState, validateTapeDecision, type TapeModel, type RawTapeAnswer } from "./decide";
 import { runJevRead } from "./read";
+import { publicReadView } from "./public-view";
 import { buildTapeState } from "./state";
 import type { TapeCandle, TapeInput, TapeState } from "./types";
 
@@ -44,6 +45,29 @@ function fakeModel(answer: () => Promise<RawTapeAnswer> | RawTapeAnswer, name = 
 }
 
 describe("validateTapeDecision", () => {
+  test("ordinary buy/hold weights retain their 3:1 meaning", () => {
+    const d = validateTapeDecision({ choice: "buy", probabilities: { buy: 3, sell: 0, hold: 1 } }, "m");
+    expect(d.status).toBe("ok");
+    expect(d.probabilities).toEqual({ buy: 0.75, sell: 0, hold: 0.25 });
+    expect(d.confidence).toBe(0.75);
+  });
+
+  test("a chosen weight that normalizes to zero becomes hold/malformed", () => {
+    const d = validateTapeDecision({ choice: "buy", probabilities: { buy: Number.MIN_VALUE, sell: 0, hold: Number.MAX_VALUE } }, "m");
+    expect(d.status).toBe("malformed");
+    expect(d.action).toBe("hold");
+    expect(d.confidence).toBeNull();
+    expect(d.probabilities).toEqual({ buy: 0, sell: 0, hold: 1 });
+  });
+
+  test("finite weights with an overflowing total become hold/malformed", () => {
+    const d = validateTapeDecision({ choice: "buy", probabilities: { buy: Number.MAX_VALUE, sell: Number.MAX_VALUE, hold: 0 } }, "m");
+    expect(d.status).toBe("malformed");
+    expect(d.action).toBe("hold");
+    expect(d.confidence).toBeNull();
+    expect(d.probabilities).toEqual({ buy: 0, sell: 0, hold: 1 });
+  });
+
   test("accepts a clean answer and normalizes the weights", () => {
     const d = validateTapeDecision({ choice: "buy", probabilities: { buy: 3, sell: 1, hold: 0 }, latencyMs: 812, inputTokens: 1_100 }, "jev-1.13.0");
     expect(d.status).toBe("ok");
@@ -66,6 +90,7 @@ describe("validateTapeDecision", () => {
     ["unknown action", { choice: "moon", latencyMs: 1 }],
     ["choice is not a string", { choice: 7, latencyMs: 1 }],
     ["negative weight", { choice: "buy", probabilities: { buy: -1, sell: 1, hold: 0 }, latencyMs: 1 }],
+    ["zero total", { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 0 }, latencyMs: 1 }],
     ["non finite weight", { choice: "buy", probabilities: { buy: Number.NaN, sell: 1, hold: 0 }, latencyMs: 1 }],
     ["chosen action has no weight", { choice: "buy", probabilities: { buy: 0, sell: 1, hold: 0 }, latencyMs: 1 }],
     ["weights are not a record", { choice: "buy", probabilities: [1, 0, 0], latencyMs: 1 }],
@@ -120,6 +145,63 @@ describe("compactTapeState", () => {
 });
 
 describe("runJevRead", () => {
+  test("invalid normalized weights remain hold through the public read projection", async () => {
+    const model = fakeModel(() => ({ choice: "buy", probabilities: { buy: Number.MAX_VALUE, sell: Number.MAX_VALUE, hold: 0 } }), "jev-1.13.0");
+    const read = await runJevRead(input(), { model, now: () => NOW });
+    expect(read.decision?.status).toBe("malformed");
+    expect(read.decision?.probabilities).toEqual({ buy: 0, sell: 0, hold: 1 });
+    const view = publicReadView(read);
+    expect(view?.decision).toEqual(read.decision);
+    expect(view?.advisory).toBe(true);
+    expect(view?.execution).toBe("never");
+  });
+
+  test("a synchronous model result beyond the elapsed deadline becomes hold/timeout", async () => {
+    const model = fakeModel(() => {
+      const started = performance.now();
+      while (performance.now() - started < 30) { /* Deliberately block timer callbacks. */ }
+      return { choice: "buy", latencyMs: 30 };
+    });
+    const read = await runJevRead(input(), { model, now: () => NOW, timeoutMs: 5 });
+    expect(read.decision?.status).toBe("timeout");
+    expect(read.decision?.action).toBe("hold");
+    expect(read.decision?.confidence).toBeNull();
+  });
+
+  test("cancellation settles a read even when the model ignores the signal", async () => {
+    const controller = new AbortController();
+    let resolveAnswer!: (answer: RawTapeAnswer) => void;
+    const model = fakeModel(() => new Promise<RawTapeAnswer>((resolve) => { resolveAnswer = resolve; }));
+    const pending = runJevRead(input(), { model, now: () => NOW, signal: controller.signal, timeoutMs: 1000 });
+    controller.abort();
+    let guard: ReturnType<typeof setTimeout> | undefined;
+    const read = await Promise.race([
+      pending,
+      new Promise<null>((resolve) => { guard = setTimeout(() => resolve(null), 100); }),
+    ]);
+    if (guard !== undefined) clearTimeout(guard);
+    resolveAnswer({ choice: "buy", latencyMs: 1 });
+    expect(read).not.toBeNull();
+    expect(read?.decision?.status).toBe("error");
+    expect(read?.decision?.action).toBe("hold");
+    expect(read?.decision?.probabilities).toEqual({ buy: 0, sell: 0, hold: 1 });
+    expect((await pending).decision?.status).toBe("error");
+  });
+
+  test("an already cancelled read never asks the model and records hold/error", async () => {
+    const controller = new AbortController();
+    controller.abort();
+    const model = fakeModel(() => ({ choice: "buy", latencyMs: 1 }));
+    const read = await runJevRead(input(), { model, now: () => NOW, signal: controller.signal });
+    expect(model.calls).toBe(0);
+    expect(read.decision?.status).toBe("error");
+    expect(read.decision?.action).toBe("hold");
+    expect(read.decision?.confidence).toBeNull();
+    expect(read.decision?.probabilities).toEqual({ buy: 0, sell: 0, hold: 1 });
+    expect(read.advisory).toBe(true);
+    expect(read.execution).toBe("never");
+  });
+
   test("asks the model with a built state and records an advisory read that never executes", async () => {
     const model = fakeModel(() => ({ choice: "buy", probabilities: { buy: 0.6, sell: 0.1, hold: 0.3 }, latencyMs: 640, inputTokens: 1_000 }));
     const read = await runJevRead(input(), { model, now: () => NOW, readId: () => "jr-1", clockOffsetMs: 69_522 });
