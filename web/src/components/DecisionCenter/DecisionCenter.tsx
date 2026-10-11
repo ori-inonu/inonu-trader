@@ -78,16 +78,12 @@ function sourceLabel(source: string): string {
   return source === "synthetic" ? "dados sintéticos de demonstração" : "API OKX OnChain OS";
 }
 
-function Gauge({ label, used, max, unit }: { label: string; used: number; max: number | null; unit: string }) {
-  const ratio = max && max > 0 ? Math.min(1, used / max) : 0;
+function DailyTotal({ label, used, unit }: { label: string; used: number; unit: string }) {
   return (
-    <div className={styles.gauge}>
-      <div className={styles.gaugeHead}>
+    <div className={styles.dailyTotal}>
+      <div className={styles.dailyTotalHead}>
         <span>{label}</span>
-        <span className={`${styles.mono} ${styles.num}`}>{used.toFixed(unit === "USD" ? 2 : 0)}{max !== null ? ` / ${max}` : ""} {unit}</span>
-      </div>
-      <div className={styles.track} role="img" aria-label={`${label}: ${Math.round(ratio * 100)}% usado`}>
-        <span className={`${styles.fill} ${ratio >= 0.9 ? styles.fillHot : ""}`} style={{ transform: `scaleX(${ratio})` }} />
+        <span className={`${styles.mono} ${styles.num}`}>{used.toFixed(unit === "USD" ? 2 : 0)} {unit}</span>
       </div>
     </div>
   );
@@ -140,6 +136,10 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
   const ranked = cycle ? rankCandidates(cycle) : [];
   const eligibleCount = cycle?.eligibleIds.length ?? 0;
   const insights = state.insights;
+  const dayRealizedUsd = cycle?.ledger?.dayRealizedUsd;
+  const realizedTone = typeof dayRealizedUsd === "number" && Number.isFinite(dayRealizedUsd)
+    ? dayRealizedUsd < 0 ? styles.neg : dayRealizedUsd > 0 ? styles.pos : ""
+    : "";
 
   return (
     <section className={styles.center} aria-labelledby="center-title">
@@ -184,7 +184,7 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
             <div className={styles.kpi}><span className={styles.kpiLabel}>Patrimônio conhecido</span><span className={styles.kpiValue}>{usd(cycle.inventory.knownValueUsd)}</span><span className={styles.kpiMeta}>{cycle.inventory.valueComplete ? "cobertura completa" : "parcial: ativos sem preço"}</span></div>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Candidatos</span><span className={styles.kpiValue}>{eligibleCount} / {cycle.candidates.length}</span><span className={styles.kpiMeta}>elegíveis / avaliados</span></div>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Decisão do Jev</span><span className={styles.kpiValueText}>{cycle.decision ? (cycle.decision.choice === "hold" ? "Manter" : chosen ? kindLabel(chosen.kind) : cycle.decision.choice) : "não consultado"}</span><span className={styles.kpiMeta}>{cycle.decision ? `${cycle.decision.model}, ${Math.round(cycle.decision.latencyMs)} ms, peso ${pct(cycle.decision.probabilities[cycle.decision.choice])}` : "sem elegíveis"}</span></div>
-            <div className={styles.kpi}><span className={styles.kpiLabel}>Resultado realizado hoje</span><span className={`${styles.kpiValue} ${(cycle.ledger?.dayRealizedUsd ?? 0) < 0 ? styles.neg : (cycle.ledger?.dayRealizedUsd ?? 0) > 0 ? styles.pos : ""}`}>{usd(cycle.ledger?.dayRealizedUsd ?? 0, 4)}</span><span className={styles.kpiMeta}>só planos concluídos e reconciliados</span></div>
+            <div className={styles.kpi}><span className={styles.kpiLabel}>Resultado realizado hoje</span><span className={`${styles.kpiValue} ${realizedTone}`}>{usd(dayRealizedUsd, 4)}</span><span className={styles.kpiMeta}>só planos concluídos e reconciliados</span></div>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Execução</span><span className={styles.kpiValueText}>{executionLabel(cycle.execution.status)}</span><span className={styles.kpiMeta}>{cycle.execution.reasons.map(reasonLabel).join("; ") || "sem motivos"}</span></div>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Fonte</span><span className={styles.kpiValue}>{cycle.inventory.source === "synthetic" ? "sintética" : "OKX"}</span><span className={styles.kpiMeta}>{sourceLabel(cycle.inventory.source)}</span></div>
           </div>
@@ -205,11 +205,12 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
             </div>
 
             <div className={styles.block}>
-              <h3 className={styles.subtitle}>Limites do dia</h3>
+              <h3 className={styles.subtitle}>Atividade do dia</h3>
               {cycle.ledger ? (
                 <>
-                  <Gauge label="Capital comprometido" used={cycle.ledger.dayNotionalUsd} max={null} unit="USD" />
-                  <Gauge label="Planos executados" used={cycle.ledger.dayPlans} max={null} unit="planos" />
+                  <DailyTotal label="Capital comprometido" used={cycle.ledger.dayNotionalUsd} unit="USD" />
+                  <DailyTotal label="Planos executados" used={cycle.ledger.dayPlans} unit="planos" />
+                  <p className={styles.note}>Tetos diários não informados neste ciclo; utilização percentual indisponível.</p>
                   <p className={styles.note}>
                     Pernas abertas: {cycle.ledger.openLegs.length === 0 ? "nenhuma" : cycle.ledger.openLegs.map((leg) => `${leg.pairKey} ${leg.status}`).join(", ")}.
                     {cycle.ledger.killSwitch ? " Kill switch ativo: nada executa até remover data/operator/STOP." : " Kill switch inativo."}

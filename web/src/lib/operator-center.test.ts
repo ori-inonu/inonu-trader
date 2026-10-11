@@ -24,6 +24,14 @@ const cycle: OperatorCycleView = {
   ledger: { dayNotionalUsd: 0, dayPlans: 0, dayRealizedUsd: 0, openLegs: [], killSwitch: false },
 };
 
+function renderCycle(value: OperatorCycleView): string {
+  return renderToStaticMarkup(createElement(DecisionCenterView, { state: { status: "ready", cycle: value, history: [value], insights: null, error: null, ageMs: 4_000, lastFetchAtMs: 1, reload() {} } }));
+}
+
+function realizedKpi(html: string): string {
+  return html.split("Resultado realizado hoje")[1]!.split("</div>")[0]!;
+}
+
 describe("decision center", () => {
   it("ranks eligible candidates first by Jev weight and labels risk from the candidate numbers", () => {
     const ranked = rankCandidates(cycle);
@@ -57,5 +65,34 @@ describe("decision center", () => {
     expect(html).not.toContain("—");
     const absent = renderToStaticMarkup(createElement(DecisionCenterView, { state: { status: "absent", cycle: null, history: [], insights: null, error: null, ageMs: null, lastFetchAtMs: 1, reload() {} } }));
     expect(absent).toContain("bun run okx:operator");
+  });
+
+  it.each([undefined, null])("does not invent a zero realized result when the ledger is %s", (ledger: OperatorCycleView["ledger"]) => {
+    const html = renderCycle({ ...cycle, ledger });
+    expect(realizedKpi(html)).toContain("desconhecido");
+    expect(realizedKpi(html)).not.toContain("0.0000 USD");
+    expect(html).toContain("Ledger indisponível neste ciclo.");
+  });
+
+  it("does not invent a zero when the ledger omits the realized total", () => {
+    const { dayRealizedUsd: _omitted, ...ledger } = cycle.ledger!;
+    expect(realizedKpi(renderCycle({ ...cycle, ledger }))).toContain("desconhecido");
+  });
+
+  it.each([NaN, Infinity, -Infinity])("reports a non-finite realized result as unknown (%s)", (dayRealizedUsd: number) => {
+    expect(realizedKpi(renderCycle({ ...cycle, ledger: { ...cycle.ledger!, dayRealizedUsd } }))).toContain("desconhecido");
+  });
+
+  it.each([[0, "0.0000 USD"], [1.25, "1.2500 USD"], [-1.25, "-1.2500 USD"]] as const)("preserves the known realized result %s", (dayRealizedUsd: number, expected: string) => {
+    expect(realizedKpi(renderCycle({ ...cycle, ledger: { ...cycle.ledger!, dayRealizedUsd } }))).toContain(expected);
+  });
+
+  it("shows daily totals without inventing cap utilization", () => {
+    const html = renderCycle({ ...cycle, ledger: { ...cycle.ledger!, dayNotionalUsd: 45, dayPlans: 2 } });
+    expect(html).toContain("Atividade do dia");
+    expect(html).toContain("45.00 USD");
+    expect(html).toContain("2 planos");
+    expect(html).toContain("Tetos diários não informados neste ciclo");
+    expect(html).not.toContain("% usado");
   });
 });
