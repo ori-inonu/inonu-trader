@@ -5,7 +5,7 @@
  *   run   captures into a folder in the format of the Jev Decision Lab. Needs --allow-network. The onchainos source also
  *         needs --credentials-from-env, which reads OKX_WEB3_API_KEY, OKX_WEB3_API_SECRET and OKX_WEB3_API_PASSPHRASE.
  *
- * READ ONLY: no signing of transactions, no calldata, no trade endpoint, no funds movement, no payment (x402).
+ * READ ONLY: no signing of transactions, no transaction building, no trade endpoint, no funds movement, no per call payment.
  * Output: JSON on stdout, a short Portuguese summary on stderr. Exit codes: 0 complete report (also when the duration
  * limit ended the run), 2 usage error, 3 the run had to stop (malformed record, provider failure, damaged folder).
  *
