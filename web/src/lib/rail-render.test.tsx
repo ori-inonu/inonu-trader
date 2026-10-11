@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import Rail from "@/components/Rail/Rail";
+import BrandMark from "@/components/BrandMark/BrandMark";
 import type { Meta } from "@/lib/types";
 
 const WALLET = "0x7F3a4c9B21e5D6f8A0b3C4D5e6F708192a3B4c5D6";
@@ -17,14 +18,26 @@ function meta(overrides: Partial<Meta> = {}): Meta {
 }
 
 describe("Rail rendering", () => {
-  test("shows the Jev wordmark with no trace of the old identity", () => {
+  test("names the public brand mark and keeps decorative marks hidden", () => {
+    const publicMark = renderToStaticMarkup(<BrandMark />);
+    expect(publicMark).toContain('role="img"');
+    expect(publicMark).toContain('aria-label="INONU TRADER"');
+    expect(publicMark).not.toContain("JEV TRADER");
+
+    const decorativeMark = renderToStaticMarkup(<BrandMark decorative />);
+    expect(decorativeMark).toContain('aria-hidden="true"');
+    expect(decorativeMark).not.toContain("aria-label=");
+    expect(decorativeMark).not.toContain("role=");
+  });
+
+  test("shows the INONU TRADER wordmark", () => {
     const markup = renderToStaticMarkup(
       <Rail meta={meta()} latest={null} connection="live" uptimeText="00:01:02" />,
     );
 
-    expect(markup).toContain("JEV TRADER");
+    expect(markup).toContain("INONU TRADER");
     expect(markup).toContain("Decisao do agente. Execucao real a cada bloco.");
-    expect(markup).not.toContain("INONU");
+    expect(markup).not.toContain("JEV TRADER");
   });
 
   test("carries the presentFeed labels through unchanged", () => {
