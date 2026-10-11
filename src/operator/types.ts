@@ -148,7 +148,11 @@ export interface ExecutionOutcome {
   orderId: string | null;
   /** Second-leg hash for round trips when it was sent. */
   closeTxHash?: string | null;
-  /** Reconciled realized result in USD after a completed plan, gas included; null until reconciled. */
+  /** Observed selected-chain quantity delta at prior prices; not attributable profit. */
+  observedBalanceDeltaUsd?: number | null;
+  /** Inventory movement alone cannot establish the plan's financial result. */
+  resultBasis?: "inventory_only";
+  /** Attributable realized result in USD; null until separately qualified. */
   realizedUsd?: number | null;
   /** Native gas paid across the plan's transactions when receipts reported it. */
   gasCostNative?: number;
@@ -165,7 +169,7 @@ export interface OperatorCycle {
   decision: OperatorDecision | null;
   plan: ExecutionPlan | null;
   execution: ExecutionOutcome;
-  /** Inference cost charged to this cycle, USD, when known. */
+  /** Input-token inference allowance, USD when known; not a complete confirmed bill. */
   inferenceUsd: number | null;
   warnings: string[];
   /** Ledger view: cumulative usage today and legs awaiting reconciliation. */

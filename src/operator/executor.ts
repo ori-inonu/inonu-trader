@@ -13,7 +13,7 @@ import type { ExecutionOutcome, ExecutionPlan, OperatorPolicy, OpportunityCandid
  * prepared transaction passes every static check: router, spender and selector
  * allowlists, exact value, gas limit cap, minimum output within the slippage cap
  * and a successful eth_call simulation (R5 F2). The kill switch is read again
- * before every send (R5 F4). Approvals are built locally for the exact amount
+ * before every send (R5 F4), together with the fixed plan expiry. Approvals are built locally for the exact amount
  * to the spender OKX reports; remote approval calldata is never forwarded.
  * Solana execution is disabled until a transaction policy exists (R5 C1, F1).
  */
@@ -21,7 +21,8 @@ export const SOLANA_LIVE_ENABLED = false;
 
 export interface EvmSigner {
   readonly address: string;
-  sendTransaction(tx: { chainIndex: string; to: string; data: string; value: string; gasLimit: string }): Promise<string>;
+  /** Invoke beforeSubmit synchronously after asynchronous preparation, immediately before SDK handoff; propagate a thrown guard. */
+  sendTransaction(tx: { chainIndex: string; to: string; data: string; value: string; gasLimit: string }, beforeSubmit: () => void): Promise<string>;
   /** Resolves with the receipt status and the native gas cost paid; throws on timeout. */
   waitForReceipt(chainIndex: string, txHash: string, timeoutMs: number): Promise<{ success: boolean; gasCostNative: number | null }>;
   /** eth_call with the same calldata; resolves false when the call reverts. */
@@ -164,8 +165,12 @@ async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCa
 
   const stopRequested = () => deps.killSwitchExists();
   const send = async (tx: { to: string; data: string; value: string; gasLimit: string }, stage: string) => {
-    if (stopRequested()) throw new Error(`kill_switch_present_before_${stage}`);
-    return signer.sendTransaction({ chainIndex, ...tx });
+    const beforeSubmit = () => {
+      if (stopRequested()) throw new Error(`kill_switch_present_before_${stage}`);
+      if (!planIsFresh(plan, deps.now())) throw new Error(`plan_expired_before_${stage}`);
+    };
+    beforeSubmit();
+    return signer.sendTransaction({ chainIndex, ...tx }, beforeSubmit);
   };
   const gasLimitFor = (prepared: PreparedEvmTransaction) => ((BigInt(prepared.gas) * BigInt(3)) / BigInt(2)).toString();
   let gasCostNative = 0;
@@ -186,6 +191,7 @@ async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCa
   try {
     if (!fromNative) {
       const approveHash = await send({ to: candidate.from.tokenContractAddress, data: encodeApprove(spender!, candidate.sizeAtomic), value: "0", gasLimit: "120000" }, "approve1");
+      deps.ledger.updateLeg(plan.planId, { approveTxHash: approveHash });
       if (!(await settle(approveHash))) return fail("approve_reverted", failed("approve_reverted", approveHash));
     }
     if (!(await signer.simulate({ chainIndex, to: leg1.to, data: leg1.data, value: leg1.value }))) return fail("leg1_simulation_reverted", blocked(["leg1_simulation_reverted"]));
@@ -217,6 +223,7 @@ async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCa
   try {
     if (!toNative) {
       const approveHash = await send({ to: candidate.to.tokenContractAddress, data: encodeApprove(spender!, leg1.minReceiveAmount!), value: "0", gasLimit: "120000" }, "approve2");
+      deps.ledger.updateLeg(plan.planId, { closeApproveTxHash: approveHash });
       if (!(await settle(approveHash))) throw new Error("leg2_approve_reverted");
     }
     if (!(await signer.simulate({ chainIndex, to: leg2.to, data: leg2.data, value: leg2.value }))) throw new Error("leg2_simulation_reverted");
@@ -253,12 +260,14 @@ export async function createEthersEvmSigner(privateKey: string, rpcByChain: Reco
   };
   return {
     address,
-    async sendTransaction(tx) {
+    async sendTransaction(tx, beforeSubmit) {
       const wallet = await walletFor(tx.chainIndex);
       const feeData = await wallet.provider.getFeeData();
       const cap = ethers.utils.parseUnits(String(maxFeeGwei), "gwei");
       const suggested = feeData.maxFeePerGas ?? feeData.gasPrice;
       if (suggested && suggested.gt(cap)) throw new Error("gas price above OPERATOR_MAX_FEE_GWEI");
+      // The SDK/network may await internally; this guard covers our own handoff only.
+      beforeSubmit();
       const response = await wallet.sendTransaction({ to: tx.to, data: tx.data, value: ethers.BigNumber.from(tx.value), gasLimit: ethers.BigNumber.from(tx.gasLimit), maxFeePerGas: cap });
       return response.hash;
     },

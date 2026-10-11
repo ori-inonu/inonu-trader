@@ -227,7 +227,9 @@ async function main() {
       }
       console.log(`  plano ${cycle.plan ? `${cycle.plan.planId} ${cycle.plan.executionQualification}` : "nenhum"}; execução ${cycle.execution.status} (${cycle.execution.reasons.join("; ")})`);
       if (cycle.ledger) console.log(`  ledger hoje ${cycle.ledger.dayPlans} planos / ${cycle.ledger.dayNotionalUsd.toFixed(2)} USD; realizado dia ${cycle.ledger.dayRealizedUsd.toFixed(4)} semana ${cycle.ledger.weekRealizedUsd.toFixed(4)} drawdown ${cycle.ledger.drawdownUsd.toFixed(4)} USD; legs abertas ${cycle.ledger.openLegs.length}${cycle.ledger.killSwitch ? "; KILL SWITCH ativo" : ""}`);
-      if (cycle.execution.realizedUsd !== undefined) console.log(`  resultado realizado deste plano: ${cycle.execution.realizedUsd === null ? "desconhecido" : cycle.execution.realizedUsd.toFixed(4) + " USD"}`);
+      if (cycle.execution.observedBalanceDeltaUsd !== undefined) console.log(`  variação observada do inventário (preços anteriores): ${cycle.execution.observedBalanceDeltaUsd === null ? "desconhecida" : cycle.execution.observedBalanceDeltaUsd.toFixed(4) + " USD"}; atribuição à operação pendente`);
+      if (cycle.execution.realizedUsd !== undefined) console.log(`  resultado realizado atribuído deste plano: ${cycle.execution.realizedUsd === null ? "desconhecido" : cycle.execution.realizedUsd.toFixed(4) + " USD"}`);
+      if (cycle.decision) console.log(`  provisão de inferência por tokens de entrada: ${cycle.inferenceUsd === null ? "desconhecida" : cycle.inferenceUsd.toFixed(6) + " USD"} (não representa a fatura completa confirmada)`);
     };
 
     await once();

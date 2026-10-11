@@ -287,9 +287,9 @@ test("Solana live stays disabled until a transaction policy exists (guard test)"
   expect(outcome).toMatchObject({ status: "blocked", reasons: ["solana_live_disabled_pending_policy"] });
 });
 
-test("a completed plan is reconciled against a fresh inventory with gas and recorded in the ledger", async () => {
-  const before = syntheticInventory(NOW);
-  const after: InventorySnapshot = { ...before, chains: before.chains.map((chain) => chain.chainIndex === "196"
+test("a completed plan reports a fresh inventory diagnostic and awaits attributed reconciliation", async () => {
+  const before = { ...syntheticInventory(NOW), riskTokensExcluded: false };
+  const after: InventorySnapshot = { ...before, observedAtMs: NOW + 1, chains: before.chains.map((chain) => chain.chainIndex === "196"
     ? { ...chain, assets: chain.assets.map((asset) => asset.symbol === "USDT" ? { ...asset, balance: 75.12, balanceText: "75.12", valueUsd: 75.12 } : asset) }
     : chain) };
   expect(reconcileRealizedUsd(before, after, "196", "0x1E4a5963aBFD975d8c9021ce480b42188849D41d")).toBeCloseTo(0.12, 9);
@@ -305,11 +305,13 @@ test("a completed plan is reconciled against a fresh inventory with gas and reco
     executor: { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: before.address, killSwitchExists: () => false, tradeClient: fakeTradeClient(candidate!), evmSigner: fakeSigner(before.address) },
   });
   expect(cycle.execution.status).toBe("completed");
-  // 0.12 USD of USDT minus three receipts of 0.001 OKB at 50 USD.
-  expect(cycle.execution.realizedUsd).toBeCloseTo(0.12 - 0.003 * 50, 9);
-  expect(cycle.ledger!.dayRealizedUsd).toBeCloseTo(0.12 - 0.15, 9);
-  expect(cycle.ledger!.weekRealizedUsd).toBeCloseTo(0.12 - 0.15, 9);
-  expect(cycle.ledger!.drawdownUsd).toBeCloseTo(0.03, 9);
+  expect(cycle.execution.observedBalanceDeltaUsd).toBeCloseTo(0.12, 9);
+  expect(cycle.execution.realizedUsd).toBeNull();
+  expect(cycle.execution.resultBasis).toBe("inventory_only");
+  expect(cycle.ledger!.dayRealizedUsd).toBe(0);
+  expect(cycle.ledger!.weekRealizedUsd).toBe(0);
+  expect(cycle.ledger!.drawdownUsd).toBe(0);
+  expect(ledger.openLegs()[0]!.status).toBe("reconciliation_required");
   expect(reads).toBe(2);
 });
 

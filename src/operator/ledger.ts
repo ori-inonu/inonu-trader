@@ -18,10 +18,14 @@ export interface OpenLeg {
   chainIndex: string;
   openedAtMs: number;
   txHash: string;
+  /** Known first ERC20 approval identity; omission/null means unavailable. */
+  approveTxHash?: string | null;
   /** Atomic amount of the intermediate asset expected from leg 1 (minimum). */
   intermediateAtomic: string;
-  status: "leg1_sent" | "leg1_confirmed" | "leg2_sent" | "closed" | "failed";
+  status: "leg1_sent" | "leg1_confirmed" | "leg2_sent" | "reconciliation_required" | "closed" | "failed";
   closeTxHash: string | null;
+  /** Known closing ERC20 approval identity; omission/null means unavailable. */
+  closeApproveTxHash?: string | null;
   note: string | null;
 }
 
@@ -31,7 +35,7 @@ export interface OperatorLedgerState {
   /** YYYY-MM-DD (UTC) -> committed notional in USD. */
   dailyNotionalUsd: Record<string, number>;
   dailyPlans: Record<string, number>;
-  /** YYYY-MM-DD (UTC) -> realized result in USD, reconciled after completed plans, gas included. */
+  /** YYYY-MM-DD (UTC) -> separately qualified attributable realized result in USD. */
   dailyRealizedUsd: Record<string, number>;
   /** Running sum of realized results and the highest value it reached, for the drawdown stop. */
   cumulativeRealizedUsd: number;
@@ -56,7 +60,7 @@ export interface CumulativeLimits {
   maxDrawdownUsd: number;
 }
 
-const LEG_STATUSES = new Set(["leg1_sent", "leg1_confirmed", "leg2_sent", "closed", "failed"]);
+const LEG_STATUSES = new Set(["leg1_sent", "leg1_confirmed", "leg2_sent", "reconciliation_required", "closed", "failed"]);
 
 export function validateCumulativeLimits(limits: CumulativeLimits): void {
   const positive = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value > 0;
@@ -97,6 +101,10 @@ function validLeg(value: unknown): value is OpenLeg {
   return isRecord(value) && typeof value.planId === "string" && typeof value.candidateId === "string" && typeof value.pairKey === "string" &&
     typeof value.chainIndex === "string" && Number.isSafeInteger(value.openedAtMs) && typeof value.txHash === "string" &&
     typeof value.intermediateAtomic === "string" && typeof value.status === "string" && LEG_STATUSES.has(value.status) &&
+    (!Object.prototype.hasOwnProperty.call(value, "approveTxHash") || value.approveTxHash === null ||
+      (typeof value.approveTxHash === "string" && value.approveTxHash.length > 0)) &&
+    (!Object.prototype.hasOwnProperty.call(value, "closeApproveTxHash") || value.closeApproveTxHash === null ||
+      (typeof value.closeApproveTxHash === "string" && value.closeApproveTxHash.length > 0)) &&
     (value.closeTxHash === null || typeof value.closeTxHash === "string") && (value.note === null || typeof value.note === "string");
 }
 
@@ -150,6 +158,7 @@ export function createOperatorLedger(initial: OperatorLedgerState, persist: (sta
       if (state.peakRealizedUsd - state.cumulativeRealizedUsd >= limits.maxDrawdownUsd) reasons.push("drawdown_stop");
       const open = state.openLegs.filter((leg) => leg.status !== "closed");
       if (open.some((leg) => leg.pairKey === input.pairKey)) reasons.push("open_leg_on_pair");
+      if (open.some((leg) => leg.status === "reconciliation_required")) reasons.push("unattributed_result_requires_reconciliation");
       if (open.some((leg) => leg.status === "failed")) reasons.push("failed_leg_requires_manual_reconciliation");
       if (open.some((leg) => input.nowMs - leg.openedAtMs > limits.staleLegMs)) reasons.push("stale_open_leg");
       return reasons;

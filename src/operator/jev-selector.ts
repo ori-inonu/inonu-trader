@@ -30,7 +30,7 @@ export interface OperatorState {
 
 export interface OperatorModel {
   readonly name: string;
-  choose(state: OperatorState, eligible: OpportunityCandidate[]): Promise<OperatorDecision>;
+  choose(state: OperatorState, eligible: OpportunityCandidate[], options?: { signal?: AbortSignal }): Promise<OperatorDecision>;
 }
 
 export function buildOperatorState(inventory: InventorySnapshot, eligible: OpportunityCandidate[]): OperatorState {
@@ -67,17 +67,52 @@ function round(value: number, digits: number): number {
   return Math.round(value * factor) / factor;
 }
 
-export function validateOperatorDecision(decision: OperatorDecision, eligible: OpportunityCandidate[]): OperatorDecision {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function validateOperatorDecision(decision: unknown, eligible: OpportunityCandidate[]): OperatorDecision {
+  if (!isRecord(decision)) throw new Error("Invalid operator decision");
+  const { choice, probabilities: source, latencyMs, inputTokens, confidence, model } = decision;
   const keys = ["hold", ...eligible.map((candidate) => candidate.id)];
-  if (!keys.includes(decision.choice)) throw new Error("Operator decision names an unknown candidate");
-  const values = keys.map((key) => decision.probabilities[key]);
+  if (typeof choice !== "string" || !keys.includes(choice)) throw new Error("Operator decision names an unknown candidate");
+  if (!isRecord(source) || Reflect.ownKeys(source).length !== keys.length || !keys.every((key) => Object.hasOwn(source, key))) throw new Error("Invalid operator probabilities");
+  const values = keys.map((key) => source[key]);
   if (!values.every((value): value is number => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1)) throw new Error("Invalid operator probabilities");
   const total = values.reduce<number>((sum, value) => sum + value, 0);
   if (Math.abs(total - 1) > 0.02) throw new Error("Operator probabilities do not sum to one");
-  if (!Number.isFinite(decision.latencyMs) || decision.latencyMs < 0) throw new Error("Invalid operator latency");
-  if (decision.inputTokens !== null && (!Number.isSafeInteger(decision.inputTokens) || decision.inputTokens < 0)) throw new Error("Invalid operator usage");
-  if (decision.confidence !== null && (!Number.isFinite(decision.confidence) || decision.confidence < 0 || decision.confidence > 1)) throw new Error("Invalid operator confidence");
-  return decision;
+  if (typeof latencyMs !== "number" || !Number.isFinite(latencyMs) || latencyMs < 0) throw new Error("Invalid operator latency");
+  if (inputTokens !== null && (typeof inputTokens !== "number" || !Number.isSafeInteger(inputTokens) || inputTokens < 0)) throw new Error("Invalid operator usage");
+  if (confidence !== null && (typeof confidence !== "number" || !Number.isFinite(confidence) || confidence < 0 || confidence > 1)) throw new Error("Invalid operator confidence");
+  if (typeof model !== "string" || !model) throw new Error("Invalid operator model");
+  return {
+    choice,
+    probabilities: Object.fromEntries(keys.map((key, index) => [key, values[index] as number])),
+    confidence,
+    latencyMs,
+    inputTokens,
+    model,
+  };
+}
+
+/** Parse an evaluation without turning omitted decision weights into certainty. */
+export function decisionFromEvaluation(result: unknown, eligible: OpportunityCandidate[], latencyMs: number, model: string): OperatorDecision {
+  if (!isRecord(result)) throw new Error("Invalid operator evaluation");
+  const { answers, usage: usageRecord, providerMetadata } = result;
+  const answer = isRecord(answers) ? answers.allocation : null;
+  if (!isRecord(answer)) throw new Error("Invalid operator evaluation");
+  const usage = isRecord(usageRecord) ? usageRecord.inputTokens : undefined;
+  const metadata = isRecord(providerMetadata) ? providerMetadata.typesafe : null;
+  const confidenceRecord = isRecord(metadata) ? metadata.confidence : null;
+  const confidence = isRecord(confidenceRecord) ? confidenceRecord.allocation : undefined;
+  return validateOperatorDecision({
+    choice: answer.choice,
+    probabilities: answer.probabilities,
+    confidence: confidence ?? null,
+    latencyMs,
+    inputTokens: typeof usage === "number" && Number.isSafeInteger(usage) && usage >= 0 ? usage : null,
+    model,
+  }, eligible);
 }
 
 function criteriaFor(eligible: OpportunityCandidate[]): Record<string, string> {
@@ -109,7 +144,7 @@ export class JevOperatorModel implements OperatorModel {
     this.model = typeSafeAi.evaluationModel(modelId);
   }
 
-  async choose(state: OperatorState, eligible: OpportunityCandidate[]): Promise<OperatorDecision> {
+  async choose(state: OperatorState, eligible: OpportunityCandidate[], options?: { signal?: AbortSignal }): Promise<OperatorDecision> {
     if (eligible.length > 254) throw new Error("Too many candidates for one choice question");
     const t0 = performance.now();
     const questions = {
@@ -123,21 +158,8 @@ export class JevOperatorModel implements OperatorModel {
         criteria: criteriaFor(eligible),
       },
     } as const;
-    const result = await experimental_evaluate({ model: this.model, state: state as any, questions: questions as any, maxRetries: 0 });
-    const answer = (result.answers as any).allocation as { choice: string; probabilities?: Record<string, number> };
-    const keys = ["hold", ...eligible.map((candidate) => candidate.id)];
-    const probabilities: Record<string, number> = {};
-    for (const key of keys) probabilities[key] = answer.probabilities?.[key] ?? (key === answer.choice ? 1 : 0);
-    const usage = result.usage?.inputTokens;
-    const confidence = (result.providerMetadata as any)?.typesafe?.confidence?.allocation;
-    return validateOperatorDecision({
-      choice: answer.choice,
-      probabilities,
-      confidence: typeof confidence === "number" ? confidence : null,
-      latencyMs: performance.now() - t0,
-      inputTokens: typeof usage === "number" && Number.isSafeInteger(usage) && usage >= 0 ? usage : null,
-      model: this.name,
-    }, eligible);
+    const result = await experimental_evaluate({ model: this.model, state: state as any, questions: questions as any, maxRetries: 0, abortSignal: options?.signal });
+    return decisionFromEvaluation(result, eligible, performance.now() - t0, this.name);
   }
 }
 
