@@ -27,7 +27,7 @@ test("describes observed activity without promising an order or measured cadence
   const markup = renderToStaticMarkup(
     <CommandCenter meta={null} latest={null} events={[]} connection="connecting" operatorCycle={null} reducedMotion />,
   );
-  expect(markup).toContain("Acompanha o feed de preço, as decisões do agente e os estados das ordens observadas.");
+  expect(markup).toContain("Acompanha os dados informados pelo feed e apresenta as decisoes do Jev, com o estado observado de cada ordem.");
   expect(markup).toContain("Cadência não verificada");
   expect(markup).not.toContain("Um bloco a cada 300 ms");
   expect(markup).not.toContain("coloca a ordem no livro on-chain");

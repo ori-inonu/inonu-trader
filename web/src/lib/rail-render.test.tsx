@@ -52,7 +52,7 @@ describe("Rail rendering", () => {
     );
 
     expect(markup).toContain("INONU TRADER");
-    expect(markup).toContain("Monitoramento do mercado e decisões do agente.");
+    expect(markup).toContain("Decisoes do Jev. Estado observado da operacao.");
     expect(markup).not.toContain("Execucao real a cada bloco");
     expect(markup).not.toContain("JEV TRADER");
   });

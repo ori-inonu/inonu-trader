@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "INONU TRADER",
-  description: "Monitoramento do mercado, decisões do JEV e acompanhamento dos estados das ordens e da carteira.",
+  description: "Central Jev de decisoes e acompanhamento das operacoes.",
 };
 
 export const viewport: Viewport = {

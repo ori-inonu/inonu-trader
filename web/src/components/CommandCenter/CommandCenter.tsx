@@ -228,7 +228,7 @@ export default function CommandCenter({ meta, latest, events, connection, operat
           <p className={styles.eyebrow}>Central de decisoes e operacoes</p>
           <h2 className={styles.title} id="command-center-title">Jev no comando</h2>
           <p className={styles.lede}>
-            Acompanha o feed de preço, as decisões do agente e os estados das ordens observadas.
+            Acompanha os dados informados pelo feed e apresenta as decisoes do Jev, com o estado observado de cada ordem.
           </p>
         </div>
         <dl className={styles.headChips}>
