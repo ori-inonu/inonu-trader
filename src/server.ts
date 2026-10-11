@@ -2,6 +2,7 @@ import { config } from "./config";
 import { resolve } from "node:path";
 import { createOperatorHandler, isOperatorPath } from "./operator/http";
 import { createSystemOneHandler, isSystemOnePath } from "./system-one/http";
+import { createJevReadHandler, isJevReadPath } from "./jev-read/http";
 import type { Fill, Quote } from "./market";
 import type { BlockEvent } from "./trader";
 
@@ -24,6 +25,12 @@ const systemOneHandler = createSystemOneHandler(
   (process.env.OPERATOR_DASHBOARD_ORIGINS ?? "http://localhost:3001,http://127.0.0.1:3001").split(","),
   process.env.OPERATOR_READ_TOKEN ?? null,
 );
+/** Jev reads the tape: the latest advisory buy, sell or hold per instrument, read only (scripts/jev-read.ts writes it). */
+const jevReadHandler = createJevReadHandler(
+  resolve(OPERATOR_ROOT, process.env.JEV_READ_STATE_PATH ?? "data/jev-read/latest.json"),
+  (process.env.OPERATOR_DASHBOARD_ORIGINS ?? "http://localhost:3001,http://127.0.0.1:3001").split(","),
+  process.env.OPERATOR_READ_TOKEN ?? null,
+);
 
 /** GET / snapshot · GET /history recent blocks · GET /events SSE stream (`snapshot`, `block`, `quote`, `fill`, `ping`) */
 export function startServer(meta: Meta, history: () => BlockEvent[]) {
@@ -41,6 +48,7 @@ export function startServer(meta: Meta, history: () => BlockEvent[]) {
         const { pathname } = new URL(req.url);
         if (isOperatorPath(pathname)) return operatorHandler(req, pathname);
         if (isSystemOnePath(pathname)) return systemOneHandler(req);
+        if (isJevReadPath(pathname)) return jevReadHandler(req);
         if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
         if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null });
         if (pathname === "/history") return json(history());
