@@ -46,7 +46,14 @@ describe("GET /system-one", () => {
     const response = handler(new Request("http://x/system-one", { headers }));
     expect(response.status).toBe(200);
     expect(response.headers.get("content-type")).toBe("application/json");
-    expect(((await response.json()) as { cycleId: string }).cycleId).toBe("so-1");
+    const published = await response.json() as { cycleId: string; brief: typeof cycle.brief; chosen: unknown; execution: typeof cycle.execution };
+    expect(published.cycleId).toBe("so-1");
+    expect(published.brief.limits.leverageCeiling).toBe(0);
+    expect(published.brief.candidates).toHaveLength(8);
+    expect(published.brief.candidates.every(candidate => !candidate.eligible && candidate.marginUsd === 0 && candidate.notionalUsd === 0)).toBe(true);
+    expect(published.brief.eligibleIds).toEqual([]);
+    expect(published.chosen).toBeNull();
+    expect(published.execution.status).toBe("blocked");
     writeFileSync(path, "{not json");
     expect(handler(new Request("http://x/system-one", { headers })).status).toBe(500);
   });

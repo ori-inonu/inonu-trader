@@ -71,19 +71,30 @@ function strings(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
 }
 
+function requiredNumbers(input: Record<string, unknown>, fields: string, positive = false): boolean {
+  return fields.split(" ").every(key => {
+    const value = num(input[key]);
+    return value !== null && (positive ? value > 0 : value >= 0);
+  });
+}
+
+function validCandidateNumbers(input: Record<string, unknown>): boolean {
+  return requiredNumbers(input, "marginUsd notionalUsd") && requiredNumbers(input, "leverage liquidationDistance", true);
+}
+
 function parseCandidate(value: unknown): SystemOneCandidateView | null {
   if (!isRecord(value)) return null;
   const side = value.side === "short" ? "short" : value.side === "long" ? "long" : null;
   const leverage = num(value.leverage);
   const id = str(value.id);
-  if (!side || leverage === null || !id) return null;
+  if (!side || leverage === null || !id || !validCandidateNumbers(value)) return null;
   return {
     id,
     side,
     leverage,
-    marginUsd: num(value.marginUsd) ?? 0,
-    notionalUsd: num(value.notionalUsd) ?? 0,
-    liquidationDistance: num(value.liquidationDistance) ?? 1 / leverage,
+    marginUsd: num(value.marginUsd)!,
+    notionalUsd: num(value.notionalUsd)!,
+    liquidationDistance: num(value.liquidationDistance)!,
     touchProbability: num(value.touchProbability),
     medianMultipleNoEdge: num(value.medianMultipleNoEdge),
     fundingCarryPerDay: num(value.fundingCarryPerDay),
@@ -106,6 +117,9 @@ export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
   const market = brief.market;
   const wallet = brief.wallet;
   const limits = brief.limits;
+  if (!requiredNumbers(wallet, "capitalUsd knownValueUsd openNotionalUsd") ||
+      !requiredNumbers(limits, "orderCapUsd exposureCapUsd") || !requiredNumbers(limits, "leverageCeiling", brief.phase !== "fase-0")) return null;
+  if (brief.candidates.some(candidate => isRecord(candidate) && /^(long|short)-(1|2|3|5)x$/.test(str(candidate.id)) && !validCandidateNumbers(candidate))) return null;
   const candidates = brief.candidates.map(parseCandidate).filter((candidate): candidate is SystemOneCandidateView => candidate !== null);
   const decisionRaw = value.decision;
   const decision = isRecord(decisionRaw) && typeof decisionRaw.choice === "string"
@@ -142,18 +156,18 @@ export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
         observedAtMs: num(market.observedAtMs) ?? 0,
       },
       wallet: {
-        capitalUsd: num(wallet.capitalUsd) ?? 0,
-        knownValueUsd: num(wallet.knownValueUsd) ?? 0,
+        capitalUsd: num(wallet.capitalUsd)!,
+        knownValueUsd: num(wallet.knownValueUsd)!,
         valueComplete: wallet.valueComplete === true,
-        openNotionalUsd: num(wallet.openNotionalUsd) ?? 0,
+        openNotionalUsd: num(wallet.openNotionalUsd)!,
         openSide: typeof wallet.openSide === "string" ? wallet.openSide : null,
         source: str(wallet.source, "unknown"),
       },
       limits: {
-        leverageCeiling: num(limits.leverageCeiling) ?? 0,
+        leverageCeiling: num(limits.leverageCeiling)!,
         leverageCap: num(limits.leverageCap),
-        orderCapUsd: num(limits.orderCapUsd) ?? 0,
-        exposureCapUsd: num(limits.exposureCapUsd) ?? 0,
+        orderCapUsd: num(limits.orderCapUsd)!,
+        exposureCapUsd: num(limits.exposureCapUsd)!,
         liquidationDistanceFloor: num(limits.liquidationDistanceFloor),
         dailyStopUsd: num(limits.dailyStopUsd),
       },

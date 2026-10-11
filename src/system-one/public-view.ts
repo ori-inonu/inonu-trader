@@ -12,6 +12,11 @@ const codes = (input: unknown) => Array.isArray(input) ? input.filter((value): v
 const numbers = (input: Record<string, unknown>, fields: string) => Object.fromEntries(fields.split(" ").map(key => [key, finiteOrNull(input[key])]));
 const member = (input: unknown, values: string[], fallback: string | null = "unknown") => typeof input === "string" && values.includes(input) ? input : fallback;
 const candidateId = (input: unknown) => typeof input === "string" && /^(long|short)-(1|2|3|5)x$/.test(input) ? input : null;
+const requiredNumbers = (input: Record<string, unknown>, fields: string, positive = false) => fields.split(" ").every(key => {
+  const value = finiteOrNull(input[key]);
+  return value !== null && (positive ? value > 0 : value >= 0);
+});
+const validCandidate = (input: Record<string, unknown>) => requiredNumbers(input, "marginUsd notionalUsd") && requiredNumbers(input, "leverage liquidationDistance", true);
 
 /** Explicit dashboard projection. Never publish free-form provider text or extra journal fields. */
 export function publicSystemOneView(input: unknown): Record<string, unknown> | null {
@@ -20,6 +25,10 @@ export function publicSystemOneView(input: unknown): Record<string, unknown> | n
   if (!isRecord(brief.market) || !isRecord(brief.wallet) || !isRecord(brief.limits) || !Array.isArray(brief.candidates)) return null;
   const started = finiteOrNull(input.startedAtMs), completed = finiteOrNull(input.completedAtMs);
   if (started === null || completed === null || started <= 0 || completed < started || !["blocked", "dry_run"].includes(String(execution.status))) return null;
+  if (!requiredNumbers(brief.wallet, "capitalUsd knownValueUsd openNotionalUsd") ||
+      !requiredNumbers(brief.limits, "orderCapUsd exposureCapUsd") || !requiredNumbers(brief.limits, "leverageCeiling", brief.phase !== "fase-0")) return null;
+  if (brief.candidates.some(c => isRecord(c) && candidateId(c.id) && !validCandidate(c))) return null;
+  if (isRecord(input.chosen) && !validCandidate(input.chosen)) return null;
   const candidates = brief.candidates.slice(0, 8).filter(isRecord).filter(c => candidateId(c.id)).map(c => ({
     ...numbers(c, "leverage marginUsd notionalUsd liquidationDistance touchProbability medianMultipleNoEdge fundingCarryPerDay fundingCarryUsd"),
     id: candidateId(c.id), side: member(c.side, ["long", "short"]), eligible: c.eligible === true, reasons: codes(c.reasons),

@@ -41,6 +41,56 @@ const cycle = {
 };
 
 describe("parseSystemOneCycle", () => {
+  test("phase 0 preserves known zero limits and all eight blocked candidates", () => {
+    const observing = {
+      ...cycle,
+      brief: {
+        ...cycle.brief,
+        phase: "fase-0",
+        limits: { ...cycle.brief.limits, leverageCeiling: 0, leverageCap: 0, orderCapUsd: 0, exposureCapUsd: 0 },
+        candidates: (["long", "short"] as const).flatMap(side => [1, 2, 3, 5].map(leverage => ({
+          ...candidate(`${side}-${leverage}x`, side, leverage, false), marginUsd: 0, notionalUsd: 0, reasons: ["phase_0_observes_only"],
+        }))),
+        eligibleIds: [],
+      },
+      chosen: null, decision: null, execution: { status: "blocked", reasons: ["no_eligible_candidate"] },
+    };
+    const parsed = parseSystemOneCycle(observing);
+    expect(parsed?.brief.limits.leverageCeiling).toBe(0);
+    expect(parsed?.brief.candidates).toHaveLength(8);
+    expect(parsed?.brief.candidates.every(candidate => !candidate.eligible && candidate.marginUsd === 0 && candidate.notionalUsd === 0)).toBe(true);
+    expect(parsed?.brief.eligibleIds).toEqual([]);
+    expect(parsed?.chosen).toBeNull();
+    expect(parsed?.execution.status).toBe("blocked");
+    for (const phase of ["fase-1", "fase-2"]) {
+      expect(parseSystemOneCycle({ ...observing, brief: { ...observing.brief, phase } })).toBeNull();
+    }
+  });
+
+  test("rejects invalid required financial values and preserves optional unknown risk", () => {
+    const locations = [
+      ["wallet", "capitalUsd"], ["wallet", "knownValueUsd"], ["wallet", "openNotionalUsd"],
+      ["limits", "leverageCeiling"], ["limits", "orderCapUsd"], ["limits", "exposureCapUsd"],
+      ["candidate", "leverage"], ["candidate", "marginUsd"], ["candidate", "notionalUsd"], ["candidate", "liquidationDistance"],
+      ["chosen", "marginUsd"], ["chosen", "notionalUsd"], ["chosen", "liquidationDistance"],
+    ];
+    for (const [section, field] of locations) {
+      for (const invalid of [null, undefined, NaN, Infinity, -Infinity, -1, "10"]) {
+        const changed = structuredClone(cycle);
+        const target = section === "candidate" ? changed.brief.candidates[0]! : section === "chosen" ? changed.chosen : section === "wallet" ? changed.brief.wallet : changed.brief.limits;
+        (target as unknown as Record<string, unknown>)[field!] = invalid;
+        expect(parseSystemOneCycle(changed)).toBeNull();
+      }
+    }
+    const unknown = structuredClone(cycle);
+    unknown.brief.market.realizedSigmaDaily = null as unknown as number;
+    unknown.brief.candidates = unknown.brief.candidates.map(candidate => ({ ...candidate, touchProbability: null as unknown as number }));
+    const parsed = parseSystemOneCycle(unknown);
+    expect(parsed?.brief.market.realizedSigmaDaily).toBeNull();
+    expect(parsed?.brief.candidates[0]?.touchProbability).toBeNull();
+    expect(parsed?.brief.wallet.openNotionalUsd).toBe(0);
+  });
+
   test("rejects unsupported schemas, failed selected decisions and forged candidates", () => {
     expect(parseSystemOneCycle({ ...cycle, schemaVersion: 99 })).toBeNull();
     expect(parseSystemOneCycle({ ...cycle, decision: { ...cycle.decision, status: "error" } })).toBeNull();
@@ -55,6 +105,41 @@ describe("parseSystemOneCycle", () => {
     expect(html).toContain("capital configurado");
     expect(html).toContain("Atualizacao indisponivel");
     expect(html).not.toContain("Alavancagem decidida pelo Jev");
+  });
+  test.each(["unknown", "unverified", null])("view preserves unknown provenance %s instead of claiming a public API or balance reading", (source: string | null) => {
+    const parsed = parseSystemOneCycle({ ...cycle, brief: { ...cycle.brief, market: { ...cycle.brief.market, source }, wallet: { ...cycle.brief.wallet, source } } })!;
+    const html = renderToStaticMarkup(createElement(SystemOneView, { state: { status: "ready", cycle: parsed, error: null, ageMs: 0 } }));
+    expect(html).toContain("origem de mercado desconhecida");
+    expect(html).toContain("origem de carteira desconhecida");
+    expect(html).not.toContain("API publica OKX v5");
+    expect(html).not.toContain("leitura de saldo");
+  });
+  test.each(["error", "timeout", "malformed", "invalid-choice"])("view identifies rejected %s decision without presenting fallback weights", (status: string) => {
+    const parsed = parseSystemOneCycle({ ...cycle, chosen: null, decision: { ...cycle.decision, choice: "hold", probabilities: { hold: 1 }, status }, execution: { status: "blocked", reasons: ["system_one_never_executes", `decision_${status}`, "hold"] } })!;
+    const html = renderToStaticMarkup(createElement(SystemOneView, { state: { status: "ready", cycle: parsed, error: null, ageMs: 0 }, reducedMotion: true }));
+    expect(html).toContain("Decisao rejeitada");
+    expect(html).toContain("Manter por seguranca");
+    expect(html).toContain("Motivos da execucao");
+    expect(html).not.toContain("peso 100%");
+    expect(html).not.toContain('data-system-one-word="true">Manter<');
+  });
+  test("a valid hold retains its accepted decision weight", () => {
+    const parsed = parseSystemOneCycle({ ...cycle, chosen: null, decision: { ...cycle.decision, choice: "hold", probabilities: { hold: 1 } }, execution: { status: "blocked", reasons: ["hold"] } })!;
+    const html = renderToStaticMarkup(createElement(SystemOneView, { state: { status: "ready", cycle: parsed, error: null, ageMs: 0 } }));
+    expect(html).toContain('data-system-one-word="true">Manter<');
+    expect(html).toContain("peso 100%");
+    expect(html).not.toContain("Decisao rejeitada");
+  });
+  test("ladder exposes eligibility and candidate details through native disclosure controls", () => {
+    const parsed = parseSystemOneCycle(cycle)!;
+    const html = renderToStaticMarkup(createElement(SystemOneView, { state: { status: "ready", cycle: parsed, error: null, ageMs: 0 }, reducedMotion: true }));
+    expect(html).toContain("Elegivel");
+    expect(html).toContain("Bloqueado");
+    expect(html.match(/<details[ >]/g)).toHaveLength(3);
+    expect(html.match(/<summary[ >]/g)).toHaveLength(3);
+    expect(html).toContain("Detalhes long-5x");
+    expect(html).toMatch(/<p[^>]*>long-5x: acima do cap<\/p>/);
+    expect(html).toMatch(/<p[^>]*>long-1x: toque de liquidacao/);
   });
   test("parses a full cycle and drops malformed candidates and probabilities", () => {
     const parsed = parseSystemOneCycle(cycle);

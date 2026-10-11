@@ -55,3 +55,32 @@ test("oversized and unsupported cycles are rejected", () => {
   writeFileSync(path, JSON.stringify({ schemaVersion: 99 }));
   expect(handler(request()).status).toBe(500);
 });
+
+test("public GET rejects invalid required financial values instead of publishing null", async () => {
+  const nowMs = Date.now();
+  const cycle = await runSystemOneCycle({ ...syntheticReadings({ nowMs, capitalUsd: 1000 }), phase: "fase-2", kellyLowerBound: 12 }, { model: new MockSystemOneModel(), now: () => nowMs });
+  const path = join(dir, "financial.json");
+  const handler = createSystemOneHandler(path);
+  const read = () => handler(new Request("http://localhost/system-one", { headers }));
+  writeFileSync(path, JSON.stringify(cycle));
+  expect(read().status).toBe(200);
+  const locations = [
+    ["wallet", "capitalUsd"], ["wallet", "knownValueUsd"], ["wallet", "openNotionalUsd"],
+    ["limits", "leverageCeiling"], ["limits", "orderCapUsd"], ["limits", "exposureCapUsd"],
+    ["candidate", "leverage"], ["candidate", "marginUsd"], ["candidate", "notionalUsd"], ["candidate", "liquidationDistance"],
+  ];
+  for (const [section, field] of locations) {
+    for (const invalid of [null, undefined, NaN, Infinity, -Infinity, -1, "10"]) {
+      const changed = structuredClone(cycle);
+      const target = section === "candidate" ? changed.brief.candidates[0]! : section === "wallet" ? changed.brief.wallet : changed.brief.limits;
+      (target as unknown as Record<string, unknown>)[field!] = invalid;
+      writeFileSync(path, JSON.stringify(changed));
+      expect(read().status).toBe(500);
+    }
+  }
+  const unknown = structuredClone(cycle);
+  unknown.brief.market.realizedSigmaDaily = null;
+  unknown.brief.candidates.forEach(candidate => { candidate.touchProbability = null; });
+  writeFileSync(path, JSON.stringify(unknown));
+  expect(read().status).toBe(200);
+});
