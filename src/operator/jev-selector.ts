@@ -1,6 +1,7 @@
 import { experimental_evaluate } from "ai";
 import { typeSafeAi } from "@ai-sdk/typesafe-ai";
 import type { InventorySnapshot } from "../okx-wallet/portfolio";
+import { safeText } from "./candidates";
 import type { OperatorDecision, OpportunityCandidate } from "./types";
 
 /**
@@ -55,7 +56,7 @@ export function buildOperatorState(inventory: InventorySnapshot, eligible: Oppor
         priceImpactPercent: candidate.priceImpactPercent,
         costsUsd: costsUsd === null ? null : round(costsUsd, 6),
         quoteAgeMs: candidate.quoteAgeMs,
-        notes: candidate.notes.slice(0, 4),
+        notes: candidate.notes.slice(0, 4).map((note) => safeText(note)),
       };
     }),
   };
@@ -83,8 +84,17 @@ function criteriaFor(eligible: OpportunityCandidate[]): Record<string, string> {
   const criteria: Record<string, string> = {
     hold: "Commit no capital this cycle: no candidate clears costs with adequate certainty, or the inventory evidence is incomplete.",
   };
+  const byKind: Record<string, string> = {
+    dex_round_trip: "Swap the base asset to the counter asset and back on the same chain",
+    cross_chain_rebalance: "Bridge the base asset to the home chain",
+    kuru_spot_maker: "Keep inventory allocated to the every-block Kuru maker",
+    defi_yield: "Subscribe the base asset to a DeFi product for the stated horizon",
+    perp_funding_carry: "Research only",
+    memepump_research: "Research only",
+  };
   for (const candidate of eligible) {
-    criteria[candidate.id] = `${candidate.title}. Commit the listed size now because its conservative net result after every listed cost is the best realizable gain among the candidates.`;
+    // Fixed wording per kind plus sanitized symbols; provider-supplied titles never reach the criteria (R5 M5).
+    criteria[candidate.id] = `${byKind[candidate.kind] ?? "Candidate"} (${safeText(candidate.from.symbol, 12)} to ${safeText(candidate.to.symbol, 12)}, chain ${candidate.chainIndex}). Commit the listed size now because its conservative net result after every listed cost is the best realizable gain among the candidates.`;
   }
   return criteria;
 }

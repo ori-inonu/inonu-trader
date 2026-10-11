@@ -51,7 +51,7 @@ Módulos:
 - `src/operator/plan.ts` e `executor.ts`: plano com validade (`OPERATOR_PLAN_TTL_MS`), chave idempotente sha256(candidato, quoteHash, tamanho) e `maxLossUsd`; execução EVM via ethers e Solana via signatário próprio só quando `OPERATOR_EXECUTE=true`, `DRY_RUN=false`, `LIVE_ACK=OWN_FUNDS_RISK`, chave dedicada, `OPERATOR_RPC_<chainIndex>` e `OPERATOR_ROUTER_<chainIndex>` existem. O executor conduz as duas pernas: approve com calldata local de valor exato para o router da allowlist (nunca `signatureData` remoto), perna 1, recibo, perna 2 com o mínimo recebido, recibo. Tron, Sui, TON e Bitcoin não têm signatário: ficam em dry run.
 - Perfis de política (`OPERATOR_PROFILE`): `micro` é o padrão (5 USD ou 5% do patrimônio por plano, 20 USD e 4 planos por dia, cooldown de 15 min) e `standard` mantém os limites de pesquisa (25 USD, 25%, 100 USD, 10 planos, 2 min). Variáveis explícitas sobrepõem o perfil. Com uma carteira de cerca de 80 USD, o mínimo de 200 MON na Kuru já supera 5%, então o mandato Kuru não é dimensionado por este perfil.
 - `src/operator/ledger.ts`: ledger persistente (`data/operator/ledger.json`) com chaves executadas, teto diário de notional e de planos, cooldown, kill switch por arquivo (`data/operator/STOP`) e máquina de estados das pernas (`leg1_sent`, `leg1_confirmed`, `leg2_sent`, `closed`, `failed`). Uma perna aberta bloqueia o mesmo par; uma perna `failed` ou antiga bloqueia qualquer plano até reconciliação manual.
-- Barreira de unidades: `toTokenAmount` da OKX não tem unidade declarada na documentação (ver `docs/okx-dex-units-v3`); a evidência disponível é o SDK oficial, que divide por `10^decimal`. Por isso idas e voltas via API ficam research only até `OPERATOR_TRUST_QUOTE_UNITS=true`, decisão explícita do operador humano após teste autenticado.
+- Barreira de unidades: `toTokenAmount` da OKX não tem unidade declarada em nenhuma página oficial (ver `docs/okx-dex-units-v3` e `docs/okx-dex-sdk-units-v1`). O que existe é um auxiliar de exibição no SDK oficial que divide o valor por `10^decimal`; isso não qualifica a unidade. Por isso idas e voltas via API ficam research only até `OPERATOR_TRUST_QUOTE_UNITS=true`, decisão explícita do operador humano após um teste autenticado de menor valor.
 - Reconciliação: após um plano `completed`, o ciclo relê o inventário e calcula o resultado realizado como variação do ativo base ao preço observado antes do plano; o valor vai para `dailyRealizedUsd` do ledger e alimenta a parada por perda diária (`OPERATOR_MAX_DAILY_LOSS_USD`). Saldo ou preço desconhecido deixa o resultado `null`, nunca zero.
 - `bun run okx:operator --live --routers` imprime o router que o endpoint de swap usaria em cada rede EVM, para conferência no explorer antes de copiar em `OPERATOR_ROUTER_<chainIndex>`; a OKX não publica uma tabela oficial de routers por rede nas páginas lidas.
 - `src/operator/cycle.ts`: um ciclo completo; Jev só é consultado quando há elegíveis, então um ciclo sem candidato não gera custo de inferência. O estado persistido tem o endereço reduzido.
@@ -59,12 +59,35 @@ Módulos:
 - `src/server.ts`: `GET /operator` serve o último ciclo.
 - Dashboard: `MultichainPanel` lê a mesma conta EVM em oito redes por RPC pública sem trocar a rede da extensão, conecta a conta Solana pela OKX e mostra inventário, candidatos, decisão do Jev e estado da execução.
 
+## 2b. Correções após a revisão independente R5 (2026-10-11)
+
+A revisão `docs/research/R5-revisao-operador-codigo-final-20261010.md` vetou o estágio live e listou as condições F1 a F8. Estado após esta rodada:
+
+| Condição | Aplicado | Onde |
+| --- | --- | --- |
+| F1 Solana | Execução Solana desligada no executor (`SOLANA_LIVE_ENABLED=false`) com teste de guarda; o signatário fica para testes e trabalho futuro com política de program ids e simulação | `executor.ts`, `operator.test.ts` |
+| F2 EVM | `value` exato (0 para ERC-20, tamanho para nativo), teto de gas limit, selector obrigatório na allowlist, router obrigatório, spender vindo de `approve-transaction` e obrigatório na allowlist, `eth_call` antes de cada perna | `executor.ts` (`checkPreparedLeg`), `trade.ts` (`fetchApproveSpender`) |
+| F3 Ledger | `--init-ledger` explícito, ausência bloqueia execução, parse estrito, escrita atômica, caminhos absolutos a partir da raiz do repositório, lock de processo | `ledger.ts`, `config.ts`, CLI |
+| F4 Idempotência e STOP | `quoteHash` sem timestamps; kill switch lido antes de cada envio | `candidates.ts`, `executor.ts` |
+| F5 Gates próprios | `OPERATOR_LIVE_ACK`, `OPERATOR_PRIVATE_KEY`, `--jev` obrigatório; `DRY_RUN`, `LIVE_ACK` e `PRIVATE_KEY` do trader não são consultados; bridge nunca vira plano live | `config.ts` (`operatorLiveGate`), `plan.ts` |
+| F6 Reconciliação | gás dos recibos deduzido do realizado; paradas semanal e de drawdown; `--reconcile <planId> <closed\|failed>` | `cycle.ts`, `ledger.ts`, CLI |
+| F7 Exposição | erros sanitizados (sem URL, calldata ou chaves); rotas `/operator*` só para origens do painel, token opcional, cache do journal e limite de tamanho; divulgação das RPCs de terceiros no painel | `executor.ts` (`sanitizeError`), `operator/http.ts`, `MultichainPanel` |
+| F8 Testes | gates, Solana bloqueado, segunda perna revertida, STOP no meio do plano, ledger em arquivo real com lock, parse estrito, handler HTTP | `operator.test.ts`, `ledger.test.ts`, `http.test.ts` |
+
+Ainda sem solução nesta rodada: política de transação Solana (fica desligado), reconciliação on-chain por recibo em vez de leitura da API de saldo (o gás já entra), rotação do journal, e a origem oficial dos routers (a OKX não publica tabela; `--routers` mostra o `tx.to` para conferência manual). Tetos duros em `HARD_LIMITS` impedem o env de ultrapassar 100 USD por plano, 500 USD por dia, 24 planos por dia e cooldown abaixo de 60 s.
+
 ## 3. Como rodar
 
 Demonstração offline (sem rede, sem credenciais):
 
 ```bash
 bun run okx:operator
+```
+
+Antes de qualquer execução, crie o ledger uma única vez (sem ele a execução fica bloqueada):
+
+```bash
+bun run okx:operator --init-ledger
 ```
 
 Inventário e cotações reais (somente leitura; nada é enviado):

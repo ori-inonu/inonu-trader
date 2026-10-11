@@ -1,25 +1,31 @@
 import { chainByIndex } from "../okx-wallet/chains";
 import { EVM_NATIVE_PLACEHOLDER } from "./candidates";
 import type { SolanaSigner } from "../okx-wallet/solana-signer";
-import { prepareEvmSwap, TRADE_PATHS, type OkxTradeClient, type PreparedEvmTransaction } from "../okx-wallet/trade";
+import { fetchApproveSpender, prepareEvmSwap, type OkxTradeClient, type PreparedEvmTransaction } from "../okx-wallet/trade";
 import type { OperatorLedger } from "./ledger";
 import { planIsFresh } from "./plan";
 import type { ExecutionOutcome, ExecutionPlan, OperatorPolicy, OpportunityCandidate } from "./types";
 
 /**
  * Execution is the last, separately gated stage. A plan is sent only when it is
- * qualified_live, fresh, allowed by the persistent ledger (daily caps, cooldown,
- * kill switch, no open leg on the pair), targets an allowlisted router, and the
- * prepared transaction's minimum output matches the candidate's quote within the
- * slippage cap. Approvals are built locally for the exact amount; remote
- * approval calldata is never forwarded. Everything else is journaled as
- * blocked or dry_run with explicit reasons.
+ * qualified_live, fresh, allowed by the persistent ledger (daily, weekly and
+ * drawdown caps, cooldown, kill switch, no open leg on the pair), and when the
+ * prepared transaction passes every static check: router, spender and selector
+ * allowlists, exact value, gas limit cap, minimum output within the slippage cap
+ * and a successful eth_call simulation (R5 F2). The kill switch is read again
+ * before every send (R5 F4). Approvals are built locally for the exact amount
+ * to the spender OKX reports; remote approval calldata is never forwarded.
+ * Solana execution is disabled until a transaction policy exists (R5 C1, F1).
  */
+export const SOLANA_LIVE_ENABLED = false;
+
 export interface EvmSigner {
   readonly address: string;
   sendTransaction(tx: { chainIndex: string; to: string; data: string; value: string; gasLimit: string }): Promise<string>;
-  /** Resolves true on success receipt, false on revert; throws on timeout. */
-  waitForReceipt(chainIndex: string, txHash: string, timeoutMs: number): Promise<boolean>;
+  /** Resolves with the receipt status and the native gas cost paid; throws on timeout. */
+  waitForReceipt(chainIndex: string, txHash: string, timeoutMs: number): Promise<{ success: boolean; gasCostNative: number | null }>;
+  /** eth_call with the same calldata; resolves false when the call reverts. */
+  simulate(tx: { chainIndex: string; to: string; data: string; value: string }): Promise<boolean>;
 }
 
 export interface ExecutorDeps {
@@ -44,8 +50,20 @@ function isNativeEvm(tokenContractAddress: string): boolean {
 
 export function encodeApprove(spender: string, amountAtomic: string): string {
   if (!/^0x[0-9a-fA-F]{40}$/.test(spender)) throw new Error("Invalid spender");
-  if (!/^(0|[1-9]\d{0,77})$/.test(amountAtomic)) throw new Error("Invalid approve amount");
+  if (!/^(0|[1-9]\d{0,77})$/.test(amountAtomic) || BigInt(amountAtomic) >= BigInt(2) ** BigInt(256)) throw new Error("Invalid approve amount");
   return APPROVE_SELECTOR + spender.slice(2).toLowerCase().padStart(64, "0") + BigInt(amountAtomic).toString(16).padStart(64, "0");
+}
+
+/** Removes URLs, hex blobs and base58 blobs so journals never carry RPC hosts, calldata or keys (R5 M1, F7). */
+export function sanitizeError(error: unknown): string {
+  const text = error instanceof Error ? error.message : typeof error === "string" ? error : "unknown";
+  return text
+    .replace(/https?:\/\/[^\s"']+/g, "[url]")
+    .replace(/0x[0-9a-fA-F]{16,}/g, "[hex]")
+    .replace(/\b[1-9A-HJ-NP-Za-km-z]{32,}\b/g, "[b58]")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 160);
 }
 
 function blocked(reasons: string[]): ExecutionOutcome {
@@ -56,10 +74,8 @@ function failed(reason: string, txHash: string | null = null): ExecutionOutcome 
   return { status: "failed", reasons: [reason], txHash, orderId: null };
 }
 
-function allowlisted(policy: OperatorPolicy, chainIndex: string, address: string): boolean {
-  const list = policy.routerAllowlist[chainIndex] ?? [];
-  const evm = chainByIndex(chainIndex)?.kind === "evm";
-  return list.some((entry) => evm ? entry.toLowerCase() === address.toLowerCase() : entry === address);
+function inList(list: string[] | undefined, address: string, evm: boolean): boolean {
+  return (list ?? []).some((entry) => evm ? entry.toLowerCase() === address.toLowerCase() : entry === address);
 }
 
 /** True when `minReceive` is at least the quoted output reduced by the slippage cap. */
@@ -67,6 +83,27 @@ export function minReceiveMatchesQuote(minReceiveAtomic: string, quotedOutAtomic
   const quoted = BigInt(quotedOutAtomic);
   const floor = (quoted * BigInt(Math.round((100 - slippagePercent) * 10_000))) / BigInt(1_000_000);
   return BigInt(minReceiveAtomic) >= floor;
+}
+
+/**
+ * Static checks on one prepared leg (R5 F2). Every list is mandatory for live:
+ * a missing router, spender or selector allowlist refuses the leg.
+ */
+export function checkPreparedLeg(prepared: PreparedEvmTransaction, input: { chainIndex: string; fromNative: boolean; amountAtomic: string; expectedOutAtomic: string; slippagePercent: number; policy: OperatorPolicy }): string[] {
+  const reasons: string[] = [];
+  const { policy, chainIndex } = input;
+  if (!(policy.routerAllowlist[chainIndex] ?? []).length) reasons.push("router_allowlist_missing");
+  else if (!inList(policy.routerAllowlist[chainIndex], prepared.to, true)) reasons.push("router_not_allowlisted");
+  const selectors = policy.selectorAllowlist[chainIndex] ?? [];
+  const selector = prepared.data.slice(0, 10).toLowerCase();
+  if (!selectors.length) reasons.push("selector_allowlist_missing");
+  else if (prepared.data.length < 10 || !selectors.includes(selector)) reasons.push("selector_not_allowlisted");
+  const expectedValue = input.fromNative ? input.amountAtomic : "0";
+  if (BigInt(prepared.value) !== BigInt(expectedValue)) reasons.push("value_mismatch");
+  if (BigInt(prepared.gas) > BigInt(policy.maxGasLimit)) reasons.push("gas_limit_above_maximum");
+  if (prepared.minReceiveAmount === null) reasons.push("min_receive_unknown");
+  else if (!minReceiveMatchesQuote(prepared.minReceiveAmount, input.expectedOutAtomic, input.slippagePercent)) reasons.push("min_receive_below_quote");
+  return reasons;
 }
 
 export async function executePlan(plan: ExecutionPlan, candidate: OpportunityCandidate, deps: ExecutorDeps): Promise<ExecutionOutcome> {
@@ -80,14 +117,15 @@ export async function executePlan(plan: ExecutionPlan, candidate: OpportunityCan
   if (candidate.sizeUsd === null || candidate.expectedLeg1OutAtomic === null || candidate.expectedOutAtomic === null) return blocked(["candidate_quote_incomplete"]);
   if (!deps.tradeClient) return blocked(["trade_client_missing"]);
 
+  // The daily notional counts both legs of a round trip (R5 B8).
   const ledgerReasons = deps.ledger.checkBeforeExecute({
-    idempotencyKey: plan.idempotencyKey, pairKey: candidate.pairKey, sizeUsd: candidate.sizeUsd, nowMs: deps.now(), killSwitchExists: deps.killSwitchExists(),
+    idempotencyKey: plan.idempotencyKey, pairKey: candidate.pairKey, sizeUsd: candidate.sizeUsd * 2, nowMs: deps.now(), killSwitchExists: deps.killSwitchExists(),
   }, deps.policy);
   if (ledgerReasons.length) return blocked(ledgerReasons);
 
-  if (chain.kind === "evm") return executeEvmRoundTrip(plan, candidate, deps);
-  if (chain.kind === "solana") return executeSolanaRoundTrip(plan, candidate, deps);
-  return blocked(["signer_unavailable_for_chain_family"]);
+  if (chain.kind === "solana") return SOLANA_LIVE_ENABLED ? blocked(["solana_policy_missing"]) : blocked(["solana_live_disabled_pending_policy"]);
+  if (chain.kind !== "evm") return blocked(["signer_unavailable_for_chain_family"]);
+  return executeEvmRoundTrip(plan, candidate, deps);
 }
 
 async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCandidate, deps: ExecutorDeps): Promise<ExecutionOutcome> {
@@ -95,147 +133,120 @@ async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCa
   if (!signer) return blocked(["evm_signer_missing"]);
   if (signer.address.toLowerCase() !== deps.inventoryAddress.toLowerCase()) return blocked(["signer_address_differs_from_inventory_address"]);
   const receiptTimeoutMs = deps.receiptTimeoutMs ?? 120_000;
+  const chainIndex = candidate.chainIndex;
+  const fromNative = isNativeEvm(candidate.from.tokenContractAddress);
+  const toNative = isNativeEvm(candidate.to.tokenContractAddress);
+
+  // Spender for approvals comes from OKX and must be allowlisted (R5 A2).
+  let spender: string | null = null;
+  if (!fromNative || !toNative) {
+    try {
+      spender = await fetchApproveSpender(deps.tradeClient!, chainIndex, fromNative ? candidate.to.tokenContractAddress : candidate.from.tokenContractAddress, candidate.sizeAtomic);
+    } catch (error) {
+      return failed(`spender_lookup_failed: ${sanitizeError(error)}`);
+    }
+    if (!(deps.policy.spenderAllowlist[chainIndex] ?? []).length) return blocked(["spender_allowlist_missing"]);
+    if (!inList(deps.policy.spenderAllowlist[chainIndex], spender, true)) return blocked(["spender_not_allowlisted"]);
+  }
 
   let leg1: PreparedEvmTransaction;
   try {
     leg1 = await prepareEvmSwap(deps.tradeClient!, {
-      chainIndex: candidate.chainIndex, fromTokenAddress: candidate.from.tokenContractAddress, toTokenAddress: candidate.to.tokenContractAddress,
+      chainIndex, fromTokenAddress: candidate.from.tokenContractAddress, toTokenAddress: candidate.to.tokenContractAddress,
       amountAtomic: candidate.sizeAtomic, slippagePercent: deps.slippagePercent, userWalletAddress: signer.address,
     });
   } catch (error) {
-    return failed(`prepare_failed: ${error instanceof Error ? error.message : "unknown"}`);
+    return failed(`prepare_failed: ${sanitizeError(error)}`);
   }
-  const reasons: string[] = [];
-  if (!allowlisted(deps.policy, candidate.chainIndex, leg1.to)) reasons.push("router_not_allowlisted");
-  if (leg1.minReceiveAmount === null) reasons.push("min_receive_unknown");
-  else if (!minReceiveMatchesQuote(leg1.minReceiveAmount, candidate.expectedLeg1OutAtomic!, deps.slippagePercent)) reasons.push("min_receive_below_quote");
+  const reasons = checkPreparedLeg(leg1, { chainIndex, fromNative, amountAtomic: candidate.sizeAtomic, expectedOutAtomic: candidate.expectedLeg1OutAtomic!, slippagePercent: deps.slippagePercent, policy: deps.policy });
   if (!planIsFresh(plan, deps.now())) reasons.push("plan_expired_after_prepare");
   if (reasons.length) return blocked(reasons);
 
-  deps.ledger.recordExecution({ idempotencyKey: plan.idempotencyKey, sizeUsd: candidate.sizeUsd!, nowMs: deps.now(), leg: {
-    planId: plan.planId, candidateId: candidate.id, pairKey: candidate.pairKey, chainIndex: candidate.chainIndex, openedAtMs: deps.now(),
+  const stopRequested = () => deps.killSwitchExists();
+  const send = async (tx: { to: string; data: string; value: string; gasLimit: string }, stage: string) => {
+    if (stopRequested()) throw new Error(`kill_switch_present_before_${stage}`);
+    return signer.sendTransaction({ chainIndex, ...tx });
+  };
+  const gasLimitFor = (prepared: PreparedEvmTransaction) => ((BigInt(prepared.gas) * BigInt(3)) / BigInt(2)).toString();
+  let gasCostNative = 0;
+  const settle = async (txHash: string) => {
+    const receipt = await signer.waitForReceipt(chainIndex, txHash, receiptTimeoutMs);
+    if (receipt.gasCostNative !== null) gasCostNative += receipt.gasCostNative;
+    return receipt.success;
+  };
+
+  if (stopRequested()) return blocked(["kill_switch_present"]);
+  deps.ledger.recordExecution({ idempotencyKey: plan.idempotencyKey, sizeUsd: candidate.sizeUsd! * 2, nowMs: deps.now(), leg: {
+    planId: plan.planId, candidateId: candidate.id, pairKey: candidate.pairKey, chainIndex, openedAtMs: deps.now(),
     txHash: "", intermediateAtomic: leg1.minReceiveAmount!, status: "leg1_sent", closeTxHash: null, note: null,
   } });
+  const fail = (note: string, outcome: ExecutionOutcome) => { deps.ledger.updateLeg(plan.planId, { status: "failed", note }); return outcome; };
+
   let txHash: string;
   try {
-    if (!isNativeEvm(candidate.from.tokenContractAddress)) {
-      const approveHash = await signer.sendTransaction({ chainIndex: candidate.chainIndex, to: candidate.from.tokenContractAddress, data: encodeApprove(leg1.to, candidate.sizeAtomic), value: "0", gasLimit: "120000" });
-      const approved = await signer.waitForReceipt(candidate.chainIndex, approveHash, receiptTimeoutMs);
-      if (!approved) { deps.ledger.updateLeg(plan.planId, { status: "failed", note: "approve_reverted" }); return failed("approve_reverted", approveHash); }
+    if (!fromNative) {
+      const approveHash = await send({ to: candidate.from.tokenContractAddress, data: encodeApprove(spender!, candidate.sizeAtomic), value: "0", gasLimit: "120000" }, "approve1");
+      if (!(await settle(approveHash))) return fail("approve_reverted", failed("approve_reverted", approveHash));
     }
-    const gasLimit = ((BigInt(leg1.gas) * BigInt(3)) / BigInt(2)).toString();
-    txHash = await signer.sendTransaction({ chainIndex: candidate.chainIndex, to: leg1.to, data: leg1.data, value: leg1.value, gasLimit });
+    if (!(await signer.simulate({ chainIndex, to: leg1.to, data: leg1.data, value: leg1.value }))) return fail("leg1_simulation_reverted", blocked(["leg1_simulation_reverted"]));
+    txHash = await send({ to: leg1.to, data: leg1.data, value: leg1.value, gasLimit: gasLimitFor(leg1) }, "leg1");
     deps.ledger.updateLeg(plan.planId, { txHash });
   } catch (error) {
-    deps.ledger.updateLeg(plan.planId, { status: "failed", note: `send_failed: ${error instanceof Error ? error.message : "unknown"}` });
-    return failed(`send_failed: ${error instanceof Error ? error.message : "unknown"}`);
+    return fail(`send_failed: ${sanitizeError(error)}`, failed(`send_failed: ${sanitizeError(error)}`));
   }
 
   let confirmed: boolean;
-  try { confirmed = await signer.waitForReceipt(candidate.chainIndex, txHash, receiptTimeoutMs); } catch {
-    deps.ledger.updateLeg(plan.planId, { status: "failed", note: "leg1_receipt_timeout" });
-    return { status: "sent", reasons: ["leg1_sent_receipt_timeout; reconcile manually before any new plan"], txHash, orderId: null };
+  try { confirmed = await settle(txHash); } catch {
+    return fail("leg1_receipt_timeout", { status: "sent", reasons: ["leg1_sent_receipt_timeout; reconcile manually before any new plan"], txHash, orderId: null });
   }
-  if (!confirmed) { deps.ledger.updateLeg(plan.planId, { status: "failed", note: "leg1_reverted" }); return failed("leg1_reverted", txHash); }
+  if (!confirmed) return fail("leg1_reverted", failed("leg1_reverted", txHash));
   deps.ledger.updateLeg(plan.planId, { status: "leg1_confirmed" });
 
   // Second leg: sell the minimum intermediate amount back; the ledger keeps the leg open until it confirms.
   let leg2: PreparedEvmTransaction;
   try {
     leg2 = await prepareEvmSwap(deps.tradeClient!, {
-      chainIndex: candidate.chainIndex, fromTokenAddress: candidate.to.tokenContractAddress, toTokenAddress: candidate.from.tokenContractAddress,
+      chainIndex, fromTokenAddress: candidate.to.tokenContractAddress, toTokenAddress: candidate.from.tokenContractAddress,
       amountAtomic: leg1.minReceiveAmount!, slippagePercent: deps.slippagePercent, userWalletAddress: signer.address,
     });
   } catch (error) {
-    deps.ledger.updateLeg(plan.planId, { status: "failed", note: `leg2_prepare_failed: ${error instanceof Error ? error.message : "unknown"}` });
-    return { status: "sent", reasons: [`leg2_prepare_failed: ${error instanceof Error ? error.message : "unknown"}`], txHash, orderId: null };
+    return fail(`leg2_prepare_failed: ${sanitizeError(error)}`, { status: "sent", reasons: [`leg2_prepare_failed: ${sanitizeError(error)}`], txHash, orderId: null });
   }
-  if (!allowlisted(deps.policy, candidate.chainIndex, leg2.to) || leg2.minReceiveAmount === null) {
-    deps.ledger.updateLeg(plan.planId, { status: "failed", note: "leg2_router_or_min_receive_invalid" });
-    return { status: "sent", reasons: ["leg2_blocked: router_not_allowlisted_or_min_receive_unknown"], txHash, orderId: null };
-  }
+  const leg2Reasons = checkPreparedLeg(leg2, { chainIndex, fromNative: toNative, amountAtomic: leg1.minReceiveAmount!, expectedOutAtomic: candidate.expectedOutAtomic!, slippagePercent: deps.slippagePercent, policy: deps.policy });
+  if (leg2Reasons.length) return fail(`leg2_blocked: ${leg2Reasons.join(",")}`, { status: "sent", reasons: [`leg2_blocked: ${leg2Reasons.join(",")}`], txHash, orderId: null });
   try {
-    if (!isNativeEvm(candidate.to.tokenContractAddress)) {
-      const approveHash = await signer.sendTransaction({ chainIndex: candidate.chainIndex, to: candidate.to.tokenContractAddress, data: encodeApprove(leg2.to, leg1.minReceiveAmount!), value: "0", gasLimit: "120000" });
-      if (!(await signer.waitForReceipt(candidate.chainIndex, approveHash, receiptTimeoutMs))) throw new Error("leg2_approve_reverted");
+    if (!toNative) {
+      const approveHash = await send({ to: candidate.to.tokenContractAddress, data: encodeApprove(spender!, leg1.minReceiveAmount!), value: "0", gasLimit: "120000" }, "approve2");
+      if (!(await settle(approveHash))) throw new Error("leg2_approve_reverted");
     }
-    const closeTxHash = await signer.sendTransaction({ chainIndex: candidate.chainIndex, to: leg2.to, data: leg2.data, value: leg2.value, gasLimit: ((BigInt(leg2.gas) * BigInt(3)) / BigInt(2)).toString() });
+    if (!(await signer.simulate({ chainIndex, to: leg2.to, data: leg2.data, value: leg2.value }))) throw new Error("leg2_simulation_reverted");
+    const closeTxHash = await send({ to: leg2.to, data: leg2.data, value: leg2.value, gasLimit: gasLimitFor(leg2) }, "leg2");
     deps.ledger.updateLeg(plan.planId, { status: "leg2_sent", closeTxHash });
-    const closed = await signer.waitForReceipt(candidate.chainIndex, closeTxHash, receiptTimeoutMs);
+    const closed = await settle(closeTxHash);
     deps.ledger.updateLeg(plan.planId, { status: closed ? "closed" : "failed", note: closed ? null : "leg2_reverted" });
     return closed
-      ? { status: "completed", reasons: ["both_legs_confirmed; realized result pending reconciliation of balances"], txHash, orderId: null, closeTxHash }
-      : { status: "sent", reasons: ["leg2_reverted; position open in the intermediate asset"], txHash, orderId: null, closeTxHash };
+      ? { status: "completed", reasons: ["both_legs_confirmed; realized result pending reconciliation of balances"], txHash, orderId: null, closeTxHash, gasCostNative }
+      : { status: "sent", reasons: ["leg2_reverted; position open in the intermediate asset"], txHash, orderId: null, closeTxHash, gasCostNative };
   } catch (error) {
-    deps.ledger.updateLeg(plan.planId, { status: "failed", note: `leg2_failed: ${error instanceof Error ? error.message : "unknown"}` });
-    return { status: "sent", reasons: [`leg2_failed: ${error instanceof Error ? error.message : "unknown"}`], txHash, orderId: null };
+    return fail(`leg2_failed: ${sanitizeError(error)}`, { status: "sent", reasons: [`leg2_failed: ${sanitizeError(error)}`], txHash, orderId: null, gasCostNative });
   }
 }
 
-async function executeSolanaRoundTrip(plan: ExecutionPlan, candidate: OpportunityCandidate, deps: ExecutorDeps): Promise<ExecutionOutcome> {
-  const signer = deps.solanaSigner;
-  if (!signer) return blocked(["solana_signer_missing"]);
-  if (signer.address !== deps.inventoryAddress) return blocked(["signer_address_differs_from_inventory_address"]);
-  const receiptTimeoutMs = deps.receiptTimeoutMs ?? 90_000;
-  const swapData = async (from: string, to: string, amount: string) => {
-    const data = await deps.tradeClient!.get(TRADE_PATHS.swap, {
-      chainIndex: "501", fromTokenAddress: from, toTokenAddress: to, amount, slippagePercent: String(deps.slippagePercent), userWalletAddress: signer.address,
-    });
-    const first = data[0];
-    const tx = first && typeof first.tx === "object" && first.tx !== null ? first.tx as Record<string, unknown> : null;
-    if (!tx || typeof tx.data !== "string" || !tx.data) throw new Error("swap response lacks tx.data");
-    const minReceive = typeof tx.minReceiveAmount === "string" && /^(0|[1-9]\d{0,77})$/.test(tx.minReceiveAmount) ? tx.minReceiveAmount : null;
-    return { data: tx.data, minReceive };
-  };
-  let leg1: { data: string; minReceive: string | null };
-  try { leg1 = await swapData(candidate.from.tokenContractAddress, candidate.to.tokenContractAddress, candidate.sizeAtomic); } catch (error) {
-    return failed(`prepare_failed: ${error instanceof Error ? error.message : "unknown"}`);
-  }
-  const reasons: string[] = [];
-  if ((deps.policy.routerAllowlist["501"] ?? []).length === 0) reasons.push("router_allowlist_missing");
-  if (leg1.minReceive === null) reasons.push("min_receive_unknown");
-  else if (!minReceiveMatchesQuote(leg1.minReceive, candidate.expectedLeg1OutAtomic!, deps.slippagePercent)) reasons.push("min_receive_below_quote");
-  if (!planIsFresh(plan, deps.now())) reasons.push("plan_expired_after_prepare");
-  if (reasons.length) return blocked(reasons);
-
-  deps.ledger.recordExecution({ idempotencyKey: plan.idempotencyKey, sizeUsd: candidate.sizeUsd!, nowMs: deps.now(), leg: {
-    planId: plan.planId, candidateId: candidate.id, pairKey: candidate.pairKey, chainIndex: "501", openedAtMs: deps.now(),
-    txHash: "", intermediateAtomic: leg1.minReceive!, status: "leg1_sent", closeTxHash: null, note: null,
-  } });
-  let txHash: string;
-  try { txHash = await signer.signAndSend(leg1.data); deps.ledger.updateLeg(plan.planId, { txHash }); } catch (error) {
-    deps.ledger.updateLeg(plan.planId, { status: "failed", note: `send_failed: ${error instanceof Error ? error.message : "unknown"}` });
-    return failed(`send_failed: ${error instanceof Error ? error.message : "unknown"}`);
-  }
-  if (!(await signer.confirm(txHash, receiptTimeoutMs))) { deps.ledger.updateLeg(plan.planId, { status: "failed", note: "leg1_not_confirmed" }); return failed("leg1_not_confirmed", txHash); }
-  deps.ledger.updateLeg(plan.planId, { status: "leg1_confirmed" });
-  try {
-    const leg2 = await swapData(candidate.to.tokenContractAddress, candidate.from.tokenContractAddress, leg1.minReceive!);
-    if (leg2.minReceive === null) throw new Error("leg2_min_receive_unknown");
-    const closeTxHash = await signer.signAndSend(leg2.data);
-    deps.ledger.updateLeg(plan.planId, { status: "leg2_sent", closeTxHash });
-    const closed = await signer.confirm(closeTxHash, receiptTimeoutMs);
-    deps.ledger.updateLeg(plan.planId, { status: closed ? "closed" : "failed", note: closed ? null : "leg2_not_confirmed" });
-    return closed
-      ? { status: "completed", reasons: ["both_legs_confirmed; realized result pending reconciliation of balances"], txHash, orderId: null, closeTxHash }
-      : { status: "sent", reasons: ["leg2_not_confirmed; position open in the intermediate asset"], txHash, orderId: null, closeTxHash };
-  } catch (error) {
-    deps.ledger.updateLeg(plan.planId, { status: "failed", note: `leg2_failed: ${error instanceof Error ? error.message : "unknown"}` });
-    return { status: "sent", reasons: [`leg2_failed: ${error instanceof Error ? error.message : "unknown"}`], txHash, orderId: null };
-  }
-}
-
-/** ethers v5 signer bound to one RPC per chain with a gas price cap; built only when the live gate opens. */
+/** ethers v5 signer bound to one RPC per chain with a gas price cap and a chainId check; built only when the live gate opens. */
 export async function createEthersEvmSigner(privateKey: string, rpcByChain: Record<string, string>, maxFeeGwei: number): Promise<EvmSigner> {
   const { ethers } = await import("ethers");
   const wallets = new Map<string, InstanceType<typeof ethers.Wallet>>();
   const address = new ethers.Wallet(privateKey).address;
-  const walletFor = (chainIndex: string) => {
+  const walletFor = async (chainIndex: string) => {
     const rpc = rpcByChain[chainIndex];
     if (!rpc) throw new Error(`No RPC configured for chain ${chainIndex}`);
     let wallet = wallets.get(chainIndex);
     if (!wallet) {
-      wallet = new ethers.Wallet(privateKey, new ethers.providers.JsonRpcProvider(rpc));
+      const provider = new ethers.providers.JsonRpcProvider(rpc);
+      const expected = chainByIndex(chainIndex)?.evmChainIdHex;
+      const network = await provider.getNetwork();
+      if (!expected || BigInt(expected) !== BigInt(network.chainId)) throw new Error(`RPC chainId does not match chain ${chainIndex}`);
+      wallet = new ethers.Wallet(privateKey, provider);
       wallets.set(chainIndex, wallet);
     }
     return wallet;
@@ -243,7 +254,7 @@ export async function createEthersEvmSigner(privateKey: string, rpcByChain: Reco
   return {
     address,
     async sendTransaction(tx) {
-      const wallet = walletFor(tx.chainIndex);
+      const wallet = await walletFor(tx.chainIndex);
       const feeData = await wallet.provider.getFeeData();
       const cap = ethers.utils.parseUnits(String(maxFeeGwei), "gwei");
       const suggested = feeData.maxFeePerGas ?? feeData.gasPrice;
@@ -252,9 +263,21 @@ export async function createEthersEvmSigner(privateKey: string, rpcByChain: Reco
       return response.hash;
     },
     async waitForReceipt(chainIndex, txHash, timeoutMs) {
-      const receipt = await walletFor(chainIndex).provider.waitForTransaction(txHash, 1, timeoutMs);
+      const wallet = await walletFor(chainIndex);
+      const receipt = await wallet.provider.waitForTransaction(txHash, 1, timeoutMs);
       if (!receipt) throw new Error("receipt timeout");
-      return receipt.status === 1;
+      const price = receipt.effectiveGasPrice ?? null;
+      const gasCostNative = price ? Number(ethers.utils.formatEther(receipt.gasUsed.mul(price))) : null;
+      return { success: receipt.status === 1, gasCostNative };
+    },
+    async simulate(tx) {
+      const wallet = await walletFor(tx.chainIndex);
+      try {
+        await wallet.provider.call({ from: address, to: tx.to, data: tx.data, value: ethers.BigNumber.from(tx.value) });
+        return true;
+      } catch {
+        return false;
+      }
     },
   };
 }

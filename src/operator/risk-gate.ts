@@ -16,7 +16,11 @@ export function validateOperatorPolicy(policy: OperatorPolicy): void {
     !finite(policy.maxDailyNotionalUsd) || policy.maxDailyNotionalUsd <= 0 || !Number.isSafeInteger(policy.maxDailyPlans) || policy.maxDailyPlans < 1 ||
     !Number.isSafeInteger(policy.cooldownMs) || policy.cooldownMs < 0 || typeof policy.killSwitchPath !== "string" || !policy.killSwitchPath ||
     !Number.isSafeInteger(policy.staleLegMs) || policy.staleLegMs < 1 || typeof policy.routerAllowlist !== "object" || policy.routerAllowlist === null ||
-    !finite(policy.maxFeeGwei) || policy.maxFeeGwei <= 0 || !finite(policy.maxDailyLossUsd) || policy.maxDailyLossUsd <= 0)
+    !finite(policy.maxFeeGwei) || policy.maxFeeGwei <= 0 || !finite(policy.maxDailyLossUsd) || policy.maxDailyLossUsd <= 0 ||
+    typeof policy.spenderAllowlist !== "object" || policy.spenderAllowlist === null || typeof policy.selectorAllowlist !== "object" || policy.selectorAllowlist === null ||
+    !Number.isSafeInteger(policy.maxGasLimit) || policy.maxGasLimit < 21_000 || !finite(policy.maxWeeklyLossUsd) || policy.maxWeeklyLossUsd <= 0 ||
+    !finite(policy.maxDrawdownUsd) || policy.maxDrawdownUsd <= 0 || !Array.isArray(policy.stablecoinPriceBand) || policy.stablecoinPriceBand.length !== 2 ||
+    !finite(policy.stablecoinPriceBand[0]) || !finite(policy.stablecoinPriceBand[1]) || policy.stablecoinPriceBand[0] <= 0 || policy.stablecoinPriceBand[0] >= policy.stablecoinPriceBand[1])
     throw new Error("Invalid operator policy");
   for (const reserve of Object.values(policy.gasReserveNative)) if (!finite(reserve) || reserve < 0) throw new Error("Invalid operator policy");
 }
@@ -56,6 +60,9 @@ export function gateCandidate(candidate: OpportunityCandidate, inventory: Invent
   }
 
   if (candidate.kind !== "kuru_spot_maker") {
+    // Stablecoin bases must price near one USD; a wrong price would scale the plan size (R5 M4).
+    const baseAsset = chain?.assets.find((entry) => sameToken(candidate.chainIndex, entry.tokenContractAddress, candidate.from.tokenContractAddress));
+    if (baseAsset && !baseAsset.native && baseAsset.priceUsd !== null && (baseAsset.priceUsd < policy.stablecoinPriceBand[0] || baseAsset.priceUsd > policy.stablecoinPriceBand[1])) reasons.push("base_price_implausible");
     if (candidate.sizeUsd === null) reasons.push("size_usd_unknown");
     else {
       if (candidate.sizeUsd > policy.maxPlanUsd) reasons.push("size_above_max_plan");

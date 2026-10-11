@@ -122,6 +122,11 @@ function hashQuotes(parts: unknown[]): string {
   return createHash("sha256").update(JSON.stringify(parts)).digest("hex").slice(0, 32);
 }
 
+/** Short, printable, ASCII-only text so provider strings never carry instructions to Jev (R5 M5). */
+export function safeText(value: string, max = 80): string {
+  return value.replace(/[^A-Za-z0-9 .,:%()/+-]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
+}
+
 function slug(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 24);
 }
@@ -163,7 +168,7 @@ export async function buildRoundTripCandidates(context: CandidateContext): Promi
         netUsd: costs.complete ? grossUsd - networkFeeUsd! - costs.inferenceUsd : null,
         priceImpactPercent: impact, costs,
         quoteAgeMs: (context.now ? context.now() : nowMs) - Math.min(leg1.receivedAtMs, leg2.receivedAtMs),
-        quoteHash: hashQuotes([pair.chainIndex, amountAtomic, leg1.toAmountAtomic, leg2.toAmountAtomic, leg1.receivedAtMs, leg2.receivedAtMs]),
+        quoteHash: hashQuotes([pair.chainIndex, amountAtomic, leg1.toAmountAtomic, leg2.toAmountAtomic]),
         notes: [`gross ${grossUsd.toFixed(6)} USD before network fees`, ...(quoter.unitsQualified ? [] : ["output unit of the quote not qualified; research only until OPERATOR_TRUST_QUOTE_UNITS=true"])],
         researchOnly: !quoter.unitsQualified,
       });
@@ -211,7 +216,7 @@ export async function buildBridgeCandidates(context: CandidateContext): Promise<
         expectedOutAtomic: received, expectedLeg1OutAtomic: received, pairKey: `${pair.chainIndex}->${home}:${pair.base.symbol}`,
         netUsd: costs.complete ? grossUsd - quote.totalFeeUsd! - costs.inferenceUsd : null,
         priceImpactPercent: 0, costs, quoteAgeMs: (context.now ? context.now() : nowMs) - quote.receivedAtMs,
-        quoteHash: hashQuotes([pair.chainIndex, home, amountAtomic, received, quote.receivedAtMs]),
+        quoteHash: hashQuotes([pair.chainIndex, home, amountAtomic, received]),
         notes: [quote.estimatedMinutes === null ? "arrival time unknown" : `arrival about ${quote.estimatedMinutes} min`, "stablecoin valued at 1 USD on arrival; not a guarantee", ...(quoter.qualified ? [] : ["cross-chain quote contract not qualified; research only until OPERATOR_TRUST_BRIDGE_API=true"])],
         researchOnly: !quoter.qualified,
       });
@@ -266,12 +271,12 @@ export async function buildYieldCandidates(context: CandidateContext): Promise<O
       const expected = product.apyPercent === null ? null : sizeUsd * (product.apyPercent / 100) * (horizonDays / 365);
       const costs: CostBreakdown = { networkFeeUsd: product.subscribeFeeUsd, tradingFeeUsd: 0, inferenceUsd: policy.inferenceUsdPerCandidate, complete: product.subscribeFeeUsd !== null };
       candidates.push({
-        id: `yl_${pair.chainIndex}_${slug(product.id)}`, kind: "defi_yield", title: `Subscribe ${pair.base.symbol} to ${product.name} on ${chain.chainName} for ${horizonDays} days`,
+        id: `yl_${pair.chainIndex}_${slug(product.id)}`, kind: "defi_yield", title: `Subscribe ${pair.base.symbol} to ${safeText(product.name, 40)} on ${chain.chainName} for ${horizonDays} days`,
         chainIndex: pair.chainIndex, from: pair.base, to: pair.base, sizeUsd, sizeAtomic: atomicFromUsd(sizeUsd, base.priceUsd!, pair.base.decimals),
         expectedOutAtomic: null, expectedLeg1OutAtomic: null, pairKey: `${pair.chainIndex}:defi:${product.id}`,
         netUsd: expected !== null && costs.complete ? expected - product.subscribeFeeUsd! - costs.inferenceUsd : null,
         priceImpactPercent: 0, costs, quoteAgeMs: 0,
-        quoteHash: hashQuotes([product.id, product.apyPercent, nowMs]),
+        quoteHash: hashQuotes([product.id, product.apyPercent, sizeUsd]),
         notes: [product.apyPercent === null ? "APY not advertised" : `advertised APY ${product.apyPercent}%; realized yield is not guaranteed`, product.tvlUsd === null ? "TVL unknown" : `TVL ${product.tvlUsd} USD`],
         researchOnly: false,
       });
