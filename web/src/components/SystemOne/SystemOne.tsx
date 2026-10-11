@@ -29,15 +29,20 @@ function age(ms: number | null): string {
 
 const REASON: Record<string, string> = {
   phase_0_observes_only: "fase 0 so observa",
+  phase_requires_spot: "fase 1 permite apenas spot",
   borrowing_not_allowed_in_phase: "sem emprestimo nesta fase",
   above_leverage_ceiling: "acima do teto",
   above_leverage_cap: "acima do cap",
   leverage_cap_undefined: "cap indefinido sem Kelly",
   below_liquidation_floor: "abaixo do piso de liquidacao",
   sigma_unknown: "sigma desconhecido",
+  funding_unknown: "funding ou intervalo desconhecido",
+  market_stale: "dados de mercado ausentes ou desatualizados",
+  inventory_stale: "inventario ausente ou desatualizado",
   mark_price_unknown: "mark desconhecido",
   margin_zero: "margem zero",
   inventory_value_incomplete: "inventario incompleto",
+  inventory_invalid: "inventario invalido",
   would_flip_open_position: "inverteria a posicao",
   exposure_cap_reached: "exposicao no limite",
 };
@@ -78,7 +83,7 @@ function Ladder({ cycle, reducedMotion }: { cycle: SystemOneCycleView; reducedMo
           <span className={`${styles.ladderSide} ${styles[`side_${side}`]}`}>{sideWord(side)}</span>
           <div className={styles.ladderSlabs}>
             {cycle.brief.candidates.filter((candidate) => candidate.side === side).map((candidate, index) => (
-              <Slab key={candidate.id} candidate={candidate} chosen={cycle.chosen?.id === candidate.id} index={index} ceiling={ceiling} cap={cap} />
+              <Slab key={candidate.id} candidate={candidate} chosen={cycle.chosen?.id === candidate.id} index={index} ceiling={ceiling} cap={cap} modelLabel={cycle.decision?.model === "mock" ? "MOCK" : "Jev"} />
             ))}
           </div>
         </div>
@@ -87,7 +92,7 @@ function Ladder({ cycle, reducedMotion }: { cycle: SystemOneCycleView; reducedMo
   );
 }
 
-function Slab({ candidate, chosen, index, ceiling, cap }: { candidate: SystemOneCandidateView; chosen: boolean; index: number; ceiling: number; cap: number | null }) {
+function Slab({ candidate, chosen, index, ceiling, cap, modelLabel }: { candidate: SystemOneCandidateView; chosen: boolean; index: number; ceiling: number; cap: number | null; modelLabel: string }) {
   const wall = candidate.leverage > ceiling ? "ceiling" : cap !== null && candidate.leverage > cap ? "cap" : null;
   const title = candidate.eligible
     ? `${candidate.id}: toque de liquidacao ${pct(candidate.touchProbability)}, mediana sem vantagem ${candidate.medianMultipleNoEdge === null ? UNAVAILABLE : candidate.medianMultipleNoEdge.toFixed(3) + "x"}, carry ${usd(candidate.fundingCarryUsd, 4)}`
@@ -102,13 +107,15 @@ function Slab({ candidate, chosen, index, ceiling, cap }: { candidate: SystemOne
       <span className={styles.slabTop} aria-hidden="true" />
       <span className={styles.slabLeverage}>{candidate.leverage}x</span>
       <span className={styles.slabTouch}>{candidate.touchProbability === null ? "n/d" : pct(candidate.touchProbability, 0)}</span>
-      {chosen ? <span className={styles.slabFlag}>Jev</span> : null}
+      {chosen ? <span className={styles.slabFlag}>{modelLabel}</span> : null}
     </div>
   );
 }
 
 export function SystemOneView({ state, reducedMotion = false }: SystemOneProps) {
   const cycle = state.cycle;
+  const mock = cycle?.decision?.model === "mock";
+  const historical = state.status === "error" || (state.ageMs !== null && state.ageMs > 120_000);
   const wordRef = useRef<HTMLSpanElement | null>(null);
   const word = cycle ? choiceWord(cycle) : state.status === "absent" ? "Sem ciclo" : state.status === "error" ? "Backend sem resposta" : "Carregando";
 
@@ -127,7 +134,7 @@ export function SystemOneView({ state, reducedMotion = false }: SystemOneProps) 
       <header className={styles.head}>
         <div>
           <p className={styles.eyebrow}>System One</p>
-          <h3 className={styles.title} id="system-one-title">Alavancagem decidida pelo Jev</h3>
+          <h3 className={styles.title} id="system-one-title">{mock ? "Simulacao de alavancagem com MOCK" : "Central de decisao de alavancagem"}</h3>
           <p className={styles.sub}>
             {cycle
               ? `${PHASE[cycle.brief.phase] ?? cycle.brief.phase}. ${cycle.brief.market.instId}, ${cycle.brief.market.source === "synthetic" ? "dados sinteticos" : "API publica OKX v5"}, ciclo ${cycle.cycleId.slice(0, 10)} ${age(state.ageMs)}.`
@@ -137,13 +144,15 @@ export function SystemOneView({ state, reducedMotion = false }: SystemOneProps) 
           </p>
         </div>
         <div className={styles.choice}>
-          <span className={styles.choiceLabel}>Escolha</span>
+          <span className={styles.choiceLabel}>{historical ? "Ultima escolha registrada" : "Escolha"}</span>
           <span className={styles.choiceWord} ref={wordRef} data-system-one-word="true">{word}</span>
           <span className={styles.choiceMeta}>
             {cycle?.decision ? `${cycle.decision.model}, ${Math.round(cycle.decision.latencyMs)} ms, peso ${pct(cycle.decision.probabilities[cycle.decision.choice] ?? null, 0)}` : cycle ? "nenhum candidato elegivel" : ""}
           </span>
         </div>
       </header>
+      {state.error ? <p role="status" className={styles.note}>Atualizacao indisponivel. Os dados exibidos sao do ultimo ciclo recebido.</p> : historical ? <p role="status" className={styles.note}>Ciclo desatualizado. Aguardando nova leitura.</p> : null}
+      {cycle ? <p className={styles.note}>Carteira: {cycle.brief.wallet.source === "configured" ? "capital configurado, saldo nao consultado" : cycle.brief.wallet.source === "synthetic" ? "capital sintetico" : "leitura de saldo"}. {mock ? "MOCK deterministico, sem consulta ao Jev." : ""}</p> : null}
 
       {cycle ? (
         <div className={styles.body}>

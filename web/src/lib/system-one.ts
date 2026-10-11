@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /** Mirror of src/system-one/types.ts as served by GET /system-one. */
 export interface SystemOneCandidateView {
@@ -96,6 +96,9 @@ function parseCandidate(value: unknown): SystemOneCandidateView | null {
 /** Strict enough to never render a partial cycle as a decision. */
 export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
   if (!isRecord(value) || !isRecord(value.brief) || !isRecord(value.execution)) return null;
+  if (value.schemaVersion !== 1 || num(value.startedAtMs) === null || num(value.completedAtMs) === null) return null;
+  if (Number(value.completedAtMs) < Number(value.startedAtMs)) return null;
+  if (value.execution.status !== "blocked" && value.execution.status !== "dry_run") return null;
   const brief = value.brief;
   if (!isRecord(brief.market) || !isRecord(brief.wallet) || !isRecord(brief.limits) || !Array.isArray(brief.candidates)) return null;
   const cycleId = str(value.cycleId);
@@ -112,9 +115,14 @@ export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
         confidence: num(decisionRaw.confidence),
         latencyMs: num(decisionRaw.latencyMs) ?? 0,
         model: str(decisionRaw.model, "desconhecido"),
-        status: str(decisionRaw.status, "ok"),
+        status: str(decisionRaw.status, "malformed"),
       }
     : null;
+  const chosenRaw = parseCandidate(value.chosen);
+  const chosen = chosenRaw ? candidates.find(candidate => candidate.id === chosenRaw.id && candidate.eligible) ?? null : null;
+  if (value.chosen !== null && (!chosen || !decision || decision.status !== "ok" || decision.choice !== chosen.id || !strings(brief.eligibleIds).includes(chosen.id))) return null;
+  if ((value.execution.status === "dry_run") !== (chosen !== null)) return null;
+  if (decision?.choice !== undefined && decision.choice !== "hold" && !chosen) return null;
   return {
     cycleId,
     startedAtMs: num(value.startedAtMs) ?? 0,
@@ -154,47 +162,65 @@ export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
       notes: strings(brief.notes),
     },
     decision,
-    chosen: parseCandidate(value.chosen),
+    chosen,
     execution: { status: str(value.execution.status, "blocked"), reasons: strings(value.execution.reasons) },
     warnings: strings(value.warnings),
   };
 }
 
-export function useSystemOne(apiUrl: string, intervalMs = 10_000): SystemOneState & { reload(): void } {
-  const [state, setState] = useState<SystemOneState>({ status: "idle", cycle: null, error: null, ageMs: null });
-  const alive = useRef(true);
+type StateUpdate = SystemOneState | ((previous: SystemOneState) => SystemOneState);
 
-  const load = useCallback(async () => {
+/** One in-flight read per source. A disposed source never publishes into a newer session. */
+export function createSystemOneLoader(apiUrl: string, setState: (update: StateUpdate) => void, fetcher: (url: string, init: RequestInit) => Promise<Response> = fetch) {
+  let disposed = false;
+  let active: AbortController | null = null;
+  const load = async () => {
+    if (disposed || active) return;
+    const controller = new AbortController();
+    active = controller;
+    const timeout = setTimeout(() => controller.abort(), 10_000);
     setState((previous) => (previous.status === "idle" ? { ...previous, status: "loading" } : previous));
     try {
-      const response = await fetch(`${apiUrl}/system-one`, { cache: "no-store" });
+      const response = await fetcher(`${apiUrl}/system-one`, { cache: "no-store", signal: controller.signal });
       if (response.status === 404) {
-        if (alive.current) setState((previous) => ({ ...previous, status: "absent", error: null }));
+        if (!disposed && !controller.signal.aborted) setState({ status: "absent", cycle: null, ageMs: null, error: null });
         return;
       }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const cycle = parseSystemOneCycle(await response.json());
       if (!cycle) throw new Error("ciclo invalido");
-      if (alive.current) setState({ status: "ready", cycle, error: null, ageMs: Math.max(0, Date.now() - cycle.completedAtMs) });
+      if (!disposed && !controller.signal.aborted) setState({ status: "ready", cycle, error: null, ageMs: Math.max(0, Date.now() - cycle.completedAtMs) });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      if (alive.current) setState((previous) => ({ ...previous, status: previous.cycle ? "ready" : "error", error: message }));
+      if (!disposed) setState((previous) => ({ ...previous, status: "error", error: message }));
+    } finally {
+      clearTimeout(timeout);
+      active = null;
     }
-  }, [apiUrl]);
+  };
+  return { load, dispose: () => { disposed = true; active?.abort(); } };
+}
+
+export function useSystemOne(apiUrl: string, intervalMs = 10_000): SystemOneState & { reload(): void } {
+  const [state, setState] = useState<SystemOneState>({ status: "idle", cycle: null, error: null, ageMs: null });
+  const reload = useRef<() => void>(() => {});
 
   useEffect(() => {
-    alive.current = true;
-    void load();
-    const timer = setInterval(() => { void load(); }, intervalMs);
+    const loader = createSystemOneLoader(apiUrl, setState);
+    setState({ status: "idle", cycle: null, error: null, ageMs: null });
+    reload.current = () => { void loader.load(); };
+    void loader.load();
+    const timer = setInterval(() => { void loader.load(); }, Math.max(1000, Number.isFinite(intervalMs) ? intervalMs : 10_000));
     const clock = setInterval(() => {
       setState((previous) => (previous.cycle ? { ...previous, ageMs: Math.max(0, Date.now() - previous.cycle.completedAtMs) } : previous));
     }, 1_000);
     return () => {
-      alive.current = false;
+      loader.dispose();
+      reload.current = () => {};
       clearInterval(timer);
       clearInterval(clock);
     };
-  }, [load, intervalMs]);
+  }, [apiUrl, intervalMs]);
 
-  return { ...state, reload: () => { void load(); } };
+  return { ...state, reload: () => reload.current() };
 }

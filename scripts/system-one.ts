@@ -13,7 +13,8 @@
  * capital (SYSTEM_ONE_CAPITAL_USD or --capital), stated as such in the output; it is not a balance.
  */
 
-import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { PHASE_IDS, type PhaseId } from "../src/policy/envelope";
 import { createPublicOkxHttp } from "../src/onchainos/public-okx";
@@ -35,10 +36,22 @@ function flagValue(name: string): string | null {
 
 function numberFlag(name: string, fallback: number): number {
   const raw = flagValue(name);
-  if (raw === null) return fallback;
-  const value = Number(raw);
+  const value = raw === null ? fallback : Number(raw);
   if (!Number.isFinite(value) || value <= 0) throw new Error(`${name} must be a positive number`);
   return value;
+}
+
+const switches = new Set(["--public", "--jev", "--loop", "--help", "-h"]);
+const values = new Set(["--phase", "--kelly", "--capital", "--inst", "--bar", "--candles", "--horizon"]);
+const seen = new Set<string>();
+for (let i = 0; i < args.length; i += 1) {
+  const arg = args[i]!;
+  if (seen.has(arg) || (!switches.has(arg) && !values.has(arg))) throw new Error("invalid or duplicate flag");
+  seen.add(arg);
+  if (values.has(arg)) {
+    if (!args[i + 1] || args[i + 1]!.startsWith("--")) throw new Error("missing flag value");
+    i += 1;
+  }
 }
 
 if (hasFlag("--help") || hasFlag("-h")) {
@@ -61,13 +74,15 @@ if (kellyLowerBound !== null && !(Number.isFinite(kellyLowerBound) && kellyLower
 const horizonDays = numberFlag("--horizon", 7);
 const instId = flagValue("--inst") ?? process.env.SYSTEM_ONE_INST_ID ?? "MON-USDT-SWAP";
 const bar = (flagValue("--bar") ?? "15m") as keyof typeof BAR_MS;
-if (!(bar in BAR_MS)) throw new Error(`--bar must be one of ${Object.keys(BAR_MS).join(", ")}`);
-const candles = Math.round(numberFlag("--candles", 96));
+if (!Object.hasOwn(BAR_MS, bar)) throw new Error(`--bar must be one of ${Object.keys(BAR_MS).join(", ")}`);
+const candles = numberFlag("--candles", 96);
+if (!Number.isInteger(candles) || candles < 2 || candles > 300) throw new Error("--candles must be an integer from 2 to 300");
 const usePublic = hasFlag("--public");
 const useJev = hasFlag("--jev");
 const statePath = resolve(ROOT, process.env.SYSTEM_ONE_STATE_PATH ?? "data/system-one/latest.json");
 const journalPath = resolve(ROOT, process.env.SYSTEM_ONE_JOURNAL_PATH ?? "data/system-one/cycles.jsonl");
-const intervalMs = Math.max(5_000, Number(process.env.SYSTEM_ONE_INTERVAL_MS ?? "60000"));
+const intervalMs = Number(process.env.SYSTEM_ONE_INTERVAL_MS ?? "60000");
+if (!Number.isSafeInteger(intervalMs) || intervalMs < 5_000 || intervalMs > 86_400_000) throw new Error("SYSTEM_ONE_INTERVAL_MS must be an integer from 5000 to 86400000");
 
 const model: SystemOneModel = useJev ? new JevSystemOneModel(process.env.SYSTEM_ONE_MODEL ?? "jev-latest") : new MockSystemOneModel();
 if (!useJev) console.error("system-one: modelo MOCK (sem --jev): a escolha e deterministica e nao e uma decisao do Jev.");
@@ -84,11 +99,16 @@ async function once(): Promise<void> {
   const cycle = await runSystemOneCycle({ ...readings, phase, horizonDays, kellyLowerBound }, { model, now: () => Date.now() });
   mkdirSync(dirname(statePath), { recursive: true });
   mkdirSync(dirname(journalPath), { recursive: true });
-  writeFileSync(statePath, JSON.stringify(cycle, null, 2));
+  const temporary = `${statePath}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync(temporary, JSON.stringify(cycle, null, 2), { flag: "wx" });
+    renameSync(temporary, statePath);
+  } finally { rmSync(temporary, { force: true }); }
   appendFileSync(journalPath, `${JSON.stringify(cycle)}\n`);
   const market = cycle.brief.market;
   const summary = [
     `system-one ${cycle.cycleId} ${phase} ${market.instId} fonte=${market.source}`,
+    `carteira=${cycle.brief.wallet.source} ${cycle.brief.wallet.source === "configured" ? "capital configurado, nao saldo" : "inventario sintetico"}`,
     `mark=${market.markPrice ?? "n/d"} funding=${market.fundingRate ?? "n/d"} sigma_dia=${market.realizedSigmaDaily === null ? "n/d" : (market.realizedSigmaDaily * 100).toFixed(2) + "%"} velas=${market.candlesUsed}`,
     `teto=${cycle.brief.limits.leverageCeiling}x cap=${cycle.brief.limits.leverageCap ?? "indefinido"} elegiveis=${cycle.brief.eligibleIds.length}/${cycle.brief.candidates.length}`,
     `decisao=${cycle.decision ? `${cycle.decision.choice} (${cycle.decision.model}, ${Math.round(cycle.decision.latencyMs)} ms, ${cycle.decision.status})` : "Jev nao consultado"} execucao=${cycle.execution.status}: ${cycle.execution.reasons.join(", ")}`,
@@ -100,5 +120,8 @@ async function once(): Promise<void> {
 await once();
 if (hasFlag("--loop")) {
   console.error(`system-one: repetindo a cada ${intervalMs} ms`);
-  setInterval(() => { once().catch((error) => console.error(`system-one: ciclo falhou: ${error instanceof Error ? error.message : String(error)}`)); }, intervalMs);
+  while (true) {
+    await Bun.sleep(intervalMs);
+    try { await once(); } catch { console.error("system-one: ciclo falhou"); }
+  }
 }
