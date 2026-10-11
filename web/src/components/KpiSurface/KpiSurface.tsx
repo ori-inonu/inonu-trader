@@ -39,12 +39,13 @@ const KpiCellView = memo(function KpiCellView({ cell, reducedMotion }: KpiCellVi
 function KpiSurfaceView({ cells, reducedMotion = false, connection }: KpiSurfaceProps) {
   const frame = feedFrameState(connection);
   const stale = frame.held;
+  /* No notice chip here: the rail and the core panel already state the reconnect in frame, and a
+     third copy would sit on top of the metrics. */
   return (
     <section className={`${styles.surface} ${stale ? styles.stale : ""}`} aria-label="Métricas do feed">
       {cells.map((cell) => (
         <KpiCellView key={cell.id} cell={cell} reducedMotion={reducedMotion || stale} />
       ))}
-      {frame.notice ? <span className={styles.staleChip}>{frame.notice}</span> : null}
     </section>
   );
 }

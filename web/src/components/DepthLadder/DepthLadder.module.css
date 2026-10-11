@@ -4,26 +4,24 @@
 @keyframes jev-ladder-in {
   from {
     opacity: 0;
-    transform: translateY(6px) scaleY(0.9);
+    transform: translateY(6px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scaleY(1);
+    transform: translateY(0);
   }
 }
 
-@keyframes jev-ladder-settle {
-  0% {
-    transform: scaleX(1);
+@keyframes jev-bar-grow {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
   }
 
-  60% {
-    transform: scaleX(1.08);
-  }
-
-  100% {
+  to {
     transform: scaleX(1);
+    transform-origin: left center;
   }
 }
 
@@ -32,6 +30,7 @@
   z-index: 1;
   display: flex;
   min-width: 0;
+  height: 100%;
   flex-direction: column;
   gap: var(--s2);
   border: 1px solid var(--edge);
@@ -47,6 +46,10 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--s3);
+}
+
+.heading {
+  min-width: 0;
 }
 
 .eyebrow {
@@ -82,6 +85,7 @@
   position: relative;
   min-width: 0;
   min-height: 220px;
+  flex: 1;
   overflow: hidden;
   border: 1px solid var(--edge);
   border-radius: var(--r-sm);
@@ -91,56 +95,60 @@
 .svg {
   display: block;
   width: 100%;
-  height: 220px;
+  height: 100%;
 }
 
-.deck {
-  fill: var(--bg-deck-2);
-  stroke: var(--edge);
+/* The mid spine: the vertical reference both sides grow away from. */
+.spine {
+  stroke: var(--edge-strong);
   stroke-width: 1;
+  stroke-dasharray: 3 4;
 }
 
 .plane {
   transform-origin: left center;
+  animation-delay: calc(var(--stagger-step) * var(--stagger-index, 0));
 }
 
 .planeIn {
   animation: jev-ladder-in var(--dur-base) var(--ease-out-expo) both;
 }
 
-.planeSettle {
-  animation: jev-ladder-settle 320ms var(--ease-out-back) both;
-}
-
+/* The front face unfurls from the edge that touches the spine: right for a bid, left for an ask. */
 .bar {
+  transform-box: fill-box;
+  animation: jev-bar-grow var(--dur-slow) var(--ease-out-expo) both;
   fill: var(--edge-strong);
 }
 
-.cap {
-  fill: var(--ink-4);
+.bid .bar {
+  transform-origin: right center;
+  fill: var(--buy);
+  fill-opacity: 0.34;
 }
 
-.bid .bar {
-  fill: var(--buy);
-  fill-opacity: 0.4;
+.ask .bar {
+  transform-origin: left center;
+  fill: var(--sell);
+  fill-opacity: 0.34;
+}
+
+.mid .bar {
+  fill: var(--hold);
+  fill-opacity: 0.5;
+}
+
+/* The top face carries the arm hue solid, so depth reads even in greyscale. */
+.cap {
+  fill: var(--ink-4);
 }
 
 .bid .cap {
   fill: var(--buy);
 }
 
-.ask .bar {
-  fill: var(--sell);
-  fill-opacity: 0.4;
-}
-
 .ask .cap {
   fill: var(--sell);
-}
-
-.mid .bar {
-  fill: var(--hold);
-  fill-opacity: 0.28;
 }
 
 .mid .cap {
@@ -149,23 +157,38 @@
 
 .price {
   fill: var(--ink-2);
-  font: 400 11px/1.2 var(--font-mono), monospace;
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .size {
   fill: var(--ink-4);
-  font: 400 10px/1.2 var(--font-mono), monospace;
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The word beside each slab. Colour is never the only thing separating a bid from an ask. */
+.side {
+  fill: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
 }
 
 .legend {
-  display: grid;
+  display: flex;
   min-width: 0;
-  gap: 2px;
+  flex-wrap: wrap;
+  gap: 2px var(--s3);
   margin: 0;
   padding: 0;
   list-style: none;
   color: var(--ink-3);
-  font: 400 11px/1.35 var(--font-mono), monospace;
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .legend .bid {
@@ -184,29 +207,28 @@
   color: var(--ink-4);
 }
 
-.still .plane {
+.still .plane,
+.still .bar,
+.still .cap {
   animation: none;
 }
 
-/* Below the tablet breakpoint the isometric projection becomes a flat ladder, because a squashed
-   isometric view is unreadable on a narrow column. */
 @media (max-width: 899.98px) {
-  .svg {
-    height: 200px;
+  .frame {
+    min-height: 200px;
   }
+}
 
-  .plane {
-    transform: none;
-  }
-
-  .bar,
-  .cap {
-    fill-opacity: 0.55;
+@media (max-width: 379.98px) {
+  .panel {
+    padding: var(--s3);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .plane {
+  .plane,
+  .bar,
+  .cap {
     animation: none;
   }
 }

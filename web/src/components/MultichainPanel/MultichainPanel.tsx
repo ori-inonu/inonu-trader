@@ -7,11 +7,8 @@ import { defaultEvmRpcFetch, readMultichainBalances, type MultichainSnapshot } f
 import styles from "./MultichainPanel.module.css";
 
 function shortAddress(address: string): string {
-  return address.length > 12 ? address.slice(0, 6) + "..." + address.slice(-4) : address;
+  return address.length > 12 ? `${address.slice(0, 6)}…${address.slice(-4)}` : address;
 }
-
-
-
 
 export interface MultichainPanelViewProps {
   evmAccount: string | null;
@@ -27,9 +24,10 @@ export function MultichainPanelView({ evmAccount, evmAvailable, multichain, mult
   return (
     <section className={styles.panel} aria-labelledby="multichain-title">
       <header className={styles.header}>
-        <div>
+        <div className={styles.headingGroup}>
+          <p className={styles.eyebrow}>REDES</p>
           <h2 className={styles.title} id="multichain-title">Patrimônio multichain</h2>
-          <p className={styles.description}>Somente leitura. Conectar não habilita o executor.</p>
+          <p className={styles.description} title="Somente leitura. Conectar não habilita o executor.">Somente leitura. Conectar não habilita o executor.</p>
         </div>
         <span className={styles.badge}>OKX OnChain OS</span>
       </header>
@@ -46,29 +44,35 @@ export function MultichainPanelView({ evmAccount, evmAvailable, multichain, mult
             </button>
             {multichainError ? <p className={styles.error} role="alert">{multichainError}</p> : null}
             {multichain ? (
+              multichain.chains.length === 0 ? (
+                <p className={styles.note}>A consulta não retornou nenhuma rede.</p>
+              ) : (
               <ul className={styles.chainList} aria-label="Saldos por rede EVM">
-                {multichain.chains.map((chain) => (
-                  <li key={chain.chainIndex} className={styles.chainRow}>
-                    <div className={styles.chainHead}>
-                      <span className={styles.chainName}>{chain.name}</span>
-                      <span className={styles.chainMeta}>{chain.status === "ok" ? `bloco ${chain.block}` : `indisponível: ${chain.error}`}</span>
-                    </div>
-                    {chain.status === "ok" ? (
-                      <dl className={styles.balances}>
-                        <div className={styles.balanceRow}><dt>{chain.native!.symbol}</dt><dd>{chain.native!.amount}</dd></div>
-                        {chain.tokens.map((token) => (
-                          <div key={token.contract} className={styles.balanceRow}><dt>{token.symbol}</dt><dd>{token.amount}</dd></div>
-                        ))}
-                      </dl>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
+                  {multichain.chains.map((chain) => (
+                    <li key={chain.chainIndex} className={styles.chainRow}>
+                      <div className={styles.chainHead}>
+                        <span className={styles.chainName}>{chain.name}</span>
+                        <span className={chain.status === "ok" ? styles.chainMeta : `${styles.chainMeta} ${styles.chainMetaDown}`}>
+                          {chain.status === "ok" ? `bloco ${chain.block ?? "desconhecido"}` : `indisponível: ${chain.error ?? "sem resposta"}`}
+                        </span>
+                      </div>
+                      {chain.status === "ok" && chain.native ? (
+                        <dl className={styles.balances}>
+                          <div className={styles.balanceRow}><dt>{chain.native.symbol}</dt><dd>{chain.native.amount}</dd></div>
+                          {chain.tokens.map((token) => (
+                            <div key={token.contract} className={styles.balanceRow}><dt>{token.symbol}</dt><dd>{token.amount}</dd></div>
+                          ))}
+                        </dl>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              )
             ) : null}
           </>
         )}
 
-        <h3 className={styles.subtitle}>Solana pela OKX Wallet</h3>
+        <h3 className={`${styles.subtitle} ${styles.subtitleDivided}`}>Solana pela OKX Wallet</h3>
         {!solana.ready ? (
           <p className={styles.note}>Verificando o provider Solana da extensão.</p>
         ) : !solana.available ? (

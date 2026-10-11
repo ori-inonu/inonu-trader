@@ -12,7 +12,7 @@ export default function BrandMark({
       viewBox="0 0 64 64"
       fill="none"
       role={decorative ? undefined : "img"}
-      aria-label={decorative ? undefined : "JEV TRADER"}
+      aria-label={decorative ? undefined : "INONU TRADER"}
       aria-hidden={decorative ? true : undefined}
       focusable="false"
     >

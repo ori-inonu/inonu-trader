@@ -27,24 +27,32 @@ export function startServer(meta: Meta, history: () => BlockEvent[]) {
   };
   setInterval(() => clients.forEach((c) => send(c, "ping", Date.now())), 15_000);
 
-  Bun.serve({
-    port: config.port,
-    fetch(req) {
-      const { pathname } = new URL(req.url);
-      if (isOperatorPath(pathname)) return operatorHandler(req, pathname);
-      if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
-      if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null });
-      if (pathname === "/history") return json(history());
-      if (pathname === "/events") {
-        const stream = new ReadableStream<Uint8Array>({
-          start(c) { clients.add(c); send(c, "snapshot", { ...meta, history: history() }); },
-          cancel(c) { clients.delete(c); },
-        });
-        return new Response(stream, { headers: { ...CORS, "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" } });
-      }
-      return json({ error: "not found" }, 404);
-    },
-  });
+  try {
+    Bun.serve({
+      port: config.port,
+      fetch(req) {
+        const { pathname } = new URL(req.url);
+        if (isOperatorPath(pathname)) return operatorHandler(req, pathname);
+        if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
+        if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null });
+        if (pathname === "/history") return json(history());
+        if (pathname === "/events") {
+          const stream = new ReadableStream<Uint8Array>({
+            start(c) { clients.add(c); send(c, "snapshot", { ...meta, history: history() }); },
+            cancel(c) { clients.delete(c); },
+          });
+          return new Response(stream, { headers: { ...CORS, "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" } });
+        }
+        return json({ error: "not found" }, 404);
+      },
+    });
+  } catch (e) {
+    const code = e instanceof Error && "code" in e ? e.code : undefined;
+    if (code !== "EADDRINUSE") throw e;
+    console.error(`jev-trader: cannot bind port ${config.port}: already in use.`);
+    console.error(`  Set PORT=<other port> to serve elsewhere, or stop the process already listening on ${config.port}.`);
+    process.exit(1);
+  }
 
   const broadcast = (type: string, data: unknown) => clients.forEach((c) => send(c, type, data));
   return {

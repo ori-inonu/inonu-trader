@@ -321,38 +321,23 @@ svg {
   outline-offset: 3px;
 }
 
-/* Console shell: hull surface plus a static deck grain that kills banding on large dark fields. */
-.card {
-  display: flex;
-  width: 100%;
-  max-width: var(--card-max);
-  min-height: 100vh;
-  min-height: 100svh;
-  flex-direction: column;
-  gap: var(--s6);
-  margin-inline: auto;
-  padding: var(--s4) var(--s6) var(--s6);
-  background-color: var(--bg-hull);
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(233, 241, 250, 0.03) 0px,
-    rgba(233, 241, 250, 0.03) 1px,
-    transparent 1px,
-    transparent 2px
-  );
+/* Visually hidden, still announced. A global utility because the text it hides has to stay
+   readable to assistive tech from any component that renders a duplicate of a graphic. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-@media (max-width: 899.98px) {
-  .card {
-    padding: var(--s3) var(--s4) var(--s6);
-  }
-}
-
-@media (max-width: 379.98px) {
-  .card {
-    padding-inline: var(--s3);
-  }
-}
+/* Console shell lives in page.module.css (.console). It stays transparent so the fixed
+   ConsoleBackdrop field is what actually paints the hull, which is why the shell declares no
+   background of its own. */
 
 /* Compositor only backdrop hooks for the next phase. Neither carries state. */
 .meshLayer {

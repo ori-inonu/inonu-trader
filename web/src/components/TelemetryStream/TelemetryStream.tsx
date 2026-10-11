@@ -5,11 +5,14 @@ import type { BlockEvent, ConnectionState } from "@/lib/types";
 import { filterFeedEvents, type FeedSideFilter, type FeedTypeFilter } from "@/lib/presentation";
 import { fmtInt, fmtPrice, shortTx, txUrl } from "@/lib/format";
 import { feedFrameState } from "@/lib/feed-frame";
+import { telemetryEmptyMessage, telemetryStaggerDelay } from "@/lib/telemetry-state";
 import styles from "./TelemetryStream.module.css";
 
-const ROW_H = 64;
+/** Must match the row block-size in TelemetryStream.module.css: calc(var(--s9) + var(--s5)). */
+const ROW_H = 76;
 const MAX_ROWS = 40;
-const STAGGER_CAP = 8;
+/** The first row is the newest one. It carries the marker; nothing animates to signal it. */
+const NEWEST = "mais recente";
 
 type Kind = "buy" | "sell" | "hold" | "late" | "waiting";
 
@@ -79,10 +82,7 @@ function TelemetryStreamView({ events, connection, capacity: capacityProp, reduc
   const capacity = capacityProp ?? measured ?? MAX_ROWS;
   const filtered = filterFeedEvents(events, sideFilter, typeFilter);
   const rows = filtered.slice(-capacity).reverse();
-  const defaultSelection = sideFilter === "all" && typeFilter === "all";
-  const emptyMessage = events.length === 0 && defaultSelection
-    ? "Aguardando dados do feed"
-    : "Nenhum evento para estes filtros";
+  const emptyMessage = telemetryEmptyMessage(events.length, sideFilter, typeFilter);
   const frame = feedFrameState(connection);
   const stale = frame.held;
 
@@ -120,10 +120,10 @@ function TelemetryStreamView({ events, connection, capacity: capacityProp, reduc
         <p className={styles.range}>Exibindo os {rows.length} eventos mais recentes de {filtered.length} correspondências.</p>
       ) : null}
 
+      {rows.length === 0 ? <p className={styles.empty}>{emptyMessage}</p> : null}
+
       <div className={styles.list} ref={listRef} role="list" aria-label="Eventos do feed">
-        {rows.length === 0 ? (
-          <p className={styles.empty}>{emptyMessage}</p>
-        ) : rows.map((event, index) => {
+        {rows.map((event, index) => {
           const kind = kindOf(event);
           const decision = event.decision;
           const quote = event.quote;
@@ -145,14 +145,15 @@ function TelemetryStreamView({ events, connection, capacity: capacityProp, reduc
 
           return (
             <article
-              className={`${styles.row} ${styles[kind]}`}
+              className={`${styles.row} ${styles[kind]} ${index === 0 ? styles.newest : ""}`}
               key={event.block}
               role="listitem"
-              style={reducedMotion ? undefined : { animationDelay: `${Math.min(index, STAGGER_CAP) * 26}ms` }}
+              style={reducedMotion ? undefined : { animationDelay: `${telemetryStaggerDelay(index)}ms` }}
             >
               <div className={styles.rowTop}>
                 <span className={styles.block}>[{fmtInt(event.block)}]</span>
                 <span className={styles.kind}>{KIND_LABEL[kind]}</span>
+                {index === 0 ? <span className={styles.newestTag}>{NEWEST}</span> : null}
                 <span className={styles.latency}>{latency}</span>
               </div>
               <div className={styles.rowBottom}>

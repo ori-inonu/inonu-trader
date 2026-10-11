@@ -1,0 +1,747 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. Nothing in this module loops. */
+@keyframes jev-flip {
+  from {
+    opacity: 0;
+    transform: rotateX(-10deg) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotateX(0deg) translateY(0);
+  }
+}
+
+@keyframes jev-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jev-bar-rise {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(var(--h, 1));
+  }
+}
+
+.deck {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s4);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-lg);
+  padding: var(--s5);
+  background: var(--bg-hull);
+  box-shadow: var(--elev-2);
+}
+
+.head {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s4);
+}
+
+.headCopy {
+  min-width: 0;
+  max-width: 64ch;
+}
+
+.eyebrow {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: var(--s1);
+  color: var(--ink);
+  font: var(--fs-lg);
+  font-size: 22px;
+  line-height: 26px;
+}
+
+.lede {
+  margin-top: var(--s2);
+  color: var(--ink-2);
+  font: var(--fs-base);
+}
+
+.subtitle {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.note {
+  color: var(--ink-3);
+  font: var(--fs-sm);
+}
+
+/* View switch */
+.switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  padding: var(--s1);
+  background: var(--bg-deck);
+}
+
+.tab {
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: var(--s2) var(--s4);
+  background: transparent;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-out-expo),
+    color var(--dur-fast) var(--ease-out-expo),
+    transform var(--dur-fast) var(--ease-out-expo);
+}
+
+.tab:hover {
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.tabActive {
+  border-color: var(--edge-strong);
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
+/* Stage: a shallow perspective so the active panel flips in once. */
+.stage {
+  min-width: 0;
+  perspective: 1200px;
+}
+
+.panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s4);
+  transform-origin: 50% 0%;
+  animation: jev-flip var(--dur-slow) var(--ease-out-expo) both;
+}
+
+/* Risk controls */
+.controls {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--s3);
+}
+
+.group {
+  min-width: 0;
+  margin: 0;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3) var(--s3);
+  background: var(--bg-deck);
+}
+
+.legend {
+  padding: 0 var(--s1);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.segment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+
+.seg {
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  padding: var(--s1) var(--s2);
+  background: var(--bg-deck-2);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-out-expo),
+    border-color var(--dur-fast) var(--ease-out-expo),
+    color var(--dur-fast) var(--ease-out-expo);
+}
+
+.seg:hover {
+  border-color: var(--edge-strong);
+  color: var(--ink);
+}
+
+.segActive {
+  border-color: var(--signal-deep);
+  background: var(--bg-deck-3);
+  color: var(--signal);
+}
+
+/* 2.5D bar chart: each column carries two slabs, median multiple and touch probability. */
+.chartWrap {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  padding: var(--s4) var(--s4) var(--s3);
+  background: linear-gradient(180deg, var(--bg-well) 0%, var(--bg-deck) 100%);
+}
+
+.chart {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: end;
+  gap: var(--s3);
+  height: 260px;
+  padding-bottom: 64px;
+}
+
+.baseline {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 0;
+  border-top: 1px dashed var(--edge-strong);
+  /* The chart body ends 64px above the panel edge so the baseline must offset the same. */
+  margin-bottom: 64px;
+  pointer-events: none;
+}
+
+.baselineLabel {
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  border-radius: var(--r-xs);
+  padding: 1px var(--s2);
+  background: var(--bg-well);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.column {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--s1);
+}
+
+.columnBars {
+  display: flex;
+  height: 100%;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--s2);
+  perspective: 600px;
+}
+
+.bar {
+  --h: 0;
+  position: relative;
+  display: block;
+  width: 34%;
+  height: 100%;
+  transform: scaleY(var(--h));
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-slow) var(--ease-out-expo);
+  will-change: transform;
+}
+
+.bar.barTouch {
+  width: 22%;
+}
+
+.barFace {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(180deg, var(--bar-hi) 0%, var(--bar-lo) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* The slab top: a thin lighter cap skewed to read as the upper face of a block. */
+.barTop {
+  position: absolute;
+  top: -6px;
+  right: 0;
+  left: 0;
+  height: 6px;
+  background: var(--bar-hi);
+  opacity: 0.9;
+  transform: skewX(-32deg) translateX(3px);
+  transform-origin: 0 100%;
+}
+
+.barGain {
+  --bar-hi: var(--buy);
+  --bar-lo: color-mix(in srgb, var(--buy) 45%, var(--bg-well));
+}
+
+.barLoss {
+  --bar-hi: var(--hold);
+  --bar-lo: color-mix(in srgb, var(--hold) 40%, var(--bg-well));
+}
+
+.barTouch {
+  --bar-hi: var(--sell);
+  --bar-lo: color-mix(in srgb, var(--sell) 40%, var(--bg-well));
+}
+
+.columnLeverage {
+  color: var(--ink);
+  font: var(--fs-md);
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.columnMedian,
+.columnTouch {
+  color: var(--ink-2);
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.columnTouch {
+  color: var(--ink-3);
+}
+
+.legendRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  margin: 0;
+  padding: 0;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  list-style: none;
+}
+
+.legendRow li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.swatchGain {
+  background: var(--buy);
+}
+
+.swatchLoss {
+  background: var(--hold);
+}
+
+.swatchTouch {
+  background: var(--sell);
+}
+
+.reading {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--s3);
+}
+
+.readingKelly {
+  color: var(--signal);
+  font: var(--fs-readout);
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.readingVerdict {
+  color: var(--ink-2);
+  font: var(--fs-base);
+}
+
+.reading .note {
+  grid-column: 1 / -1;
+}
+
+/* Permission stairs: five steps rising toward the viewer, each a slab in depth. */
+.stairs {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--s3);
+  perspective: 1200px;
+  perspective-origin: 50% 0%;
+}
+
+.step {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s1);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+  /* Each step is a little higher and nearer than the last one. */
+  transform: translateZ(calc(var(--i) * 6px)) translateY(calc(var(--i) * -4px));
+  transform-style: preserve-3d;
+  animation: jev-fade-rise var(--dur-base) var(--ease-out-expo) both;
+  animation-delay: calc(var(--i) * var(--stagger-step));
+  transition: transform var(--dur-base) var(--ease-out-expo), box-shadow var(--dur-base) var(--ease-out-expo);
+}
+
+.step:hover {
+  box-shadow: var(--elev-2);
+  transform: translateZ(calc(var(--i) * 6px + 10px)) translateY(calc(var(--i) * -4px - 2px));
+}
+
+.stepId {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+  letter-spacing: var(--track-micro);
+}
+
+.stepName {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.stepState {
+  width: fit-content;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 1px var(--s2);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.step_active {
+  border-color: var(--buy);
+}
+
+.step_active .stepState {
+  border-color: var(--buy);
+  color: var(--buy);
+}
+
+.step_viable .stepState {
+  border-color: var(--hold);
+  color: var(--hold);
+}
+
+.step_blocked .stepState {
+  border-color: var(--sell);
+  color: var(--sell);
+}
+
+.stepSummary {
+  color: var(--ink-2);
+  font: var(--fs-sm);
+}
+
+.stepBlocker {
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.phaseHead {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s1);
+}
+
+.tableWrap {
+  min-width: 0;
+  overflow-x: auto;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+}
+
+.table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font: var(--fs-sm);
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid var(--edge);
+  padding: var(--s2) var(--s3);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table thead th {
+  background: var(--bg-deck-2);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.table tbody tr:nth-child(even) td,
+.table tbody tr:nth-child(even) th {
+  background: var(--bg-deck);
+}
+
+.rowLabel {
+  display: block;
+  color: var(--ink);
+  font: var(--fs-sm);
+  font-weight: 500;
+}
+
+.rowBasis {
+  display: block;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.num {
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.criteria {
+  margin: 0;
+  padding-left: var(--s5);
+  color: var(--ink-3);
+  font: var(--fs-sm);
+}
+
+.criteria li + li {
+  margin-top: var(--s1);
+}
+
+/* Ecosystem */
+.totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.total {
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  padding: var(--s1) var(--s3);
+  background: var(--bg-deck);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+}
+
+.total strong {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.total_implemented {
+  border-color: var(--buy);
+}
+
+.total_read_only {
+  border-color: var(--signal-deep);
+}
+
+.total_blocked {
+  border-color: var(--sell);
+}
+
+.total_unconfirmed {
+  border-color: var(--late);
+}
+
+.families {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--s3);
+  perspective: 1000px;
+}
+
+.family {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s1);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+  animation: jev-fade-rise var(--dur-base) var(--ease-out-expo) both;
+  animation-delay: min(calc(var(--i) * var(--stagger-step)), var(--stagger-cap));
+  transition: transform var(--dur-base) var(--ease-out-expo), box-shadow var(--dur-base) var(--ease-out-expo);
+}
+
+.family:hover {
+  box-shadow: var(--elev-2);
+  transform: rotateX(3deg) translateY(-3px);
+}
+
+.familyName {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.familyCount {
+  position: absolute;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+}
+
+.family {
+  position: relative;
+}
+
+.familyCount {
+  top: var(--s3);
+  right: var(--s3);
+}
+
+.familySummary {
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.stack {
+  display: flex;
+  height: 8px;
+  margin-top: var(--s1);
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--bg-well);
+}
+
+.stackPart {
+  display: block;
+  flex-basis: 0;
+  transition: flex-grow var(--dur-slow) var(--ease-out-expo);
+}
+
+.stack_implemented {
+  background: var(--buy);
+}
+
+.stack_read_only {
+  background: var(--signal-deep);
+}
+
+.stack_blocked {
+  background: var(--sell);
+}
+
+.stack_unconfirmed {
+  background: var(--late);
+}
+
+.still .panel,
+.still .step,
+.still .family {
+  animation: none;
+}
+
+@media (max-width: 1279.98px) {
+  .stairs {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .reading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 899.98px) {
+  .deck {
+    padding: var(--s4);
+  }
+
+  .chart {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    height: 220px;
+    gap: var(--s1);
+  }
+
+  .columnLeverage {
+    font: var(--fs-sm);
+    font-family: var(--font-mono);
+  }
+
+  .step {
+    transform: none;
+  }
+
+  .step:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .chart {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 180px;
+    height: auto;
+  }
+
+  .column {
+    height: 180px;
+  }
+
+  .baseline {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .step,
+  .family,
+  .bar,
+  .tab,
+  .seg,
+  .stackPart {
+    animation: none;
+    transition: none;
+  }
+}

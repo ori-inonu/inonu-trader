@@ -21,7 +21,7 @@
 
 .label {
   min-width: 0;
-  color: var(--ink-4);
+  color: var(--ink-3);
   font: var(--fs-micro);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
@@ -30,7 +30,7 @@
 .value {
   min-width: 0;
   color: var(--ink);
-  font: var(--fs-xs);
+  font: var(--fs-sm);
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }

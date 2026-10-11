@@ -56,6 +56,15 @@ export function JevCoreView({ latest, connection, model, reducedMotion, still, a
     : UNAVAILABLE;
 
   const shaken = latest?.quote?.status === "reverted" || latest?.quote?.status === "lost";
+  const actionText = decision
+    ? decision.late
+      ? "Resposta tardia"
+      : decision.action === "buy"
+        ? "Compra"
+        : decision.action === "sell"
+          ? "Venda"
+          : "Manter"
+    : "Aguardando decisao";
 
   return (
     <section
@@ -84,11 +93,11 @@ export function JevCoreView({ latest, connection, model, reducedMotion, still, a
       </div>
 
       <div
-        className={`${styles.actionWord} ${reducedMotion ? "" : styles.actionEnter} ${shaken && !reducedMotion ? styles.shake : ""}`}
+        className={`${styles.actionWord} ${actionText.length > 8 ? styles.actionWordLong : ""} ${reducedMotion ? "" : styles.actionEnter} ${shaken && !reducedMotion ? styles.shake : ""}`}
         key={actionKey}
         data-action-word="true"
       >
-        {decision ? (decision.late ? "Resposta tardia" : decision.action === "buy" ? "Compra" : decision.action === "sell" ? "Venda" : "Manter") : "Aguardando decisao"}
+        {actionText}
       </div>
 
       <dl className={styles.readouts}>

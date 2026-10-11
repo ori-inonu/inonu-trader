@@ -49,7 +49,7 @@ function networkLabel(chainId: string | null): string {
 }
 
 function shortAddress(address: string): string {
-  return address.slice(0, 6) + "…" + address.slice(-4);
+  return address.length > 12 ? `${address.slice(0, 6)}…${address.slice(-4)}` : address;
 }
 
 function formatAge(ageMs: number): string {
@@ -90,11 +90,12 @@ export function WalletPanelView({
   return (
     <section className={styles.panel} aria-labelledby="wallet-title">
       <header className={styles.header}>
-        <div>
+        <div className={styles.headingGroup}>
+          <p className={styles.eyebrow}>CARTEIRA</p>
           <h2 className={styles.title} id="wallet-title">
             Carteira OKX
           </h2>
-          <p className={styles.description}>
+          <p className={styles.description} title="Somente leitura. Conectar não habilita o executor.">
             Somente leitura. Conectar não habilita o executor.
           </p>
         </div>
@@ -122,16 +123,19 @@ export function WalletPanelView({
         ) : null}
 
         {snapshot.account ? (
-          <dl className={styles.details}>
-            <div className={styles.detailRow}>
-              <dt>Conta</dt>
-              <dd title={snapshot.account}>{shortAddress(snapshot.account)}</dd>
-            </div>
-            <div className={styles.detailRow}>
-              <dt>Rede</dt>
-              <dd>{networkLabel(snapshot.chainId)}</dd>
-            </div>
-          </dl>
+          <>
+            <h3 className={styles.subtitle}>Conta e rede</h3>
+            <dl className={styles.details}>
+              <div className={styles.detailRow}>
+                <dt>Conta</dt>
+                <dd title={snapshot.account}>{shortAddress(snapshot.account)}</dd>
+              </div>
+              <div className={styles.detailRow}>
+                <dt>Rede</dt>
+                <dd>{networkLabel(snapshot.chainId)}</dd>
+              </div>
+            </dl>
+          </>
         ) : null}
 
         {snapshot.chainId === "0x8f" ? (
@@ -146,22 +150,26 @@ export function WalletPanelView({
         </p>
 
         {snapshot.balances?.network === "monad" ? (
-          <dl className={styles.balances} aria-label="Saldos da carteira na Monad">
-            <div className={styles.balanceRow}>
-              <dt>MON</dt>
-              <dd>{snapshot.balances.mon}</dd>
-            </div>
-            <div className={styles.balanceRow}>
-              <dt>USDC nativo</dt>
-              <dd>{snapshot.balances.usdc}</dd>
-            </div>
-            <div className={styles.blockRow}>
-              <dt>Bloco consultado</dt>
-              <dd>{snapshot.balances.block}</dd>
-            </div>
-          </dl>
+          <>
+            <h3 className={styles.subtitle}>Saldos na Monad</h3>
+            <dl className={styles.balances} aria-label="Saldos da carteira na Monad">
+              <div className={styles.balanceRow}>
+                <dt>MON</dt>
+                <dd>{snapshot.balances.mon}</dd>
+              </div>
+              <div className={styles.balanceRow}>
+                <dt>USDC nativo</dt>
+                <dd>{snapshot.balances.usdc}</dd>
+              </div>
+              <div className={styles.blockRow}>
+                <dt>Bloco consultado</dt>
+                <dd>{snapshot.balances.block}</dd>
+              </div>
+            </dl>
+          </>
         ) : snapshot.balances?.network === "xlayer" ? (
           <>
+            <h3 className={styles.subtitle}>Saldos na X Layer</h3>
             <dl className={styles.balances} aria-label="Saldos da carteira na X Layer">
               <div className={styles.balanceRow}>
                 <dt>OKB</dt>

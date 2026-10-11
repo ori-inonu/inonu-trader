@@ -20,7 +20,6 @@
   min-width: 0;
   flex-direction: column;
   gap: var(--s3);
-  padding-top: var(--s1);
   transition: opacity var(--dur-base) var(--ease-out-expo);
 }
 
@@ -68,7 +67,7 @@
 }
 
 .digestLabel {
-  color: var(--ink-4);
+  color: var(--ink-3);
   font: var(--fs-micro);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
@@ -94,9 +93,16 @@
   animation: jev-rule-draw 520ms var(--ease-out-expo) both;
 }
 
+/* While reconnecting no new value is arriving, so nothing in the frame moves. */
+.stale *,
+.stale {
+  animation: none !important;
+}
+
 .statusRow {
   display: flex;
   min-width: 0;
+  max-width: 100%;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--s2);
@@ -105,6 +111,7 @@
 .statusBadge {
   display: inline-flex;
   min-height: 28px;
+  flex: none;
   align-items: center;
   border: 1px solid var(--edge-strong);
   border-radius: var(--r-pill);
@@ -135,16 +142,23 @@
   color: var(--ink-3);
 }
 
+/* Market and model names can be arbitrarily long, so they ellipsize instead of pushing the
+   connection chips off the row. The chip row stays on one line because the badges cannot shrink. */
 .context {
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   color: var(--ink-3);
   font: var(--fs-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .wallet {
   min-width: 44px;
   min-height: 44px;
   max-width: 100%;
+  flex: none;
   border: 1px solid var(--edge-strong);
   border-radius: var(--r-sm);
   padding: var(--s2) var(--s3);

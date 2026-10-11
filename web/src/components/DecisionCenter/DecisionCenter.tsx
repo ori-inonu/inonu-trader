@@ -84,7 +84,7 @@ function Gauge({ label, used, max, unit }: { label: string; used: number; max: n
     <div className={styles.gauge}>
       <div className={styles.gaugeHead}>
         <span>{label}</span>
-        <span className={styles.mono}>{used.toFixed(unit === "USD" ? 2 : 0)}{max !== null ? ` / ${max}` : ""} {unit}</span>
+        <span className={`${styles.mono} ${styles.num}`}>{used.toFixed(unit === "USD" ? 2 : 0)}{max !== null ? ` / ${max}` : ""} {unit}</span>
       </div>
       <div className={styles.track} role="img" aria-label={`${label}: ${Math.round(ratio * 100)}% usado`}>
         <span className={`${styles.fill} ${ratio >= 0.9 ? styles.fillHot : ""}`} style={{ transform: `scaleX(${ratio})` }} />
@@ -105,7 +105,7 @@ function ProbabilityBars({ cycle }: { cycle: OperatorCycleView }) {
           <div className={styles.track} role="img" aria-label={`${labelFor(key)}: ${Math.round(value * 100)}%`}>
             <span className={`${styles.fill} ${key === cycle.decision!.choice ? styles.fillChosen : ""}`} style={{ transform: `scaleX(${value})` }} />
           </div>
-          <span className={styles.mono}>{Math.round(value * 100)}%</span>
+          <span className={`${styles.mono} ${styles.num}`}>{Math.round(value * 100)}%</span>
         </div>
       ))}
     </div>
@@ -144,17 +144,23 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
   return (
     <section className={styles.center} aria-labelledby="center-title">
       <header className={styles.header}>
-        <div>
+        <div className={styles.headingGroup}>
           <p className={styles.eyebrow}>CENTRAL DE DECISÕES</p>
           <h2 id="center-title" className={styles.title}>Operador Jev sobre a carteira OKX</h2>
-          <p className={styles.description}>
+          <p className={styles.description} title="Inventário em todas as redes, candidatos com risco e retorno, escolha do Jev e execução com gates. Atualiza sozinho a cada 5 segundos.">
             Inventário em todas as redes, candidatos com risco e retorno, escolha do Jev e execução com gates. Atualiza sozinho a cada 5 segundos.
           </p>
         </div>
         <div className={styles.status}>
           <span className={`${styles.statusDot} ${state.status === "ready" && state.ageMs !== null && state.ageMs < 120_000 ? styles.statusLive : ""}`} aria-hidden="true" />
-          <span>
-            {state.status === "absent" ? "sem ciclo registrado" : state.status === "error" && !cycle ? `backend sem resposta (${state.error})` : cycle ? `ciclo ${cycle.cycleId.slice(0, 8)} ${age(state.ageMs)}` : "carregando"}
+          <span className={cycle && state.error !== null ? styles.statusStale : undefined}>
+            {state.status === "absent"
+              ? "sem ciclo registrado"
+              : state.status === "error" && !cycle
+                ? `backend sem resposta (${state.error})`
+                : cycle
+                  ? `ciclo ${cycle.cycleId.slice(0, 8)} ${age(state.ageMs)}`
+                  : "carregando"}
           </span>
         </div>
       </header>
@@ -169,12 +175,17 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
         </div>
       ) : (
         <div className={styles.body}>
+          {state.error !== null ? (
+            <p className={styles.warn}>
+              Última atualização falhou ({state.error}). O painel mantém o último ciclo conhecido, sem recalcular nada.
+            </p>
+          ) : null}
           <div className={styles.kpis}>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Patrimônio conhecido</span><span className={styles.kpiValue}>{usd(cycle.inventory.knownValueUsd)}</span><span className={styles.kpiMeta}>{cycle.inventory.valueComplete ? "cobertura completa" : "parcial: ativos sem preço"}</span></div>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Candidatos</span><span className={styles.kpiValue}>{eligibleCount} / {cycle.candidates.length}</span><span className={styles.kpiMeta}>elegíveis / avaliados</span></div>
-            <div className={styles.kpi}><span className={styles.kpiLabel}>Decisão do Jev</span><span className={styles.kpiValue}>{cycle.decision ? (cycle.decision.choice === "hold" ? "Manter" : chosen ? kindLabel(chosen.kind) : cycle.decision.choice) : "não consultado"}</span><span className={styles.kpiMeta}>{cycle.decision ? `${cycle.decision.model}, ${Math.round(cycle.decision.latencyMs)} ms, peso ${pct(cycle.decision.probabilities[cycle.decision.choice])}` : "sem elegíveis"}</span></div>
+            <div className={styles.kpi}><span className={styles.kpiLabel}>Decisão do Jev</span><span className={styles.kpiValueText}>{cycle.decision ? (cycle.decision.choice === "hold" ? "Manter" : chosen ? kindLabel(chosen.kind) : cycle.decision.choice) : "não consultado"}</span><span className={styles.kpiMeta}>{cycle.decision ? `${cycle.decision.model}, ${Math.round(cycle.decision.latencyMs)} ms, peso ${pct(cycle.decision.probabilities[cycle.decision.choice])}` : "sem elegíveis"}</span></div>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Resultado realizado hoje</span><span className={`${styles.kpiValue} ${(cycle.ledger?.dayRealizedUsd ?? 0) < 0 ? styles.neg : (cycle.ledger?.dayRealizedUsd ?? 0) > 0 ? styles.pos : ""}`}>{usd(cycle.ledger?.dayRealizedUsd ?? 0, 4)}</span><span className={styles.kpiMeta}>só planos concluídos e reconciliados</span></div>
-            <div className={styles.kpi}><span className={styles.kpiLabel}>Execução</span><span className={styles.kpiValue}>{executionLabel(cycle.execution.status)}</span><span className={styles.kpiMeta}>{cycle.execution.reasons.map(reasonLabel).join("; ") || "sem motivos"}</span></div>
+            <div className={styles.kpi}><span className={styles.kpiLabel}>Execução</span><span className={styles.kpiValueText}>{executionLabel(cycle.execution.status)}</span><span className={styles.kpiMeta}>{cycle.execution.reasons.map(reasonLabel).join("; ") || "sem motivos"}</span></div>
             <div className={styles.kpi}><span className={styles.kpiLabel}>Fonte</span><span className={styles.kpiValue}>{cycle.inventory.source === "synthetic" ? "sintética" : "OKX"}</span><span className={styles.kpiMeta}>{sourceLabel(cycle.inventory.source)}</span></div>
           </div>
 
@@ -214,30 +225,45 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
             </div>
           </div>
 
-          <h3 className={styles.subtitle}>Candidatos avaliados neste ciclo</h3>
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr><th>Oportunidade</th><th>Rede</th><th>Tamanho</th><th>Líquido</th><th>Retorno</th><th>Impacto</th><th>Cotação</th><th>Risco</th><th>Peso Jev</th><th>Gate</th></tr>
-              </thead>
-              <tbody>
-                {ranked.map((candidate) => (
-                  <tr key={candidate.id} className={candidate.eligible ? styles.rowEligible : styles.rowRejected}>
-                    <td><span className={styles.cellTitle}>{kindLabel(candidate.kind)}</span><span className={styles.cellMeta}>{candidate.from.symbol} para {candidate.to.symbol}</span></td>
-                    <td className={styles.mono}>{candidate.kind === "perp_funding_carry" ? "OKX Exchange" : candidate.toChainIndex ? `${candidate.chainIndex} para ${candidate.toChainIndex}` : candidate.chainIndex}</td>
-                    <td className={styles.mono}>{usd(candidate.sizeUsd)}</td>
-                    <td className={`${styles.mono} ${candidate.netUsd !== null ? (candidate.netUsd >= 0 ? styles.pos : styles.neg) : ""}`}>{usd(candidate.netUsd, 4)}</td>
-                    <td className={styles.mono}>{candidate.netBps === null ? "n/d" : `${candidate.netBps.toFixed(1)} bps`}</td>
-                    <td className={styles.mono}>{candidate.priceImpactPercent === null ? "n/d" : `${candidate.priceImpactPercent.toFixed(2)}%`}</td>
-                    <td className={styles.mono}>{candidate.quoteAgeMs === null ? "n/d" : `${(candidate.quoteAgeMs / 1_000).toFixed(1)} s`}</td>
-                    <td><span className={`${styles.risk} ${styles[`risk_${riskLabel(candidate)}`]}`}>{riskLabel(candidate)}</span></td>
-                    <td className={styles.mono}>{candidate.weight === null ? "n/d" : pct(candidate.weight)}</td>
-                    <td className={styles.cellMeta}>{candidate.eligible ? "elegível" : candidate.reasons.map(reasonLabel).join(", ")}</td>
+          <h3 className={`${styles.subtitle} ${styles.subtitleDivided}`}>Candidatos avaliados neste ciclo</h3>
+          {ranked.length === 0 ? (
+            <p className={styles.note}>Nenhum candidato avaliado neste ciclo.</p>
+          ) : (
+            <div className={styles.tableWrap} tabIndex={0} role="region" aria-label="Tabela de candidatos avaliados neste ciclo">
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th scope="col">Oportunidade</th>
+                    <th scope="col">Rede</th>
+                    <th scope="col" className={styles.num}>Tamanho</th>
+                    <th scope="col" className={styles.num}>Líquido</th>
+                    <th scope="col" className={styles.num}>Retorno</th>
+                    <th scope="col" className={styles.num}>Impacto</th>
+                    <th scope="col" className={styles.num}>Cotação</th>
+                    <th scope="col">Risco</th>
+                    <th scope="col" className={styles.num}>Peso Jev</th>
+                    <th scope="col">Gate</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {ranked.map((candidate) => (
+                    <tr key={candidate.id} className={candidate.eligible ? styles.rowEligible : styles.rowRejected}>
+                      <td><span className={styles.cellTitle}>{kindLabel(candidate.kind)}</span><span className={styles.cellMeta}>{candidate.from.symbol} para {candidate.to.symbol}</span></td>
+                      <td className={styles.mono}>{candidate.kind === "perp_funding_carry" ? "OKX Exchange" : candidate.toChainIndex ? `${candidate.chainIndex} para ${candidate.toChainIndex}` : candidate.chainIndex}</td>
+                      <td className={`${styles.mono} ${styles.num}`}>{usd(candidate.sizeUsd)}</td>
+                      <td className={`${styles.mono} ${styles.num} ${candidate.netUsd !== null ? (candidate.netUsd >= 0 ? styles.pos : styles.neg) : ""}`}>{usd(candidate.netUsd, 4)}</td>
+                      <td className={`${styles.mono} ${styles.num}`}>{candidate.netBps === null ? "n/d" : `${candidate.netBps.toFixed(1)} bps`}</td>
+                      <td className={`${styles.mono} ${styles.num}`}>{candidate.priceImpactPercent === null ? "n/d" : `${candidate.priceImpactPercent.toFixed(2)}%`}</td>
+                      <td className={`${styles.mono} ${styles.num}`}>{candidate.quoteAgeMs === null ? "n/d" : `${(candidate.quoteAgeMs / 1_000).toFixed(1)} s`}</td>
+                      <td><span className={`${styles.risk} ${styles[`risk_${riskLabel(candidate)}`]}`}>{riskLabel(candidate)}</span></td>
+                      <td className={`${styles.mono} ${styles.num}`}>{candidate.weight === null ? "n/d" : pct(candidate.weight)}</td>
+                      <td className={styles.cellMeta}>{candidate.eligible ? "elegível" : candidate.reasons.map(reasonLabel).join(", ")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           <div className={styles.columns}>
             <div className={styles.block}>
@@ -245,7 +271,7 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
               <ul className={styles.chains}>
                 {cycle.inventory.chains.map((chain) => (
                   <li key={chain.chainIndex} className={styles.chain}>
-                    <div className={styles.chainHead}><span className={styles.cellTitle}>{chain.chainName}</span><span className={styles.mono}>{usd(chain.knownValueUsd)}{chain.valueComplete ? "" : " parcial"}</span></div>
+                    <div className={styles.chainHead}><span className={styles.cellTitle}>{chain.chainName}</span><span className={`${styles.mono} ${styles.num}`}>{usd(chain.knownValueUsd)}{chain.valueComplete ? "" : " parcial"}</span></div>
                     <div className={styles.assets}>
                       {chain.assets.map((asset, index) => <span key={index} className={styles.asset}><span className={styles.cellMeta}>{asset.symbol}</span><span className={styles.mono}>{asset.balanceText}</span></span>)}
                     </div>
@@ -256,18 +282,28 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
             <div className={styles.block}>
               <h3 className={styles.subtitle}>Risco e retorno por tipo (histórico)</h3>
               {insights && insights.byKind.length ? (
-                <div className={styles.tableWrap}>
+                <div className={styles.tableWrap} tabIndex={0} role="region" aria-label="Tabela de risco e retorno por tipo de oportunidade">
                   <table className={styles.table}>
-                    <thead><tr><th>Tipo</th><th>Vistos</th><th>Elegíveis</th><th>Escolhidos</th><th>Retorno médio</th><th>Impacto médio</th><th>Motivo mais comum</th></tr></thead>
+                    <thead>
+                      <tr>
+                        <th scope="col">Tipo</th>
+                        <th scope="col" className={styles.num}>Vistos</th>
+                        <th scope="col" className={styles.num}>Elegíveis</th>
+                        <th scope="col" className={styles.num}>Escolhidos</th>
+                        <th scope="col" className={styles.num}>Retorno médio</th>
+                        <th scope="col" className={styles.num}>Impacto médio</th>
+                        <th scope="col">Motivo mais comum</th>
+                      </tr>
+                    </thead>
                     <tbody>
                       {insights.byKind.map((kind) => (
                         <tr key={kind.kind}>
                           <td className={styles.cellTitle}>{kindLabel(kind.kind)}</td>
-                          <td className={styles.mono}>{kind.seen}</td>
-                          <td className={styles.mono}>{kind.eligible} ({pct(kind.eligibleRate)})</td>
-                          <td className={styles.mono}>{kind.chosen}{kind.chosenRate === null ? "" : ` (${pct(kind.chosenRate)})`}</td>
-                          <td className={`${styles.mono} ${kind.avgNetBps !== null ? (kind.avgNetBps >= 0 ? styles.pos : styles.neg) : ""}`}>{kind.avgNetBps === null ? "n/d" : `${kind.avgNetBps.toFixed(1)} bps`}</td>
-                          <td className={styles.mono}>{kind.avgPriceImpactPercent === null ? "n/d" : `${kind.avgPriceImpactPercent.toFixed(2)}%`}</td>
+                          <td className={`${styles.mono} ${styles.num}`}>{kind.seen}</td>
+                          <td className={`${styles.mono} ${styles.num}`}>{kind.eligible} ({pct(kind.eligibleRate)})</td>
+                          <td className={`${styles.mono} ${styles.num}`}>{kind.chosen}{kind.chosenRate === null ? "" : ` (${pct(kind.chosenRate)})`}</td>
+                          <td className={`${styles.mono} ${styles.num} ${kind.avgNetBps !== null ? (kind.avgNetBps >= 0 ? styles.pos : styles.neg) : ""}`}>{kind.avgNetBps === null ? "n/d" : `${kind.avgNetBps.toFixed(1)} bps`}</td>
+                          <td className={`${styles.mono} ${styles.num}`}>{kind.avgPriceImpactPercent === null ? "n/d" : `${kind.avgPriceImpactPercent.toFixed(2)}%`}</td>
                           <td className={styles.cellMeta}>{kind.topReasons[0] ? `${reasonLabel(kind.topReasons[0].reason)} (${kind.topReasons[0].count})` : "nenhum"}</td>
                         </tr>
                       ))}
@@ -275,17 +311,21 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
                   </table>
                 </div>
               ) : <p className={styles.note}>Sem histórico suficiente ainda.</p>}
-              <h3 className={styles.subtitle}>Ciclos recentes</h3>
-              <ul className={styles.timeline}>
-                {[...state.history].reverse().slice(0, 8).map((entry) => (
-                  <li key={entry.cycleId} className={styles.timelineRow}>
-                    <span className={styles.mono}>{new Date(entry.startedAtMs).toLocaleTimeString("pt-BR")}</span>
-                    <span>{entry.decision ? (entry.decision.choice === "hold" ? "manter" : kindLabel(entry.candidates.find((candidate) => candidate.id === entry.decision!.choice)?.kind ?? entry.decision.choice)) : "sem consulta"}</span>
-                    <span className={styles.cellMeta}>{executionLabel(entry.execution.status)}</span>
-                    <span className={styles.mono}>{usd(entry.inventory.knownValueUsd)}</span>
-                  </li>
-                ))}
-              </ul>
+              <h3 className={`${styles.subtitle} ${styles.subtitleDivided}`}>Ciclos recentes</h3>
+              {state.history.length === 0 ? (
+                <p className={styles.note}>Nenhum ciclo anterior registrado nesta sessão.</p>
+              ) : (
+                <ul className={styles.timeline}>
+                  {[...state.history].reverse().slice(0, 8).map((entry) => (
+                    <li key={entry.cycleId} className={styles.timelineRow}>
+                      <span className={styles.mono}>{new Date(entry.startedAtMs).toLocaleTimeString("pt-BR")}</span>
+                      <span>{entry.decision ? (entry.decision.choice === "hold" ? "manter" : kindLabel(entry.candidates.find((candidate) => candidate.id === entry.decision!.choice)?.kind ?? entry.decision.choice)) : "sem consulta"}</span>
+                      <span className={styles.cellMeta}>{executionLabel(entry.execution.status)}</span>
+                      <span className={`${styles.mono} ${styles.num}`}>{usd(entry.inventory.knownValueUsd)}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 

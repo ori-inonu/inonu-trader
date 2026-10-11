@@ -1,77 +1,120 @@
+/* Dock card shell. Radius, edge, header padding and content padding match DecisionCenter and
+   WalletPanel so the three cards read as one system. */
 .panel {
+  container-type: inline-size;
+  container-name: card;
   min-width: 0;
-  margin-top: 16px;
   border: 1px solid var(--edge);
-  border-radius: 18px;
+  border-radius: var(--r-lg);
   background: var(--bg-deck);
   color: var(--ink);
 }
 
 .header {
   display: flex;
+  min-width: 0;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
-  padding: 18px 20px 14px;
+  gap: var(--s3);
+  padding: var(--s5) var(--s5) var(--s3);
   border-bottom: 1px solid var(--edge);
 }
 
-.title {
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.25;
+.headingGroup {
+  min-width: 0;
 }
 
+.eyebrow {
+  margin: 0;
+  color: var(--signal);
+  font: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+/* The title is held to two lines so every card header resolves to the same height in the dock
+   row. The full title stays reachable through the title attribute. */
+.title {
+  display: -webkit-box;
+  min-block-size: 2lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
+  color: var(--ink);
+  font: var(--fs-md);
+  font-weight: 600;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* All four cards reserve the same three lines and clamp to them, so the dock row reads as one
+   header band. The full sentence stays reachable through the title attribute. */
 .description {
-  margin-top: 5px;
+  display: -webkit-box;
+  min-block-size: 3lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
   color: var(--ink-2);
-  font-size: 12px;
-  line-height: 1.45;
+  font: var(--fs-sm);
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .badge {
+  display: inline-flex;
   flex: none;
+  min-height: 24px;
+  align-items: center;
   border: 1px solid var(--edge-strong);
-  border-radius: 999px;
-  padding: 5px 9px;
+  border-radius: var(--r-pill);
+  padding: 0 var(--s2);
   color: var(--hold);
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
-  line-height: 1.3;
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
 }
 
 .content {
   display: grid;
-  gap: 12px;
-  padding: 16px 20px 18px;
+  min-width: 0;
+  gap: var(--s3);
+  padding: var(--s4) var(--s5) var(--s5);
 }
 
 .subtitle {
-  margin-top: 6px;
+  margin: 0;
   color: var(--ink-2);
-  font-size: 12px;
+  font: var(--fs-xs);
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--track-micro);
   text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* Section rule so the two networks of this card read as two blocks, matching the rhythm the
+   DecisionCenter uses between its sections. */
+.subtitleDivided {
+  padding-top: var(--s4);
+  border-top: 1px solid var(--edge);
 }
 
 .note,
 .error,
-.footer,
-.candidateMeta {
-  font-size: 12px;
+.footer {
+  margin: 0;
+  font: var(--fs-sm);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .note,
-.footer,
-.candidateMeta {
+.footer {
   color: var(--ink-3);
 }
 
 .note code {
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-mono);
   color: var(--ink);
 }
 
@@ -79,93 +122,92 @@
   color: var(--sell);
 }
 
-.decision {
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.5;
-}
-
-.chainList,
-.candidateList {
+.chainList {
   display: grid;
-  gap: 10px;
+  min-width: 0;
+  gap: var(--s3);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.chainRow,
-.candidateEligible,
-.candidateRejected {
+.chainRow {
   display: grid;
-  gap: 8px;
+  min-width: 0;
+  gap: var(--s2);
   border: 1px solid var(--edge);
-  border-radius: 12px;
-  padding: 10px 12px;
-}
-
-.candidateEligible {
-  border-color: var(--buy);
-}
-
-.candidateRejected {
-  opacity: 0.8;
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck-2);
 }
 
 .chainHead {
   display: flex;
+  min-width: 0;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--s3);
 }
 
 .chainName {
+  min-width: 0;
   color: var(--ink);
-  font-size: 13px;
+  font-size: var(--fs-base);
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .chainMeta {
+  min-width: 0;
+  flex: 0 1 auto;
   color: var(--ink-3);
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
   text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.chainMetaDown {
+  color: var(--hold);
 }
 
 .balances {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: var(--s2) var(--s3);
   margin: 0;
 }
 
 .balanceRow {
   display: grid;
-  gap: 2px;
   min-width: 0;
+  gap: var(--s1);
 }
 
 .balanceRow dt {
+  min-width: 0;
   color: var(--ink-3);
-  font-size: 11px;
+  font: var(--fs-xs);
+  overflow-wrap: anywhere;
 }
 
 .balanceRow dd {
+  min-width: 0;
   margin: 0;
-  overflow-wrap: anywhere;
   color: var(--ink);
-  font-family: var(--font-mono), monospace;
-  font-size: 15px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .actions {
   display: flex;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .primaryButton,
@@ -173,13 +215,14 @@
 .textButton {
   min-width: 44px;
   min-height: 44px;
-  border-radius: 10px;
-  padding: 9px 13px;
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 600;
-  line-height: 1.25;
-  transition: background-color 160ms ease, border-color 160ms ease;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  transition: background-color var(--dur-fast) var(--ease-snap), border-color var(--dur-fast) var(--ease-snap), color var(--dur-fast) var(--ease-snap);
 }
 
 .primaryButton {
@@ -200,15 +243,52 @@
   color: var(--ink-2);
 }
 
+.primaryButton:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--signal) 82%, var(--ink));
+}
+
+.secondaryButton:hover:not(:disabled),
+.textButton:hover:not(:disabled) {
+  border-color: var(--signal);
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
 .primaryButton:disabled,
 .secondaryButton:disabled,
 .textButton:disabled {
+  border-color: var(--edge);
+  background: var(--bg-deck);
+  color: var(--ink-3);
   cursor: not-allowed;
-  opacity: 0.55;
 }
 
-@media (max-width: 379.98px) {
+/* The 1fr dock column is this narrow at 1280px even though the viewport is wide, so the card
+   itself decides when a two column balance grid and inline buttons stop fitting. */
+@container card (max-width: 320px) {
   .balances {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .actions {
+    align-items: stretch;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    flex: 1 1 130px;
+  }
+
+  .textButton {
+    flex: 1 1 100%;
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryButton,
+  .secondaryButton,
+  .textButton {
+    transition: none;
   }
 }
