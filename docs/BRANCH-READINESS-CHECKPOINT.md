@@ -33,3 +33,7 @@ Falhas anteriores preservadas: root-tests-2 teve handshake C6 e passou isoladame
 Jev 980c21d8-fcf3-4778-8112-4f399ec8c8df: isolate_projection, jev-1.13.0, confianca 1, 802 tokens entrada/57 saida, custo desconhecido. approved_by=jev_delegated apenas para a escolha tecnica. Consulta sobre teardown retornou skipped/unsafe_candidate_id; local_fallback: preservar o requisito de ausencia do processo com evidencia do OS, sem alterar escopo ou autorizacao.
 
 Proximo passo: concluir revisao independente, corrigir bloqueadores, rever o delta final, confirmar main atual e executar merge local. Auditar ancestralidade e preservacao concorrente antes de remover somente C:/Users/gabri/jev-trader-codex-review e codex/review-main-readiness quando integralmente incorporados. Outros worktrees/branches permanecem sob suas sessoes. Nao ha comprovacao de crescimento exponencial.
+
+## Atualizacao apos segunda revisao
+
+O recibo final-review.txt identificou um bloqueador S2: modelo sincrono pode bloquear event loop e retornar antes do callback atrasado do timer. Reproduzido em readiness.test.ts: timeout esperado, ok recebido. Correção usa performance.now() e compara prazo monotônico antes de aceitar a resposta; prazo excedido aborta e bloqueia. Bateria deadline-green: 71 pass, 0 fail em 6 arquivos; typecheck backend exit 0. Nenhum codigo de frontend mudou apos web-tests-4/build. Segunda revisao nao encontrou outros bloqueadores no escopo. O delta de deadline e fixture ainda exige terceira revisao independente antes do merge.

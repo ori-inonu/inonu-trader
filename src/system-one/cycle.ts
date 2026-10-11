@@ -50,9 +50,13 @@ export async function runSystemOneCycle(input: CycleInput, deps: CycleDeps): Pro
         onAbort = () => reject(new Error("decision cancelled"));
         signal.addEventListener("abort", onAbort, { once: true });
       });
-      timer = setTimeout(() => controller.abort(), Math.min(timeoutMs, 60_000));
+      const budgetMs = Math.min(timeoutMs, 60_000);
+      const deadline = performance.now() + budgetMs;
+      timer = setTimeout(() => controller.abort(), budgetMs);
       // The adapter receives independent copies; only the local envelope may validate its answer.
       const raw = await Promise.race([deps.model.choose(structuredClone(brief), structuredClone(eligible), { signal }), cancelled]);
+      // A blocked event loop can resolve the promise before servicing its overdue timer.
+      if (performance.now() >= deadline) controller.abort();
       signal.throwIfAborted();
       decision = validateLeverageDecision(raw, eligible);
     } catch {
