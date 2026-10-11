@@ -1,5 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { parseSystemOneCycle } from "./system-one";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { SystemOneView } from "../components/SystemOne/SystemOne";
 
 const candidate = (id: string, side: "long" | "short", leverage: number, eligible: boolean) => ({
   id,
@@ -38,6 +41,21 @@ const cycle = {
 };
 
 describe("parseSystemOneCycle", () => {
+  test("rejects unsupported schemas, failed selected decisions and forged candidates", () => {
+    expect(parseSystemOneCycle({ ...cycle, schemaVersion: 99 })).toBeNull();
+    expect(parseSystemOneCycle({ ...cycle, decision: { ...cycle.decision, status: "error" } })).toBeNull();
+    expect(parseSystemOneCycle({ ...cycle, chosen: candidate("short-5x", "short", 5, true) })).toBeNull();
+    expect(parseSystemOneCycle({ ...cycle, completedAtMs: undefined })).toBeNull();
+  });
+
+  test("view identifies mock, configured capital and failed refresh", () => {
+    const parsed = parseSystemOneCycle({ ...cycle, decision: { ...cycle.decision, model: "mock" } })!;
+    const html = renderToStaticMarkup(createElement(SystemOneView, { state: { status: "error", cycle: parsed, error: "fetch failed", ageMs: 180_000 }, reducedMotion: true }));
+    expect(html).toContain("MOCK");
+    expect(html).toContain("capital configurado");
+    expect(html).toContain("Atualizacao indisponivel");
+    expect(html).not.toContain("Alavancagem decidida pelo Jev");
+  });
   test("parses a full cycle and drops malformed candidates and probabilities", () => {
     const parsed = parseSystemOneCycle(cycle);
     expect(parsed).not.toBeNull();

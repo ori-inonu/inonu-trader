@@ -34,10 +34,10 @@ describe("volatility", () => {
 });
 
 describe("funding carry", () => {
-  test("longs pay a positive rate, shorts receive it, three settlements a day by default", () => {
+  test("longs pay and shorts receive; unknown interval leaves carry unknown", () => {
     expect(fundingCarryPerDay("long", 0.0001, 8 * 3_600_000)).toBeCloseTo(-0.0003);
     expect(fundingCarryPerDay("short", 0.0001, 8 * 3_600_000)).toBeCloseTo(0.0003);
-    expect(fundingCarryPerDay("short", 0.0001, null)).toBeCloseTo(0.0003);
+    expect(fundingCarryPerDay("short", 0.0001, null)).toBeNull();
     expect(fundingCarryPerDay("short", null, null)).toBeNull();
   });
 });
@@ -53,9 +53,9 @@ describe("brief", () => {
     expect(brief.notes.some((note) => note.includes("Phase 0"))).toBe(true);
   });
 
-  test("phase 1 allows only 1x and sizes the margin by the order cap", () => {
+  test("phase 1 rejects perpetual contracts while preserving the order cap", () => {
     const brief = buildLeverageBrief({ ...readings, phase: "fase-1", nowMs: NOW });
-    expect(brief.eligibleIds.sort()).toEqual(["long-1x", "short-1x"]);
+    expect(brief.eligibleIds).toEqual([]);
     const long1 = brief.candidates.find((candidate) => candidate.id === "long-1x") as LeverageCandidate;
     expect(long1.marginUsd).toBeLessThanOrEqual(brief.limits.orderCapUsd);
     expect(long1.notionalUsd).toBeCloseTo(long1.marginUsd);
@@ -154,9 +154,9 @@ describe("cycle", () => {
   test("a failing model becomes a hold with an error status and a warning", async () => {
     const readings = syntheticReadings({ nowMs: NOW, capitalUsd: 1_000, sigmaDaily: 0.02 });
     const model = { name: "broken", choose: async () => { throw new Error("boom"); } };
-    const cycle = await runSystemOneCycle({ ...readings, phase: "fase-1" }, { model, now: () => NOW, cycleId: () => "c3" });
+    const cycle = await runSystemOneCycle({ ...readings, phase: "fase-2" }, { model, now: () => NOW, cycleId: () => "c3" });
     expect(cycle.decision).toMatchObject({ choice: "hold", status: "error", model: "broken" });
-    expect(cycle.warnings[0]).toContain("decision_failed: boom");
+    expect(cycle.warnings).toEqual(["decision_failed"]);
     expect(cycle.execution.status).toBe("blocked");
   });
 });
@@ -169,8 +169,8 @@ describe("public market reading", () => {
       async get(endpoint, query) {
         calls.push(endpoint.path);
         if (endpoint.path.endsWith("mark-price")) return { data: [{ instId: query?.instId, instType: "SWAP", markPx: "0.0251", ts: String(NOW) }], meta: meta(endpoint.path) };
-        if (endpoint.path.endsWith("funding-rate")) return { data: [{ instId: query?.instId, fundingRate: "0.0001", fundingTime: String(NOW + 3_600_000), nextFundingTime: String(NOW + 9 * 3_600_000), method: "current_period", settState: "settled" }], meta: meta(endpoint.path) };
-        const rows = Array.from({ length: 40 }, (_, i) => [String(NOW - i * 900_000), "0.025", "0.026", "0.024", String(0.025 + (i % 3) * 0.0001), "1", "1", "1", "1"]);
+        if (endpoint.path.endsWith("funding-rate")) return { data: [{ instId: query?.instId, ts: String(NOW), fundingRate: "0.0001", fundingTime: String(NOW + 3_600_000), nextFundingTime: String(NOW + 9 * 3_600_000), method: "current_period", settState: "settled" }], meta: meta(endpoint.path) };
+        const rows = Array.from({ length: 40 }, (_, i) => [String(NOW - (i + 1) * 900_000), "0.025", "0.026", "0.024", String(0.025 + (i % 3) * 0.0001), "1", "1", "1", "1"]);
         return { data: rows, meta: meta(endpoint.path) };
       },
     };
