@@ -215,7 +215,7 @@ export default function CommandCenter({ meta, latest, events, connection, operat
     );
   }, [actionKey, reducedMotion, stale]);
 
-  const cadence = "Um bloco a cada 300 ms";
+  const cadence = "Cadência não verificada";
 
   return (
     <section
@@ -228,7 +228,7 @@ export default function CommandCenter({ meta, latest, events, connection, operat
           <p className={styles.eyebrow}>Central de decisoes e operacoes</p>
           <h2 className={styles.title} id="command-center-title">Jev no comando</h2>
           <p className={styles.lede}>
-            Le o feed de preco, decide entre compra e venda e coloca a ordem no livro on-chain da Kuru em cada bloco da Monad.
+            Acompanha o feed de preço, as decisões do agente e os estados das ordens observadas.
           </p>
         </div>
         <dl className={styles.headChips}>
