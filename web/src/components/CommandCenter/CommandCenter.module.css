@@ -1,0 +1,889 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. jev-floor-glide, jev-dash-flow and
+   jev-equator-spin are infinite and carry no state: the floor drifts, the input links stream and
+   the equator ring circles the core whether or not anything has changed. */
+@keyframes jev-dash-flow {
+  from {
+    stroke-dashoffset: 20;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes jev-equator-spin {
+  from {
+    transform: translateZ(20px) rotateX(74deg) rotateZ(0deg);
+  }
+
+  to {
+    transform: translateZ(20px) rotateX(74deg) rotateZ(360deg);
+  }
+}
+@keyframes jev-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jev-tile-land {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) translateZ(26px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes jev-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.965);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes jev-floor-glide {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(48px);
+  }
+}
+
+.center {
+  --accent: var(--signal);
+  --accent-deep: var(--signal-deep);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s4);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-lg);
+  padding: var(--s5) var(--s5) var(--s4);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(79, 214, 232, 0.07) 0%, transparent 55%),
+    var(--bg-hull);
+  box-shadow: var(--elev-3);
+  transition: opacity var(--dur-base) var(--ease-out-expo);
+}
+
+.center.buy {
+  --accent: var(--buy);
+  --accent-deep: color-mix(in srgb, var(--buy) 55%, var(--bg-well));
+}
+
+.center.sell {
+  --accent: var(--sell);
+  --accent-deep: color-mix(in srgb, var(--sell) 55%, var(--bg-well));
+}
+
+.center.hold {
+  --accent: var(--hold);
+  --accent-deep: color-mix(in srgb, var(--hold) 55%, var(--bg-well));
+}
+
+.center.late {
+  --accent: var(--late);
+  --accent-deep: color-mix(in srgb, var(--late) 55%, var(--bg-well));
+}
+
+.center.unknown {
+  --accent: var(--edge-strong);
+  --accent-deep: var(--edge);
+}
+
+.center.stale {
+  opacity: 0.6;
+}
+
+.stale *,
+.stale {
+  animation: none !important;
+}
+
+/* Header */
+.head {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s4);
+}
+
+.headCopy {
+  min-width: 0;
+  max-width: 62ch;
+}
+
+.eyebrow {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: var(--s1);
+  color: var(--ink);
+  font: var(--fs-lg);
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  margin-top: var(--s2);
+  color: var(--ink-2);
+  font: var(--fs-base);
+}
+
+.headChips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--s2);
+  margin: 0;
+}
+
+.chip {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+}
+
+.chip dt {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.chip dd {
+  margin: 0;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Scene: a fixed logical frame so the SVG and the satellite layer share coordinates. */
+.scene {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1000 / 520;
+  max-height: 560px;
+  min-height: 380px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background:
+    radial-gradient(60% 70% at 50% 48%, rgba(79, 214, 232, 0.05) 0%, transparent 70%),
+    linear-gradient(180deg, var(--bg-well) 0%, var(--bg-hull) 100%);
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+/* Perspective floor: a receding grid that glides toward the viewer. Ambient, carries no state. */
+.floor {
+  position: absolute;
+  inset: 42% -20% -10%;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 600px;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 45%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 45%, #000 100%);
+}
+
+.floorGrid {
+  position: absolute;
+  inset: -60px 0 -120px;
+  transform-origin: 50% 0%;
+  transform: rotateX(62deg);
+  background-image:
+    linear-gradient(90deg, rgba(79, 214, 232, 0.09) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(79, 214, 232, 0.09) 1px, transparent 1px);
+  background-size: 48px 48px;
+  will-change: transform;
+  animation: jev-floor-glide 6s linear infinite;
+}
+
+.floorGrid::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: radial-gradient(70% 60% at 50% 20%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 70%);
+  transition: background var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.orbits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.ring,
+.ringFar,
+.ringNear {
+  fill: none;
+  stroke: var(--edge-strong);
+  stroke-width: 1;
+}
+
+.ringFar {
+  stroke: var(--edge);
+  stroke-dasharray: 3 9;
+}
+
+.ringNear {
+  stroke: color-mix(in srgb, var(--accent) 45%, var(--edge-strong));
+  stroke-dasharray: 1 6;
+  transition: stroke var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.link {
+  fill: none;
+  stroke: var(--edge-strong);
+  stroke-width: 1.2;
+  opacity: 0.8;
+}
+
+.link_input {
+  stroke-dasharray: 4 6;
+  animation: jev-dash-flow 1.4s linear infinite;
+}
+
+.link_output {
+  stroke: color-mix(in srgb, var(--accent) 60%, var(--edge-strong));
+  stroke-width: 1.6;
+  transition: stroke var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.link_operator {
+  stroke-dasharray: 2 5;
+  animation: jev-dash-flow 2.6s linear infinite;
+}
+
+.particles circle {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* Satellites: DOM cards positioned by the same logical frame as the SVG. */
+.satellites {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform: rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) translateZ(18px);
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.satellite {
+  --sx: 50%;
+  --sy: 50%;
+  --sscale: 1;
+  --sopacity: 1;
+  position: absolute;
+  top: var(--sy);
+  left: var(--sx);
+  display: flex;
+  width: 164px;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
+  background: color-mix(in srgb, var(--bg-deck) 88%, transparent);
+  box-shadow: var(--elev-2);
+  opacity: var(--sopacity);
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(var(--sscale));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.satellite::before {
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  width: 9px;
+  height: 9px;
+  content: "";
+  border: 2px solid var(--bg-hull);
+  border-radius: 50%;
+  background: var(--edge-strong);
+  transform: translateY(-50%);
+}
+
+.sat_output::before {
+  right: -5px;
+  left: auto;
+  background: var(--accent);
+  transition: background var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.sat_operator::before {
+  top: -5px;
+  left: 50%;
+  background: var(--hold);
+  transform: translateX(-50%);
+}
+
+.satRole {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.sat_output .satRole {
+  color: var(--accent);
+  transition: color var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.sat_operator .satRole {
+  color: var(--hold);
+}
+
+.satLabel {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.satValue {
+  min-width: 0;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.satTone_buy .satValue {
+  color: var(--buy);
+}
+
+.satTone_sell .satValue {
+  color: var(--sell);
+}
+
+.satTone_hold .satValue {
+  color: var(--hold);
+}
+
+.satTone_late .satValue {
+  color: var(--late);
+}
+
+.satTone_unknown .satValue {
+  color: var(--ink-3);
+}
+
+/* Nucleus: Jev, layered in depth. The only element on the stage that climbs above the orbit. */
+.nucleusWrap {
+  position: absolute;
+  top: 47.9%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 252px;
+  height: 252px;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.nucleus {
+  position: relative;
+  display: grid;
+  width: 252px;
+  height: 252px;
+  place-items: center;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+
+.layer {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.layerShadow {
+  inset: 10px;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.75) 0%, transparent 70%);
+  transform: translateZ(-40px) translateY(26px) scale(1.12);
+}
+
+.layerBody {
+  inset: 0;
+  border: 1px solid var(--edge-strong);
+  background:
+    radial-gradient(circle at 36% 30%, color-mix(in srgb, var(--accent) 22%, var(--bg-deck-3)) 0%, var(--bg-deck) 52%, var(--bg-well) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 70px rgba(0, 0, 0, 0.6),
+    0 30px 60px -30px rgba(0, 0, 0, 0.9);
+  transform: translateZ(0);
+  transition: background var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.halo {
+  position: absolute;
+  inset: 6px;
+  width: calc(100% - 12px);
+  height: calc(100% - 12px);
+  transform: translateZ(14px) rotate(-90deg);
+}
+
+.haloTrack {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 3;
+}
+
+.haloArc {
+  fill: none;
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  transition:
+    stroke-dasharray var(--dur-cinematic) var(--ease-out-expo),
+    stroke-dashoffset var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.halo_buy {
+  stroke: var(--buy);
+}
+
+.halo_sell {
+  stroke: var(--sell);
+}
+
+.halo_hold {
+  stroke: var(--hold);
+}
+
+.layerInner {
+  inset: 34px;
+  border: 1px solid var(--edge);
+  background: radial-gradient(circle at 50% 42%, var(--bg-deck-2) 0%, var(--bg-well) 100%);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.55);
+  transform: translateZ(28px);
+}
+
+/* A tilted ring circling the core between the body and the face, ambient only. */
+.equator {
+  position: absolute;
+  inset: 18px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 70%, var(--edge-strong));
+  border-radius: 50%;
+  opacity: 0.7;
+  transform: translateZ(20px) rotateX(74deg);
+  animation: jev-equator-spin 16s linear infinite;
+  transition: border-color var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.face {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transform: translateZ(44px);
+}
+
+.faceName {
+  color: var(--ink);
+  font: var(--fs-lg);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.faceVendor {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.word {
+  display: grid;
+  min-height: 40px;
+  place-items: center;
+  margin-top: var(--s2);
+  color: var(--accent);
+  font: var(--fs-hero);
+  font-size: 30px;
+  line-height: 1.1;
+  text-align: center;
+  transition: color var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.wordLong {
+  font: var(--fs-md);
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+.unknown .word,
+.unknown .wordLong {
+  color: var(--ink-2);
+}
+
+.faceConfidence {
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Corner readouts */
+.readouts {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.readout {
+  position: absolute;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.readout dt {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.readout dd {
+  margin: 0;
+  color: var(--ink);
+  font: var(--fs-readout);
+  font-variant-numeric: tabular-nums;
+}
+
+.readoutTl {
+  top: var(--s4);
+  left: var(--s4);
+}
+
+.readoutTr {
+  top: var(--s4);
+  right: var(--s4);
+  text-align: right;
+}
+
+.readoutBl {
+  bottom: var(--s4);
+  left: var(--s4);
+}
+
+.readoutBl dd {
+  color: var(--buy);
+}
+
+.readoutBr {
+  right: var(--s4);
+  bottom: var(--s4);
+  text-align: right;
+}
+
+.readoutBr dd {
+  color: var(--sell);
+}
+
+.notice {
+  position: absolute;
+  top: var(--s4);
+  left: 50%;
+  border: 1px solid var(--hold);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s3);
+  color: var(--hold);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+/* Block belt: the last blocks laid on a plane that recedes toward the scene. */
+.belt {
+  min-width: 0;
+  overflow: hidden;
+  perspective: 900px;
+}
+
+.beltPlane {
+  display: flex;
+  min-width: 0;
+  gap: var(--s1);
+  padding: var(--s2) var(--s2) 0;
+  transform: rotateX(34deg);
+  transform-origin: 50% 0%;
+  transform-style: preserve-3d;
+}
+
+.beltEmpty {
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.tile {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s1);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  padding: var(--s1) var(--s1) var(--s2);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+  transform-style: preserve-3d;
+}
+
+.tileBar {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--edge-strong);
+}
+
+.tile_buy .tileBar {
+  background: var(--buy);
+}
+
+.tile_sell .tileBar {
+  background: var(--sell);
+}
+
+.tile_hold .tileBar {
+  background: var(--hold);
+}
+
+.tile_late .tileBar {
+  background: var(--late);
+}
+
+.tileQuoted {
+  border-color: var(--edge-strong);
+  background: var(--bg-deck-2);
+}
+
+.tileFilled {
+  box-shadow: var(--elev-2), inset 0 -2px 0 var(--buy);
+}
+
+.tileNumber {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.tileQuoted .tileNumber {
+  color: var(--ink-2);
+}
+
+.tileNew {
+  animation: jev-tile-land var(--dur-slow) var(--ease-out-back) both;
+}
+
+.center :global(details) {
+  animation: jev-fade-rise var(--dur-base) var(--ease-out-expo) both;
+}
+
+/* Still: reduced motion or a frame explicitly held. Nothing drifts, nothing lands. */
+.still .floorGrid,
+.still .tileNew,
+.still .link_input,
+.still .link_operator,
+.still .equator {
+  animation: none;
+}
+
+@media (max-width: 1279.98px) {
+  .satellite {
+    width: 140px;
+  }
+
+  .nucleusWrap,
+  .nucleus {
+    width: 216px;
+    height: 216px;
+  }
+
+  .layerInner {
+    inset: 28px;
+  }
+
+  .word {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 899.98px) {
+  .head {
+    flex-direction: column;
+  }
+
+  .headChips {
+    justify-content: flex-start;
+  }
+
+  /* Below this the orbit has no room: the scene stacks the nucleus over a list of satellites,
+     the SVG links go, and the belt shrinks to its last twelve tiles via overflow. */
+  .scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    aspect-ratio: auto;
+    min-height: 0;
+    max-height: none;
+    padding: var(--s7) var(--s4) var(--s4);
+    gap: var(--s5);
+    perspective: none;
+  }
+
+  .orbits,
+  .floor {
+    display: none;
+  }
+
+  /* Jev comes first on a phone, then what it reads and drives, then the readouts. */
+  .nucleusWrap {
+    position: static;
+    order: -1;
+    transform: none;
+  }
+
+  .equator {
+    display: none;
+  }
+
+  .satellite::before {
+    display: none;
+  }
+
+  .readout dd {
+    font: var(--fs-md);
+    font-family: var(--font-mono);
+  }
+
+  .satellites {
+    position: static;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--s2);
+    transform: none;
+  }
+
+  .satellite {
+    position: static;
+    width: auto;
+    opacity: 1;
+    transform: none;
+  }
+
+  .readouts {
+    position: static;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s2);
+  }
+
+  .readout {
+    position: static;
+    text-align: left;
+  }
+
+  .readoutTr,
+  .readoutBr {
+    text-align: left;
+  }
+
+  .beltPlane {
+    transform: rotateX(18deg);
+  }
+
+  .tile:nth-child(-n + 14) {
+    display: none;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .center {
+    padding: var(--s4) var(--s3) var(--s3);
+  }
+
+  .nucleusWrap,
+  .nucleus {
+    width: 200px;
+    height: 200px;
+  }
+
+  .layerInner {
+    inset: 26px;
+  }
+
+  .word {
+    font-size: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floorGrid,
+  .tileNew,
+  .link_input,
+  .link_operator,
+  .equator,
+  .orbits,
+  .satellites,
+  .nucleusWrap {
+    animation: none;
+    transition: none;
+  }
+}

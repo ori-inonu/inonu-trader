@@ -19,6 +19,22 @@
   animation: none !important;
 }
 
+/* Each cell is a shallow slab: it lifts and tips toward the pointer on hover, 2.5D only. */
+.cell {
+  transform: perspective(700px) rotateX(0deg) translateY(0);
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo),
+    border-color var(--dur-base) var(--ease-out-expo);
+  will-change: transform;
+}
+
+.cell:hover {
+  border-color: var(--edge-strong);
+  box-shadow: var(--elev-2);
+  transform: perspective(700px) rotateX(4deg) translateY(-3px);
+}
+
 .cell {
   display: flex;
   min-width: 0;
@@ -139,7 +155,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .surface {
+  .surface,
+  .cell {
     transition: none;
+  }
+
+  .cell:hover {
+    transform: none;
   }
 }
