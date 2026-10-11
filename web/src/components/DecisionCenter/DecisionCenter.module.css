@@ -212,16 +212,12 @@
   background: var(--signal);
 }
 
-.fillHot {
-  background: var(--sell);
-}
-
-.gauge {
+.dailyTotal {
   display: grid;
   gap: var(--s1);
 }
 
-.gaugeHead {
+.dailyTotalHead {
   display: flex;
   min-width: 0;
   justify-content: space-between;
