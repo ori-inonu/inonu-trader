@@ -12,6 +12,7 @@ import type { GetPort } from "../onchainos/http";
 import { readGet } from "../onchainos/read";
 import { parseFundingRate, parseMarkPrice, parsePublicCandles, toNumber, type PublicCandleRow } from "../onchainos/public-okx";
 import type { MarketReading, Side, WalletReading } from "./types";
+import { isFreshReading } from "./types";
 import { realizedVolatility } from "./volatility";
 
 export const DEFAULT_INST_ID = "MON-USDT-SWAP";
@@ -94,13 +95,20 @@ export interface PublicMarketOptions {
   bar?: keyof typeof BAR_MS;
   candles?: number;
   nowMs: number;
+  /** Live callers sample after the awaited reads; fixed-time callers retain nowMs. */
+  now?: () => number;
 }
 
-function closesOf(rows: readonly PublicCandleRow[]): number[] {
+function closesOf(rows: readonly PublicCandleRow[], barMs: number, nowMs: number): number[] {
   // The public endpoint returns newest first; the volatility needs oldest first.
-  const ordered = [...rows].sort((a, b) => a.startMs - b.startMs);
+  const ordered = rows.filter(row => row.confirmed).sort((a, b) => a.startMs - b.startMs);
+  const latest = ordered.at(-1);
+  if (!latest || latest.startMs + barMs > nowMs || nowMs - (latest.startMs + barMs) > barMs) return [];
   const closes: number[] = [];
+  let previous: number | null = null;
   for (const row of ordered) {
+    if (previous !== null && row.startMs - previous !== barMs) return [];
+    previous = row.startMs;
     const close = toNumber(row.close);
     if (close === null) return [];
     closes.push(close);
@@ -112,7 +120,8 @@ function closesOf(rows: readonly PublicCandleRow[]): number[] {
 export async function readPublicMarket(port: GetPort, options: PublicMarketOptions): Promise<MarketReading> {
   const instId = options.instId ?? DEFAULT_INST_ID;
   const bar = options.bar ?? DEFAULT_BAR;
-  const barMs = BAR_MS[bar] ?? null;
+  const barMs = Object.hasOwn(BAR_MS, bar) ? BAR_MS[bar]! : null;
+  if (barMs === null) throw new Error("bar_unknown");
   const limit = Math.min(300, Math.max(2, options.candles ?? 96));
 
   const [mark, funding, candles] = await Promise.all([
@@ -121,28 +130,29 @@ export async function readPublicMarket(port: GetPort, options: PublicMarketOptio
     readGet(port, "public.candles", { instId, bar, limit }, (data) => parsePublicCandles(data, 300)),
   ]);
 
-  const closes = closesOf(candles.value);
+  const evaluatedAtMs = options.now?.() ?? options.nowMs;
+  const closes = closesOf(candles.value, barMs, evaluatedAtMs);
   const volatility = barMs === null ? { sigmaDaily: null, returnsUsed: 0, reason: "bar_unknown" } : realizedVolatility(closes, barMs);
-  const fundingRate = toNumber(funding.value.fundingRate);
+  const fundingRate = isFreshReading(funding.value.tsMs, evaluatedAtMs) ? toNumber(funding.value.fundingRate) : null;
   return {
     instId,
     indexPrice: null,
-    markPrice: toNumber(mark.value.markPx),
+    markPrice: isFreshReading(mark.value.tsMs, evaluatedAtMs) ? toNumber(mark.value.markPx) : null,
     fundingRate,
     fundingIntervalMs: funding.value.intervalMs,
     realizedSigmaDaily: volatility.sigmaDaily,
     candlesUsed: closes.length,
     candleBarMs: barMs,
     source: "okx_public_v5",
-    observedAtMs: options.nowMs,
+    observedAtMs: Math.min(mark.value.tsMs ?? 0, funding.value.tsMs ?? 0),
   };
 }
 
 export function configuredWallet(capitalUsd: number, nowMs: number): WalletReading {
   return {
     capitalUsd,
-    knownValueUsd: capitalUsd,
-    valueComplete: true,
+    knownValueUsd: 0,
+    valueComplete: false,
     openNotionalUsd: 0,
     openSide: null,
     source: "configured",

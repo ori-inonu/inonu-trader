@@ -19,7 +19,11 @@ const operatorHandler = createOperatorHandler({
   journalPath: resolve(OPERATOR_ROOT, process.env.OPERATOR_JOURNAL_PATH ?? "data/operator/cycles.jsonl"),
 });
 /** System One: the latest leverage decision cycle, read only. */
-const systemOneHandler = createSystemOneHandler(resolve(OPERATOR_ROOT, process.env.SYSTEM_ONE_STATE_PATH ?? "data/system-one/latest.json"));
+const systemOneHandler = createSystemOneHandler(
+  resolve(OPERATOR_ROOT, process.env.SYSTEM_ONE_STATE_PATH ?? "data/system-one/latest.json"),
+  (process.env.OPERATOR_DASHBOARD_ORIGINS ?? "http://localhost:3001,http://127.0.0.1:3001").split(","),
+  process.env.OPERATOR_READ_TOKEN ?? null,
+);
 
 /** GET / snapshot · GET /history recent blocks · GET /events SSE stream (`snapshot`, `block`, `quote`, `fill`, `ping`) */
 export function startServer(meta: Meta, history: () => BlockEvent[]) {

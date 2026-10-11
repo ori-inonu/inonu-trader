@@ -11,6 +11,11 @@
 import type { DerivedLimits, PhaseId } from "../policy/envelope";
 
 export const SYSTEM_ONE_SCHEMA_VERSION = 1;
+/** Conservative analysis freshness gate, not an execution SLA. */
+export const MAX_READING_AGE_MS = 120_000;
+export function isFreshReading(timestamp: number | null, nowMs: number): boolean {
+  return timestamp !== null && Number.isFinite(timestamp) && Number.isFinite(nowMs) && timestamp > 0 && timestamp <= nowMs && nowMs - timestamp <= MAX_READING_AGE_MS;
+}
 
 export const LEVERAGE_LADDER: readonly number[] = Object.freeze([1, 2, 3, 5]);
 export const SIDES = ["long", "short"] as const;

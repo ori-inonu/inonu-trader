@@ -41,6 +41,6 @@
     "okx:defi": "bun --no-env-file run scripts/okx-defi.ts",
     "okx:derivatives": "bun --no-env-file run scripts/okx-derivatives.ts",
     "okx:operator": "bun run scripts/okx-operator.ts",
-    "system-one": "bun run scripts/system-one.ts"
+    "system-one": "bun --no-env-file run scripts/system-one.ts"
   }
 }

@@ -6,7 +6,7 @@
 
 import type { PhaseId } from "../policy/envelope";
 import { buildLeverageBrief, type BuildBriefInput } from "./brief";
-import type { SystemOneModel } from "./decide";
+import { validateLeverageDecision, type SystemOneModel } from "./decide";
 import { SYSTEM_ONE_SCHEMA_VERSION, type LeverageBrief, type LeverageCandidate, type LeverageDecision, type MarketReading, type SystemOneCycle, type WalletReading } from "./types";
 
 export interface CycleDeps {
@@ -14,6 +14,7 @@ export interface CycleDeps {
   now: () => number;
   cycleId?: () => string;
   signal?: AbortSignal;
+  timeoutMs?: number;
 }
 
 export interface CycleInput {
@@ -30,23 +31,44 @@ function defaultCycleId(now: number): string {
 
 export async function runSystemOneCycle(input: CycleInput, deps: CycleDeps): Promise<SystemOneCycle> {
   const startedAtMs = deps.now();
-  const briefInput: BuildBriefInput = { ...input, nowMs: startedAtMs };
+  const briefInput: BuildBriefInput = { ...structuredClone(input), nowMs: startedAtMs };
   const brief: LeverageBrief = buildLeverageBrief(briefInput);
   const eligible: LeverageCandidate[] = brief.candidates.filter((candidate) => candidate.eligible);
   const warnings: string[] = [];
 
   let decision: LeverageDecision | null = null;
   if (eligible.length > 0) {
+    const controller = new AbortController();
+    const timeoutMs = deps.timeoutMs ?? 10_000;
+    const signal = deps.signal ? AbortSignal.any([deps.signal, controller.signal]) : controller.signal;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let onAbort: (() => void) | undefined;
     try {
-      decision = await deps.model.choose(brief, eligible, { signal: deps.signal });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      warnings.push(`decision_failed: ${message.slice(0, 160)}`);
-      decision = { choice: "hold", probabilities: { hold: 1 }, confidence: null, latencyMs: 0, model: deps.model.name, status: message.includes("abort") ? "timeout" : "error" };
+      if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new Error("invalid deadline");
+      signal.throwIfAborted();
+      const cancelled = new Promise<never>((_, reject) => {
+        onAbort = () => reject(new Error("decision cancelled"));
+        signal.addEventListener("abort", onAbort, { once: true });
+      });
+      const budgetMs = Math.min(timeoutMs, 60_000);
+      const deadline = performance.now() + budgetMs;
+      timer = setTimeout(() => controller.abort(), budgetMs);
+      // The adapter receives independent copies; only the local envelope may validate its answer.
+      const raw = await Promise.race([deps.model.choose(structuredClone(brief), structuredClone(eligible), { signal }), cancelled]);
+      // A blocked event loop can resolve the promise before servicing its overdue timer.
+      if (performance.now() >= deadline) controller.abort();
+      signal.throwIfAborted();
+      decision = validateLeverageDecision(raw, eligible);
+    } catch {
+      warnings.push("decision_failed");
+      decision = { choice: "hold", probabilities: { hold: 1 }, confidence: null, latencyMs: 0, model: deps.model.name, status: signal.aborted ? "timeout" : "error" };
+    } finally {
+      if (timer !== undefined) clearTimeout(timer);
+      if (onAbort) signal.removeEventListener("abort", onAbort);
     }
   }
 
-  const chosen = decision && decision.choice !== "hold" ? eligible.find((candidate) => candidate.id === decision!.choice) ?? null : null;
+  const chosen = decision?.status === "ok" && decision.choice !== "hold" ? eligible.find((candidate) => candidate.id === decision.choice) ?? null : null;
   const reasons: string[] = ["system_one_never_executes"];
   if (eligible.length === 0) reasons.push("no_eligible_candidate");
   if (decision === null) reasons.push("jev_not_asked");
@@ -66,7 +88,7 @@ export async function runSystemOneCycle(input: CycleInput, deps: CycleDeps): Pro
   };
 }
 
-/** The cycle without the wallet address or anything that could identify the owner; safe to serve. */
+/** Local journal compatibility only. HTTP publication must use publicSystemOneView. */
 export function redactCycle(cycle: SystemOneCycle): SystemOneCycle {
   return cycle;
 }

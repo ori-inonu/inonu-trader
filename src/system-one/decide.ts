@@ -119,8 +119,22 @@ export function validateLeverageDecision(decision: unknown, eligible: LeverageCa
   if (!isRecord(decision)) return fallback("malformed");
   const model = typeof decision.model === "string" ? decision.model.slice(0, 64) : "unknown";
   const latencyMs = finiteOrNull(decision.latencyMs) ?? 0;
+  if (decision.status !== undefined && decision.status !== "ok") {
+    const status = ["error", "timeout", "malformed", "invalid-choice"].includes(String(decision.status))
+      ? decision.status as LeverageDecision["status"] : "malformed";
+    return fallback(status, model, latencyMs);
+  }
   const choice = typeof decision.choice === "string" ? decision.choice : null;
   if (choice === null || !keys.includes(choice)) return fallback("invalid-choice", model, latencyMs);
+  if (decision.probabilities !== undefined && (!isRecord(decision.probabilities) ||
+      Object.values(decision.probabilities).some(value => typeof value !== "number" || !Number.isFinite(value) || value < 0))) {
+    return fallback("malformed", model, latencyMs);
+  }
+  if (isRecord(decision.probabilities)) {
+    const weights = decision.probabilities as Record<string, number>;
+    const total = keys.reduce((sum, key) => sum + (weights[key] ?? 0), 0);
+    if (!Number.isFinite(total) || (choice !== "hold" && !(weights[choice]! > 0))) return fallback("malformed", model, latencyMs);
+  }
   const probabilities = isRecord(decision.probabilities) ? normalize(decision.probabilities as Record<string, number>, keys) : normalize({ [choice]: 1 }, keys);
   const confidence = finiteOrNull(decision.confidence);
   return {
