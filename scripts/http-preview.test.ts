@@ -5,6 +5,35 @@ import { join, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dir, "..");
 
+test("quiet preview SSE remains connected until its heartbeat arrives", async () => {
+  const { startServer } = await import("../src/server");
+  const dir = mkdtempSync(join(tmpdir(), "inonu-http-heartbeat-"));
+  const reservation = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: () => new Response() });
+  const port = reservation.port;
+  reservation.stop(true);
+  const origin = "http://localhost:3002";
+  const preview = startServer({ model: "none", wallet: null, dryRun: true, market: "preview", startedAt: 1 }, () => [],
+    { port: port!, origins: [origin], stateDir: join(dir, "absent-state") });
+  const abort = new AbortController();
+  const deadline = setTimeout(() => abort.abort(), 22_000);
+  let cancelReader: (() => Promise<void>) | undefined;
+  try {
+    const events = await fetch(`http://127.0.0.1:${port}/events`, { headers: { Origin: origin }, signal: abort.signal });
+    const reader = events.body!.getReader();
+    cancelReader = () => reader.cancel();
+    const decoder = new TextDecoder();
+    expect(decoder.decode((await reader.read()).value)).toContain("event: snapshot");
+    const heartbeat = await reader.read();
+    expect(heartbeat.done).toBe(false);
+    expect(decoder.decode(heartbeat.value)).toContain("event: ping");
+    expect(existsSync(join(dir, "absent-state"))).toBe(false);
+  } finally {
+    clearTimeout(deadline);
+    try { await cancelReader?.(); } finally { abort.abort(); preview!.close(); }
+    rmSync(dir, { recursive: true, force: true });
+  }
+}, 25_000);
+
 test("HTTP preview CLI exposes honest empty state without starting financial producers", async () => {
   const dir = mkdtempSync(join(tmpdir(), "inonu-http-preview-"));
   const config = join(dir, "bunfig.toml");

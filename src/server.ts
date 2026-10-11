@@ -44,7 +44,7 @@ export function startServer(meta: Meta, history: () => BlockEvent[], preview?: H
     const server = Bun.serve({
       port,
       ...(preview ? { hostname: "127.0.0.1" } : {}),
-      fetch(req) {
+      fetch(req, httpServer) {
         const { pathname } = new URL(req.url);
         const origin = req.headers.get("origin");
         const headers: Record<string, string> = preview ? { vary: "Origin", ...(origin && origins.includes(origin) ? { "access-control-allow-origin": origin, "access-control-allow-methods": "GET, OPTIONS", "access-control-allow-headers": "content-type" } : {}) } : CORS;
@@ -56,6 +56,8 @@ export function startServer(meta: Meta, history: () => BlockEvent[], preview?: H
         if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null }, 200, headers);
         if (pathname === "/history") return json(history(), 200, headers);
         if (pathname === "/events") {
+          // Quiet preview streams must survive between 15-second heartbeats.
+          if (preview) httpServer.timeout(req, 0);
           const stream = new ReadableStream<Uint8Array>({
             start(c) { clients.add(c); send(c, "snapshot", { ...meta, history: history() }); },
             cancel(c) { clients.delete(c); },
