@@ -11,7 +11,8 @@
     "stage core"
     "dock dock"
     "reveal reveal";
-  gap: var(--s6);
+  /* One gutter for the whole console: every panel group inside a row uses the same value. */
+  gap: var(--s4);
   width: 100%;
   max-width: var(--card-max);
   min-height: 100vh;
@@ -34,8 +35,11 @@
   position: sticky;
   top: var(--s4);
   grid-area: core;
+  display: grid;
   min-width: 0;
   align-self: start;
+  grid-template-rows: auto auto;
+  gap: var(--s4);
 }
 
 .stage {
@@ -111,8 +115,11 @@
       "stage"
       "dock"
       "reveal";
+    padding: var(--s3) var(--s4) var(--s6);
   }
 
+  /* Sticky stops here: the core column becomes full width and its own panel already owns the
+     scroll, so a pinned column would only fight the reader. */
   .core {
     position: static;
   }
@@ -123,7 +130,7 @@
   }
 }
 
-@media (max-width: 379.98px) {
+@media (max-width: 479.98px) {
   .console {
     padding-inline: var(--s3);
   }
@@ -131,4 +138,9 @@
 /* While the feed is reconnecting the stage keeps its last values but reads as held. */
 .stage.stale {
   opacity: 0.6;
+}
+
+.stage.stale *,
+.stage.stale {
+  animation: none !important;
 }

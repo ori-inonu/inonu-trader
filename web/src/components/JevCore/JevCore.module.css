@@ -51,8 +51,8 @@
   flex-direction: column;
   gap: var(--s3);
   border: 1px solid var(--edge-strong);
-  border-radius: var(--r-lg);
-  padding: var(--s5);
+  border-radius: var(--r-md);
+  padding: var(--s4);
   background: var(--bg-deck);
   /* The only element on the page at --elev-3. */
   box-shadow: var(--elev-3);
@@ -63,8 +63,14 @@
   opacity: 0.6;
 }
 
+/* While reconnecting no new value is arriving, so nothing in the frame moves. */
+.stale *,
+.stale {
+  animation: none !important;
+}
+
 .eyebrow {
-  color: var(--ink-4);
+  color: var(--ink-3);
   font: var(--fs-micro);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
@@ -123,11 +129,14 @@
 
 .ring {
   position: absolute;
-  inset: 14px;
-  border: 2px solid var(--signal-deep);
+  /* Sits on the orb rim, clear of the gauge arcs the dial draws over it, so the per block turn is
+     actually visible instead of buried under the widest arc. Only two of the four sides are
+     painted, so the turn sweeps a visible arc instead of spinning a symmetric circle. */
+  inset: var(--s1);
+  border: 2px solid transparent;
+  border-top-color: var(--signal-deep);
+  border-right-color: var(--signal-deep);
   border-radius: 50%;
-  border-left-color: transparent;
-  border-bottom-color: transparent;
   transform: translateZ(24px);
 }
 
@@ -150,31 +159,45 @@
 }
 
 .buy .ring {
-  border-color: var(--buy);
+  border-top-color: var(--buy);
+  border-right-color: var(--buy);
 }
 
 .sell .ring {
-  border-color: var(--sell);
+  border-top-color: var(--sell);
+  border-right-color: var(--sell);
 }
 
 .hold .ring {
-  border-color: var(--hold);
+  border-top-color: var(--hold);
+  border-right-color: var(--hold);
 }
 
 .late .ring {
-  border-color: var(--late);
+  border-top-color: var(--late);
+  border-right-color: var(--late);
 }
 
 .unknown .ring {
-  border-color: var(--edge-strong);
+  border-top-color: var(--edge-strong);
+  border-right-color: var(--edge-strong);
 }
 
 .actionWord {
+  display: grid;
   min-height: 40px;
+  place-items: center;
   color: var(--ink);
   font: var(--fs-hero);
+  font-variant-numeric: tabular-nums;
   line-height: 1.1;
   text-align: center;
+}
+
+/* "Aguardando decisao" and "Resposta tardia" are three times the width of a single action word.
+   One step down keeps both on one line, so the block counter below never moves. */
+.actionWordLong {
+  font: var(--fs-lg);
 }
 
 .actionEnter {
@@ -223,17 +246,21 @@
 }
 
 .readout dt {
-  color: var(--ink-4);
+  color: var(--ink-3);
   font: var(--fs-micro);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
 }
 
+/* One step below the KPI values: a readout cell is a third the width of a KPI cell, so the
+   readout size is the largest that keeps "Indisponivel" and a block number on one line. */
 .readout dd {
   min-width: 0;
   margin: 0;
   color: var(--ink-2);
-  font: var(--fs-readout);
+  font: var(--fs-md);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 
@@ -283,17 +310,7 @@
   animation: jev-fade-rise-sm 200ms var(--ease-out-expo) both;
 }
 
-@media (max-width: 899.98px) {
-  .core {
-    position: static;
-  }
-}
-
-@media (max-width: 379.98px) {
-  .core {
-    padding: var(--s4);
-  }
-
+@media (max-width: 479.98px) {
   .readouts {
     grid-template-columns: minmax(0, 1fr);
   }

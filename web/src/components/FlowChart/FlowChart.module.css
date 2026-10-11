@@ -32,7 +32,7 @@
   width: 100%;
   height: 100%;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .toolbar {
@@ -40,7 +40,7 @@
   min-width: 0;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--s3);
 }
 
 .heading {
@@ -49,23 +49,23 @@
 
 .eyebrow {
   color: var(--signal);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
 }
 
 .title {
   overflow-wrap: anywhere;
   color: var(--ink);
-  font-size: 16px;
+  font: var(--fs-md);
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .windows {
   display: flex;
   flex: none;
-  gap: 6px;
+  gap: var(--s1);
 }
 
 .windowButton,
@@ -73,13 +73,13 @@
   min-width: 44px;
   min-height: 44px;
   border: 1px solid var(--edge-strong);
-  border-radius: 10px;
+  border-radius: var(--r-sm);
   background: var(--bg-deck-2);
   color: var(--ink-2);
   cursor: pointer;
-  font-size: 13px;
+  font: var(--fs-base);
   font-weight: 600;
-  transition: background-color 160ms ease, border-color 160ms ease;
+  transition: background-color var(--dur-fast) var(--ease-snap), border-color var(--dur-fast) var(--ease-snap);
 }
 
 .windowButton[aria-pressed="true"] {
@@ -100,11 +100,39 @@
   color: var(--bg-well);
 }
 
+.windowButton:focus-visible,
+.inspectButton:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
 .availability {
-  min-height: 18px;
+  min-height: var(--fs-base);
   color: var(--ink-3);
-  font-size: 12px;
+  font: var(--fs-sm);
   font-variant-numeric: tabular-nums;
+}
+
+.panel {
+  position: relative;
+  min-width: 0;
+  min-height: 300px;
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-2);
+  touch-action: pan-y;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
 }
 
 .floor {
@@ -118,31 +146,29 @@
 }
 
 .blockCell {
+  transform-box: fill-box;
   transform-origin: center bottom;
-  animation: jev-block-grow 200ms var(--ease-out-expo) both;
+  animation: jev-block-grow var(--dur-base) var(--ease-out-expo) both;
 }
 
-.panel {
-  position: relative;
-  min-width: 0;
-  min-height: 300px;
-  flex: 1;
-  overflow: hidden;
-  border-radius: var(--r-sm);
-  box-shadow: var(--elev-2);
-  border: 1px solid var(--edge);
-  border-radius: 18px;
-  background: var(--bg-deck);
-  touch-action: pan-y;
+.buy {
+  fill: var(--buy);
 }
 
-.svg {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: crosshair;
+.sell {
+  fill: var(--sell);
+}
+
+.hold {
+  fill: var(--hold);
+}
+
+.late {
+  fill: var(--late);
+}
+
+.idle {
+  fill: var(--ink-3);
 }
 
 .line {
@@ -158,9 +184,18 @@
   stroke-width: 1;
 }
 
-.tick {
+/* Mean of the plotted window. It is a reading aid, so it sits behind the price line. */
+.reference {
+  stroke: var(--edge-strong);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
+}
+
+.tick,
+.blockTick {
   fill: var(--ink-3);
-  font: 500 12px var(--font-mono), monospace;
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
@@ -169,10 +204,20 @@
   stroke-width: 1.5;
 }
 
+.guideDot {
+  fill: var(--hold);
+}
+
+.tagBox {
+  fill: var(--signal);
+}
+
 .tagText {
   fill: var(--bg-well);
-  font: 600 12px var(--font-mono), monospace;
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
 .cross {
@@ -187,23 +232,39 @@
   stroke-width: 2;
 }
 
+.cellMarker {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.areaTop {
+  stop-color: var(--signal);
+  stop-opacity: 0.14;
+}
+
+.areaBase {
+  stop-color: var(--signal);
+  stop-opacity: 0;
+}
+
 .priceOverlay,
 .statusOverlay {
   position: absolute;
-  top: 14px;
+  top: var(--s3);
   display: flex;
-  max-width: 52%;
+  max-width: 46%;
   flex-direction: column;
   gap: 2px;
   pointer-events: none;
 }
 
 .priceOverlay {
-  left: 16px;
+  left: var(--s4);
 }
 
 .statusOverlay {
-  right: 16px;
+  right: var(--s4);
   align-items: flex-end;
   text-align: right;
 }
@@ -211,40 +272,56 @@
 .priceOverlay strong {
   overflow-wrap: anywhere;
   color: var(--ink);
-  font: 600 26px/1.15 var(--font-mono), monospace;
+  font: var(--fs-readout);
   font-variant-numeric: tabular-nums;
 }
 
 .priceOverlay span,
 .statusOverlay span {
   color: var(--ink-3);
-  font-size: 12px;
-  line-height: 1.35;
+  font: var(--fs-xs);
 }
 
 .action {
   color: var(--ink);
-  font-size: 19px;
-  font-weight: 600;
+  font: var(--fs-lg);
   line-height: 1.2;
 }
 
-.buy { color: var(--buy); }
-.sell { color: var(--sell); }
-.hold { color: var(--hold); }
-.late { color: var(--sell); }
-.waiting { color: var(--ink-2); }
+.action.buy {
+  fill: var(--ink);
+  color: var(--buy);
+}
+
+.action.sell {
+  fill: var(--ink);
+  color: var(--sell);
+}
+
+.action.hold {
+  fill: var(--ink);
+  color: var(--hold);
+}
+
+.action.late {
+  fill: var(--ink);
+  color: var(--late);
+}
+
+.action.waiting {
+  fill: var(--ink);
+  color: var(--ink-2);
+}
 
 .positionSummary {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 4px 12px;
+  gap: var(--s1) var(--s3);
   color: var(--ink-2);
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  line-height: 1.45;
 }
 
 .positionSummary span {
@@ -259,9 +336,9 @@
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: var(--s6);
   color: var(--ink-2);
-  font-size: 14px;
+  font: var(--fs-base);
   text-align: center;
 }
 
@@ -270,18 +347,18 @@
   min-width: 0;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
+  gap: var(--s2);
   animation: jev-fade-rise var(--dur-base) var(--ease-out-expo) both;
 }
 
 .inspectButton {
-  padding: 0 10px;
+  padding: 0 var(--s2);
   white-space: nowrap;
 }
 
 .inspectButton:disabled {
   cursor: not-allowed;
-  color: var(--ink-3);
+  color: var(--ink-4);
 }
 
 .inspectSummary {
@@ -290,25 +367,19 @@
   flex-direction: column;
   gap: 2px;
   color: var(--ink-2);
-  font-size: 12px;
-  line-height: 1.4;
+  font: var(--fs-xs);
   text-align: center;
 }
 
 .inspectSummary strong {
   color: var(--ink);
-  font-family: var(--font-mono), monospace;
+  font: var(--fs-base);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
 .inspectSummary span {
   overflow-wrap: anywhere;
-}
-
-.windowButton:focus-visible,
-.inspectButton:focus-visible {
-  outline: 2px solid var(--signal);
-  outline-offset: 3px;
 }
 
 @media (max-width: 899.98px) {
@@ -319,7 +390,7 @@
   .toolbar {
     align-items: flex-start;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--s1);
   }
 
   .windows {
@@ -332,15 +403,25 @@
 
   .priceOverlay,
   .statusOverlay {
-    top: 12px;
-    max-width: 48%;
+    top: var(--s2);
+    max-width: 46%;
   }
 
-  .priceOverlay { left: 12px; }
-  .statusOverlay { right: 12px; }
+  .priceOverlay {
+    left: var(--s3);
+  }
 
-  .priceOverlay strong { font-size: 21px; }
-  .action { font-size: 16px; }
+  .statusOverlay {
+    right: var(--s3);
+  }
+
+  .priceOverlay strong {
+    font-size: var(--fs-md);
+  }
+
+  .action {
+    font-size: var(--fs-md);
+  }
 
   .inspector {
     grid-template-columns: 1fr 1fr;
@@ -352,7 +433,23 @@
   }
 }
 
+@media (max-width: 379.98px) {
+  .priceOverlay,
+  .statusOverlay {
+    max-width: 44%;
+  }
+
+  .priceOverlay strong {
+    font-size: var(--fs-base);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .blockCell,
+  .inspector {
+    animation: none;
+  }
+
   .windowButton,
   .inspectButton {
     transition: none;
