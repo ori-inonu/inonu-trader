@@ -4,7 +4,8 @@ import type { SolanaSigner } from "../okx-wallet/solana-signer";
 import { fetchApproveSpender, prepareEvmSwap, type OkxTradeClient, type PreparedEvmTransaction } from "../okx-wallet/trade";
 import type { OperatorLedger } from "./ledger";
 import { planIsFresh } from "./plan";
-import type { ExecutionOutcome, ExecutionPlan, OperatorPolicy, OpportunityCandidate } from "./types";
+import { validateOperatorDecision } from "./jev-selector";
+import type { ExecutionOutcome, ExecutionPlan, OperatorDecision, OperatorPolicy, OpportunityCandidate } from "./types";
 
 /**
  * Execution is the last, separately gated stage. A plan is sent only when it is
@@ -107,10 +108,39 @@ export function checkPreparedLeg(prepared: PreparedEvmTransaction, input: { chai
   return reasons;
 }
 
-export async function executePlan(plan: ExecutionPlan, candidate: OpportunityCandidate, deps: ExecutorDeps): Promise<ExecutionOutcome> {
-  if (plan.candidateId !== candidate.id) return failed("plan_candidate_mismatch");
+export interface ExecutionDecisionContext {
+  model: string;
+  decision: OperatorDecision;
+  eligible: OpportunityCandidate[];
+}
+
+export async function executePlan(plan: ExecutionPlan, candidate: OpportunityCandidate, deps: ExecutorDeps, context?: ExecutionDecisionContext): Promise<ExecutionOutcome> {
+  if (plan.candidateId !== candidate.id) return plan.executionQualification === "qualified_live"
+    ? blocked(["plan_candidate_mismatch"])
+    : failed("plan_candidate_mismatch");
   if (plan.executionQualification === "not_qualified") return blocked(["plan_not_qualified"]);
   if (plan.executionQualification === "qualified_dry_run") return { status: "dry_run", reasons: ["dry_run_default"], txHash: null, orderId: null };
+  if (!context) return blocked(["execution_decision_context_missing"]);
+  let model: unknown;
+  try {
+    model = context.model;
+  } catch {
+    return blocked(["execution_model_missing"]);
+  }
+  if (typeof model !== "string" || !model.trim()) return blocked(["execution_model_missing"]);
+  if (model.trim().toLowerCase() === "mock") return blocked(["execution_model_mock"]);
+  let decision: OperatorDecision;
+  try {
+    decision = validateOperatorDecision(context.decision, context.eligible);
+  } catch {
+    return blocked(["execution_decision_invalid"]);
+  }
+  if (decision.model !== model) return blocked(["execution_model_mismatch"]);
+  if (decision.choice === "hold" || decision.choice !== plan.candidateId || decision.choice !== candidate.id) return blocked(["execution_decision_candidate_mismatch"]);
+  return executeQualifiedPlan(plan, candidate, deps);
+}
+
+async function executeQualifiedPlan(plan: ExecutionPlan, candidate: OpportunityCandidate, deps: ExecutorDeps): Promise<ExecutionOutcome> {
   if (!planIsFresh(plan, deps.now())) return blocked(["plan_expired"]);
   const chain = chainByIndex(candidate.chainIndex);
   if (!chain) return blocked(["chain_unknown"]);

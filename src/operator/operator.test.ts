@@ -3,12 +3,12 @@ import { syntheticInventory, type InventorySnapshot } from "../okx-wallet/portfo
 import { buildCandidates, buildRoundTripCandidates, DEFAULT_PAIRS, safeText, sizeFor, type BridgeQuoter, type SwapQuoter } from "./candidates";
 import { HARD_LIMITS, loadOperatorConfig, operatorLiveGate } from "./config";
 import { reconcileRealizedUsd, runOperatorCycle, redactCycle } from "./cycle";
-import { checkPreparedLeg, encodeApprove, executePlan, minReceiveMatchesQuote, sanitizeError, SOLANA_LIVE_ENABLED, type EvmSigner } from "./executor";
+import { checkPreparedLeg, encodeApprove, executePlan, minReceiveMatchesQuote, sanitizeError, SOLANA_LIVE_ENABLED, type EvmSigner, type ExecutorDeps, type ExecutionDecisionContext } from "./executor";
 import { createOperatorLedger, emptyLedger } from "./ledger";
 import { buildOperatorState, MockOperatorModel, validateOperatorDecision, type OperatorModel } from "./jev-selector";
 import { buildExecutionPlan } from "./plan";
 import { gateCandidate, gateCandidates } from "./risk-gate";
-import type { OperatorPolicy, OpportunityCandidate } from "./types";
+import type { ExecutionPlan, OperatorPolicy, OpportunityCandidate } from "./types";
 
 const NOW = 1_760_000_000_000;
 const policy: OperatorPolicy = loadOperatorConfig({ OPERATOR_PROFILE: "standard" }).policy;
@@ -18,6 +18,72 @@ const ROUTER = "0x" + "ab".repeat(20);
 const SPENDER = "0x" + "5e".repeat(20);
 const SELECTOR = "0xdeadbeef";
 const livePolicy: OperatorPolicy = { ...policy, routerAllowlist: { "196": [ROUTER] }, spenderAllowlist: { "196": [SPENDER] }, selectorAllowlist: { "196": [SELECTOR] } };
+
+// Explicit offline identity for the existing single-candidate execution guard fixtures.
+function executeSyntheticPlan(plan: ExecutionPlan, candidate: OpportunityCandidate, deps: ExecutorDeps) {
+  const decision = { choice: candidate.id, probabilities: { hold: 0, [candidate.id]: 1 },
+    confidence: 1, latencyMs: 0, inputTokens: 0, model: "synthetic-live-test" };
+  return executePlan(plan, candidate, deps, { model: decision.model, decision, eligible: [candidate] });
+}
+
+test("live plan candidate mismatch blocks before any execution side effect", async () => {
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const decision = { choice: candidate!.id, probabilities: { hold: 0, [candidate!.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 0, model: "synthetic-live-test" };
+  const plan = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
+  let effects = 0;
+  const ledger = createOperatorLedger(emptyLedger(), () => { effects++; });
+  const outcome = await executePlan({ ...plan, candidateId: "different_candidate" }, candidate!, {
+    now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy,
+    inventoryAddress: inventory.address, killSwitchExists: () => false,
+    tradeClient: { async get() { effects++; throw new Error("unexpected client call"); }, async post() { effects++; return []; } } as never,
+    evmSigner: { address: inventory.address, async simulate() { effects++; return true; }, async sendTransaction() { effects++; return "0x1"; }, async waitForReceipt() { effects++; return { success: true, gasCostNative: 0 }; } },
+  }, { model: decision.model, decision, eligible: [candidate!] });
+  expect(outcome).toMatchObject({ status: "blocked", reasons: ["plan_candidate_mismatch"] });
+  expect(effects).toBe(0);
+  expect(ledger.state()).toEqual(emptyLedger());
+});
+
+test("live decision validation uses all eligible candidates and blocks inconsistent decisions without effects", async () => {
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const other = { ...candidate!, id: "rt_other" };
+  const eligible = [candidate!, other];
+  const decision = { choice: candidate!.id, probabilities: { hold: 0.1, [candidate!.id]: 0.7, rt_other: 0.2 }, confidence: 0.7, latencyMs: 1, inputTokens: 10, model: "synthetic-live-test" };
+  const plan = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
+  let effects = 0;
+  const ledger = createOperatorLedger(emptyLedger(), () => { effects++; });
+  const deps = { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: inventory.address, killSwitchExists: () => false,
+    tradeClient: { async get() { effects++; throw new Error("unexpected client call"); }, async post() { effects++; return []; } } as never };
+  const context = { model: decision.model, decision, eligible };
+  // A complete distribution reaches the existing signer gate. Validating only
+  // the selected candidate would reject rt_other and fail this assertion.
+  expect(await executePlan(plan, candidate!, deps, context)).toMatchObject({ status: "blocked", reasons: ["evm_signer_missing"] });
+  const invalidCases: [ExecutionDecisionContext, string][] = [
+    [{ ...context, model: " \t" }, "execution_model_missing"],
+    [{ ...context, model: undefined as unknown as string }, "execution_model_missing"],
+    [{ ...context, decision: { ...decision, probabilities: { hold: 0.3, [candidate!.id]: 0.7 } } }, "execution_decision_invalid"],
+    [{ ...context, decision: { ...decision, probabilities: { ...decision.probabilities, rt_other: NaN } } }, "execution_decision_invalid"],
+    [{ ...context, decision: { ...decision, model: "different-model" } }, "execution_model_mismatch"],
+    [{ ...context, decision: { ...decision, choice: "hold" } }, "execution_decision_candidate_mismatch"],
+    [{ ...context, decision: { ...decision, choice: other.id } }, "execution_decision_candidate_mismatch"],
+  ];
+  const sent: unknown[] = [];
+  const signer: EvmSigner = {
+    address: inventory.address,
+    async simulate() { effects++; return true; },
+    async sendTransaction(tx) { effects++; sent.push(tx); return "0x1"; },
+    async waitForReceipt() { effects++; return { success: true, gasCostNative: 0 }; },
+  };
+  for (const [invalid, reason] of invalidCases) {
+    expect(await executePlan(plan, candidate!, { ...deps, evmSigner: signer }, invalid)).toMatchObject({ status: "blocked", reasons: [reason] });
+    expect(effects).toBe(0);
+    expect(sent).toHaveLength(0);
+    expect(ledger.state()).toEqual(emptyLedger());
+  }
+  expect((await executePlan({ ...plan, executionQualification: "qualified_dry_run" }, candidate!, deps)).status).toBe("dry_run");
+  expect(effects).toBe(0);
+});
 
 function quoter(edgeFraction: number, feeUsd: number | null = 0.01, receivedAtMs = NOW, unitsQualified = true): SwapQuoter {
   return {
@@ -214,6 +280,99 @@ test("prepared legs fail closed without router, spender and selector allowlists 
   expect(sanitizeError(new Error("server https://rpc.example.com/abc?key=1 rejected 0x" + "ab".repeat(40) + " key 4Nd1mBQtrMJVYVfKf2PJy9NZaZdRMHoKoQfiwnNoQ8fB"))).toBe("server [url] rejected [hex] key [b58]");
 });
 
+test("live executor refuses missing model decision context before external calls or ledger writes", async () => {
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, [candidate!]), [candidate!]);
+  const plan = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
+  let calls = 0;
+  let writes = 0;
+  const ledger = createOperatorLedger(emptyLedger(), () => { writes++; });
+  const before = JSON.stringify(ledger.state());
+  const outcome = await executePlan(plan, candidate!, {
+    now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy,
+    inventoryAddress: inventory.address, killSwitchExists: () => false,
+    tradeClient: { async get() { calls++; throw new Error("unexpected external call"); }, async post() { calls++; return []; } } as never,
+    evmSigner: fakeSigner(inventory.address),
+  });
+  expect(outcome.status).toBe("blocked");
+  expect(outcome.reasons).toEqual(["execution_decision_context_missing"]);
+  expect(calls).toBe(0);
+  expect(writes).toBe(0);
+  expect(JSON.stringify(ledger.state())).toBe(before);
+});
+
+test("live executor rejects mock identity but accepts a valid non-mock full decision context", async () => {
+  const inventory = syntheticInventory(NOW);
+  const eligible = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const candidate = eligible[0]!;
+  const mock = await new MockOperatorModel().choose(buildOperatorState(inventory, eligible), eligible);
+  const decision = { ...mock, model: "synthetic-live-test" };
+  const plan = buildExecutionPlan(candidate, decision, policy, openGate, NOW);
+  let calls = 0;
+  let writes = 0;
+  const ledger = createOperatorLedger(emptyLedger(), () => { writes++; });
+  const deps = { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy,
+    inventoryAddress: inventory.address, killSwitchExists: () => false,
+    tradeClient: { async get() { calls++; throw new Error("synthetic boundary reached"); }, async post() { calls++; return []; } } as never };
+  for (const identity of ["mock", " MOCK "]) {
+    const outcome = await executePlan(plan, candidate, deps, { model: identity, decision: { ...mock, model: identity }, eligible });
+    expect(outcome.status).toBe("blocked");
+    expect(outcome.reasons).toEqual(["execution_model_mock"]);
+  }
+  expect(calls).toBe(0);
+  expect(writes).toBe(0);
+  expect((await executePlan(plan, candidate, deps, { model: decision.model, decision, eligible })).reasons).toEqual(["evm_signer_missing"]);
+});
+
+test("live executor cannot authorize a mock decision through a changing model getter", async () => {
+  const inventory = syntheticInventory(NOW);
+  const eligible = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const candidate = eligible[0]!;
+  const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, eligible), eligible);
+  const plan = buildExecutionPlan(candidate, decision, policy, openGate, NOW);
+  let reads = 0;
+  let calls = 0;
+  let writes = 0;
+  const ledger = createOperatorLedger(emptyLedger(), () => { writes++; });
+  const before = JSON.stringify(ledger.state());
+  const outcome = await executePlan(plan, candidate, {
+    now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy,
+    inventoryAddress: inventory.address, killSwitchExists: () => false,
+    tradeClient: { async get() { calls++; throw new Error("unexpected external call"); }, async post() { calls++; return []; } } as never,
+    evmSigner: fakeSigner(inventory.address),
+  }, { get model() { return ++reads < 4 ? "synthetic-live-test" : "mock"; }, decision, eligible });
+  expect(outcome).toMatchObject({ status: "blocked", reasons: ["execution_model_mismatch"] });
+  expect(calls).toBe(0);
+  expect(writes).toBe(0);
+  expect(JSON.stringify(ledger.state())).toBe(before);
+});
+
+test("a mock cycle with every live gate open has no execution side effects", async () => {
+  const inventory = syntheticInventory(NOW);
+  let calls = 0;
+  let writes = 0;
+  const sent: { to: string; data: string; value: string }[] = [];
+  const ledger = createOperatorLedger(emptyLedger(), () => { writes++; });
+  const before = JSON.stringify(ledger.state());
+  const cycle = await runOperatorCycle({
+    inventorySource: async () => inventory, model: new MockOperatorModel(), policy, gate: openGate,
+    now: () => NOW, jevUsdPerMTok: 0,
+    candidateContext: { swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") },
+    executor: { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy,
+      inventoryAddress: inventory.address, killSwitchExists: () => false,
+      tradeClient: { async get() { calls++; throw new Error("unexpected external call"); }, async post() { calls++; return []; } } as never,
+      evmSigner: fakeSigner(inventory.address, { sent }),
+    },
+  });
+  expect(cycle.plan?.executionQualification).toBe("qualified_live");
+  expect(cycle.execution).toMatchObject({ status: "blocked", reasons: ["execution_model_mock"] });
+  expect(calls).toBe(0);
+  expect(sent).toHaveLength(0);
+  expect(writes).toBe(0);
+  expect(JSON.stringify(ledger.state())).toBe(before);
+});
+
 test("executor blocks dry runs, expired plans, address mismatch, unlisted spender and repeats; completes both legs once with exact approvals", async () => {
   const inventory = syntheticInventory(NOW);
   const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
@@ -225,22 +384,22 @@ test("executor blocks dry runs, expired plans, address mismatch, unlisted spende
   const ledger = createOperatorLedger(emptyLedger(), () => {});
   const base = { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient, evmSigner: signer };
   const dry = buildExecutionPlan(candidate!, decision, policy, closedGate, NOW);
-  expect((await executePlan(dry, candidate!, base)).status).toBe("dry_run");
+  expect((await executeSyntheticPlan(dry, candidate!, base)).status).toBe("dry_run");
   const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
-  expect((await executePlan(live, candidate!, { ...base, now: () => NOW + policy.planTtlMs + 1 })).reasons).toEqual(["plan_expired"]);
-  expect((await executePlan(live, candidate!, { ...base, inventoryAddress: "0x" + "11".repeat(20) })).reasons).toEqual(["signer_address_differs_from_inventory_address"]);
-  expect((await executePlan(live, candidate!, { ...base, policy: { ...livePolicy, spenderAllowlist: {} } })).reasons).toEqual(["spender_allowlist_missing"]);
-  expect((await executePlan(live, candidate!, { ...base, tradeClient: fakeTradeClient(candidate!, { spender: "0x" + "77".repeat(20) }) })).reasons).toEqual(["spender_not_allowlisted"]);
-  expect((await executePlan(live, candidate!, { ...base, policy })).reasons).toEqual(["spender_allowlist_missing"]);
-  expect((await executePlan(live, candidate!, { ...base, tradeClient: fakeTradeClient(candidate!, { to: "0x" + "cc".repeat(20) }) })).reasons).toEqual(["router_not_allowlisted"]);
-  expect((await executePlan(live, candidate!, { ...base, killSwitchExists: () => true })).reasons).toEqual(["kill_switch_present"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, now: () => NOW + policy.planTtlMs + 1 })).reasons).toEqual(["plan_expired"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, inventoryAddress: "0x" + "11".repeat(20) })).reasons).toEqual(["signer_address_differs_from_inventory_address"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, policy: { ...livePolicy, spenderAllowlist: {} } })).reasons).toEqual(["spender_allowlist_missing"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, tradeClient: fakeTradeClient(candidate!, { spender: "0x" + "77".repeat(20) }) })).reasons).toEqual(["spender_not_allowlisted"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, policy })).reasons).toEqual(["spender_allowlist_missing"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, tradeClient: fakeTradeClient(candidate!, { to: "0x" + "cc".repeat(20) }) })).reasons).toEqual(["router_not_allowlisted"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, killSwitchExists: () => true })).reasons).toEqual(["kill_switch_present"]);
   const tron = { ...candidate!, chainIndex: "195" };
-  expect((await executePlan({ ...live, candidateId: tron.id }, tron, base)).reasons).toEqual(["signer_unavailable_for_chain_family"]);
-  expect((await executePlan(live, candidate!, { ...base, evmSigner: fakeSigner(inventory.address, { simulateOk: false }) })).reasons).toEqual(["leg1_simulation_reverted"]);
+  expect((await executeSyntheticPlan({ ...live, candidateId: tron.id }, tron, base)).reasons).toEqual(["signer_unavailable_for_chain_family"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, evmSigner: fakeSigner(inventory.address, { simulateOk: false }) })).reasons).toEqual(["leg1_simulation_reverted"]);
   expect(sent).toHaveLength(0);
 
   const freshLedger = createOperatorLedger(emptyLedger(), () => {});
-  const outcome = await executePlan(live, candidate!, { ...base, ledger: freshLedger });
+  const outcome = await executeSyntheticPlan(live, candidate!, { ...base, ledger: freshLedger });
   expect(outcome.status).toBe("completed");
   expect(outcome.txHash).toBe("0x2");
   expect(outcome.closeTxHash).toBe("0x3");
@@ -254,7 +413,7 @@ test("executor blocks dry runs, expired plans, address mismatch, unlisted spende
   const day = new Date(NOW).toISOString().slice(0, 10);
   expect(freshLedger.state().dailyPlans[day]).toBe(1);
   expect(freshLedger.state().dailyNotionalUsd[day]).toBe(50);
-  expect((await executePlan(live, candidate!, { ...base, ledger: freshLedger, now: () => NOW + 1 })).reasons).toEqual(["idempotency_key_already_executed", "cooldown_active"]);
+  expect((await executeSyntheticPlan(live, candidate!, { ...base, ledger: freshLedger, now: () => NOW + 1 })).reasons).toEqual(["idempotency_key_already_executed", "cooldown_active"]);
 });
 
 test("the kill switch is honored between sends and leaves a failed leg", async () => {
@@ -266,7 +425,7 @@ test("the kill switch is honored between sends and leaves a failed leg", async (
   const ledger = createOperatorLedger(emptyLedger(), () => {});
   const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
   // STOP appears right after the approval is sent: the swap itself must not go out.
-  const outcome = await executePlan(live, candidate!, {
+  const outcome = await executeSyntheticPlan(live, candidate!, {
     now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: inventory.address, tradeClient: fakeTradeClient(candidate!), evmSigner: signer,
     killSwitchExists: () => sent.length >= 1,
   });
@@ -283,7 +442,7 @@ test("Solana live stays disabled until a transaction policy exists (guard test)"
   const solana: OpportunityCandidate = { ...candidate!, chainIndex: "501", pairKey: "501:USDC/SOL" };
   const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, [solana]), [solana]);
   const live = buildExecutionPlan(solana, decision, policy, openGate, NOW);
-  const outcome = await executePlan(live, solana, { now: () => NOW, slippagePercent: 0.5, ledger: createOperatorLedger(emptyLedger(), () => {}), policy: { ...livePolicy, routerAllowlist: { "501": ["11111111111111111111111111111111"] } }, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: fakeTradeClient(solana), solanaSigner: { address: inventory.address, async signAndSend() { throw new Error("must not be called"); }, async confirm() { return true; } } });
+  const outcome = await executeSyntheticPlan(live, solana, { now: () => NOW, slippagePercent: 0.5, ledger: createOperatorLedger(emptyLedger(), () => {}), policy: { ...livePolicy, routerAllowlist: { "501": ["11111111111111111111111111111111"] } }, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: fakeTradeClient(solana), solanaSigner: { address: inventory.address, async signAndSend() { throw new Error("must not be called"); }, async confirm() { return true; } } });
   expect(outcome).toMatchObject({ status: "blocked", reasons: ["solana_live_disabled_pending_policy"] });
 });
 
@@ -300,7 +459,12 @@ test("a completed plan reports a fresh inventory diagnostic and awaits attribute
   const ledger = createOperatorLedger(emptyLedger(), () => {});
   let reads = 0;
   const cycle = await runOperatorCycle({
-    inventorySource: async () => (reads++ === 0 ? before : after), model: new MockOperatorModel(), policy, gate: openGate, now: () => NOW, jevUsdPerMTok: 0,
+    inventorySource: async () => (reads++ === 0 ? before : after), model: {
+      name: "synthetic-live-test",
+      async choose(state, eligible) {
+        return { ...await new MockOperatorModel().choose(state, eligible), model: this.name };
+      },
+    }, policy, gate: openGate, now: () => NOW, jevUsdPerMTok: 0,
     candidateContext: { swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") },
     executor: { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: before.address, killSwitchExists: () => false, tradeClient: fakeTradeClient(candidate!), evmSigner: fakeSigner(before.address) },
   });
@@ -323,12 +487,12 @@ test("a reverted first leg leaves a failed leg that blocks every later plan", as
   const ledger = createOperatorLedger(emptyLedger(), () => {});
   const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
   const deps = { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: fakeTradeClient(candidate!), evmSigner: signer };
-  const outcome = await executePlan(live, candidate!, deps);
+  const outcome = await executeSyntheticPlan(live, candidate!, deps);
   expect(outcome).toMatchObject({ status: "failed", reasons: ["leg1_reverted"], txHash: "0x2" });
   expect(ledger.openLegs()[0]!.status).toBe("failed");
   const other = { ...candidate!, id: "rt_other", pairKey: "other", quoteHash: "zz" };
   const otherPlan = buildExecutionPlan(other, { ...decision, choice: other.id, probabilities: { ...decision.probabilities, rt_other: decision.probabilities[candidate!.id]! } }, policy, openGate, NOW + 200_000);
-  expect((await executePlan(otherPlan, other, { ...deps, now: () => NOW + 200_000 })).reasons).toEqual(["failed_leg_requires_manual_reconciliation"]);
+  expect((await executeSyntheticPlan(otherPlan, other, { ...deps, now: () => NOW + 200_000 })).reasons).toEqual(["failed_leg_requires_manual_reconciliation"]);
 });
 
 test("a reverted second leg keeps the position open as failed and reports it", async () => {
@@ -338,7 +502,7 @@ test("a reverted second leg keeps the position open as failed and reports it", a
   const signer = fakeSigner(inventory.address, { revertHash: "0x3" });
   const ledger = createOperatorLedger(emptyLedger(), () => {});
   const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
-  const outcome = await executePlan(live, candidate!, { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: fakeTradeClient(candidate!), evmSigner: signer });
+  const outcome = await executeSyntheticPlan(live, candidate!, { now: () => NOW, slippagePercent: 0.5, ledger, policy: livePolicy, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: fakeTradeClient(candidate!), evmSigner: signer });
   expect(outcome).toMatchObject({ status: "sent", txHash: "0x2", closeTxHash: "0x3" });
   expect(outcome.reasons[0]).toContain("leg2_reverted");
   expect(ledger.openLegs()[0]).toMatchObject({ status: "failed", note: "leg2_reverted" });

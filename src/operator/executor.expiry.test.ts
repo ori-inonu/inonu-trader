@@ -30,7 +30,7 @@ function fixture(onEvent?: (event: string, clock: { now: number; kill: boolean }
     quoteAgeMs: 0, quoteHash: "synthetic-expiry-quote", notes: [], researchOnly: false,
   };
   const plan = buildExecutionPlan(candidate, {
-    choice: candidate.id, probabilities: { [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test",
+    choice: candidate.id, probabilities: { hold: 0, [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test",
   }, policy, { operatorExecute: true, operatorLiveAck: true, realModel: true, signerAvailable: true }, NOW);
   let recorded = false;
   const ledger = createOperatorLedger(emptyLedger(), () => {
@@ -72,7 +72,7 @@ function fixture(onEvent?: (event: string, clock: { now: number; kill: boolean }
   const run = () => executePlan(plan, candidate, {
     tradeClient, evmSigner: signer, ledger, policy, inventoryAddress: ADDRESS, now: () => clock.now,
     slippagePercent: 0.5, killSwitchExists: () => clock.kill,
-  });
+  }, { model: "synthetic-test", decision: { choice: candidate.id, probabilities: { hold: 0, [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test" }, eligible: [candidate] });
   return { run, clock, plan, candidate, ledger, policy, sent, receipts, receiptResults };
 }
 

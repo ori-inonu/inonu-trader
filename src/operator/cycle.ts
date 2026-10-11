@@ -180,7 +180,7 @@ export async function runOperatorCycle(deps: CycleDeps): Promise<OperatorCycle> 
         const chosen = eligible.find((candidate) => candidate.id === decision!.choice)!;
         plan = buildExecutionPlan(chosen, decision, deps.policy, deps.gate, deps.now());
         execution = deps.executor
-          ? await executePlan(plan, chosen, deps.executor)
+          ? await executePlan(plan, chosen, deps.executor, { model: deps.model.name, decision, eligible })
           : { status: plan.executionQualification === "qualified_dry_run" ? "dry_run" : "blocked", reasons: ["no_executor_attached"], txHash: null, orderId: null };
       if (execution.status === "completed" && deps.executor) {
         deps.executor.ledger.updateLeg(plan.planId, { status: "reconciliation_required", note: "result_attribution_unverified" });
