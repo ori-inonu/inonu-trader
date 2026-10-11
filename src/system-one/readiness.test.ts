@@ -69,6 +69,19 @@ test("deadline closes a model that ignores cancellation", async () => {
   expect(cycle.execution.status).toBe("blocked");
 }, 1000);
 
+test("elapsed deadline blocks a fulfilled model before the delayed timer can fire", async () => {
+  const model: SystemOneModel = { name: "fixture", choose: async (_brief, eligible) => {
+    const until = performance.now() + 30;
+    while (performance.now() < until) { /* reproduce a blocked event loop */ }
+    const choice = eligible[0]!.id;
+    return { choice, probabilities: { [choice]: 1 }, confidence: 1, latencyMs: 30, model: "fixture", status: "ok" };
+  } };
+  const cycle = await runSystemOneCycle({ ...readings, phase: "fase-2" }, { model, now: () => nowMs, timeoutMs: 10 });
+  expect(cycle.decision?.status).toBe("timeout");
+  expect(cycle.chosen).toBeNull();
+  expect(cycle.execution.status).toBe("blocked");
+});
+
 test("leverage never multiplies the total exposure allowance", () => {
   const input = { ...readings, phase: "fase-2" as const, nowMs, kellyLowerBound: 12 };
   const initial = buildLeverageBrief(input);
