@@ -8,7 +8,7 @@
  *  - Offline by default: a client sends only with valid credentials AND `allowNetwork: true`.
  *  - Credentials live in closures. No error, event, counter or property carries a credential, a signature, a header or a
  *    query string. The original exception of the `fetch` is never attached to an error.
- *  - Retries only for HTTP 429 and 5xx, bounded, with a deterministic exponential backoff. No payment (x402) is ever made.
+ *  - Retries only for HTTP 429 and 5xx, bounded, with a deterministic exponential backoff. No per call payment is ever made.
  */
 
 import { createHmac } from "node:crypto";
