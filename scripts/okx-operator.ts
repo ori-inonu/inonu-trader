@@ -124,6 +124,14 @@ async function main() {
   const loop = args.includes("--loop");
   const operator = loadOperatorConfig();
   const now = () => Date.now();
+  // Every file writer owns one interval, including offline state/journal runs.
+  // Pure router inspection does not write operator files.
+  const readOnlyRouters = live && args.includes("--routers") && !args.includes("--init-ledger") && reconcileIndex < 0;
+  const releaseLock = readOnlyRouters ? () => {} : acquireLock(operator.lockPath);
+  const shutdown = () => { releaseLock(); process.exit(0); };
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+  try {
   const historyExists = existsSync(operator.journalPath) || existsSync(operator.statePath);
   const { ledger, ready: ledgerReady, note: ledgerNote } = openLedger(operator.ledgerPath, args.includes("--init-ledger"), historyExists);
   if (ledgerNote) console.log(ledgerNote);
@@ -141,10 +149,6 @@ async function main() {
   }
 
   const killSwitchExists = () => existsSync(operator.policy.killSwitchPath);
-  const releaseLock = live ? acquireLock(operator.lockPath) : () => {};
-  const shutdown = () => { releaseLock(); process.exit(0); };
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
 
   let inventorySource: () => Promise<InventorySnapshot>;
   let swapQuoter: SwapQuoter;
@@ -155,7 +159,6 @@ async function main() {
   let inventoryAddress: string;
   const model: OperatorModel = useJev ? new JevOperatorModel(config.jevModelId) : new MockOperatorModel();
   const liveGate = operatorLiveGate(operator, model.name);
-  try {
     if (live) {
       if (!operator.okx) throw new UsageError("Configure OKX_WEB3_API_KEY, OKX_WEB3_API_SECRET e OKX_WEB3_API_PASSPHRASE.");
       if (!operator.address) throw new UsageError("Configure OPERATOR_ADDRESS com o endereço público da carteira observada.");
@@ -238,6 +241,8 @@ async function main() {
       try { await once(); } catch (error) { console.error(`ciclo falhou: ${error instanceof Error ? error.message.slice(0, 160) : String(error)}`); }
     }
   } finally {
+    process.off("SIGINT", shutdown);
+    process.off("SIGTERM", shutdown);
     releaseLock();
   }
 }
