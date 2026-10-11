@@ -308,14 +308,16 @@ describe("qualify-live CLI (child process)", () => {
     expect(itemOf(parsed, "authorization.fields-valid").status).toBe("unmet");
   });
 
-  test("usage errors exit 2 with usage on stderr and nothing on stdout; --help exits 0", async () => {
-    for (const args of [["--unknown"], ["--now", "yesterday"], ["--now", "2026-10-11"], ["--data-dir"], ["--print-template", "other"], ["--print-template"],
-      ["--data-dir", "a", "--data-dir", "b"], ["--now", NOW_ISO, "--now", NOW_ISO], ["positional"], ["--live"], ["--help", "--now", "x"]]) {
+  for (const args of [["--unknown"], ["--now", "yesterday"], ["--now", "2026-10-11"], ["--data-dir"], ["--print-template", "other"], ["--print-template"],
+    ["--data-dir", "a", "--data-dir", "b"], ["--now", NOW_ISO, "--now", NOW_ISO], ["positional"], ["--live"], ["--help", "--now", "x"]]) {
+    test(`usage error ${JSON.stringify(args)} exits 2 with usage on stderr and nothing on stdout`, async () => {
       const result = await run(args);
       expect({ args, exit: result.exit }).toEqual({ args, exit: 2 });
       expect(result.out).toBe("");
       expect(result.err).toContain("Uso:");
-    }
+    });
+  }
+  test("--help exits 0 and describes its read-only behavior", async () => {
     const help = await run(["--help"]);
     expect(help.exit).toBe(0);
     expect(help.out).toContain("Uso:");
