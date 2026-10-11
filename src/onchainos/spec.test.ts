@@ -91,7 +91,7 @@ describe("spec: registry, tables and catalog", () => {
       expect(item.repoCoverage, endpoint.catalogId).not.toBeNull();
       expect(item.repoCoverage!.mode, endpoint.catalogId).toBe("somente_leitura");
       const files = item.repoCoverage!.file.split(";").map((value) => value.trim());
-      expect(files, endpoint.catalogId).toContain(FAMILY_FILE[endpoint.family]);
+      expect(files, endpoint.catalogId).toContain(FAMILY_FILE[endpoint.family] as string);
       for (const file of files) expect(existsSync(join(root, file)), `${endpoint.catalogId}: ${file}`).toBe(true);
     }
   });
