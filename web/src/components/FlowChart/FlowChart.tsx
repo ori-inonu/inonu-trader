@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { BlockEvent } from "@/lib/types";
 import { fmtInt, fmtMon, fmtPrice, fmtSigned, fmtSignedMon } from "@/lib/format";
 import { presentDecision, sliceChartWindow, type ChartWindow } from "@/lib/presentation";
@@ -8,28 +8,75 @@ import { smoothPath } from "./smooth";
 import styles from "./FlowChart.module.css";
 
 const WINDOWS: ChartWindow[] = [32, 64, 128];
-const PAD_TOP = 96;
-const PAD_BOTTOM = 56;
+/** Right gutter reserved for the price scale: tick labels and the live price pill. */
 const PLOT_RIGHT = 96;
+/** Bottom band reserved for the block strip and the block axis. */
+const PAD_BOTTOM = 52;
+/** Left with the overlays clear of the plot. */
+const PAD_TOP_WIDE = 96;
+const PAD_TOP_SHORT = 72;
 const MIN_RANGE_PCT = 0.002;
 const TAG_W = 68;
+/** A tick label is dropped when the live price pill would sit on top of it. */
+const TAG_CLEARANCE = 12;
 
-function cellFill(event: BlockEvent): string {
-  if (event.decision?.late) return "var(--late)";
+type Tone = "buy" | "sell" | "hold" | "late" | "idle";
+
+interface ChartScale {
+  lo: number;
+  hi: number;
+  block: number;
+  window: ChartWindow;
+}
+
+interface ChartModel {
+  w: number;
+  h: number;
+  padTop: number;
+  base: number;
+  plotWidth: number;
+  plotHeight: number;
+  lo: number;
+  hi: number;
+  mean: number;
+  line: string;
+  area: string;
+  cells: Array<{ key: number; x: number; tone: Tone }>;
+  fills: Array<{ key: number; x: number; y: number; tone: "buy" | "sell" }>;
+  ticks: Array<{ y: number; label: string }>;
+  blockTicks: Array<{ x: number; label: string; anchor: "start" | "middle" | "end" }>;
+  cellY: number;
+  cellH: number;
+  endY: number;
+  first: BlockEvent;
+  last: BlockEvent;
+  fx: (block: number) => number;
+  fy: (price: number) => number;
+}
+
+function cellTone(event: BlockEvent): Tone {
+  if (event.decision?.late) return "late";
   const side = event.fill?.side ?? event.decision?.action;
-  if (side === "buy") return "var(--buy)";
-  if (side === "sell") return "var(--sell)";
-  return "var(--ink-3)";
+  if (side === "buy") return "buy";
+  if (side === "sell") return "sell";
+  return "idle";
 }
 
 function confidence(event: BlockEvent): string {
   const decision = event.decision;
   if (!decision || decision.late) return "Indisponível";
-  const values = [decision.probabilities?.buy, decision.probabilities?.sell, decision.probabilities?.hold];
+  const buy = decision.probabilities?.buy;
+  const sell = decision.probabilities?.sell;
+  const hold = decision.probabilities?.hold;
+  const values = [buy, sell, hold];
   if (values.some((value) => typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1)) {
     return "Indisponível";
   }
-  return `${Math.round(Math.max(...values as number[]) * 100)}%`;
+  let peak = 0;
+  for (const value of values) {
+    if (typeof value === "number" && value > peak) peak = value;
+  }
+  return `${Math.round(peak * 100)}%`;
 }
 
 function statusFor(event: BlockEvent): string {
@@ -43,6 +90,81 @@ function statusFor(event: BlockEvent): string {
   return decision.label;
 }
 
+/**
+ * Everything that depends only on the plotted geometry. Pointer moves re-render the chart for the
+ * crosshair alone, so the plot itself is memoized and never reconciles again while the pointer
+ * travels the same series.
+ */
+const Plot = memo(function Plot({ model, gradientId }: { model: ChartModel; gradientId: string }) {
+  const { w, h, padTop, base, plotWidth, plotHeight, cells, fills, ticks, blockTicks, cellY, cellH, endY, last } = model;
+  return (
+    <>
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop className={styles.areaTop} offset="0%" />
+          <stop className={styles.areaBase} offset="100%" />
+        </linearGradient>
+      </defs>
+
+      <rect className={styles.floor} x="0" y={padTop - 12} width={w} height={base - padTop + 12} />
+      <g className={styles.corners} aria-hidden="true">
+        <path d={`M0 ${padTop - 12} L14 ${padTop - 12} M0 ${padTop - 12} L0 ${padTop + 2}`} />
+        <path d={`M${plotWidth} ${padTop - 12} L${plotWidth - 14} ${padTop - 12} M${plotWidth} ${padTop - 12} L${plotWidth} ${padTop + 2}`} />
+        <path d={`M0 ${base} L14 ${base} M0 ${base} L0 ${base - 14}`} />
+        <path d={`M${plotWidth} ${base} L${plotWidth - 14} ${base} M${plotWidth} ${base} L${plotWidth} ${base - 14}`} />
+      </g>
+
+      {ticks.map((tick) => (
+        <line key={tick.y} className={styles.grid} x1="0" x2={plotWidth} y1={tick.y} y2={tick.y} />
+      ))}
+
+      <path d={model.area} fill={`url(#${gradientId})`} />
+      <path className={styles.line} d={model.line} />
+
+      <line
+        className={styles.reference}
+        x1="0"
+        x2={plotWidth}
+        y1={model.fy(model.mean)}
+        y2={model.fy(model.mean)}
+      />
+
+      {fills.map((fill) => (
+        <circle key={fill.key} className={styles[fill.tone]} cx={fill.x} cy={fill.y} r="3.5" />
+      ))}
+
+      {cells.map((cell) => (
+        <rect key={cell.key} className={`${styles.blockCell} ${styles[cell.tone]}`} x={cell.x - 2.5} y={cellY} width="5" height={cellH} rx="2" />
+      ))}
+
+      <text className={styles.tick} x={plotWidth + 8} y={model.fy(model.mean) + 4}>
+        média
+      </text>
+
+      {ticks.map((tick) => (
+        <text key={`label-${tick.y}`} className={styles.tick} x={w - 8} y={tick.y - 5} textAnchor="end">
+          {tick.label}
+        </text>
+      ))}
+
+      {blockTicks.map((tick) => (
+        <text key={`block-${tick.x}`} className={styles.blockTick} x={tick.x} y={h - 6} textAnchor={tick.anchor}>
+          {tick.label}
+        </text>
+      ))}
+
+      <g className={styles.tag} style={{ transform: `translateY(${endY.toFixed(1)}px)` }}>
+        <line className={styles.guide} x1={plotWidth} x2={w - TAG_W - 12} y1="0" y2="0" />
+        <circle className={styles.guideDot} cx={w - TAG_W - 8} cy="0" r="4" />
+        <rect className={styles.tagBox} x={w - TAG_W - 4} y="-10" width={TAG_W} height="20" rx="999" />
+        <text className={styles.tagText} x={w - 4 - TAG_W / 2} y="4" textAnchor="middle">
+          {fmtPrice(last.mid)}
+        </text>
+      </g>
+    </>
+  );
+});
+
 export default function FlowChart({
   events,
   latest,
@@ -53,10 +175,11 @@ export default function FlowChart({
   market: string;
 }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
-  const scaleRef = useRef<{ lo: number; hi: number; block: number; window: ChartWindow } | null>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [windowSize, setWindowSize] = useState<ChartWindow>(64);
   const [selectedBlock, setSelectedBlock] = useState<number | null>(null);
+  const [scale, setScale] = useState<ChartScale | null>(null);
   const gid = useId().replace(/[^a-zA-Z0-9]/g, "");
 
   useEffect(() => {
@@ -64,6 +187,9 @@ export default function FlowChart({
     if (!element) return;
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
+      // The pointer mapping is derived from this rect, so it is captured with the size and
+      // never re-read on every pointer move.
+      rectRef.current = element.getBoundingClientRect();
       setSize((current) =>
         Math.abs(current.w - width) < 0.5 && Math.abs(current.h - height) < 0.5
           ? current
@@ -93,17 +219,8 @@ export default function FlowChart({
     );
   }, [windowEvents]);
 
-  const model = useMemo(() => {
-    const { w, h } = size;
-    const plotHeight = h - PAD_TOP - PAD_BOTTOM;
-    if (w < 180 || plotHeight < 52 || !windowEvents.length) return null;
-
-    const first = windowEvents[0];
-    const last = windowEvents[windowEvents.length - 1];
-    const blockSpan = Math.max(1, last.block - first.block);
-    const plotWidth = Math.max(1, w - PLOT_RIGHT);
-    const fx = (block: number) => ((block - first.block) / blockSpan) * plotWidth;
-
+  const bounds = useMemo(() => {
+    if (!windowEvents.length) return null;
     let lo = Infinity;
     let hi = -Infinity;
     let sum = 0;
@@ -112,54 +229,91 @@ export default function FlowChart({
       hi = Math.max(hi, event.mid);
       sum += event.mid;
     }
-    const mean = sum / windowEvents.length;
-    const floor = Math.max(mean * MIN_RANGE_PCT, 1e-9);
+    return { lo, hi, mean: sum / windowEvents.length, block: windowEvents[windowEvents.length - 1].block };
+  }, [windowEvents]);
+
+  // The scale eases toward each new block instead of snapping. It lives in state, not in a ref
+  // written during render, so React can render the same block twice without shifting the scale.
+  useEffect(() => {
+    if (!bounds) {
+      setScale(null);
+      return;
+    }
+    const previous = scale;
+    if (!previous || previous.window !== windowSize || previous.block === bounds.block) {
+      setScale({ lo: bounds.lo, hi: bounds.hi, block: bounds.block, window: windowSize });
+      return;
+    }
+    let lo = previous.lo + (bounds.lo - previous.lo) * 0.1;
+    let hi = previous.hi + (bounds.hi - previous.hi) * 0.1;
+    for (const event of windowEvents) {
+      lo = Math.min(lo, event.mid);
+      hi = Math.max(hi, event.mid);
+    }
+    const floor = Math.max(bounds.mean * MIN_RANGE_PCT, 1e-9);
     if (hi - lo < floor) {
-      lo = mean - floor / 2;
-      hi = mean + floor / 2;
+      const center = (hi + lo) / 2;
+      lo = center - floor / 2;
+      hi = center + floor / 2;
     }
+    setScale({ lo, hi, block: bounds.block, window: windowSize });
+    // `scale` is read as the previous value only, so it is intentionally not a dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bounds, windowSize, windowEvents]);
 
-    const previous = scaleRef.current;
-    if (previous && previous.window === windowSize && previous.block !== last.block) {
-      lo = previous.lo + (lo - previous.lo) * 0.1;
-      hi = previous.hi + (hi - previous.hi) * 0.1;
-      for (const event of windowEvents) {
-        lo = Math.min(lo, event.mid);
-        hi = Math.max(hi, event.mid);
-      }
-      if (hi - lo < floor) {
-        const center = (hi + lo) / 2;
-        lo = center - floor / 2;
-        hi = center + floor / 2;
-      }
+  const model = useMemo<ChartModel | null>(() => {
+    const { w, h } = size;
+    const padTop = h < 280 ? PAD_TOP_SHORT : PAD_TOP_WIDE;
+    const plotHeight = h - padTop - PAD_BOTTOM;
+    if (!bounds || w < 180 || plotHeight < 40 || !windowEvents.length) return null;
+
+    const first = windowEvents[0];
+    const last = windowEvents[windowEvents.length - 1];
+    const blockSpan = Math.max(1, last.block - first.block);
+    const plotWidth = Math.max(1, w - PLOT_RIGHT);
+    const fx = (block: number) => ((block - first.block) / blockSpan) * plotWidth;
+
+    const active = scale ?? bounds;
+    let lo = active.lo;
+    let hi = active.hi;
+    const floor = Math.max(bounds.mean * MIN_RANGE_PCT, 1e-9);
+    if (hi - lo < floor) {
+      const center = (hi + lo) / 2;
+      lo = center - floor / 2;
+      hi = center + floor / 2;
     }
-    scaleRef.current = { lo, hi, block: last.block, window: windowSize };
-
     const range = hi - lo || 1;
-    const fy = (price: number) => PAD_TOP + (1 - (price - lo) / range) * plotHeight;
+    const fy = (price: number) => padTop + (1 - (price - lo) / range) * plotHeight;
+    const base = h - PAD_BOTTOM;
+
     const points = windowEvents.map((event) => [fx(event.block), fy(event.mid)] as const);
     const line = smoothPath(points);
-    const base = h - PAD_BOTTOM;
     const area = `${line} L${points[points.length - 1][0].toFixed(1)} ${base} L${points[0][0].toFixed(1)} ${base} Z`;
-    const byBlock = new Map(windowEvents.map((event) => [event.block, event]));
-    const cells = windowEvents.map((event) => ({
-      key: event.block,
-      x: fx(event.block),
-      fill: cellFill(event),
-      late: event.decision?.late === true,
-    }));
-    const fills = windowEvents.filter((event) => event.fill).map((event) => ({
-      key: event.block,
-      x: fx(event.block),
-      y: fy(event.mid),
-      fill: event.fill!.side === "buy" ? "var(--buy)" : "var(--sell)",
-    }));
-    const ticks = [0.25, 0.5, 0.75].map((fraction) => ({
-      y: PAD_TOP + plotHeight * fraction,
-      label: fmtPrice(lo + (1 - fraction) * range),
-    }));
-    return { area, byBlock, cells, fills, fx, fy, last, line, plotWidth, ticks, base, shift: 0, endY: fy(last.mid) };
-  }, [size, windowEvents, windowSize]);
+    const cells = windowEvents.map((event) => ({ key: event.block, x: fx(event.block), tone: cellTone(event) }));
+    const fills = windowEvents.flatMap((event) =>
+      event.fill
+        ? [{ key: event.block, x: fx(event.block), y: fy(event.mid), tone: event.fill.side === "buy" ? "buy" as const : "sell" as const }]
+        : [],
+    );
+    const endY = fy(last.mid);
+    const ticks = [0.25, 0.5, 0.75]
+      .map((fraction) => ({ y: padTop + plotHeight * fraction, label: fmtPrice(lo + (1 - fraction) * range) }))
+      .filter((tick) => Math.abs(tick.y - endY) > TAG_CLEARANCE);
+
+    const lastIndex = windowEvents.length - 1;
+    const blockTicks = [
+      { index: 0, anchor: "start" as const },
+      { index: Math.round(lastIndex / 2), anchor: "middle" as const },
+      { index: lastIndex, anchor: "end" as const },
+    ]
+      .filter((tick, at, all) => all.findIndex((other) => other.index === tick.index) === at)
+      .map((tick) => ({ x: fx(windowEvents[tick.index].block), label: fmtInt(windowEvents[tick.index].block), anchor: tick.anchor }));
+
+    return {
+      w, h, padTop, base, plotWidth, plotHeight, lo, hi, mean: bounds.mean, line, area,
+      cells, fills, ticks, blockTicks, cellY: base + 8, cellH: 14, endY, first, last, fx, fy,
+    };
+  }, [size, scale, bounds, windowEvents]);
 
   const selectedIndex = windowEvents.findIndex((event) => event.block === selectedBlock);
   const inspected = selectedIndex >= 0 ? windowEvents[selectedIndex] : windowEvents[windowEvents.length - 1] ?? null;
@@ -176,8 +330,9 @@ export default function FlowChart({
     && Number.isFinite(pnl.pnlPct);
 
   function selectAt(clientX: number) {
-    if (!model || !panelRef.current || !windowEvents.length) return;
-    const rect = panelRef.current.getBoundingClientRect();
+    if (!model || !windowEvents.length) return;
+    const rect = rectRef.current;
+    if (!rect) return;
     const x = clientX - rect.left;
     let closest = windowEvents[0];
     let distance = Infinity;
@@ -188,11 +343,20 @@ export default function FlowChart({
         distance = nextDistance;
       }
     }
-    setSelectedBlock(closest.block);
+    setSelectedBlock((current) => (current === closest.block ? current : closest.block));
   }
 
   const selectedX = inspected && model ? model.fx(inspected.block) : null;
   const selectedY = inspected && model ? model.fy(inspected.mid) : null;
+
+  // Rebuilt only when the plotted numbers change, never on a pointer move.
+  const chartLabel = useMemo(() => {
+    if (!model || !shown) return "Gráfico de preço por bloco. Aguardando dados do feed.";
+    return `Gráfico de preço médio por bloco para ${market || "o mercado informado"}. `
+      + `${windowEvents.length} blocos, do ${fmtInt(model.first.block)} ao ${fmtInt(model.last.block)}. `
+      + `Preço mínimo ${fmtPrice(model.lo)}, preço máximo ${fmtPrice(model.hi)}, `
+      + `média da janela ${fmtPrice(model.mean)}, último preço ${fmtPrice(model.last.mid)}.`;
+  }, [model, shown, market, windowEvents.length]);
 
   return (
     <section className={styles.wrap} aria-labelledby="chart-title">
@@ -229,75 +393,29 @@ export default function FlowChart({
         onPointerDown={(event) => {
           if (event.pointerType !== "mouse") selectAt(event.clientX);
         }}
-        onPointerLeave={() => {
-          if (inspected) setSelectedBlock(inspected.block);
-        }}
       >
-        {!model || !shown ? (
+        {!shown ? (
           <div className={styles.empty}>Aguardando dados do feed</div>
+        ) : !model ? (
+          <div className={styles.empty}>Espaço insuficiente para desenhar o gráfico</div>
         ) : (
           <>
-            <svg className={styles.svg} viewBox={`0 0 ${size.w} ${size.h}`} width={size.w} height={size.h} aria-hidden="true">
-              <defs>
-                <linearGradient id={`area${gid}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--signal)" stopOpacity="0.14" />
-                  <stop offset="100%" stopColor="var(--signal)" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <rect
-                x="0"
-                y={PAD_TOP - 12}
-                width={size.w}
-                height={model.base - PAD_TOP + 12}
-                className={styles.floor}
-              />
-              <g className={styles.corners} aria-hidden="true">
-                <path d={`M0 ${PAD_TOP - 12} L14 ${PAD_TOP - 12} M0 ${PAD_TOP - 12} L0 ${PAD_TOP + 2}`} />
-                <path d={`M${size.w} ${PAD_TOP - 12} L${size.w - 14} ${PAD_TOP - 12} M${size.w} ${PAD_TOP - 12} L${size.w} ${PAD_TOP + 2}`} />
-                <path d={`M0 ${model.base} L14 ${model.base} M0 ${model.base} L0 ${model.base - 14}`} />
-                <path d={`M${size.w} ${model.base} L${size.w - 14} ${model.base} M${size.w} ${model.base} L${size.w} ${model.base - 14}`} />
-              </g>
-              {model.ticks.map((tick) => (
-                <line key={tick.y} className={styles.grid} x1="0" x2={size.w} y1={tick.y} y2={tick.y} />
-              ))}
-              <path d={model.area} fill={`url(#area${gid})`} />
-              <path className={styles.line} d={model.line} />
-              {model.fills.map((fill) => (
-                <circle key={fill.key} cx={fill.x} cy={fill.y} r="3.5" fill={fill.fill} />
-              ))}
-              {model.cells.map((cell) => (
-                <rect
-                  key={cell.key}
-                  className={styles.blockCell}
-                  x={cell.x - 2.5}
-                  y={size.h - 36}
-                  width="5"
-                  height="16"
-                  rx="2"
-                  fill={cell.fill}
-                  stroke={inspected?.block === cell.key ? "var(--ink)" : "none"}
-                  strokeWidth="1.5"
-                />
-              ))}
+            <svg className={styles.svg} viewBox={`0 0 ${size.w} ${size.h}`} role="img" aria-label={chartLabel}>
+              <Plot model={model} gradientId={`area${gid}`} />
               {selectedX !== null && selectedY !== null ? (
                 <g>
-                  <line className={styles.cross} x1={selectedX} x2={selectedX} y1={PAD_TOP - 8} y2={model.base + 4} />
+                  <line className={styles.cross} x1={selectedX} x2={selectedX} y1={model.padTop - 8} y2={model.base + 4} />
                   <circle className={styles.crossDot} cx={selectedX} cy={selectedY} r="4.5" />
+                  <rect
+                    className={styles.cellMarker}
+                    x={selectedX - 3.5}
+                    y={model.cellY - 1}
+                    width="7"
+                    height={model.cellH + 2}
+                    rx="3"
+                  />
                 </g>
               ) : null}
-              {model.ticks.map((tick) => (
-                <text key={`label-${tick.y}`} className={styles.tick} x={size.w - 8} y={tick.y - 5} textAnchor="end">
-                  {tick.label}
-                </text>
-              ))}
-              <g className={styles.tag} style={{ transform: `translateY(${model.endY.toFixed(1)}px)` }}>
-                <line className={styles.guide} x1={size.w - 72} x2={size.w - TAG_W - 10} y1="0" y2="0" />
-                <circle cx={size.w - 82} cy="0" r="4" fill="var(--hold)" />
-                <rect x={size.w - TAG_W - 8} y="-10" width={TAG_W} height="20" rx="999" fill="var(--signal)" />
-                <text className={styles.tagText} x={size.w - 8 - TAG_W / 2} y="4" textAnchor="middle">
-                  {fmtPrice(model.last.mid)}
-                </text>
-              </g>
             </svg>
 
             <div className={styles.priceOverlay}>
@@ -312,7 +430,7 @@ export default function FlowChart({
         )}
       </div>
 
-      {model && shown ? (
+      {shown ? (
         <div className={styles.positionSummary}>
           <span>{shown.position?.side && shown.position.side !== "flat"
             ? `${shown.position.side === "long" ? "Comprada" : "Vendida"}: ${fmtMon(shown.position.size, Number.isInteger(shown.position.size) ? 0 : 3)}`

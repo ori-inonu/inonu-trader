@@ -128,7 +128,7 @@ function DecisionDialView({ probabilities, action, late, size = 220, reducedMoti
         <circle cx={centre} cy={centre} r={size * 0.035} fill="var(--ink)" />
       </svg>
 
-      <span className={`${styles.word} clippedText`}>{word}</span>
+      <span className={styles.word}>{word}</span>
       <span className="srOnly">{description}</span>
     </div>
   );

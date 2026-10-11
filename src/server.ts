@@ -18,40 +18,48 @@ export function startServer(meta: Meta, history: () => BlockEvent[]) {
   };
   setInterval(() => clients.forEach((c) => send(c, "ping", Date.now())), 15_000);
 
-  Bun.serve({
-    port: config.port,
-    fetch(req) {
-      const { pathname } = new URL(req.url);
-      if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
-      if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null });
-      if (pathname === "/history") return json(history());
-      if (pathname === "/operator") {
-        // Latest operator cycle written by scripts/okx-operator.ts; redacted before persisting.
-        const statePath = process.env.OPERATOR_STATE_PATH ?? "data/operator/latest.json";
-        if (!existsSync(statePath)) return json({ error: "operator state not found", statePath }, 404);
-        try { return json(JSON.parse(readFileSync(statePath, "utf8"))); } catch { return json({ error: "operator state unreadable" }, 500); }
-      }
-      if (pathname === "/operator/history" || pathname === "/operator/insights") {
-        // Operator journal (one redacted cycle per line) and descriptive statistics over it.
-        const journalPath = process.env.OPERATOR_JOURNAL_PATH ?? "data/operator/cycles.jsonl";
-        if (!existsSync(journalPath)) return json({ error: "operator journal not found", journalPath }, 404);
-        let cycles: ReturnType<typeof parseCycleLines>;
-        try { cycles = parseCycleLines(readFileSync(journalPath, "utf8")); } catch { return json({ error: "operator journal unreadable" }, 500); }
-        if (pathname === "/operator/insights") return json(computeInsights(cycles));
-        const limitRaw = Number(new URL(req.url).searchParams.get("limit") ?? "50");
-        const limit = Number.isSafeInteger(limitRaw) && limitRaw > 0 ? Math.min(limitRaw, 500) : 50;
-        return json(cycles.slice(-limit));
-      }
-      if (pathname === "/events") {
-        const stream = new ReadableStream<Uint8Array>({
-          start(c) { clients.add(c); send(c, "snapshot", { ...meta, history: history() }); },
-          cancel(c) { clients.delete(c); },
-        });
-        return new Response(stream, { headers: { ...CORS, "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" } });
-      }
-      return json({ error: "not found" }, 404);
-    },
-  });
+  try {
+    Bun.serve({
+      port: config.port,
+      fetch(req) {
+        const { pathname } = new URL(req.url);
+        if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
+        if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null });
+        if (pathname === "/history") return json(history());
+        if (pathname === "/operator") {
+          // Latest operator cycle written by scripts/okx-operator.ts; redacted before persisting.
+          const statePath = process.env.OPERATOR_STATE_PATH ?? "data/operator/latest.json";
+          if (!existsSync(statePath)) return json({ error: "operator state not found", statePath }, 404);
+          try { return json(JSON.parse(readFileSync(statePath, "utf8"))); } catch { return json({ error: "operator state unreadable" }, 500); }
+        }
+        if (pathname === "/operator/history" || pathname === "/operator/insights") {
+          // Operator journal (one redacted cycle per line) and descriptive statistics over it.
+          const journalPath = process.env.OPERATOR_JOURNAL_PATH ?? "data/operator/cycles.jsonl";
+          if (!existsSync(journalPath)) return json({ error: "operator journal not found", journalPath }, 404);
+          let cycles: ReturnType<typeof parseCycleLines>;
+          try { cycles = parseCycleLines(readFileSync(journalPath, "utf8")); } catch { return json({ error: "operator journal unreadable" }, 500); }
+          if (pathname === "/operator/insights") return json(computeInsights(cycles));
+          const limitRaw = Number(new URL(req.url).searchParams.get("limit") ?? "50");
+          const limit = Number.isSafeInteger(limitRaw) && limitRaw > 0 ? Math.min(limitRaw, 500) : 50;
+          return json(cycles.slice(-limit));
+        }
+        if (pathname === "/events") {
+          const stream = new ReadableStream<Uint8Array>({
+            start(c) { clients.add(c); send(c, "snapshot", { ...meta, history: history() }); },
+            cancel(c) { clients.delete(c); },
+          });
+          return new Response(stream, { headers: { ...CORS, "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive" } });
+        }
+        return json({ error: "not found" }, 404);
+      },
+    });
+  } catch (e) {
+    const code = e instanceof Error && "code" in e ? e.code : undefined;
+    if (code !== "EADDRINUSE") throw e;
+    console.error(`jev-trader: cannot bind port ${config.port}: already in use.`);
+    console.error(`  Set PORT=<other port> to serve elsewhere, or stop the process already listening on ${config.port}.`);
+    process.exit(1);
+  }
 
   const broadcast = (type: string, data: unknown) => clients.forEach((c) => send(c, type, data));
   return {

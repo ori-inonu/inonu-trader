@@ -1,9 +1,11 @@
+/* Sits inside a Disclosure. The disclosure owns the outer frame, so this panel drops its own
+   radius and border and only supplies the internal rhythm. */
 .panel {
+  container-type: inline-size;
+  container-name: report;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--edge);
-  border-radius: 18px;
-  background: var(--bg-deck);
+  background: var(--bg-deck-2);
   color: var(--ink);
 }
 
@@ -12,35 +14,70 @@
   min-width: 0;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
-  padding: 18px 20px 14px;
-  border-bottom: 1px solid var(--edge);
+  gap: var(--s3);
+  padding: var(--s4) 0 0;
 }
 
 .headingGroup {
   min-width: 0;
 }
 
-.title {
+.eyebrow {
   margin: 0;
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.3;
+  color: var(--signal);
+  font: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
 }
 
+/* The title is held to two lines so every card header resolves to the same height in the dock
+   row. The full title stays reachable through the title attribute. */
+.title {
+  display: -webkit-box;
+  min-block-size: 2lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
+  color: var(--ink);
+  font: var(--fs-md);
+  font-weight: 600;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* All four cards reserve the same three lines and clamp to them, so the dock row reads as one
+   header band. The full sentence stays reachable through the title attribute. */
 .description {
-  margin: 5px 0 0;
+  display: -webkit-box;
+  min-block-size: 3lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
   color: var(--ink-2);
-  font-size: 12px;
+  font: var(--fs-sm);
   line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.badge {
+  display: inline-flex;
+  flex: none;
+  min-height: 24px;
+  align-items: center;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 0 var(--s2);
+  color: var(--hold);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
 }
 
 .content {
   display: grid;
   min-width: 0;
-  gap: 14px;
-  padding: 16px 20px 18px;
+  gap: var(--s3);
+  padding: var(--s4) 0 var(--s5);
 }
 
 .status,
@@ -51,7 +88,7 @@
 .safety,
 .error {
   margin: 0;
-  font-size: 12px;
+  font: var(--fs-sm);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
@@ -69,9 +106,10 @@
 }
 
 .safety {
-  padding: 11px 12px;
   border: 1px solid var(--edge-strong);
-  border-radius: 10px;
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck);
   color: var(--ink-2);
 }
 
@@ -84,7 +122,7 @@
   min-width: 0;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .fileLabel {
@@ -94,8 +132,9 @@
   grid-column: 1 / -1;
   align-items: center;
   color: var(--ink);
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .fileInput {
@@ -105,20 +144,28 @@
   min-height: 44px;
   grid-column: 1 / -1;
   color: var(--ink-2);
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
 }
 
 .fileInput::file-selector-button {
   min-width: 44px;
   min-height: 44px;
-  margin-right: 9px;
+  margin-right: var(--s2);
   border: 1px solid var(--edge-strong);
-  border-radius: 9px;
-  background: var(--bg-deck-2);
+  border-radius: var(--r-sm);
+  padding: 0 var(--s3);
+  background: var(--bg-deck);
   color: var(--ink);
   font: inherit;
+  font-weight: 600;
   cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-snap), background-color var(--dur-fast) var(--ease-snap);
+}
+
+.fileInput::file-selector-button:hover {
+  border-color: var(--signal);
+  background: var(--bg-deck-3);
 }
 
 .help {
@@ -129,14 +176,14 @@
 .secondaryButton {
   min-width: 44px;
   min-height: 44px;
-  border-radius: 10px;
-  padding: 9px 13px;
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   font-weight: 600;
   line-height: 1.3;
   overflow-wrap: anywhere;
-  transition: background-color 150ms ease, border-color 150ms ease;
+  transition: background-color var(--dur-fast) var(--ease-snap), border-color var(--dur-fast) var(--ease-snap), color var(--dur-fast) var(--ease-snap);
 }
 
 .primaryButton {
@@ -147,61 +194,69 @@
 
 .secondaryButton {
   border: 1px solid var(--edge-strong);
-  background: var(--bg-deck-2);
+  background: var(--bg-deck);
   color: var(--ink);
 }
 
 .primaryButton:hover {
-  background: var(--signal);
+  background: color-mix(in srgb, var(--signal) 82%, var(--ink));
 }
 
 .secondaryButton:hover {
   border-color: var(--signal);
+  background: var(--bg-deck-3);
 }
 
+/* One focus treatment for every control in the panel, including the native file selector. */
 .primaryButton:focus-visible,
 .secondaryButton:focus-visible,
 .fileInput:focus-visible,
 .fileInput::file-selector-button:focus-visible {
-  outline: 3px solid var(--hold);
+  outline: 2px solid var(--signal);
   outline-offset: 2px;
 }
 
 .report {
   display: grid;
   min-width: 0;
-  gap: 13px;
-  padding-top: 3px;
+  gap: var(--s3);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--edge);
 }
 
 .badges {
   display: flex;
   min-width: 0;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: var(--s2);
 }
 
-.badge {
+.reportBadge {
   display: inline-flex;
   min-width: 0;
-  min-height: 32px;
+  min-height: 24px;
   align-items: center;
   border: 1px solid var(--edge-strong);
-  border-radius: 999px;
-  padding: 5px 9px;
-  color: var(--hold);
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  line-height: 1.35;
+  border-radius: var(--r-pill);
+  padding: 0 var(--s2);
+  color: var(--ink-2);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
   overflow-wrap: anywhere;
+}
+
+.reportBadgeWarn {
+  border-color: color-mix(in srgb, var(--hold) 55%, var(--edge));
+  color: var(--hold);
 }
 
 .details {
   display: grid;
   min-width: 0;
-  gap: 8px;
+  gap: var(--s2);
   margin: 0;
-  padding: 11px 0;
+  padding: var(--s3) 0;
   border-top: 1px solid var(--edge);
   border-bottom: 1px solid var(--edge);
 }
@@ -211,7 +266,7 @@
   min-width: 0;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: baseline;
-  gap: 12px;
+  gap: var(--s3);
 }
 
 .detailRow dt,
@@ -219,19 +274,24 @@
   min-width: 0;
   margin: 0;
   overflow-wrap: anywhere;
-  word-break: break-word;
 }
 
 .detailRow dt {
   color: var(--ink-3);
-  font-size: 12px;
+  font: var(--fs-sm);
 }
 
+/* Identifiers, amounts and instants take the mono ramp; declared prose takes the sans ramp. */
 .detailRow dd {
   color: var(--ink);
-  font-family: var(--font-mono), monospace;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
   font-variant-numeric: tabular-nums;
+}
+
+.detailRow dd.prose {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
 }
 
 .deltaRow dt,
@@ -243,22 +303,23 @@
 .subsection {
   display: grid;
   min-width: 0;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .subheading {
   margin: 0;
   color: var(--ink);
-  font-size: 13px;
+  font-size: var(--fs-base);
   font-weight: 600;
   line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .legs,
 .reasons {
   display: grid;
   min-width: 0;
-  gap: 10px;
+  gap: var(--s3);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -267,27 +328,23 @@
 .leg {
   display: grid;
   min-width: 0;
-  gap: 6px;
+  gap: var(--s2);
   border: 1px solid var(--edge);
-  border-radius: 11px;
-  padding: 11px;
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck);
 }
 
 .reasons li {
   min-width: 0;
   color: var(--ink-2);
-  font-size: 12px;
+  font: var(--fs-sm);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 379.98px) {
-  .header,
-  .content {
-    padding-right: 14px;
-    padding-left: 14px;
-  }
-
+/* Two side by side buttons with these labels stop fitting well before the disclosure body runs out. */
+@container report (max-width: 420px) {
   .header {
     flex-direction: column;
   }
@@ -303,13 +360,14 @@
 
   .detailRow {
     grid-template-columns: minmax(0, 1fr);
-    gap: 3px;
+    gap: var(--s1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .primaryButton,
-  .secondaryButton {
+  .secondaryButton,
+  .fileInput::file-selector-button {
     transition: none;
   }
 }

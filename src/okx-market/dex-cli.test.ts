@@ -12,8 +12,11 @@ function run(args: string[], credentials: Record<string, string> = {}) {
   writeFileSync(guard, `import { writeFileSync } from 'node:fs'; globalThis.fetch = async () => { writeFileSync(${JSON.stringify(marker)}, 'attempted'); throw new Error('network forbidden in offline test'); };`);
   writeFileSync(join(directory, '.env'), 'OKX_WEB3_API_KEY=ENV_FILE_SENTINEL\nOKX_WEB3_API_SECRET=ENV_FILE_SENTINEL\nOKX_WEB3_API_PASSPHRASE=ENV_FILE_SENTINEL');
   try {
+    // The child budget is the repo test timeout, not an ad hoc 10s: this spawn contends for CPU with the
+    // rest of the suite, and a child killed by its own timeout reports ETIMEDOUT as a bare error instead of
+    // the assertion that actually matters.
     const result = spawnSync(process.execPath, ['--no-env-file', '--preload', guard, script, ...args], {
-      cwd: directory, env: { SystemRoot: process.env.SystemRoot ?? 'C:\\Windows', ...credentials }, encoding: 'utf8', timeout: 10000 });
+      cwd: directory, env: { SystemRoot: process.env.SystemRoot ?? 'C:\\Windows', ...credentials }, encoding: 'utf8', timeout: 30000 });
     return { status: result.status, stdout: result.stdout, stderr: result.stderr, networkCalled: existsSync(marker), error: result.error };
   } finally {
     if (!resolve(directory).startsWith(resolve(tmpdir()) + '\\') && !resolve(directory).startsWith(resolve(tmpdir()) + '/')) throw new Error('Unsafe temporary directory');

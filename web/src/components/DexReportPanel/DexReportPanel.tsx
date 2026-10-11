@@ -67,23 +67,23 @@ function legView(leg: DexReportLeg, index: number, report: NormalizedDexReport) 
         </div>
         <div className={styles.detailRow}>
           <dt>Impacto de preço declarado</dt>
-          <dd>{leg.priceImpactPercent === null ? "Desconhecido" : String(leg.priceImpactPercent) + "%"}</dd>
+          <dd className={leg.priceImpactPercent === null ? styles.prose : undefined}>{leg.priceImpactPercent === null ? "Desconhecido" : String(leg.priceImpactPercent) + "%"}</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Fração de imposto de origem</dt>
-          <dd>{leg.fromTaxFraction === null ? "Desconhecida" : String(leg.fromTaxFraction)}</dd>
+          <dd className={leg.fromTaxFraction === null ? styles.prose : undefined}>{leg.fromTaxFraction === null ? "Desconhecida" : String(leg.fromTaxFraction)}</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Fração de imposto de destino</dt>
-          <dd>{leg.toTaxFraction === null ? "Desconhecida" : String(leg.toTaxFraction)}</dd>
+          <dd className={leg.toTaxFraction === null ? styles.prose : undefined}>{leg.toTaxFraction === null ? "Desconhecida" : String(leg.toTaxFraction)}</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Taxa de trade (USD)</dt>
-          <dd>{leg.networkEstimates.tradeFeeUsd === null ? "Desconhecida" : leg.networkEstimates.tradeFeeUsd + " USD (declarada)"}</dd>
+          <dd className={leg.networkEstimates.tradeFeeUsd === null ? styles.prose : undefined}>{leg.networkEstimates.tradeFeeUsd === null ? "Desconhecida" : leg.networkEstimates.tradeFeeUsd + " USD (declarada)"}</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Gas estimado (unidade nativa)</dt>
-          <dd>
+          <dd className={styles.prose}>
             {leg.networkEstimates.estimateGasFeeNativeAtomic === null
               ? "Desconhecido"
               : leg.networkEstimates.estimateGasFeeNativeAtomic + " unidades atômicas nativas (declaradas)"}
@@ -105,21 +105,21 @@ function timingView(report: NormalizedDexReport) {
       </div>
       <div className={styles.detailRow}>
         <dt>Consulta de cobertura (UTC epoch ms)</dt>
-        <dd>{timing.coverageRequestedAt === null ? "Desconhecida" : String(timing.coverageRequestedAt)}</dd>
+        <dd className={timing.coverageRequestedAt === null ? styles.prose : undefined}>{timing.coverageRequestedAt === null ? "Desconhecida" : String(timing.coverageRequestedAt)}</dd>
       </div>
       <div className={styles.detailRow}>
         <dt>Resposta da cobertura (UTC epoch ms)</dt>
-        <dd>{timing.coverageReceivedAt === null ? "Desconhecida" : String(timing.coverageReceivedAt)}</dd>
+        <dd className={timing.coverageReceivedAt === null ? styles.prose : undefined}>{timing.coverageReceivedAt === null ? "Desconhecida" : String(timing.coverageReceivedAt)}</dd>
       </div>
       {report.legs.map((leg, index) => (
         <div className={styles.detailRow} key={index}>
           <dt>Perna {index + 1}: solicitação/recebimento (UTC epoch ms)</dt>
-          <dd>{leg.requestedAt === undefined ? "Desconhecidos" : String(leg.requestedAt) + " / " + (leg.receivedAt === undefined ? "desconhecido" : String(leg.receivedAt))}</dd>
+          <dd className={leg.requestedAt === undefined || leg.receivedAt === undefined ? styles.prose : undefined}>{leg.requestedAt === undefined ? "Desconhecidos" : String(leg.requestedAt) + " / " + (leg.receivedAt === undefined ? "desconhecido" : String(leg.receivedAt))}</dd>
         </div>
       ))}
       <div className={styles.detailRow}>
         <dt>Conclusão/tempo declarado (UTC epoch ms / ms)</dt>
-        <dd>{timing.completedAt === null ? "Conclusão desconhecida" : String(timing.completedAt) + " / " + (timing.elapsedMs === null ? "tempo desconhecido" : String(timing.elapsedMs))}</dd>
+        <dd className={timing.completedAt === null || timing.elapsedMs === null ? styles.prose : undefined}>{timing.completedAt === null ? "Conclusão desconhecida" : String(timing.completedAt) + " / " + (timing.elapsedMs === null ? "tempo desconhecido" : String(timing.elapsedMs))}</dd>
       </div>
     </dl>
   );
@@ -129,6 +129,7 @@ function reportView(state: DexReportImportState) {
   const report = state.report;
   if (report === null) return null;
   const synthetic = state.isExample || report.source === "synthetic";
+  const grossDeltaUnknown = report.quotedGrossDeltaAtomic === null;
   const grossDelta = report.quotedGrossDeltaAtomic === null
     ? "Desconhecido"
     : displayedAmount(report.quotedGrossDeltaAtomic, report.tokenA.decimals) + ", unidade de token A inferida pelo round trip";
@@ -136,9 +137,9 @@ function reportView(state: DexReportImportState) {
   return (
     <div className={styles.report}>
       <div className={styles.badges}>
-        <span className={styles.badge}>{synthetic ? "Dados sintéticos: demonstração" : "Origem declarada pelo arquivo"}</span>
-        <span className={styles.badge}>Relatório histórico</span>
-        <span className={styles.badge}>Frescor do mercado desconhecido</span>
+        <span className={styles.reportBadge}>{synthetic ? "Dados sintéticos: demonstração" : "Origem declarada pelo arquivo"}</span>
+        <span className={styles.reportBadge}>Relatório histórico</span>
+        <span className={`${styles.reportBadge} ${styles.reportBadgeWarn}`}>Frescor do mercado desconhecido</span>
       </div>
 
       <p className={styles.age}>{formatElapsed(state.ageSinceImportMs)}</p>
@@ -146,7 +147,7 @@ function reportView(state: DexReportImportState) {
       <dl className={styles.details}>
         <div className={styles.detailRow}>
           <dt>Estado declarado</dt>
-          <dd>{report.status === "quoted_gross_delta" ? "Delta bruto cotado" : report.status === "blocked" ? "Bloqueado" : "Desconhecido"}</dd>
+          <dd className={styles.prose}>{report.status === "quoted_gross_delta" ? "Delta bruto cotado" : report.status === "blocked" ? "Bloqueado" : "Desconhecido"}</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Rede declarada (chainIndex)</dt>
@@ -166,27 +167,27 @@ function reportView(state: DexReportImportState) {
         </div>
         <div className={styles.detailRow}>
           <dt>Saída cotada (token A, unidade inferida)</dt>
-          <dd>{report.outputAtomic === null ? "Desconhecida" : displayedAmount(report.outputAtomic, report.tokenA.decimals)}</dd>
+          <dd className={report.outputAtomic === null ? styles.prose : undefined}>{report.outputAtomic === null ? "Desconhecida" : displayedAmount(report.outputAtomic, report.tokenA.decimals)}</dd>
         </div>
         <div className={styles.detailRow + " " + styles.deltaRow}>
           <dt>Delta bruto cotado (token A)</dt>
-          <dd>{grossDelta}</dd>
+          <dd className={grossDeltaUnknown ? styles.prose : undefined}>{grossDelta}</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Retorno líquido não avaliado</dt>
-          <dd>Não avaliado</dd>
+          <dd className={styles.prose}>Não avaliado</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Cobertura total de custos desconhecida</dt>
-          <dd>Desconhecida</dd>
+          <dd className={styles.prose}>Desconhecida</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Execução não qualificada</dt>
-          <dd>Não qualificada</dd>
+          <dd className={styles.prose}>Não qualificada</dd>
         </div>
         <div className={styles.detailRow}>
           <dt>Saldo da carteira</dt>
-          <dd>Relatório não representa saldo da carteira</dd>
+          <dd className={styles.prose}>Relatório não representa saldo da carteira</dd>
         </div>
       </dl>
 
@@ -223,8 +224,9 @@ export function DexReportPanelView({ state, onSelectFile, onShowExample, onClear
     <section className={styles.panel} aria-labelledby="dex-report-title">
       <header className={styles.header}>
         <div className={styles.headingGroup}>
+          <p className={styles.eyebrow}>ARQUIVO LOCAL</p>
           <h2 className={styles.title} id="dex-report-title">Relatório DEX offline</h2>
-          <p className={styles.description}>Leitura local de arquivo histórico; nenhuma conexão ou ação de carteira.</p>
+          <p className={styles.description} title="Leitura local de arquivo histórico; nenhuma conexão ou ação de carteira.">Leitura local de arquivo histórico; nenhuma conexão ou ação de carteira.</p>
         </div>
         <span className={styles.badge}>Somente leitura local</span>
       </header>

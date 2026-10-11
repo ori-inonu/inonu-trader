@@ -10,8 +10,10 @@
   overflow: visible;
 }
 
+/* The gauge track is an outline, not a disc: the orb behind it stays visible, which is what makes
+   the core sphere and its per block ring readable instead of hidden under an opaque plate. */
 .bed {
-  fill: var(--bg-well);
+  fill: none;
   stroke: var(--edge);
   stroke-width: 1;
 }
@@ -29,23 +31,35 @@
   opacity: 0.5;
 }
 
+/* The needle pivots on the dial centre. transform-box must be view-box: the needle is a line, so
+   a fill box origin would spin it around its own midpoint and float it off the rings. */
 .needle {
-  transform-box: fill-box;
+  transform-box: view-box;
   transform-origin: center;
   transition: transform 480ms var(--ease-out-back);
 }
 
 .needleStatic {
-  transform-box: fill-box;
+  transform-box: view-box;
   transform-origin: center;
   transition: none;
 }
 
+/* Anchored to the dial box rather than left to the grid static position. The word sits in the
+   lower half of the bowl, which is the one wedge the 240 degree sweep never crosses, so the
+   needle can never run through the label. */
 .word {
   position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: 18% 18% 0;
+  pointer-events: none;
   font: var(--fs-lg);
   color: var(--ink);
   text-align: center;
+  text-wrap: balance;
 }
 
 .unknown .word {
@@ -66,15 +80,6 @@
 
 .late .word {
   color: var(--late);
-}
-
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,8 +1,11 @@
 .disclosure {
+  container-type: inline-size;
+  container-name: reveal;
   min-width: 0;
+  overflow: hidden;
   border: 1px solid var(--edge);
-  border-radius: var(--r-md);
-  background: var(--bg-deck-2);
+  border-radius: var(--r-lg);
+  background: var(--bg-deck);
   box-shadow: var(--elev-1);
 }
 
@@ -15,8 +18,10 @@
   padding: var(--s3) var(--s4);
   cursor: pointer;
   list-style: none;
-  color: var(--ink-2);
-  font: var(--fs-sm);
+  color: var(--ink);
+  font: var(--fs-md);
+  font-weight: 600;
+  transition: background-color var(--dur-fast) var(--ease-snap), color var(--dur-fast) var(--ease-snap);
 }
 
 .summary::-webkit-details-marker {
@@ -24,9 +29,11 @@
 }
 
 .summary:hover {
+  background: var(--bg-deck-2);
   color: var(--ink);
 }
 
+/* Inset ring: the summary is flush with the card border, so an outset ring would be clipped. */
 .summary:focus-visible {
   outline: 2px solid var(--signal);
   outline-offset: -2px;
@@ -34,15 +41,19 @@
 
 .label {
   min-width: 0;
-  flex: 1;
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
 }
 
 .badge {
+  display: inline-flex;
   flex: none;
+  min-height: 24px;
+  align-items: center;
   border: 1px solid var(--edge-strong);
   border-radius: var(--r-pill);
-  padding: 2px var(--s2);
-  color: var(--ink-3);
+  padding: 0 var(--s2);
+  color: var(--ink-2);
   font: var(--fs-micro);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
@@ -50,12 +61,16 @@
 
 .chevron {
   flex: none;
-  width: 10px;
-  height: 10px;
+  width: var(--s3);
+  height: var(--s3);
   border-right: 2px solid var(--ink-3);
   border-bottom: 2px solid var(--ink-3);
   transform: rotate(45deg) translate(-2px, -2px);
   transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+.disclosure[open] > .summary {
+  border-bottom: 1px solid var(--edge);
 }
 
 .disclosure[open] .chevron {
@@ -64,19 +79,26 @@
 
 .body {
   min-width: 0;
-  border-top: 1px solid var(--edge);
   padding: var(--s4);
   color: var(--ink-2);
   font: var(--fs-sm);
 }
 
-.body :global(p) {
+.body > * {
   min-width: 0;
+  max-inline-size: 100%;
+}
+
+.body :global(p),
+.body :global(ul),
+.body :global(ol),
+.body :global(dl) {
   overflow-wrap: anywhere;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chevron {
+  .chevron,
+  .summary {
     transition: none;
   }
 }

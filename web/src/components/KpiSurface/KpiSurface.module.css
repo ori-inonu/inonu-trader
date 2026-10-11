@@ -3,13 +3,36 @@
   z-index: 1;
   display: grid;
   min-width: 0;
+  /* One row of six at full width, then two even rows of three, then three even rows of two.
+     Every row factor divides six, so no breakpoint ever leaves a hole in the grid. */
   grid-template-columns: minmax(200px, 1.4fr) repeat(5, minmax(0, 1fr));
-  gap: var(--s2);
+  gap: var(--s4);
   transition: opacity var(--dur-base) var(--ease-out-expo);
 }
 
 .stale {
   opacity: 0.6;
+}
+
+.stale *,
+.stale {
+  animation: none !important;
+}
+
+/* Each cell is a shallow slab: it lifts and tips toward the pointer on hover, 2.5D only. */
+.cell {
+  transform: perspective(700px) rotateX(0deg) translateY(0);
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    box-shadow var(--dur-base) var(--ease-out-expo),
+    border-color var(--dur-base) var(--ease-out-expo);
+  will-change: transform;
+}
+
+.cell:hover {
+  border-color: var(--edge-strong);
+  box-shadow: var(--elev-2);
+  transform: perspective(700px) rotateX(4deg) translateY(-3px);
 }
 
 .cell {
@@ -21,14 +44,14 @@
   gap: var(--s2);
   border: 1px solid var(--edge);
   border-radius: var(--r-md);
-  padding: var(--s3) var(--s4);
+  padding: var(--s4);
   background: var(--bg-deck);
   box-shadow: var(--elev-1);
 }
 
 .label {
   min-width: 0;
-  color: var(--ink-4);
+  color: var(--ink-3);
   font: var(--fs-micro);
   letter-spacing: var(--track-micro);
   text-transform: uppercase;
@@ -38,6 +61,7 @@
   min-width: 0;
   color: var(--ink-2);
   font: var(--fs-readout);
+  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 
@@ -51,7 +75,6 @@
 
 /* Containers reserve their size so a value change never shifts the grid. */
 .hero {
-  grid-row: span 1;
   justify-content: center;
   border-color: var(--edge-strong);
   background: var(--bg-deck-2);
@@ -62,14 +85,16 @@
   color: var(--signal);
 }
 
+/* One step above the other cells, not the mega size: a seven figure mid must stay on one line
+   even in the narrowest track of the row. The gradient runs ink to signal, never to a deep tone,
+   so the lower half of the digits keeps its contrast on the raised deck. */
 .heroValue {
-  background-image: linear-gradient(180deg, var(--ink) 0%, var(--ink-3) 58%, var(--signal-deep) 100%);
+  background-image: linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 58%, var(--signal) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: var(--ink);
-  font: var(--fs-mega);
-  line-height: 1.04;
+  font: var(--fs-hero);
 }
 
 .buy .value {
@@ -89,30 +114,23 @@
 }
 
 .unknown .value {
-  color: var(--ink-4);
+  color: var(--ink-3);
+}
+
+/* "Indisponivel" is the longest value the surface ever renders. One step down keeps it on a
+   single line in the narrowest cell instead of growing that cell past its neighbours. */
+.cell:not(.hero).unknown .value {
+  font: var(--fs-md);
+  font-family: var(--font-mono);
 }
 
 .neutral .value {
   color: var(--ink);
 }
 
-.staleChip {
-  position: absolute;
-  top: var(--s3);
-  right: var(--s3);
-  border: 1px solid var(--hold);
-  border-radius: var(--r-pill);
-  padding: 2px var(--s3);
-  background: var(--bg-deck);
-  color: var(--hold);
-  font: var(--fs-micro);
-  letter-spacing: var(--track-micro);
-  text-transform: uppercase;
-}
-
 @media (max-width: 1279.98px) {
   .surface {
-    grid-template-columns: minmax(180px, 1.2fr) repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -120,9 +138,12 @@
   .surface {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
 
-  .hero {
-    grid-column: span 2;
+@media (max-width: 479.98px) {
+  /* Below this the hero track can no longer hold a seven figure mid at the hero size. */
+  .heroValue {
+    font: var(--fs-readout);
   }
 }
 
@@ -134,7 +155,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .surface {
+  .surface,
+  .cell {
     transition: none;
+  }
+
+  .cell:hover {
+    transform: none;
   }
 }

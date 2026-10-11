@@ -1,13 +1,24 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import type { BlockEvent } from "@/lib/types";
 import { fmtPrice } from "@/lib/format";
 import { buildDepthLevels, levelGeometry } from "@/lib/ladder";
 import styles from "./DepthLadder.module.css";
 
 const UNAVAILABLE = "Indisponivel";
+/** Isometric slab depth. Both the top face and the front face are drawn from it. */
 const PLANE_DEPTH = 10;
+const FRAME_PAD_X = 10;
+const FRAME_PAD_Y = 12;
+/** Both columns shrink on a narrow frame instead of eating the plot. */
+const PRICE_COL = 92;
+const PRICE_COL_MIN = 58;
+const SIZE_COL = 140;
+const SIZE_COL_MIN = 72;
+const SIZE_COL_SHARE = 0.3;
+/** Fallback for the first paint and for server rendering, before the frame has been measured. */
+const FALLBACK = { w: 320, h: 220 };
 
 export interface DepthLadderProps {
   latest: BlockEvent | null;
@@ -21,26 +32,48 @@ interface Plane {
   arm: "bid" | "ask" | "mid";
   isLive: boolean;
   block: number | null;
-  y: number;
+  share: number;
   scale: number;
-}
-
-function project(price: number, index: number, total: number): number {
-  const share = total <= 1 ? 0.5 : index / (total - 1);
-  return share;
 }
 
 function iso(x: number, y: number, z: number): string {
   return `${(x - z).toFixed(1)},${(y - z * 0.5).toFixed(1)}`;
 }
 
+const SIDE_LABEL: Record<Plane["arm"], string> = {
+  bid: "Compra",
+  ask: "Venda",
+  mid: "Meio",
+};
+
 /**
  * Isometric depth view of the resting book.
- * A level is only ever drawn from a size the feed actually reported. A level with no resting size
- * renders at the minimum scale and says so, because a fabricated resting order would be a false
- * claim about the on-chain book.
+ *
+ * Bids grow leftward from the mid spine and asks grow rightward, so the two sides are told apart
+ * by where the slab sits and by the word beside it, never by hue alone. A level is only ever
+ * drawn from a size the feed actually reported. A level with no resting size renders at the
+ * minimum scale and says so, because a fabricated resting order would be a false claim about
+ * the on-chain book.
  */
 function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false }: DepthLadderProps) {
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const [measured, setMeasured] = useState(FALLBACK);
+
+  useEffect(() => {
+    const element = frameRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setMeasured((current) =>
+        Math.abs(current.w - width) < 0.5 && Math.abs(current.h - height) < 0.5
+          ? current
+          : { w: Math.round(width), h: Math.round(height) },
+      );
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
   const levels = useMemo(
     () => buildDepthLevels(latest ? [latest] : [], windowSize),
     [latest, windowSize],
@@ -51,7 +84,7 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
     [levels],
   );
 
-  const planes: Plane[] = useMemo(() => levels.map((level, index) => {
+  const planes = useMemo<Plane[]>(() => levels.map((level, index) => {
     const size = level.arm === "bid" ? level.bidSize : level.arm === "ask" ? level.askSize : 0;
     return {
       price: level.price,
@@ -59,21 +92,30 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
       arm: level.arm,
       isLive: level.isLive,
       block: level.block,
-      y: project(level.price, index, levels.length),
+      share: levels.length <= 1 ? 0.5 : index / (levels.length - 1),
       scale: levelGeometry(level, maxSize, size),
     };
   }), [levels, maxSize]);
 
-  const width = 320;
-  const height = 220;
-  const baseline = 180;
-  const span = 240;
+  const width = Math.max(240, measured.w);
+  const height = Math.max(180, measured.h);
+  const priceX = FRAME_PAD_X;
+  const sizeRight = width - FRAME_PAD_X;
+  const plotLeft = priceX + PRICE_COL;
+  const plotRight = sizeRight - SIZE_COL;
+  const plotWidth = Math.max(60, plotRight - plotLeft);
+  const midX = plotLeft + plotWidth / 2;
+  const halfWidth = plotWidth / 2 - 6;
+
+  const rows = planes.length;
+  const rowHeight = rows > 0 ? (height - FRAME_PAD_Y * 2) / rows : 0;
+  const rowY = (index: number) => FRAME_PAD_Y + rowHeight * (index + 0.5);
   const reportedAny = planes.some((plane) => plane.size > 0);
 
   return (
     <section className={`${styles.panel} ${reducedMotion ? styles.still : ""}`} aria-labelledby="ladder-title">
       <header className={styles.header}>
-        <div>
+        <div className={styles.heading}>
           <p className={styles.eyebrow}>LIVRO ON-CHAIN</p>
           <h2 className={styles.title} id="ladder-title">Profundidade Kuru</h2>
         </div>
@@ -86,10 +128,11 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
           : "Aguardando dados do feed"}
       </p>
 
-      <div className={styles.frame}>
+      <div className={styles.frame} ref={frameRef}>
         <svg
           className={styles.svg}
           viewBox={`0 0 ${width} ${height}`}
+          preserveAspectRatio="xMidYMid meet"
           role="img"
           aria-label={
             latest
@@ -97,35 +140,37 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
               : "Profundidade do livro indisponivel."
           }
         >
-          <polygon
-            points={`${iso(40, baseline, 0)} ${iso(280, baseline, 0)} ${iso(280, baseline, PLANE_DEPTH * 2)} ${iso(40, baseline, PLANE_DEPTH * 2)}`}
-            className={styles.deck}
-          />
+          <line className={styles.spine} x1={midX} x2={midX} y1={FRAME_PAD_Y - 4} y2={height - FRAME_PAD_Y + 4} />
 
           {planes.map((plane, index) => {
-            const y = 30 + plane.y * span * 0.5;
-            const barWidth = plane.scale * 200;
+            const y = rowY(index);
+            const barWidth = Math.max(2, plane.scale * halfWidth);
             const depth = plane.arm === "mid" ? PLANE_DEPTH * 2 : PLANE_DEPTH;
-            const animate = !reducedMotion && plane.isLive;
+            const from = plane.arm === "ask" ? midX : midX - barWidth;
+            const to = plane.arm === "ask" ? midX + barWidth : midX;
+            const capRise = 12;
             return (
               <g
                 key={`${plane.arm}-${plane.price}`}
-                className={`${styles.plane} ${styles[plane.arm]} ${animate ? styles.planeIn : ""} ${!reducedMotion && plane.arm !== "mid" && plane.size > 0 ? styles.planeSettle : ""}`}
-                style={{ animationDelay: `${Math.min(index, 8) * 26}ms` }}
+                className={`${styles.plane} ${styles[plane.arm]} ${!reducedMotion && plane.isLive ? styles.planeIn : ""}`}
+                style={{ "--stagger-index": Math.min(index, 8) } as React.CSSProperties}
               >
                 <polygon
-                  points={`${iso(40, y, 0)} ${iso(40 + barWidth, y, 0)} ${iso(40 + barWidth, y, depth)} ${iso(40, y, depth)}`}
+                  points={`${iso(from, y, 0)} ${iso(to, y, 0)} ${iso(to, y, depth)} ${iso(from, y, depth)}`}
                   className={styles.bar}
                 />
                 <polygon
-                  points={`${iso(40, y, depth)} ${iso(40 + barWidth, y, depth)} ${iso(40 + barWidth, y - 12, depth)} ${iso(40, y - 12, depth)}`}
+                  points={`${iso(from, y, depth)} ${iso(to, y, depth)} ${iso(to, y - capRise, depth)} ${iso(from, y - capRise, depth)}`}
                   className={styles.cap}
                 />
-                <text className={styles.price} x={46 + barWidth} y={y + 4}>
+                <text className={styles.price} x={priceX} y={y + 4}>
                   {fmtPrice(plane.price)}
                 </text>
-                <text className={styles.size} x={46} y={y - 16}>
+                <text className={styles.size} x={sizeRight} y={y + 4} textAnchor="end">
                   {plane.arm === "mid" ? "mid" : plane.size > 0 ? `${plane.size.toLocaleString("en-US", { maximumFractionDigits: 3 })} MON` : "sem tamanho informado"}
+                </text>
+                <text className={styles.side} x={plane.arm === "ask" ? plotRight : plotLeft} y={y - capRise - 6} textAnchor={plane.arm === "ask" ? "end" : "start"}>
+                  {SIDE_LABEL[plane.arm]}
                 </text>
               </g>
             );
@@ -141,7 +186,7 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
         ) : (
           planes.map((plane) => (
             <li className={styles[plane.arm]} key={`legend-${plane.arm}-${plane.price}`}>
-              {plane.arm === "bid" ? "Compra" : plane.arm === "ask" ? "Venda" : "Meio"}
+              {SIDE_LABEL[plane.arm]}
               {": "}
               {fmtPrice(plane.price)}
               {plane.block !== null ? `, bloco ${plane.block}` : ""}

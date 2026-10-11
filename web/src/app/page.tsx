@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
+import CommandCenter from "@/components/CommandCenter/CommandCenter";
 import ConsoleBackdrop, { type BackdropTone } from "@/components/ConsoleBackdrop/ConsoleBackdrop";
-import DecisionCenter from "@/components/DecisionCenter/DecisionCenter";
+import { DecisionCenterView } from "@/components/DecisionCenter/DecisionCenter";
 import DepthLadder from "@/components/DepthLadder/DepthLadder";
 import DexReportPanel from "@/components/DexReportPanel/DexReportPanel";
 import Disclosure from "@/components/Disclosure/Disclosure";
 import FlowChart from "@/components/FlowChart/FlowChart";
+import GrowthDeck from "@/components/GrowthDeck/GrowthDeck";
 import InstrumentRow, { type InstrumentItem } from "@/components/InstrumentRow/InstrumentRow";
 import JevCore from "@/components/JevCore/JevCore";
 import KpiSurface from "@/components/KpiSurface/KpiSurface";
@@ -17,6 +19,7 @@ import WalletPanel from "@/components/WalletPanel/WalletPanel";
 import { buildKpiCells } from "@/lib/kpi";
 import { feedFrameState } from "@/lib/feed-frame";
 import { useFeed } from "@/lib/useFeed";
+import { useOperatorCenter } from "@/lib/operator-center";
 import { useReducedMotion } from "@/lib/motion";
 import { useUptime } from "@/lib/useUptime";
 import styles from "./page.module.css";
@@ -35,6 +38,7 @@ function feedRate(events: { ts: number }[]): string {
 
 export default function Page() {
   const feed = useFeed(API_URL);
+  const operator = useOperatorCenter(API_URL);
   const reducedMotion = useReducedMotion();
   const uptimeText = useUptime(feed.meta?.startedAt);
   const latest = feed.latest;
@@ -102,6 +106,17 @@ export default function Page() {
           />
         </header>
 
+        <section className={styles.command}>
+          <CommandCenter
+            meta={feed.meta}
+            latest={connecting ? null : latest}
+            events={feed.events}
+            connection={feed.connection}
+            operatorCycle={operator.cycle}
+            reducedMotion={reducedMotion}
+          />
+        </section>
+
         <section className={styles.kpi}>
           <KpiSurface cells={cells} reducedMotion={reducedMotion} connection={feed.connection} />
         </section>
@@ -136,8 +151,12 @@ export default function Page() {
           </div>
         </section>
 
+        <section className={styles.growth}>
+          <GrowthDeck reducedMotion={reducedMotion} />
+        </section>
+
         <section className={styles.dock}>
-          <div className={styles.dockDecision}><DecisionCenter /></div>
+          <div className={styles.dockDecision}><DecisionCenterView state={operator} /></div>
           <div className={styles.dockWallet}><WalletPanel /></div>
           <div className={styles.dockMultichain}><MultichainPanel /></div>
         </section>
