@@ -89,6 +89,53 @@ describe("brief", () => {
     expect(candidates.find((candidate) => candidate.id === "long-1x")?.eligible).toBe(true);
   });
 
+  test("2x cannot enlarge the total exposure ceiling when a position is already open", () => {
+    const wallet = { ...readings.wallet, openNotionalUsd: 230, openSide: "long" as const };
+    const market = { ...readings.market, realizedSigmaDaily: 0.04 };
+    const brief = buildLeverageBrief({ market, wallet, phase: "fase-2", nowMs: NOW, kellyLowerBound: 12 });
+    // Capital 1000, sigma 4%: exposure cap 250, order margin 20.
+    // The 1x proposal totals 250; the 2x proposal totals 270.
+    expect(brief.limits.exposureCapUsd).toBe(250);
+    expect(brief.candidates.find((candidate) => candidate.id === "long-1x")?.eligible).toBe(true);
+    expect(brief.candidates.find((candidate) => candidate.id === "long-2x")?.reasons).toContain("exposure_cap_reached");
+    expect(brief.eligibleIds).not.toContain("long-2x");
+  });
+
+  test.each([18.4049999995, 18.405, 18.4050000005])("fractional cap includes decimal equality but rejects excess: %s", (openNotionalUsd) => {
+    const brief = buildLeverageBrief({
+      market: { ...readings.market, realizedSigmaDaily: 0.04 },
+      wallet: { ...readings.wallet, capitalUsd: 80.02, openSide: "long", openNotionalUsd },
+      phase: "fase-2", kellyLowerBound: 12, nowMs: NOW,
+    });
+    const candidate = brief.candidates.find((value) => value.id === "long-1x")!;
+    expect(brief.limits.exposureCapUsd).toBe(20.005);
+    expect(candidate.notionalUsd).toBe(1.6);
+    expect(candidate.eligible).toBe(openNotionalUsd <= 18.405);
+    expect(candidate.reasons.includes("exposure_cap_reached")).toBe(openNotionalUsd > 18.405);
+    expect(brief.eligibleIds.includes(candidate.id)).toBe(openNotionalUsd <= 18.405);
+  });
+
+  test.each([
+    [1, 229.99, true],
+    [1, 230, true],
+    [1, 230.01, false],
+    [1, 230.0000000005, false],
+    [2, 209.99, true],
+    [2, 210, true],
+    [2, 210.01, false],
+    [2, 210.0000000005, false],
+  ] as const)("%ix with open notional %s respects the inclusive total ceiling", (leverage, openNotionalUsd, allowed) => {
+    const market = { ...readings.market, realizedSigmaDaily: 0.04 };
+    const wallet = { ...readings.wallet, openNotionalUsd, openSide: "long" as const };
+    const brief = buildLeverageBrief({ market, wallet, phase: "fase-2", nowMs: NOW, kellyLowerBound: 12 });
+    const id = `long-${leverage}x`;
+    const candidate = brief.candidates.find((candidate) => candidate.id === id)!;
+    expect(brief.limits.exposureCapUsd).toBe(250);
+    expect(candidate.eligible).toBe(allowed);
+    expect(candidate.reasons.includes("exposure_cap_reached")).toBe(!allowed);
+    expect(brief.eligibleIds.includes(id)).toBe(allowed);
+  });
+
   test("touch probability and drag grow with leverage", () => {
     const brief = buildLeverageBrief({ ...readings, phase: "fase-2", nowMs: NOW, kellyLowerBound: 12 });
     const longs = brief.candidates.filter((candidate) => candidate.side === "long");
