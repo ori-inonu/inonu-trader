@@ -1,0 +1,278 @@
+@keyframes ring-a {
+  from { transform: rotateX(68deg) rotateZ(0deg); }
+  to { transform: rotateX(68deg) rotateZ(360deg); }
+}
+
+@keyframes ring-b {
+  from { transform: rotateY(68deg) rotateZ(0deg); }
+  to { transform: rotateY(68deg) rotateZ(-360deg); }
+}
+
+@keyframes ring-c {
+  from { transform: rotateX(28deg) rotateY(-28deg) rotateZ(0deg); }
+  to { transform: rotateX(28deg) rotateY(-28deg) rotateZ(360deg); }
+}
+
+.stage {
+  --tone: var(--signal);
+  position: relative;
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4) var(--s2);
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(60% 70% at 50% 52%, color-mix(in srgb, var(--tone) 10%, transparent) 0%, transparent 72%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-deck) 92%, transparent), color-mix(in srgb, var(--bg-hull) 96%, transparent));
+  box-shadow: var(--elev-2);
+  transition: border-color var(--dur-slow) var(--ease-out-expo);
+}
+
+.stage[data-tone="buy"] { --tone: var(--buy); }
+.stage[data-tone="sell"] { --tone: var(--sell); }
+.stage[data-tone="hold"] { --tone: var(--hold); }
+.stage[data-tone="late"] { --tone: var(--late); }
+.stage[data-tone="neutral"] { --tone: var(--signal); }
+.stage[data-dimmed="true"] .orbit,
+.stage[data-dimmed="true"] .weights { opacity: 0.55; }
+
+.micro {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s4);
+  min-width: 0;
+}
+
+.market { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+
+.pair {
+  color: var(--ink);
+  font: var(--fs-hero);
+  letter-spacing: 0.01em;
+}
+
+.quote { color: var(--ink-3); font-size: 0.6em; }
+
+.quoteBox { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+
+.price {
+  color: var(--ink);
+  font: var(--fs-readout);
+  font-variant-numeric: tabular-nums;
+}
+
+.change { font: var(--fs-sm); font-variant-numeric: tabular-nums; color: var(--ink-3); }
+.up { color: var(--buy); }
+.down { color: var(--sell); }
+
+.body {
+  display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s5);
+}
+
+/* The cell is the container; the orbit inside it is the largest square that fits, whatever the column is. */
+.orbitCell {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  place-items: center;
+  container-type: size;
+}
+
+.side {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--s3);
+}
+
+/* The orbit is a square size container: every measure inside is relative to it, so the rig scales with the stage. */
+.orbit {
+  position: relative;
+  display: grid;
+  width: min(100cqw, 100cqh);
+  height: min(100cqw, 100cqh);
+  place-items: center;
+  container-type: size;
+  perspective: 900px;
+}
+
+.rig {
+  position: absolute;
+  width: 100cqw;
+  height: 100cqh;
+  transform-style: preserve-3d;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--tone) 55%, transparent);
+  transform-style: preserve-3d;
+  transition: border-color var(--dur-slow) var(--ease-out-expo);
+}
+
+.ringA { inset: 0%; animation: ring-a 90s linear infinite; }
+.ringB { inset: 3%; border-color: color-mix(in srgb, var(--tone) 32%, transparent); animation: ring-b 130s linear infinite; }
+.ringC { inset: 9%; border-style: dashed; border-color: color-mix(in srgb, var(--tone) 24%, transparent); animation: ring-c 70s linear infinite; }
+
+.floor {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -4%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, color-mix(in srgb, var(--tone) 24%, transparent) 0%, transparent 72%);
+}
+
+.gauge {
+  position: relative;
+  width: 78cqw;
+  height: 78cqh;
+  transform: rotate(-90deg);
+}
+
+.track {
+  fill: none;
+  stroke: var(--bg-deck-3);
+  stroke-width: 8;
+  opacity: 0.8;
+}
+
+.arc {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: butt;
+  transition: stroke-dasharray var(--dur-slow) var(--ease-out-expo), stroke-dashoffset var(--dur-slow) var(--ease-out-expo);
+}
+
+.arcBuy { stroke: var(--buy); }
+.arcSell { stroke: var(--sell); }
+.arcHold { stroke: var(--hold); }
+
+/* The inner diameter of the ring is about 57% of the orbit, so the readout is sized against it. */
+.core {
+  position: absolute;
+  display: flex;
+  width: 52cqmin;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.headline {
+  color: var(--tone);
+  font: 500 11cqmin / 1 var(--font-mono);
+  letter-spacing: 0.02em;
+  transition: color var(--dur-slow) var(--ease-out-expo);
+}
+
+.headlineLong { font-size: 6.2cqmin; line-height: 1.1; }
+
+.confidence {
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.weights {
+  display: grid;
+  gap: var(--s3);
+  list-style: none;
+}
+
+.weight {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "label value" "track track";
+  align-items: baseline;
+  gap: 4px var(--s2);
+  font: var(--fs-sm);
+}
+
+.weightLabel { grid-area: label; color: var(--ink-2); }
+.weightValue { grid-area: value; color: var(--ink); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.weightTrack {
+  position: relative;
+  grid-area: track;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--bg-deck-3);
+}
+
+.weightFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--r-pill);
+  background: var(--ink-3);
+  transition: width var(--dur-slow) var(--ease-out-expo);
+}
+
+.weight[data-key="buy"] .weightFill { background: var(--buy); }
+.weight[data-key="sell"] .weightFill { background: var(--sell); }
+.weight[data-key="hold"] .weightFill { background: var(--hold); }
+
+.status { color: var(--ink-3); font: var(--fs-xs); }
+.muted { color: var(--ink-3); font: var(--fs-xs); }
+
+.seen { display: grid; gap: var(--s2); }
+.seenItem { display: grid; min-width: 0; grid-template-columns: 1fr auto; align-items: baseline; gap: var(--s2); }
+.seenItem dt { color: var(--ink-3); font: var(--fs-xs); }
+.seenItem dd { color: var(--ink); font: var(--fs-xs); font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s1) var(--s4);
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.modelTag { color: var(--ink-2); font-family: var(--font-mono); }
+.systemOne { flex-basis: 100%; color: var(--ink-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ring { animation: none; transition: none; }
+  .arc, .weightFill, .headline { transition: none; }
+}
+
+:global(html[data-tab-hidden="true"]) .ring { animation-play-state: paused; }
+
+/* Narrow windows drop the right column; phones stack the orbit over the weights. */
+@media (max-width: 1100px) {
+  .body { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); }
+  .body > .side:last-child { display: none; }
+}
+
+@media (max-width: 560px) {
+  .body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+  .body > .side:first-child { order: 2; height: auto; }
+}

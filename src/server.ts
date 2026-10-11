@@ -1,6 +1,7 @@
 import { isAbsolute, resolve } from "node:path";
 import { createOperatorHandler, isOperatorPath } from "./operator/http";
 import { createSystemOneHandler, isSystemOnePath } from "./system-one/http";
+import { createJevReadHandler, isJevReadPath } from "./jev-read/http";
 import type { Fill, Quote } from "./market";
 import type { BlockEvent } from "./trader";
 
@@ -32,6 +33,9 @@ export function startServer(meta: Meta, history: () => BlockEvent[], preview?: H
   });
   const systemOneHandler = createSystemOneHandler(
     preview ? resolve(preview.stateDir, "system-one/latest.json") : resolve(OPERATOR_ROOT, process.env.SYSTEM_ONE_STATE_PATH ?? "data/system-one/latest.json"), origins, token);
+  // Jev reads the tape: the latest advisory buy, sell or hold per instrument, read only (scripts/jev-read.ts writes it).
+  const jevReadHandler = createJevReadHandler(
+    preview ? resolve(preview.stateDir, "jev-read/latest.json") : resolve(OPERATOR_ROOT, process.env.JEV_READ_STATE_PATH ?? "data/jev-read/latest.json"), origins, token);
   // The explicit read-only preview must not load financial environment configuration.
   // Keep the synchronous configuration contract for existing normal callers.
   const port = preview ? preview.port : (require("./config") as typeof import("./config")).config.port;
@@ -52,6 +56,7 @@ export function startServer(meta: Meta, history: () => BlockEvent[], preview?: H
         if (preview && req.method !== "GET" && req.method !== "OPTIONS") return json({ error: "method not allowed" }, 405, headers);
         if (isOperatorPath(pathname)) return operatorHandler(req, pathname);
         if (isSystemOnePath(pathname)) return systemOneHandler(req);
+        if (isJevReadPath(pathname)) return jevReadHandler(req);
         if (req.method === "OPTIONS") return new Response(null, { headers });
         if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null }, 200, headers);
         if (pathname === "/history") return json(history(), 200, headers);

@@ -1,0 +1,127 @@
+/* The desk never scrolls: it is one fixed viewport sized grid. Wings hinge toward the Jev at the center. */
+.root {
+  --px: 0;
+  --py: 0;
+  position: fixed;
+  z-index: 1;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 48px minmax(0, 1fr) clamp(150px, 21vh, 196px);
+  gap: var(--s3);
+  padding: var(--s3) var(--s4) var(--s3);
+  overflow: hidden;
+  perspective: 1800px;
+  perspective-origin: calc(50% + var(--px) * 3%) calc(46% + var(--py) * 3%);
+  color: var(--ink);
+}
+
+.rail { min-width: 0; }
+.dock { min-width: 0; min-height: 0; }
+.mobileChips { display: none; }
+
+.deck {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.6fr) minmax(280px, 0.78fr);
+  gap: var(--s4);
+  transform-style: preserve-3d;
+}
+
+.wing {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: var(--s3);
+  backface-visibility: hidden;
+  will-change: transform;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+/* Hinged at the inner edge so the panels fold toward the Jev like a cockpit. */
+.wingL { transform: rotateY(calc(9deg + var(--px) * 1.4deg)); transform-origin: 100% 50%; }
+.wingR { transform: rotateY(calc(-9deg + var(--px) * 1.4deg)); transform-origin: 0% 50%; }
+
+.center {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--s3);
+  transform: translateZ(26px);
+}
+
+.jev { min-width: 0; min-height: 0; }
+
+.graph {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  gap: var(--s3);
+}
+
+.cell { display: flex; min-width: 0; min-height: 0; flex-direction: column; }
+.cell > * { flex: 1 1 auto; min-height: 0; }
+
+.tabs { display: none; }
+
+@media (max-width: 1280px) {
+  .deck { grid-template-columns: minmax(250px, 0.8fr) minmax(0, 1.5fr) minmax(250px, 0.8fr); gap: var(--s3); }
+  .wingL { transform: rotateY(calc(6deg + var(--px) * 1.2deg)); }
+  .wingR { transform: rotateY(calc(-6deg + var(--px) * 1.2deg)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wing { transition: none; }
+  .wingL { transform: rotateY(9deg); }
+  .wingR { transform: rotateY(-9deg); }
+}
+
+@media (max-height: 700px) {
+  .root { grid-template-rows: 44px minmax(0, 1fr) 132px; }
+}
+
+/* Phones and narrow windows: one section at a time, still without scrolling the page. */
+@media (max-width: 820px) {
+  .root {
+    grid-template-rows: 44px minmax(0, 1fr) 52px;
+    padding: var(--s2) var(--s3) var(--s2);
+    perspective: none;
+  }
+
+  .deck { display: block; transform-style: flat; }
+  .center { display: contents; transform: none; }
+  .wing { transform: none !important; height: 100%; }
+
+  .jev,
+  .graph,
+  .wing,
+  .dock { display: none; height: 100%; }
+
+  .root[data-tab="jev"] .jev { display: block; }
+  .root[data-tab="grafico"] .graph { display: flex; flex-direction: column; }
+  .root[data-tab="livro"] [data-slot="livro"] { display: flex; }
+  .root[data-tab="fluxo"] [data-slot="fluxo"] { display: flex; }
+  .root[data-tab="fontes"] .dock { display: flex; flex-direction: column; gap: var(--s3); grid-row: 2; }
+  .mobileChips { display: block; }
+  .mobileChips ul { flex-wrap: wrap; justify-content: flex-start; }
+
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--s1);
+  }
+
+  .tab {
+    min-height: 44px;
+    border: 1px solid var(--edge);
+    border-radius: var(--r-sm);
+    background: var(--bg-deck);
+    color: var(--ink-2);
+    font: var(--fs-xs);
+    cursor: pointer;
+  }
+
+  .tab[aria-pressed="true"] { border-color: var(--signal-deep); background: var(--bg-deck-2); color: var(--ink); }
+  .tab:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+}

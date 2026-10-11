@@ -1,0 +1,370 @@
+.frame {
+  position: absolute;
+  inset: 0;
+}
+
+.root {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s3);
+  container-type: inline-size;
+}
+
+.gaugeBox {
+  --tone: var(--ink-2);
+  display: flex;
+  min-height: 0;
+  flex: 1 1 54%;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.gaugeBox[data-tone="buy"] {
+  --tone: var(--buy);
+}
+
+.gaugeBox[data-tone="sell"] {
+  --tone: var(--sell);
+}
+
+.gauge {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow: visible;
+}
+
+.track {
+  fill: none;
+  stroke: var(--edge);
+  stroke-linecap: butt;
+}
+
+.value {
+  fill: none;
+  stroke: var(--tone);
+  stroke-linecap: butt;
+}
+
+.tick {
+  fill: none;
+  stroke: var(--ink-4);
+  stroke-width: 1.2;
+}
+
+.end {
+  fill: var(--ink-3);
+  font: 600 7px/8px var(--font-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.needle {
+  /* Rotation about the gauge hub in SVG user units. The only motion on the panel and a short ease. */
+  transform-origin: 100px 100px;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+.needleLine {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-width: 2.4;
+}
+
+.read {
+  fill: var(--tone);
+  font: 600 26px/28px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.word {
+  fill: var(--ink-2);
+  font: 500 8.5px/10px var(--font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stats {
+  display: grid;
+  flex: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2) var(--s3);
+  margin: 0;
+}
+
+.stat {
+  --tone: var(--ink);
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.stat[data-tone="buy"] {
+  --tone: var(--buy);
+}
+
+.stat[data-tone="sell"] {
+  --tone: var(--sell);
+}
+
+.stat dt {
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stat dd {
+  margin: 0;
+  overflow: hidden;
+  color: var(--tone);
+  font: 500 14px/18px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unit {
+  color: var(--ink-3);
+  font-size: 10px;
+}
+
+.spark {
+  --tone: var(--ink-3);
+  display: flex;
+  min-height: 52px;
+  flex: 1 1 22%;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.spark[data-tone="buy"] {
+  --tone: var(--buy);
+}
+
+.spark[data-tone="sell"] {
+  --tone: var(--sell);
+}
+
+.sparkHead {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+
+.sparkTitle {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sparkValue {
+  color: var(--tone);
+  font: 500 11px/14px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.sparkBox {
+  position: relative;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  border-radius: var(--r-xs);
+  background: var(--bg-well);
+}
+
+.sparkSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.zero {
+  stroke: var(--edge-strong);
+  stroke-dasharray: 3 3;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.sparkFill {
+  fill: color-mix(in srgb, var(--tone) 14%, transparent);
+  stroke: none;
+}
+
+.sparkLine {
+  fill: none;
+  stroke: var(--tone);
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.sparkEmpty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.root[data-compact="true"] {
+  gap: var(--s1);
+  padding: var(--s2) var(--s3);
+}
+
+.still .needle {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .needle {
+    transition: none;
+  }
+}
+
+.readOff {
+  fill: var(--ink-3);
+  font: 500 11px/12px var(--font-sans);
+}
+
+.window {
+  color: var(--ink-3);
+  font: 500 10.5px/14px var(--font-mono);
+}
+
+/* Bar mode: the arc is replaced by a thin bias bar when the panel is short. The numbers stay. */
+/* Column count comes from flowLayout(): 2 when full or narrow, 4 when compact and wide enough. */
+.root .stats {
+  grid-template-columns: repeat(var(--stat-cols, 2), minmax(0, 1fr));
+}
+
+.root[data-mode="bar"] {
+  gap: 4px;
+  padding: 8px var(--s3);
+}
+
+.biasBox {
+  --tone: var(--ink-2);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.biasBox[data-tone="buy"] {
+  --tone: var(--buy);
+}
+
+.biasBox[data-tone="sell"] {
+  --tone: var(--sell);
+}
+
+.biasHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+
+.biasRead {
+  color: var(--tone);
+  font: 600 18px/20px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.biasOff {
+  color: var(--ink-3);
+  font: 500 11px/20px var(--font-sans);
+}
+
+.biasWord {
+  color: var(--ink-2);
+  font: 500 9px/12px var(--font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.biasRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.biasEnd {
+  color: var(--ink-3);
+  font: 600 8.5px/10px var(--font-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.biasTrack {
+  position: relative;
+  display: block;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--edge);
+}
+
+.biasFill {
+  position: absolute;
+  inset-block: 0;
+  background: var(--tone);
+  transition: left var(--dur-base) var(--ease-out-expo), width var(--dur-base) var(--ease-out-expo);
+}
+
+.biasCenter {
+  position: absolute;
+  inset: -2px auto -2px 50%;
+  width: 1px;
+  background: var(--ink-3);
+}
+
+.biasMark {
+  position: absolute;
+  inset: -3px auto -3px 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ink);
+  transition: left var(--dur-base) var(--ease-out-expo);
+}
+
+.still .biasFill,
+.still .biasMark {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .biasFill,
+  .biasMark {
+    transition: none;
+  }
+}
+
+/* Short panels print the four figures smaller, and without the unit, so a tiny volume is not cut. */
+.root[data-compact="true"] .stat dd {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.root[data-compact="true"] .stat dt {
+  letter-spacing: 0.06em;
+}
+
+.root[data-mode="bar"] .spark {
+  min-height: 32px;
+}

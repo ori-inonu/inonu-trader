@@ -73,10 +73,10 @@ test("HTTP preview CLI exposes honest empty state without starting financial pro
       dataSource: "local-http-preview-no-producer" });
     const history = await fetch(`${api}/history`, { headers: { Origin: "http://localhost:3002" } });
     expect(await history.json()).toEqual([]);
-    for (const path of ["/operator", "/system-one"]) {
+    for (const path of ["/operator", "/system-one", "/jev-read"]) {
       expect((await fetch(`${api}${path}`, { headers: { Origin: "http://localhost:3002" } })).status).toBe(404);
     }
-    for (const path of ["/", "/history", "/events", "/operator", "/system-one"]) {
+    for (const path of ["/", "/history", "/events", "/operator", "/system-one", "/jev-read"]) {
       const rejected = await fetch(`${api}${path}`, { headers: { Origin: "https://unlisted.invalid" } });
       expect(rejected.status).toBe(403);
       expect(rejected.headers.get("access-control-allow-origin")).toBeNull();
