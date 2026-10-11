@@ -1,6 +1,7 @@
 import { config } from "./config";
 import { resolve } from "node:path";
 import { createOperatorHandler, isOperatorPath } from "./operator/http";
+import { createSystemOneHandler, isSystemOnePath } from "./system-one/http";
 import type { Fill, Quote } from "./market";
 import type { BlockEvent } from "./trader";
 
@@ -17,6 +18,8 @@ const operatorHandler = createOperatorHandler({
   statePath: resolve(OPERATOR_ROOT, process.env.OPERATOR_STATE_PATH ?? "data/operator/latest.json"),
   journalPath: resolve(OPERATOR_ROOT, process.env.OPERATOR_JOURNAL_PATH ?? "data/operator/cycles.jsonl"),
 });
+/** System One: the latest leverage decision cycle, read only. */
+const systemOneHandler = createSystemOneHandler(resolve(OPERATOR_ROOT, process.env.SYSTEM_ONE_STATE_PATH ?? "data/system-one/latest.json"));
 
 /** GET / snapshot · GET /history recent blocks · GET /events SSE stream (`snapshot`, `block`, `quote`, `fill`, `ping`) */
 export function startServer(meta: Meta, history: () => BlockEvent[]) {
@@ -33,6 +36,7 @@ export function startServer(meta: Meta, history: () => BlockEvent[]) {
       fetch(req) {
         const { pathname } = new URL(req.url);
         if (isOperatorPath(pathname)) return operatorHandler(req, pathname);
+        if (isSystemOnePath(pathname)) return systemOneHandler(req);
         if (req.method === "OPTIONS") return new Response(null, { headers: CORS });
         if (pathname === "/") return json({ ...meta, latest: history().at(-1) ?? null });
         if (pathname === "/history") return json(history());

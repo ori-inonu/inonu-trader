@@ -38,6 +38,7 @@
     "okx:evidence": "bun --no-env-file run scripts/okx-evidence.ts",
     "okx:defi": "bun --no-env-file run scripts/okx-defi.ts",
     "okx:derivatives": "bun --no-env-file run scripts/okx-derivatives.ts",
-    "okx:operator": "bun run scripts/okx-operator.ts"
+    "okx:operator": "bun run scripts/okx-operator.ts",
+    "system-one": "bun run scripts/system-one.ts"
   }
 }

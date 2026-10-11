@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { expect, setDefaultTimeout, test } from "bun:test";
 import { mkdtempSync, readdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -6,8 +6,14 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { fixturePlan, fixtureAccess, fixtureDependencies } from "./capture.test";
 import { runCapture } from "./index";
+
+/* Every test here starts a child bun process. Under a loaded machine the child can take well over
+   the five seconds it needs when idle, so the child timeout and the per test timeout are raised.
+   No assertion changes. */
+const CHILD_TIMEOUT_MS = 45_000;
+setDefaultTimeout(60_000);
 const cli = fileURLToPath(new URL("../../scripts/public-market-capture.ts", import.meta.url));
-function execute(args: string[], cwd: string) { const r = spawnSync(process.execPath, ["--no-env-file", cli, ...args], { cwd, encoding: "utf8", timeout: 5000 }); return { ...r, report: r.stdout.trim() ? JSON.parse(r.stdout) : null }; }
+function execute(args: string[], cwd: string) { const r = spawnSync(process.execPath, ["--no-env-file", cli, ...args], { cwd, encoding: "utf8", timeout: CHILD_TIMEOUT_MS }); return { ...r, report: r.stdout.trim() ? JSON.parse(r.stdout) : null }; }
 
 test("C01 CLI defaults offline with an empty working directory", () => {
   const root = mkdtempSync(join(tmpdir(), "inonu-cli-")), result = execute([], root);

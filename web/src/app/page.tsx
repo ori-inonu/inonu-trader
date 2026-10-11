@@ -14,12 +14,14 @@ import JevCore from "@/components/JevCore/JevCore";
 import KpiSurface from "@/components/KpiSurface/KpiSurface";
 import MultichainPanel from "@/components/MultichainPanel/MultichainPanel";
 import Rail from "@/components/Rail/Rail";
+import SystemOneView from "@/components/SystemOne/SystemOne";
 import TelemetryStream from "@/components/TelemetryStream/TelemetryStream";
 import WalletPanel from "@/components/WalletPanel/WalletPanel";
 import { buildKpiCells } from "@/lib/kpi";
 import { feedFrameState } from "@/lib/feed-frame";
 import { useFeed } from "@/lib/useFeed";
 import { useOperatorCenter } from "@/lib/operator-center";
+import { useSystemOne } from "@/lib/system-one";
 import { useReducedMotion } from "@/lib/motion";
 import { useUptime } from "@/lib/useUptime";
 import styles from "./page.module.css";
@@ -39,6 +41,7 @@ function feedRate(events: { ts: number }[]): string {
 export default function Page() {
   const feed = useFeed(API_URL);
   const operator = useOperatorCenter(API_URL);
+  const systemOne = useSystemOne(API_URL);
   const reducedMotion = useReducedMotion();
   const uptimeText = useUptime(feed.meta?.startedAt);
   const latest = feed.latest;
@@ -115,6 +118,7 @@ export default function Page() {
             operatorCycle={operator.cycle}
             reducedMotion={reducedMotion}
           />
+          <SystemOneView state={systemOne} reducedMotion={reducedMotion} />
         </section>
 
         <section className={styles.kpi}>

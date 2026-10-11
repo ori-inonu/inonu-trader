@@ -73,6 +73,10 @@ The dashboard opens on the command center: Jev sits at the middle of a tilted or
 
 `bun run policy:envelope --capital 80 --sigma 0.04` derives the per-phase limits (fase-0 to fase-2) from the research envelope and `--check <file> --phase fase-1` checks a settings file against a phase ([docs/POLITICA-DE-LIMITES.md](docs/POLITICA-DE-LIMITES.md)). `bun run okx:derivatives` evaluates perpetual-swap carry and leverage risk from a synthetic or imported snapshot ([docs/okx-derivatives-v1/GUIA.md](docs/okx-derivatives-v1/GUIA.md)). Both are offline and execute nothing. How Jev decides on top of the Onchain OS: [docs/JEV-DECISAO-ONCHAIN-OS.md](docs/JEV-DECISAO-ONCHAIN-OS.md); the page and endpoint inventory of the Onchain OS: [docs/research/R6-onchain-os-inventario.md](docs/research/R6-onchain-os-inventario.md).
 
+## System One: Jev's leverage decision layer
+
+`bun run system-one` runs one leverage decision cycle: market reading (mark price, funding rate and candles of the perpetual from the keyless OKX public v5 API with `--public`, or a synthetic walk by default), realized daily volatility, the risk envelope of the phase (src/policy/envelope.ts), eight leverage candidates (long and short at 1x, 2x, 3x and 5x) with liquidation touch probability, volatility drag and funding carry, and one Jev choice among the eligible candidates or hold (`--jev`; the default mock announces itself). The cycle is written to `data/system-one/latest.json`, served at `GET /system-one` and shown on the dashboard under the command center as the leverage ladder. System One never signs or sends: every cycle ends as `dry_run` or `blocked`. See [SYSTEM-ONE.md](docs/SYSTEM-ONE.md) and research [R9](docs/research/R9-system-one-alavancagem-onchainos.md).
+
 ## OKX Web3 opportunity scanner
 
 Run `bun --no-env-file run okx:market-scan` for the local synthetic report. It makes no live requests and cannot execute trades. See the [OKX Web3 integration guide](docs/okx-market-v1/OKX-WEB3-INTEGRATION.md) for the documented coverage, optional read-only access requirements and remaining limitations.
