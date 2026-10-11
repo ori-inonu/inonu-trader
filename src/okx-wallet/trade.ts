@@ -187,6 +187,19 @@ export function okxBridgeQuoter(client: OkxTradeClient, now: () => number = Date
   };
 }
 
+/**
+ * Spender address OKX reports for token approvals
+ * (GET /api/v6/dex/aggregator/approve-transaction, field dexContractAddress).
+ * The executor only approves this address, and only when it is allowlisted.
+ */
+export async function fetchApproveSpender(client: OkxTradeClient, chainIndex: string, tokenContractAddress: string, approveAmount: string): Promise<string> {
+  const data = await client.get(TRADE_PATHS.approve, { chainIndex, tokenContractAddress, approveAmount });
+  const first = data[0];
+  const spender = first?.dexContractAddress;
+  if (typeof spender !== "string" || !/^0x[0-9a-fA-F]{40}$/.test(spender)) throw new Error("approve-transaction response lacks dexContractAddress");
+  return spender;
+}
+
 export interface PreparedEvmTransaction {
   chainIndex: string;
   to: string;

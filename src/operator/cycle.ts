@@ -1,4 +1,4 @@
-import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { createHash } from "node:crypto";
 import type { InventorySnapshot } from "../okx-wallet/portfolio";
@@ -33,6 +33,8 @@ function ledgerView(ledger: OperatorLedger | undefined, nowMs: number, killSwitc
     dayNotionalUsd: state.dailyNotionalUsd[day] ?? 0,
     dayPlans: state.dailyPlans[day] ?? 0,
     dayRealizedUsd: ledger.dayRealizedUsd(nowMs),
+    weekRealizedUsd: ledger.weekRealizedUsd(nowMs),
+    drawdownUsd: ledger.drawdownUsd(),
     openLegs: ledger.openLegs().map((leg) => ({ planId: leg.planId, pairKey: leg.pairKey, status: leg.status, openedAtMs: leg.openedAtMs, txHash: leg.txHash })),
     killSwitch,
   };
@@ -86,7 +88,11 @@ export async function runOperatorCycle(deps: CycleDeps): Promise<OperatorCycle> 
       if (execution.status === "completed" && deps.executor) {
         try {
           const after = await deps.inventorySource();
-          const realizedUsd = reconcileRealizedUsd(inventory, after, chosen.chainIndex, chosen.from.tokenContractAddress);
+          const baseDelta = reconcileRealizedUsd(inventory, after, chosen.chainIndex, chosen.from.tokenContractAddress);
+          // Gas paid is subtracted at the native price observed before the plan; unknown gas or price leaves the result unknown (R5 M3).
+          const nativePrice = inventory.chains.find((chain) => chain.chainIndex === chosen.chainIndex)?.assets.find((asset) => asset.native)?.priceUsd ?? null;
+          const gasUsd = execution.gasCostNative !== undefined && nativePrice !== null ? execution.gasCostNative * nativePrice : null;
+          const realizedUsd = baseDelta === null || gasUsd === null ? null : baseDelta - gasUsd;
           execution = { ...execution, realizedUsd };
           if (realizedUsd === null) warnings.push("realized_result_unknown");
           else deps.executor.ledger.recordRealized(deps.now(), realizedUsd);
@@ -109,7 +115,7 @@ export async function runOperatorCycle(deps: CycleDeps): Promise<OperatorCycle> 
   };
 }
 
-/** Public view of a cycle without the wallet address or per-asset contract list. */
+/** Public view of a cycle: the wallet address is shortened; balances stay because the dashboard shows them. */
 export function redactCycle(cycle: OperatorCycle): OperatorCycle {
   const address = cycle.inventory.address;
   const shortAddress = address.length > 10 ? `${address.slice(0, 6)}...${address.slice(-4)}` : "redacted";
@@ -120,6 +126,8 @@ export function persistCycle(cycle: OperatorCycle, statePath: string, journalPat
   mkdirSync(dirname(statePath), { recursive: true });
   mkdirSync(dirname(journalPath), { recursive: true });
   const redacted = redactCycle(cycle);
-  writeFileSync(statePath, JSON.stringify(redacted, null, 2));
+  const tmp = `${statePath}.${process.pid}.tmp`;
+  writeFileSync(tmp, JSON.stringify(redacted, null, 2));
+  renameSync(tmp, statePath);
   appendFileSync(journalPath, JSON.stringify(redacted) + "\n");
 }

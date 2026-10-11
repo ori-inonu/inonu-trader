@@ -38,7 +38,7 @@ export function MultichainPanelView({ evmAccount, evmAvailable, multichain, mult
           <p className={styles.note}>Conecte a carteira OKX no painel acima para consultar a mesma conta em Monad, X Layer, Ethereum, BNB Chain, Base, Arbitrum, Polygon e Optimism.</p>
         ) : (
           <>
-            <p className={styles.note}>Conta {shortAddress(evmAccount)}. Cada rede responde pela sua própria RPC pública; uma falha aparece como indisponível, nunca como zero.</p>
+            <p className={styles.note}>Conta {shortAddress(evmAccount)}. Ao consultar, o endereço desta conta e o seu IP são enviados a oito RPCs públicas de terceiros (publicnode, rpc.xlayer.tech e rpc.monad.xyz), uma por rede. Uma falha aparece como indisponível, nunca como zero. Para usar RPCs próprias, defina NEXT_PUBLIC_EVM_RPC_&lt;chainIndex&gt; sem chaves secretas.</p>
             <button className={styles.primaryButton} type="button" onClick={readMultichain} disabled={multichainBusy || !evmAvailable}>
               {multichainBusy ? "Consultando redes" : "Consultar todas as redes"}
             </button>

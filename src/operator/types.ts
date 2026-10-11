@@ -92,12 +92,22 @@ export interface OperatorPolicy {
   cooldownMs: number;
   killSwitchPath: string;
   staleLegMs: number;
-  /** Allowed OKX router/spender contracts per chainIndex; live execution needs a match. */
+  /** Allowed OKX router contracts per chainIndex; live execution needs a match. */
   routerAllowlist: Record<string, string[]>;
+  /** Allowed approval spenders per chainIndex (the address OKX reports for approve-transaction). */
+  spenderAllowlist: Record<string, string[]>;
+  /** Allowed 4-byte selectors per chainIndex for router calldata; mandatory for live. */
+  selectorAllowlist: Record<string, string[]>;
   /** Gas price cap for EVM sends, gwei. */
   maxFeeGwei: number;
+  /** Gas limit cap per transaction. */
+  maxGasLimit: number;
   /** Daily loss stop on reconciled realized results, USD. */
   maxDailyLossUsd: number;
+  maxWeeklyLossUsd: number;
+  maxDrawdownUsd: number;
+  /** Accepted USD price band for stablecoin base assets; outside it the candidate is rejected. */
+  stablecoinPriceBand: [number, number];
 }
 
 export interface OperatorDecision {
@@ -138,8 +148,10 @@ export interface ExecutionOutcome {
   orderId: string | null;
   /** Second-leg hash for round trips when it was sent. */
   closeTxHash?: string | null;
-  /** Reconciled realized result in USD after a completed plan; null until reconciled. */
+  /** Reconciled realized result in USD after a completed plan, gas included; null until reconciled. */
   realizedUsd?: number | null;
+  /** Native gas paid across the plan's transactions when receipts reported it. */
+  gasCostNative?: number;
 }
 
 export interface OperatorCycle {
@@ -157,5 +169,5 @@ export interface OperatorCycle {
   inferenceUsd: number | null;
   warnings: string[];
   /** Ledger view: cumulative usage today and legs awaiting reconciliation. */
-  ledger: { dayNotionalUsd: number; dayPlans: number; dayRealizedUsd: number; openLegs: { planId: string; pairKey: string; status: string; openedAtMs: number; txHash: string }[]; killSwitch: boolean } | null;
+  ledger: { dayNotionalUsd: number; dayPlans: number; dayRealizedUsd: number; weekRealizedUsd: number; drawdownUsd: number; openLegs: { planId: string; pairKey: string; status: string; openedAtMs: number; txHash: string }[]; killSwitch: boolean } | null;
 }
