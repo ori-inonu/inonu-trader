@@ -1,4 +1,4 @@
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync, writeSync } from "node:fs";
+import { closeSync, existsSync, lstatSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync, writeSync, type Stats } from "node:fs";
 import { dirname, isAbsolute } from "node:path";
 
 /**
@@ -227,13 +227,44 @@ export function initLedgerFile(path: string): OperatorLedgerState {
 }
 
 /** Atomic write: temp file in the same directory, then rename (R5 A3, B6). */
-export function ledgerFilePersister(path: string): (state: OperatorLedgerState) => void {
+export interface LedgerPersistenceOptions {
+  platform?: string;
+  rename?: typeof renameSync;
+  wait?: (milliseconds: number) => void;
+  lstat?: (path: string) => Pick<Stats, "isDirectory" | "isSymbolicLink">;
+}
+
+export function ledgerFilePersister(path: string, options: LedgerPersistenceOptions = {}): (state: OperatorLedgerState) => void {
   requireAbsolute(path);
+  const rename = options.rename ?? renameSync;
+  const lstat = options.lstat ?? lstatSync;
+  const wait = options.wait ?? ((milliseconds: number) => {
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+  });
+  const validateDestination = () => {
+    let destination;
+    try { destination = lstat(path); }
+    catch (error) {
+      if ((error as NodeJS.ErrnoException | null)?.code !== "ENOENT") throw error;
+    }
+    if (destination?.isDirectory() || destination?.isSymbolicLink())
+      throw Object.assign(new Error("Invalid ledger destination: directory or symbolic link"), { code: "EINVAL" });
+  };
   return (state) => {
+    validateDestination();
     mkdirSync(dirname(path), { recursive: true });
     const tmp = `${path}.${process.pid}.tmp`;
     writeFileSync(tmp, JSON.stringify(state, null, 2));
-    renameSync(tmp, path);
+    for (let attempt = 0; ; attempt++) {
+      validateDestination();
+      try { rename(tmp, path); return; }
+      catch (error) {
+        const code = (error as NodeJS.ErrnoException | null)?.code;
+        if ((options.platform ?? process.platform) !== "win32" ||
+          !["EPERM", "EBUSY", "EACCES"].includes(code ?? "") || attempt >= 3) throw error;
+        wait(10 * 2 ** attempt);
+      }
+    }
   };
 }
 

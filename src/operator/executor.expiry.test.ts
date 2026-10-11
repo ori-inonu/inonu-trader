@@ -1,7 +1,10 @@
 import { expect, test } from "bun:test";
+import { mkdtempSync, readdirSync, renameSync, rmdirSync, unlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { loadOperatorConfig } from "./config";
 import { executePlan, type EvmSigner } from "./executor";
-import { createOperatorLedger, emptyLedger } from "./ledger";
+import { createOperatorLedger, emptyLedger, ledgerFilePersister, readLedgerFile, type OperatorLedgerState } from "./ledger";
 import { buildExecutionPlan } from "./plan";
 import type { OpportunityCandidate } from "./types";
 
@@ -12,7 +15,8 @@ const SPENDER = "0x" + "5e".repeat(20);
 const SELECTOR = "0xdeadbeef";
 const STAGES = ["approve1", "leg1", "approve2", "leg2"];
 
-function fixture(onEvent?: (event: string, clock: { now: number; kill: boolean }) => void) {
+function fixture(onEvent?: (event: string, clock: { now: number; kill: boolean }) => void,
+  persist?: (state: OperatorLedgerState) => void) {
   const clock = { now: NOW, kill: false };
   const policy = {
     ...loadOperatorConfig({ OPERATOR_PROFILE: "standard" }).policy,
@@ -33,7 +37,8 @@ function fixture(onEvent?: (event: string, clock: { now: number; kill: boolean }
     choice: candidate.id, probabilities: { hold: 0, [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test",
   }, policy, { operatorExecute: true, operatorLiveAck: true, realModel: true, signerAvailable: true }, NOW);
   let recorded = false;
-  const ledger = createOperatorLedger(emptyLedger(), () => {
+  const ledger = createOperatorLedger(emptyLedger(), (state) => {
+    persist?.(state);
     if (!recorded) { recorded = true; onEvent?.("ledger_recorded", clock); }
   });
   const sent: string[] = [];
@@ -74,6 +79,57 @@ function fixture(onEvent?: (event: string, clock: { now: number; kill: boolean }
     slippagePercent: 0.5, killSwitchExists: () => clock.kill,
   }, { model: "synthetic-test", decision: { choice: candidate.id, probabilities: { hold: 0, [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test" }, eligible: [candidate] });
   return { run, clock, plan, candidate, ledger, policy, sent, receipts, receiptResults };
+}
+
+// Exercise public execution and persistence boundaries with a synthetic signer and no network.
+for (const boundary of ["expiry", "stop"] as const) {
+  for (const persistAt of [1, 2]) {
+    test(`${boundary} during ledger retry at write ${persistAt} blocks the next handoff and retains known identities`, async () => {
+      const directory = mkdtempSync(join(tmpdir(), "inonu-persistence-guard-"));
+      const path = join(directory, "ledger.json");
+      try {
+        writeFileSync(path, JSON.stringify(emptyLedger()));
+        let writes = 0;
+        let locked = true;
+        const waits: number[] = [];
+        const persist = ledgerFilePersister(path, {
+          platform: "win32",
+          rename(source, destination) {
+            if (writes === persistAt && locked) {
+              locked = false;
+              throw Object.assign(new Error("synthetic retained reader"), { code: "EPERM" });
+            }
+            renameSync(source, destination);
+          },
+          wait(ms) {
+            waits.push(ms);
+            if (boundary === "stop") f.clock.kill = true;
+            else f.clock.now = f.plan.expiresAtMs;
+          },
+        });
+        const f = fixture(undefined, (state) => { writes++; persist(state); });
+        const result = await f.run();
+        const stage = persistAt === 1 ? "approve1" : "leg1";
+        expect(result.status).toBe("failed");
+        expect(result.reasons).toEqual([`send_failed: ${boundary === "stop" ? "kill_switch_present" : "plan_expired"}_before_${stage}`]);
+        expect(waits).toEqual([10]);
+        expect(f.sent).toEqual(persistAt === 1 ? [] : ["approve1"]);
+        // A previously sent approval still needs receipt observation; the
+        // guard prevents the next transaction, not reconciliation of that send.
+        expect(f.receipts).toEqual(persistAt === 1 ? [] : ["approve1"]);
+        const persisted = readLedgerFile(path);
+        expect(persisted.status).toBe("ready");
+        if (persisted.status !== "ready") throw new Error("ledger not readable");
+        expect(persisted.state.executedKeys).toEqual([f.plan.idempotencyKey]);
+        expect(persisted.state.openLegs[0]?.status).toBe("failed");
+        expect(persisted.state.openLegs[0]?.approveTxHash ?? null).toBe(persistAt === 1 ? null : "0x1");
+        expect(persisted.state.openLegs[0]?.txHash).toBe("");
+      } finally {
+        for (const file of readdirSync(directory)) unlinkSync(join(directory, file));
+        rmdirSync(directory);
+      }
+    });
+  }
 }
 
 test("approval receipt after expiry is observed, but the first swap is never dispatched", async () => {
