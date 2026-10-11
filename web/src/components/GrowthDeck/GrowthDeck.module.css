@@ -537,6 +537,17 @@
   font: var(--fs-xs);
 }
 
+.cellNote {
+  display: block;
+  margin-top: 6px;
+  max-width: 32ch;
+  white-space: normal;
+  font-family: var(--font-sans, sans-serif);
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
 .num {
   color: var(--ink-2);
   font-family: var(--font-mono);
