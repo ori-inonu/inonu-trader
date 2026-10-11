@@ -22,7 +22,7 @@ import {
 } from "@/lib/command-center";
 import { feedFrameState } from "@/lib/feed-frame";
 import { fmtInt, shortAddr } from "@/lib/format";
-import { DUR, EASE, playSwap } from "@/lib/motion";
+import { DUR, EASE } from "@/lib/motion";
 import { orderStateFor } from "@/lib/order-state";
 import { createRafLoop } from "@/lib/useRafLoop";
 import styles from "./CommandCenter.module.css";
@@ -201,8 +201,18 @@ export default function CommandCenter({ meta, latest, events, connection, operat
     signals.forEach((signal, index) => launchSignal(layer, signal, positions.current, nucleusRef.current, index));
   }, [latest, reducedMotion, stale]);
 
+  // The word never fades out fully: a feed that flips between late and waiting on consecutive
+  // blocks would otherwise leave the core blank more often than not.
   useEffect(() => {
-    playSwap(wordRef.current, reducedMotion || stale);
+    const element = wordRef.current;
+    if (!element || reducedMotion || stale || typeof element.animate !== "function") return;
+    element.animate(
+      [
+        { opacity: 0.35, transform: "translateY(4px)" },
+        { opacity: 1, transform: "translateY(0)" },
+      ],
+      { duration: DUR.base, easing: EASE.outExpo },
+    );
   }, [actionKey, reducedMotion, stale]);
 
   const cadence = "Um bloco a cada 300 ms";
