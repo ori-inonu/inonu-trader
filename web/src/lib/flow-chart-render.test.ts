@@ -203,13 +203,35 @@ async function waitForPortClosed(port: number, timeoutMs = 8000): Promise<boolea
   return !await canConnect(port);
 }
 
+function childHasExited(child: any, probe = (pid: number) => process.kill(pid, 0)): boolean {
+  if (child.exitCode !== null || child.signalCode !== null) return true;
+  if (!Number.isSafeInteger(child.pid) || child.pid <= 0) return false;
+  try {
+    probe(child.pid);
+    return false;
+  } catch (error) {
+    // Bun on Windows can retain null exit fields after the owned Edge PID is gone.
+    // Only OS-confirmed absence qualifies; permission errors are not evidence of exit.
+    return (error as NodeJS.ErrnoException).code === "ESRCH";
+  }
+}
+
+test("browser teardown requires exit status or OS-confirmed absence of its owned PID", () => {
+  const child = { pid: 123, exitCode: null, signalCode: null };
+  assert.equal(childHasExited(child, () => true), false);
+  assert.equal(childHasExited(child, () => { throw Object.assign(new Error(), { code: "ESRCH" }); }), true);
+  assert.equal(childHasExited(child, () => { throw Object.assign(new Error(), { code: "EPERM" }); }), false);
+  assert.equal(childHasExited({ ...child, pid: -1 }, () => { throw new Error("must not probe a process group"); }), false);
+  assert.equal(childHasExited({ ...child, exitCode: 0 }, () => { throw new Error("already exited"); }), true);
+});
+
 async function waitForChildExit(child: any, timeoutMs: number): Promise<boolean> {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    if (child.exitCode !== null || child.signalCode !== null) return true;
+    if (childHasExited(child)) return true;
     await Bun.sleep(100);
   }
-  return child.exitCode !== null || child.signalCode !== null;
+  return childHasExited(child);
 }
 
 function makeEvent(block: number, pnlMon: unknown = 0, pnlPct: unknown = 0) {

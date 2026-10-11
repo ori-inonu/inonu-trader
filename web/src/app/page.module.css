@@ -30,7 +30,10 @@
 
 .command {
   grid-area: command;
+  display: flex;
   min-width: 0;
+  flex-direction: column;
+  gap: var(--s4);
 }
 
 .kpi {
