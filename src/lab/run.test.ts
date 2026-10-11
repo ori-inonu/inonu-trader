@@ -18,7 +18,7 @@ import {
   runEpochs,
 } from "./run.ts";
 import { LeakError, ReplaySource, SyntheticSource, syntheticConfig, type DataSource } from "./source.ts";
-import { HOLD, HOUR_MS, type PolicyDecision } from "./types.ts";
+import { HOLD, HOUR_MS, type LabReport, type PolicyDecision } from "./types.ts";
 
 // Spec: docs/JEV-LABORATORIO-DE-DECISAO.md sections 4, 7 and 9. Titles start with the acceptance id.
 // Everything is synthetic.
@@ -458,6 +458,18 @@ describe("LB24 report from the journal", () => {
     expect(JSON.stringify(again)).toBe(JSON.stringify(report));
     expect(JSON.stringify(report)).not.toMatch(/NaN|Infinity|undefined/);
     expect(JSON.parse(JSON.stringify(report))).toEqual(report);
+  });
+
+  test("LB24 the number of bootstrap resamples changes only the leverage bootstrap block, and bad values are refused", () => {
+    const fast = buildReport(BASE_DATA, { bootstrapResamples: 20 });
+    const strip = (value: LabReport): unknown =>
+      JSON.parse(JSON.stringify({ ...value, policies: value.policies.map((policy) => ({ ...policy, leverage: policy.leverage.map((row) => ({ ...row, bootstrap: null })) })) }));
+    expect(strip(fast)).toEqual(strip(report));
+    const resamplesOf = (value: LabReport): number[] => value.policies.flatMap((policy) => policy.leverage.flatMap((row) => (row.bootstrap === null ? [] : [row.bootstrap.resamples])));
+    expect(resamplesOf(fast).length).toBeGreaterThan(0);
+    expect(new Set(resamplesOf(fast))).toEqual(new Set([20]));
+    expect(new Set(resamplesOf(report))).toEqual(new Set([2000]));
+    for (const bad of [0, -1, 1.5, Number.NaN, 100_001]) expect(() => buildReport(BASE_DATA, { bootstrapResamples: bad })).toThrow(RangeError);
   });
 
   test("LB24 the report built after a run equals the report read back from the journal file", async () => {

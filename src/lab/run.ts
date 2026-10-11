@@ -347,7 +347,7 @@ export async function runEpochs(options: RunOptions): Promise<RunSummary> {
       try {
         if (epoch === undefined) epoch = buildEpoch(source.asOf(t), index, candidateParams);
         const eligible = sortedById(epoch.candidates.filter((candidate) => (epoch as Epoch).eligibleIds.includes(candidate.id)));
-        const input: PolicyInput = deepFreeze({ epochId, t, eligible: eligible.map((candidate) => structuredClone(candidate)) });
+        const input: PolicyInput = deepFreeze({ epochId, t, eligible });
         for (const policy of waiting) decisions.push(await runPolicy(policy, input));
       } finally {
         source.closeDecision();
@@ -466,14 +466,24 @@ function comma(value: number, digits: number): string {
   return value.toFixed(digits).replace(".", ",");
 }
 
-export function buildReport(data: JournalData): LabReport {
+export interface ReportOptions {
+  /**
+   * Resamples of the block bootstrap that simulates the leverage paths. The default (2000) is what the CLI uses; a
+   * smaller number only speeds up tests that do not look at the leverage block. It never changes any other figure.
+   */
+  bootstrapResamples?: number;
+}
+
+export function buildReport(data: JournalData, options: ReportOptions = {}): LabReport {
+  const resamples = options.bootstrapResamples ?? STATS_DEFAULTS.bootstrapResamples;
+  if (!Number.isSafeInteger(resamples) || resamples < 1 || resamples > 100_000) throw new RangeError("bootstrapResamples must be an integer from 1 to 100000");
   const spec = parseSpec(data.manifest);
   assertComplete(data, spec.policies.map((policy) => policy.id));
   const ctx: StatsContext = {
     stepMs: spec.stepMs,
     horizonMs: spec.horizonMs,
     maxDecisionMs: STATS_DEFAULTS.maxDecisionMs,
-    bootstrap: { resamples: STATS_DEFAULTS.bootstrapResamples, seed: STATS_DEFAULTS.bootstrapSeed, ruinFraction: STATS_DEFAULTS.ruinFraction },
+    bootstrap: { resamples, seed: STATS_DEFAULTS.bootstrapSeed, ruinFraction: STATS_DEFAULTS.ruinFraction },
     maintenanceMarginRate: spec.costTable.maintenanceMarginRate,
     alpha: STATS_DEFAULTS.alpha,
   };
@@ -578,7 +588,7 @@ export function renderSummaryPt(report: LabReport): string[] {
   if (leverageLines > 0) lines.push("Sem vantagem validada, alavancar só reduz a mediana; o contrafactual mostra risco, não ganho.");
   lines.push(`Sinalizadas (Holm e acima de todas as linhas de base): ${report.flagged.length === 0 ? "nenhuma" : report.flagged.join(", ")}.`);
   const gate = report.gate;
-  lines.push(`Portão de promoção: permanecer na fase-0. Critérios aprovados ${gate.passed.length}, reprovados ${gate.failed.length}, desconhecidos ${gate.unknown.length}. O portão só recomenda; quem decide é o dono.`);
+  lines.push(`Portão de promoção: permanecer na fase-0. Critérios atendidos ${gate.passed.length}, reprovados ${gate.failed.length}, desconhecidos ${gate.unknown.length}. O portão só recomenda; quem decide é o dono.`);
   lines.push(STANDING_DISCLAIMER);
   return lines;
 }

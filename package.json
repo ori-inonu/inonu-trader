@@ -22,6 +22,9 @@
     "dev": "bun --watch run src/index.ts",
     "doctor": "bun run scripts/doctor.ts",
     "qualify:live": "bun run scripts/qualify-live.ts",
+    "policy:envelope": "bun --no-env-file run scripts/policy-envelope.ts",
+    "jev:lab": "bun --no-env-file run scripts/jev-lab.ts",
+    "test:lab": "bun --no-env-file test src/lab scripts/jev-lab.test.ts",
     "capture": "bun run scripts/capture.ts",
     "backtest": "bun run scripts/backtest.ts",
     "test": "bun --no-env-file test --parallel=1 --timeout 15000 ./src ./scripts",
@@ -34,6 +37,7 @@
     "okx:signals": "bun --no-env-file run scripts/okx-signals.ts",
     "okx:evidence": "bun --no-env-file run scripts/okx-evidence.ts",
     "okx:defi": "bun --no-env-file run scripts/okx-defi.ts",
+    "okx:derivatives": "bun --no-env-file run scripts/okx-derivatives.ts",
     "okx:operator": "bun run scripts/okx-operator.ts"
   }
 }

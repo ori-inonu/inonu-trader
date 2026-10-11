@@ -48,9 +48,9 @@ Cada critério é um comportamento observável. Os testes carregam o identificad
 | LB16 | `JevPolicy` valida a resposta: id desconhecido, resposta malformada, tempo esgotado e exceção viram `hold` com status próprio; abstenção é `hold` com status `ok`; o estado enviado ao seletor só tem chaves opacas, enumerações fechadas e números | `policies.test.ts` |
 | LB17 | `MockJevChooser` é determinístico e offline; é o seletor padrão da CLI e a saída diz isso em voz alta | `policies.test.ts`, `jev-lab.test.ts` |
 | LB18 | Média: Newey-West com a regra de lag e a inflação documentadas, p-valor com t de Student, IC de 95%; a distribuição t, o estimador e o bootstrap batem com referências numéricas | `stats.test.ts` |
-| LB19 | Potência e tamanho: uma vantagem plantada de tamanho detectável com o N dado é sinalizada em todas as sementes testadas, e sem vantagem a taxa de falso positivo fica perto do nível nominal, nas estatísticas e no pipeline completo | `stats.test.ts`, `lab.integration.test.ts` |
+| LB19 | Potência e tamanho, medidos (seção 7.6): com vantagem plantada de tamanho detectável para o N usado o relatório a sinaliza na grande maioria das sementes; sem vantagem a taxa de sinalização, por política testada e na família de Holm, fica perto do nível nominal e nunca muito acima, nas estatísticas e no pipeline completo, em dezenas de sementes | `stats.test.ts`, `lab.integration.test.ts` |
 | LB20 | Comparação pareada contra baselines (união-interseção), correção de Holm, Brier e tabela de confiabilidade, Sharpe anualizado com a ressalva e dias necessários para detectar um Sharpe (valores de R3) | `stats.test.ts` |
-| LB21 | `promotionGate` só recomenda `fase-0`; lista critérios aprovados, reprovados e desconhecidos; todo texto de promoção diz que não concede nada e remete ao `qualify:live`; dados sintéticos nunca passam; o limite de alavancagem vem de `kellyLowerBound` | `stats.test.ts` |
+| LB21 | `promotionGate` só recomenda `fase-0`; lista critérios atendidos, reprovados e desconhecidos; todo texto de promoção diz que não concede nada e remete ao `qualify:live`; dados sintéticos nunca passam; o limite de alavancagem vem de `kellyLowerBound` | `stats.test.ts` |
 | LB22 | Diário: só anexa, é idempotente (repetir um id de época nunca duplica), retoma de onde parou, grava o snapshot de forma atômica (arquivo temporário e renomeação) | `journal.test.ts` |
 | LB23 | Diário: leitura estrita (linha malformada é erro que nomeia a linha), diário ausente ou corrompido com resultados existentes faz a execução PARAR, e uma configuração diferente da gravada também | `journal.test.ts` |
 | LB24 | O orquestrador é puro e o relatório sai só do diário: interromper e retomar dá exatamente os mesmos bytes que uma execução contínua | `run.test.ts` |
@@ -92,7 +92,7 @@ Features geradas (todas `number | null`; unidades entre parênteses):
 | --- | --- |
 | `retLookbackBps` | retorno do fechamento mais recente ao de `lookbackMs` atrás, velas conhecidas em `t` (bps) |
 | `volHorizonBps` | desvio-padrão dos retornos logarítmicos de vela no lookback, escalado ao horizonte (bps); `null` com menos de 20 velas |
-| `spreadBps` | spread cotado do instrumento no ticker mais recente e fresco (bps); no carry, soma das duas pernas |
+| `spreadBps` | spread cotado do instrumento no ticker mais recente e fresco, com idade de até 120000 ms (bps); no carry, soma das duas pernas |
 | `basisBps` | `(perp - spot) / spot` nos tickers (bps) |
 | `fundingNextBps`, `fundingLastBps` | taxa anunciada da próxima liquidação e última liquidada (bps por liquidação) |
 | `fundingMeanBps`, `fundingMinBps` | média e mínimo das últimas 6 liquidações (bps); `null` com menos de 6 |
@@ -261,9 +261,9 @@ O relatório calcula, com `sigma` diário derivado de `volHorizonBps`, a referê
 
 ### 7.1 O que é medido
 
-Para cada política `p` e época `e`, a série `x_e^p` é o retorno líquido sobre o capital a 1x da escolha (0 em `hold`). Para o Jev subtrai-se `costUsd / notionalUsd` em toda época em que foi consultado; se `costUsd` é `null` o custo **não** é subtraído, o relatório marca `inferenceCostKnown: false` e o portão deixa de aprovar custos completos. Linhas de base passivas (`buy-and-hold`) não pagam custos de negociação (`gross + funding - oportunidade`): é o benchmark sem giro.
+Para cada política `p` e época `e`, a série `x_e^p` é o retorno líquido sobre o capital a 1x da escolha (0 em `hold`). Para o Jev subtrai-se `costUsd / notionalUsd` em toda época em que foi consultado; se `costUsd` é `null` o custo **não** é subtraído, o relatório marca `inference.costKnown: false` e o critério `custo-de-inferencia` do portão fica desconhecido. Linhas de base passivas (`buy-and-hold`) não pagam custos de negociação (`gross + funding - oportunidade`): é o benchmark sem giro.
 
-Por política: `n`, média por época, desvio, taxa de acerto (fração das negociações com retorno líquido positivo), erro-padrão HAC, `t`, IC de 95%, p-valor unilateral, drawdown máximo, taxa de negociação, negociações por dia, Sharpe anualizado, dias para detectar esse Sharpe, e o contrafactual de alavancagem. Para o Jev: latência (p50, p95, p99) e Brier com tabela de confiabilidade.
+Por política: `n`, média por época, desvio, taxa de acerto (fração das negociações com retorno líquido positivo), erro-padrão HAC, `t`, IC de 95%, p-valor unilateral, drawdown máximo, taxa de negociação, negociações por dia, Sharpe anualizado, dias para detectar esse Sharpe, e o contrafactual de alavancagem. Para o Jev: latência (p50, p95, p99), fração das consultas acima de 1500 ms (o `maxDecisionMs` da qualificação) e Brier com tabela de confiabilidade.
 
 ### 7.2 Por que não vale o desvio-padrão ingênuo (sobreposição)
 
@@ -281,7 +281,7 @@ gl       = max(1, floor(n/(lag+1)) - 1)
 p (unilateral) = 1 - T_gl(t)      IC95 = media +- T_gl^-1(0,975) * SE
 ```
 
-A inflação `n/(n - lag)` e o t de Student com `gl` graus de liberdade corrigem amostras curtas relativas à sobreposição. O tamanho do teste foi medido por simulação (4000 repetições por célula, retornos sobrepostos de incrementos normais): 4,8% a 6,1% de rejeição para nível unilateral nominal de 5%, com `K` de 1, 4 e 8 e `n` de 200 a 1000. Série com variância de longo prazo zero (por exemplo `hold`) tem `t`, p-valor e IC `null`.
+A inflação `n/(n - lag)` e o t de Student com `gl` graus de liberdade corrigem amostras curtas relativas à sobreposição. O tamanho do teste foi medido por simulação (4000 repetições por célula, retornos sobrepostos de incrementos normais): 4,8% a 6,1% de rejeição para nível unilateral nominal de 5%, com `K` de 1, 4 e 8 e `n` de 200 a 1000. Série com variância de longo prazo zero (por exemplo `hold`) tem `t`, p-valor e IC `null`. A seção 7.6 traz o tamanho e o poder medidos, também no pipeline completo.
 
 ### 7.3 Várias políticas e várias modalidades: correção de Holm
 
@@ -303,7 +303,87 @@ Com tranches de `1/K` (seção 6.1), o Sharpe do portfólio implementável é `m
 | --- | --- | --- | --- | --- | --- | --- |
 | Dias (t = 2) | 5840 | 1460 | 365 | 162,2 | 91,3 | 58,4 |
 
-Exemplo numérico com a sobreposição do laboratório (horizonte 24 h, passo 6 h, `K = 4`). Suponha uma política cujo retorno líquido verdadeiro seja de 12 bps por decisão com desvio de 300 bps por decisão (ativo com 3% de volatilidade diária): relação sinal-ruído por decisão `0,04`. Para `t = 2` com sobreposição, `n = K * (t / SNR)^2 = 4 * 2500 = 10000` decisões, ou `10000 * 6 h = 2500 dias` (6,8 anos). Conferindo pelo Sharpe: `SR = 0,04 / sqrt(4) * sqrt(1460) = 0,02 * 38,21 = 0,764` e `(2 / 0,764)^2 * 365 = 2499` dias. Uma vantagem de 12 bps por decisão parece boa e é um Sharpe de 0,76: invisível por anos. Em sentido inverso, a janela padrão de 400 épocas (100 dias) só detecta Sharpe anualizado a partir de `2 * sqrt(365/100) = 3,82`; é o que R3 resume como "90 dias só detectam Sharpe de cerca de 4".
+Exemplo numérico com a sobreposição do laboratório (horizonte 24 h, passo 6 h, `K = 4`). Suponha uma política cujo retorno líquido verdadeiro seja de 12 bps por decisão com desvio de 300 bps por decisão (ativo com 3% de volatilidade diária): relação sinal-ruído por decisão `0,04`. Para `t = 2` com sobreposição, `n = K * (t / SNR)^2 = 4 * 2500 = 10000` decisões, ou `10000 * 6 h = 2500 dias` (6,8 anos). Conferindo pelo Sharpe: `SR = 0,04 / sqrt(4) * sqrt(1460) = 0,02 * 38,21 = 0,764` e `(2 / 0,7642)^2 * 365 = 2500` dias. Uma vantagem de 12 bps por decisão parece boa e é um Sharpe de 0,76: invisível por anos. Em sentido inverso, a janela padrão de 400 épocas (100 dias) só detecta Sharpe anualizado a partir de `2 * sqrt(365/100) = 3,82`; é o que R3 resume como "90 dias só detectam Sharpe de cerca de 4".
+
+### 7.6 Poder e taxa de falso positivo medidos (LB19)
+
+O tamanho e o poder da média (seção 7.2) foram medidos de dois modos: sobre séries simuladas (`stats.test.ts`: 1500 séries nulas por célula, com `K` de 1, 4 e 8) e, nesta seção, **no relatório inteiro**. O mesmo mundo sintético passa pelo pipeline real (fonte, candidatos, políticas, resultados com custos, diário, relatório com Newey-West, Holm e comparações pareadas) em dezenas de sementes, e as taxas são contadas no relatório que o usuário lê (`lab.integration.test.ts`). Tudo é sintético: isto verifica a máquina estatística e não diz nada sobre nenhum mercado.
+
+**Três níveis de "sinal"**, do mais cru ao oficial: (a) *rejeição bruta*, o p-valor unilateral da média abaixo de `0,05`; (b) *rejeição após Holm*, o p ajustado abaixo de `0,05`, e *vencedor claro* quando além disso `t >= 2` e o limite inferior do IC de 95% está acima de zero; (c) *sinalizada* (`flagged`), rejeição após Holm e todas as comparações pareadas contra as linhas de base significativas. Só (c) é o veredito do relatório; (a) é uma etapa intermediária.
+
+**Os mundos.** Todos têm um ativo com 1,5% de volatilidade diária, velas de 1 hora e horizonte de 24 horas, e usam as sementes 1, 2, 3, ...
+
+| Mundo | Construção | Janela |
+| --- | --- | --- |
+| Nulo exato | Sem taxas, spreads, slippage, rendimento do caixa, funding e base: o preço é martingale e **toda política tem média líquida verdadeira zero**. A vantagem plantada é de 1e-6 bps, ou seja nada, mas faz a fonte publicar uma pontuação plantada que é ruído puro, para o Mock ter o que negociar. O elenco padrão ganha um segundo Jev, `jev-fade`, que aposta contra o movimento de 24 h quando ele passa de um desvio-padrão (uma política que reage ao retorno recente: o caso em que o teste unilateral se comporta pior) | `K = 4` (passo de 6 h), 120 épocas (30 dias) |
+| Custos realistas, sem vantagem | Tabela de custos, spreads e funding padrão do gerador, a mesma pontuação de ruído | `K = 1` (passo de 24 h), 160 épocas |
+| Vantagem plantada | Custos realistas e vantagem de 110 bps, o valor esperado bruto por decisão da regra oráculo "comprar se a pontuação é positiva, vender se não" (correlação 0,92 entre a pontuação e o movimento seguinte; a fonte recusa 0,95 ou mais). O Mock negocia só as pontuações fortes, cerca de 30 épocas de 160, e paga os custos de cada uma | `K = 1`, 160 épocas |
+
+**Tamanho (sem vantagem).** Mundo nulo exato, 600 sementes, `K = 4`, 120 épocas, nível unilateral nominal de 5%:
+
+| Política | Rejeição bruta | Após Holm | `t` médio |
+| --- | --- | --- | --- |
+| `random` | 3,5% | 0,0% | 0,02 |
+| `buy-and-hold` | 5,3% | 0,2% | 0,00 |
+| `momentum-rule` | 2,5% | 0,0% | -0,24 |
+| `jev` (Mock, pontuação de ruído) | 3,3% | 0,3% | -0,04 |
+| `jev-fade` | 7,0% | 0,7% | 0,21 |
+
+Alguma rejeição na família de Holm (cerca de 10 a 11 hipóteses neste elenco): 1,3% das sementes (8 de 600), contra 5% de nível familiar. **Sinalizada (c): nenhuma em 600 sementes.** Em outras células do mundo nulo (4 políticas, com o ruído de base padrão de 2 bps), a rejeição bruta de cada política ficou entre 2,4% e 6,4%:
+
+| `K` | Épocas | Sementes | `random` | `buy-and-hold` | `momentum-rule` | `jev` | Família de Holm | Sinalizada |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 120 | 1000 | 4,9% | 4,1% | 4,2% | 4,7% | 1,7% | 0,1% |
+| 1 | 240 | 600 | 5,7% | 5,3% | 4,3% | 4,0% | 3,2% | 0,3% |
+| 2 | 160 | 700 | 4,0% | 5,0% | 3,4% | 5,6% | 2,6% | 0,0% |
+| 4 | 120 | 800 | 4,4% | 5,8% | 4,8% | 4,1% | 2,0% | 0,1% |
+| 4 | 160 | 800 | 4,5% | 6,4% | 2,4% | 4,3% | 1,8% | 0,0% |
+| 4 | 400 | 300 | 4,3% | 4,7% | 4,7% | 6,3% | 2,7% | 0,0% |
+
+Com custos realistas e sem vantagem (200 sementes, `K = 1`, 160 épocas) as taxas caem: rejeição bruta de 0,0% (`random`), 3,5% (`buy-and-hold`), 0,5% (`momentum-rule`) e 0,5% (`jev`), nenhuma rejeição após Holm e nenhuma sinalização. A política `random` perdeu dinheiro em 192 das 200 sementes (média de cerca de -15 bps por época): a tabela de custos morde, que é o objetivo de torná-la conservadora.
+
+**A assimetria das regras que reagem ao retorno recente.** As duas regras que apostam no movimento das últimas 24 h têm caudas espelhadas: o `t` médio de `momentum-rule` é -0,24 e o de `jev-fade` é +0,21, contra 0,00 a 0,02 para `random` e `buy-and-hold`. O teste de `momentum-rule` rejeita 2,5% na cauda superior e 8,7% na inferior; o de `jev-fade`, 7,0% e 2,0%. O mesmo aparece fora do pipeline, em preços GBM horários puros (1,5% de volatilidade diária, sem custos; regra pelo sinal das últimas 24 h, sem limiar; decisão a cada 6 h, posição de 24 h aberta 1 h depois) com o mesmo `meanTest`, `K = 4`, de 1500 a 4000 repetições por célula. Rejeição na cauda superior e na inferior:
+
+| Épocas | Seguir o movimento | Apostar contra o movimento | Passivo comprado (referência) |
+| --- | --- | --- | --- |
+| 60 | 1,5% e 4,2% | 4,7% e 1,3% | 3,6% e 3,5% |
+| 120 | 3,8% e 6,8% | 7,2% e 2,8% | 5,2% e 4,4% |
+| 400 | 3,7% e 6,4% | 7,0% e 3,8% | 4,7% e 6,1% |
+| 1000 | 5,1% e 6,4% | 6,1% e 4,9% | 5,7% e 6,7% |
+
+Sem sobreposição (`K = 1`, 120 épocas) as duas regras são simétricas (4,9% e 4,8%). A causa é que a variância de longo prazo de uma regra que aposta no retorno recente depende de a regra ter "funcionado" naquele caminho: quando funciona, as autocovariâncias são maiores e o `t` encolhe; quando falha, ocorre o oposto. O t de Student simétrico não acompanha isso. O tamanho bilateral fica certo (a soma das caudas é cerca de 10%); o do teste unilateral "média > 0" fica entre 1,5% e 7,2% conforme a regra. Por isso **nenhum veredito do laboratório depende só do teste bruto**: o portão exige, além dele, a correção de Holm sobre uma família de 8 a 11 hipóteses (o menor p-valor precisa ficar abaixo de 0,05 dividido pelo tamanho da família, de 0,0045 a 0,0063) e todas as comparações pareadas (é isso que a lista `flagged` reúne), mais uma amostra efetiva de pelo menos 30 blocos e 90 dias. Medido, o excesso do teste bruto não chega ao veredito: `jev-fade` tem 0,7% de rejeição após Holm e nenhuma sinalização em 600 sementes. Há ainda o viés conhecido do kernel de Bartlett, que subestima a variância de longo prazo em cerca de 10% para `K = 4` com lag 12 e infla o desvio do `t` em cerca de 5% (a coluna do passivo mostra o efeito).
+
+**Poder (com vantagem plantada).** Custos realistas, elenco padrão com o Mock, 60 sementes por célula (40 quando indicado). "Vencedor claro" é o nível (b) acima; "Sinalizada" é o nível (c).
+
+| `K` | Épocas | Vantagem plantada | Vencedor claro | Sinalizada |
+| --- | --- | --- | --- | --- |
+| 1 | 120 | 60 bps | 78% | 18% |
+| 1 | 120 | 80 bps | 100% | 43% |
+| 1 | 120 | 110 bps | 100% | 77% |
+| 1 | 160 | 60 bps | 97% | 30% |
+| 1 | 160 | 80 bps | 100% | 70% |
+| 1 | 160 | 110 bps | 100% | 94% (120 sementes) |
+| 1 | 200 | 70 bps | 100% (40) | 55% (40) |
+| 1 | 200 | 110 bps | 100% (40) | 95% (40) |
+| 2 | 160 | 60 bps | 93% | 15% |
+| 2 | 160 | 110 bps | 100% | 73% |
+| 4 | 160 | 60 bps | 67% | 2% |
+| 4 | 160 | 100 bps | 92% | 18% |
+| 4 | 400 | 40 bps | 90% (40) | 8% (40) |
+| 4 | 400 | 80 bps | 100% (40) | 60% (40) |
+| 4 | 400 | 110 bps | 100% (40) | 83% (40) |
+
+Leitura: 110 bps por decisão é o máximo que a fonte aceita para 1,5% de volatilidade diária (sinal-ruído de 0,73 por decisão, enorme para qualquer mercado real). Mesmo assim, sem sobreposição são precisos 160 dias para sinalizar em 94% das sementes e, com `K = 4`, 400 épocas (100 dias) sinalizam em 83%. O gargalo é a sinalização, não a significância: em todas as 7 falhas das 120 sementes da célula de 160 épocas com 110 bps o Jev era vencedor claro e falhou só na comparação com `buy-and-hold`, cujas oscilações são grandes. **Sem sinal não é sem vantagem**: uma vantagem de 40 bps (sinal-ruído de 0,27) em 100 dias é "significativa" em 90% das sementes e quase nunca sinalizada (8%).
+
+**O que o teste de ponta a ponta afirma** (`lab.integration.test.ts`, cerca de 12 s para 106 execuções do pipeline). Os limites ficam bem além do pior que a varredura mostrou em janelas de sementes consecutivas, porque as sementes são fixas e uma mudança inofensiva na ordem dos sorteios do gerador não deve tornar um teste determinístico instável; um defeito real, como um estimador que ignora a sobreposição (cerca de 20% de rejeição com `K = 4`), continua falhando.
+
+| Teste | Afirmação | Medido nas sementes do teste |
+| --- | --- | --- |
+| Nulo exato, `K = 4`, 120 épocas, 60 sementes | Toda política tem p-valor em toda semente e os dois Jevs negociam; rejeição bruta de no máximo 10 de 60 por política e 36 de 300 no conjunto; no máximo 2 rejeições após Holm por política, 6 sementes com alguma rejeição na família e 1 sinalizada; `t` médio de `random`, `buy-and-hold` e `jev` entre -0,5 e 0,5 | 0, 5, 1, 4 e 3 rejeições brutas (13 de 300); 1 após Holm; 1 semente com rejeição na família; nenhuma sinalizada |
+| Custos realistas sem vantagem, `K = 1`, 160 épocas, 16 sementes | `random` perde em pelo menos 13 sementes; no máximo 3 rejeições brutas, 1 semente com rejeição na família e 1 sinalizada | `random` perde em 16; nenhuma rejeição; nenhuma sinalizada |
+| Vantagem plantada de 110 bps, `K = 1`, 160 épocas, 30 sementes | Vencedor claro em pelo menos 27, sinalizada em pelo menos 23, média positiva em pelo menos 29, no máximo 1 semente com outra política sinalizada, média do Jev entre 20 e 110 bps | 30, 26, 30, 0 e 43,5 bps |
+
+Se uma taxa medida ficar claramente acima do nominal, a estatística está errada: o conserto é em `stats.ts`, nunca afrouxar o limite.
 
 ## 8. Portão de promoção
 
@@ -311,51 +391,59 @@ Exemplo numérico com a sobreposição do laboratório (horizonte 24 h, passo 6 
 
 | Critério | Regra | Origem |
 | --- | --- | --- |
-| `dados-reais` | sintético: reprovado; captura: desconhecido (a origem não é verificável pelo laboratório) | seção 0 |
+| `dados-reais` | sintético: reprovado; captura: desconhecido (a origem não é verificável pelo laboratório); nunca atendido | seção 0 |
 | `dias-minimos` | dias cobertos `>= 90` | R3, seção 6 (Sharpe 4 exige cerca de 90 dias) |
 | `amostra-efetiva` | `floor(n/(lag+1)) >= 30` | seção 7.2 |
-| `custos-completos` | resultados completos `>= 95%` e custo de inferência conhecido | R3, "custos conservadores" |
+| `resultados-completos` | fração de épocas com resultado utilizável `>= 0,95` (`run.completeness`) | R3, "custos conservadores" |
+| `custo-de-inferencia` | todo custo de inferência informado (`inference.costKnown`); desconhecido nunca vira zero e deixa o critério desconhecido | D1 |
 | `t-newey-west` | `t >= 2` | R3, seção 6 |
 | `limite-inferior-positivo` | limite inferior do IC de 95% da média líquida por época `> 0` | R3, seção 6 |
 | `correcao-holm` | p ajustado por Holm `< 0,05` | seção 7.3 |
 | `contra-baselines` | todas as comparações pareadas com `t >= 2` e limite inferior `> 0` | seção 7.3 |
 | `kelly-alavancagem` | `kellyLowerBound(mu_dia, sigma_dia, dias) > 0`; o teto de alavancagem da fase 2 sai de `deriveLimits` | `envelope.ts` |
-| `janela-fora-da-amostra` | desconhecido, salvo `frozenAtMs` declarado: aprovado se o primeiro epoch é posterior, reprovado se anterior (atestado pelo operador, não verificável) | R3, seção 6 |
+| `janela-fora-da-amostra` | desconhecido, salvo `frozenAtMs` declarado: atendido se o primeiro epoch é posterior, reprovado se anterior (atestado pelo operador, não verificável) | R3, seção 6 |
 | `fills-reais-conciliados` | **sempre desconhecido**: o laboratório não executa | R3, seção 6 |
 | `autorizacao-e-assinante` | **sempre desconhecido**: autorização financeira explícita e assinante separado não são avaliáveis aqui | R3, seção 6 e D11 |
 
-O texto de `recommendation` sempre começa com "Recomendação: permanecer na fase-0". Se os critérios estatísticos foram todos atendidos, acrescenta que isto **não concede nada** e que o dono decide com o checklist de qualificação real, a autorização explícita, o assinante separado e fills reais conciliados. O mu e o sigma diários do Kelly vêm do portfólio de tranches (seção 7.5): `mu_dia = media/K * passos por dia`, `sigma_dia = sqrt(LRV * passos por dia)/K`.
+O texto de `recommendation` sempre começa com "Recomendação: permanecer na fase-0". Se os critérios estatísticos foram todos atendidos e nenhum foi reprovado, acrescenta que isto **não concede nada** e que o dono decide com o checklist de qualificação real, a autorização explícita, o assinante separado e fills reais conciliados; caso contrário, diz "Evidência insuficiente nesta janela" com a contagem de critérios reprovados e desconhecidos. Sempre afirma que a alavancagem permanece em 0x na fase-0 e termina com "Nada aqui prova lucro". O mu e o sigma diários do Kelly vêm do portfólio de tranches (seção 7.5): `mu_dia = media/K * passos por dia`, `sigma_dia = sqrt(LRV * passos por dia)/K`.
 
 ## 9. Como ler um relatório
 
-O JSON da CLI (`schema: "jev-lab-report-v1"`) tem, em ordem: `mode` e `source`; `jev` (nome do seletor, `isMock`, aviso); `run` (épocas, dias, passo, horizonte, sobreposição `K`, semente, vantagem plantada, completude); `costTable`; `policies[]`; `paired[]`; `multipleTesting`; `flagged`; `gate`; `notes`; e por último `disclaimer`.
+O JSON da CLI (`schema: "jev-lab-report-v1"`) tem, em ordem: `mode` e `source`; `jev` (nome do seletor, `isMock`, `realJevCalled`, aviso); `run` (épocas, épocas pendentes, dias, passo, horizonte, sobreposição `K`, semente, vantagem plantada, `frozenAtMs`, completude); `costTable`; `policies[]`; `paired[]`; `multipleTesting`; `flagged`; `gate`; `notes`; e por último `disclaimer`.
 
 1. Leia primeiro `jev.isMock` e `mode`. Mock ou sintético: o resultado só verifica a máquina.
-2. Em `policies[]`, olhe `meanBpsPerEpoch`, `t` e `ci95Bps`. Uma média positiva com IC que contém zero **não é evidência**. `hold` tem média 0 por definição: é a barra.
-3. `adjustedP` é o p-valor após Holm. Só ele conta, e só junto com `paired[]` inteiro significativo.
-4. `completeness` baixa (muitos epochs incompletos) invalida a leitura.
-5. `leverage` mostra, por `L`, o resultado observado e a distribuição reamostrada. Se `probLiquidation` ou `probRuin` sobem com `L` enquanto a média líquida a 1x é zero ou negativa, é o arrasto de volatilidade de R3: alavancagem sem vantagem só reduz a mediana. `reference` traz a forma fechada sem vantagem para comparar.
-6. `gate.failed` e `gate.unknown` dizem o que falta. `gate.recommendation` nunca é uma autorização.
-7. O `disclaimer` final vale sempre.
+2. Em `policies[]`, olhe `mean.meanBps` (média líquida por época, em bps do capital comprometido), `mean.t` e `mean.ci95Bps`. Uma média positiva com IC que contém zero **não é evidência**. `hold` tem média 0 por definição, e essa é a barra. `statuses` conta as decisões por status: tudo que não é `ok` virou `hold`.
+3. `adjustedP` é o p-valor após Holm. Só ele conta, e só junto com todas as linhas de `paired[]` significativas (`significantlyBetter: true`). `flagged` lista as políticas testadas que cumprem as duas coisas.
+4. `usableEpochs` e `incompleteDecisions` mostram quantos epochs entraram na série; `run.completeness` baixa invalida a leitura.
+5. `sharpe` traz o Sharpe anualizado, os dias necessários para detectá-lo e a ressalva; `portfolio` traz a média e o desvio diários do portfólio de tranches e o limite inferior de Kelly.
+6. `leverage` mostra, por `L`, `observed` (curva de patrimônio do histórico), `bootstrap` (distribuição reamostrada) e `reference` (forma fechada sem vantagem de `envelope.ts`). Se `bootstrap.probLiquidation` ou `bootstrap.probRuin` sobem com `L` enquanto a média líquida a 1x é zero ou negativa, é o arrasto de volatilidade de R3: alavancagem sem vantagem só reduz a mediana.
+7. `calibration` (só quando a política informa probabilidades) traz o Brier, a referência da taxa de acerto e a tabela de confiabilidade.
+8. `gate.failed` e `gate.unknown` dizem o que falta. `gate.recommendation` nunca é uma autorização.
+9. O `disclaimer` final vale sempre.
 
 ## 10. CLI
 
 ```
 bun --no-env-file run scripts/jev-lab.ts run --synthetic --epochs <N> --seed <S> [--planted-edge <bps>] --out <pasta>
-bun --no-env-file run scripts/jev-lab.ts run --capture <arquivo.jsonl> --out <pasta> [--step-ms <ms>] [--horizon-ms <ms>] [--bar-ms <ms>] [--frozen-at-ms <ms>]
-bun --no-env-file run scripts/jev-lab.ts report --journal <pasta>/journal.jsonl
+bun --no-env-file run scripts/jev-lab.ts run --capture <arquivo.jsonl> --out <pasta> [--seed <S>] [--step-ms <ms>] [--horizon-ms <ms>] [--bar-ms <ms>] [--frozen-at-ms <ms>]
+bun --no-env-file run scripts/jev-lab.ts report --journal <pasta ou arquivo journal.jsonl>
 bun --no-env-file run scripts/jev-lab.ts --help
 ```
 
-- **Saída.** JSON do relatório no stdout (determinístico byte a byte), resumo curto em pt-BR no stderr. O seletor é sempre o `MockJevChooser`, e a primeira linha do stderr e o campo `jev.warning` dizem isso em voz alta.
-- **Códigos de saída.** 0: execução ou relatório completo (o relatório, não o código, carrega o veredito). 2: uso incorreto ou entrada inválida. 3: parada de integridade do diário (ausente com resultados existentes, corrompido, configuração divergente, época incompleta); nada é sobrescrito.
+Dois subcomandos:
+
+- **`run`** roda a grade de épocas, grava o diário em `<pasta>/journal.jsonl` e o `snapshot.json` ao lado, e imprime o relatório. Com `--synthetic`, `--epochs` (1 a 50000) e `--seed` (0 a 4294967295) são obrigatórios e `--planted-edge` (bps por decisão, decimal com ponto, padrão 0) planta a vantagem da seção 3.3; uma vantagem grande demais para a volatilidade e o horizonte (`rho >= 0,95`) é erro de uso. Com `--capture`, o arquivo é lido no formato da seção 3.4 (até 256 MiB, arquivo regular, sem seguir link simbólico), a grade fica nos múltiplos do passo depois de 3 dias de aquecimento e o número de épocas é o que a captura consegue terminar; `--seed` só semeia a política `random`. Passo padrão 21600000 ms (6 h), horizonte padrão 86400000 ms (24 h), vela padrão 900000 ms (15 min); passo e horizonte precisam ser múltiplos da vela. `--frozen-at-ms` registra no manifesto o instante em que a configuração foi congelada. Os números são inteiros sem sinal, sem vírgula e sem notação científica.
+- **`report`** reconstrói o relatório só a partir de um diário existente (arquivo ou pasta). Recusa um diário com época incompleta.
+
+- **Saída.** JSON do relatório no stdout (determinístico byte a byte), resumo curto em pt-BR no stderr com uma linha `Diário:` que diz quantas épocas foram novas, quantas já estavam completas e quantas estão pendentes. O seletor é sempre o `MockJevChooser`, e a primeira linha do stderr e o campo `jev.warning` dizem isso em voz alta. A última linha do stderr e o último campo do JSON são o aviso fixo de que nada prova lucro e nada concede permissão.
+- **Códigos de saída.** 0: execução ou relatório completo (o relatório, não o código, carrega o veredito). 2: uso incorreto ou entrada inválida, incluindo captura mal formada ou curta demais e diário inexistente em `report`. 3: parada de integridade do diário (ausente com resultados existentes, vazio, truncado, corrompido, configuração divergente da gravada, época incompleta no `report`) ou tentativa de ler o futuro; nada é sobrescrito e o stdout fica vazio.
 - **Isolamento.** Nunca lê `process.env`, nunca usa a rede, nunca assina, nunca escreve fora da pasta `--out` e só lê o arquivo de `--capture` (ou o diário). `--no-env-file` é cinto de segurança.
-- **Retomada.** Repetir `run` na mesma pasta com a mesma configuração não duplica nada e completa o que faltar. Diário ausente com `snapshot.json` presente, diário truncado ou com linha malformada: a execução PARA com código 3 em vez de recomeçar vazia por cima.
+- **Retomada.** Repetir `run` na mesma pasta com a mesma configuração não duplica nada e completa o que faltar. Diário ausente com `snapshot.json` presente, diário vazio, truncado ou com linha malformada: a execução PARA com código 3 em vez de recomeçar vazia por cima. Para consertar um diário cortado no meio de uma linha, inspecione o arquivo, apague só a linha final incompleta e rode de novo: as épocas que faltarem serão refeitas.
 - **Script sugerido** (o mantenedor liga em `package.json`; este trabalho não o altera): `"jev:lab": "bun --no-env-file run scripts/jev-lab.ts"`.
 
 ## 11. Como injetar o Jev real
 
-O módulo `policies.ts` define o contrato `LabChooser` com o mesmo espírito do `OperatorModel`: recebe um estado só com chaves opacas (`c1`, `c2`, ...), enumerações fechadas (`modality`, `side`) e números (`null` = desconhecido), e devolve `{ choice, probabilities, confidence, latencyMs, inputTokens }`. Nada de texto livre, nome de ativo ou descrição externa entra no prompt (D1). A resposta é validada contra os ids conhecidos; `hold` é a abstenção; tempo esgotado e erro viram `hold`. Quem quiser o Jev real escreve o adaptador **fora** de `src/lab`, no mesmo molde de `JevOperatorModel`, por exemplo em um script próprio:
+O módulo `policies.ts` define o contrato `LabChooser` com o mesmo espírito do `OperatorModel`: recebe um estado só com chaves opacas (`c1`, `c2`, ...), enumerações fechadas (`modality`, `side`) e números (`null` = desconhecido), e devolve `{ choice, probabilities, confidence, latencyMs, inputTokens }`. Nada de texto livre, nome de ativo ou descrição externa entra no prompt (D1). A resposta é validada contra os ids conhecidos; `hold` é a abstenção; tempo esgotado (padrão de 15000 ms; só uma resposta assíncrona pode estourá-lo) e erro viram `hold`. O custo de inferência só é conhecido quando o chamador informa o preço por milhão de tokens (`inferenceUsdPerMTok`); sem isso fica `null`. Quem quiser o Jev real escreve o adaptador **fora** de `src/lab`, no mesmo molde de `JevOperatorModel`, por exemplo em um script próprio:
 
 ```ts
 // exemplo, fora de src/lab: o laboratório nunca importa o SDK
@@ -391,11 +479,17 @@ A chamada ao Jev real custa dinheiro e é não determinística: o diário guarda
 10. A mesma plataforma e o mesmo runtime dão os mesmos bytes; não se promete igualdade bit a bit entre plataformas.
 11. Um único processo por pasta de saída; não há trava de arquivo.
 12. O custo de inferência só entra se o chamador informar `inferenceUsdPerMTok`; sem isso fica desconhecido e o relatório diz.
+13. A CLI só usa o `MockJevChooser`: medir o Jev real exige um script do chamador (seção 11) e é a parte que este repositório não faz.
+14. O custo de inferência entra na série de 1x e nos múltiplos de patrimônio como uma redução da tranche, não como saque separado.
+15. O mundo nulo e a vantagem plantada da seção 7.6 são construções sintéticas: provam que a máquina estatística tem o tamanho e o poder que diz ter, não que algum mercado se comporte assim.
+16. O teste unilateral bruto de uma política que reage ao retorno recente é assimétrico: medido, rejeita de 1,5% a 7,2% quando o nível nominal é 5% (seção 7.6). Nenhum veredito depende só dele; a lista `flagged` exige também Holm e as comparações pareadas, e o portão exige ainda a amostra efetiva.
+17. As taxas e o poder da seção 7.6 valem para o gerador sintético (movimento browniano geométrico sem saltos, um ativo de 1,5% de volatilidade diária). Caudas pesadas, saltos e volatilidade estocástica mudam os números, em geral para pior.
 
 ## 13. Verificação
 
 ```
 bun --no-env-file test --parallel=1 --timeout 15000 ./src ./scripts
+bun --no-env-file test src/lab/lab.integration.test.ts
 bun --no-env-file run typecheck
 bun --no-env-file run scripts/jev-lab.ts run --synthetic --epochs 400 --seed 7 --out <pasta temporária>
 bun --no-env-file run scripts/jev-lab.ts report --journal <pasta temporária>/journal.jsonl
@@ -406,15 +500,15 @@ bun --no-env-file run scripts/jev-lab.ts report --journal <pasta temporária>/jo
 | Arquivo | Conteúdo |
 | --- | --- |
 | `src/lab/types.ts` | tipos, constantes e o formato do relatório |
-| `src/lab/capture-format.ts` | `parseCaptureLine`, `parseCaptureText`, `serializeCaptureRecord`, `CaptureFormatError` |
+| `src/lab/capture-format.ts` | `parseCaptureLine`, `parseCaptureText`, `serializeCaptureRecord`, `serializeCapture`, `CaptureFormatError` |
 | `src/lab/rng.ts` | `Rng` (sfc32), `hashSeed` |
 | `src/lab/source.ts` | `RecordStore`, `ReplaySource`, `SyntheticSource`, `LeakError`, `sampleBarExtremes` |
-| `src/lab/candidates.ts` | `buildEpochCandidates`, `epochIdFor` |
+| `src/lab/candidates.ts` | `buildEpochCandidates`, `buildEpoch`, `epochIdFor` |
 | `src/lab/outcomes.ts` | `COST_TABLE`, `computeEpochOutcomes`, `scanLiquidation`, `returnOnCapital` |
 | `src/lab/policies.ts` | `holdPolicy`, `randomPolicy`, `buyAndHoldPolicy`, `momentumRulePolicy`, `carryRulePolicy`, `JevPolicy`, `MockJevChooser` |
-| `src/lab/stats.ts` | `meanTest`, `holmAdjust`, `trancheEquity`, `bootstrapPaths`, `brierScore`, `daysToDetectSharpe`, `promotionGate` |
-| `src/lab/journal.ts` | `Journal`, `parseJournalText`, `JournalError` |
-| `src/lab/run.ts` | `runEpochs`, `buildReport`, `renderSummaryPt`, `STANDING_DISCLAIMER` |
+| `src/lab/stats.ts` | `meanTest`, `neweyWestLrv`, `holmAdjust`, `trancheEquity`, `bootstrapLeverage`, `brierScore`, `calibrationReport`, `daysToDetectSharpe`, `buildPolicyReport`, `buildPairedReport`, `assignHolm`, `promotionGate` |
+| `src/lab/journal.ts` | `FileJournal`, `MemoryJournal`, `parseJournalText`, `assertComplete`, `JournalError` |
+| `src/lab/run.ts` | `runEpochs`, `buildReport`, `buildSyntheticSpec`, `buildReplaySpec`, `renderSummaryPt`, `STANDING_DISCLAIMER`, `MOCK_WARNING` |
 | `scripts/jev-lab.ts` | CLI |
 
 ## 15. Fontes
