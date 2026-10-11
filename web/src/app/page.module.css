@@ -53,6 +53,7 @@
 }
 
 .stage {
+  grid-area: stage;
   display: grid;
   min-width: 0;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
@@ -144,6 +145,10 @@
   .stage {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "chart"
+      "ladder"
+      "stream";
   }
 }
 
