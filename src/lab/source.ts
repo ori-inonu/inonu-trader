@@ -179,7 +179,7 @@ export class RecordStore implements DataSource {
         if (stream === undefined) return [];
         const from = sinceMs === undefined ? 0 : lowerBound(stream.records, sinceMs);
         const to = upperBound(stream.records, cap);
-        return (from >= to ? [] : stream.records.slice(from, to)) as readonly RecordOf<K>[];
+        return (from >= to ? [] : stream.records.slice(from, to)) as unknown as readonly RecordOf<K>[];
       },
     };
   }
