@@ -18,6 +18,7 @@ import { randomUUID } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { PHASE_IDS, type PhaseId } from "../src/policy/envelope";
 import { createPublicOkxHttp } from "../src/onchainos/public-okx";
+import { correctedClock, measureServerClockOffset } from "../src/system-one/clock";
 import { runSystemOneCycle } from "../src/system-one/cycle";
 import { JevSystemOneModel, MockSystemOneModel, type SystemOneModel } from "../src/system-one/decide";
 import { BAR_MS, configuredWallet, readPublicMarket, syntheticReadings } from "../src/system-one/readings";
@@ -91,12 +92,29 @@ const publicHttp = usePublic
   ? createPublicOkxHttp({ fetch: globalThis.fetch.bind(globalThis), now: () => Date.now(), sleep: (ms) => new Promise((done) => setTimeout(done, ms)), allowNetwork: true })
   : null;
 
+/**
+ * OKX stamps every reading with its own clock. A local clock that is behind makes those stamps look like the future and
+ * the freshness gate would reject all of them, so a public run evaluates freshness on the exchange-corrected clock
+ * (src/system-one/clock.ts). If the offset cannot be measured the local clock is kept, which fails closed as before.
+ */
+async function cycleClock(): Promise<() => number> {
+  if (!usePublic) return () => Date.now();
+  const sample = await measureServerClockOffset({ fetch: globalThis.fetch.bind(globalThis), now: () => Date.now() });
+  if (sample === null) {
+    console.error("system-one: desvio do relogio local nao medido; frescor avaliado no relogio local");
+    return () => Date.now();
+  }
+  console.error(`system-one: relogio local ${sample.offsetMs} ms em relacao a OKX (ida e volta ${sample.roundTripMs} ms); frescor avaliado no relogio corrigido`);
+  return correctedClock(sample);
+}
+
 async function once(): Promise<void> {
-  const nowMs = Date.now();
+  const clock = await cycleClock();
+  const nowMs = clock();
   const readings = publicHttp
-    ? { market: await readPublicMarket(publicHttp, { instId, bar, candles, nowMs, now: () => Date.now() }), wallet: configuredWallet(capitalUsd, Date.now()) }
+    ? { market: await readPublicMarket(publicHttp, { instId, bar, candles, nowMs, now: clock }), wallet: configuredWallet(capitalUsd, clock()) }
     : syntheticReadings({ nowMs, capitalUsd, instId, candles });
-  const cycle = await runSystemOneCycle({ ...readings, phase, horizonDays, kellyLowerBound }, { model, now: () => Date.now() });
+  const cycle = await runSystemOneCycle({ ...readings, phase, horizonDays, kellyLowerBound }, { model, now: clock });
   mkdirSync(dirname(statePath), { recursive: true });
   mkdirSync(dirname(journalPath), { recursive: true });
   const temporary = `${statePath}.${randomUUID()}.tmp`;
