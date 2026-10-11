@@ -79,9 +79,15 @@ export interface CallEvent {
   readonly outcome: "ok" | "retry" | "error";
 }
 
-export interface OnchainosHttp {
+export interface GetPort {
   get(endpoint: EndpointRef, query?: QueryInput): Promise<HttpResult>;
+}
+
+export interface PostPort {
   post(endpoint: EndpointRef, body: unknown): Promise<HttpResult>;
+}
+
+export interface OnchainosHttp extends GetPort, PostPort {
   readonly quota: QuotaCounters;
   readonly info: HttpInfo;
 }

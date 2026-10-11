@@ -3,7 +3,7 @@
  * Nothing here touches the network, the environment or the disk. Specification: docs/OKX-ONCHAINOS-DADOS-SPEC.md.
  */
 
-import type { FetchInit, FetchLike, FetchResponseLike } from "./http.ts";
+import { createOnchainosHttp, type FetchInit, type FetchLike, type FetchResponseLike, type OnchainosHttp, type OnchainosHttpOptions } from "./http.ts";
 
 export interface FakeClock {
   readonly now: () => number;
@@ -117,6 +117,39 @@ export function makeFakeFetch(script: FakeScript, clock?: FakeClock): FakeFetch 
     });
   };
   return { fetch, calls };
+}
+
+// ---------------------------------------------------------------------------
+// A complete authenticated stack over the fakes
+// ---------------------------------------------------------------------------
+
+/** Canary credentials: they must never appear in any error, event or output. */
+export const CANARY_KEY = "canary-key-3f2a9c1d-77aa-4d1e-9bb0-aaaaaaaaaaaa";
+export const CANARY_SECRET = "canary-secret-KAT-0123456789abcdef";
+export const CANARY_PASSPHRASE = "canary-pass-Zq9!x";
+export const CANARY_CREDENTIALS = Object.freeze({ apiKey: CANARY_KEY, secretKey: CANARY_SECRET, passphrase: CANARY_PASSPHRASE });
+
+export interface FakeStack {
+  readonly clock: FakeClock;
+  readonly fake: FakeFetch;
+  readonly http: OnchainosHttp;
+}
+
+/** An authenticated client over a scripted fetch and a manual clock. The rate is high so tests do not wait. */
+export function makeStack(script: FakeScript, extra: Partial<OnchainosHttpOptions> = {}): FakeStack {
+  const clock = makeClock();
+  const fake = makeFakeFetch(script, clock);
+  const http = createOnchainosHttp({
+    fetch: fake.fetch,
+    now: clock.now,
+    sleep: clock.sleep,
+    credentials: CANARY_CREDENTIALS,
+    allowNetwork: true,
+    requestsPerSecond: 10,
+    burst: 10,
+    ...extra,
+  });
+  return { clock, fake, http };
 }
 
 // ---------------------------------------------------------------------------

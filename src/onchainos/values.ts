@@ -215,3 +215,67 @@ export function field(record: Record<string, unknown>, ...names: string[]): unkn
   }
   return undefined;
 }
+
+// ---------------------------------------------------------------------------
+// Request side: token references and chain lists
+// ---------------------------------------------------------------------------
+
+export interface TokenRef {
+  readonly chainIndex: string;
+  readonly tokenContractAddress: string;
+}
+
+export interface TokenRefOptions {
+  /** Largest list accepted in one call. */
+  max: number;
+  /** The empty address means the chain's native token (documented by the index price page only). */
+  allowNative?: boolean;
+}
+
+export function tokenKey(ref: TokenRef): string {
+  return `${ref.chainIndex}|${ref.tokenContractAddress}`;
+}
+
+/** Validates ONE token reference from the caller and normalises the address (EVM style in lower case). */
+export function normaliseTokenRef(token: unknown, allowNative = false): TokenRef {
+  if (typeof token !== "object" || token === null || Array.isArray(token)) throw new OnchainosError("invalid_request", "referência de token deve ser um objeto com chainIndex e tokenContractAddress");
+  const record = token as Record<string, unknown>;
+  const chainIndex = readChainIndex(record.chainIndex);
+  if (chainIndex === null) throw new OnchainosError("invalid_request", "chainIndex inválido");
+  const tokenContractAddress = readTokenAddress(record.tokenContractAddress, { allowNative });
+  if (tokenContractAddress === null) throw new OnchainosError("invalid_request", "tokenContractAddress inválido");
+  return { chainIndex, tokenContractAddress };
+}
+
+/** Validates a list of token references from the caller: not empty, bounded, no duplicates after normalisation. */
+export function normaliseTokenRefs(tokens: unknown, options: TokenRefOptions): TokenRef[] {
+  if (!Array.isArray(tokens) || tokens.length < 1 || tokens.length > options.max) {
+    throw new OnchainosError("invalid_request", `a lista de tokens deve ter de 1 a ${options.max} itens`);
+  }
+  const seen = new Set<string>();
+  return tokens.map((token) => {
+    const ref = normaliseTokenRef(token, options.allowNative === true);
+    const key = tokenKey(ref);
+    if (seen.has(key)) throw new OnchainosError("invalid_request", "token repetido na lista");
+    seen.add(key);
+    return ref;
+  });
+}
+
+export interface ChainRow {
+  readonly chainIndex: string;
+}
+
+/** A list of supported chains reduced to chainIndex. Names, symbols and logos are text from the provider and are dropped. */
+export function readChainRows(data: unknown, maxRows = 500): ChainRow[] {
+  const rows = asArray(data, "data", maxRows);
+  const seen = new Set<string>();
+  return rows.map((raw, index) => {
+    const record = asRecord(raw, "linha", index);
+    const chainIndex = readChainIndex(field(record, "chainIndex"));
+    if (chainIndex === null) return schemaFail("chainIndex ilegível", { rowIndex: index });
+    if (seen.has(chainIndex)) return schemaFail("cadeia repetida", { rowIndex: index });
+    seen.add(chainIndex);
+    return { chainIndex };
+  });
+}
