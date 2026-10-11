@@ -173,7 +173,7 @@ async function offlineCycle(afterSource: (executor: ExecutorDeps) => Promise<Inv
   const ledger = createOperatorLedger(emptyLedger(), () => {});
   ledger.recordRealized(NOW, 1.25); // Existing historical amount must not be reclassified or overwritten.
   const executor: ExecutorDeps = { now: () => NOW, slippagePercent: 0.5, ledger, policy: { ...policy, routerAllowlist: { "196": [router] }, spenderAllowlist: { "196": [spender] }, selectorAllowlist: { "196": [selector] } }, inventoryAddress: WALLET, killSwitchExists: () => false, tradeClient, evmSigner: signer };
-  const model: OperatorModel = { name: "offline", async choose(state, eligible) { return { ...await new MockOperatorModel().choose(state, eligible), inputTokens: 1_000_000 }; } };
+  const model: OperatorModel = { name: "offline", async choose(state, eligible) { return { ...await new MockOperatorModel().choose(state, eligible), model: this.name, inputTokens: 1_000_000 }; } };
   let reads = 0;
   const cycle = await runOperatorCycle({
     inventorySource: async () => reads++ === 0 ? before : afterSource(executor), model, policy, gate, now: () => NOW, jevUsdPerMTok: rate,
@@ -205,9 +205,9 @@ test("an unattributed completed cycle retains both hashes and blocks another pai
   });
   const later = NOW + result.policy.cooldownMs + 1;
   const anotherPair = { ...result.candidate, id: "another_candidate", pairKey: "another_pair", quoteHash: "another_quote" };
-  const decision = { ...result.cycle.decision!, choice: anotherPair.id };
+  const decision = { ...result.cycle.decision!, choice: anotherPair.id, probabilities: { hold: 0, [anotherPair.id]: 1 } };
   const plan = buildExecutionPlan(anotherPair, decision, result.policy, result.gate, later);
-  const execution = await executePlan(plan, anotherPair, { ...result.executor, now: () => later });
+  const execution = await executePlan(plan, anotherPair, { ...result.executor, now: () => later }, { model: decision.model, decision, eligible: [anotherPair] });
   expect(execution.status).toBe("blocked");
   expect(execution.reasons).toContain("unattributed_result_requires_reconciliation");
   expect(result.sendCount()).toBe(3);

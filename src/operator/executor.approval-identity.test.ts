@@ -63,7 +63,7 @@ function fixture(options: FixtureOptions = {}) {
     quoteAgeMs: 0, quoteHash: "synthetic-approval-identity-quote", notes: [], researchOnly: false,
   };
   const plan = buildExecutionPlan(candidate, {
-    choice: candidate.id, probabilities: { [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test",
+    choice: candidate.id, probabilities: { hold: 0, [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test",
   }, policy, { operatorExecute: true, operatorLiveAck: true, realModel: true, signerAvailable: true }, NOW);
   // Opaque fixture identities are independent of the plan builder's hash calculation.
   plan.idempotencyKey = EXECUTED_KEY;
@@ -136,7 +136,7 @@ function fixture(options: FixtureOptions = {}) {
   const run = () => executePlan(plan, candidate, {
     tradeClient, evmSigner: signer, ledger, policy, inventoryAddress: ADDRESS, now: () => clock,
     slippagePercent: 0.5, killSwitchExists: () => killed,
-  });
+  }, { model: "synthetic-test", decision: { choice: candidate.id, probabilities: { hold: 0, [candidate.id]: 1 }, confidence: 1, latencyMs: 0, inputTokens: 1, model: "synthetic-test" }, eligible: [candidate] });
   return { run, restore, path, plan, policy, sent, receiptSnapshots, storageErrors };
 }
 
