@@ -26,6 +26,19 @@ function floorTo(value: number, decimals: number): number {
   return Math.floor(value * factor) / factor;
 }
 
+/** Compare the decimal input amounts without admitting excess through a floating-point tolerance. */
+function exceedsExposureCap(existing: number, proposed: number, cap: number): boolean {
+  if (![existing, proposed, cap].every(Number.isFinite)) return true;
+  const amounts = [existing, proposed, cap].map((value) => {
+    const [mantissa, exponent = "0"] = value.toString().toLowerCase().split("e");
+    const [whole, fraction = ""] = mantissa!.split(".");
+    return { coefficient: BigInt(whole + fraction), scale: fraction.length - Number(exponent) };
+  });
+  const scale = Math.max(...amounts.map((amount) => amount.scale));
+  const [open, addition, ceiling] = amounts.map((amount) => amount.coefficient * 10n ** BigInt(scale - amount.scale)) as [bigint, bigint, bigint];
+  return open + addition > ceiling;
+}
+
 /** Funding carry per day from the side's point of view: longs pay a positive rate, shorts receive it. */
 export function fundingCarryPerDay(side: Side, fundingRate: number | null, intervalMs: number | null): number | null {
   if (fundingRate === null || !Number.isFinite(fundingRate) || intervalMs === null || !Number.isFinite(intervalMs) || intervalMs <= 0) return null;
@@ -77,7 +90,7 @@ export function buildLeverageCandidates(input: BuildBriefInput, limits: DerivedL
           !Number.isFinite(wallet.knownValueUsd) || wallet.knownValueUsd < 0 ||
           (wallet.openNotionalUsd > 0 && wallet.openSide !== "long" && wallet.openSide !== "short")) reasons.push("inventory_invalid");
       if (wallet.openSide !== null && wallet.openSide !== side) reasons.push("would_flip_open_position");
-      if (wallet.openNotionalUsd + notionalUsd > limits.exposureCapUsd + 1e-9) reasons.push("exposure_cap_reached");
+      if (exceedsExposureCap(wallet.openNotionalUsd, notionalUsd, limits.exposureCapUsd)) reasons.push("exposure_cap_reached");
 
       const touchProbability = sigma === null ? null : touchLiquidationProbability(leverage, sigma, horizonDays);
       const medianMultiple = sigma === null ? null : medianWealthNoEdge(leverage, sigma, horizonDays);
