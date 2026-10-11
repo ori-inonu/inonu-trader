@@ -267,6 +267,11 @@ export function normalizeInventory(input: {
 }): InventorySnapshot {
   if (!Number.isSafeInteger(input.observedAtMs) || input.observedAtMs <= 0) throw new Error("Invalid observation time");
   const queriedChains = validateChainList(input.queriedChains);
+  const finiteSum = (sum: number, value: number): number => {
+    const next = sum + value;
+    if (!Number.isFinite(next)) throw new Error("Inventory USD total is not representable");
+    return next;
+  };
   const byChain = new Map<string, ChainInventory>();
   for (const raw of input.assets) {
     if (!queriedChains.includes(raw.chainIndex)) continue;
@@ -278,7 +283,8 @@ export function normalizeInventory(input: {
     }
     const balance = parseDecimal(raw.balance);
     const price = parseDecimal(raw.tokenPrice);
-    const valueUsd = balance !== null && price !== null ? balance * price : null;
+    const product = balance !== null && price !== null ? balance * price : null;
+    const valueUsd = product !== null && Number.isFinite(product) ? product : null;
     const native = raw.tokenContractAddress === "";
     const asset: InventoryAsset = {
       chainIndex: raw.chainIndex, chainName: spec.name, tokenContractAddress: raw.tokenContractAddress, native,
@@ -287,7 +293,7 @@ export function normalizeInventory(input: {
     chain.assets.push(asset);
     if (native) chain.nativeBalance = balance;
     if (valueUsd === null) chain.valueComplete = false;
-    else chain.knownValueUsd += valueUsd;
+    else chain.knownValueUsd = finiteSum(chain.knownValueUsd, valueUsd);
   }
   const chains = queriedChains.map((chainIndex) => byChain.get(chainIndex)).filter((chain): chain is ChainInventory => chain !== undefined);
   return {
@@ -296,7 +302,7 @@ export function normalizeInventory(input: {
     source: input.source,
     queriedChains,
     chains,
-    knownValueUsd: chains.reduce((sum, chain) => sum + chain.knownValueUsd, 0),
+    knownValueUsd: chains.reduce((sum, chain) => finiteSum(sum, chain.knownValueUsd), 0),
     valueComplete: chains.every((chain) => chain.valueComplete),
     riskTokensExcluded: input.riskTokensExcluded,
   };
