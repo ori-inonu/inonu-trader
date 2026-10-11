@@ -325,7 +325,8 @@ class JournalState {
   readonly decisions: PolicyDecision[] = [];
   readonly outcomes: Outcome[] = [];
   private readonly epochById = new Map<string, Epoch>();
-  private readonly canonical = new Map<string, string>();
+  /** The JSON text of each stored record, keyed by its idempotency key. */
+  private readonly lines = new Map<string, string>();
 
   constructor(
     readonly runId: string,
@@ -333,7 +334,7 @@ class JournalState {
   ) {}
 
   hasKey(key: string): boolean {
-    return this.canonical.has(key);
+    return this.lines.has(key);
   }
 
   epoch(id: string): Epoch | undefined {
@@ -355,8 +356,8 @@ class JournalState {
     }
   }
 
-  commit(record: JournalRecord): void {
-    this.canonical.set(keyOf(record), canonicalJson(record));
+  commit(record: JournalRecord, line: string = JSON.stringify(record)): void {
+    this.lines.set(keyOf(record), line);
     if (record.type === "epoch") {
       this.epochs.push(record.epoch);
       this.epochById.set(record.epoch.id, record.epoch);
@@ -368,8 +369,8 @@ class JournalState {
    * Validates a batch and returns the records that are new. Identical records are skipped, a different record with an
    * existing key is a conflict. Nothing is stored here.
    */
-  plan(records: readonly JournalRecord[]): JournalRecord[] {
-    const fresh: JournalRecord[] = [];
+  plan(records: readonly JournalRecord[]): Array<{ record: JournalRecord; line: string }> {
+    const fresh: Array<{ record: JournalRecord; line: string }> = [];
     const batchKeys = new Map<string, string>();
     const batchEpochs = new Map<string, Epoch>();
     for (const raw of records) {
@@ -381,18 +382,19 @@ class JournalState {
         throw error;
       }
       const key = keyOf(record);
-      const content = canonicalJson(record);
-      const known = batchKeys.get(key) ?? this.canonical.get(key);
+      const line = JSON.stringify(record);
+      const known = batchKeys.get(key) ?? this.lines.get(key);
       if (known !== undefined) {
-        if (known !== content) throw new JournalError("conflict", "registro com a mesma chave e conteúdo diferente do já gravado");
+        // the same text is the common case; the same content with another key order is still the same record
+        if (known !== line && canonicalJson(JSON.parse(known)) !== canonicalJson(JSON.parse(line))) throw new JournalError("conflict", "registro com a mesma chave e conteúdo diferente do já gravado");
         continue;
       }
       this.checkReferences(record, (id) => batchEpochs.get(id) ?? this.epochById.get(id), (message) => {
         throw new JournalError("invalid", message);
       });
-      batchKeys.set(key, content);
+      batchKeys.set(key, line);
       if (record.type === "epoch") batchEpochs.set(record.epoch.id, record.epoch);
-      fresh.push(record);
+      fresh.push({ record, line });
     }
     return fresh;
   }
@@ -427,7 +429,7 @@ export class MemoryJournal implements JournalPort {
 
   append(records: readonly JournalRecord[]): number {
     const fresh = this.state.plan(records);
-    for (const record of fresh) this.state.commit(record);
+    for (const { record, line } of fresh) this.state.commit(record, line);
     return fresh.length;
   }
 
@@ -629,8 +631,8 @@ export class FileJournal implements JournalPort {
   append(records: readonly JournalRecord[]): number {
     const fresh = this.state.plan(records);
     if (fresh.length === 0) return 0;
-    appendFileSync(this.journalPath, fresh.map(serializeRecord).join(""), "utf8");
-    for (const record of fresh) this.state.commit(record);
+    appendFileSync(this.journalPath, fresh.map((entry) => `${entry.line}\n`).join(""), "utf8");
+    for (const { record, line } of fresh) this.state.commit(record, line);
     return fresh.length;
   }
 

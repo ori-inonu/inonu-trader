@@ -173,9 +173,21 @@ export interface ScanResult {
  * (low for a long, high for a short), so with the exact bridge extremes of the synthetic source it reproduces
  * continuous monitoring.
  */
+const RATIO_CACHE = new Map<string, number>();
+
+/** liquidationRatio of okx-derivatives as a number, memoized: the same few combinations are asked for thousands of times. */
+function liquidationRatioNumber(side: "long" | "short", leverage: number, maintenanceMarginPpm: bigint, feePpm: bigint): number {
+  const key = `${side}|${leverage}|${maintenanceMarginPpm}|${feePpm}`;
+  const cached = RATIO_CACHE.get(key);
+  if (cached !== undefined) return cached;
+  const exact = liquidationRatio(side, leverage, maintenanceMarginPpm, feePpm);
+  const value = Number(exact.n) / Number(exact.d);
+  RATIO_CACHE.set(key, value);
+  return value;
+}
+
 export function scanLiquidation(input: ScanInput): ScanResult {
-  const ratioExact = liquidationRatio(input.side, input.leverage, input.maintenanceMarginPpm, input.feePpm);
-  const ratio = Number(ratioExact.n) / Number(ratioExact.d);
+  const ratio = liquidationRatioNumber(input.side, input.leverage, input.maintenanceMarginPpm, input.feePpm);
   const costs = Number(input.maintenanceMarginPpm + input.feePpm) / 1e6;
   const denominator = input.side === "long" ? 1 - costs : 1 + costs;
   const base = input.entryPrice * ratio;

@@ -389,16 +389,19 @@ export function bootstrapLeverage(series: readonly BootstrapSeries[], options: B
   const ruins = series.map(() => 0);
   const indices = new Int32Array(n);
   const sizes = new Float64Array(n);
+  const anyLiquidation = series.map((s) => s.liquidated.some(Boolean));
   for (let r = 0; r < options.resamples; r += 1) {
     fillMovingBlocks(indices, blockLength, rng);
     series.forEach((s, k) => {
       const equity = trancheFinalAndMin(s.multiples, indices, options.holdSteps, sizes);
       (finals[k] as number[])[r] = equity.final;
       let any = false;
-      for (let i = 0; i < n; i += 1) {
-        if (s.liquidated[indices[i] as number] === true) {
-          any = true;
-          break;
+      if (anyLiquidation[k]) {
+        for (let i = 0; i < n; i += 1) {
+          if (s.liquidated[indices[i] as number] === true) {
+            any = true;
+            break;
+          }
         }
       }
       if (any) liquidations[k] = (liquidations[k] as number) + 1;

@@ -251,6 +251,10 @@ export interface JevPolicyOptions {
 
 class TimeoutSignal extends Error {}
 
+function isThenable(value: unknown): value is PromiseLike<unknown> {
+  return typeof value === "object" && value !== null && typeof (value as { then?: unknown }).then === "function";
+}
+
 export class JevPolicy implements LabPolicy {
   readonly id: string;
   readonly baseline = false;
@@ -289,20 +293,29 @@ export class JevPolicy implements LabPolicy {
     const state: ChooserState = deepFreeze({ horizonHours: (input.eligible[0] as LabCandidate).horizonMs / HOUR_MS, candidates });
     const known = [HOLD, ...keyToId.keys()];
 
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const timeout = new Promise<never>((_, reject) => {
-      timer = setTimeout(() => reject(new TimeoutSignal()), this.timeoutMs);
-    });
-    const pending = Promise.resolve().then(() => this.source.choose(state));
-    pending.catch(() => undefined);
-    let raw: unknown;
+    let answer: unknown;
     try {
-      raw = await Promise.race([pending, timeout]);
-    } catch (error) {
-      if (error instanceof TimeoutSignal) return this.failure(input, ids, "timeout", `tempo esgotado (${this.timeoutMs} ms)`, this.timeoutMs);
+      answer = this.source.choose(state);
+    } catch {
       return this.failure(input, ids, "error", "o seletor lançou erro", 0);
-    } finally {
-      clearTimeout(timer);
+    }
+    let raw: unknown = answer;
+    if (isThenable(answer)) {
+      // Only an asynchronous answer can be late: a synchronous one is already here and needs no timer.
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const timeout = new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new TimeoutSignal()), this.timeoutMs);
+      });
+      const pending = Promise.resolve(answer);
+      pending.catch(() => undefined);
+      try {
+        raw = await Promise.race([pending, timeout]);
+      } catch (error) {
+        if (error instanceof TimeoutSignal) return this.failure(input, ids, "timeout", `tempo esgotado (${this.timeoutMs} ms)`, this.timeoutMs);
+        return this.failure(input, ids, "error", "o seletor lançou erro", 0);
+      } finally {
+        clearTimeout(timer);
+      }
     }
 
     const checked = validateChooserAnswer(raw, known);
