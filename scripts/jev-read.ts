@@ -152,6 +152,10 @@ while (running && (!useJev || modelReads < maxReads)) {
   cursor += 1;
   const sample = clockSample;
   const clock = sample === null ? () => Date.now() : correctedClock(sample);
+  // A quiet market pushes nothing for a while without being broken: take a fresh REST snapshot before the read.
+  const ages = feed.ages(instId, Date.now());
+  if (ages.bookAgeMs === null || ages.bookAgeMs > 3_000) await feed.refreshBook(instId);
+  if (ages.tickerAgeMs === null || ages.tickerAgeMs > 10_000) await feed.refreshTicker(instId);
   const read = await runJevRead(feed.snapshot(instId, Date.now()), { model, now: clock, clockOffsetMs: sample?.offsetMs ?? null });
   store.record(read);
   totalReads += 1;

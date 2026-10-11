@@ -246,3 +246,63 @@ describe("OkxTapeFeed REST refresh", () => {
     expect(feed.snapshot("BTC-USDT", clock).fundingRate).toBeNull();
   });
 });
+
+describe("OkxTapeFeed REST snapshots for quiet markets", () => {
+  test("a book snapshot from REST is stamped with the moment it arrived", async () => {
+    const urls: string[] = [];
+    const feed = makeFeed({
+      fetchImpl: async (url: string) => {
+        urls.push(url);
+        return { ok: true, status: 200, json: async () => ({ code: "0", data: [{ asks: [["100.1", "2", "0", "1"]], bids: [["99.9", "3", "0", "1"]], ts: "1" }] }) };
+      },
+    });
+    clock = 4_242_000;
+    await feed.refreshBook("BTC-USDT");
+    expect(urls[0]).toBe("https://www.okx.com/api/v5/market/books?instId=BTC-USDT&sz=5");
+    expect(feed.snapshot("BTC-USDT", clock).book).toEqual({ bids: [{ px: 99.9, sz: 3 }], asks: [{ px: 100.1, sz: 2 }], receivedAtMs: 4_242_000 });
+  });
+
+  test("a malformed or failed book snapshot keeps the previous book and says so", async () => {
+    let calls = 0;
+    const feed = makeFeed({
+      fetchImpl: async () => {
+        calls += 1;
+        if (calls === 1) return { ok: true, status: 200, json: async () => ({ code: "0", data: [{ asks: [["100.1", "2", "0", "1"]], bids: [["99.9", "3", "0", "1"]] }] }) };
+        if (calls === 2) return { ok: true, status: 200, json: async () => ({ code: "0", data: [{ asks: [["x", "2"]], bids: [] }] }) };
+        return { ok: false, status: 503, json: async () => ({}) };
+      },
+    });
+    clock = 10;
+    await feed.refreshBook("BTC-USDT");
+    clock = 20;
+    await feed.refreshBook("BTC-USDT");
+    await feed.refreshBook("BTC-USDT");
+    expect(feed.snapshot("BTC-USDT", clock).book?.receivedAtMs).toBe(10);
+    expect(feed.status().lastError).toContain("book");
+  });
+
+  test("a ticker snapshot from REST carries the 24h fields and its arrival time", async () => {
+    const urls: string[] = [];
+    const feed = makeFeed({
+      fetchImpl: async (url: string) => {
+        urls.push(url);
+        return { ok: true, status: 200, json: async () => ({ code: "0", data: [{ instId: "MON-USDT", last: "0.0271", open24h: "0.02465", high24h: "0.02719", low24h: "0.02465" }] }) };
+      },
+    });
+    clock = 777;
+    await feed.refreshTicker("MON-USDT");
+    expect(urls[0]).toBe("https://www.okx.com/api/v5/market/ticker?instId=MON-USDT");
+    expect(feed.snapshot("MON-USDT", clock).ticker).toEqual({ last: 0.0271, open24h: 0.02465, high24h: 0.02719, low24h: 0.02465, receivedAtMs: 777 });
+  });
+
+  test("ages report how old the held book and ticker are, null when absent", async () => {
+    const feed = makeFeed();
+    feed.start();
+    const socket = FakeSocket.instances[0]!;
+    socket.open();
+    expect(feed.ages("BTC-USDT", clock)).toEqual({ bookAgeMs: null, tickerAgeMs: null });
+    socket.emit(book("BTC-USDT"));
+    clock += 3_000;
+    expect(feed.ages("BTC-USDT", clock)).toEqual({ bookAgeMs: 3_000, tickerAgeMs: null });
+  });
+});

@@ -168,6 +168,47 @@ export class OkxTapeFeed {
     }
   }
 
+  /** How old the held book and ticker are, null when absent. A quiet market pushes nothing: the owner refreshes by REST. */
+  ages(instId: string, nowMs: number): { bookAgeMs: number | null; tickerAgeMs: number | null } {
+    const memory = this.memory.get(instId);
+    return {
+      bookAgeMs: memory?.book ? nowMs - memory.book.receivedAtMs : null,
+      tickerAgeMs: memory?.ticker ? nowMs - memory.ticker.receivedAtMs : null,
+    };
+  }
+
+  /** A fresh top-5 snapshot over REST. books5 only pushes on change, so an illiquid market can be silent yet current. */
+  async refreshBook(instId: string): Promise<void> {
+    const memory = this.memory.get(instId);
+    if (memory === undefined) return;
+    try {
+      const body = await this.get(`/api/v5/market/books?instId=${instId}&sz=5`);
+      const rows = isRecord(body) && body.code === "0" && Array.isArray(body.data) ? body.data : null;
+      const row: unknown = rows?.[0];
+      const bids = isRecord(row) ? levels(row.bids) : null;
+      const asks = isRecord(row) ? levels(row.asks) : null;
+      if (bids === null || asks === null || bids.length === 0 || asks.length === 0) throw new Error("row");
+      memory.book = { bids, asks, receivedAtMs: this.options.now() };
+    } catch {
+      this.lastError = `book_refresh_failed:${instId}`;
+    }
+  }
+
+  async refreshTicker(instId: string): Promise<void> {
+    const memory = this.memory.get(instId);
+    if (memory === undefined) return;
+    try {
+      const body = await this.get(`/api/v5/market/ticker?instId=${instId}`);
+      const rows = isRecord(body) && body.code === "0" && Array.isArray(body.data) ? body.data : null;
+      const row: unknown = rows?.[0];
+      const last = isRecord(row) ? num(row.last) : null;
+      if (!isRecord(row) || last === null || last <= 0) throw new Error("row");
+      memory.ticker = { last, open24h: num(row.open24h), high24h: num(row.high24h), low24h: num(row.low24h), receivedAtMs: this.options.now() };
+    } catch {
+      this.lastError = `ticker_refresh_failed:${instId}`;
+    }
+  }
+
   async refreshFunding(instId: string): Promise<void> {
     const memory = this.memory.get(instId);
     if (memory === undefined) return;
