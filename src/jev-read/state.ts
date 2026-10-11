@@ -7,6 +7,7 @@ import {
   BOOK_MAX_AGE_MS,
   CANDLES_MAX_AGE_MS,
   FLOW_WINDOW_MS,
+  FUTURE_TOLERANCE_MS,
   HORIZON_MINUTES,
   MIN_CANDLES,
   TICKER_MAX_AGE_MS,
@@ -75,21 +76,29 @@ function flowOf(trades: readonly TapeTrade[], nowMs: number): TapeState["flow60s
   };
 }
 
+/** An age is acceptable when it is not older than the limit and not meaningfully in the future of the clock it is read on. */
+const fresh = (ageMs: number, maxMs: number) => ageMs <= maxMs && ageMs >= -FUTURE_TOLERANCE_MS;
+
 export function buildTapeState(input: TapeInput): TapeStateResult {
   const reasons: InsufficientReason[] = [];
 
   const bids = input.book ? validLevels(input.book.bids) : [];
   const asks = input.book ? validLevels(input.book.asks) : [];
   if (input.book === null || bids.length === 0 || asks.length === 0) reasons.push("book_missing");
-  else if (input.nowMs - input.book.receivedAtMs > BOOK_MAX_AGE_MS) reasons.push("book_stale");
+  else if (!fresh(input.nowMs - input.book.receivedAtMs, BOOK_MAX_AGE_MS)) reasons.push("book_stale");
   else if (bids[0]!.px >= asks[0]!.px) reasons.push("book_crossed");
 
   if (input.ticker === null || !positive(input.ticker.last)) reasons.push("ticker_missing");
-  else if (input.nowMs - input.ticker.receivedAtMs > TICKER_MAX_AGE_MS) reasons.push("ticker_stale");
+  else if (!fresh(input.nowMs - input.ticker.receivedAtMs, TICKER_MAX_AGE_MS)) reasons.push("ticker_stale");
 
+  // Candle stamps come from the exchange, so they are aged on the exchange clock. Without a measured offset the age is unknown.
   const tail = contiguousTail(input.candles);
   if (tail === null) reasons.push("candles_short");
-  else if (input.nowMs - tail[tail.length - 1]!.tsMs > CANDLES_MAX_AGE_MS) reasons.push("candles_stale");
+  else if (input.exchangeNowMs === null || !Number.isFinite(input.exchangeNowMs)) reasons.push("clock_unknown");
+  else if (!fresh(input.exchangeNowMs - tail[tail.length - 1]!.tsMs, CANDLES_MAX_AGE_MS)) reasons.push("candles_stale");
+
+  // Flow is read from the trades channel. Silence from a dead or unsubscribed channel must not look like a quiet market.
+  if (!input.tradesLive) reasons.push("trades_unavailable");
 
   if (reasons.length > 0 || input.book === null || input.ticker === null || tail === null) return { ok: false, reasons };
 

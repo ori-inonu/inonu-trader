@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { buildTapeState } from "./state";
-import { BOOK_MAX_AGE_MS, CANDLES_MAX_AGE_MS, FLOW_WINDOW_MS, MIN_CANDLES, TICKER_MAX_AGE_MS, type TapeCandle, type TapeInput, type TapeTrade } from "./types";
+import { BOOK_MAX_AGE_MS, CANDLES_MAX_AGE_MS, FLOW_WINDOW_MS, FUTURE_TOLERANCE_MS, MIN_CANDLES, TICKER_MAX_AGE_MS, type TapeCandle, type TapeInput, type TapeTrade } from "./types";
 
 const NOW = 2_000_000_000_000;
 
@@ -12,6 +12,8 @@ function input(overrides: Partial<TapeInput> = {}): TapeInput {
   return {
     instId: "BTC-USDT",
     nowMs: NOW,
+    exchangeNowMs: NOW,
+    tradesLive: true,
     book: {
       bids: [{ px: 99.9, sz: 2 }, { px: 99.8, sz: 3 }, { px: 99.7, sz: 1 }, { px: 99.6, sz: 4 }, { px: 99.5, sz: 5 }],
       asks: [{ px: 100.1, sz: 1 }, { px: 100.2, sz: 1 }, { px: 100.3, sz: 2 }, { px: 100.4, sz: 2 }, { px: 100.5, sz: 2 }],
@@ -151,5 +153,56 @@ describe("buildTapeState: reasons accumulate", () => {
     expect(Object.keys(s).sort()).toEqual(["bookImbalanceTop5", "change24hPct", "depthQuoteTop5", "flow60s", "fundingRatePct", "horizonMinutes", "instId", "mid", "rangePosition24h", "returnsBps", "spreadBps", "volBpsPerMinute"]);
     expect(s.instId).toBe("BTC-USDT");
     expect(s.horizonMinutes).toBe(5);
+  });
+});
+
+describe("buildTapeState: clocks", () => {
+  test("candles are aged on the exchange clock, not on a skewed local one", () => {
+    // The local clock is 70 s behind the exchange. The last candle is 200 s old on the exchange clock.
+    const skewed = input({ nowMs: NOW - 70_000, exchangeNowMs: NOW });
+    const list = candles(MIN_CANDLES + 5).map((c, i, all) => ({ ...c, tsMs: NOW - 200_000 - (all.length - 1 - i) * 60_000 }));
+    const local = { ...skewed, candles: list, book: { ...skewed.book!, receivedAtMs: NOW - 70_000 - 200 }, ticker: { ...skewed.ticker!, receivedAtMs: NOW - 70_000 - 1_000 } };
+    expect(buildTapeState(local)).toEqual({ ok: false, reasons: ["candles_stale"] });
+  });
+
+  test("a fresh candle on the exchange clock is accepted even when the local clock is 70 s behind", () => {
+    const base = input({ nowMs: NOW - 70_000, exchangeNowMs: NOW });
+    const ok = { ...base, book: { ...base.book!, receivedAtMs: NOW - 70_000 - 200 }, ticker: { ...base.ticker!, receivedAtMs: NOW - 70_000 - 1_000 } };
+    expect(buildTapeState(ok).ok).toBe(true);
+  });
+
+  test("a candle stamped an hour ahead of the exchange clock is not fresh", () => {
+    const list = candles(MIN_CANDLES + 2).map((c) => ({ ...c, tsMs: c.tsMs + 3_600_000 }));
+    expect(buildTapeState(input({ candles: list }))).toEqual({ ok: false, reasons: ["candles_stale"] });
+  });
+
+  test("a candle slightly ahead, within the tolerance of the offset measurement, is still fresh", () => {
+    const list = candles(MIN_CANDLES + 2).map((c, i, all) => ({ ...c, tsMs: NOW + FUTURE_TOLERANCE_MS - (all.length - 1 - i) * 60_000 }));
+    expect(buildTapeState(input({ candles: list })).ok).toBe(true);
+  });
+
+  test("without a measured offset the candle age is unknown and Jev is not asked", () => {
+    expect(buildTapeState(input({ exchangeNowMs: null }))).toEqual({ ok: false, reasons: ["clock_unknown"] });
+  });
+
+  test("a book or ticker received in the future of the local clock is not fresh (the clock stepped back)", () => {
+    const base = input();
+    expect(buildTapeState({ ...base, book: { ...base.book!, receivedAtMs: NOW + 3_600_000 } })).toEqual({ ok: false, reasons: ["book_stale"] });
+    expect(buildTapeState({ ...base, ticker: { ...base.ticker!, receivedAtMs: NOW + 3_600_000 } })).toEqual({ ok: false, reasons: ["ticker_stale"] });
+  });
+
+  test("a receipt a moment ahead of the evaluation is not an error", () => {
+    const base = input();
+    expect(buildTapeState({ ...base, book: { ...base.book!, receivedAtMs: NOW + 1_000 } }).ok).toBe(true);
+  });
+});
+
+describe("buildTapeState: the trades feed", () => {
+  test("when the trades channel is not live the flow is unknown, so Jev is not asked", () => {
+    expect(buildTapeState(input({ tradesLive: false }))).toEqual({ ok: false, reasons: ["trades_unavailable"] });
+  });
+
+  test("it is reported after the other reasons", () => {
+    expect(buildTapeState(input({ book: null, tradesLive: false }))).toEqual({ ok: false, reasons: ["book_missing", "trades_unavailable"] });
   });
 });

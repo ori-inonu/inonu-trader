@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { createJevReadHandler, isJevReadPath } from "./http";
+import { createHealthHandler, createJevReadHandler, isJevReadPath } from "./http";
 import { publicBoardView, publicReadView } from "./public-view";
 import { JevReadStore } from "./store";
 import { JEV_READ_SCHEMA_VERSION, type JevRead, type TapeState } from "./types";
@@ -69,6 +69,22 @@ describe("publicReadView", () => {
     ["a read id that is not an id", { readId: "../../etc/passwd" }],
   ])("rejects %s", (_label, patch) => {
     expect(publicReadView({ ...read(), ...patch })).toBeNull();
+  });
+
+  test("weights and confidence are bounded: a hostile file cannot publish impossible numbers", () => {
+    const decision = (probabilities: { buy: number; sell: number; hold: number }, confidence: number | null, action: "buy" | "sell" | "hold" = "hold") =>
+      read({ decision: { action, probabilities, confidence, latencyMs: 1, model: "jev-1.13.0", status: "ok", inputTokens: null } });
+    expect(publicReadView(decision({ buy: 0.9, sell: 0.9, hold: 0.9 }, 0.9))).toBeNull();
+    expect(publicReadView(decision({ buy: 0.2, sell: 0.3, hold: 0.5 }, 1e308))).toBeNull();
+    expect(publicReadView(decision({ buy: 0.2, sell: 0.3, hold: 0.5 }, 0.9))).toBeNull(); // confidence must equal the chosen weight
+    expect(publicReadView(decision({ buy: 0.2, sell: 0.3, hold: 0.5 }, -0.5))).toBeNull();
+    expect(publicReadView(decision({ buy: 0.2, sell: 0.3, hold: 0.5 }, 0.5))).not.toBeNull();
+    expect(publicReadView(decision({ buy: 0.2, sell: 0.3, hold: 0.5 }, null))).not.toBeNull();
+  });
+
+  test("the new insufficiency reasons are allowlisted", () => {
+    const view = publicReadView(read({ state: null, decision: null, insufficient: ["clock_unknown", "trades_unavailable"] })) as { insufficient: string[] };
+    expect(view.insufficient).toEqual(["clock_unknown", "trades_unavailable"]);
   });
 
   test("a decision must be consistent: an action needs a status ok and weight", () => {
@@ -220,5 +236,32 @@ describe("createJevReadHandler", () => {
     const response = createJevReadHandler(path)(get());
     expect(response.status).toBe(500);
     expect(await response.text()).not.toContain("hello");
+  });
+});
+
+describe("createHealthHandler", () => {
+  const ORIGIN = "http://127.0.0.1:3001";
+  const body = () => ({ ok: true, reads: 3 });
+  const req = (init: RequestInit & { origin?: string | null } = {}) => {
+    const { origin = ORIGIN, ...rest } = init;
+    return new Request("http://x/health", { ...rest, headers: { ...(origin ? { origin } : {}), ...(rest.headers as Record<string, string> | undefined) } });
+  };
+
+  test("serves the snapshot to an allowed origin only", async () => {
+    const handler = createHealthHandler(undefined, null, body);
+    const ok = handler(req());
+    expect(ok.status).toBe(200);
+    expect(ok.headers.get("access-control-allow-origin")).toBe(ORIGIN);
+    expect(await ok.json()).toEqual({ ok: true, reads: 3 });
+    expect(handler(req({ origin: null })).status).toBe(403);
+    expect(handler(req({ origin: "https://evil.example" })).status).toBe(403);
+  });
+
+  test("GET and OPTIONS only, and the token when one is set", () => {
+    const handler = createHealthHandler(undefined, "s3cret", body);
+    expect(handler(req({ method: "POST" })).status).toBe(405);
+    expect(handler(req({ method: "OPTIONS" })).status).toBe(204);
+    expect(handler(req()).status).toBe(401);
+    expect(handler(req({ headers: { authorization: "Bearer s3cret" } })).status).toBe(200);
   });
 });

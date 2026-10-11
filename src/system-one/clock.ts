@@ -16,6 +16,8 @@ export const OKX_PUBLIC_TIME_URL = "https://www.okx.com/api/v5/public/time";
 /** A round trip longer than this says nothing reliable about the offset (error up to half of it). */
 export const MAX_TRUSTED_ROUND_TRIP_MS = 2_500;
 export const DEFAULT_CLOCK_SAMPLES = 3;
+/** A real offset between a working machine and the exchange is seconds or minutes. Beyond an hour the sample is not trusted. */
+export const MAX_PLAUSIBLE_OFFSET_MS = 3_600_000;
 const DEFAULT_TIMEOUT_MS = 5_000;
 
 export interface ClockSample {
@@ -77,7 +79,7 @@ export async function measureServerClockOffset(options: MeasureOptions): Promise
       const receivedAtMs = options.now();
       if (serverAtMs === null) continue;
       const sample = computeClockSample(requestedAtMs, receivedAtMs, serverAtMs);
-      if (sample === null || sample.roundTripMs > MAX_TRUSTED_ROUND_TRIP_MS) continue;
+      if (sample === null || sample.roundTripMs > MAX_TRUSTED_ROUND_TRIP_MS || Math.abs(sample.offsetMs) > MAX_PLAUSIBLE_OFFSET_MS) continue;
       if (best === null || sample.roundTripMs < best.roundTripMs) best = sample;
     } catch {
       // A failed sample is simply not a sample.
@@ -89,12 +91,16 @@ export async function measureServerClockOffset(options: MeasureOptions): Promise
 }
 
 /**
- * The corrected clock: local time plus the measured offset plus half of the round trip. The estimate can be behind
- * the true server clock by at most half of the round trip, so adding it guarantees the corrected clock is never
- * earlier than the exchange's: a stamp the exchange issued cannot land in the future, and `isFreshReading` stays
- * strict. The price is that a reading looks at most half a round trip older than it is.
+ * The corrected clock: local time at creation plus the measured offset plus half of the round trip, advancing with the
+ * MONOTONIC clock. The estimate can be behind the true server clock by at most half of the round trip, so adding it
+ * guarantees the corrected clock is never earlier than the exchange's: a stamp the exchange issued cannot land in the
+ * future, and `isFreshReading` stays strict. Advancing with a monotonic clock means a wall clock that is stepped
+ * (NTP, the user, sleep) cannot drag the corrected clock behind the exchange between two measurements.
+ * Create it right after the sample is taken. The price is that a reading looks at most half a round trip older.
  */
-export function correctedClock(sample: ClockSample, local: () => number = Date.now): () => number {
+export function correctedClock(sample: ClockSample, local: () => number = Date.now, mono: () => number = () => performance.now()): () => number {
+  const baseLocal = local();
+  const baseMono = mono();
   const shiftMs = sample.offsetMs + Math.ceil(sample.roundTripMs / 2);
-  return () => local() + shiftMs;
+  return () => baseLocal + (mono() - baseMono) + shiftMs;
 }

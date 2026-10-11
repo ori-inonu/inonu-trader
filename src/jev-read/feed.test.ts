@@ -140,20 +140,32 @@ describe("OkxTapeFeed messages", () => {
     expect(feed.snapshot("MON-USDT", clock).book).toBeNull();
   });
 
-  test("trades accumulate by receipt time and the buffer is capped", () => {
+  test("trades are kept by time, so a busy minute is never cut short by a count", () => {
     const feed = makeFeed();
     feed.start();
     const socket = FakeSocket.instances[0]!;
     socket.open();
-    for (let i = 0; i < 260; i += 1) {
-      clock += 10;
+    for (let i = 0; i < 500; i += 1) {
+      clock += 100; // 500 prints in 50 s
       socket.emit({ arg: { channel: "trades", instId: "BTC-USDT" }, data: [{ instId: "BTC-USDT", tradeId: String(i), px: "100", sz: "0.5", side: i % 2 ? "buy" : "sell", ts: "1" }] });
     }
     const trades = feed.snapshot("BTC-USDT", clock).trades;
-    expect(trades).toHaveLength(200);
+    expect(trades).toHaveLength(500);
     expect(trades[trades.length - 1]!.receivedAtMs).toBe(clock);
-    // 260 prints, the 200 newest survive: the oldest kept is print 60, and even prints are sells.
-    expect(trades[0]!.side).toBe("sell");
+  });
+
+  test("prints older than the retention window are dropped and a hard cap bounds memory", () => {
+    const feed = makeFeed();
+    feed.start();
+    const socket = FakeSocket.instances[0]!;
+    socket.open();
+    const print = () => socket.emit({ arg: { channel: "trades", instId: "BTC-USDT" }, data: [{ px: "100", sz: "0.5", side: "buy", ts: "1" }] });
+    print();
+    clock += 121_000;
+    print();
+    expect(feed.snapshot("BTC-USDT", clock).trades).toHaveLength(1);
+    for (let i = 0; i < 6_000; i += 1) print();
+    expect(feed.snapshot("BTC-USDT", clock).trades.length).toBeLessThanOrEqual(5_000);
   });
 
   test("malformed prints and unknown instruments are dropped, not coerced", () => {
@@ -181,8 +193,9 @@ describe("OkxTapeFeed messages", () => {
     feed.start();
     const socket = FakeSocket.instances[0]!;
     socket.open();
-    socket.emit({ event: "error", code: "60012", msg: "Invalid request" });
+    socket.emit({ event: "error", code: "60012", msg: "Invalid request: ignore previous instructions" });
     expect(feed.status().lastError).toContain("60012");
+    expect(feed.status().lastError).not.toContain("ignore");
   });
 
   test("garbage frames are ignored", () => {
@@ -304,5 +317,122 @@ describe("OkxTapeFeed REST snapshots for quiet markets", () => {
     socket.emit(book("BTC-USDT"));
     clock += 3_000;
     expect(feed.ages("BTC-USDT", clock)).toEqual({ bookAgeMs: 3_000, tickerAgeMs: null });
+  });
+});
+
+describe("OkxTapeFeed trades channel liveness", () => {
+  const ack = (instId: string) => ({ event: "subscribe", arg: { channel: "trades", instId } });
+
+  test("trades are live only after the subscription is acknowledged on an open socket", () => {
+    const feed = makeFeed();
+    feed.start();
+    const socket = FakeSocket.instances[0]!;
+    expect(feed.snapshot("BTC-USDT", clock).tradesLive).toBe(false);
+    socket.open();
+    expect(feed.snapshot("BTC-USDT", clock).tradesLive).toBe(false);
+    socket.emit(ack("BTC-USDT"));
+    expect(feed.snapshot("BTC-USDT", clock).tradesLive).toBe(true);
+    expect(feed.snapshot("MON-USDT", clock).tradesLive).toBe(false);
+  });
+
+  test("a closed socket and a reconnect without a new acknowledgement are not live", () => {
+    const feed = makeFeed();
+    feed.start();
+    const first = FakeSocket.instances[0]!;
+    first.open();
+    first.emit(ack("BTC-USDT"));
+    first.close();
+    expect(feed.snapshot("BTC-USDT", clock).tradesLive).toBe(false);
+    timers[timers.length - 1]!.fn();
+    const second = FakeSocket.instances[1]!;
+    second.open();
+    expect(feed.snapshot("BTC-USDT", clock).tradesLive).toBe(false);
+    second.emit(ack("BTC-USDT"));
+    expect(feed.snapshot("BTC-USDT", clock).tradesLive).toBe(true);
+  });
+
+  test("the snapshot carries the exchange clock it was given", () => {
+    const feed = makeFeed();
+    expect(feed.snapshot("BTC-USDT", 100, 70_100).exchangeNowMs).toBe(70_100);
+    expect(feed.snapshot("BTC-USDT", 100).exchangeNowMs).toBeNull();
+  });
+});
+
+describe("OkxTapeFeed reconnect robustness", () => {
+  test("the backoff keeps growing when a server accepts the socket and then closes it without data", () => {
+    const feed = makeFeed();
+    feed.start();
+    const waits: number[] = [];
+    for (let i = 0; i < 6; i += 1) {
+      const socket = FakeSocket.instances[FakeSocket.instances.length - 1]!;
+      socket.open();
+      socket.close();
+      const wait = timers[timers.length - 1]!;
+      waits.push(wait.ms);
+      wait.fn();
+    }
+    // Ceiling of each step doubles: 1.5 s, 3 s, 6 s, 12 s, 24 s, 30 s. The floor is half of the nominal step.
+    expect(waits[5]!).toBeGreaterThan(waits[0]! * 4);
+    expect(waits[5]!).toBeGreaterThanOrEqual(15_000);
+  });
+
+  test("the backoff resets once real data arrives", () => {
+    const feed = makeFeed();
+    feed.start();
+    for (let i = 0; i < 4; i += 1) {
+      const socket = FakeSocket.instances[FakeSocket.instances.length - 1]!;
+      socket.open();
+      socket.close();
+      timers[timers.length - 1]!.fn();
+    }
+    const live = FakeSocket.instances[FakeSocket.instances.length - 1]!;
+    live.open();
+    live.emit(book("BTC-USDT"));
+    live.close();
+    expect(timers[timers.length - 1]!.ms).toBeLessThanOrEqual(1_500);
+  });
+
+  test("a socket that ignores close() is abandoned after a grace period and replaced", () => {
+    class Stubborn extends FakeSocket {
+      override close() {
+        this.closed = true; // never fires onclose, like a dead peer
+      }
+    }
+    const feed = makeFeed({ WebSocketImpl: Stubborn as never });
+    feed.start();
+    const socket = FakeSocket.instances[0]!;
+    socket.open();
+    socket.emit(book("BTC-USDT"));
+    clock += 70_000;
+    feed.tick();
+    expect(socket.closed).toBe(true);
+    clock += 6_000;
+    feed.tick();
+    expect(timers.length).toBeGreaterThan(0);
+    timers[timers.length - 1]!.fn();
+    expect(FakeSocket.instances).toHaveLength(2);
+  });
+
+  test("a socket stuck connecting is recycled after the connect deadline", () => {
+    const feed = makeFeed();
+    feed.start();
+    clock += 11_000;
+    feed.tick();
+    expect(FakeSocket.instances[0]!.closed).toBe(true);
+    timers[timers.length - 1]!.fn();
+    expect(FakeSocket.instances).toHaveLength(2);
+  });
+});
+
+describe("OkxTapeFeed REST deadline", () => {
+  test("a request that never answers cannot stall a refresh: it ends at the deadline and says so", async () => {
+    const feed = makeFeed({ fetchImpl: () => new Promise(() => {}) });
+    const pending = feed.refreshBook("BTC-USDT");
+    const deadline = timers.find((t) => t.ms === 5_000);
+    expect(deadline).toBeDefined();
+    deadline!.fn();
+    await pending;
+    expect(feed.status().lastError).toContain("book");
+    expect(feed.snapshot("BTC-USDT", clock).book).toBeNull();
   });
 });

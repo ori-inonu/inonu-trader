@@ -6,7 +6,7 @@
 
 import { JEV_READ_SCHEMA_VERSION, TAPE_ACTIONS, type TapeAction } from "./types";
 
-const REASONS = new Set(["book_missing", "book_stale", "book_crossed", "ticker_missing", "ticker_stale", "candles_short", "candles_stale"]);
+const REASONS = new Set(["book_missing", "book_stale", "book_crossed", "ticker_missing", "ticker_stale", "candles_short", "candles_stale", "clock_unknown", "trades_unavailable"]);
 const STATUSES = ["ok", "error", "timeout", "malformed"] as const;
 const READ_ID = /^jr-[a-z0-9-]{1,40}$/;
 const INST_ID = /^[A-Z0-9]{1,12}-[A-Z0-9]{1,12}(?:-SWAP)?$/;
@@ -62,13 +62,18 @@ function projectDecision(raw: unknown): Record<string, unknown> | null {
   if (weights === null || Object.values(weights).some((w) => w < 0 || w > 1)) return null;
   const status = STATUSES.find((s) => s === raw.status);
   if (status === undefined) return null;
+  const sum = weights.buy! + weights.sell! + weights.hold!;
+  if (!(Math.abs(sum - 1) <= 0.01)) return null;
   if (status === "ok" && !(weights[action as TapeAction]! > 0)) return null;
   if (status !== "ok" && action !== "hold") return null;
+  const confidence = finiteOrNull(raw.confidence);
+  if (raw.confidence !== null && raw.confidence !== undefined && (confidence === null || confidence < 0 || confidence > 1)) return null;
+  if (status === "ok" && confidence !== null && Math.abs(confidence - weights[action as TapeAction]!) > 0.01) return null;
   const tokens = raw.inputTokens;
   return {
     action,
     probabilities: weights,
-    confidence: finiteOrNull(raw.confidence),
+    confidence,
     latencyMs: finite(raw.latencyMs) && raw.latencyMs >= 0 ? raw.latencyMs : null,
     model: typeof raw.model === "string" && MODEL_ID.test(raw.model) ? raw.model : "unknown",
     status,

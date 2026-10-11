@@ -24,6 +24,8 @@ const REASON_LABEL: Record<string, string> = {
   ticker_stale: "preco velho",
   candles_short: "velas insuficientes",
   candles_stale: "velas velhas",
+  clock_unknown: "relogio da OKX ainda nao medido",
+  trades_unavailable: "fita de negocios indisponivel",
 };
 
 export function reasonLabel(code: string): string {

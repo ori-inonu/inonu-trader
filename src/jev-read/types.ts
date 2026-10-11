@@ -33,8 +33,15 @@ export interface TapeCandle {
 /** Raw, normalized inputs of one read of one instrument. Numbers are display and analysis values, never balances. */
 export interface TapeInput {
   readonly instId: string;
-  /** Local wall clock of the evaluation. */
+  /** Local wall clock of the evaluation. Book, ticker and trade receipts are on this clock. */
   readonly nowMs: number;
+  /**
+   * The exchange clock at the evaluation (local time plus the measured offset), null when the offset is unknown.
+   * Candle stamps are issued by the exchange, so they are aged against this clock and never against the local one.
+   */
+  readonly exchangeNowMs: number | null;
+  /** True only while the socket is open and the trades channel of this instrument was acknowledged. */
+  readonly tradesLive: boolean;
   /** Best first on both sides. */
   readonly book: { readonly bids: readonly TapeLevel[]; readonly asks: readonly TapeLevel[]; readonly receivedAtMs: number } | null;
   readonly trades: readonly TapeTrade[];
@@ -87,7 +94,9 @@ export type InsufficientReason =
   | "ticker_missing"
   | "ticker_stale"
   | "candles_short"
-  | "candles_stale";
+  | "candles_stale"
+  | "clock_unknown"
+  | "trades_unavailable";
 
 export interface TapeDecision {
   readonly action: TapeAction;
@@ -130,5 +139,7 @@ export const BOOK_MAX_AGE_MS = 5_000;
 export const TICKER_MAX_AGE_MS = 15_000;
 export const CANDLES_MAX_AGE_MS = 150_000;
 export const FLOW_WINDOW_MS = 60_000;
+/** A stamp this far ahead of the clock it is compared with is the residual of the offset measurement, not freshness. */
+export const FUTURE_TOLERANCE_MS = 5_000;
 export const MIN_CANDLES = 31;
 export const HORIZON_MINUTES = 5;

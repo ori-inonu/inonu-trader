@@ -14,6 +14,8 @@ function input(overrides: Partial<TapeInput> = {}): TapeInput {
   return {
     instId: "ETH-USDT",
     nowMs: NOW,
+    exchangeNowMs: NOW,
+    tradesLive: true,
     book: { bids: [{ px: 99.9, sz: 2 }], asks: [{ px: 100.1, sz: 2 }], receivedAtMs: NOW - 100 },
     trades: [{ px: 100, sz: 1, side: "buy", receivedAtMs: NOW - 1_000 }],
     candles: candles(40),

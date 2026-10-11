@@ -6,21 +6,23 @@
  *   bun run jev-read --jev --insts BTC-USDT,MON-USDT --interval 20000 --max-reads 500 --serve 3100
  *
  * It never signs, sends or places anything. The reads are written to JEV_READ_STATE_PATH (data/jev-read/latest.json)
- * and appended to JEV_READ_JOURNAL_PATH (data/jev-read/reads.jsonl); the backend serves the board at GET /jev-read, and
- * `--serve <port>` serves it from this process on 127.0.0.1. Without credentials or without a fresh feed nothing is
- * decided: the read records why. Real inference needs the app key in the environment, for example
- * `bun --env-file=.env scripts/jev-read.ts --jev`.
+ * and appended to JEV_READ_JOURNAL_PATH (data/jev-read/reads.jsonl, rotated at 20 MB); the backend serves the board at
+ * GET /jev-read, and `--serve <port>` serves it from this process on 127.0.0.1 with the same dashboard origins and
+ * optional token as /operator. Without credentials or without a fresh feed nothing is decided: the read records why.
+ * `--max-reads` caps the paid model calls over a rolling 24 hours and is counted from the journal, so a restart does not
+ * reset it. Real inference needs the app key in the environment, for example `bun --env-file=.env scripts/jev-read.ts --jev`.
  */
 
 import { resolve } from "node:path";
 import { JevTapeModel } from "../src/jev-read/decide";
 import { OkxTapeFeed } from "../src/jev-read/feed";
-import { createJevReadHandler, DEFAULT_DASHBOARD_ORIGINS, isJevReadPath, parseOrigins, readHeaders } from "../src/jev-read/http";
-import { runJevRead } from "../src/jev-read/read";
+import { createHealthHandler, createJevReadHandler, DEFAULT_DASHBOARD_ORIGINS, isJevReadPath } from "../src/jev-read/http";
+import { ClockKeeper, countRecentModelReads, readRound } from "../src/jev-read/loop";
 import { JevReadStore } from "../src/jev-read/store";
-import { correctedClock, measureServerClockOffset, type ClockSample } from "../src/system-one/clock";
+import { measureServerClockOffset } from "../src/system-one/clock";
 
 const ROOT = resolve(import.meta.dir, "..");
+const DAY_MS = 86_400_000;
 const args = process.argv.slice(2);
 const switches = new Set(["--jev", "--observe", "--help", "-h"]);
 const values = new Set(["--insts", "--interval", "--max-reads", "--serve", "--warmup", "--model"]);
@@ -45,7 +47,7 @@ if (hasFlag("--help") || hasFlag("-h")) {
   console.log([
     "jev-read: o Jev le a fita da OKX e diz comprar, vender ou manter. Consultivo: nunca assina nem envia.",
     "Modo (obrigatorio): --jev (Jev real) ou --observe (so o estado, sem consultar modelo).",
-    "Flags: --insts <BTC-USDT,...> --interval <ms entre leituras, min 5000> --max-reads <teto de consultas> --serve <porta> --warmup <ms> --model <id>.",
+    "Flags: --insts <BTC-USDT,...> --interval <ms entre leituras, min 5000> --max-reads <teto de consultas ao modelo em 24 h, contado no diario> --serve <porta> --warmup <ms> --model <id>.",
     "Saida: data/jev-read/latest.json e data/jev-read/reads.jsonl; o backend serve em GET /jev-read.",
   ].join("\n"));
   process.exit(0);
@@ -77,45 +79,54 @@ if (useJev && !process.env.TYPESAFE_AI_API_KEY) {
 const modelId = flagValue("--model") ?? process.env.JEV_MODEL_ID ?? "jev-latest";
 const model = useJev ? new JevTapeModel(modelId) : null;
 
-const store = new JevReadStore({ statePath, journalPath });
+const keeper = new ClockKeeper({ measure: () => measureServerClockOffset({ fetch: globalThis.fetch.bind(globalThis), now: () => Date.now() }) });
+// Files carry the exchange clock when it is known, so the dashboard ages every read on one clock.
+const store = new JevReadStore({ statePath, journalPath, now: () => keeper.stamp() });
 const feed = new OkxTapeFeed({ instIds: insts });
 const startedAtMs = Date.now();
-let clockSample = null as ClockSample | null;
-let modelReads = 0;
 let totalReads = 0;
+let modelReads = useJev ? countRecentModelReads(journalPath, startedAtMs - DAY_MS) : 0;
 let running = true;
 
 async function measureClock(): Promise<void> {
-  clockSample = await measureServerClockOffset({ fetch: globalThis.fetch.bind(globalThis), now: () => Date.now() });
-  console.error(clockSample === null
-    ? "jev-read: desvio do relogio local nao medido"
-    : `jev-read: relogio local ${clockSample.offsetMs} ms em relacao a OKX (ida e volta ${clockSample.roundTripMs} ms); leituras carimbadas no relogio da OKX`);
+  await keeper.refresh();
+  const offset = keeper.offsetMs();
+  console.error(offset === null
+    ? "jev-read: desvio do relogio local nao medido; sem ele o Jev nao e consultado"
+    : `jev-read: relogio local ${offset} ms em relacao a OKX; leituras carimbadas no relogio da OKX`);
 }
 
 const cleanups: Array<() => void> = [];
+/** Runs fn every ms. A synchronous throw and a rejected promise are both contained. */
 function every(ms: number, fn: () => void | Promise<void>): void {
-  const handle = setInterval(() => void Promise.resolve(fn()).catch(() => {}), ms);
+  const handle = setInterval(() => {
+    void Promise.resolve().then(fn).catch(() => {});
+  }, ms);
   cleanups.push(() => clearInterval(handle));
 }
 
 if (servePort !== null) {
   const origins = (process.env.OPERATOR_DASHBOARD_ORIGINS ?? DEFAULT_DASHBOARD_ORIGINS.join(",")).split(",");
   const token = process.env.OPERATOR_READ_TOKEN ?? null;
-  const allowed = parseOrigins(origins);
-  const handler = createJevReadHandler(statePath, origins, token);
+  const readHandler = createJevReadHandler(statePath, origins, token);
+  const healthHandler = createHealthHandler(origins, token, () => ({
+    ok: true,
+    mode: useJev ? "jev" : "observe",
+    model: useJev ? modelId : null,
+    startedAtMs,
+    reads: totalReads,
+    modelReads24h: modelReads,
+    maxReads,
+    feed: feed.status(),
+    clockOffsetMs: keeper.offsetMs(),
+  }));
   const server = Bun.serve({
     hostname: "127.0.0.1",
     port: servePort,
     fetch(req) {
       const { pathname } = new URL(req.url);
-      if (isJevReadPath(pathname)) return handler(req);
-      if (pathname === "/health") {
-        const headers = readHeaders(req.headers.get("origin"), allowed);
-        if (headers === null) return new Response(JSON.stringify({ error: "origin not allowed" }), { status: 403, headers: { "content-type": "application/json" } });
-        if (req.method === "OPTIONS") return new Response(null, { status: 204, headers });
-        if (token && req.headers.get("authorization") !== `Bearer ${token}`) return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers });
-        return new Response(JSON.stringify({ ok: true, mode: useJev ? "jev" : "observe", model: useJev ? modelId : null, startedAtMs, reads: totalReads, modelReads, feed: feed.status(), clockOffsetMs: clockSample?.offsetMs ?? null }), { headers });
-      }
+      if (isJevReadPath(pathname)) return readHandler(req);
+      if (pathname === "/health") return healthHandler(req);
       return new Response(JSON.stringify({ error: "not found" }), { status: 404, headers: { "content-type": "application/json" } });
     },
   });
@@ -143,32 +154,29 @@ for (const instId of insts) {
 }
 every(30_000, async () => { for (const instId of insts) await feed.refreshCandles(instId); });
 every(120_000, async () => { for (const instId of insts) await feed.refreshFunding(instId); });
-console.error(`jev-read: modo ${useJev ? `Jev real (${modelId})` : "observacao"}, ${insts.join(", ")}, uma leitura a cada ${intervalMs} ms, teto de ${maxReads} consultas`);
+console.error(`jev-read: modo ${useJev ? `Jev real (${modelId})` : "observacao"}, ${insts.join(", ")}, uma leitura a cada ${intervalMs} ms, teto de ${maxReads} consultas em 24 h (${modelReads} ja feitas)`);
 await Bun.sleep(warmupMs);
 
 let cursor = 0;
 while (running && (!useJev || modelReads < maxReads)) {
   const instId = insts[cursor % insts.length]!;
   cursor += 1;
-  const sample = clockSample;
-  const clock = sample === null ? () => Date.now() : correctedClock(sample);
-  // A quiet market pushes nothing for a while without being broken: take a fresh REST snapshot before the read.
-  const ages = feed.ages(instId, Date.now());
-  if (ages.bookAgeMs === null || ages.bookAgeMs > 3_000) await feed.refreshBook(instId);
-  if (ages.tickerAgeMs === null || ages.tickerAgeMs > 10_000) await feed.refreshTicker(instId);
-  const read = await runJevRead(feed.snapshot(instId, Date.now()), { model, now: clock, clockOffsetMs: sample?.offsetMs ?? null });
-  store.record(read);
-  totalReads += 1;
-  if (read.decision !== null) modelReads += 1;
-  if (read.decision !== null) {
-    const d = read.decision;
-    console.log(`jev-read ${instId} ${d.action} p=${d.probabilities[d.action].toFixed(2)} ${d.model} ${d.status} ${Math.round(d.latencyMs)} ms tokens=${d.inputTokens ?? "n/d"}`);
-  } else if (read.state !== null) {
-    console.log(`jev-read ${instId} estado registrado (observacao) mid=${read.state.mid} spread=${read.state.spreadBps.toFixed(2)} bps`);
-  } else {
-    console.log(`jev-read ${instId} sem leitura: ${read.insufficient.join(", ")}`);
+  const { read, error } = await readRound({ feed, keeper, model, store, instId });
+  if (error !== null) console.error(`jev-read: ${instId} ${error}`);
+  if (read !== null) {
+    totalReads += 1;
+    if (read.decision !== null) modelReads += 1;
+    if (read.decision !== null) {
+      const d = read.decision;
+      console.log(`jev-read ${instId} ${d.action} p=${d.probabilities[d.action].toFixed(2)} ${d.model} ${d.status} ${Math.round(d.latencyMs)} ms tokens=${d.inputTokens ?? "n/d"}`);
+    } else if (read.state !== null) {
+      console.log(`jev-read ${instId} estado registrado (observacao) mid=${read.state.mid} spread=${read.state.spreadBps.toFixed(2)} bps`);
+    } else {
+      console.log(`jev-read ${instId} sem leitura: ${read.insufficient.join(", ")}`);
+    }
   }
-  await Bun.sleep(read.state === null ? Math.min(intervalMs, 3_000) : intervalMs);
+  // A read that could not be made retries sooner, never hotter than every 3 s; a failed round waits a full interval.
+  await Bun.sleep(error !== null ? intervalMs : read !== null && read.state === null ? Math.min(intervalMs, 3_000) : intervalMs);
 }
-console.error(running ? `jev-read: teto de ${maxReads} consultas atingido` : "jev-read: encerrado");
+console.error(running ? `jev-read: teto de ${maxReads} consultas em 24 h atingido` : "jev-read: encerrado");
 shutdown();

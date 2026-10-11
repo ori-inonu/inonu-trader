@@ -120,7 +120,7 @@ describe("jevStageModel", () => {
 
 describe("reasonLabel", () => {
   test("every producer reason has a Portuguese label and an unknown one is generic", () => {
-    for (const r of ["book_missing", "book_stale", "book_crossed", "ticker_missing", "ticker_stale", "candles_short", "candles_stale"]) {
+    for (const r of ["book_missing", "book_stale", "book_crossed", "ticker_missing", "ticker_stale", "candles_short", "candles_stale", "clock_unknown", "trades_unavailable"]) {
       expect(reasonLabel(r)).not.toBe(r);
     }
     expect(reasonLabel("surprise")).toBe("dado insuficiente");

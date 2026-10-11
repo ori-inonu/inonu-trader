@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { computeClockSample, correctedClock, measureServerClockOffset, parseOkxServerTime, type ClockFetch } from "./clock";
+import { computeClockSample, correctedClock, MAX_PLAUSIBLE_OFFSET_MS, measureServerClockOffset, parseOkxServerTime, type ClockFetch } from "./clock";
 import { isFreshReading, MAX_READING_AGE_MS } from "./types";
 
 describe("corrected clock with the strict freshness rule", () => {
@@ -7,7 +7,7 @@ describe("corrected clock with the strict freshness rule", () => {
   const sample = { offsetMs: 70_000, roundTripMs: 400, measuredAtMs: 0 };
   const local = 1_000_000_000_000;
   const serverNow = local + 70_000 + 200;
-  const now = correctedClock(sample, () => local);
+  const now = correctedClock(sample, () => local, () => 0);
 
   test("without the correction the exchange stamps look like the future and are rejected", () => {
     expect(isFreshReading(serverNow, local)).toBe(false);
@@ -122,5 +122,42 @@ describe("measureServerClockOffset", () => {
   test("a malformed body is ignored", async () => {
     const { fetchFn, now } = scriptedFetch([{ serverAtMs: 0, latencyMs: 100, body: { code: "0", data: [{ ts: "nope" }] } }]);
     expect(await measureServerClockOffset({ fetch: fetchFn, now, samples: 1 })).toBeNull();
+  });
+});
+
+describe("correctedClock is monotonic", () => {
+  const sample = { offsetMs: 70_000, roundTripMs: 400, measuredAtMs: 0 };
+
+  test("it advances with the monotonic clock, not with the wall clock", () => {
+    let wall = 1_000_000_000_000;
+    let mono = 5_000;
+    const now = correctedClock(sample, () => wall, () => mono);
+    const first = now();
+    mono += 1_000;
+    wall += 1_000;
+    expect(now() - first).toBe(1_000);
+  });
+
+  test("a local wall clock stepped back by 70 s does not leave the corrected clock behind the exchange", () => {
+    let wall = 1_000_000_000_000;
+    let mono = 5_000;
+    const now = correctedClock(sample, () => wall, () => mono);
+    const exchangeAtStart = wall + 70_000 + 200;
+    mono += 10_000;
+    wall = wall + 10_000 - 70_000; // NTP or the user steps the wall clock back while 10 s really pass
+    expect(now()).toBeGreaterThanOrEqual(exchangeAtStart + 10_000);
+  });
+});
+
+describe("measureServerClockOffset: plausibility", () => {
+  test("an offset beyond the plausible bound is discarded as a bad sample", async () => {
+    const { fetchFn, now } = scriptedFetch([{ serverAtMs: 5_000_000 + MAX_PLAUSIBLE_OFFSET_MS + 60_000, latencyMs: 100 }]);
+    expect(await measureServerClockOffset({ fetch: fetchFn, now, samples: 1 })).toBeNull();
+  });
+
+  test("an offset at the bound is kept", async () => {
+    const { fetchFn, now } = scriptedFetch([{ serverAtMs: 5_000_050 + 70_000, latencyMs: 100 }]);
+    const sample = await measureServerClockOffset({ fetch: fetchFn, now, samples: 1 });
+    expect(sample?.offsetMs).toBe(70_000);
   });
 });

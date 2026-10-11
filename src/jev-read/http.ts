@@ -61,3 +61,18 @@ export function createJevReadHandler(statePath: string, origins: readonly string
     }
   };
 }
+
+/** GET /health of the producer: same origin allowlist, method rule and optional token as /jev-read. */
+export function createHealthHandler(origins: readonly string[] = DEFAULT_DASHBOARD_ORIGINS, readToken: string | null, snapshot: () => unknown): (req: Request) => Response {
+  const allowed = parseOrigins(origins);
+  const token = readToken?.trim() || null;
+  return (req) => {
+    const headers = readHeaders(req.headers.get("origin"), allowed);
+    if (headers === null) return new Response(JSON.stringify({ error: "origin not allowed" }), { status: 403, headers: { "content-type": "application/json", "cache-control": "no-store", vary: "Origin" } });
+    const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers });
+    if (req.method === "OPTIONS") return new Response(null, { status: 204, headers });
+    if (req.method !== "GET") return json({ error: "method not allowed" }, 405);
+    if (token && req.headers.get("authorization") !== `Bearer ${token}`) return json({ error: "unauthorized" }, 401);
+    return json(snapshot());
+  };
+}
