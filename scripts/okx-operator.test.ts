@@ -149,3 +149,24 @@ test("source ordering supplements live snapshot ownership and model-error cleanu
   expect(main).toContain('process.off("SIGINT", shutdown)');
   expect(main).toContain('process.off("SIGTERM", shutdown)');
 });
+
+test("reconciliation with --realized records the signed result that feeds the loss stops; a bad value changes nothing", async () => {
+  const f = fixture();
+  ledgerWithOpenLeg(f.ledger);
+  const before = JSON.parse(readFileSync(f.ledger, "utf8"));
+  const bad = await f.run("--reconcile", "fixture-plan", "closed", "--realized", "lots");
+  expect(bad.code).toBe(1);
+  expect(bad.stderr).toContain("--realized exige");
+  expect(JSON.parse(readFileSync(f.ledger, "utf8"))).toEqual(before);
+  expect(existsSync(f.lock)).toBe(false);
+  const result = await f.run("--reconcile", "fixture-plan", "closed", "--realized", "-0.25");
+  expect(result.code).toBe(0);
+  expect(result.stdout).toContain("resultado -0.2500 USD registrado");
+  const after = JSON.parse(readFileSync(f.ledger, "utf8"));
+  expect(after.openLegs[0].status).toBe("closed");
+  expect(after.openLegs[0].note).toMatch(/^manual_reconcile_.*_realized_-0\.25$/);
+  expect(Object.values(after.dailyRealizedUsd)).toEqual([-0.25]);
+  expect(after.cumulativeRealizedUsd).toBe(-0.25);
+  expect(after.peakRealizedUsd).toBe(0);
+  expect(existsSync(f.lock)).toBe(false);
+});

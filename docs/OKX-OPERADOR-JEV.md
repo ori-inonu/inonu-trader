@@ -76,6 +76,20 @@ A revisão `docs/research/R5-revisao-operador-codigo-final-20261010.md` vetou o 
 
 Ainda sem solução nesta rodada: política de transação Solana (fica desligado), reconciliação on-chain por recibo em vez de leitura da API de saldo (o gás já entra), rotação do journal, e a origem oficial dos routers (a OKX não publica tabela; `--routers` mostra o `tx.to` para conferência manual). Tetos duros em `HARD_LIMITS` impedem o env de ultrapassar 100 USD por plano, 500 USD por dia, 24 planos por dia e cooldown abaixo de 60 s.
 
+## 2c. Após a re-revisão R8 (2026-10-11)
+
+`docs/research/R8-re-revisao-operador-f1-f8-20261011.md` manteve o veredito de não liberar o estágio 3 e listou as condições C1 a C9. O commit 9fd6f39 mudou a semântica da conclusão: um plano `completed` vira `reconciliation_required` e bloqueia o operador até reconciliação manual; o ciclo não calcula mais o resultado realizado. Correções desta rodada (outras já tinham entrado na `main` por outras sessões: lock em todos os escritores do CLI, validação do contexto de decisão com recusa do `mock`, tentativa de renomeação do ledger no Windows):
+
+| Item | Aplicado | Onde |
+| --- | --- | --- |
+| C1 (N1) piso da perna 2 | A saída vende o mínimo garantido da perna 1 e o esperado escala proporcionalmente (`scaleExpectedOut`); os fakes dos testes aplicam o desconto de slippage nas duas pernas | `executor.ts`, `operator.test.ts` |
+| C3 (N3, N7) ledger e reconcile | `--init-ledger` recusa quando já há histórico (exige `--accept-history`); `--reconcile <planId> <closed\|failed> --realized <usd>` registra o resultado assinado, com gás, e é isso que alimenta as paradas diária, semanal e de drawdown | `scripts/okx-operator.ts` |
+| C4 (N5) gates | `OPERATOR_LIVE_ACK` vazio vale como ausente; `OPERATOR_PRIVATE_KEY` igual à `PRIVATE_KEY` do trader é recusada; o script `okx:operator` roda com `--no-env-file` e o guia manda usar `--env-file=.env.operator` | `config.ts`, `package.json` |
+| C7 (F8) testes | piso proporcional com desconto, janela de saída, gates um a um, chave do trader recusada; o teste de approval identity escreve no diretório temporário do sistema, não no repositório | `operator.test.ts`, `executor.approval-identity.test.ts` |
+| C9 (N8) prazo da saída | `OPERATOR_EXIT_WINDOW_MS` dá à perna 2 uma janela própria após a confirmação da perna 1, nunca menor que o prazo do plano. Padrão 0 mantém a regra atual do dono (prazo de entrada vale para a saída) até a decisão D2 | `executor.ts`, `config.ts` |
+
+Seguem abertos e dependem do dono (D1 a D8 da R8): política do repo sobre `LIVE_ACK`, semântica do STOP no meio do plano, exposição de `/operator*`, guarda da chave fora do `.env`, reconciliação on-chain automática (hoje um plano por intervenção manual), tetos duros adicionais, origem oficial de routers e spenders e rotação do journal. C2 (decodificar receiver e minReturn do calldata) e C8 (teste autenticado de menor valor) também seguem abertos.
+
 ## 3. Como rodar
 
 Demonstração offline (sem rede, sem credenciais):
@@ -84,10 +98,16 @@ Demonstração offline (sem rede, sem credenciais):
 bun run okx:operator
 ```
 
-Antes de qualquer execução, crie o ledger uma única vez (sem ele a execução fica bloqueada):
+Antes de qualquer execução, crie o ledger uma única vez (sem ele a execução fica bloqueada; com histórico já existente acrescente `--accept-history`):
 
 ```bash
 bun run okx:operator --init-ledger
+```
+
+Depois de cada plano concluído, confira as transações no explorer e feche a perna informando o resultado assinado em USD, com gás; só esse registro alimenta as paradas de perda:
+
+```bash
+bun run okx:operator --reconcile plan_xxxxxxxxxxxx closed --realized -0.42
 ```
 
 Inventário e cotações reais (somente leitura; nada é enviado):

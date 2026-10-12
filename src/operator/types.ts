@@ -86,6 +86,12 @@ export interface OperatorPolicy {
   inferenceUsdPerCandidate: number;
   /** Plans expire this many milliseconds after the decision. */
   planTtlMs: number;
+  /**
+   * Exit window after leg 1 confirms, milliseconds. 0 (default) keeps the rule
+   * that the entry deadline also bounds the exit; a positive value gives the
+   * second leg its own window, never shorter than the plan deadline (R8 C9, D2).
+   */
+  exitWindowMs: number;
   /** Cumulative caps enforced by the persistent ledger. */
   maxDailyNotionalUsd: number;
   maxDailyPlans: number;

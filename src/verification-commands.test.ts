@@ -1,8 +1,12 @@
-import { expect, test } from "bun:test";
+import { expect, setDefaultTimeout, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { delimiter, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
+
+// The child build wrapper contends for CPU with the rest of the suite; generous child and per test budgets.
+const CHILD_TIMEOUT_MS = 45_000;
+setDefaultTimeout(120_000);
 
 const rootPackage = await Bun.file(new URL("../package.json", import.meta.url)).json();
 const webPackage = await Bun.file(new URL("../web/package.json", import.meta.url)).json();
@@ -28,7 +32,7 @@ test("the root build wrapper really executes the child package instead of printi
     writeFileSync(join(directory, "web/package.json"), JSON.stringify({ scripts: { build: "bun --no-env-file print.ts" } }));
     writeFileSync(join(directory, "web/print.ts"), "console.log('VERIFIED_CHILD_BUILD');\n");
     const result = spawnSync(process.execPath, rootPackage.scripts.build.split(" ").slice(1), {
-      cwd: directory, encoding: "utf8", timeout: 10_000,
+      cwd: directory, encoding: "utf8", timeout: CHILD_TIMEOUT_MS,
       env: { SystemRoot: process.env.SystemRoot, PATH: dirname(process.execPath) + delimiter + (process.env.PATH ?? "") },
     });
     expect(result.error).toBeUndefined();

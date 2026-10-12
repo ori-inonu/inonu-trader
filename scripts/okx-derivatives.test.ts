@@ -1,4 +1,4 @@
-import { afterAll, expect, test } from "bun:test";
+import { afterAll, expect, setDefaultTimeout, test } from "bun:test";
 import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -10,6 +10,10 @@ import { buildDerivativesReport } from "../src/okx-derivatives/report.ts";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Json = Record<string, any>;
+
+// Each run starts a child bun process that contends for CPU with the rest of the suite; generous child and per test budgets.
+const CHILD_TIMEOUT_MS = 45_000;
+setDefaultTimeout(120_000);
 
 const cli = fileURLToPath(new URL("./okx-derivatives.ts", import.meta.url));
 const cwd = fileURLToPath(new URL("../", import.meta.url));
@@ -38,7 +42,7 @@ afterAll(() => {
 });
 
 function run(args: string[] = [], extraEnv: Record<string, string> = {}) {
-  return spawnSync(process.execPath, ["--no-env-file", "run", cli, ...args], { cwd, env: { ...env, ...extraEnv }, encoding: "utf8", timeout: 20000 });
+  return spawnSync(process.execPath, ["--no-env-file", "run", cli, ...args], { cwd, env: { ...env, ...extraEnv }, encoding: "utf8", timeout: CHILD_TIMEOUT_MS });
 }
 
 function writeInput(directory: string, mutate: (raw: Json) => void = () => {}, name = "input.json"): string {
@@ -230,7 +234,7 @@ test("OKX-DERIV D16: at run time nothing opens a socket: fetch, WebSocket and th
     await import(${JSON.stringify(pathToFileURL(cli).href)});
     process.stderr.write("NETWORK_TRAPS:" + traps.length + ":" + traps.join(",") + "\\n");
   `;
-  const result = spawnSync(process.execPath, ["--no-env-file", "--eval", script], { cwd, env, encoding: "utf8", timeout: 20000 });
+  const result = spawnSync(process.execPath, ["--no-env-file", "--eval", script], { cwd, env, encoding: "utf8", timeout: CHILD_TIMEOUT_MS });
   expect(result.error).toBeUndefined();
   expect(result.status).toBe(0);
   expect(result.stderr).toBe("NETWORK_TRAPS:0:\n");

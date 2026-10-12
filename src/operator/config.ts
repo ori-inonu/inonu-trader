@@ -116,13 +116,17 @@ export function loadOperatorConfig(source: Record<string, string | undefined> = 
   if (solanaSecret !== null && !/^[1-9A-HJ-NP-Za-km-z]{43,90}$/.test(solanaSecret)) throw new Error("Invalid SOLANA_PRIVATE_KEY format");
   const evmPrivateKey = source.OPERATOR_PRIVATE_KEY?.trim() || null;
   if (evmPrivateKey !== null && !/^0x[0-9a-fA-F]{64}$/.test(evmPrivateKey)) throw new Error("Invalid OPERATOR_PRIVATE_KEY format");
+  // The operator wallet is dedicated: reusing the Kuru trader key is refused outright (R8 C4).
+  const traderKey = source.PRIVATE_KEY?.trim();
+  if (evmPrivateKey !== null && traderKey && evmPrivateKey.toLowerCase() === traderKey.toLowerCase()) throw new Error("OPERATOR_PRIVATE_KEY must differ from the trader PRIVATE_KEY");
   const address = source.OPERATOR_ADDRESS?.trim() || null;
   const credentials = { apiKey: source.OKX_WEB3_API_KEY, secretKey: source.OKX_WEB3_API_SECRET, passphrase: source.OKX_WEB3_API_PASSPHRASE };
   const credentialValid = (value: string | undefined): value is string => typeof value === "string" && value.trim().length > 0 && !/[\u0000-\u001f\u007f]/.test(value);
   const okx = credentialValid(credentials.apiKey) && credentialValid(credentials.secretKey) && credentialValid(credentials.passphrase)
     ? { apiKey: credentials.apiKey, secretKey: credentials.secretKey, passphrase: credentials.passphrase }
     : null;
-  const liveAckRaw = source.OPERATOR_LIVE_ACK;
+  // An empty value (as shipped in .env.example) is the same as absent (R8 C4).
+  const liveAckRaw = source.OPERATOR_LIVE_ACK?.trim() || undefined;
   if (liveAckRaw !== undefined && liveAckRaw !== "OWN_FUNDS_RISK_OPERATOR") throw new Error("Invalid OPERATOR_LIVE_ACK");
   return {
     profile: profileRaw,
@@ -135,6 +139,7 @@ export function loadOperatorConfig(source: Record<string, string | undefined> = 
       gasReserveNative,
       inferenceUsdPerCandidate: number("OPERATOR_INFERENCE_USD_PER_CANDIDATE", 0.0001, 0),
       planTtlMs: number("OPERATOR_PLAN_TTL_MS", 30_000, 1, 600_000),
+      exitWindowMs: number("OPERATOR_EXIT_WINDOW_MS", 0, 0, 600_000),
       maxDailyNotionalUsd: number("OPERATOR_MAX_DAILY_NOTIONAL_USD", profile.maxDailyNotionalUsd, Number.MIN_VALUE, HARD_LIMITS.maxDailyNotionalUsd),
       maxDailyPlans: number("OPERATOR_MAX_DAILY_PLANS", profile.maxDailyPlans, 1, HARD_LIMITS.maxDailyPlans),
       cooldownMs: number("OPERATOR_COOLDOWN_MS", profile.cooldownMs, HARD_LIMITS.minCooldownMs),
