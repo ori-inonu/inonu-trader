@@ -14,7 +14,9 @@ const ROUTER = "0x" + "ab".repeat(20);
 const SPENDER = "0x" + "5e".repeat(20);
 const SELECTOR = "0xdeadbeef";
 const EXECUTED_KEY = "synthetic-approval-identity-key";
-const TEST_ROOT = resolve(import.meta.dir, "../../evidence/implementation-v1/test-ledgers");
+import { tmpdir } from "node:os";
+// Ledgers for these cases live in the OS temp directory, never inside the repository (R8 N23).
+const TEST_ROOT = resolve(tmpdir(), "inonu-operator-approval-identity");
 const directories: string[] = [];
 
 afterEach(() => {

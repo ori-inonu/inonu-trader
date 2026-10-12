@@ -12,7 +12,7 @@ export function validateOperatorPolicy(policy: OperatorPolicy): void {
   if (!finite(policy.maxPlanUsd) || policy.maxPlanUsd <= 0 || !finite(policy.maxCapitalFraction) || policy.maxCapitalFraction <= 0 || policy.maxCapitalFraction > 1 ||
     !finite(policy.minNetUsd) || policy.minNetUsd < 0 || !finite(policy.maxPriceImpactPercent) || policy.maxPriceImpactPercent < 0 || policy.maxPriceImpactPercent > 100 ||
     !Number.isSafeInteger(policy.maxQuoteAgeMs) || policy.maxQuoteAgeMs < 1 || !finite(policy.inferenceUsdPerCandidate) || policy.inferenceUsdPerCandidate < 0 ||
-    !Number.isSafeInteger(policy.planTtlMs) || policy.planTtlMs < 1 || typeof policy.gasReserveNative !== "object" || policy.gasReserveNative === null ||
+    !Number.isSafeInteger(policy.planTtlMs) || policy.planTtlMs < 1 || !Number.isSafeInteger(policy.exitWindowMs) || policy.exitWindowMs < 0 || typeof policy.gasReserveNative !== "object" || policy.gasReserveNative === null ||
     !finite(policy.maxDailyNotionalUsd) || policy.maxDailyNotionalUsd <= 0 || !Number.isSafeInteger(policy.maxDailyPlans) || policy.maxDailyPlans < 1 ||
     !Number.isSafeInteger(policy.cooldownMs) || policy.cooldownMs < 0 || typeof policy.killSwitchPath !== "string" || !policy.killSwitchPath ||
     !Number.isSafeInteger(policy.staleLegMs) || policy.staleLegMs < 1 || typeof policy.routerAllowlist !== "object" || policy.routerAllowlist === null ||

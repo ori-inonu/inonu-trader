@@ -82,7 +82,8 @@ function usage(): string {
     "--live   inventário, cotações, produtos DeFi e funding reais (OKX_WEB3_API_KEY/SECRET/PASSPHRASE, OPERATOR_ADDRESS).",
     "--jev    decisão pelo Jev real (TYPESAFE_AI_API_KEY).",
     "--loop   repete a cada OPERATOR_INTERVAL_MS.",
-    "--init-ledger cria o ledger uma única vez; --reconcile <planId> <closed|failed> fecha uma perna após conferência on-chain.",
+    "--init-ledger cria o ledger uma única vez (com histórico existente exige --accept-history); --reconcile <planId> <closed|failed> --realized <usd> fecha uma perna após conferência on-chain e registra o resultado que alimenta as paradas de perda.",
+    "Rode com bun --no-env-file --env-file=.env.operator run scripts/okx-operator.ts para não herdar o .env do trader.",
     "--routers (com --live) imprime o router (tx.to) por rede EVM para conferir no explorer; nada é enviado.",
     "Estado: OPERATOR_STATE_PATH, OPERATOR_JOURNAL_PATH, OPERATOR_LEDGER_PATH, OPERATOR_LOCK_PATH; kill switch: OPERATOR_KILL_SWITCH_PATH (data/operator/STOP).",
     "Execução real exige OPERATOR_EXECUTE=true, OPERATOR_LIVE_ACK=OWN_FUNDS_RISK_OPERATOR, OPERATOR_PRIVATE_KEY de carteira dedicada, --jev,",
@@ -90,11 +91,13 @@ function usage(): string {
   ].join("\n");
 }
 
-function openLedger(ledgerPath: string, allowInit: boolean, historyExists: boolean): { ledger: OperatorLedger; ready: boolean; note: string | null } {
+function openLedger(ledgerPath: string, allowInit: boolean, historyExists: boolean, acceptHistory: boolean): { ledger: OperatorLedger; ready: boolean; note: string | null } {
   const file = readLedgerFile(ledgerPath);
   if (file.status === "corrupt") throw new UsageError(`Ledger corrompido em ${ledgerPath}: ${file.message}. Corrija ou mova o arquivo antes de continuar.`);
   if (file.status === "missing") {
     if (allowInit) {
+      // Cumulative limits restart from zero; with existing history that must be an explicit choice (R8 C3).
+      if (historyExists && !acceptHistory) throw new UsageError("Já existe histórico do operador sem ledger; os limites acumulados recomeçariam do zero. Repita com --init-ledger --accept-history se isso for intencional.");
       const state = initLedgerFile(ledgerPath);
       return { ledger: createOperatorLedger(state, ledgerFilePersister(ledgerPath)), ready: true, note: `ledger criado em ${ledgerPath}` };
     }
@@ -115,9 +118,13 @@ function initLedgerFileInMemory() {
 async function main() {
   const args = process.argv.slice(2);
   if (args.includes("--help")) { console.log(usage()); return; }
-  const flags = new Set(["--live", "--jev", "--loop", "--routers", "--init-ledger", "--reconcile"]);
+  const flags = new Set(["--live", "--jev", "--loop", "--routers", "--init-ledger", "--accept-history", "--reconcile", "--realized"]);
   const reconcileIndex = args.indexOf("--reconcile");
-  const positional = reconcileIndex >= 0 ? args.slice(reconcileIndex + 1, reconcileIndex + 3) : [];
+  const realizedIndex = args.indexOf("--realized");
+  const positional = [
+    ...(reconcileIndex >= 0 ? args.slice(reconcileIndex + 1, reconcileIndex + 3) : []),
+    ...(realizedIndex >= 0 ? args.slice(realizedIndex + 1, realizedIndex + 2) : []),
+  ];
   for (const arg of args) if (!flags.has(arg) && !positional.includes(arg)) throw new UsageError(`Flag desconhecida: ${arg}\n${usage()}`);
   const live = args.includes("--live");
   const useJev = args.includes("--jev");
@@ -133,18 +140,24 @@ async function main() {
   process.on("SIGTERM", shutdown);
   try {
   const historyExists = existsSync(operator.journalPath) || existsSync(operator.statePath);
-  const { ledger, ready: ledgerReady, note: ledgerNote } = openLedger(operator.ledgerPath, args.includes("--init-ledger"), historyExists);
+  const { ledger, ready: ledgerReady, note: ledgerNote } = openLedger(operator.ledgerPath, args.includes("--init-ledger"), historyExists, args.includes("--accept-history"));
   if (ledgerNote) console.log(ledgerNote);
-  if (args.includes("--init-ledger") && args.length === 1) return;
+  if (args.includes("--init-ledger") && !live && reconcileIndex < 0) return;
 
   if (reconcileIndex >= 0) {
+    // Manual reconciliation records the signed realized result (gas included, checked on chain);
+    // that record is what feeds the daily, weekly and drawdown stops (R8 C3, N7).
     const [planId, status] = positional;
-    if (!planId || (status !== "closed" && status !== "failed")) throw new UsageError("Uso: --reconcile <planId> <closed|failed>");
+    const realizedRaw = realizedIndex >= 0 ? args[realizedIndex + 1] : undefined;
+    const realizedUsd = realizedRaw === undefined || !/^-?\d+(?:\.\d+)?$/.test(realizedRaw) ? Number.NaN : Number(realizedRaw);
+    if (!planId || (status !== "closed" && status !== "failed") || !Number.isFinite(realizedUsd) || Math.abs(realizedUsd) > 10_000)
+      throw new UsageError("Uso: --reconcile <planId> <closed|failed> --realized <usd assinado, gás incluído, conferido on-chain>");
     if (!ledgerReady) throw new UsageError("Ledger ausente; nada a reconciliar.");
     const leg = ledger.openLegs().find((entry) => entry.planId === planId);
     if (!leg) throw new UsageError(`Nenhuma perna aberta com planId ${planId}.`);
-    ledger.updateLeg(planId, { status, note: `manual_reconcile_${new Date().toISOString()}` });
-    console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status}`);
+    ledger.recordRealized(now(), realizedUsd);
+    ledger.updateLeg(planId, { status, note: `manual_reconcile_${new Date().toISOString()}_realized_${realizedUsd}` });
+    console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status}; resultado ${realizedUsd.toFixed(4)} USD registrado (dia ${ledger.dayRealizedUsd(now()).toFixed(4)}, semana ${ledger.weekRealizedUsd(now()).toFixed(4)}, drawdown ${ledger.drawdownUsd().toFixed(4)})`);
     return;
   }
 

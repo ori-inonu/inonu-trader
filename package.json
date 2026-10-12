@@ -41,7 +41,7 @@
     "okx:evidence": "bun --no-env-file run scripts/okx-evidence.ts",
     "okx:defi": "bun --no-env-file run scripts/okx-defi.ts",
     "okx:derivatives": "bun --no-env-file run scripts/okx-derivatives.ts",
-    "okx:operator": "bun run scripts/okx-operator.ts",
+    "okx:operator": "bun --no-env-file run scripts/okx-operator.ts",
     "system-one": "bun --no-env-file run scripts/system-one.ts",
     "jev-read": "bun --no-env-file run scripts/jev-read.ts"
   }

@@ -3,7 +3,7 @@ import { syntheticInventory, type InventorySnapshot } from "../okx-wallet/portfo
 import { buildCandidates, buildRoundTripCandidates, DEFAULT_PAIRS, safeText, sizeFor, type BridgeQuoter, type SwapQuoter } from "./candidates";
 import { HARD_LIMITS, loadOperatorConfig, operatorLiveGate } from "./config";
 import { reconcileRealizedUsd, runOperatorCycle, redactCycle } from "./cycle";
-import { checkPreparedLeg, encodeApprove, executePlan, minReceiveMatchesQuote, sanitizeError, SOLANA_LIVE_ENABLED, type EvmSigner, type ExecutorDeps, type ExecutionDecisionContext } from "./executor";
+import { checkPreparedLeg, encodeApprove, executePlan, minReceiveMatchesQuote, sanitizeError, scaleExpectedOut, SOLANA_LIVE_ENABLED, type EvmSigner, type ExecutorDeps, type ExecutionDecisionContext } from "./executor";
 import { createOperatorLedger, emptyLedger } from "./ledger";
 import { buildOperatorState, MockOperatorModel, validateOperatorDecision, type OperatorModel } from "./jev-selector";
 import { buildExecutionPlan } from "./plan";
@@ -532,4 +532,94 @@ test("a full cycle asks Jev only with eligible candidates, journals hold without
   expect(quiet.decision).toBeNull();
   expect(quiet.execution.reasons).toEqual(["no_eligible_candidate"]);
   expect(quiet.inferenceUsd).toBe(0);
+});
+
+
+/* ---------- R8 conditions C1, C4, C9 ---------- */
+
+/** OKX minReceiveAmount carries the slippage haircut: quote x (1 - slippage). */
+function r8Haircut(quotedAtomic: string, slippagePercent = 0.5): string {
+  return ((BigInt(quotedAtomic) * BigInt(Math.round((100 - slippagePercent) * 10_000))) / BigInt(1_000_000)).toString();
+}
+
+/** Trade client whose second-leg quote scales with the amount actually sold and whose minimums carry the haircut on both legs. */
+function r8TradeClient(candidate: OpportunityCandidate, secondLegMinReceive?: string) {
+  return {
+    async get(path: string, params: Record<string, string>) {
+      if (path.endsWith("approve-transaction")) return [{ dexContractAddress: SPENDER }];
+      const firstLeg = params.fromTokenAddress === candidate.from.tokenContractAddress;
+      const quoted = firstLeg ? candidate.expectedLeg1OutAtomic! : scaleExpectedOut(candidate.expectedOutAtomic!, params.amount ?? "0", candidate.expectedLeg1OutAtomic!);
+      const minReceiveAmount = firstLeg ? r8Haircut(quoted) : (secondLegMinReceive ?? r8Haircut(quoted));
+      const native = (params.fromTokenAddress ?? "").toLowerCase().startsWith("0xeeee");
+      return [{ tx: { to: ROUTER, data: `${SELECTOR}00ff`, value: native ? (params.amount ?? "0") : "0", gas: "200000", minReceiveAmount } }];
+    },
+    async post() { return []; },
+  } as never;
+}
+
+function r8Signer(address: string, sent: { to: string; value: string; gasLimit: string }[], onReceipt?: (hash: string) => void): EvmSigner {
+  return {
+    address,
+    async sendTransaction(tx, beforeSubmit) { beforeSubmit(); sent.push({ to: tx.to, value: tx.value, gasLimit: tx.gasLimit }); return `0x${sent.length}`; },
+    async waitForReceipt(_chain, hash) { onReceipt?.(hash); return { success: true, gasCostNative: 0.001 }; },
+    async simulate() { return true; },
+  };
+}
+
+test("R8 C1: the second leg uses a proportional floor, so haircuts on both legs still complete the round trip", async () => {
+  expect(scaleExpectedOut("1000", "995", "1000")).toBe("995");
+  expect(scaleExpectedOut("25250000", "24875000000000000000", "25000000000000000000")).toBe("25123750");
+  expect(() => scaleExpectedOut("1", "1", "0")).toThrow("Invalid quoted input");
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, [candidate!]), [candidate!]);
+  const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
+  const sent: { to: string; value: string; gasLimit: string }[] = [];
+  const outcome = await executeSyntheticPlan(live, candidate!, { now: () => NOW, slippagePercent: 0.5, ledger: createOperatorLedger(emptyLedger(), () => {}), policy: livePolicy, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: r8TradeClient(candidate!), evmSigner: r8Signer(inventory.address, sent) });
+  expect(outcome.status).toBe("completed");
+  expect(sent.map((tx) => tx.to)).toEqual([candidate!.from.tokenContractAddress, ROUTER, ROUTER]);
+  // The exit sells exactly the guaranteed minimum of leg 1 and carries it as value for the native sale.
+  expect(sent[2]!.value).toBe(r8Haircut(candidate!.expectedLeg1OutAtomic!));
+  expect(sent.map((tx) => tx.gasLimit)).toEqual(["120000", "300000", "300000"]);
+  // A second leg quoted below its proportional floor is still refused and leaves the position for reconciliation.
+  const starved = await executeSyntheticPlan(live, candidate!, { now: () => NOW, slippagePercent: 0.5, ledger: createOperatorLedger(emptyLedger(), () => {}), policy: livePolicy, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: r8TradeClient(candidate!, "1"), evmSigner: r8Signer(inventory.address, []) });
+  expect(starved.status).toBe("sent");
+  expect(starved.reasons[0]).toContain("min_receive_below_quote");
+});
+
+test("R8 C9: the exit window gives the second leg its own deadline only when configured", async () => {
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, [candidate!]), [candidate!]);
+  const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
+  const run = async (exitWindowMs: number) => {
+    let clock = NOW;
+    const sent: { to: string; value: string; gasLimit: string }[] = [];
+    // The first swap receipt alone takes longer than the plan TTL.
+    const signer = r8Signer(inventory.address, sent, (hash) => { if (hash === "0x2") clock += policy.planTtlMs + 1_000; });
+    const outcome = await executeSyntheticPlan(live, candidate!, { now: () => clock, slippagePercent: 0.5, ledger: createOperatorLedger(emptyLedger(), () => {}), policy: { ...livePolicy, exitWindowMs }, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: r8TradeClient(candidate!), evmSigner: signer });
+    return { outcome, sends: sent.length };
+  };
+  const strict = await run(0);
+  expect(strict.outcome.status).toBe("sent");
+  expect(strict.outcome.reasons[0]).toContain("plan_expired_before_leg2");
+  expect(strict.sends).toBe(2);
+  const windowed = await run(60_000);
+  expect(windowed.outcome.status).toBe("completed");
+  expect(windowed.sends).toBe(3);
+  expect(loadOperatorConfig({}).policy.exitWindowMs).toBe(0);
+  expect(() => loadOperatorConfig({ OPERATOR_EXIT_WINDOW_MS: "-1" })).toThrow("Invalid OPERATOR_EXIT_WINDOW_MS");
+});
+
+test("R8 C4: an empty acknowledgement is absent, each gate closes alone and the trader key is refused for the operator", () => {
+  const key = "0x" + "11".repeat(32);
+  const full = { OPERATOR_EXECUTE: "true", OPERATOR_LIVE_ACK: "OWN_FUNDS_RISK_OPERATOR", OPERATOR_PRIVATE_KEY: key };
+  expect(operatorLiveGate(loadOperatorConfig(full), "jev-latest").live).toBe(true);
+  expect(operatorLiveGate(loadOperatorConfig({ ...full, OPERATOR_EXECUTE: "false" }), "jev-latest").reasons).toEqual(["OPERATOR_EXECUTE is not true"]);
+  expect(operatorLiveGate(loadOperatorConfig({ ...full, OPERATOR_LIVE_ACK: "" }), "jev-latest").reasons).toEqual(["OPERATOR_LIVE_ACK is not OWN_FUNDS_RISK_OPERATOR"]);
+  expect(operatorLiveGate(loadOperatorConfig({ ...full, OPERATOR_LIVE_ACK: "  " }), "jev-latest").reasons).toEqual(["OPERATOR_LIVE_ACK is not OWN_FUNDS_RISK_OPERATOR"]);
+  expect(operatorLiveGate(loadOperatorConfig({ ...full, OPERATOR_PRIVATE_KEY: "" }), "jev-latest").reasons).toEqual(["OPERATOR_PRIVATE_KEY is not set"]);
+  expect(operatorLiveGate(loadOperatorConfig(full), "mock").reasons).toEqual(["live requires the real Jev model (--jev)"]);
+  expect(() => loadOperatorConfig({ ...full, PRIVATE_KEY: key.toUpperCase().replace("0X", "0x") })).toThrow("must differ from the trader PRIVATE_KEY");
+  expect(loadOperatorConfig({ ...full, PRIVATE_KEY: "0x" + "22".repeat(32) }).evmPrivateKey).toBe(key);
 });
