@@ -321,3 +321,22 @@ test("the script checks that the operator key is not the trader's account, and o
   const line = main.slice(main.lastIndexOf("\n", call), call);
   expect(line).toContain("liveGate.live && ledgerReady");
 });
+
+test("--init-ledger over an existing journal or state is refused without --accept-history, and the flag creates the ledger (R8 C3; R10 R17, R18)", async () => {
+  for (const history of ["journal", "state"] as const) {
+    const f = fixture();
+    writeFileSync(history === "journal" ? f.journal : f.state, "{}\n");
+    const refused = await f.run("--init-ledger");
+    expect(refused.code).toBe(1);
+    expect(refused.stderr).toContain("--accept-history");
+    expect(existsSync(f.ledger)).toBe(false);
+    expect(existsSync(f.lock)).toBe(false);
+
+    const accepted = await f.run("--init-ledger", "--accept-history");
+    expect(accepted.code).toBe(0);
+    expect(existsSync(f.ledger)).toBe(true);
+    const created = JSON.parse(readFileSync(f.ledger, "utf8"));
+    expect(created).toMatchObject({ version: 1, executedKeys: [], openLegs: [], cumulativeRealizedUsd: 0, lastExecutionAtMs: null });
+    expect(existsSync(f.lock)).toBe(false);
+  }
+});

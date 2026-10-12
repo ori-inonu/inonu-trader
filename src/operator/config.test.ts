@@ -55,3 +55,14 @@ test("OPERATOR_DECISION_TIMEOUT_MS defaults to 10000 and accepts only whole numb
     expect(() => loadOperatorConfig({ OPERATOR_DECISION_TIMEOUT_MS: bad })).toThrow("Invalid OPERATOR_DECISION_TIMEOUT_MS");
   }
 });
+
+test("R10 R13: the trader key is refused whatever the letter case, in both directions, and a different key passes", () => {
+  const lower = "0x" + "ab".repeat(32);
+  const upper = "0x" + "AB".repeat(32);
+  const mixed = "0x" + "aB".repeat(32);
+  for (const [operatorKey, traderKey] of [[lower, upper], [upper, lower], [lower, mixed], [mixed, upper]] as const) {
+    expect(() => loadOperatorConfig({ OPERATOR_PRIVATE_KEY: operatorKey, PRIVATE_KEY: traderKey })).toThrow("must differ from the trader PRIVATE_KEY");
+  }
+  expect(loadOperatorConfig({ OPERATOR_PRIVATE_KEY: lower, PRIVATE_KEY: "0x" + "cd".repeat(32) }).evmPrivateKey).toBe(lower);
+  expect(loadOperatorConfig({ OPERATOR_PRIVATE_KEY: lower }).evmPrivateKey).toBe(lower);
+});
