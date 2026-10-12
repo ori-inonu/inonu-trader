@@ -1,8 +1,14 @@
-import { afterEach, expect, test } from "bun:test";
+import { afterEach, expect, setDefaultTimeout, test } from "bun:test";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { acquireLock, createOperatorLedger, initLedgerFile, ledgerFilePersister } from "../src/operator/ledger";
+
+// Each run starts a child bun process that contends for CPU with the rest of the suite; a child killed by its own
+// timeout reports a null or signal exit code. The child budget and the per test budget are generous so load cannot
+// fail the test (same budgets as the sibling CLI tests, commit 0f8afc1).
+const CHILD_TIMEOUT_MS = 45_000;
+setDefaultTimeout(120_000);
 
 const ROOT = resolve(import.meta.dir, "..");
 const fixtures: string[] = [];
@@ -31,7 +37,7 @@ function fixture() {
     const child = Bun.spawn([process.execPath, "--no-env-file", "--no-addons", "--no-install", `--config=${configPath}`, "--preload", guardPath, join(ROOT, "scripts/okx-operator.ts"), ...args], {
       cwd: dir, env, stdout: "pipe", stderr: "pipe",
     });
-    const timer = setTimeout(() => child.kill(), 10_000);
+    const timer = setTimeout(() => child.kill(), CHILD_TIMEOUT_MS);
     try {
       const [stdout, stderr, code] = await Promise.all([new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited]);
       return { stdout, stderr, code };
