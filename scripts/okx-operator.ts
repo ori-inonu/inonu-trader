@@ -5,7 +5,7 @@ import { persistCycle, runOperatorCycle } from "../src/operator/cycle";
 import { JevOperatorModel, MockOperatorModel, type OperatorModel } from "../src/operator/jev-selector";
 import { createEthersEvmSigner, type ExecutorDeps } from "../src/operator/executor";
 import { acquireLock, createOperatorLedger, initLedgerFile, ledgerFilePersister, readLedgerFile, type OperatorLedger } from "../src/operator/ledger";
-import { parseRealizedUsd } from "../src/operator/cli-guards";
+import { killSwitchPresent, parseRealizedUsd } from "../src/operator/cli-guards";
 import { buildFundingCandidates, DEFAULT_FUNDING_INSTRUMENTS, okxPublicFundingSource, type FundingObservation } from "../src/operator/funding";
 import { DEFAULT_PAIRS, type BridgeQuoter, type DefiSource, type SwapQuoter } from "../src/operator/candidates";
 import { createOkxPortfolioClient, normalizeInventory, syntheticInventory, type InventorySnapshot } from "../src/okx-wallet/portfolio";
@@ -170,7 +170,8 @@ async function main() {
     return;
   }
 
-  const killSwitchExists = () => existsSync(operator.policy.killSwitchPath);
+  // Fail closed: only a clear ENOENT means the STOP file is absent (R8 N15).
+  const killSwitchExists = () => killSwitchPresent(operator.policy.killSwitchPath);
 
   let inventorySource: () => Promise<InventorySnapshot>;
   let swapQuoter: SwapQuoter;

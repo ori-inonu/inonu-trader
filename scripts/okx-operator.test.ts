@@ -17,7 +17,7 @@ afterEach(() => { for (const dir of fixtures.splice(0)) rmSync(dir, { recursive:
 function fixture(extraEnv: Record<string, string> = {}) {
   const dir = mkdtempSync(join(tmpdir(), "inonu-cli-lock-test-"));
   fixtures.push(dir);
-  const paths = { ledger: join(dir, "ledger.json"), lock: join(dir, "LOCK"), state: join(dir, "state.json"), journal: join(dir, "journal.jsonl") };
+  const paths = { ledger: join(dir, "ledger.json"), lock: join(dir, "LOCK"), state: join(dir, "state.json"), journal: join(dir, "journal.jsonl"), stop: join(dir, "STOP") };
   const configPath = join(dir, "bunfig.toml");
   const guardPath = join(dir, "offline.ts");
   writeFileSync(configPath, "[install]\nauto = false\n");
@@ -31,7 +31,7 @@ function fixture(extraEnv: Record<string, string> = {}) {
     MODEL: "mock", DRY_RUN: "true", OPERATOR_EXECUTE: "false",
     OPERATOR_LEDGER_PATH: paths.ledger, OPERATOR_LOCK_PATH: paths.lock,
     OPERATOR_STATE_PATH: paths.state, OPERATOR_JOURNAL_PATH: paths.journal,
-    OPERATOR_KILL_SWITCH_PATH: join(dir, "STOP"),
+    OPERATOR_KILL_SWITCH_PATH: paths.stop,
     ...extraEnv,
   });
   async function run(...args: string[]) {
@@ -275,4 +275,21 @@ test("--realized without --reconcile and --accept-history without --init-ledger 
   const init = await f.run("--init-ledger", "--accept-history");
   expect(init.code).toBe(0);
   expect(existsSync(f.ledger)).toBe(true);
+});
+
+test("the STOP file is reported by the cycle, and the script reads it through the fail-closed helper, not existsSync (R8 N15)", async () => {
+  const f = fixture();
+  const quiet = await f.run();
+  expect(quiet.code).toBe(0);
+  expect(quiet.stdout).not.toContain("KILL SWITCH ativo");
+  writeFileSync(f.stop, "");
+  const stopped = await f.run();
+  expect(stopped.code).toBe(0);
+  expect(stopped.stdout).toContain("KILL SWITCH ativo");
+
+  // existsSync answers false for any filesystem error, which would read an unreadable STOP as absent.
+  const source = readFileSync(join(ROOT, "scripts/okx-operator.ts"), "utf8");
+  const definition = source.match(/const killSwitchExists.*/)?.[0];
+  expect(definition).toContain("killSwitchPresent(operator.policy.killSwitchPath)");
+  expect(source.includes("existsSync(operator.policy.killSwitchPath)")).toBe(false);
 });
