@@ -293,3 +293,20 @@ test("the STOP file is reported by the cycle, and the script reads it through th
   expect(definition).toContain("killSwitchPresent(operator.policy.killSwitchPath)");
   expect(source.includes("existsSync(operator.policy.killSwitchPath)")).toBe(false);
 });
+
+test("OPERATOR_DECISION_TIMEOUT_MS is read by the script, an out of range value stops it, and the value reaches the cycle (R10 C9, A-14)", async () => {
+  const bad = fixture({ OPERATOR_DECISION_TIMEOUT_MS: "30001" });
+  const refused = await bad.run();
+  expect(refused.code).toBe(1);
+  expect(refused.stderr).toContain("Invalid OPERATOR_DECISION_TIMEOUT_MS");
+  expect(existsSync(bad.state)).toBe(false);
+  expect(existsSync(bad.lock)).toBe(false);
+  const ok = fixture({ OPERATOR_DECISION_TIMEOUT_MS: "5000" });
+  const ran = await ok.run();
+  expect(ran.code).toBe(0);
+  expect(ran.stdout).toContain("SYNTHETIC");
+
+  // The synthetic model answers at once, so no run can show the deadline; the forwarding is read from the source.
+  const source = readFileSync(join(ROOT, "scripts/okx-operator.ts"), "utf8");
+  expect(source.match(/decisionTimeoutMs: [^, }]*/)?.[0]).toBe("decisionTimeoutMs: operator.decisionTimeoutMs");
+});

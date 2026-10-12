@@ -45,3 +45,13 @@ test("settings that may be fractional stay fractional", () => {
   const policy = loadOperatorConfig({ OPERATOR_MAX_PLAN_USD: "2.5", OPERATOR_MAX_CAPITAL_FRACTION: "0.125", OPERATOR_MIN_NET_USD: "0.075", OPERATOR_MAX_FEE_GWEI: "0.5" }).policy;
   expect([policy.maxPlanUsd, policy.maxCapitalFraction, policy.minNetUsd, policy.maxFeeGwei]).toEqual([2.5, 0.125, 0.075, 0.5]);
 });
+
+test("OPERATOR_DECISION_TIMEOUT_MS defaults to 10000 and accepts only whole numbers from 1 to 30000 (R10 C9, A-14)", () => {
+  expect(loadOperatorConfig({}).decisionTimeoutMs).toBe(10_000);
+  expect(loadOperatorConfig({ OPERATOR_DECISION_TIMEOUT_MS: "1" }).decisionTimeoutMs).toBe(1);
+  expect(loadOperatorConfig({ OPERATOR_DECISION_TIMEOUT_MS: "5000" }).decisionTimeoutMs).toBe(5_000);
+  expect(loadOperatorConfig({ OPERATOR_DECISION_TIMEOUT_MS: "30000" }).decisionTimeoutMs).toBe(30_000);
+  for (const bad of ["0", "-1", "30001", "1.5", "", " ", "abc", "Infinity", "1e9"]) {
+    expect(() => loadOperatorConfig({ OPERATOR_DECISION_TIMEOUT_MS: bad })).toThrow("Invalid OPERATOR_DECISION_TIMEOUT_MS");
+  }
+});

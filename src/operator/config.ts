@@ -40,6 +40,8 @@ export interface OperatorConfig {
   ledgerPath: string;
   lockPath: string;
   intervalMs: number;
+  /** Deadline for the Jev decision of one cycle, ms (OPERATOR_DECISION_TIMEOUT_MS): a whole number from 1 to 30000, default 10000. */
+  decisionTimeoutMs: number;
   /** Explicit operator gate, separate from the Kuru trader's DRY_RUN and LIVE_ACK. */
   execute: boolean;
   /** OPERATOR_LIVE_ACK=OWN_FUNDS_RISK_OPERATOR; a second, operator-specific acknowledgement. */
@@ -165,6 +167,7 @@ export function loadOperatorConfig(source: Record<string, string | undefined> = 
     ledgerPath: path("OPERATOR_LEDGER_PATH", "data/operator/ledger.json"),
     lockPath: path("OPERATOR_LOCK_PATH", "data/operator/LOCK"),
     intervalMs: number("OPERATOR_INTERVAL_MS", 60_000, 1_000),
+    decisionTimeoutMs: whole("OPERATOR_DECISION_TIMEOUT_MS", 10_000, 1, 30_000),
     execute: bool("OPERATOR_EXECUTE", false),
     liveAck: liveAckRaw === "OWN_FUNDS_RISK_OPERATOR",
     evmPrivateKey,

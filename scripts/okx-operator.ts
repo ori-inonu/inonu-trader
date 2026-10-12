@@ -236,6 +236,7 @@ async function main() {
         candidateContext: { swapQuoter, bridgeQuoter, defiSource, homeChainIndex: "143", extraCandidates: buildFundingCandidates(funding, operator.policy.inferenceUsdPerCandidate) },
         executor, ledger, killSwitchExists,
         jevUsdPerMTok: useJev ? config.jevUsdPerMTok : 0,
+        decisionTimeoutMs: operator.decisionTimeoutMs,
       });
       persistCycle(cycle, operator.statePath, operator.journalPath);
       const chains = cycle.inventory.chains.map((chain) => `${chain.chainName} ${chain.knownValueUsd.toFixed(2)} USD${chain.valueComplete ? "" : " (parcial)"}`).join(" | ");
