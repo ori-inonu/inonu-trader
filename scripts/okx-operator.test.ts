@@ -310,3 +310,14 @@ test("OPERATOR_DECISION_TIMEOUT_MS is read by the script, an out of range value 
   const source = readFileSync(join(ROOT, "scripts/okx-operator.ts"), "utf8");
   expect(source.match(/decisionTimeoutMs: [^, }]*/)?.[0]).toBe("decisionTimeoutMs: operator.decisionTimeoutMs");
 });
+
+test("the script checks that the operator key is not the trader's account, and only when the live gate is open, before it builds the signer (R10 B1)", () => {
+  // The live path itself is never run here: no --live, no key, no network. This pins the order in the source.
+  const source = readFileSync(join(ROOT, "scripts/okx-operator.ts"), "utf8");
+  const main = source.slice(source.indexOf("async function main()"));
+  const call = main.indexOf("assertOperatorKeyIsDedicated(operator.evmPrivateKey!, config.privateKey)");
+  expect(call).toBeGreaterThan(-1);
+  expect(call).toBeLessThan(main.indexOf("createEthersEvmSigner("));
+  const line = main.slice(main.lastIndexOf("\n", call), call);
+  expect(line).toContain("liveGate.live && ledgerReady");
+});

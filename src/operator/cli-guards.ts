@@ -37,3 +37,23 @@ export function killSwitchPresent(path: string, stat: (path: string) => unknown 
     return (error as NodeJS.ErrnoException | null)?.code !== "ENOENT";
   }
 }
+
+/**
+ * The operator wallet is dedicated: its key must not belong to the trader's account (R8 C4, R10 B1).
+ * loadOperatorConfig already refuses two equal strings, but only when both variables sit in the same
+ * environment, and a string compare cannot see two spellings of one key (letter case, or k and k plus
+ * the order of the curve). This derives the address of each key locally (ethers, no network, nothing
+ * signed) and refuses equality. With no trader key there is nothing to compare, which is the case
+ * under `--env-file=.env.operator`: there only the guide's instruction to use a dedicated wallet
+ * protects the trader's account. Messages never carry a key or an address.
+ */
+export async function assertOperatorKeyIsDedicated(operatorKey: string, traderKey: string | undefined): Promise<void> {
+  if (!traderKey) return;
+  const { ethers } = await import("ethers");
+  const addressOf = (key: string, label: string): string => {
+    try { return ethers.utils.computeAddress(key).toLowerCase(); }
+    catch { throw new Error(`Cannot derive an address from ${label}; refusing to continue`); }
+  };
+  if (addressOf(operatorKey, "OPERATOR_PRIVATE_KEY") === addressOf(traderKey, "the trader PRIVATE_KEY"))
+    throw new Error("OPERATOR_PRIVATE_KEY derives the same address as the trader PRIVATE_KEY; the operator wallet must be dedicated");
+}

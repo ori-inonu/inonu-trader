@@ -5,7 +5,7 @@ import { persistCycle, runOperatorCycle } from "../src/operator/cycle";
 import { JevOperatorModel, MockOperatorModel, type OperatorModel } from "../src/operator/jev-selector";
 import { createEthersEvmSigner, type ExecutorDeps } from "../src/operator/executor";
 import { acquireLock, createOperatorLedger, initLedgerFile, ledgerFilePersister, readLedgerFile, type OperatorLedger } from "../src/operator/ledger";
-import { killSwitchPresent, parseRealizedUsd } from "../src/operator/cli-guards";
+import { assertOperatorKeyIsDedicated, killSwitchPresent, parseRealizedUsd } from "../src/operator/cli-guards";
 import { buildFundingCandidates, DEFAULT_FUNDING_INSTRUMENTS, okxPublicFundingSource, type FundingObservation } from "../src/operator/funding";
 import { DEFAULT_PAIRS, type BridgeQuoter, type DefiSource, type SwapQuoter } from "../src/operator/candidates";
 import { createOkxPortfolioClient, normalizeInventory, syntheticInventory, type InventorySnapshot } from "../src/okx-wallet/portfolio";
@@ -210,6 +210,8 @@ async function main() {
         }
         return;
       }
+      // The operator wallet is dedicated: refuse a key that derives the trader's address before any signer exists (R10 B1).
+      if (liveGate.live && ledgerReady) await assertOperatorKeyIsDedicated(operator.evmPrivateKey!, config.privateKey);
       const evmSigner = liveGate.live && ledgerReady ? await createEthersEvmSigner(operator.evmPrivateKey!, operator.rpcByChain, operator.policy.maxFeeGwei) : undefined;
       if (!liveGate.live) console.log(`execução real desligada: ${liveGate.reasons.join("; ")}`);
       else if (!ledgerReady) console.log("execução real desligada: ledger ausente");
