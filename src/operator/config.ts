@@ -4,7 +4,8 @@ import type { OperatorPolicy } from "./types";
 
 /**
  * Policy profiles by phase. "micro" is the default: single plans of at most 5 USD
- * or 5% of the known inventory, 20 USD and 4 plans per day, 15 minute cooldown.
+ * or 5% of the known inventory, 20 USD of notional per day counting both legs of a round
+ * trip (up to 2 plans of 5 USD) and at most 4 plans per day, 15 minute cooldown.
  * "standard" keeps the wider research limits. Explicit OPERATOR_* variables
  * override the profile value but never the hard ceilings below.
  */
