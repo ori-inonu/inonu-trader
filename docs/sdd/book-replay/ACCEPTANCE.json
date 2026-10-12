@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "kind": "future_profile_acceptance",
+  "profile": "offline_replay_v4",
+  "resultVersion": 3,
+  "status": "proposed_unfrozen",
+  "oldFrozenAcceptanceChanged": false,
+  "approved_by": null,
+  "human_response": false,
+  "criteria": [
+    {
+      "id": "V4-AC01",
+      "requirement": "Versioned primitive in-memory seam and synthetic-only CLI; original input/parser invariants; zero forbidden I/O.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC02",
+      "requirement": "Complete capture archive gates and exact known/null provenance across rejection, no-books, overflow and cancellation.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC03",
+      "requirement": "Observed producer terminal/report reason difference and unobserved disk timing accepted without invented equality or timing upgrade.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC04",
+      "requirement": "All original metadata/unit/receipt/applicability gates and quarantine unchanged.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC05",
+      "requirement": "All original ordinal/clock/origin/non-stitching gates unchanged.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC06",
+      "requirement": "Original phases/quarantine/duplicate/heartbeat/reset semantics and deep copies unchanged.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC07",
+      "requirement": "Original atomic numeric/schema/level update semantics unchanged.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC08",
+      "requirement": "Disposition-correct accepted update diagnostics; invalid events retain history but close usability.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC09",
+      "requirement": "Original finite input/resource limits and cooperative cancellation/yield behavior unchanged.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC10",
+      "requirement": "Independent exact summary capacity proof and adversarial four-string escaping/API regressions; no literal discard.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC11",
+      "requirement": "Result-byte min/max and exact-limit boundaries, both overflow paths and invalid-limit no-leak summary.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC12",
+      "requirement": "Stable canonical hashing includes retained facts; deep immutability; seven false flags; no forbidden outputs.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC13",
+      "requirement": "Actual TDD, scoped checks, fresh suites, separate fixed-copy reviews and exact guarded integration.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    },
+    {
+      "id": "V4-AC14",
+      "requirement": "Evidence/version/limit/authority limitations documented and old frozen task unchanged; design-only status explicit.",
+      "authoritativeDefinition": "SPEC.md#immutable-future-acceptance-to-freeze-only-after-design-review",
+      "implementationVerified": false
+    }
+  ]
+}
