@@ -124,6 +124,16 @@ bun run okx:operator --live --jev --loop
 
 O painel em http://localhost:3001 mostra o ciclo via `GET /operator` do backend na porta 3000. Para Solana, conecte a conta Solana da extensão no painel; a conta EVM e a conta Solana são endereços distintos, e a API de saldo precisa do endereço da família certa (`OPERATOR_ADDRESS` EVM cobre as redes EVM; para incluir Solana no inventário do backend use um ciclo separado com o endereço Solana e `OPERATOR_CHAINS=501`).
 
+### Lock obsoleto (`Operator lock present`)
+
+Todo escritor do CLI (o ciclo, `--init-ledger` e `--reconcile`) toma o lock `data/operator/LOCK` (ou `OPERATOR_LOCK_PATH`) antes de ler o ledger e o solta ao terminar. Se o CLI recusar com `Operator lock present at <caminho>; another operator may be running`, ou há outro operador vivo, ou um encerramento forçado (queda de energia, console fechado, processo morto) deixou o arquivo para trás. O lock nunca é removido automaticamente. Para decidir:
+
+1. Abra o arquivo do lock e leia o pid: ele guarda uma linha `<pid> <data ISO>`.
+2. Confira o processo: `tasklist /FI "PID eq <pid>"`. O Windows reaproveita pids, então um pid vivo só prova que o operador roda se a imagem for o `bun.exe` do operador.
+3. Operador vivo: não apague nada; deixe o ciclo terminar ou encerre-o pelo console dele.
+4. Processo inexistente (o `tasklist` informa que nenhuma tarefa corresponde) ou pid de outro programa: o lock é obsoleto. Apague o arquivo LOCK à mão, nunca com o operador vivo.
+5. Depois confira o ledger (`data/operator/ledger.json`). Se houver perna aberta (`leg1_sent`, `leg1_confirmed`, `leg2_sent`, `reconciliation_required` ou `failed`), confira as transações no explorer e feche-a com `bun run okx:operator --reconcile <planId> <closed|failed> --realized <usd>`.
+
 ## 4. O que o ciclo sintético mostra hoje
 
 O fixture sintético dá à X Layer uma ida e volta com líquido positivo (cerca de 0,13 USD em 25 USD) e às demais redes um líquido negativo. O Jev mock escolhe a ida e volta na X Layer, o plano sai `qualified_dry_run` e a execução registra `dry_run` porque o gate está fechado. O produto DeFi sintético é rejeitado por custo de subscribe desconhecido e o funding carry aparece como pesquisa. Lucro real depende de cotações reais que mostrem desvio entre rotas, de unidades qualificadas e de execução reconciliada; nenhum lucro foi realizado nesta entrega.
