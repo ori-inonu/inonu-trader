@@ -28,7 +28,7 @@ test("ledger enforces idempotency, daily caps, cooldown, kill switch and open le
   expect(restored.checkBeforeExecute({ ...input, nowMs: NOW + 86_400_000 }, limits)).toEqual(["idempotency_key_already_executed"]);
 });
 
-test("strict parse rejects missing fields, wrong types and unknown leg statuses", () => {
+test("strict parse rejects missing fields, wrong types, unknown leg statuses, out of range counters and repeated plan ids", () => {
   expect(() => parseLedger({ version: 2 })).toThrow("Corrupt operator ledger");
   const base = emptyLedger();
   expect(() => parseLedger({ ...base, dailyPlans: { "2026-10-10": "3" } })).toThrow("Corrupt operator ledger");
@@ -37,6 +37,28 @@ test("strict parse rejects missing fields, wrong types and unknown leg statuses"
   expect(() => parseLedger({ ...base, openLegs: [{ planId: "p" }] })).toThrow("Corrupt operator ledger");
   expect(() => parseLedger({ ...base, openLegs: [{ planId: "p", candidateId: "c", pairKey: "k", chainIndex: "1", openedAtMs: 1, txHash: "", intermediateAtomic: "1", status: "weird", closeTxHash: null, note: null }] })).toThrow("Corrupt operator ledger");
   expect(parseLedger(base)).toEqual(base);
+
+  // Ranges (R8 N12): a plan count is a non-negative integer and the notional never goes below zero.
+  const day = "2026-10-10";
+  expect(() => parseLedger({ ...base, dailyPlans: { [day]: -1 } })).toThrow("Corrupt operator ledger");
+  expect(() => parseLedger({ ...base, dailyPlans: { [day]: 1.5 } })).toThrow("Corrupt operator ledger");
+  expect(() => parseLedger({ ...base, dailyNotionalUsd: { [day]: -0.01 } })).toThrow("Corrupt operator ledger");
+  expect(() => parseLedger({ ...base, dailyNotionalUsd: { [day]: -10 } })).toThrow("Corrupt operator ledger");
+  // A plan id names one leg: a repeated id would make updateLeg and the reconcile patch two legs at once.
+  const leg = { planId: "plan_a", candidateId: "c", pairKey: "196:USDT/OKB", chainIndex: "196", openedAtMs: 1, txHash: "0x1", intermediateAtomic: "1", status: "leg1_sent", closeTxHash: null, note: null };
+  expect(() => parseLedger({ ...base, openLegs: [leg, { ...leg, candidateId: "other", pairKey: "other" }] })).toThrow("Corrupt operator ledger");
+  expect(() => parseLedger({ ...base, openLegs: [leg, { ...leg, status: "closed" }] })).toThrow("Corrupt operator ledger");
+  expect(parseLedger({ ...base, openLegs: [leg, { ...leg, planId: "plan_b" }] }).openLegs).toHaveLength(2);
+});
+
+test("strict parse keeps accepting what the executor writes: cents of notional, zero counters, signed results", () => {
+  const base = emptyLedger();
+  const day = "2026-10-10";
+  const written = { ...base, dailyNotionalUsd: { [day]: 9.74 }, dailyPlans: { [day]: 0 }, dailyRealizedUsd: { [day]: -0.42 }, cumulativeRealizedUsd: -0.42 };
+  expect(parseLedger(written)).toEqual(written);
+  const ledger = createOperatorLedger(emptyLedger(), () => {});
+  ledger.recordExecution({ idempotencyKey: "k", sizeUsd: 4.37 * 2, nowMs: NOW, leg: null });
+  expect(parseLedger(JSON.parse(JSON.stringify(ledger.state())))).toEqual(ledger.state());
 });
 
 test("reconciled losses accumulate per day, per week and as drawdown, each with its own stop", () => {

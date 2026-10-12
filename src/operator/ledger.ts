@@ -97,6 +97,21 @@ function finiteMap(value: unknown): value is Record<string, number> {
   return isRecord(value) && Object.entries(value).every(([key, entry]) => /^\d{4}-\d{2}-\d{2}$/.test(key) && typeof entry === "number" && Number.isFinite(entry));
 }
 
+/** Notional per day: never negative; fractions are legitimate (sizes are in USD with cents). */
+function notionalMap(value: unknown): value is Record<string, number> {
+  return finiteMap(value) && Object.values(value).every((entry) => entry >= 0);
+}
+
+/** Plans per day: a count, so a non-negative integer. */
+function countMap(value: unknown): value is Record<string, number> {
+  return finiteMap(value) && Object.values(value).every((entry) => Number.isSafeInteger(entry) && entry >= 0);
+}
+
+/** A plan id names one leg: updateLeg and the reconcile patch every leg that carries it. */
+function distinctPlanIds(legs: OpenLeg[]): boolean {
+  return new Set(legs.map((leg) => leg.planId)).size === legs.length;
+}
+
 function validLeg(value: unknown): value is OpenLeg {
   return isRecord(value) && typeof value.planId === "string" && typeof value.candidateId === "string" && typeof value.pairKey === "string" &&
     typeof value.chainIndex === "string" && Number.isSafeInteger(value.openedAtMs) && typeof value.txHash === "string" &&
@@ -111,10 +126,10 @@ function validLeg(value: unknown): value is OpenLeg {
 /** Strict parse (R5 A3): every field must have its exact type; nothing defaults silently. */
 export function parseLedger(value: unknown): OperatorLedgerState {
   if (!isRecord(value) || value.version !== 1 || !Array.isArray(value.executedKeys) || !value.executedKeys.every((key) => typeof key === "string") ||
-    !finiteMap(value.dailyNotionalUsd) || !finiteMap(value.dailyPlans) || !finiteMap(value.dailyRealizedUsd) ||
+    !notionalMap(value.dailyNotionalUsd) || !countMap(value.dailyPlans) || !finiteMap(value.dailyRealizedUsd) ||
     typeof value.cumulativeRealizedUsd !== "number" || !Number.isFinite(value.cumulativeRealizedUsd) ||
     typeof value.peakRealizedUsd !== "number" || !Number.isFinite(value.peakRealizedUsd) ||
-    !Array.isArray(value.openLegs) || !value.openLegs.every(validLeg) ||
+    !Array.isArray(value.openLegs) || !value.openLegs.every(validLeg) || !distinctPlanIds(value.openLegs) ||
     !(value.lastExecutionAtMs === null || Number.isSafeInteger(value.lastExecutionAtMs)))
     throw new Error("Corrupt operator ledger");
   return value as unknown as OperatorLedgerState;
