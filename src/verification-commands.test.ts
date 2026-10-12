@@ -1,7 +1,7 @@
 import { expect, setDefaultTimeout, test } from "bun:test";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { delimiter, dirname, join } from "node:path";
+import { delimiter, dirname, join, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 
 // The child build wrapper contends for CPU with the rest of the suite; generous child and per test budgets.
@@ -17,6 +17,22 @@ test("default backend verification includes source and maintained script regress
 
 test("default frontend verification discovers every library regression test", () => {
   expect(webPackage.scripts.test).toBe("bun --no-env-file test --parallel=1 --timeout 15000 ./src/lib");
+});
+
+test("every frontend test file sits inside the ./src/lib glob that the default frontend verification runs", () => {
+  // The glob above is frozen, so a test written beside its component would silently never run in test:all.
+  const lib = join(import.meta.dir, "..", "web", "src", "lib");
+  const all: string[] = [];
+  const walk = (directory: string) => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) { if (entry.name !== "node_modules" && entry.name !== ".next") walk(path); }
+      else if (/\.(?:test|spec)\.(?:ts|tsx|js|jsx|mjs)$/.test(entry.name)) all.push(path);
+    }
+  };
+  walk(join(import.meta.dir, "..", "web", "src"));
+  expect(all.length).toBeGreaterThan(60);
+  expect(all.filter((path) => relative(lib, path).startsWith("..")).map((path) => relative(join(import.meta.dir, ".."), path).replaceAll("\\", "/"))).toEqual([]);
 });
 
 test("aggregate verification includes both packages and the canonical production build", () => {
