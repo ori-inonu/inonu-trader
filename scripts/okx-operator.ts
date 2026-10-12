@@ -130,6 +130,9 @@ async function main() {
     ...(realizedIndex >= 0 ? args.slice(realizedIndex + 1, realizedIndex + 2) : []),
   ];
   for (const arg of args) if (!flags.has(arg) && !positional.includes(arg)) throw new UsageError(`Flag desconhecida: ${arg}\n${usage()}`);
+  // A flag that belongs to another one must not be silently ignored while the cycle runs anyway (R10 B3).
+  if (realizedIndex >= 0 && reconcileIndex < 0) throw new UsageError("--realized só vale junto de --reconcile <planId> <closed|failed>; sozinho ele seria ignorado.");
+  if (args.includes("--accept-history") && !args.includes("--init-ledger")) throw new UsageError("--accept-history só vale junto de --init-ledger; sozinho ele seria ignorado.");
   const live = args.includes("--live");
   const useJev = args.includes("--jev");
   const loop = args.includes("--loop");

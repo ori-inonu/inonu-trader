@@ -250,3 +250,29 @@ test("a plan takes one result: the second --realized is refused, but a leg that 
   expect(after.cumulativeRealizedUsd).toBe(-1.5);
   expect(existsSync(f.lock)).toBe(false);
 });
+
+test("--realized without --reconcile and --accept-history without --init-ledger are usage errors that run nothing (R10 B3)", async () => {
+  const f = fixture();
+  const stray = await f.run("--realized", "-0.25");
+  expect(stray.code).toBe(1);
+  expect(stray.stderr).toContain("--realized");
+  expect(stray.stdout).not.toContain("SYNTHETIC");
+  expect(existsSync(f.state)).toBe(false);
+  expect(existsSync(f.journal)).toBe(false);
+  expect(existsSync(f.ledger)).toBe(false);
+  expect(existsSync(f.lock)).toBe(false);
+
+  const history = await f.run("--accept-history");
+  expect(history.code).toBe(1);
+  expect(history.stderr).toContain("--accept-history");
+  expect(history.stdout).not.toContain("SYNTHETIC");
+  expect(existsSync(f.state)).toBe(false);
+  expect(existsSync(f.journal)).toBe(false);
+  expect(existsSync(f.ledger)).toBe(false);
+  expect(existsSync(f.lock)).toBe(false);
+
+  // Each flag is still accepted next to the one it belongs to.
+  const init = await f.run("--init-ledger", "--accept-history");
+  expect(init.code).toBe(0);
+  expect(existsSync(f.ledger)).toBe(true);
+});
