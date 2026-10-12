@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { WalletProposalReviewView } from "./WalletProposalReview";
-import type { WalletProposalReviewSnapshot } from "../../lib/wallet-proposal-review";
+import { WalletProposalReviewView } from "../components/WalletProposalReview/WalletProposalReview";
+import type { WalletProposalReviewSnapshot } from "./wallet-proposal-review";
 
 const EMPTY: WalletProposalReviewSnapshot = { status: "empty", text: "", reason: null, executionQualified: false, proposal: null, observedAtMs: null };
 const noAction = () => {};

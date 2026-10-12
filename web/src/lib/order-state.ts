@@ -7,7 +7,7 @@ export interface OrderState {
 }
 
 const QUOTE_STATE: Record<Quote["status"], OrderState> = {
-  sent: { label: "Orden enviada", tone: "neutral" },
+  sent: { label: "Ordem enviada", tone: "neutral" },
   placed: { label: "Ordem no livro", tone: "buy" },
   reverted: { label: "Ordem revertida", tone: "sell" },
   lost: { label: "Ordem perdida", tone: "sell" },

@@ -152,6 +152,25 @@ export function defaultEvmRpcFetch(timeoutMs = 8_000): EvmRpcFetch {
   };
 }
 
+/**
+ * RPC overrides from the build environment, one literal access per network of EVM_CHAINS. Next replaces only the literal
+ * form NEXT_PUBLIC_NAME read as a property of the process environment object in the browser bundle, so that object handed
+ * over whole, a computed key or a loop gives the panel an empty record and no override ever arrives. A network added to
+ * EVM_CHAINS needs a line here and a line in web/.env.example; evm-rpc-overrides.test.ts fails until both exist.
+ */
+export function publicEvmRpcOverrides(): Record<string, string | undefined> {
+  return {
+    NEXT_PUBLIC_EVM_RPC_143: process.env.NEXT_PUBLIC_EVM_RPC_143,
+    NEXT_PUBLIC_EVM_RPC_196: process.env.NEXT_PUBLIC_EVM_RPC_196,
+    NEXT_PUBLIC_EVM_RPC_1: process.env.NEXT_PUBLIC_EVM_RPC_1,
+    NEXT_PUBLIC_EVM_RPC_56: process.env.NEXT_PUBLIC_EVM_RPC_56,
+    NEXT_PUBLIC_EVM_RPC_8453: process.env.NEXT_PUBLIC_EVM_RPC_8453,
+    NEXT_PUBLIC_EVM_RPC_42161: process.env.NEXT_PUBLIC_EVM_RPC_42161,
+    NEXT_PUBLIC_EVM_RPC_137: process.env.NEXT_PUBLIC_EVM_RPC_137,
+    NEXT_PUBLIC_EVM_RPC_10: process.env.NEXT_PUBLIC_EVM_RPC_10,
+  };
+}
+
 function rpcUrlFor(chain: EvmChainSpec, overrides: Record<string, string | undefined>): string {
   const override = overrides[`NEXT_PUBLIC_EVM_RPC_${chain.chainIndex}`];
   return override && /^https?:\/\//.test(override) ? override : chain.rpcUrl;

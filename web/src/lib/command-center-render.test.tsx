@@ -5,7 +5,7 @@ import { eventFixture, fillFixture, quoteFixture } from "./test-fixtures";
 import type { BlockEvent } from "./types";
 
 test.each([
-  [eventFixture({ quote: quoteFixture({ status: "sent" }) }), "Orden enviada"],
+  [eventFixture({ quote: quoteFixture({ status: "sent" }) }), "Ordem enviada"],
   [eventFixture({ quote: quoteFixture({ status: "placed" }) }), "Ordem no livro"],
   [eventFixture({ quote: quoteFixture({ status: "reverted" }) }), "Ordem revertida"],
   [eventFixture({ quote: quoteFixture({ status: "lost" }) }), "Ordem perdida"],

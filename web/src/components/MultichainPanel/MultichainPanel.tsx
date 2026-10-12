@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useOkxWallet } from "@/lib/useOkxWallet";
 import { useOkxSolana } from "@/lib/useOkxSolana";
-import { defaultEvmRpcFetch, readMultichainBalances, type ChainBalanceResult, type MultichainSnapshot } from "@/lib/evm-multichain";
+import { defaultEvmRpcFetch, publicEvmRpcOverrides, readMultichainBalances, type ChainBalanceResult, type MultichainSnapshot } from "@/lib/evm-multichain";
 import { formatWalletObservationTime, getWalletBalanceFreshness, startWalletFreshnessTicker } from "@/lib/wallet-freshness";
 import styles from "./MultichainPanel.module.css";
 
@@ -157,7 +157,7 @@ export default function MultichainPanel() {
     if (!account || busy) return;
     setBusy(true);
     setError(null);
-    readMultichainBalances(account, defaultEvmRpcFetch(), { overrides: process.env as Record<string, string | undefined> })
+    readMultichainBalances(account, defaultEvmRpcFetch(), { overrides: publicEvmRpcOverrides() })
       .then((snapshot) => setMultichain(snapshot))
       .catch(() => setError("Não foi possível consultar as redes."))
       .finally(() => setBusy(false));

@@ -46,9 +46,9 @@
     "okx:operator": "bun --no-env-file run scripts/okx-operator.ts",
     "system-one": "bun --no-env-file run scripts/system-one.ts",
     "jev-read": "bun --no-env-file run scripts/jev-read.ts",
-    "real:console": "bun run scripts/real-console.ts",
-    "real:start": "bun run scripts/real-start.ts",
-    "real:doctor": "bun run scripts/real-doctor.ts",
+    "real:console": "bun --no-env-file run scripts/real-console.ts",
+    "real:start": "bun --no-env-file run scripts/real-start.ts",
+    "real:doctor": "bun --no-env-file run scripts/real-doctor.ts",
     "reports:serve": "bun --no-env-file --no-install scripts/reports-server.ts",
     "pilot": "bun --no-env-file run scripts/gev-wallet-pilot.ts",
     "pilot:fixture": "bun --no-env-file run scripts/gev-wallet-pilot-fixture.ts --fixture"
