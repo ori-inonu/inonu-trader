@@ -50,10 +50,20 @@ export interface FeedStatus {
   readonly lastError: string | null;
 }
 
+interface ConfirmedOrdering<T> {
+  value: T | null;
+  sourceTsMs: number | null;
+  pending: T[];
+  lost: { minSourceTsMs: number; maxSourceTsMs: number; minReceiptMonoMs: number } | null;
+}
+
+const newOrdering = <T>(): ConfirmedOrdering<T> => ({ value: null, sourceTsMs: null, pending: [], lost: null });
+
 interface Memory {
   book: { bids: TapeLevel[]; asks: TapeLevel[]; receivedAtMs: number; proof: ValueProof } | null;
   bookLastSourceTsMs: number | null;
   bookCaptureId: number;
+  bookOrdering: ConfirmedOrdering<NonNullable<Memory["book"]>>;
   trades: TapeTrade[];
   tradesLostThroughMonoMs: number | null;
   tradesGapSinceMonoMs?: number;
@@ -61,6 +71,7 @@ interface Memory {
   ticker: TapeInput["ticker"];
   tickerLastSourceTsMs: number | null;
   tickerCaptureId: number;
+  tickerOrdering: ConfirmedOrdering<NonNullable<TapeInput["ticker"]>>;
   funding: FundingObservation | null;
   fundingCaptureId: number;
   fundingConflictTsMs: number | null;
@@ -74,6 +85,8 @@ export const DEFAULT_FUNDING_MAX_AGE_MS = 120_000;
 /** Longer than the 60 s flow window with margin; the hard cap only bounds memory against a flood. */
 const TRADE_RETAIN_MS = 120_000;
 const MAX_TRADES = 5_000;
+/** Pending validation is bounded; lost history requires provably superseding valid data. */
+const MAX_PENDING_VALUES = 256;
 const PING_AFTER_MS = 25_000;
 const RECONNECT_AFTER_MS = 60_000;
 const CONNECT_TIMEOUT_MS = 10_000;
@@ -136,7 +149,7 @@ export class OkxTapeFeed {
     const fundingMaxAgeMs = options.fundingMaxAgeMs === undefined ? DEFAULT_FUNDING_MAX_AGE_MS : options.fundingMaxAgeMs;
     if (!Number.isSafeInteger(fundingMaxAgeMs) || fundingMaxAgeMs <= 0) throw new RangeError("fundingMaxAgeMs must be a positive safe integer");
     this.options = { ...options, fundingMaxAgeMs, now: options.now ?? Date.now, monotonicNow: options.monotonicNow ?? (() => performance.now()), wsUrl: options.wsUrl ?? DEFAULT_WS, restOrigin: options.restOrigin ?? DEFAULT_REST };
-    for (const instId of options.instIds) this.memory.set(instId, { book: null, bookLastSourceTsMs: null, bookCaptureId: 0, trades: [], tradesLostThroughMonoMs: null, candles: [], ticker: null, tickerLastSourceTsMs: null, tickerCaptureId: 0, funding: null, fundingCaptureId: 0, fundingConflictTsMs: null, fundingLastSourceTsMs: null });
+    for (const instId of options.instIds) this.memory.set(instId, { book: null, bookLastSourceTsMs: null, bookCaptureId: 0, bookOrdering: newOrdering(), trades: [], tradesLostThroughMonoMs: null, candles: [], ticker: null, tickerLastSourceTsMs: null, tickerCaptureId: 0, tickerOrdering: newOrdering(), funding: null, fundingCaptureId: 0, fundingConflictTsMs: null, fundingLastSourceTsMs: null });
   }
 
   start(): void {
@@ -146,9 +159,11 @@ export class OkxTapeFeed {
       memory.book = null;
       memory.bookLastSourceTsMs = null;
       memory.bookCaptureId = 0;
+      memory.bookOrdering = newOrdering();
       memory.ticker = null;
       memory.tickerLastSourceTsMs = null;
       memory.tickerCaptureId = 0;
+      memory.tickerOrdering = newOrdering();
       memory.funding = null;
       memory.fundingConflictTsMs = null;
       memory.fundingLastSourceTsMs = null;
@@ -166,9 +181,11 @@ export class OkxTapeFeed {
       memory.book = null;
       memory.bookLastSourceTsMs = null;
       memory.bookCaptureId = 0;
+      memory.bookOrdering = newOrdering();
       memory.ticker = null;
       memory.tickerLastSourceTsMs = null;
       memory.tickerCaptureId = 0;
+      memory.tickerOrdering = newOrdering();
       memory.funding = null;
       memory.fundingConflictTsMs = null;
       memory.fundingLastSourceTsMs = null;
@@ -219,6 +236,7 @@ export class OkxTapeFeed {
     const memory = this.memory.get(instId);
     if (memory === undefined) throw new Error(`instrument not tracked: ${instId}`);
     const monotonicNowMs = this.options.monotonicNow();
+    this.reconcileOrdering(memory, exchangeNowMs, monotonicNowMs);
     this.pruneTrades(memory, monotonicNowMs);
     const acknowledgedAtMonoMs = this.tradesAcknowledgedAt.get(instId);
     const socketOpen = this.socket !== null && this.socket.readyState === WS_OPEN;
@@ -249,6 +267,7 @@ export class OkxTapeFeed {
   ages(instId: string, _wallNowMs: number, exchangeNowMs: number | null): { bookAgeMs: number | null; tickerAgeMs: number | null } {
     const memory = this.memory.get(instId);
     const monotonicNowMs = this.options.monotonicNow();
+    if (memory) this.reconcileOrdering(memory, exchangeNowMs, monotonicNowMs);
     const age = (proof: ValueProof | undefined, kind: "book" | "ticker"): number | null => {
       if (!proof || proof.feedId !== this.feedId || proof.feedEpoch !== this.feedEpoch ||
         !Number.isSafeInteger(proof.captureId) || proof.captureId <= 0 || proof.forSpotInstId !== instId ||
@@ -581,6 +600,11 @@ export class OkxTapeFeed {
   private acceptTicker(memory: Memory, incoming: NonNullable<Memory["ticker"]>): void {
     if (incoming.proof.captureId < memory.tickerCaptureId) return;
     memory.tickerCaptureId = incoming.proof.captureId;
+    this.stageObservation(memory.tickerOrdering, incoming);
+    this.applyTicker(memory, incoming);
+  }
+
+  private applyTicker(memory: Memory, incoming: NonNullable<Memory["ticker"]>): void {
     const sourceTsMs = incoming.proof.sourceTsMs;
     if (memory.tickerLastSourceTsMs !== null && sourceTsMs < memory.tickerLastSourceTsMs) return;
     if (sourceTsMs === memory.tickerLastSourceTsMs) {
@@ -597,6 +621,11 @@ export class OkxTapeFeed {
   private acceptBook(memory: Memory, incoming: NonNullable<Memory["book"]>): void {
     if (incoming.proof.captureId < memory.bookCaptureId) return;
     memory.bookCaptureId = incoming.proof.captureId;
+    this.stageObservation(memory.bookOrdering, incoming);
+    this.applyBook(memory, incoming);
+  }
+
+  private applyBook(memory: Memory, incoming: NonNullable<Memory["book"]>): void {
     const sourceTsMs = incoming.proof.sourceTsMs;
     if (memory.bookLastSourceTsMs !== null && sourceTsMs < memory.bookLastSourceTsMs) return;
     if (sourceTsMs === memory.bookLastSourceTsMs) {
@@ -611,6 +640,81 @@ export class OkxTapeFeed {
     memory.book = incoming;
   }
 
+  private stageObservation<T extends { receivedAtMs: number; proof: ValueProof }>(ordering: ConfirmedOrdering<T>, incoming: T): void {
+    if (ordering.pending.length >= MAX_PENDING_VALUES) {
+      const evicted = ordering.pending.shift()!;
+      const proof = evicted.proof;
+      // Invalid immutable receipts cannot contribute valid ordering history.
+      if (Number.isSafeInteger(proof.receivedAtMs) && proof.receivedAtMs >= 0 &&
+        evicted.receivedAtMs === proof.receivedAtMs && Number.isFinite(proof.receivedAtMonoMs) && proof.receivedAtMonoMs >= 0 &&
+        proof.feedId === this.feedId && proof.feedEpoch === this.feedEpoch &&
+        (proof.wsGeneration === null || proof.wsGeneration === this.wsGeneration)) {
+        const lost = ordering.lost;
+        ordering.lost = { minSourceTsMs: Math.min(lost?.minSourceTsMs ?? proof.sourceTsMs, proof.sourceTsMs),
+          maxSourceTsMs: Math.max(lost?.maxSourceTsMs ?? proof.sourceTsMs, proof.sourceTsMs),
+          minReceiptMonoMs: Math.min(lost?.minReceiptMonoMs ?? proof.receivedAtMonoMs, proof.receivedAtMonoMs) };
+      }
+    }
+    ordering.pending.push(incoming);
+  }
+
+  /** Admission never uses the wall clock to confirm an exchange source watermark. */
+  private reconcileOrdering(memory: Memory, exchangeNowMs: number | null, monotonicNowMs: number): void {
+    if (exchangeNowMs === null || !Number.isFinite(exchangeNowMs) || exchangeNowMs < 0 ||
+      exchangeNowMs > Number.MAX_SAFE_INTEGER || !Number.isFinite(monotonicNowMs) || monotonicNowMs < 0) return;
+    const reconcile = <T extends { receivedAtMs: number; proof: ValueProof }>(ordering: ConfirmedOrdering<T>,
+      read: () => T | null, write: (value: T | null, sourceTsMs: number | null) => void,
+      apply: (value: T) => void): void => {
+      if (ordering.lost) write(null, ordering.sourceTsMs);
+      if (ordering.pending.length === 0) return;
+      write(ordering.lost ? null : ordering.value, ordering.sourceTsMs);
+      let rejected: T | null = null;
+      const deferred: T[] = [];
+      let admittedCaptureId = -1;
+      for (const observation of ordering.pending) {
+        const proof = observation.proof;
+        if (!Number.isSafeInteger(proof.receivedAtMs) || proof.receivedAtMs < 0 ||
+          observation.receivedAtMs !== proof.receivedAtMs ||
+          !Number.isFinite(proof.receivedAtMonoMs) || proof.receivedAtMonoMs < 0 ||
+          proof.feedId !== this.feedId || proof.feedEpoch !== this.feedEpoch ||
+          (proof.wsGeneration !== null && proof.wsGeneration !== this.wsGeneration)) {
+          rejected = observation;
+          continue;
+        }
+        if (proof.sourceTsMs > exchangeNowMs || proof.receivedAtMonoMs > monotonicNowMs) {
+          deferred.push(observation);
+          rejected = observation;
+          continue;
+        }
+        if (ordering.lost) {
+          const lost = ordering.lost;
+          // A strictly newer valid source supersedes all evicted history.
+          // Entirely future history is superseded by this later valid capture.
+          if (proof.sourceTsMs <= lost.maxSourceTsMs && lost.minSourceTsMs <= exchangeNowMs &&
+            lost.minReceiptMonoMs <= monotonicNowMs) continue;
+          ordering.lost = null;
+          write(ordering.value, ordering.sourceTsMs);
+        }
+        if (ordering.sourceTsMs !== null && proof.sourceTsMs < ordering.sourceTsMs) continue;
+        apply(observation);
+        ordering.sourceTsMs = proof.sourceTsMs;
+        ordering.value = read();
+        admittedCaptureId = proof.captureId;
+        rejected = null;
+      }
+      ordering.pending = deferred.filter(observation => observation.proof.captureId > admittedCaptureId);
+      // Expose rejected data only as an invalid value for existing stale gates.
+      // Its timestamp is never installed in the confirmed ordering watermark.
+      if (rejected) write(rejected, ordering.sourceTsMs);
+    };
+    reconcile(memory.bookOrdering, () => memory.book,
+      (value, ts) => { memory.book = value; memory.bookLastSourceTsMs = ts; },
+      (value) => this.applyBook(memory, value));
+    reconcile(memory.tickerOrdering, () => memory.ticker,
+      (value, ts) => { memory.ticker = value; memory.tickerLastSourceTsMs = ts; },
+      (value) => this.applyTicker(memory, value));
+  }
+
   private recordTradeGap(memory: Memory, nowMonoMs: number): void {
     memory.tradesGapSinceMonoMs = nowMonoMs;
     memory.tradesLostThroughMonoMs = Math.max(memory.tradesLostThroughMonoMs ?? nowMonoMs, nowMonoMs);
@@ -623,7 +727,9 @@ export class OkxTapeFeed {
     for (let index = 0; index < drop; index += 1) {
       const receipt = memory.trades[index]!.proof.receivedAtMonoMs;
       const age = nowMonoMs - receipt;
-      if (age >= 0 && age <= FLOW_WINDOW_MS) memory.tradesLostThroughMonoMs = Math.max(memory.tradesLostThroughMonoMs ?? receipt, receipt);
+      // A receipt ahead of a rolled-back clock is still known lost data.
+      // Keep its original time so returning to that clock cannot erase the loss.
+      if (age <= FLOW_WINDOW_MS) memory.tradesLostThroughMonoMs = Math.max(memory.tradesLostThroughMonoMs ?? receipt, receipt);
     }
     if (drop > 0) memory.trades.splice(0, drop);
   }

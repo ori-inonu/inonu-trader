@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, test } from "bun:test";
 import { OkxTapeFeed, type FeedSocket } from "./feed";
 import { buildTapeState } from "./state";
 import { runJevRead } from "./read";
+import { ClockKeeper, readRound } from "./loop";
+import type { JevReadStore } from "./store";
 
 class FakeSocket implements FeedSocket {
   static instances: FakeSocket[] = [];
@@ -243,6 +245,57 @@ describe("OkxTapeFeed socket ownership", () => {
 });
 
 describe("OkxTapeFeed funding validity policy", () => {
+  test("omitted funding TTL uses inclusive source and cache boundaries through the public model path", async () => {
+    for (const domain of ["source", "cache"] as const) {
+      for (const rate of [-0.004, 0, 0.004]) {
+        let exchange = 2_000_000_000_000;
+        clock = exchange;
+        let mono = 140_000;
+        let calls = 0;
+        const feed = makeFeed({ monotonicNow: () => mono, fetchImpl: async (input) => {
+          const url = String(input);
+          if (url.includes("funding-rate")) return Response.json({ code: "0", data: [
+            { instId: "BTC-USDT-SWAP", ts: String(exchange), fundingRate: String(rate) },
+          ] });
+          return Response.json({ code: "0", data: Array.from({ length: 31 }, (_, i) =>
+            [String(exchange - i * 60_000), "100", "100", "100", "100", "1", "1", "1", "1"]),
+          });
+        } });
+        feed.start();
+        const socket = FakeSocket.instances.at(-1)!;
+        socket.open();
+        socket.emit({ event: "subscribe", arg: { channel: "trades", instId: "BTC-USDT" } });
+        mono = 200_000;
+        await feed.refreshFunding("BTC-USDT");
+        const model = { name: "default-funding-boundary", decide: async () => {
+          calls += 1;
+          return { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, latencyMs: 0 };
+        } };
+        for (const [index, age] of [0, 119_999, 120_000, 120_001].entries()) {
+          exchange = 2_000_000_000_000 + (domain === "source" ? age : index);
+          mono = 200_000 + (domain === "cache" ? age : 0);
+          clock = exchange + (domain === "source" ? 180_000 : -180_000);
+          socket.emit({ arg: { channel: "books5", instId: "BTC-USDT" }, data: [
+            { ts: String(exchange), bids: [["99", "1"]], asks: [["101", "1"]] },
+          ] });
+          socket.emit({ arg: { channel: "tickers", instId: "BTC-USDT" }, data: [
+            { ts: String(exchange), last: "100" },
+          ] });
+          await feed.refreshCandles("BTC-USDT");
+          const value = feed.snapshot("BTC-USDT", clock, exchange);
+          expect(value.fundingMaxAgeMs).toBe(120_000);
+          const read = await runJevRead(value, { now: () => exchange, model });
+          expect(read.insufficient).toEqual([]);
+          expect(read.state?.fundingRatePct).toBe(age === 120_001 ? null : rate * 100);
+          expect(read.decision?.status).toBe("ok");
+          expect(read.execution).toBe("never");
+        }
+        expect(calls).toBe(4);
+        feed.stop();
+      }
+    }
+  });
+
   test("funding carries its source and immutable capture clocks in the feed domain", async () => {
     let mono = 10.5;
     const feed = makeFeed({ monotonicNow: () => mono, fetchImpl: async () => ({ ok: true, status: 200,
@@ -357,6 +410,117 @@ describe("OkxTapeFeed socket", () => {
 });
 
 describe("OkxTapeFeed messages", () => {
+  test.each([false, true])("public readRound rejects candles that expire while a real feed ticker refresh awaits, failure=%s", async (failure) => {
+    const base = 2_000_000_000_000;
+    clock = base;
+    let mono = 140_000;
+    let calls = 0;
+    let tickerRefreshes = 0;
+    const feed = makeFeed({ monotonicNow: () => mono, fetchImpl: async (input) => {
+      if (String(input).includes("ticker?")) {
+        tickerRefreshes += 1;
+        await Promise.resolve();
+        mono += 10_000;
+        clock += 10_000;
+        freshBook();
+        if (failure) throw new Error("ticker transport unavailable");
+        return Response.json({ code: "0", data: [{ instId: "BTC-USDT", ts: String(clock), last: "100" }] });
+      }
+      return Response.json({ code: "0", data: Array.from({ length: 31 }, (_, i) =>
+        [String(base - 130_000 - i * 60_000), "100", "100", "100", "100", "1", "1", "1", "1"]),
+      });
+    } });
+    feed.start();
+    const socket = FakeSocket.instances.at(-1)!;
+    socket.open();
+    socket.emit({ event: "subscribe", arg: { channel: "trades", instId: "BTC-USDT" } });
+    const freshBook = () => socket.emit({ arg: { channel: "books5", instId: "BTC-USDT" }, data: [
+      { ts: String(clock), bids: [["99", "1"]], asks: [["101", "1"]] },
+    ] });
+    mono = 200_000;
+    const keeper = new ClockKeeper({ mono: () => mono, wall: () => clock,
+      measure: async () => ({ offsetMs: 0, roundTripMs: 0, measuredAtMs: clock }) });
+    await keeper.refresh();
+    freshBook();
+    socket.emit({ arg: { channel: "tickers", instId: "BTC-USDT" }, data: [{ ts: String(clock), last: "100" }] });
+    await feed.refreshCandles("BTC-USDT");
+    const model = { name: "public-post-await", decide: async () => {
+      calls += 1;
+      return { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, latencyMs: 0 };
+    } };
+    const stored: unknown[] = [];
+    const store = { record: (value: unknown) => stored.push(value) } as unknown as JevReadStore;
+    const deps = { feed, keeper, model, store, instId: "BTC-USDT", localNow: () => clock };
+    const positive = await readRound(deps);
+    expect(positive.read?.insufficient).toEqual([]);
+    expect(calls).toBe(1);
+    expect(tickerRefreshes).toBe(0);
+    mono += 11_000;
+    clock += 11_000;
+    freshBook();
+    expect(buildTapeState(feed.snapshot("BTC-USDT", clock, keeper.exchangeNow())).ok).toBe(true);
+    const expired = await readRound(deps);
+    expect(tickerRefreshes).toBe(1);
+    expect(expired.error).toBeNull();
+    expect(expired.read?.insufficient).toEqual(failure ? ["ticker_stale", "candles_stale"] : ["candles_stale"]);
+    if (failure) expect(feed.status().lastError).toBe("ticker_refresh_failed:BTC-USDT");
+    expect(expired.read?.state).toBeNull();
+    expect(expired.read?.decision).toBeNull();
+    expect(expired.read?.execution).toBe("never");
+    expect(calls).toBe(1);
+    expect(stored).toHaveLength(2);
+    feed.stop();
+  });
+
+  test("cap loss during monotonic rollback blocks the model after the clock returns", async () => {
+    clock = 2_000_000_000_000;
+    let mono = 140_000;
+    let calls = 0;
+    const feed = makeFeed({ monotonicNow: () => mono, fetchImpl: async () => Response.json({
+      code: "0", data: Array.from({ length: 31 }, (_, i) =>
+        [String(clock - i * 60_000), "100", "100", "100", "100", "1", "1", "1", "1"]),
+    }) });
+    feed.start();
+    const socket = FakeSocket.instances.at(-1)!;
+    socket.open();
+    const arg = { channel: "trades", instId: "BTC-USDT" };
+    socket.emit({ event: "subscribe", arg });
+    const core = async () => {
+      clock += 1;
+      socket.emit({ arg: { channel: "books5", instId: "BTC-USDT" }, data: [
+        { ts: String(clock), bids: [["99", "1"]], asks: [["101", "1"]] },
+      ] });
+      socket.emit({ arg: { channel: "tickers", instId: "BTC-USDT" }, data: [
+        { ts: String(clock), last: "100" },
+      ] });
+      await feed.refreshCandles("BTC-USDT");
+    };
+    const prints = () => socket.emit({ arg, data: Array.from({ length: 5_000 }, () =>
+      ({ px: "100", sz: "1", side: "buy", ts: String(clock) })) });
+    const model = { name: "rollback-regression", decide: async () => {
+      calls += 1;
+      return { choice: "hold", probabilities: { buy: 0.1, sell: 0.1, hold: 0.8 }, latencyMs: 1 };
+    } };
+    mono = 200_000;
+    await core(); prints();
+    const positive = await runJevRead(feed.snapshot("BTC-USDT", clock, clock), { now: () => clock, model });
+    expect(positive.insufficient).toEqual([]);
+    expect(positive.state?.flow60s.count).toBe(5_000);
+    expect(calls).toBe(1);
+    mono = 130_000; prints();
+    expect(buildTapeState(feed.snapshot("BTC-USDT", clock, clock)).ok).toBe(false);
+    mono = 200_000;
+    await core();
+    const returned = feed.snapshot("BTC-USDT", clock, clock);
+    expect(returned.coverage?.lostThroughMonoMs).toBe(200_000);
+    const blocked = await runJevRead(returned, { now: () => clock, model });
+    expect(blocked.insufficient).toEqual(["trades_unavailable"]);
+    expect(blocked.state).toBeNull();
+    expect(blocked.decision).toBeNull();
+    expect(calls).toBe(1);
+    feed.stop();
+  });
+
   test("public feed to model blocks floods and malformed gaps until loss strictly leaves the minute", async () => {
     clock = 2_000_000_000_000;
     for (const scenario of [0, 500, 5_000, 6_000, "malformed"] as const) {
@@ -1526,6 +1690,255 @@ describe("OkxTapeFeed reconnect robustness", () => {
     expect(FakeSocket.instances[0]!.closed).toBe(true);
     timers[timers.length - 1]!.fn();
     expect(FakeSocket.instances).toHaveLength(2);
+  });
+});
+
+describe("OkxTapeFeed future observation recovery", () => {
+  test("lost ordering history blocks ambiguous data and permits proven recovery", async () => {
+    for (const transport of ["REST", "WS"] as const) for (const history of ["newer", "duplicate", "futureSource", "futureMono"] as const) {
+      const base = 2_000_000_000_000;
+      let source = base, mono = 140_000, calls = 0;
+      const row = () => ({ instId: "BTC-USDT", ts: String(source), bids: [["99", "1"]], asks: [["101", "1"]], last: "100" });
+      const feed = makeFeed({ instIds: ["BTC-USDT"], now: () => base, monotonicNow: () => mono,
+        fetchImpl: async url => Response.json({ code: "0", data: url.includes("candles")
+          ? Array.from({ length: 31 }, (_, i) => [String(base - i * 60_000), "100", "100", "100", "100", "1", "1", "1", "1"])
+          : [row()] }) });
+      feed.start(); const socket = FakeSocket.instances.at(-1)!; socket.open();
+      socket.emit({ event: "subscribe", arg: { channel: "trades", instId: "BTC-USDT" } }); mono = 200_000;
+      const refresh = async () => {
+        if (transport === "REST") { await feed.refreshBook("BTC-USDT"); await feed.refreshTicker("BTC-USDT"); }
+        else { socket.emit({ arg: { channel: "books5", instId: "BTC-USDT" }, data: [row()] });
+          socket.emit({ arg: { channel: "tickers", instId: "BTC-USDT" }, data: [row()] }); }
+      };
+      let exchange = base;
+      const inspect = () => runJevRead(feed.snapshot("BTC-USDT", base, exchange), { now: () => base,
+        model: { name: "offline", decide: async () => { calls++; return { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, latencyMs: 1 }; } } });
+      await refresh(); await feed.refreshCandles("BTC-USDT"); expect((await inspect()).insufficient).toEqual([]); expect(calls).toBe(1);
+      exchange += 2000;
+      for (let i = 1; i <= 257; i++) {
+        source = history === "newer" ? base + (i === 1 ? 1800 : i)
+          : history === "futureSource" ? base + 1_000_000 + i : base + 1;
+        if (history === "futureMono") mono = 200_001;
+        await refresh();
+      }
+      mono = 200_000;
+      const blocked = await inspect();
+      expect(blocked.insufficient).toEqual(history === "newer" || history === "duplicate"
+        ? ["book_missing", "ticker_missing"] : ["book_stale", "ticker_stale"]);
+      expect(blocked.state).toBeNull(); expect(blocked.decision).toBeNull(); expect(calls).toBe(1);
+      source = history === "newer" ? base + 1801 : history === "duplicate" ? base + 2 : base + 1;
+      await refresh(); const recovered = await inspect();
+      expect(recovered.insufficient).toEqual([]); expect(calls).toBe(2); expect(recovered.execution).toBe("never");
+      expect(feed.snapshot("BTC-USDT", base, exchange).book?.proof.sourceTsMs).toBe(source); feed.stop();
+    }
+  });
+  test("valid bursts preserve ordering and recover without restarting the feed", async () => {
+    for (const transport of ["REST", "WS"] as const) for (const count of [257, 1024]) {
+      const base = 2_000_000_000_000;
+      let source = base, price = 100, mono = 140_000, exchange = base, calls = 0;
+      const row = () => ({ instId: "BTC-USDT", ts: String(source), bids: [[String(price - 1), "1"]],
+        asks: [[String(price + 1), "1"]], last: String(price) });
+      const feed = makeFeed({ instIds: ["BTC-USDT"], now: () => base, monotonicNow: () => mono,
+        fetchImpl: async url => Response.json({ code: "0", data: url.includes("candles")
+          ? Array.from({ length: 31 }, (_, i) => [String(base - i * 60_000), "100", "100", "100", "100", "1", "1", "1", "1"])
+          : [row()] }) });
+      feed.start(); const socket = FakeSocket.instances.at(-1)!; socket.open();
+      socket.emit({ event: "subscribe", arg: { channel: "trades", instId: "BTC-USDT" } }); mono = 200_000;
+      const refresh = async () => {
+        if (transport === "REST") { await feed.refreshBook("BTC-USDT"); await feed.refreshTicker("BTC-USDT"); }
+        else { socket.emit({ arg: { channel: "books5", instId: "BTC-USDT" }, data: [row()] });
+          socket.emit({ arg: { channel: "tickers", instId: "BTC-USDT" }, data: [row()] }); }
+      };
+      const inspect = () => runJevRead(feed.snapshot("BTC-USDT", base, exchange), { now: () => base,
+        model: { name: "offline", decide: async () => { calls++; return { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, latencyMs: 1 }; } } });
+      await refresh(); await feed.refreshCandles("BTC-USDT"); expect((await inspect()).insufficient).toEqual([]);
+      exchange = base + 2000;
+      for (let i = 1; i <= count; i++) { source = base + i; await refresh(); }
+      expect((await inspect()).insufficient).toEqual([]); expect(calls).toBe(2);
+      const newest = feed.snapshot("BTC-USDT", base, exchange);
+      expect(newest.book?.proof.sourceTsMs).toBe(base + count); expect(newest.ticker?.proof.sourceTsMs).toBe(base + count);
+      mono++; await refresh();
+      const duplicate = feed.snapshot("BTC-USDT", base, exchange);
+      expect(duplicate.book?.proof).toEqual(newest.book?.proof); expect(duplicate.ticker?.proof).toEqual(newest.ticker?.proof);
+      source--; await refresh();
+      expect(feed.snapshot("BTC-USDT", base, exchange).book?.proof).toEqual(newest.book?.proof);
+      source++; price++; await refresh();
+      expect((await inspect()).insufficient).toEqual(["book_missing", "ticker_missing"]); expect(calls).toBe(2);
+      source++; await refresh(); expect((await inspect()).insufficient).toEqual([]); expect(calls).toBe(3);
+      feed.stop();
+    }
+  });
+  test("future observations confirm ordering before becoming eligible for the model", async () => {
+    for (const axis of ["source", "mono"] as const) for (const change of ["older", "duplicate", "conflict"] as const) {
+      const base = 2_000_000_000_000;
+      let exchange = base, mono = 140_000, source = base - 100, price = 100, calls = 0;
+      const row = () => ({ instId: "BTC-USDT", ts: String(source), bids: [[String(price - 1), "1"]],
+        asks: [[String(price + 1), "1"]], last: String(price) });
+      const feed = makeFeed({ instIds: ["BTC-USDT"], now: () => base, monotonicNow: () => mono,
+        fetchImpl: async url => Response.json({ code: "0", data: url.includes("candles")
+          ? Array.from({ length: 31 }, (_, i) => [String(base - i * 60_000), "100", "100", "100", "100", "1", "1", "1", "1"])
+          : [row()] }) });
+      feed.start(); const socket = FakeSocket.instances.at(-1)!; socket.open();
+      socket.emit({ event: "subscribe", arg: { channel: "trades", instId: "BTC-USDT" } });
+      mono = 200_000;
+      const refresh = async () => { await feed.refreshBook("BTC-USDT"); await feed.refreshTicker("BTC-USDT"); };
+      await refresh(); await feed.refreshCandles("BTC-USDT"); feed.snapshot("BTC-USDT", base, exchange);
+      source = axis === "source" ? base + 1 : base - 10; price = 102;
+      if (axis === "mono") mono += 1;
+      socket.emit({ arg: { channel: "books5", instId: "BTC-USDT" }, data: [row()] });
+      socket.emit({ arg: { channel: "tickers", instId: "BTC-USDT" }, data: [row()] });
+      if (axis === "mono") mono -= 1;
+      expect(feed.ages("BTC-USDT", base, exchange)).toEqual({ bookAgeMs: null, tickerAgeMs: null });
+      if (axis === "source") exchange += 1; else mono += 1;
+      const accepted = feed.snapshot("BTC-USDT", base, exchange);
+      const inspect = (input: typeof accepted) => runJevRead(input, { now: () => base,
+        model: { name: "offline", decide: async () => { calls += 1; return { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, latencyMs: 1 }; } } });
+      expect((await inspect(accepted)).insufficient).toEqual([]); expect(calls).toBe(1);
+      const high = source; mono += 1;
+      if (change === "older") source -= 1;
+      if (change === "conflict") price = 103;
+      await refresh(); const after = feed.snapshot("BTC-USDT", base, exchange);
+      const result = await inspect(after);
+      if (change === "conflict") {
+        expect(after.book).toBeNull(); expect(after.ticker).toBeNull();
+        expect(result.insufficient).toEqual(["book_missing", "ticker_missing"]); expect(calls).toBe(1);
+      } else {
+        expect(after.book?.proof.sourceTsMs).toBe(high); expect(after.ticker?.proof.sourceTsMs).toBe(high);
+        expect(after.book?.proof).toEqual(accepted.book?.proof); expect(after.ticker?.proof).toEqual(accepted.ticker?.proof);
+        expect(result.insufficient).toEqual([]); expect(calls).toBe(2);
+      }
+      expect(result.execution).toBe("never"); feed.stop();
+    }
+  });
+  for (const target of ["book", "ticker"] as const) for (const transport of ["REST", "WS"] as const) {
+  test(`invalid wall receipts do not poison ${target} ordering through ${transport}`, async () => {
+    for (const invalidWall of [NaN, Infinity, -1, 0.5, Number.MAX_SAFE_INTEGER + 1]) {
+      const base = 2_000_000_000_000;
+      let wall = base, exchange = base, source = base, mono = 140_000, calls = 0;
+      const row = (ts: number) => ({ instId: "BTC-USDT", ts: String(ts), bids: [["99", "1"]], asks: [["101", "1"]], last: "100" });
+      const feed = makeFeed({ instIds: ["BTC-USDT"], now: () => wall, monotonicNow: () => mono,
+        fetchImpl: async (url) => Response.json({ code: "0", data: url.includes("candles")
+          ? Array.from({ length: 31 }, (_, i) => [String(base - i * 60_000), "100", "100", "100", "100", "1", "1", "1", "1"])
+          : [row(url.includes(target === "book" ? "books" : "ticker") ? source : exchange)] }) });
+      feed.start(); const socket = FakeSocket.instances.at(-1)!; socket.open();
+      socket.emit({ event: "subscribe", arg: { channel: "trades", instId: "BTC-USDT" } });
+      mono = 200_000;
+      await feed.refreshBook("BTC-USDT"); await feed.refreshTicker("BTC-USDT"); await feed.refreshCandles("BTC-USDT");
+      const inspect = () => runJevRead(feed.snapshot("BTC-USDT", wall, exchange), { now: () => wall,
+        model: { name: "offline", decide: async () => { calls += 1; return { choice: "buy", probabilities: { buy: 1, sell: 0, hold: 0 }, latencyMs: 1 }; } } });
+      expect((await inspect()).insufficient).toEqual([]); expect(calls).toBe(1);
+      const update = async () => {
+        if (transport === "REST") await feed[target === "book" ? "refreshBook" : "refreshTicker"]("BTC-USDT");
+        else socket.emit({ arg: { channel: target === "book" ? "books5" : "tickers", instId: "BTC-USDT" }, data: [row(source)] });
+      };
+      exchange = base + 200; source = base + 100; wall = invalidWall;
+      await update(); wall = exchange;
+      const rejected = await inspect();
+      expect(rejected.insufficient).toEqual([`${target}_stale`]); expect(rejected.state).toBeNull();
+      expect(rejected.decision).toBeNull(); expect(rejected.execution).toBe("never"); expect(calls).toBe(1);
+      source = base + 1; await update();
+      const recovered = await inspect();
+      expect(recovered.insufficient).toEqual([]); expect(recovered.state).not.toBeNull();
+      expect(recovered.decision?.status).toBe("ok"); expect(recovered.execution).toBe("never"); expect(calls).toBe(2);
+      expect(feed.snapshot("BTC-USDT", wall, exchange)[target]?.proof.sourceTsMs).toBe(base + 1);
+      feed.stop();
+    }
+  });
+  }
+  for (const intermediateRead of [false, true]) for (const wallJump of [-180_000, 180_000]) {
+  test(`valid REST book and ticker recover with intermediateRead=${intermediateRead} and wallJump=${wallJump}`, async () => {
+    let mono = 50_000;
+    let ts = "999900";
+    const feed = makeFeed({ monotonicNow: () => mono, fetchImpl: async () => Response.json({
+      code: "0", data: [{ instId: "BTC-USDT", ts, bids: [["99", "1"]], asks: [["101", "1"]],
+        last: "100", open24h: "90", high24h: "110", low24h: "80" }],
+    }) });
+    await feed.refreshBook("BTC-USDT");
+    await feed.refreshTicker("BTC-USDT");
+    expect(feed.ages("BTC-USDT", clock, 1_000_000)).toEqual({ bookAgeMs: 100, tickerAgeMs: 100 });
+
+    ts = "9007199254740991";
+    mono += 1;
+    await feed.refreshBook("BTC-USDT");
+    await feed.refreshTicker("BTC-USDT");
+    if (intermediateRead) expect(feed.ages("BTC-USDT", clock, 1_000_000)).toEqual({ bookAgeMs: null, tickerAgeMs: null });
+
+    // A wall jump must not supply the exchange clock or determine source ordering.
+    clock += wallJump;
+    ts = "1000100";
+    mono += 1;
+    await feed.refreshBook("BTC-USDT");
+    await feed.refreshTicker("BTC-USDT");
+    expect(feed.ages("BTC-USDT", clock, 1_000_200)).toEqual({ bookAgeMs: 100, tickerAgeMs: 100 });
+    const recovered = feed.snapshot("BTC-USDT", clock, 1_000_200);
+    expect(recovered.book?.proof.sourceTsMs).toBe(1_000_100);
+    expect(recovered.ticker?.proof.sourceTsMs).toBe(1_000_100);
+  });
+  }
+
+  test("an invalid monotonic receipt cannot confirm a newer source watermark", async () => {
+    let mono = 50_000;
+    let ts = "999900";
+    const feed = makeFeed({ monotonicNow: () => mono, fetchImpl: async () => Response.json({
+      code: "0", data: [{ instId: "BTC-USDT", ts, bids: [["99", "1"]], asks: [["101", "1"]],
+        last: "100", open24h: "90", high24h: "110", low24h: "80" }],
+    }) });
+    const refresh = async () => { await feed.refreshBook("BTC-USDT"); await feed.refreshTicker("BTC-USDT"); };
+    await refresh();
+    feed.ages("BTC-USDT", clock, 1_000_000);
+    mono = Number.NaN; ts = "1000200";
+    await refresh();
+    mono = 50_001;
+    expect(feed.ages("BTC-USDT", clock, 1_000_300)).toEqual({ bookAgeMs: null, tickerAgeMs: null });
+    ts = "1000100";
+    await refresh();
+    expect(feed.ages("BTC-USDT", clock, 1_000_300)).toEqual({ bookAgeMs: 200, tickerAgeMs: 200 });
+  });
+
+  test("recovery preserves the newest valid source, duplicate proof and conflict tombstone", async () => {
+    let mono = 50_000;
+    let ts = "999900";
+    let price = "100";
+    const feed = makeFeed({ monotonicNow: () => mono, fetchImpl: async () => Response.json({
+      code: "0", data: [{ instId: "BTC-USDT", ts, bids: [[price, "1"]], asks: [["110", "1"]],
+        last: price, open24h: "90", high24h: "110", low24h: "80" }],
+    }) });
+    const refresh = async (source: string, value = "100") => {
+      ts = source; price = value; mono += 1;
+      await feed.refreshBook("BTC-USDT");
+      await feed.refreshTicker("BTC-USDT");
+    };
+    await refresh("999900");
+    const original = feed.snapshot("BTC-USDT", clock, 1_000_000);
+    await refresh("9007199254740991");
+    // An unknown exchange clock cannot confirm or clear ordering history.
+    feed.snapshot("BTC-USDT", clock, null);
+    await refresh("1000200", "102");
+    await refresh("1000100", "101");
+    const newest = feed.snapshot("BTC-USDT", clock, 1_000_300);
+    expect(newest.book?.bids[0]?.px).toBe(102);
+    expect(newest.ticker?.last).toBe(102);
+    expect(newest.book?.proof.sourceTsMs).toBe(1_000_200);
+    expect(newest.ticker?.proof.sourceTsMs).toBe(1_000_200);
+    await refresh("1000200", "102");
+    const duplicate = feed.snapshot("BTC-USDT", clock, 1_000_300);
+    expect(duplicate.book?.proof).toEqual(newest.book?.proof);
+    expect(duplicate.ticker?.proof).toEqual(newest.ticker?.proof);
+    await refresh("1000200", "103");
+    expect(feed.snapshot("BTC-USDT", clock, 1_000_300).book).toBeNull();
+    expect(feed.snapshot("BTC-USDT", clock, 1_000_300).ticker).toBeNull();
+    await refresh("9007199254740991");
+    feed.ages("BTC-USDT", clock, 1_000_300);
+    await refresh("1000200", "102");
+    await refresh("999900");
+    const conflicted = feed.snapshot("BTC-USDT", clock, 1_000_300);
+    expect(conflicted.book).toBeNull();
+    expect(conflicted.ticker).toBeNull();
+    await refresh("1000300", "104");
+    const recovered = feed.snapshot("BTC-USDT", clock, 1_000_400);
+    expect(recovered.book?.bids[0]?.px).toBe(104);
+    expect(recovered.ticker?.last).toBe(104);
+    expect(original.book?.proof.sourceTsMs).toBe(999900);
   });
 });
 
