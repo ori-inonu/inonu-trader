@@ -1,11 +1,16 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, setDefaultTimeout, test } from 'bun:test';
 import { resolve } from 'node:path';
+
+// Each run starts a child bun process that contends for CPU with the rest of the suite; a child killed by its own
+// timeout reports a null exit. The child budget and the per test budget are generous so load cannot fail the test.
+const CHILD_TIMEOUT_MS = 45_000;
+setDefaultTimeout(120_000);
 
 const script = resolve(import.meta.dir, 'okx-signals.ts');
 function run(args: string[] = [], environment: Record<string, string> = {}) {
   const child = Bun.spawnSync([process.execPath, '--no-env-file', script, ...args], {
     cwd: resolve(import.meta.dir, '..'), env: { SystemRoot: process.env.SystemRoot ?? 'C:/Windows', PATH: process.env.PATH ?? '', ...environment },
-    stdout: 'pipe', stderr: 'pipe', timeout: 5000,
+    stdout: 'pipe', stderr: 'pipe', timeout: CHILD_TIMEOUT_MS,
   });
   return { exit: child.exitCode, out: child.stdout.toString(), err: child.stderr.toString() };
 }

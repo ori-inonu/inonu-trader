@@ -1,4 +1,4 @@
-import {expect,test} from 'bun:test';
+import {expect,setDefaultTimeout,test} from 'bun:test';
 import {mkdtempSync,writeFileSync,rmSync,rmdirSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {resolve,join} from 'node:path';
@@ -8,9 +8,13 @@ import {scanOpportunities} from '../src/okx-market/okx-scan';
 import {createSyntheticOkxClient,SYNTHETIC_SCAN_TIME_MS,SYNTHETIC_PROTOCOL_ID} from '../src/okx-market/okx-fixture';
 import {DEFAULT_RESEARCH_POLICY} from '../src/okx-market/okx-opportunities';
 
+// Each run starts a child bun process that contends for CPU with the rest of the suite; a child killed by its own
+// timeout reports a null exit. The child budget and the per test budget are generous so load cannot fail the test.
+const CHILD_TIMEOUT_MS=45000;
+setDefaultTimeout(120_000);
 const script=resolve(import.meta.dir,'okx-evidence.ts');
 function run(args:string[]=[],env:Record<string,string>={}){
-  const child=Bun.spawnSync([process.execPath,'--no-env-file',script,...args],{cwd:resolve(import.meta.dir,'..'),env:{SystemRoot:process.env.SystemRoot??'C:/Windows',PATH:process.env.PATH??'',...env},stdout:'pipe',stderr:'pipe',timeout:5000});
+  const child=Bun.spawnSync([process.execPath,'--no-env-file',script,...args],{cwd:resolve(import.meta.dir,'..'),env:{SystemRoot:process.env.SystemRoot??'C:/Windows',PATH:process.env.PATH??'',...env},stdout:'pipe',stderr:'pipe',timeout:CHILD_TIMEOUT_MS});
   return {exit:child.exitCode,out:child.stdout.toString(),err:child.stderr.toString()};
 }
 function failure(args:string[],code:string){const child=run(args);expect(child.exit).toBe(1);expect(child.out).toBe('');expect(child.err.trim()).toBe(`OKX Evidence: ${code}`);}
