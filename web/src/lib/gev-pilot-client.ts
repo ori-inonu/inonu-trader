@@ -1,4 +1,4 @@
-import { PILOT_MAX_AGE_MS, PILOT_MAX_QUOTE_AGE_MS, pilotContextKey, pilotNonceValid, type PilotCycle, type PilotRequest } from "../../../src/pilot/protocol";
+import { PILOT_MAX_AGE_MS, PILOT_MAX_QUOTE_AGE_MS, pilotContextKey, pilotNonceValid, type PilotCycle, type PilotRequest } from "./gev-pilot-protocol";
 import type { ExecutionPlan, OpportunityCandidate, OperatorDecision } from "../../../src/operator/types";
 import type { WalletSnapshot } from "./okx-wallet";
 
