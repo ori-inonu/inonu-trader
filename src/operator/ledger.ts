@@ -26,6 +26,8 @@ export interface OpenLeg {
   closeTxHash: string | null;
   /** Known closing ERC20 approval identity; omission/null means unavailable. */
   closeApproveTxHash?: string | null;
+  /** Signed realized result in USD, gas included, recorded once by the manual reconcile; absent means none recorded. */
+  realizedUsd?: number;
   note: string | null;
 }
 
@@ -120,6 +122,7 @@ function validLeg(value: unknown): value is OpenLeg {
       (typeof value.approveTxHash === "string" && value.approveTxHash.length > 0)) &&
     (!Object.prototype.hasOwnProperty.call(value, "closeApproveTxHash") || value.closeApproveTxHash === null ||
       (typeof value.closeApproveTxHash === "string" && value.closeApproveTxHash.length > 0)) &&
+    (!Object.prototype.hasOwnProperty.call(value, "realizedUsd") || (typeof value.realizedUsd === "number" && Number.isFinite(value.realizedUsd))) &&
     (value.closeTxHash === null || typeof value.closeTxHash === "string") && (value.note === null || typeof value.note === "string");
 }
 
@@ -144,6 +147,13 @@ export interface OperatorLedger {
   openLegs(): OpenLeg[];
   /** Adds a reconciled realized result (USD, signed, gas included) to the day, the week and the running total. */
   recordRealized(nowMs: number, realizedUsd: number): void;
+  /**
+   * Manual reconcile of one open leg in a SINGLE write: the new status and note and, the first time, the signed
+   * realized result, which also feeds the day, the week and the running total (R10 M1, M2). A leg takes at most one
+   * result: a second value is refused, and without a value the leg must already carry one. Memory is replaced only
+   * after the write succeeded, so a failed write can be repeated without doubling the result.
+   */
+  reconcileLeg(planId: string, status: "closed" | "failed", realizedUsd: number | null, nowMs: number, note: string): void;
   dayRealizedUsd(nowMs: number): number;
   weekRealizedUsd(nowMs: number): number;
   drawdownUsd(): number;
@@ -206,6 +216,32 @@ export function createOperatorLedger(initial: OperatorLedgerState, persist: (sta
         peakRealizedUsd: Math.max(state.peakRealizedUsd, cumulative),
       };
       save();
+    },
+    reconcileLeg(planId, status, realizedUsd, nowMs, note) {
+      if (status !== "closed" && status !== "failed") throw new Error("Invalid reconcile status");
+      const leg = state.openLegs.find((entry) => entry.planId === planId);
+      if (!leg || leg.status === "closed") throw new Error(`No open leg with planId ${planId}`);
+      if (realizedUsd === null) {
+        if (leg.realizedUsd === undefined) throw new Error("Realized result required: this leg has none recorded");
+      } else {
+        if (!Number.isFinite(realizedUsd)) throw new Error("Invalid realized result");
+        if (leg.realizedUsd !== undefined) throw new Error("Realized result already recorded for this leg");
+      }
+      const patch: Partial<OpenLeg> = realizedUsd === null ? { status, note } : { status, note, realizedUsd };
+      const openLegs = state.openLegs.map((entry) => entry.planId === planId ? { ...entry, ...patch } : entry);
+      let next: OperatorLedgerState = { ...state, openLegs };
+      if (realizedUsd !== null) {
+        const day = dayKey(nowMs);
+        const cumulative = state.cumulativeRealizedUsd + realizedUsd;
+        next = {
+          ...next,
+          dailyRealizedUsd: { ...state.dailyRealizedUsd, [day]: (state.dailyRealizedUsd[day] ?? 0) + realizedUsd },
+          cumulativeRealizedUsd: cumulative,
+          peakRealizedUsd: Math.max(state.peakRealizedUsd, cumulative),
+        };
+      }
+      persist(next);
+      state = next;
     },
     dayRealizedUsd: (nowMs) => state.dailyRealizedUsd[dayKey(nowMs)] ?? 0,
     weekRealizedUsd: (nowMs) => weekSum(nowMs),

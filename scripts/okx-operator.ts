@@ -5,6 +5,7 @@ import { persistCycle, runOperatorCycle } from "../src/operator/cycle";
 import { JevOperatorModel, MockOperatorModel, type OperatorModel } from "../src/operator/jev-selector";
 import { createEthersEvmSigner, type ExecutorDeps } from "../src/operator/executor";
 import { acquireLock, createOperatorLedger, initLedgerFile, ledgerFilePersister, readLedgerFile, type OperatorLedger } from "../src/operator/ledger";
+import { parseRealizedUsd } from "../src/operator/cli-guards";
 import { buildFundingCandidates, DEFAULT_FUNDING_INSTRUMENTS, okxPublicFundingSource, type FundingObservation } from "../src/operator/funding";
 import { DEFAULT_PAIRS, type BridgeQuoter, type DefiSource, type SwapQuoter } from "../src/operator/candidates";
 import { createOkxPortfolioClient, normalizeInventory, syntheticInventory, type InventorySnapshot } from "../src/okx-wallet/portfolio";
@@ -22,7 +23,8 @@ import { chainByIndex } from "../src/okx-wallet/chains";
  * --loop  repeats every OPERATOR_INTERVAL_MS.
  * --init-ledger creates data/operator/ledger.json once; execution refuses to run
  *         without it or with a corrupt one (fail closed).
- * --reconcile <planId> <closed|failed> marks a leg after manual on-chain checks.
+ * --reconcile <planId> <closed|failed> --realized <usd> closes a leg after manual on-chain checks and records
+ *         its signed result once (the value is mandatory unless the leg already carries one).
  * --routers prints the router the swap endpoint would call per EVM chain.
  *
  * Live execution is gated by the operator's own settings only: OPERATOR_EXECUTE,
@@ -82,7 +84,9 @@ function usage(): string {
     "--live   inventário, cotações, produtos DeFi e funding reais (OKX_WEB3_API_KEY/SECRET/PASSPHRASE, OPERATOR_ADDRESS).",
     "--jev    decisão pelo Jev real (TYPESAFE_AI_API_KEY).",
     "--loop   repete a cada OPERATOR_INTERVAL_MS.",
-    "--init-ledger cria o ledger uma única vez (com histórico existente exige --accept-history); --reconcile <planId> <closed|failed> --realized <usd> fecha uma perna após conferência on-chain e registra o resultado que alimenta as paradas de perda.",
+    "--init-ledger cria o ledger uma única vez (com histórico existente exige --accept-history).",
+    "--reconcile <planId> <closed|failed> --realized <usd> fecha uma perna após conferência on-chain e registra o resultado assinado, com gás, que alimenta as paradas de perda:",
+    "  --realized é obrigatório, aceita no máximo 2 vezes OPERATOR_MAX_PLAN_USD em valor absoluto e vale uma única vez por plano; uma perna que já tem resultado muda de estado sem ele.",
     "Rode com bun --no-env-file --env-file=.env.operator run scripts/okx-operator.ts para não herdar o .env do trader.",
     "--routers (com --live) imprime o router (tx.to) por rede EVM para conferir no explorer; nada é enviado.",
     "Estado: OPERATOR_STATE_PATH, OPERATOR_JOURNAL_PATH, OPERATOR_LEDGER_PATH, OPERATOR_LOCK_PATH; kill switch: OPERATOR_KILL_SWITCH_PATH (data/operator/STOP).",
@@ -145,28 +149,21 @@ async function main() {
   if (args.includes("--init-ledger") && !live && reconcileIndex < 0) return;
 
   if (reconcileIndex >= 0) {
-    // Manual reconciliation records the signed realized result (gas included, checked on chain);
-    // that record is what feeds the daily, weekly and drawdown stops (R8 C3, N7).
+    // Manual reconciliation records the signed realized result (gas included, checked on chain) once per plan,
+    // in the same write that changes the leg; that record is what feeds the daily, weekly and drawdown stops
+    // (R8 C3, N7; R10 M1, M2). The value is mandatory unless the leg already carries one.
     const [planId, status] = positional;
-    if (!planId || (status !== "closed" && status !== "failed")) throw new UsageError("Uso: --reconcile <planId> <closed|failed> [--realized <usd assinado, gás incluído, conferido on-chain>]");
-    const realizedRaw = realizedIndex >= 0 ? args[realizedIndex + 1] : undefined;
-    let realizedUsd: number | null = null;
-    if (realizedIndex >= 0) {
-      realizedUsd = realizedRaw !== undefined && /^-?\d+(?:\.\d+)?$/.test(realizedRaw) ? Number(realizedRaw) : Number.NaN;
-      if (!Number.isFinite(realizedUsd) || Math.abs(realizedUsd) > 10_000) throw new UsageError("--realized exige um valor em USD entre -10000 e 10000, por exemplo --realized -0.42");
-    }
+    if (!planId || (status !== "closed" && status !== "failed")) throw new UsageError("Uso: --reconcile <planId> <closed|failed> --realized <usd assinado, gás incluído, conferido on-chain> (sem --realized só para uma perna que já tem resultado lançado)");
+    const realizedUsd = realizedIndex >= 0 ? parseRealizedUsd(args[realizedIndex + 1], operator.policy.maxPlanUsd) : null;
     if (!ledgerReady) throw new UsageError("Ledger ausente; nada a reconciliar.");
     const leg = ledger.openLegs().find((entry) => entry.planId === planId);
     if (!leg) throw new UsageError(`Nenhuma perna aberta com planId ${planId}.`);
+    if (realizedUsd === null && leg.realizedUsd === undefined) throw new UsageError(`--realized é obrigatório: o plano ${planId} ainda não tem resultado lançado. Confira as transações no explorer e repita com --realized <usd assinado, gás incluído>, por exemplo --realized -0.42.`);
+    if (realizedUsd !== null && leg.realizedUsd !== undefined) throw new UsageError(`O plano ${planId} já tem resultado lançado (${leg.realizedUsd} USD) e o ledger aceita um único resultado por plano. Para só trocar o estado, repita sem --realized.`);
     const stamp = new Date().toISOString();
-    if (realizedUsd === null) {
-      ledger.updateLeg(planId, { status, note: `manual_reconcile_${stamp}` });
-      console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status} sem resultado informado: as paradas de perda não veem este plano; repita com --realized <usd> após conferir no explorer.`);
-      return;
-    }
-    ledger.recordRealized(now(), realizedUsd);
-    ledger.updateLeg(planId, { status, note: `manual_reconcile_${stamp}_realized_${realizedUsd}` });
-    console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status}; resultado ${realizedUsd.toFixed(4)} USD registrado (dia ${ledger.dayRealizedUsd(now()).toFixed(4)}, semana ${ledger.weekRealizedUsd(now()).toFixed(4)}, drawdown ${ledger.drawdownUsd().toFixed(4)})`);
+    ledger.reconcileLeg(planId, status, realizedUsd, now(), realizedUsd === null ? `manual_reconcile_${stamp}` : `manual_reconcile_${stamp}_realized_${realizedUsd}`);
+    if (realizedUsd === null) console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status}; o resultado já lançado (${leg.realizedUsd!.toFixed(4)} USD) não foi alterado.`);
+    else console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status}; resultado ${realizedUsd.toFixed(4)} USD registrado (dia ${ledger.dayRealizedUsd(now()).toFixed(4)}, semana ${ledger.weekRealizedUsd(now()).toFixed(4)}, drawdown ${ledger.drawdownUsd().toFixed(4)})`);
     return;
   }
 

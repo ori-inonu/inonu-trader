@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { acquireLock, createOperatorLedger, emptyLedger, initLedgerFile, ledgerFilePersister, parseLedger, readLedgerFile, weekKey, type CumulativeLimits } from "./ledger";
+import { acquireLock, createOperatorLedger, emptyLedger, initLedgerFile, ledgerFilePersister, parseLedger, readLedgerFile, weekKey, type CumulativeLimits, type OpenLeg, type OperatorLedgerState } from "./ledger";
 
 const NOW = Date.UTC(2026, 9, 10, 12, 0, 0);
 const limits: CumulativeLimits = { maxDailyNotionalUsd: 100, maxDailyPlans: 3, cooldownMs: 60_000, killSwitchPath: "C:/data/operator/STOP", staleLegMs: 900_000, maxDailyLossUsd: 2, maxWeeklyLossUsd: 5, maxDrawdownUsd: 10 };
@@ -120,4 +120,95 @@ test("ledger files fail closed: missing is reported, corrupt throws, init refuse
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+function legAt(planId: string, status: OpenLeg["status"]): OpenLeg {
+  return { planId, candidateId: "c", pairKey: `196:${planId}`, chainIndex: "196", openedAtMs: NOW, txHash: "0x1", intermediateAtomic: "1", status, closeTxHash: null, note: "leg2_reverted" };
+}
+
+test("reconcileLeg records status, note and the signed result in ONE write, and a leg takes a result only once (R10 M2)", () => {
+  const saved: OperatorLedgerState[] = [];
+  const ledger = createOperatorLedger(emptyLedger(), (state) => saved.push(structuredClone(state)));
+  ledger.recordExecution({ idempotencyKey: "k", sizeUsd: 2, nowMs: NOW, leg: legAt("p1", "failed") });
+  saved.length = 0;
+
+  ledger.reconcileLeg("p1", "failed", -1.5, NOW + 1_000, "manual_reconcile_a");
+  expect(saved).toHaveLength(1);
+  expect(saved[0]!.openLegs[0]).toMatchObject({ status: "failed", note: "manual_reconcile_a", realizedUsd: -1.5 });
+  expect(saved[0]!.dailyRealizedUsd).toEqual({ "2026-10-10": -1.5 });
+  expect(saved[0]!.cumulativeRealizedUsd).toBe(-1.5);
+  expect(saved[0]!.peakRealizedUsd).toBe(0);
+  expect(ledger.dayRealizedUsd(NOW)).toBe(-1.5);
+  expect(ledger.weekRealizedUsd(NOW)).toBe(-1.5);
+  expect(ledger.drawdownUsd()).toBe(1.5);
+
+  // The same plan again, with the same or another value: refused, nothing written, the day keeps -1.5.
+  expect(() => ledger.reconcileLeg("p1", "failed", -1.5, NOW + 2_000, "manual_reconcile_b")).toThrow("already");
+  expect(() => ledger.reconcileLeg("p1", "closed", 42, NOW + 3_000, "manual_reconcile_c")).toThrow("already");
+  expect(saved).toHaveLength(1);
+  expect(ledger.dayRealizedUsd(NOW)).toBe(-1.5);
+  expect(ledger.state().openLegs[0]).toMatchObject({ status: "failed", note: "manual_reconcile_a" });
+
+  // Without a new value the leg may still change status, because it already carries its result.
+  ledger.reconcileLeg("p1", "closed", null, NOW + 4_000, "manual_reconcile_d");
+  expect(saved).toHaveLength(2);
+  expect(saved[1]!.openLegs[0]).toMatchObject({ status: "closed", note: "manual_reconcile_d", realizedUsd: -1.5 });
+  expect(saved[1]!.dailyRealizedUsd).toEqual({ "2026-10-10": -1.5 });
+  expect(saved[1]!.cumulativeRealizedUsd).toBe(-1.5);
+  expect(ledger.openLegs()).toHaveLength(0);
+});
+
+test("reconcileLeg feeds the loss stops through the same single write", () => {
+  const ledger = createOperatorLedger(emptyLedger(), () => {});
+  ledger.recordExecution({ idempotencyKey: "k", sizeUsd: 2, nowMs: NOW, leg: legAt("p1", "failed") });
+  const input = { idempotencyKey: "other", pairKey: "elsewhere", sizeUsd: 1, nowMs: NOW + 120_000, killSwitchExists: false };
+  expect(ledger.checkBeforeExecute(input, limits)).toEqual(["failed_leg_requires_manual_reconciliation"]);
+  ledger.reconcileLeg("p1", "closed", -2.5, NOW + 1_000, "manual_reconcile");
+  expect(ledger.checkBeforeExecute(input, limits)).toEqual(["daily_loss_stop"]);
+});
+
+test("reconcileLeg without a value needs a result already on the leg, and refuses unknown, closed or invalid input without writing", () => {
+  let writes = 0;
+  const ledger = createOperatorLedger(emptyLedger(), () => { writes++; });
+  ledger.recordExecution({ idempotencyKey: "k", sizeUsd: 2, nowMs: NOW, leg: legAt("p1", "leg1_sent") });
+  ledger.recordExecution({ idempotencyKey: "k2", sizeUsd: 2, nowMs: NOW, leg: legAt("p2", "closed") });
+  writes = 0;
+  const before = JSON.stringify(ledger.state());
+  expect(() => ledger.reconcileLeg("p1", "closed", null, NOW, "n")).toThrow("Realized result required");
+  expect(() => ledger.reconcileLeg("missing", "closed", -1, NOW, "n")).toThrow("No open leg");
+  expect(() => ledger.reconcileLeg("p2", "failed", -1, NOW, "n")).toThrow("No open leg");
+  expect(() => ledger.reconcileLeg("p1", "leg1_confirmed" as never, -1, NOW, "n")).toThrow("Invalid reconcile status");
+  expect(() => ledger.reconcileLeg("p1", "closed", Number.NaN, NOW, "n")).toThrow("Invalid realized result");
+  expect(() => ledger.reconcileLeg("p1", "closed", Number.POSITIVE_INFINITY, NOW, "n")).toThrow("Invalid realized result");
+  expect(writes).toBe(0);
+  expect(JSON.stringify(ledger.state())).toBe(before);
+});
+
+test("reconcileLeg commits to memory only after the write succeeded, so a failed write can be repeated without doubling", () => {
+  let failNext = true;
+  const saved: OperatorLedgerState[] = [];
+  const ledger = createOperatorLedger(emptyLedger(), (state) => {
+    if (failNext) { failNext = false; throw Object.assign(new Error("synthetic EPERM"), { code: "EPERM" }); }
+    saved.push(structuredClone(state));
+  });
+  failNext = false;
+  ledger.recordExecution({ idempotencyKey: "k", sizeUsd: 2, nowMs: NOW, leg: legAt("p1", "failed") });
+  saved.length = 0;
+  failNext = true;
+  expect(() => ledger.reconcileLeg("p1", "failed", -1.5, NOW, "n")).toThrow("EPERM");
+  expect(ledger.dayRealizedUsd(NOW)).toBe(0);
+  expect(ledger.state().openLegs[0]!.realizedUsd).toBeUndefined();
+  ledger.reconcileLeg("p1", "failed", -1.5, NOW, "n");
+  expect(saved).toHaveLength(1);
+  expect(ledger.dayRealizedUsd(NOW)).toBe(-1.5);
+});
+
+test("a leg result survives the strict parse and must be a finite number", () => {
+  const withResult = { ...legAt("p1", "failed"), realizedUsd: -1.5 };
+  const state = { ...emptyLedger(), openLegs: [withResult] };
+  expect(parseLedger(JSON.parse(JSON.stringify(state)))).toEqual(state);
+  for (const bad of ["1", null, true, {}, [], Number.NaN]) {
+    expect(() => parseLedger({ ...emptyLedger(), openLegs: [{ ...legAt("p1", "failed"), realizedUsd: bad }] })).toThrow("Corrupt operator ledger");
+  }
+  expect(() => parseLedger(JSON.parse(JSON.stringify({ ...emptyLedger(), openLegs: [{ ...legAt("p1", "failed"), realizedUsd: Number.POSITIVE_INFINITY }] })))).toThrow("Corrupt operator ledger");
 });
