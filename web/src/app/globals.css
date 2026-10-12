@@ -400,3 +400,7 @@ html[data-tab-hidden="true"] .scanline {
     animation: none !important;
   }
 }
+/* Display preference (menu of the desk topbar): the rise and fall colours. The charts read --buy and --sell when they
+   draw, so these two lines recolour every panel and every canvas. Keep the values equal to lib/mesa/preferences.ts. */
+:root[data-palette="daltonismo"] { --buy: #56b4ff; --sell: #ff7a3d; }
+:root[data-palette="invertido"] { --buy: #ff6b81; --sell: #3ddc97; }
