@@ -123,3 +123,7 @@ The demo exists to support this tweet. Every design or strategy change must keep
 > Demo link: https://jev-trader.vercel.app
 
 Non-negotiables: Jev makes the buy/sell call (not code), from the price feed; real trades from a real wallet; an order placed on Kuru's on-chain book every 300 ms block; the demo is the live dashboard. Never decide every N blocks. No middle dots, em dashes or en dashes in any rendered text. No blinking or pulsing indicators.
+
+## Canonical spec for the wallet evidence work
+
+Requirements, real-state inventory, the evidence contract and the task plan for verifiable manual portfolio management live in one folder: `docs/sdd/carteira-evidencia/` (`requirements.md`, `design.md`, `tasks.md`). Read `tasks.md` first for what to do next and which paths are reserved by concurrent sessions; do not copy its content elsewhere.
