@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { createHash } from "node:crypto";
 import { createTypeSafeAi } from "@ai-sdk/typesafe-ai";
 import { serializeCapture } from "../lab/capture-format.ts";
 import { MemoryJournal, digestBytes } from "../lab/journal.ts";
@@ -12,6 +13,7 @@ import {
   JEV_LAB_HARD_MAX_CALLS,
   JEV_LAB_HARD_MAX_USD,
   JEV_LAB_INPUTS,
+  JEV_LAB_PROMPT_VERSION,
   JEV_LAB_QUESTION_ID,
   JEV_LAB_SHADOW_NOTICE,
   JevBudgetExhaustedError,
@@ -209,6 +211,16 @@ describe("LJ9 the instruction says what this is, and the call is bounded", () =>
     expect(JEV_LAB_INPUTS).toContain("your confidence is not calibrated");
     expect(JEV_LAB_INPUTS).toContain("uncalibrated decision weights, not win rates");
     expect(`${JEV_LAB_GOAL} ${JEV_LAB_INPUTS}`).not.toMatch(BANNED);
+  });
+
+  test("LJ9 the texts sent to the model are pinned by a hash: editing them without a new prompt version fails here", () => {
+    const fixed = state([
+      { key: "c1", modality: "spot-momentum", side: "long", horizonHours: 24, criteria: { costBps: 22 } },
+      { key: "c2", modality: "perp-directional", side: "short", horizonHours: 24, criteria: { costBps: 12 } },
+    ]);
+    const hash = createHash("sha256").update(JSON.stringify(buildJevLabPayload(fixed).questions)).digest("hex").slice(0, 16);
+    // To change the instruction: edit the text, bump JEV_LAB_PROMPT_VERSION, then update both values below. A journal never mixes versions.
+    expect({ version: JEV_LAB_PROMPT_VERSION, hash }).toEqual({ version: "p1", hash: "66a082f3db8c952e" });
   });
 
   test("LJ9 the hold option says it is valid and preferred without evidence", () => {
@@ -546,7 +558,8 @@ describe("LJ16 construction is strict", () => {
   test("LJ16 the hard maxima are accepted, the chooser is not a mock, and building it needs neither a key nor the network", () => {
     const chooser = new JevLabChooser({ ...base, maxCalls: JEV_LAB_HARD_MAX_CALLS, maxUsd: JEV_LAB_HARD_MAX_USD });
     expect(chooser.isMock).toBe(false);
-    expect(chooser.name).toBe("jev-latest");
+    expect(chooser.modelId).toBe("jev-latest");
+    expect(chooser.name).toBe(`jev-latest@${JEV_LAB_PROMPT_VERSION}`);
     expect(chooser.meter()).toMatchObject({ callsStarted: 0, stopReason: null });
     expect(JEV_LAB_HARD_MAX_USD).toBe(5);
   });
@@ -594,7 +607,7 @@ describe("LJ17 the whole lab pipeline with the chooser: real vocabulary, priced 
       expect(decision.costUsd).toBeCloseTo((1200 / 1_000_000) * 2, 12);
       expect(decision.choice).not.toBe("hold");
     }
-    expect(report.jev).toEqual({ chooser: "jev-latest", isMock: false, realJevCalled: true, warning: null });
+    expect(report.jev).toEqual({ chooser: `jev-latest@${JEV_LAB_PROMPT_VERSION}`, isMock: false, realJevCalled: true, warning: null });
     const inference = report.policies.find((policy) => policy.id === "jev")?.inference;
     expect(inference?.costKnown).toBe(true);
     expect(inference?.consulted).toBe(consulted);

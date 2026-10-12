@@ -41,6 +41,12 @@ export const JEV_LAB_DEFAULT_MAX_CONSECUTIVE_FAILURES = 3;
 /** Fixed extra input tokens added to the conservative estimate: the provider wraps the question in its own prompt. */
 export const JEV_LAB_PROMPT_OVERHEAD_TOKENS = 500;
 export const JEV_LAB_QUESTION_ID = "decision";
+/**
+ * The version of every text sent to the model. It is part of the NAME of the chooser, and the name is part of the
+ * manifest of a run: a journal can never mix decisions made under two different instructions. A test pins a hash of the
+ * texts and fails when they change without this version changing.
+ */
+export const JEV_LAB_PROMPT_VERSION = "p1";
 
 /** The numeric criteria that candidates of the lab carry (src/lab/candidates.ts). "signalZ", the planted score of the synthetic source, is NOT here on purpose. */
 export const JEV_LAB_CRITERIA: readonly string[] = Object.freeze([
@@ -298,6 +304,9 @@ export interface JevMeter {
 }
 
 export class JevLabChooser implements LabChooser {
+  /** The model id as the provider knows it. */
+  readonly modelId: string;
+  /** The model id and the version of the instruction, e.g. jev-latest@p1: what the manifest of a run records. */
   readonly name: string;
   readonly isMock = false;
   private readonly usdPerMTok: number;
@@ -337,7 +346,8 @@ export class JevLabChooser implements LabChooser {
     if (!Number.isSafeInteger(failures) || failures < 1 || failures > 100) throw new RangeError("maxConsecutiveFailures must be an integer from 1 to 100");
     const expected = options.expectedCallUsd ?? 0;
     if (typeof expected !== "number" || !Number.isFinite(expected) || expected < 0) throw new RangeError("expectedCallUsd must be a finite number at or above zero");
-    this.name = options.modelId;
+    this.modelId = options.modelId;
+    this.name = `${options.modelId}@${JEV_LAB_PROMPT_VERSION}`;
     this.usdPerMTok = options.usdPerMTok;
     this.maxCalls = options.maxCalls;
     this.maxUsd = options.maxUsd;
@@ -358,7 +368,7 @@ export class JevLabChooser implements LabChooser {
   private modelForCall(): unknown {
     if (this.model !== undefined) return this.model;
     if (this.injected) return undefined;
-    this.model = typeSafeAi.evaluationModel(this.name);
+    this.model = typeSafeAi.evaluationModel(this.modelId);
     return this.model;
   }
 

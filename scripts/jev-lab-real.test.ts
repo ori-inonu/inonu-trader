@@ -7,7 +7,7 @@ import { FileJournal } from "../src/lab/journal.ts";
 import { STANDING_DISCLAIMER } from "../src/lab/run.ts";
 import { SyntheticSource, syntheticConfig } from "../src/lab/source.ts";
 import type { LabReport } from "../src/lab/types.ts";
-import { JEV_LAB_QUESTION_ID, type JevEvaluateArgs, type JevEvaluateFn } from "../src/lab-jev/jev-chooser.ts";
+import { JEV_LAB_PROMPT_VERSION, JEV_LAB_QUESTION_ID, type JevEvaluateArgs, type JevEvaluateFn } from "../src/lab-jev/jev-chooser.ts";
 import { ABORT_MARGIN_MS, DEFAULT_TIMEOUT_MS, HARD_MAX_CALLS, HARD_MAX_USD, main, type RealDeps } from "./jev-lab-real.ts";
 
 // Spec: docs/JEV-LAB-JEV-REAL.md sections 2 to 4. Titles start with the acceptance id (LJ20 to LJ26).
@@ -23,6 +23,7 @@ const freshDir = (): string => join(SCRATCH, `out-${(counter += 1)}`);
 
 const CANARY = "CANARY-TYPESAFE-KEY-0123456789abcdef";
 const BANNED = new RegExp(`[${[0xb7, 0x2013, 0x2014, 0x2212, 0x2022, 0x2219, 0x22c5, 0x2027, 0x30fb].map((c) => String.fromCharCode(c)).join("")}]`);
+const NAME = `jev-latest@${JEV_LAB_PROMPT_VERSION}`;
 const GOOD_ENV = { TYPESAFE_AI_API_KEY: CANARY, JEV_MODEL_ID: "jev-latest", JEV_USD_PER_MTOK: "2" } as const;
 
 const config = syntheticConfig({ seed: 21, epochs: 30, stepMs: 6 * 3_600_000, horizonMs: 24 * 3_600_000 });
@@ -281,10 +282,10 @@ describe("LJ22 a run with a fake Jev: estimate first, preflight, the lab pipelin
     expect(result.code).toBe(0);
     expect(stderrAtFirstCall).toContain("Custo estimado:");
     expect(stderrAtFirstCall).toContain("Tetos desta execução: 1,0000 USD e 200 chamadas");
-    expect(stderrAtFirstCall).toContain("Modelo: jev-latest.");
+    expect(stderrAtFirstCall).toContain(`Modelo: jev-latest (instrução ${JEV_LAB_PROMPT_VERSION}).`);
     const report = JSON.parse(result.stdout) as LabReport;
     expect(report.mode).toBe("replay");
-    expect(report.jev).toEqual({ chooser: "jev-latest", isMock: false, realJevCalled: true, warning: null });
+    expect(report.jev).toEqual({ chooser: NAME, isMock: false, realJevCalled: true, warning: null });
     expect(report.run.pendingEpochs).toBe(0);
     const consulted = consultedEpochs(join(out, "journal.jsonl"));
     expect(fake.calls.length).toBe(consulted + 1);
@@ -303,7 +304,7 @@ describe("LJ22 a run with a fake Jev: estimate first, preflight, the lab pipelin
     const data = FileJournal.read(join(out, "journal.jsonl"));
     expect(data.manifest.inferenceUsdPerMTok).toBe(2);
     expect(data.manifest.jevTimeoutMs).toBe(DEFAULT_TIMEOUT_MS);
-    expect((data.manifest.policies as Array<{ id: string; chooser: unknown }>).find((policy) => policy.id === "jev")?.chooser).toEqual({ name: "jev-latest", isMock: false });
+    expect((data.manifest.policies as Array<{ id: string; chooser: unknown }>).find((policy) => policy.id === "jev")?.chooser).toEqual({ name: NAME, isMock: false });
     const consultedIds = new Set(data.epochs.filter((epoch) => epoch.eligibleIds.length > 0).map((epoch) => epoch.id));
     const mine = data.decisions.filter((decision) => decision.policyId === "jev" && consultedIds.has(decision.epochId));
     expect(mine.length).toBe(consultedIds.size);
@@ -316,7 +317,8 @@ describe("LJ22 a run with a fake Jev: estimate first, preflight, the lab pipelin
     const inference = report.policies.find((policy) => policy.id === "jev")?.inference;
     expect(inference?.costKnown).toBe(true);
     expect(inference?.costUsdTotal).toBeCloseTo(consultedIds.size * 0.002, 9);
-    expect(result.stderr).toMatch(/Custo de inferência do Jev real \(jev-latest\): 0,\d{4} USD em \d+ épocas consultadas, tokens de entrada \d+/);
+    expect(result.stderr).toContain(`Custo de inferência do Jev real (${NAME}): 0,`);
+    expect(result.stderr).toMatch(/USD em \d+ épocas consultadas, tokens de entrada \d+/);
     expect(result.stderr).toContain("Orçamento do Jev real:");
     expect(result.stderr).toContain("o pré-voo está incluído");
   });
@@ -460,7 +462,7 @@ describe("LJ24 preflight and a Jev that stops answering", () => {
     const inference = report.policies.find((policy) => policy.id === "jev")?.inference;
     expect(inference?.costKnown).toBe(false);
     expect(inference?.costUsdTotal).toBeNull();
-    expect(result.stderr).toContain("Custo de inferência do Jev real (jev-latest): desconhecido");
+    expect(result.stderr).toContain(`Custo de inferência do Jev real (${NAME}): desconhecido`);
     const data = FileJournal.read(join(out, "journal.jsonl"));
     const unknownCosts = data.decisions.filter((decision) => decision.policyId === "jev" && decision.status === "ok" && decision.costUsd === null);
     expect(unknownCosts.length).toBe(1);

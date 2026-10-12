@@ -23,6 +23,7 @@ import { STANDING_DISCLAIMER, manifestOf, runEpochs } from "../src/lab/run.ts";
 import {
   JEV_LAB_HARD_MAX_CALLS,
   JEV_LAB_HARD_MAX_USD,
+  JEV_LAB_PROMPT_VERSION,
   JevLabChooser,
   type JevEvaluateFn,
   type JevStopReason,
@@ -359,7 +360,7 @@ async function runReal(own: OwnArgs, env: Readonly<Record<string, string | undef
   if (maxUsd < 2 * maxCallUsd) throw new Refusal(`--max-usd não cobre nem o pré-voo e uma consulta (cada consulta pode custar até ${pt(maxCallUsd, 4)} USD)`);
   const needCalls = plan.calls + 1;
   const needUsd = (money.conservativeUsd as number) + maxCallUsd;
-  err(`${["JEV LAB (Jev real, em sombra): consultas pagas ao Jev, nada é executado, assinado ou enviado.", `Modelo: ${real.modelId}.`, ...planLines(planned, price, "JEV_USD_PER_MTOK"), `Tetos desta execução: ${pt(maxUsd, 4)} USD e ${maxCalls} chamadas (o pré-voo usa uma).`].join("\n")}\n`);
+  err(`${["JEV LAB (Jev real, em sombra): consultas pagas ao Jev, nada é executado, assinado ou enviado.", `Modelo: ${real.modelId} (instrução ${JEV_LAB_PROMPT_VERSION}).`, ...planLines(planned, price, "JEV_USD_PER_MTOK"), `Tetos desta execução: ${pt(maxUsd, 4)} USD e ${maxCalls} chamadas (o pré-voo usa uma).`].join("\n")}\n`);
   if (maxCalls < needCalls || maxUsd < needUsd) {
     err(`ATENÇÃO: os tetos não cobrem a janela inteira (precisaria de ${needCalls} chamadas e até ${pt(needUsd, 4)} USD). A execução vai parar quando o teto acabar; as épocas restantes ficam pendentes e repetir o comando na mesma pasta continua dali.\n`);
   }
