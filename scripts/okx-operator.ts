@@ -148,15 +148,24 @@ async function main() {
     // Manual reconciliation records the signed realized result (gas included, checked on chain);
     // that record is what feeds the daily, weekly and drawdown stops (R8 C3, N7).
     const [planId, status] = positional;
+    if (!planId || (status !== "closed" && status !== "failed")) throw new UsageError("Uso: --reconcile <planId> <closed|failed> [--realized <usd assinado, gás incluído, conferido on-chain>]");
     const realizedRaw = realizedIndex >= 0 ? args[realizedIndex + 1] : undefined;
-    const realizedUsd = realizedRaw === undefined || !/^-?\d+(?:\.\d+)?$/.test(realizedRaw) ? Number.NaN : Number(realizedRaw);
-    if (!planId || (status !== "closed" && status !== "failed") || !Number.isFinite(realizedUsd) || Math.abs(realizedUsd) > 10_000)
-      throw new UsageError("Uso: --reconcile <planId> <closed|failed> --realized <usd assinado, gás incluído, conferido on-chain>");
+    let realizedUsd: number | null = null;
+    if (realizedIndex >= 0) {
+      realizedUsd = realizedRaw !== undefined && /^-?\d+(?:\.\d+)?$/.test(realizedRaw) ? Number(realizedRaw) : Number.NaN;
+      if (!Number.isFinite(realizedUsd) || Math.abs(realizedUsd) > 10_000) throw new UsageError("--realized exige um valor em USD entre -10000 e 10000, por exemplo --realized -0.42");
+    }
     if (!ledgerReady) throw new UsageError("Ledger ausente; nada a reconciliar.");
     const leg = ledger.openLegs().find((entry) => entry.planId === planId);
     if (!leg) throw new UsageError(`Nenhuma perna aberta com planId ${planId}.`);
+    const stamp = new Date().toISOString();
+    if (realizedUsd === null) {
+      ledger.updateLeg(planId, { status, note: `manual_reconcile_${stamp}` });
+      console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status} sem resultado informado: as paradas de perda não veem este plano; repita com --realized <usd> após conferir no explorer.`);
+      return;
+    }
     ledger.recordRealized(now(), realizedUsd);
-    ledger.updateLeg(planId, { status, note: `manual_reconcile_${new Date().toISOString()}_realized_${realizedUsd}` });
+    ledger.updateLeg(planId, { status, note: `manual_reconcile_${stamp}_realized_${realizedUsd}` });
     console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status}; resultado ${realizedUsd.toFixed(4)} USD registrado (dia ${ledger.dayRealizedUsd(now()).toFixed(4)}, semana ${ledger.weekRealizedUsd(now()).toFixed(4)}, drawdown ${ledger.drawdownUsd().toFixed(4)})`);
     return;
   }
