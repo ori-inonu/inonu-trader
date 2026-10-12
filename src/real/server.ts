@@ -15,9 +15,19 @@ async function boundedJson(request: Request): Promise<unknown> {
  } finally { reader.releaseLock(); }
 }
 
+/** Host values a browser sends to this loopback service: a loopback name with the server port (bare names for port 80). */
+function loopbackHosts(port: number): ReadonlySet<string> {
+ return new Set(['localhost', '127.0.0.1', '[::1]'].flatMap(name => port === 80 ? [name, `${name}:80`] : [`${name}:${port}`]));
+}
+
 /** Local paper API. The versioned grant covers backend, OKX Web3 and declared public RPC reads. */
 export function createRealHandler(runtime: RealRuntime, config: RealConfig, publicWorker?: PublicRuntime) {
+ const hosts = loopbackHosts(config.port);
  return async (request: Request): Promise<Response> => {
+  // DNS rebinding: a page on another name that resolves to 127.0.0.1 can read a GET without any Origin, but it cannot forge
+  // Host. Anything but a loopback name with this port (or no Host at all) is refused before routing, with no useful body.
+  const host = request.headers.get('host');
+  if (host === null || !hosts.has(host.toLowerCase())) return new Response(null, { status: 421, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
   const url = new URL(request.url);
   const origin = request.headers.get('origin');
   const allowed = origin !== null && config.origins.includes(origin);
