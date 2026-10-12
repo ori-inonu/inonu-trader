@@ -2,7 +2,19 @@ import { PILOT_MAX_AGE_MS, PILOT_MAX_QUOTE_AGE_MS, pilotContextKey, pilotNonceVa
 import type { ExecutionPlan, OpportunityCandidate, OperatorDecision } from "../../../src/operator/types";
 import type { WalletSnapshot } from "./okx-wallet";
 
-export const GEV_PILOT_ENDPOINT = "http://127.0.0.1:3020/pilot/cycles";
+/**
+ * Address of the pilot service: port 3020 unless the NEXT_PUBLIC_PILOT_PORT variable says otherwise. A wrong value throws, so
+ * a typo fails the build instead of shipping a panel that cannot reach the service. This is the browser copy of the rule of
+ * src/pilot/ports.ts (Turbopack is rooted at web/); gev-pilot-endpoint.test.ts keeps the two in agreement.
+ */
+export function pilotEndpoint(portText: string | undefined): string {
+  const text = portText ?? "3020";
+  if (!/^[1-9][0-9]{0,4}$/.test(text) || Number(text) > 65535) throw new Error("invalid_pilot_port");
+  return `http://127.0.0.1:${text}/pilot/cycles`;
+}
+const endpointValid = (v: unknown): v is string => typeof v === "string" && /^http:\/\/127\.0\.0\.1:[1-9][0-9]{0,4}\/pilot\/cycles$/.test(v) && Number(/:(\d+)\//.exec(v)![1]) <= 65535;
+// Next replaces only this literal access in the browser bundle, so the variable must not be read in any other way.
+export const GEV_PILOT_ENDPOINT = pilotEndpoint(process.env.NEXT_PUBLIC_PILOT_PORT);
 export interface GevPilotState {
   status: "blocked" | "ready" | "evaluating" | "hold" | "simulated" | "expired" | "error";
   canEvaluate: boolean;
@@ -19,6 +31,8 @@ export interface GevPilotOptions {
   now?: () => number;
   fetch?: (url: string, init: RequestInit) => Promise<Response>;
   requestDeadlineMs?: number;
+  /** Defaults to GEV_PILOT_ENDPOINT; only a loopback pilot address is accepted. */
+  endpoint?: string;
   scheduler?: { setTimeout(callback: () => void, delayMs: number): unknown; clearTimeout(handle: unknown): void };
 }
 export interface GevPilotController {
@@ -166,7 +180,8 @@ export function createGevPilotController(options: GevPilotOptions = {}): GevPilo
     clearTimeout: (handle: unknown) => globalThis.clearTimeout(handle as ReturnType<typeof setTimeout>),
   };
   const deadlineMs = options.requestDeadlineMs ?? 20_000;
-  if (!nonceValid(sessionId) || !Number.isSafeInteger(deadlineMs) || deadlineMs <= 0 || deadlineMs > 30_000) throw new Error("invalid_pilot_options");
+  const endpoint = options.endpoint ?? GEV_PILOT_ENDPOINT;
+  if (!nonceValid(sessionId) || !Number.isSafeInteger(deadlineMs) || deadlineMs <= 0 || deadlineMs > 30_000 || !endpointValid(endpoint)) throw new Error("invalid_pilot_options");
   let request: Omit<PilotRequest, "requestId"> | null = null;
   let state = initialGevPilotState();
   let disposed = false;
@@ -222,10 +237,10 @@ export function createGevPilotController(options: GevPilotOptions = {}): GevPilo
       publish({ ...state, status: "evaluating", canEvaluate: false, reason: "evaluating", cycle: null, activePlan: null });
       try {
         const value: unknown = await Promise.race([aborted, (async () => {
-          const response = await transport(GEV_PILOT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" },
+          const response = await transport(endpoint, { method: "POST", headers: { "Content-Type": "application/json" },
             credentials: "omit", redirect: "error", cache: "no-store", body: JSON.stringify(captured), signal: abort.signal });
           if (!response.ok) throw new Error("service_unavailable");
-          if (response.redirected || (response.url && response.url !== GEV_PILOT_ENDPOINT) || !/^application\/json(?:\s*;|$)/i.test(response.headers.get("content-type") ?? "")) throw new Error("invalid_response");
+          if (response.redirected || (response.url && response.url !== endpoint) || !/^application\/json(?:\s*;|$)/i.test(response.headers.get("content-type") ?? "")) throw new Error("invalid_response");
           const length = response.headers.get("content-length");
           if (length && (!/^[0-9]+$/.test(length) || Number(length) > 131_072)) throw new Error("invalid_response");
           const body = await response.text();

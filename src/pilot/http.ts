@@ -1,7 +1,6 @@
 import { evaluatePilot, type PilotDeps } from "./service";
+import { DEFAULT_PILOT_PORTS, validPilotPort, type PilotPorts } from "./ports";
 
-const ORIGINS = new Set(["http://127.0.0.1:3021","http://localhost:3021"]);
-const HOSTS = new Set(["127.0.0.1:3020","localhost:3020"]);
 const MAX_BODY = 4096;
 async function readBody(request: Request): Promise<string> {
   const length=request.headers.get("content-length");
@@ -20,7 +19,11 @@ async function readBody(request: Request): Promise<string> {
     return new TextDecoder("utf-8",{fatal:true}).decode(output);
   } finally {clearTimeout(timer);void reader.cancel().catch(()=>{});}
 }
-export function createPilotHandler(deps: PilotDeps & {journal: NonNullable<PilotDeps["journal"]>}) {
+/** The service listens on ports.port and only the page on ports.uiPort may call it; both default to 3020 and 3021. */
+export function createPilotHandler(deps: PilotDeps & {journal: NonNullable<PilotDeps["journal"]>}, ports: PilotPorts = DEFAULT_PILOT_PORTS) {
+  if(!validPilotPort(ports.port) || !validPilotPort(ports.uiPort) || ports.port===ports.uiPort)throw new Error("invalid_pilot_ports");
+  const ORIGINS = new Set([`http://127.0.0.1:${ports.uiPort}`,`http://localhost:${ports.uiPort}`]);
+  const HOSTS = new Set([`127.0.0.1:${ports.port}`,`localhost:${ports.port}`]);
   let active=false;
   return async (request: Request): Promise<Response> => {
     const origin=request.headers.get("origin");

@@ -5,6 +5,9 @@ SPEC congelada permanece intacta. Baseline f626a3026a524f61d7e9f7baf6ad6c54ebf89
 ## Portas e preservação
 As portas 3010/3011 estavam ocupadas por outros serviços e foram preservadas. Probe TCP confirmou 3020/3021 livres. Substituição local reversível, grounded no critério P7: backend loopback 3020, frontend 3021, origins permitidas exclusivamente localhost/127.0.0.1:3021. Nenhum critério P1–P7 foi modificado.
 
+## Configuração das portas
+Os padrões continuam 3020 (serviço) e 3021 (página). Os scripts `pilot` e `pilot:fixture` leem `PILOT_PORT` (porta do serviço) e `PILOT_UI_PORT` (porta da página cuja origem pode chamar o serviço) do shell, e só esses dois nomes; os scripts rodam com `--no-env-file`, então um `.env` nunca os define. A página lê `NEXT_PUBLIC_PILOT_PORT` (padrão 3020) quando o Next inicia, de `web/.env.local` ou do shell. Valor inválido (fora de 1 a 65535, com zero à esquerda, vazio) interrompe o script ou o build, e as duas portas do serviço precisam ser diferentes. Exemplo com o console do pipeline real, cuja página fica em 3001: `PILOT_PORT=3120` e `PILOT_UI_PORT=3001` no shell de `bun --no-env-file run pilot`, e `NEXT_PUBLIC_PILOT_PORT=3120` no `web/.env.local`. A origem aceita continua sendo só `http://127.0.0.1:<porta da página>` e `http://localhost:<porta da página>`, e o servidor continua em 127.0.0.1.
+
 ## Fontes reais
 O fluxo padrão não faz requests externos nem lê .env, PRIVATE_KEY ou OPERATOR_*. Retorna hold inventory_access_unverified e registra o ciclo.
 P2 permanece pendente. A pesquisa verificou clientes existentes de Balance API e DEX Quote, mas não comprovou acesso autorizado, cobertura completa do inventário, contrato das unidades, inclusão de todas as taxas das cotações ou preço/allowance da inferência. Feed público de OKX Exchange não comprova saldos/operação da Wallet. Recibos do Jev Workflows são consultas técnicas, nunca episódios financeiros do piloto.
