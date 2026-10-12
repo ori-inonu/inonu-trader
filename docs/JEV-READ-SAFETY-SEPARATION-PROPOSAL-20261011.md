@@ -1,0 +1,17 @@
+# Proposed independent safety task: F5/F6
+
+Own conversation: 01a12971-f941-7e42-8a42-fab6d44d4eb5. Proposal only; not implementation or approval.
+
+The active HTTP preview cycle remains revision114, implementation, with unchanged P1–P6. P3 visual and P6 clean-browser evidence remain incomplete. Do not mark that cycle accepted, begin_cycle there, or discard its evidence. The main/native objective remains the full operational central, not this bounded task.
+
+Proposed scheduling amendment to JEV-READ-MODEL-SAFETY-SPEC-V2-20261011.md: instead of waiting for unrelated preview visual capability before every production correction, track F5/F6 as a separate subordinate SDD task in a newly isolated managed worktree at fixed HEAD 1f08e6edd589449a82eeb70638987a09572a3bd2, tree15b1fe6b2ac58c5821b9ab77723610d0afe780aa. No mutation of preview criteria or closure. Obtain independent approval of this separation, record the same actual conversation with explicit subordinate scope, and freeze original M1–M6 unchanged before production edits. No new native goal. This amendment changes scheduling only; all full-goal obligations persist.
+
+Source requirements: JEV-DECISAO-ONCHAIN-OS.md:56 requires unavailable, late or invalid JEV answers to hold. V2 SHA256 f16fce55851a50011239a11bbd8878c072c101035b3304e6fbba251128138262; independent scope review SHA256 e1ae0a0bbe8924a5893a600f5333825fdda0d3e0a4061c04d4fa041e6bcbe9ea. Preserve original F5/F6 probe and replay independently; don't modify its acceptance to pass.
+
+Exclusive integrator production files: src/jev-read/read.ts and src/jev-read/decide.ts. Public regression tests: src/jev-read/read.test.ts (M1–M3/M5), existing validator test file discovered from actual inventory (M4 controls); dedicated file only with reviewer support. No feed, state, UI, operator or financial adapter modifications. Baseline bytes must match before writing. Production changes stay in isolated branch until affected tests/types and independent M1–M6 review pass. Local main integration requires scoped commit, concurrency recheck and exact candidate review; a safety commit does not fulfill P6 or the full goal.
+
+Acceptance mapping: M1 preabort→no model call/hold error; M2 in-flight abort→prompt hold/error including never-settling model, listeners/timer cleanup and no late acceptance; M3 synchronous elapsed deadline→hold timeout; M4 overflowing total/chosen underflow→hold malformed while both 3:1 controls pass; M5 public projection and schema/status/advisory/never preserved; M6 public RED→minimal GREEN per slice, affected suites/typecheck, original independent probe replay before commit/local merge. No external model, credentials, wallet, funds, push or deployment. Runtime blocking cannot be preempted; only expired acceptance rejected after return.
+
+JEV scheduling consultation: assessed investigate_separate_safety_task, receipt06d487ab-6f90-41c4-a966-11c9922afe0f, confidence1, model jev-1.13.0, input973/output73, billed cost null, digest3266f98118416a02f351d99592b0aa0eb73905fee04a04b349172f9bd2cc44b3, persisted true. Alternatives preview_only and research_only. approved_by=jev_delegated for advisory technical investigation only; no independent scope approval or authority inferred.
+
+Independent reviewer must assess whether separation preserves immutable acceptance and scope; rejection keeps this proposal unimplemented while independent evidence/research work continues. Preview recovery remains required in parallel through supported tools only.

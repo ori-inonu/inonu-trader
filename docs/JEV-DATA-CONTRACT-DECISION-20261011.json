@@ -1,0 +1,16 @@
+{
+  "receiptId": "d5654be0-ae0f-45e2-a032-0976b448dc90",
+  "status": "assessed",
+  "choice": "records",
+  "confidence": 0.67,
+  "model": "jev-1.13.0",
+  "inputDigest": "c943c321ddc498371aa603664bacd12196664e062c2d556f2686149fa977fb45",
+  "usage": {
+    "input_tokens": 774,
+    "output_tokens": 44
+  },
+  "receiptPersisted": true,
+  "billedCost": null,
+  "authority": "advisory_only",
+  "approved_by": "jev_delegated"
+}
