@@ -1,0 +1,7 @@
+{
+  "observedAt": "2026-10-11T15:51:41.002Z",
+  "url": "http://localhost:3002/",
+  "description": "Monitoramento do mercado, decisões do JEV e acompanhamento dos estados das ordens e da carteira.",
+  "cadenceVisible": true,
+  "source": "actual browser DOM; backend unavailable; no orders or permissions"
+}

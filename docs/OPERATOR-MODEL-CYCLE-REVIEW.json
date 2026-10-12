@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "kind": "sdd_cycle_review",
+  "proposal_id": "operator-r8-c5",
+  "proposal_sha256": "34897a4710599e2c837a620fe00e8016d60ac8f1bc7c9d43c918d920e106f1b7",
+  "objective_sha256": "9e54db028141cdfdfefa10537fb31183c43691863cf1bab7fbcceff3573e9650",
+  "constraints_sha256": "67701b75b742abc9b809bdc93134cab091f98d87fece9cef09715ed7b5b6ae21",
+  "implementer_id": "codex-inonu-system-one-safety",
+  "reviewer_id": "01a12ada-7b55-7fd2-8a20-c940f474c1a1",
+  "decision": "approve",
+  "scope_assessment": "within_authorized_objective",
+  "scope_reason": "Independent semantic scope/SPEC approval of this proposal only. The current human instruction expressly keeps the full inonu-trader/Onchain OS objective active, including pending operator security and typed JEV decisions; the prior bounded exposure milestone does not exclude C5 or establish full-goal completion. Verified R8 C5 (line 121) in the isolated copy requires executePlan to receive model identity and reject mock with a test; its source hash and three quoted source hashes match the SPEC. M1-M4 are sufficient for that bounded condition: explicit non-mock identity, full-list typed decision validation and identity/choice/plan/candidate consistency before trade-client, signer or ledger effects; actual context forwarding and an all-gates-open MockOperatorModel regression; valid synthetic multi-candidate decisions retain probability validation and existing expiry, STOP, signer, allowlist, receipt and reconciliation guards, while dry_run stays simulation; synthetic tests, affected typecheck and independent hash-bound implementation reviews remain mandatory. Identity consistency is a local necessary check, not cryptographic provider provenance or financial authorization. No gates are weakened; C1-C4, C6-C9, financial authorization, strategy measurement and full UI/integration remain pending. Approval permits only this bounded next cycle, not an unreviewed implementation, live release or completion of all security/the full goal. SPEC SHA256 7cd7c31a2e9af8d04e807aaf63faa26ef90af2f1c99881f33a04f21c6cf0f701 and normalized proposal binding were verified. Supplied objective/constraints hashes are preserved, not independently rederived from another conversation state. Reviewer is distinct; exclusive copy, filesystem RO unenforced; effective model/effort/tier unknown. No provider or financial calls."
+}

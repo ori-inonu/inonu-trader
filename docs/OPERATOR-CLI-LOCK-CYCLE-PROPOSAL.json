@@ -1,0 +1,11 @@
+{
+  "id": "operator-cli-lock",
+  "references": [
+    {
+      "sha256": "ff9ec65c9aecb76509ca1cc9009387919516abbe13eb39ba31becf34497adf5e",
+      "path": "docs/OPERATOR-CLI-LOCK-SPEC.md",
+      "excerpt": "L1: An occupied configured lock prevents initialization and reconciliation"
+    }
+  ],
+  "summary": "Repair occupied-lock init/reconcile and serialize operator CLI file writers without weakening execution/custody guards; full central objective stays open."
+}

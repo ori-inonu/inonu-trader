@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "kind": "sdd_cycle_review",
+  "proposal_id": "operator-r8-c6-persistence",
+  "proposal_sha256": "24cbd91f9233a02d2a6912ada3dc5ecd7597cccb82b534c0e6723bd97da083d9",
+  "objective_sha256": "9e54db028141cdfdfefa10537fb31183c43691863cf1bab7fbcceff3573e9650",
+  "constraints_sha256": "67701b75b742abc9b809bdc93134cab091f98d87fece9cef09715ed7b5b6ae21",
+  "implementer_id": "codex-inonu-system-one-safety",
+  "reviewer_id": "01a12ada-7b55-7fd2-8a20-c940f474c1a1",
+  "decision": "approve",
+  "scope_assessment": "within_authorized_objective",
+  "scope_reason": "O objetivo humano autorizado permanece a meta central completa inonu-trader/JEV/Onchain OS/OKX, incluindo segurança pendente do operador; o encerramento limitado C5 não conclui essa meta. Esta proposta trata apenas substituição atômica síncrona Windows de R8 C6, com P1–P5 adequados para limites determinísticos, recuperação transitória, falha permanente preservando bytes, rejeição de destinos inválidos e regressões/revisões finais. Experimento Turing demonstra retained-reader EPERM e sucesso após fechamento, não a causa do incidente global nem validade empírica de quatro tentativas/70ms; esse limite é política proposta. Aprovo apenas próximo ciclo e especificação limitada, sem implementação aceita, main merge, fundos, providers, rede ou conclusão ampla. Preserve C5 commit dd1ae31 informado pelo usuário, falhas históricas, gates de integração e exclusões HTTP/journal/locks/schema/fsync. Execute e revise P1–P5 integralmente antes da aceitação; hashes finais ainda pendentes."
+}

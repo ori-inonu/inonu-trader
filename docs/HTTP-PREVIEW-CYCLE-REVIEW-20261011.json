@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "kind": "sdd_cycle_review",
+  "proposal_id": "http-preview-20261011",
+  "proposal_sha256": "33c260e124e6693d2a61db6fbbf41a42a618cc73136ee168f5d472861bfa4f65",
+  "objective_sha256": "9e54db028141cdfdfefa10537fb31183c43691863cf1bab7fbcceff3573e9650",
+  "constraints_sha256": "67701b75b742abc9b809bdc93134cab091f98d87fece9cef09715ed7b5b6ae21",
+  "implementer_id": "codex-inonu-system-one-safety",
+  "reviewer_id": "01a12ada-91d7-7ce0-b6ea-e1556d234224",
+  "decision": "approve",
+  "scope_assessment": "within_authorized_objective",
+  "scope_reason": "Independent scope review of exact HTTP-PREVIEW-SPEC e32244822c49fe6b248eccd15da9c9addff18a1fa6c8abd97004861de7a42d2c and canonical proposal 33c260e124e6693d2a61db6fbbf41a42a618cc73136ee168f5d472861bfa4f65 at baseline f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c. User expressly permits local operational preview, not financial actions. P1-P6 require a separate loopback CLI, no runtime financial producers, validated exact origins, isolated absolute state without inherited defaults, truthful read_only/no-producer metadata, HTTP status/header and lifecycle evidence, RED/GREEN public subprocess tests, preserved normal callers/gates and later independent integrated browser verification. Existing server/handlers and frontend parser/presentation make this bounded design feasible; legacy listener state must not be exposed by widening origins. Runtime ownership/source identity and rollback remain required before replacement. User-reported seam receipt 0f49b121-c0b0-494c-8c01-711669482be4 (cli_http, confidence .98/probability .99, jev1.13.0, 728/47 tokens, cost unknown) corroborates CLI plus loopback HTTP/SSE and source audit only; it is neither human approval nor evidence of implementation. No amendment needed and no acceptance weakened. Proposal binding recomputed; objective/constraints digests retained from template without reading another conversation's private state. Coordinator must revalidate its current state/freshness. Requested Sol/xhigh effective settings unknown; ordinary isolated copy, no OS read-only sandbox. No tests, services, network, credentials, providers, funds or auxiliary agents used. This approves only the reviewed scope, not implementation, service actions, commit/integration, live qualification or full-goal completion."
+}

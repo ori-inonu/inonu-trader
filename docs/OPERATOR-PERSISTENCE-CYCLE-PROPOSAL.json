@@ -1,0 +1,11 @@
+{
+  "summary": "Correct source-backed Windows ledger replacement reliability within full central JEV objective; preserve fail-closed guards and all other pending requirements.",
+  "id": "operator-r8-c6-persistence",
+  "references": [
+    {
+      "sha256": "1aa0ea1667e8e1f46a82c1636cb0824df6b265fb16eb9d9e4ad3bbf5e7bf869a",
+      "path": "docs/OPERATOR-PERSISTENCE-SPEC.md",
+      "excerpt": "P1: Preserve synchronous ledgerFilePersister API"
+    }
+  ]
+}

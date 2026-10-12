@@ -1,0 +1,17 @@
+# Persistence integration checkpoint — 2026-10-11
+
+Own conversation 01a12971-f941-7e42-8a42-fab6d44d4eb5. Full native goal remains active; this bounded cycle does not certify the central JEV objective.
+
+Independent joined audit terminal PASS P1–P5 precommit, hash 14d67045888c90a9f7719fc8a6c910fcfbdf406a610f5b1dcf981daf9981d7b7, exact copy OPERATOR-PERSISTENCE-FINAL-AUDIT.md. Harness verification/review/audit recorded revisions52/53/54. Three-source-only local commit703c626; no internal records staged. Integrated pinnedmain96d30cc387a6520aba23199e25d0d4ec71a7ad88 into own branch, resulting HEAD ff37327264d904242c57c21c8acb548a05651e82. All three reviewed source hashes unchanged. Main remains unmodified by this task pending integration review and clean/head recheck.
+
+Integrated verification all terminal exit0, exact receipts and streams outside Git in C:/Users/gabri/.codex/worktrees/inonu-system-one-review-spec-20261011/persistence-integrated-ff3732-{root,tsc,web-test,web-build,web-tsc}.result.json.
+Root1986pass2skip0fail882929expect calls119files116.35s. Root stdout d46045915e9b03eebd560447fc4f4a97a7712d422737307193e76d725e8ca372; stderr722f80b8b454adad381a4ba91994c4ccbced5b83cd04314a18cfdade40eb6fe7. Two optional receipt conformance checks remain skipped and not qualified.
+Web408pass0fail3051expect calls38files4.83s. Root configured tsc0, webpack Next16.3.4 build0 and postbuild web tsc0. No profitability, account or financial execution claim.
+
+Locke independent integration review ACTIVE submission01a12b70-ab8d-7603-8426-f7e290b1ec72; followup completedchecks01a12b72-5677-7da1-b021-016843c935b2. Outputonly C:/Users/gabri/.codex/worktrees/inonu-system-one-review-standards-20261011/persistence-integration-review.md. Observation timeout is not terminal; poll same agent01a12ada-91d7-7ce0-b6ea-e1556d234224, never restart merely for timeout.
+
+Dev session57118 running Next dev at http://localhost:3002 from isolated integrated checkout. Existing3001 PID33732 points to primary checkout Next start, preserved. CUA tab1 visible and marked deliverable, title INONU TRADER. Actual catalog tab opened:35capacities6implemented10readonly17blocked2unconfirmed; implemented means T0observer only. Backend3000 unavailable and OKX extension absent in inappbrowser, no wallet connected or financial action. Whole app runtime not qualified. Visible copy still claims real execution each block alongside execution-unverified status: pending independent next-scope UI truthfulness issue, no correction in this persistence cycle. Do not label visible catalog complete/updated solely from overview.
+
+Official overview re-read https://web3.okx.com/pt-br/onchainos/dev-docs/home/what-is-onchainos: WalletTEE, Trade, Market, Payments; endpoint credentials/access remain unverified. Prior ONCHAIN-CAPTURE-DECISION-GAP-20261011.md remains research-only pending scope approval. Wrong guessed path web/src/lib/central/ecosystem.ts nonexistent; do bounded discovery if required.
+
+Next: retrieve authoritative integration review, verify exactreport/HEAD/hashes; only then fastforward sharedmain if clean and still pinned (otherwise re-integrate/requalify). Preserve primary/panel/all concurrent work. Continue next eligible source-backed spec/review within whole objective, no funds/push/deploy.
