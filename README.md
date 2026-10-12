@@ -53,6 +53,7 @@ Paper cash starts at BANKROLL_USD minus MARGIN_MON times firstMid. MARGIN_USDC i
 - [Frozen acceptance](docs/READINESS-SPEC.md) and [economic gate addendum](docs/PROFIT-SPEC.md)
 - [v0.0.2 release status, boundaries and open decisions](docs/RELEASE-v0.0.2.md)
 - [Live qualification plan and checklist](docs/LIVE-QUALIFICATION.md)
+- [Portfolio evidence SDD](docs/sdd/carteira-evidencia/requirements.md): canonical requirements, design (real state of the code, evidence contract, concurrent-work map) and finite task plan for verifiable manual portfolio management. Spec only; nothing in it is implemented yet.
 - Recorded pre-filter replay: kept in the local `docs/evidence` directory, which is not published.
 
 Live qualification does not enable live. `bun run qualify:live` prints a read-only checklist of what must be true and evidenced before the owner decides to lift the live-execution gate: JSON on stdout and a short pt-BR summary on stderr. It reads the config like `doctor`, plus optional local `data/live-authorization.json` and `data/live-evidence.json`, and hashes the evidence files they name. It makes no network or RPC calls and never signs or sends anything. `readyForOwnerReview` only means the checklist is complete; it is not permission to trade, and the gate in `Market.init()` is unchanged. The assistant never fills the authorization record, supplies keys or runs a live session.
