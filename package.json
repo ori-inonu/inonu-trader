@@ -47,6 +47,8 @@
     "real:console": "bun run scripts/real-console.ts",
     "real:start": "bun run scripts/real-start.ts",
     "real:doctor": "bun run scripts/real-doctor.ts",
-    "reports:serve": "bun --no-env-file --no-install scripts/reports-server.ts"
+    "reports:serve": "bun --no-env-file --no-install scripts/reports-server.ts",
+    "pilot": "bun --no-env-file run scripts/gev-wallet-pilot.ts",
+    "pilot:fixture": "bun --no-env-file run scripts/gev-wallet-pilot-fixture.ts --fixture"
   }
 }

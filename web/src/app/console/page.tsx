@@ -9,6 +9,7 @@ import DexReportPanel from "@/components/DexReportPanel/DexReportPanel";
 import Disclosure from "@/components/Disclosure/Disclosure";
 import FlowChart from "@/components/FlowChart/FlowChart";
 import GrowthDeck from "@/components/GrowthDeck/GrowthDeck";
+import GevPilotPanel from "@/components/GevPilotPanel/GevPilotPanel";
 import InstrumentRow, { type InstrumentItem } from "@/components/InstrumentRow/InstrumentRow";
 import JevCore from "@/components/JevCore/JevCore";
 import KpiSurface from "@/components/KpiSurface/KpiSurface";
@@ -18,7 +19,7 @@ import { RealPipeline } from "@/components/RealPipeline/RealPipeline";
 import PublicMarket from "@/components/RealPipeline/PublicMarket";
 import SystemOneView from "@/components/SystemOne/SystemOne";
 import TelemetryStream from "@/components/TelemetryStream/TelemetryStream";
-import WalletPanel from "@/components/WalletPanel/WalletPanel";
+import { WalletPanelView } from "@/components/WalletPanel/WalletPanel";
 import { buildKpiCells } from "@/lib/kpi";
 import { feedFrameState } from "@/lib/feed-frame";
 import { useFeed } from "@/lib/useFeed";
@@ -26,6 +27,7 @@ import { useOperatorCenter } from "@/lib/operator-center";
 import { useSystemOne } from "@/lib/system-one";
 import { useReducedMotion } from "@/lib/motion";
 import { useUptime } from "@/lib/useUptime";
+import { useOkxWallet } from "@/lib/useOkxWallet";
 import styles from "./page.module.css";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:3000";
@@ -61,6 +63,7 @@ export default function Page() {
 }
 
 function LegacyConsole() {
+  const wallet = useOkxWallet();
   const feed = useFeed(API_URL);
   const operator = useOperatorCenter(API_URL);
   const systemOne = useSystemOne(API_URL);
@@ -132,6 +135,7 @@ function LegacyConsole() {
         </header>
 
         <section className={styles.command}>
+          <GevPilotPanel snapshot={wallet.snapshot} />
           <CommandCenter
             meta={feed.meta}
             latest={connecting ? null : latest}
@@ -183,7 +187,7 @@ function LegacyConsole() {
 
         <section className={styles.dock}>
           <div className={styles.dockDecision}><DecisionCenterView state={operator} /></div>
-          <div className={styles.dockWallet}><WalletPanel /></div>
+          <div className={styles.dockWallet}><WalletPanelView {...wallet} /></div>
           <div className={styles.dockMultichain}><MultichainPanel /></div>
         </section>
 
