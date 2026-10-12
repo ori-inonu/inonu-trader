@@ -87,6 +87,7 @@ function usage(): string {
     "--init-ledger cria o ledger uma única vez (com histórico existente exige --accept-history).",
     "--reconcile <planId> <closed|failed> --realized <usd> fecha uma perna após conferência on-chain e registra o resultado assinado, com gás, que alimenta as paradas de perda:",
     "  --realized é obrigatório, aceita no máximo 2 vezes OPERATOR_MAX_PLAN_USD em valor absoluto e vale uma única vez por plano; uma perna que já tem resultado muda de estado sem ele.",
+    "  O valor é FINAL: lance só depois de desfazer a posição aberta e de conferir o total no explorer, porque um parcial lançado antes impede lançar o total depois e deixa as paradas de perda subestimadas.",
     "Rode com bun --no-env-file --env-file=.env.operator run scripts/okx-operator.ts para não herdar o .env do trader.",
     "--routers (com --live) imprime o router (tx.to) por rede EVM para conferir no explorer; nada é enviado.",
     "Estado: OPERATOR_STATE_PATH, OPERATOR_JOURNAL_PATH, OPERATOR_LEDGER_PATH, OPERATOR_LOCK_PATH; kill switch: OPERATOR_KILL_SWITCH_PATH (data/operator/STOP).",
@@ -162,7 +163,7 @@ async function main() {
     const leg = ledger.openLegs().find((entry) => entry.planId === planId);
     if (!leg) throw new UsageError(`Nenhuma perna aberta com planId ${planId}.`);
     if (realizedUsd === null && leg.realizedUsd === undefined) throw new UsageError(`--realized é obrigatório: o plano ${planId} ainda não tem resultado lançado. Confira as transações no explorer e repita com --realized <usd assinado, gás incluído>, por exemplo --realized -0.42.`);
-    if (realizedUsd !== null && leg.realizedUsd !== undefined) throw new UsageError(`O plano ${planId} já tem resultado lançado (${leg.realizedUsd} USD) e o ledger aceita um único resultado por plano. Para só trocar o estado, repita sem --realized.`);
+    if (realizedUsd !== null && leg.realizedUsd !== undefined) throw new UsageError(`O plano ${planId} já tem resultado lançado (${leg.realizedUsd} USD) e o ledger aceita um único resultado por plano. Para só trocar o estado, repita sem --realized. Se o valor lançado estiver errado ou for só parcial, pare o operador e corrija o ledger com o lock tomado (passo 6 do runbook em docs/OKX-OPERADOR-JEV.md).`);
     const stamp = new Date().toISOString();
     ledger.reconcileLeg(planId, status, realizedUsd, now(), realizedUsd === null ? `manual_reconcile_${stamp}` : `manual_reconcile_${stamp}_realized_${realizedUsd}`);
     if (realizedUsd === null) console.log(`perna ${planId} (${leg.pairKey}) marcada como ${status}; o resultado já lançado (${leg.realizedUsd!.toFixed(4)} USD) não foi alterado.`);
