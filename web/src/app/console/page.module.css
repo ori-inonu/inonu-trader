@@ -188,10 +188,6 @@
       "ladder"
       "stream";
     grid-template-rows: auto auto auto;
-    grid-template-areas:
-      "chart"
-      "ladder"
-      "stream";
   }
 }
 
