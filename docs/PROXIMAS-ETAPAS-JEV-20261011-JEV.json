@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "conversation": "01a12971-f91a-7b01-befa-dfa93eb04425",
+  "purpose": "Prioridade do novo goal de planejamento; não concede autorização de implementação ou de operações financeiras.",
+  "approved_by": "jev_delegated",
+  "decision_source": "jev",
+  "human_response": false,
+  "billed_cost_usd": null,
+  "input": {
+    "mode": "evaluate",
+    "state": {
+      "objective": "Produce a source-backed executable roadmap for the next engineering steps of an integrated trading decision dashboard. Planning only.",
+      "verified": {
+        "baseline": "Main changed after prior local delivery; new operator CLI locking code/tests have not been rerun during planning.",
+        "components": "Read-only market adapters, finite candidate decisions, operator ledger, synthetic durable paper supervisor and offline statistical lab already exist.",
+        "inventory": "Public-market System One uses configured inventory with knownValueUsd=0 and valueComplete=false. It does not execute.",
+        "coverage": "Two receipt conformance files skip without isolated alternate-source configuration; current implementations have receipt guards. Compatibility needs mapping, not an assumed missing guard.",
+        "delivery": "Prior desktop/mobile UI delivery passed local checks on the previous main. No current end-to-end qualified real inventory to decision to reconciled paper evidence has been established.",
+        "measurement": "Synthetic results do not demonstrate market edge. Current lab uses an offline mock chooser. Reduced-motion OS emulation, full accessibility and measured animation performance remain unqualified."
+      },
+      "constraints": [
+        "No implementation in this goal.",
+        "No new financial orders, signing, deployment, publishing or unapproved paid model/data sessions.",
+        "Preserve immutable acceptance and user work.",
+        "Reuse existing modules and choose the next smallest verifiable integration."
+      ]
+    },
+    "questions": {
+      "roadmap_order": {
+        "type": "choice",
+        "domain": "strategy",
+        "instructions": "Recommend the engineering sequence with the strongest verifiable progress and prerequisite coverage. All choices must first requalify the changed baseline and map receipt coverage. This is advisory planning, never permission. Abstain if evidence is insufficient.",
+        "candidates": [
+          {
+            "id": "integration_first",
+            "available": true,
+            "description": "After baseline/receipt qualification, prioritize read-only inventory and data provenance; connect finite Jev shadow decisions to a durable reconciled paper adapter; then qualify out-of-sample measurement and bounded soak. Run UI accessibility/performance alongside when observable state exists."
+          },
+          {
+            "id": "recovery_first",
+            "available": true,
+            "description": "After baseline/receipt qualification, stress synthetic recovery, ownership and journal coherence before building real inventory/data integration; then shadow decisions, paper and out-of-sample measurement. Resolves recovery uncertainty early but postpones meaningful real-data integration."
+          },
+          {
+            "id": "ui_first",
+            "available": true,
+            "description": "After baseline/receipt qualification, prioritize animation accessibility, chart interactions and measured rendering performance before integrating read-only inventory and shadow paper. Delivers visible refinement but leaves operational evidence gaps longer."
+          },
+          {
+            "id": "abstain",
+            "available": true,
+            "description": "Evidence does not support prioritization; defer only the open priority choice and continue deterministic prerequisite planning."
+          }
+        ]
+      }
+    },
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12971-f91a-7b01-befa-dfa93eb04425"
+    },
+    "correlation": {
+      "rootTaskId": "jev-next-steps-planning-20261011",
+      "requestId": "roadmap-priority-20261011"
+    }
+  },
+  "receipt": {
+    "status": "assessed",
+    "receiptId": "5e7a5f09-e833-4a43-a96e-4ba645c52037",
+    "questionIds": [
+      "roadmap_order"
+    ],
+    "inputDigest": "eec0cde1176ee717d65716bde1741b6e7f01ef755f3fb283651e81caff8f038d",
+    "rubricVersion": "batch-2026-09-26.2",
+    "policies": {
+      "roadmap_order": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12971-f91a-7b01-befa-dfa93eb04425"
+    },
+    "correlation": {
+      "requestId": "roadmap-priority-20261011",
+      "rootTaskId": "jev-next-steps-planning-20261011"
+    },
+    "model": "jev-1.13.0",
+    "answers": {
+      "roadmap_order": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "integration_first",
+        "bestCandidate": "integration_first",
+        "probabilities": {
+          "integration_first": 0.95,
+          "recovery_first": 0.01,
+          "ui_first": 0,
+          "abstain": 0.02,
+          "insufficient_evidence": 0.02
+        },
+        "confidence": 0.94,
+        "disposition": "recommendation",
+        "recommendation": "integration_first",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 876,
+      "output_tokens": 69
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T17:29:51.962Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T17:29:52.441Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12c049b797487925b0a3c8bd1eac9",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "latencyMs": 619,
+    "receiptPersisted": true
+  },
+  "raw_receipt_storage": "Persistido pelo plugin Jev Workflows conforme receiptPersisted=true; esta cópia omite apenas credentialFingerprint."
+}

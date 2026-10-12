@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import WalletProposalReview from "../WalletProposalReview/WalletProposalReview";
 import { useOkxWallet } from "@/lib/useOkxWallet";
 import {
   MONAD_USDC_CONTRACT,
@@ -21,6 +22,7 @@ export interface WalletPanelViewProps {
   ready: boolean;
   snapshot: WalletSnapshot;
   now?: number;
+  review?: ReactNode;
   connect(): Promise<void>;
   refresh(): Promise<void>;
   switchToMonad(): Promise<void>;
@@ -126,6 +128,7 @@ export function WalletPanelView({
   ready,
   snapshot,
   now,
+  review,
   connect,
   refresh,
   switchToMonad,
@@ -377,6 +380,7 @@ export function WalletPanelView({
         <p className={styles.footer}>
           Este painel apenas consulta saldos. Nenhuma ordem ou transação é enviada.
         </p>
+        {review}
       </div>
     </section>
   );
@@ -394,5 +398,5 @@ export default function WalletPanel() {
     return startWalletFreshnessTicker(setNow);
   }, [wallet.snapshot.balances]);
 
-  return <WalletPanelView {...wallet} now={now} />;
+  return <WalletPanelView {...wallet} now={now} review={<WalletProposalReview wallet={wallet} />} />;
 }

@@ -4,6 +4,8 @@
  * wallet's current network; this module never asks it to switch and never signs.
  * A chain that fails stays "error", never zero.
  */
+import { isValidWalletTimestamp } from "./wallet-freshness";
+
 export interface EvmTokenSpec {
   symbol: string;
   contract: string;
@@ -29,6 +31,7 @@ export const EVM_CHAINS: readonly EvmChainSpec[] = [
     { symbol: "USDT0", contract: "0x779Ded0c9e1022225f8E0630b35a9b54bE713736", decimals: 6 },
     { symbol: "USDC", contract: "0xB6CEceAB302E2E4948951eE7843FC24E92933061", decimals: 6 },
     { symbol: "USDC_Bridged", contract: "0x74b7F16337b8972027F6196A17a631aC6dE26d22", decimals: 6 },
+    { symbol: "USDC.e", contract: "0xA8CE8aee21bC2A48a5EF670afCc9274C7bbbC035", decimals: 6 },
   ] },
   { chainIdHex: "0x1", chainIndex: "1", name: "Ethereum", nativeSymbol: "ETH", rpcUrl: "https://ethereum-rpc.publicnode.com", tokens: [
     { symbol: "USDT", contract: "0xdAC17F958D2ee523a2206206994597C13D831ec7", decimals: 6 },
@@ -55,26 +58,56 @@ export const EVM_CHAINS: readonly EvmChainSpec[] = [
   ] },
 ];
 
+export interface EvmBalanceObservation {
+  symbol: string;
+  amount: string;
+  rawRpc: string;
+  rawUnits: string;
+  decimals: number;
+  decimalsSource: "configured";
+}
+
 export interface ChainBalanceResult {
+  account: string;
   chainIndex: string;
+  chainIdHex: string;
   name: string;
   status: "ok" | "error";
   block: string | null;
-  native: { symbol: string; amount: string } | null;
-  tokens: { symbol: string; contract: string; amount: string }[];
+  rawBlock: string | null;
+  source: "public-rpc-reported";
+  rpcHost: string | null;
+  observedAtMs: number | null;
+  native: EvmBalanceObservation | null;
+  tokens: (EvmBalanceObservation & { contract: string })[];
   error: string | null;
 }
 
 export interface MultichainSnapshot {
   account: string;
-  observedAtMs: number;
+  observedAtMs: number | null;
   chains: ChainBalanceResult[];
 }
 
 export type EvmRpcFetch = (rpcUrl: string, body: string) => Promise<unknown>;
 
-const HEX_QUANTITY = /^0x(?:0|[1-9a-fA-F][0-9a-fA-F]*)$/;
+const HEX_QUANTITY = /^0x(?:0|[1-9a-fA-F][0-9a-fA-F]{0,63})$/;
 const WORD = /^0x[0-9a-fA-F]{64}$/;
+
+function matchesExactly(value: unknown, pattern: RegExp): value is string {
+  return typeof value === "string" && pattern.exec(value)?.[0] === value;
+}
+
+function rpcResults(value: unknown): Map<number, unknown> | null {
+  if (!Array.isArray(value)) return null;
+  const results = new Map<number, unknown>();
+  for (const row of value) {
+    if (!isRecord(row) || !Number.isSafeInteger(row.id) || typeof row.id !== "number"
+      || results.has(row.id) || "error" in row || !("result" in row)) return null;
+    results.set(row.id, row.result);
+  }
+  return results;
+}
 
 function formatUnits(value: bigint, decimals: number): string {
   const scale = BigInt(10) ** BigInt(decimals);
@@ -85,6 +118,24 @@ function formatUnits(value: bigint, decimals: number): string {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function observationTime(now: () => number): number | null {
+  try {
+    const time = now();
+    return isValidWalletTimestamp(time) ? time : null;
+  } catch {
+    return null;
+  }
+}
+
+function rpcHostname(url: string): string | null {
+  try { return new URL(url).hostname; } catch { return null; }
+}
+
+function balanceObservation(symbol: string, rawRpc: string, decimals: number): EvmBalanceObservation {
+  const units = BigInt(rawRpc);
+  return { symbol, rawRpc, rawUnits: units.toString(), decimals, decimalsSource: "configured", amount: formatUnits(units, decimals) };
 }
 
 export function defaultEvmRpcFetch(timeoutMs = 8_000): EvmRpcFetch {
@@ -107,42 +158,44 @@ function rpcUrlFor(chain: EvmChainSpec, overrides: Record<string, string | undef
 }
 
 /** Batches one eth_chainId, eth_blockNumber, eth_getBalance and one balanceOf per token for a chain. */
-export async function readChainBalances(account: string, chain: EvmChainSpec, rpc: EvmRpcFetch, overrides: Record<string, string | undefined> = {}): Promise<ChainBalanceResult> {
-  const base: ChainBalanceResult = { chainIndex: chain.chainIndex, name: chain.name, status: "error", block: null, native: null, tokens: [], error: null };
-  if (!/^0x[0-9a-fA-F]{40}$/.test(account)) return { ...base, error: "conta inválida" };
+export async function readChainBalances(account: string, chain: EvmChainSpec, rpc: EvmRpcFetch, overrides: Record<string, string | undefined> = {}, now: () => number = Date.now): Promise<ChainBalanceResult> {
+  const url = rpcUrlFor(chain, overrides);
+  const base: ChainBalanceResult = { account, chainIndex: chain.chainIndex, chainIdHex: chain.chainIdHex, name: chain.name, status: "error", block: null, rawBlock: null, source: "public-rpc-reported", rpcHost: rpcHostname(url), observedAtMs: null, native: null, tokens: [], error: null };
+  if (!matchesExactly(account, /^0x[0-9a-fA-F]{40}$/)) return { ...base, error: "conta inválida" };
   const callData = "0x70a08231" + account.slice(2).toLowerCase().padStart(64, "0");
   try {
-    const url = rpcUrlFor(chain, overrides);
     const head = await rpc(url, JSON.stringify([
       { jsonrpc: "2.0", id: 1, method: "eth_chainId", params: [] },
       { jsonrpc: "2.0", id: 2, method: "eth_blockNumber", params: [] },
     ]));
-    const results = Array.isArray(head) ? head.filter(isRecord) : [];
-    const chainId = results.find((entry) => entry.id === 1)?.result;
-    const block = results.find((entry) => entry.id === 2)?.result;
-    if (typeof chainId !== "string" || !HEX_QUANTITY.test(chainId) || `0x${BigInt(chainId).toString(16)}` !== chain.chainIdHex) return { ...base, error: "a RPC respondeu por outra rede" };
-    if (typeof block !== "string" || !HEX_QUANTITY.test(block)) return { ...base, error: "bloco inválido" };
+    const results = rpcResults(head);
+    const chainId = results?.get(1);
+    const block = results?.get(2);
+    if (!matchesExactly(chainId, HEX_QUANTITY) || `0x${BigInt(chainId).toString(16)}` !== chain.chainIdHex) return { ...base, error: "a RPC respondeu por outra rede" };
+    if (!matchesExactly(block, HEX_QUANTITY)) return { ...base, error: "bloco inválido" };
+    const atBlock = { ...base, block: BigInt(block).toString(), rawBlock: block };
     const requests = [
       { jsonrpc: "2.0", id: 10, method: "eth_getBalance", params: [account, block] },
       ...chain.tokens.map((token, index) => ({ jsonrpc: "2.0", id: 100 + index, method: "eth_call", params: [{ to: token.contract, data: callData }, block] })),
     ];
     const body = await rpc(url, JSON.stringify(requests));
-    const rows = Array.isArray(body) ? body.filter(isRecord) : [];
-    const native = rows.find((entry) => entry.id === 10)?.result;
-    if (typeof native !== "string" || !HEX_QUANTITY.test(native)) return { ...base, block, error: "saldo nativo inválido" };
+    const rows = rpcResults(body);
+    const native = rows?.get(10);
+    if (!matchesExactly(native, HEX_QUANTITY)) return { ...atBlock, error: "saldo nativo inválido" };
     const tokens: ChainBalanceResult["tokens"] = [];
     for (const [index, token] of chain.tokens.entries()) {
-      const raw = rows.find((entry) => entry.id === 100 + index)?.result;
-      if (typeof raw !== "string" || !WORD.test(raw)) return { ...base, block, error: `saldo de ${token.symbol} inválido` };
-      tokens.push({ symbol: token.symbol, contract: token.contract, amount: formatUnits(BigInt(raw), token.decimals) });
+      const raw = rows?.get(100 + index);
+      if (!matchesExactly(raw, WORD)) return { ...atBlock, error: `saldo de ${token.symbol} inválido` };
+      tokens.push({ ...balanceObservation(token.symbol, raw, token.decimals), contract: token.contract });
     }
-    return { chainIndex: chain.chainIndex, name: chain.name, status: "ok", block: BigInt(block).toString(), native: { symbol: chain.nativeSymbol, amount: formatUnits(BigInt(native), 18) }, tokens, error: null };
+    return { ...atBlock, status: "ok", observedAtMs: observationTime(now), native: balanceObservation(chain.nativeSymbol, native, 18), tokens, error: null };
   } catch {
     return { ...base, error: "a RPC pública não respondeu" };
   }
 }
 
 export async function readMultichainBalances(account: string, rpc: EvmRpcFetch, options: { chains?: readonly EvmChainSpec[]; now?: () => number; overrides?: Record<string, string | undefined> } = {}): Promise<MultichainSnapshot> {
-  const chains = await Promise.all((options.chains ?? EVM_CHAINS).map((chain) => readChainBalances(account, chain, rpc, options.overrides)));
-  return { account, observedAtMs: (options.now ?? Date.now)(), chains };
+  const now = options.now ?? Date.now;
+  const chains = await Promise.all((options.chains ?? EVM_CHAINS).map((chain) => readChainBalances(account, chain, rpc, options.overrides, now)));
+  return { account, observedAtMs: observationTime(now), chains };
 }

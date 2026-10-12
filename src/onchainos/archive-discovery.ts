@@ -152,16 +152,24 @@ function sizeText(value: unknown): string {
   if (typeof value !== "string" || value.length > 128 || !/^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$/.test(value)) return schemaFail("expected bounded nonnegative decimal MB text");
   return value;
 }
-function archiveUrl(value: unknown, filename: unknown): { url: string; filename: string } {
-  if (typeof filename !== "string" || filename.length > 255 || !/^[A-Za-z0-9][A-Za-z0-9_-]*\.zip$/.test(filename)) return schemaFail("invalid archive filename");
+function archiveUrl(value: unknown, filename: unknown, observedL2?: { instId: string; dateKey: string }): { url: string; filename: string } {
+  const expectedL2Name = observedL2 ? `${observedL2.instId}-L2orderbook-400lv-${observedL2.dateKey}.tar.gz` : undefined;
+  const legacyZip = typeof filename === "string" && /^[A-Za-z0-9][A-Za-z0-9_-]*\.zip$/.test(filename);
+  if (typeof filename !== "string" || filename.length > 255 || (!legacyZip && filename !== expectedL2Name)) return schemaFail("invalid archive filename");
   if (typeof value !== "string" || value.length > 2048 || /[\x00-\x20\x7f%\\?#]/.test(value)) return schemaFail("invalid archive URL");
   let parsed: URL;
   try { parsed = new URL(value); } catch { return schemaFail("invalid archive URL"); }
   if (parsed.protocol !== "https:" || parsed.hostname !== "static.okx.com" || parsed.username !== "" || parsed.password !== "" || parsed.port !== "" || parsed.href !== value) return schemaFail("archive URL must be canonical public HTTPS");
-  const prefix = "/cdn/okex/traderecords/";
-  if (!parsed.pathname.startsWith(prefix)) return schemaFail("archive URL outside public archive prefix");
-  const segments = parsed.pathname.slice(prefix.length).split("/");
-  if (segments.at(-1) !== filename || segments.slice(0, -1).some((segment) => !/^[A-Za-z0-9_-]+$/.test(segment))) return schemaFail("unsafe archive path or filename mismatch");
+  if (legacyZip) {
+    const prefix = "/cdn/okex/traderecords/";
+    if (!parsed.pathname.startsWith(prefix)) return schemaFail("archive URL outside public archive prefix");
+    const segments = parsed.pathname.slice(prefix.length).split("/");
+    if (segments.at(-1) !== filename || segments.slice(0, -1).some((segment) => !/^[A-Za-z0-9_-]+$/.test(segment))) return schemaFail("unsafe archive path or filename mismatch");
+  } else {
+    // Only the observed module4 SPOT daily location is admitted; no archive is fetched.
+    const expectedPath = `/cdn/okx/match/orderbook/pro/L2/400lv/daily/${observedL2!.dateKey.replaceAll("-", "")}/${expectedL2Name}`;
+    if (parsed.pathname !== expectedPath) return schemaFail("archive URL outside observed L2 location");
+  }
   return { url: value, filename };
 }
 
@@ -176,10 +184,12 @@ export function parseArchiveResponse(data: unknown, request: NormalizedArchiveRe
   const providerTimestampMs = epoch(row.ts, schemaFail);
   const totalSizeMB = sizeText(row.totalSizeMB);
   const details = boundedList(row.details, 100, schemaFail);
+  const observedL2 = normalized.query.module === "4" && normalized.query.instType === "SPOT" && normalized.query.dateAggrType === "daily";
   const validatedGroups: { raw: Record<string, unknown>; files: unknown[] }[] = [];
   let count = 0;
   for (const entry of details) {
-    const raw = record(entry, ["dateRangeStart", "dateRangeEnd", "instId", "instFamily", "instType", "groupSizeMB", "groupDetails"], ["dateRangeStart", "dateRangeEnd", "instId", "instFamily", "groupSizeMB", "groupDetails"], schemaFail);
+    const raw = record(entry, ["dateRangeStart", "dateRangeEnd", "instId", "instFamily", "instType", "groupSizeMB", "groupDetails", ...(observedL2 ? ["ccy"] : [])], ["dateRangeStart", "dateRangeEnd", "instId", "instFamily", "groupSizeMB", "groupDetails"], schemaFail);
+    if (Object.hasOwn(raw, "ccy") && raw.ccy !== "") return schemaFail("unexpected currency selector for observed SPOT L2 group");
     const files = boundedList(raw.groupDetails, 2000, schemaFail);
     count += files.length;
     if (count > 2000) return schemaFail("response exceeds two thousand listed files");
@@ -215,7 +225,7 @@ export function parseArchiveResponse(data: unknown, request: NormalizedArchiveRe
       if (hasDate && hasData && (epoch(file.dataTs, schemaFail) !== dateTimestampMs || file.dateTs !== file.dataTs)) return schemaFail("conflicting timestamp aliases");
       const key = dateKey(dateTimestampMs, policy.offsetMinutes, policy.aggregation);
       if (key < startKey || key > endKey || key < policy.beginDate || key > policy.endDate) return schemaFail("file date outside group or effective query");
-      const location = archiveUrl(file.url, file.filename);
+      const location = archiveUrl(file.url, file.filename, observedL2 ? { instId, dateKey: key } : undefined);
       if (seenUrls.has(location.url) || seenNames.has(location.filename)) return schemaFail("duplicate listed archive file");
       seenUrls.add(location.url);
       seenNames.add(location.filename);

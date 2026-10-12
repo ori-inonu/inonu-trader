@@ -261,14 +261,59 @@ describe("wallet session public transaction preflight", () => {
   });
   for (const [configured, expected] of [[1, 1], [0.5, 0.5], [9000, 8000], [NaN, 8000], [Infinity, 8000], [-1, 8000], [0, 8000]] as const)
     it(`uses a positive finite bounded timeout for option ${configured}`, async () => {
-      const { provider, session } = await connected({ timeoutMs: configured });
-      provider.respond = () => new Promise(() => {});
-      const durations: number[] = []; const native = globalThis.setTimeout;
-      const timer = spyOn(globalThis, "setTimeout").mockImplementation(((callback: () => void, duration: number) => { durations.push(duration); return native(callback, 0); }) as typeof setTimeout);
+      // Control external time before connection, including its shared read deadline.
+      const clock = spyOn(Date, "now").mockReturnValue(1000);
+      const durations: number[] = [];
+      const timers = new Map<number, { callback: () => void; duration: number }>();
+      let nextTimer = 0;
+      const timer = spyOn(globalThis, "setTimeout").mockImplementation(((callback: () => void, duration: number) => {
+        const handle = ++nextTimer;
+        durations.push(duration);
+        timers.set(handle, { callback, duration });
+        return handle as unknown as ReturnType<typeof setTimeout>;
+      }) as typeof setTimeout);
+      const cancelTimer = spyOn(globalThis, "clearTimeout").mockImplementation(((handle: ReturnType<typeof setTimeout>) => {
+        timers.delete(handle as unknown as number);
+      }) as typeof clearTimeout);
+      let session: ReturnType<typeof createWalletSession> | undefined;
       try {
-        expect(await session.preflightTransaction(proposal())).toEqual({ status: "blocked", executionQualified: false, reason: "provider_timeout" });
+        const provider = new Provider();
+        session = createWalletSession(provider, { now: () => 1000, timeoutMs: configured });
+        await session.connect();
+        expect(session.getSnapshot().status).toBe("connected");
+        expect(timers.size).toBe(0);
+        provider.calls.length = 0; durations.length = 0;
+        const success = await session.preflightTransaction(proposal());
+        expect(success.status).toBe("ready_for_review");
+        expect(success.executionQualified).toBe(false);
+        expect(provider.calls.map(call => call.method)).toEqual(METHODS);
+        expect(durations).toEqual([expected, expected, expected, expected]);
+        expect(timers.size).toBe(0);
+
+        const answer = deferred<unknown>(); const started = deferred<void>();
+        provider.respond = () => { started.resolve(); return answer.promise; };
+        provider.calls.length = 0; durations.length = 0;
+        const snapshot = session.getSnapshot(); let notices = 0;
+        session.subscribe(() => notices++); const beforeNotices = notices;
+        let settled = false;
+        const pending = session.preflightTransaction(proposal()).then(result => { settled = true; return result; });
+        await started.promise; await ticks();
+        expect(settled).toBe(false);
         expect(durations).toEqual([expected]);
-      } finally { timer.mockRestore(); session.dispose(); }
+        expect(timers.size).toBe(1);
+        const [handle, scheduled] = [...timers.entries()][0];
+        expect(scheduled.duration).toBe(expected);
+        timers.delete(handle); scheduled.callback();
+        expect(await pending).toEqual({ status: "blocked", executionQualified: false, reason: "provider_timeout" });
+        answer.resolve([ACCOUNT]); await ticks();
+        expect(provider.calls).toEqual([{ method: "eth_accounts" }]);
+        expect(session.getSnapshot()).toBe(snapshot);
+        expect(notices).toBe(beforeNotices);
+        expect(timers.size).toBe(0);
+      } finally {
+        try { session?.dispose(); }
+        finally { cancelTimer.mockRestore(); timer.mockRestore(); clock.mockRestore(); }
+      }
     });
   it("honors the configured finite read timeout and ignores the late answer", async () => {
     const { provider, session } = await connected({ timeoutMs: 5 });

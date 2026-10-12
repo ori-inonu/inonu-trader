@@ -1,0 +1,15 @@
+.review { margin-top: var(--s5, 20px); padding-top: var(--s4, 16px); border-top: 1px solid var(--edge, #213b55); color: var(--ink, #ecf8ff); font: var(--fs-sm, 14px/1.5 sans-serif); }
+.review h3 { font: var(--fs-md, 16px/1.4 sans-serif); margin: 0 0 var(--s2, 8px); }
+.review p { color: var(--ink-2, #b2c8da); }
+.input { display: block; width: 100%; box-sizing: border-box; min-height: 10rem; resize: vertical; margin-top: var(--s2, 8px); padding: var(--s3, 12px); border: 1px solid var(--edge, #213b55); border-radius: var(--r-md, 8px); background: var(--bg-deck, #081522); color: var(--ink, #ecf8ff); font: var(--fs-mono, 13px/1.5 monospace); }
+.actions { display: flex; flex-wrap: wrap; gap: var(--s2, 8px); }
+.actions button { cursor: pointer; border: 1px solid var(--edge, #213b55); border-radius: var(--r-md, 8px); padding: var(--s2, 8px) var(--s3, 12px); background: var(--bg-deck, #081522); color: var(--signal, #7ae4ff); font: inherit; }
+.actions button:disabled { cursor: default; opacity: .5; }
+.input:focus-visible, .actions button:focus-visible, .review summary:focus-visible { outline: 2px solid var(--signal, #7ae4ff); outline-offset: 3px; }
+.status { min-height: 1.5em; }
+.review .notice { color: var(--signal, #7ae4ff); }
+.captured dl { display: grid; gap: var(--s2, 8px); }
+.captured dt { color: var(--ink-2, #b2c8da); }
+.captured dd { margin: 0; overflow-wrap: anywhere; font-family: monospace; }
+.review summary { cursor: pointer; color: var(--signal, #7ae4ff); }
+.calldata { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 20rem; overflow: auto; }

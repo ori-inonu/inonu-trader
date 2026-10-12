@@ -68,7 +68,7 @@ const EXECUTION: Record<string, string> = {
 const PHASE: Record<string, string> = {
   "fase-0": "Fase 0, observar",
   "fase-1": "Fase 1, spot sem alavancagem",
-  "fase-2": "Fase 2, alavancagem com vantagem validada",
+  "fase-2": "Fase 2, alavancagem exige vantagem validada",
 };
 
 function sideWord(side: "long" | "short"): string {

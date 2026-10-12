@@ -7,18 +7,26 @@ Acesso às fontes: 2026-10-11. Pesquisa pública apenas: nenhuma conta, login, c
 1. **Escopo.** 444 itens em 18 famílias: Trade 35, Gateway 7, Wallet API e Balance 7, DeFi 15, Market 61 (price 5, index 2, token 14, signal 2, leaderboard 2, portfolio 5, tracker 1, social 9, trenches 7, WebSocket 11, planos 2, introdução 1), Onchain Data 29, Security 6, Agentic Wallet 16, Skills 20, CLI 24, MCP 111 (hospedado 22, local 89), Payments 13, SDKs 9, Exchange agent-trade-kit 18, Dapp Connect 5, OKX.AI 2, Acesso e operação 13, X Layer 53.
 2. **Classe, segurança, prioridade.** 345 leitura, 22 preparam calldata ou dados para assinar, 77 escrevem ou movem fundos. Segurança: 344 automatizáveis só leitura, 50 exigem aprovação humana, 50 nunca automatizar. Prioridade: P0 7, P1 44, P2 75, P3 318.
 3. **Versus R1.** 144 itens já estavam descritos no mesmo nível, 248 pertencem a famílias que R1 nomeou sem enumerar (MCP, CLI, Onchain Data, X Layer, Social), 49 são novos e 3 contradizem R1.
-4. **Repositório.** 20 itens integrados (15 clientes somente leitura, 1 preparação de calldata, 2 fixtures, 2 providers do navegador), 4 caminhos registrados e nunca chamados, 420 sem integração.
+4. **Repositório.** O catálogo declara cobertura local para 48 itens (44 clientes somente leitura, 1 preparação de calldata, 1 fixture, 2 providers do navegador), 3 caminhos registrados e 393 sem integração. São contagens dos campos do JSON; a conferência de código desta revisão é delimitada aos 7 itens P0. Cliente ou adapter presente não comprova chamada real, saldo conciliado nem rentabilidade.
 5. **Leitura.** Cerca de 250 das cerca de 590 páginas do índice `llms.txt` foram abertas (todas as de endpoint REST de Trade clássico e Intent, Market, Balance, Gateway, DeFi, Onchain Data e X Layer Data API); 154 itens têm como fonte o código oficial no GitHub (CLI, skills, kit da Exchange), onde não há página REST; 24 itens só foram listados (caminho e tier vêm de outras fontes), 7 foram lidos só por R1 ou R2 e 3 não foram lidos.
 6. **Achado 1.** O Intent swap existe nas docs: o `quote` aceita `mode=intent|auto` e devolve typed data EIP-712, há 8 endpoints, solver e RFQ; só 5 cadeias (1, 56, 42161, 8453, 196), sem Monad. R1 dera a página como não localizada.
-7. **Achado 2.** O canal CLI/skills tem cota própria (Basic 1 milhão grátis, Premium 100 mil grátis) e, após o login, assina sozinho pagamentos x402 quando a cobrança começa (Premium USD 0,005 por chamada, contra USD 0,0002 no Open API): é um canal de gasto, não só de dados.
+7. **Achado 2.** O CLI/skills v4.6.4 tem fluxo de cobrança próprio: o primeiro excesso de cada tier exige confirmação e configuração do pagamento padrão; só depois há assinatura automática. O código marca as cotas Basic 1 milhão e Premium 100 mil como placeholders; a mensagem publica Premium USD 0,005 por chamada, versus USD 0,0002 na página REST. Esses valores de fonte não comprovam franquia nem cobrança da conta conectada.
 8. **Achado 3.** MCP local: 88 ferramentas (77 leitura, 5 calldata, 2 movem fundos, 1 transmite, 3 mudam configuração) sem modo somente leitura global; MCP hospedado: 21 ferramentas, autenticação só por cabeçalho de chave.
 9. **Achado 4.** Correções a R1: o Social `vibe` é por cadeia e contrato (não só símbolo); o kit da Exchange declara 167 ferramentas, a tabela soma 155 e os docs por módulo somam 133; o `walletType` do leaderboard difere entre CLI e REST.
-10. **Para o Jev.** Dão sinal: preço/índice/candles/trades, `price-info`, sinais e rastreio de carteiras, risco do token; só habilitam execução: swap, intent, ponte, DeFi, Agentic Wallet. Nenhum entra no laço de 300 ms. P0 já integrado: cotação, saldos e `price-info`; P0 ainda sem integração: preço atual, candles e índice atual.
+10. **Para o Jev.** Dão sinal: preço/índice/candles/trades, `price-info`, sinais e rastreio de carteiras, risco do token; só habilitam execução: swap, intent, ponte, DeFi, Agentic Wallet. Nenhum entra no laço de 300 ms. Os 7 itens P0 têm clientes locais: cotação, dois saldos, preço atual, candles, índice atual e `price-info`. Preço/candles/índice também têm adapter de captura em `src/onchainos/capture-sources.ts`. Isto não qualifica a cobertura de X Layer/Monad por endpoint, chamadas autenticadas, a carteira real nem estratégias.
 11. **Bloqueios.** Monad aparece na matriz de Trade e Market, mas não nos exemplos de sinais, tracker, memepump, Intent, DeFi nem no CLI estático; tiers de Trade, Gateway, DeFi, Social e Security NAO CONFIRMADOS; Brasil NAO CONFIRMADO.
+
+## Revisão delimitada de 2026-10-11
+
+Contagens dos 444 registros foram recalculadas. Conferência independente de métodos, caminhos, limites críticos e unidades ficou restrita aos 7 itens P0 e às condições públicas de acesso/cobrança que os afetam. Os outros 437 contratos não foram revalidados. A cobertura local foi conferida no código apenas para P0; as demais células reproduzem declarações do JSON. Nenhuma chamada autenticada, pagamento, carteira real, operação contínua ou rentabilidade foi qualificada.
+
+Fontes exatas dos P0: [quote](https://web3.okx.com/onchainos/dev-docs/trade/dex-get-quote), [total-value](https://web3.okx.com/onchainos/dev-docs/market/balance-total-value), [all-token-balances](https://web3.okx.com/onchainos/dev-docs/market/balance-total-token-balances), [price](https://web3.okx.com/onchainos/dev-docs/market/market-price), [candles](https://web3.okx.com/onchainos/dev-docs/market/market-candlesticks), [current-price](https://web3.okx.com/onchainos/dev-docs/market/index-price) e [price-info](https://web3.okx.com/onchainos/dev-docs/market/market-token-price-info). A página de preço não declara máximo remoto de lote; o teto local de 100 não é um limite oficial comprovado. Moedas/unidades não declaradas continuam desconhecidas.
+
+Acesso e custo: [tabela REST](https://web3.okx.com/onchainos/dev-docs/market/market-api-fee), [pagamento REST](https://web3.okx.com/onchainos/dev-docs/market/how-to-finish-api-payment), [erros de pagamento](https://web3.okx.com/onchainos/dev-docs/market/payment-error-handling) e [acesso](https://web3.okx.com/onchainos/dev-docs/home/api-access-and-usage). CLI/skills v4.6.4 fixado ao commit `cfbb0bafa71898e50762cd9fa77f026b4a8caa1b`: [notificações](https://github.com/okx/onchainos-skills/blob/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/skills/okx-dex-market/_shared/payment-notifications.md), [constantes e carência](https://github.com/okx/onchainos-skills/blob/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/cli/src/payment_notify.rs) e [estado de cobrança](https://github.com/okx/onchainos-skills/blob/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/cli/src/client.rs).
 
 ## (b) Legenda
 
-- Não contam como integração o catálogo de exibição `web/src/lib/central/ecosystem-catalog.ts` (33 itens de capacidade, só dados) nem os documentos em `docs/`.
+- Não contam como integração o catálogo de exibição `web/src/lib/central/ecosystem-catalog.ts` (33 itens de capacidade, só dados) nem os documentos em `docs/`. O campo repo das tabelas reproduz a cobertura declarada no catálogo JSON; apenas os 7 itens P0 foram conferidos no código nesta revisão, e presença local não comprova operação.
 - Colunas: `id` estável do JSON (padrões `a.b.*` agrupam itens, com a contagem no fim da descrição); **tier** free, basic, prem (premium), wl (whitelist), pago (plano de assinatura, extensão da lista pedida), `?` = unknown = NAO CONFIRMADO, n/a; **cl** R leitura, C prepara calldata ou dados para assinar, W escreve ou move fundos; **P** prioridade; **seg** A automatizável somente leitura, H exige aprovação humana, N nunca automatizar; **R1** cov (mesmo nível em R1), par (família citada sem o item), new, CTR (contradiz R1); **repo** RO cliente somente leitura, CD preparação de calldata, FX fixture, PR provider do navegador, REG caminho registrado nunca chamado, `-` nenhum.
 - K4 (R1): cabeçalhos OK-ACCESS-KEY, SIGN, TIMESTAMP e PASSPHRASE (HMAC SHA256 em Base64). CLI e MCP local: login JWT ou modo anônimo. MCP hospedado: só OK-ACCESS-KEY. WebSocket: login K4 no canal. Exchange: chaves da Exchange.
 - Prioridade: P0 leitura de alto valor para decisão com caminho viável; P1 leitura de valor médio ou que habilita o operador (inventário, reconciliação, custo, risco); P2 útil depois, dependente de plano pago ou de cobertura por cadeia; P3 baixo valor, lado do provedor, execução ou fora do escopo. Em grupos, vale o menor P e o pior seg.
@@ -59,8 +67,8 @@ Nota: sem página REST para a ponte, os 6 caminhos vêm de `cross_chain.rs`; a u
 
 | id | item | tier | cl | P | seg | R1 | repo |
 |---|---|---|---|---|---|---|---|
-| `gateway.supported-chains` | GET /api/v6/dex/pre-transaction/supported/chain | ? | R | P3 | A | cov | - |
-| `gateway.gas-price` | GET /api/v6/dex/pre-transaction/gas-price | ? | R | P1 | A | cov | REG |
+| `gateway.supported-chains` | GET /api/v6/dex/pre-transaction/supported/chain | ? | R | P3 | A | cov | RO |
+| `gateway.gas-price` | GET /api/v6/dex/pre-transaction/gas-price | ? | R | P1 | A | cov | RO |
 | `gateway.gas-limit` | POST /api/v6/dex/pre-transaction/gas-limit | ? | R | P2 | A | cov | - |
 | `gateway.simulate` | GET (página) ou POST (curl e CLI) .../pre-transaction/simulate | wl | R | P2 | A | cov | - |
 | `gateway.broadcast` | POST /api/v6/dex/pre-transaction/broadcast-transaction | ? | W | P3 | H | par | - |
@@ -81,9 +89,9 @@ Nota: sem página REST para a ponte, os 6 caminhos vêm de `cross_chain.rs`; a u
 
 | id | item | tier | cl | P | seg | R1 | repo |
 |---|---|---|---|---|---|---|---|
-| `defi.product.*(leitura)` | GET /api/v6/defi/product/{supported-chains, supported-platforms, rate/chart, tvl/chart, depth-price/chart} (5) | ? | R | P1 | A | new | - |
+| `defi.product.*(leitura)` | GET /api/v6/defi/product/{supported-chains, supported-platforms, rate/chart, tvl/chart, depth-price/chart} (5) | ? | R | P1 | A | new | RO |
 | `defi.product.search` | POST /api/v6/defi/product/search | ? | R | P1 | A | cov | RO |
-| `defi.product.detail` | GET /api/v6/defi/product/detail | ? | R | P1 | A | cov | FX |
+| `defi.product.detail` | GET /api/v6/defi/product/detail | ? | R | P1 | A | cov | RO |
 | `defi.prepare/calculator` | POST product/detail/prepare e calculator/enter/info (2) | ? | R | P3 | A | new | - |
 | `defi.transaction.*` | POST enter, exit e claim (calldata; exit só registrado) (3) | ? | C | P3 | H | cov | -/REG |
 | `defi.user.*` | POST user/asset/platform/list e detail (2) | ? | R | P2 | A | cov | - |
@@ -95,29 +103,29 @@ Tiers da página de planos: Free 20 endpoints (cadeias suportadas, índice, Bala
 
 | id | item | tier | cl | P | seg | R1 | repo |
 |---|---|---|---|---|---|---|---|
-| `market.price.supported-chains` | GET /api/v6/dex/market/supported/chain | free | R | P2 | A | par | - |
-| `market.price.price` | POST /api/v6/dex/market/price | basic | R | P0 | A | cov | - |
-| `market.price.trades` | GET /api/v6/dex/market/trades | basic | R | P1 | A | cov | - |
-| `market.price.candles` | GET /api/v6/dex/market/candles | basic | R | P0 | A | cov | - |
-| `market.price.historical-candles` | GET /api/v6/dex/market/historical-candles | prem | R | P1 | A | cov | - |
-| `market.index.current-price` | POST /api/v6/dex/index/current-price | free | R | P0 | A | cov | - |
-| `market.index.historical-price` | GET /api/v6/dex/index/historical-price | free | R | P1 | A | cov | - |
-| `market.token.search` | GET /api/v6/dex/market/token/search | basic | R | P1 | A | cov | - |
-| `market.token.basic-info` | POST /api/v6/dex/market/token/basic-info | basic | R | P1 | A | cov | - |
+| `market.price.supported-chains` | GET /api/v6/dex/market/supported/chain | free | R | P2 | A | par | RO |
+| `market.price.price` | POST /api/v6/dex/market/price | basic | R | P0 | A | cov | RO |
+| `market.price.trades` | GET /api/v6/dex/market/trades | basic | R | P1 | A | cov | RO |
+| `market.price.candles` | GET /api/v6/dex/market/candles | basic | R | P0 | A | cov | RO |
+| `market.price.historical-candles` | GET /api/v6/dex/market/historical-candles | prem | R | P1 | A | cov | RO |
+| `market.index.current-price` | POST /api/v6/dex/index/current-price | free | R | P0 | A | cov | RO |
+| `market.index.historical-price` | GET /api/v6/dex/index/historical-price | free | R | P1 | A | cov | RO |
+| `market.token.search` | GET /api/v6/dex/market/token/search | basic | R | P1 | A | cov | RO |
+| `market.token.basic-info` | POST /api/v6/dex/market/token/basic-info | basic | R | P1 | A | cov | RO |
 | `market.token.advanced-info` | GET /api/v6/dex/market/token/advanced-info | prem | R | P1 | A | cov | RO |
 | `market.token.top-liquidity` | GET /api/v6/dex/market/token/top-liquidity | basic | R | P1 | A | cov | RO |
 | `market.token.price-info` | POST /api/v6/dex/market/price-info | prem | R | P0 | A | cov | RO |
-| `market.token.hot/holder/top-trader` | hot-token (basic), holder e top-trader (prem) (3) | basic/prem | R | P2 | A | cov | - |
-| `market.token.cluster.*` | clusters: supported-chain, overview, list, top-holders (4) | free/prem | R | P2 | A | cov | - |
+| `market.token.hot/holder/top-trader` | hot-token (basic), holder e top-trader (prem) (3) | basic/prem | R | P2 | A | cov | RO |
+| `market.token.cluster.*` | clusters: supported-chain, overview, list, top-holders (4) | free/prem | R | P2 | A | cov | RO |
 | `market.token.rwa/ranking` | rwa/tokens (Premium) e ranking (página 404) (2) | prem/? | R | P3 | A | par/cov | - |
 | `market.signal.supported-chain` | GET /api/v6/dex/market/signal/supported/chain | free | R | P1 | A | cov | RO |
 | `market.signal.list` | POST /api/v6/dex/market/signal/list | prem | R | P1 | A | cov | RO |
-| `market.leaderboard.*` | supported-chain e list (walletType em conflito CLI x REST) (2) | free/prem | R | P2 | A | par/cov | - |
+| `market.leaderboard.*` | supported-chain e list (walletType em conflito CLI x REST) (2) | free/prem | R | P2 | A | par/cov | RO |
 | `market.portfolio.*` | supported-chain, overview, recent-pnl, latest-pnl, dex-history (5) | free/prem/basic | R | P2 | A | cov | - |
 | `market.tracker.trades` | GET /api/v6/dex/market/address-tracker/trades | ? | R | P1 | A | cov | - |
 | `market.social.news-*` | GET social/news: latest, by-symbol, search, detail, platforms (5) | ? | R | P3 | A | par | - |
-| `market.social.sentiment-*` | GET social/sentiment: symbol e ranking (2) | ? | R | P2 | A | cov/par | - |
-| `market.social.vibe-*` | GET social/vibe: timeline e top-kols (por cadeia e contrato) (2) | ? | R | P2 | A | CTR | - |
+| `market.social.sentiment-*` | GET social/sentiment: symbol e ranking (2) | ? | R | P2 | A | cov/par | RO/- |
+| `market.social.vibe-*` | GET social/vibe: timeline e top-kols (por cadeia e contrato) (2) | ? | R | P2 | A | CTR | RO |
 | `market.trenches.chains-protocols` | GET .../memepump/supported/chainsProtocol | free | R | P3 | A | par | RO |
 | `market.trenches.token-list` | GET .../memepump/tokenList (37 filtros) | prem | R | P2 | A | par | RO |
 | `market.trenches.detalhes` | tokenDetails, tokenDevInfo, similarToken, tokenBundleInfo, apedWallet (5) | prem/basic | R | P3 | A | par | - |
@@ -182,7 +190,7 @@ Nota: o Onchain Data é `/api/v6/explorer/<módulo>/<endpoint>`, sempre GET; o s
 | `cli.(swap,cross-chain,gateway)` | leitura mais calldata mais execute e broadcast (3) | ? | W | P3 | N | par | - |
 | `cli.(wallet,strategy,payment,agent)` | carteira TEE, ordens limite, pagamentos e agentes (4) | ? | W | P3 | N | par | - |
 | `cli.(mcp,upgrade,preflight,global)` | servidor MCP, upgrade, preflight e flags globais (4) | ? | WR | P3 | N | par | - |
-| `cli.payment-quota` | Cota gratuita do CLI e pagamento automático por x402 | ? | W | P2 | N | new | - |
+| `cli.payment-quota` | Cota do CLI e pagamento x402 após confirmação inicial por tier | ? | W | P2 | N | new | - |
 
 ### MCP (111)
 
@@ -254,7 +262,7 @@ Nota: o Onchain Data é `/api/v6/explorer/<módulo>/<endpoint>`, sempre GET; o s
 - Custo e inventário (`gateway.gas-price`, `trade.quote`, `balance.*`, `history.*`, `trade.history`): alimentam custo líquido, saldo e reconciliação, não o sinal.
 - Contexto fraco: Social (sentimento por símbolo, `vibe` por contrato; texto de terceiros é dado não confiável), APY e TVL do DeFi (custo de oportunidade), Onchain Data (eventos como alternativa à RPC, Monad NAO CONFIRMADO) e, se o par existir na Exchange (NAO CONFIRMADO), os dados públicos e o módulo `market` do kit (sem chave); o repo já captura a v5 pública da Exchange.
 
-**Cadência e custo.** O laço da Kuru é de 300 ms por bloco; nenhuma família OKX cabe nele. REST no plano Free: 100 mil chamadas Basic e 100 mil Premium por mês (cerca de 3.333 por dia ou 2,3 por minuto cada); WebSocket exige plano de USD 99 ou mais, limita 3 conexões por segundo por chave e 480 operações de assinatura por hora por conexão, sem SLA. Trade Trial: 60 dias, RPS 1 (até 5). Canal CLI: Basic 1 milhão grátis e USD 0,0001 por excedente, Premium 100 mil grátis e USD 0,005 (arquivo com TODO e data de fallback 2026.5.31, pode estar defasado). Usar o CLI em laço pode gastar fundos.
+**Cadência e custo.** O laço da Kuru é de 300 ms por bloco; nenhuma família OKX foi qualificada para ele. A página REST publica no plano Free 100 mil chamadas Basic e 100 mil Premium por mês (cerca de 3.333 por dia ou 2,3 por minuto cada), com excedentes de USD 0,0001 e USD 0,0002, respectivamente; WebSocket começa no Starter de USD 99. Os limites de WebSocket e de Trade descritos neste inventário não foram revalidados nesta revisão P0. No CLI v4.6.4, as cotas de 1 milhão Basic e 100 mil Premium estão marcadas como placeholders; a mensagem de cobrança publica USD 0,0001 Basic e USD 0,005 Premium. O primeiro excesso por tier exige confirmação, escolha do ativo quando houver alternativas, configuração via `payment default set --tier` e nova execução. Uma única opção também exige confirmação. O cliente só pré-assina automaticamente depois do estado `charging_confirmed`. A carência encontrada é histórica e inconsistente: o fallback da skill cita 2026.5.31, enquanto o código usa corte em 2026-05-30T00:00:00Z; não demonstra carência vigente. Plano, franquia, preço efetivo e disponibilidade regional da conta permanecem NAO CONFIRMADOS. Usar o CLI em laço pode gastar fundos.
 
 **Só habilitam execução (nenhum sinal).** `trade.swap`, `approve`, `swap-instruction`, `quote-intent` e ordens Intent, `trade.xchain.*` (approve e swap), `gateway.broadcast`, `defi.transaction.*`, `agentic.*` de envio e ordens, ferramentas MCP de calldata e de fundos, Payments. Ficam no operador, em cadência própria, com o Jev escolhendo entre candidatos elegíveis ou hold.
 

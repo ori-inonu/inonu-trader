@@ -37,7 +37,12 @@ The parser accepts exactly one `data` row, at most 100 groups and at most 2000 l
 
 The official example uses `dateTs`, while its response table uses `dataTs`. The parser accepts either and records `timestampAlias: "dateTs" | "dataTs" | "both"`. Both are accepted only when identical valid decimal milliseconds. `dateTimestampText` preserves the text. Response `instType` is optional because the table omits it; when present, it must match the request.
 
-URLs must be canonical HTTPS on `static.okx.com`, under `/cdn/okex/traderecords/`, with no credentials, explicit port, query, fragment, percent escapes or backslashes. Path segments use ASCII letters/digits/underscore/hyphen. The basename must exactly equal the safe filename: ASCII alphanumeric/underscore/hyphen followed by one `.zip` suffix, at most 255 characters. URL length is at most 2048 characters. Traversal, empty path segments, confusable prefixes and URL normalization changes fail. A safe basename directly under the required prefix is accepted. No listed URL is fetched.
+URLs must be canonical HTTPS on `static.okx.com`, with no credentials, explicit port, query, fragment, percent escapes or backslashes. Filename length is at most 255 characters; URL length is at most 2048 characters. Traversal, empty path segments, confusable prefixes and URL normalization changes fail. The parser accepts two bounded locations:
+
+- Legacy ZIP archives under `/cdn/okex/traderecords/`. Path segments use ASCII letters/digits/underscore/hyphen; the basename must exactly equal the filename, consisting of ASCII alphanumeric/underscore/hyphen followed by one `.zip` suffix. A safe basename directly under the prefix is accepted.
+- Daily SPOT 400-level L2 archives, only for module `4`, at `/cdn/okx/match/orderbook/pro/L2/400lv/daily/YYYYMMDD/INST-L2orderbook-400lv-YYYY-MM-DD.tar.gz`. `INST` must equal the validated group `instId`; both dates must equal the validated UTC0 file date. Other tar paths, depths, aggregations and extensions are rejected.
+
+For the second request shape, the group may contain `ccy: ""` or omit `ccy`. Nonempty or nonstring values and all other additional fields remain rejected. This field does not replace instrument identity. No listed URL is fetched.
 
 Empty `details` is valid and means no files listed for that query. It does not prove that historical data is absent. Provider timestamp is kept separate from the local request and receipt clocks. Metadata timestamps do not establish when an archive was published or historically available to a trading decision.
 
@@ -62,11 +67,15 @@ Every plan/listing explicitly keeps `historicalCoverage`, `rights`, `fileAccess`
 ## Offline checks
 
 ```powershell
-bun --no-env-file test src/onchainos/archive-discovery.test.ts scripts/okx-archive-discovery.test.ts src/onchainos/http.test.ts src/onchainos/errors.test.ts src/onchainos/values.test.ts
+bun --no-env-file test src/onchainos/archive-discovery.test.ts src/onchainos/archive-observed.test.ts scripts/okx-archive-discovery.test.ts scripts/okx-archive-observed.test.ts src/onchainos/http.test.ts src/onchainos/errors.test.ts src/onchainos/values.test.ts
 ```
 
 Tests inject network, time and output. No real probe or archive download is part of the unit suite. A single separately authorized public availability query is evidence only for its instrument/date; real access and coverage remain unqualified until that observation is recorded.
 
 ## Contract provenance
 
-This implementation follows the frozen archive discovery acceptance AD01–AD10 and the official [OKX historical market data documentation](https://www.okx.com/docs-v5/en/#rest-api-market-data-get-historical-market-data). The retained official contract was observed on 2026-10-11 with SHA256 `d4304e750303c66c87d8b6e49c539f002835ee88cfb1eebd2299327d31e99667`. Documentation describes variable backfill and typical T+2/T+3 schedules; these are not completeness or release guarantees. This document contains no private harness state or consultation payload.
+This implementation follows archive discovery acceptance AD01–AD10 and the bounded observed-L2 compatibility criteria AC01 through AC06. The official [OKX historical market data documentation](https://www.okx.com/docs-v5/en/#public-data-rest-api-get-historical-market-data) describes metadata; its ZIP example is for trades and does not define the internal L2 archive format. The original retained contract was observed on 2026-10-11 with SHA256 `d4304e750303c66c87d8b6e49c539f002835ee88cfb1eebd2299327d31e99667`. Documentation describes variable backfill and typical T+2/T+3 schedules; these are not completeness or release guarantees.
+
+The compatibility regression retains an intact 511-byte public metadata response for BTC-USDT, module 4, SPOT, daily, 2026-10-01. Its SHA256 is `a24a9109e655754aebd047d42f403ce4de8afaa34adbdf9423c69d8627c4f85a`; the declared file size is `109.26` MB. This is metadata evidence for that query; neither the archive nor its expanded content was obtained. Tests replay the retained bytes through injected fetch ports and explicitly label adversarial variants as synthetic. They do not repeat the public query.
+
+See [historical data qualification](./OKX-HISTORICAL-DATA-QUALIFICATION.md) for primary sources and remaining dependencies. Historical archive schema, units, sequences/checksum behavior, actual coverage, historical availability, usage rights, and fill/cost assumptions still need their own qualification. Live WebSocket documentation supplies a separate contract; equivalence to historical files has not been demonstrated. This correction does not establish a verified wallet balance, profitable backtests, continuous operation or completion of the broader INONU TRADER goal.

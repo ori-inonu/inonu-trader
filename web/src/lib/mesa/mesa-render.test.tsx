@@ -113,6 +113,11 @@ describe("DeskDock", () => {
     switchToMonad: noop,
     switchToXLayer: noop,
     disconnect: () => {},
+    revision: 0,
+    identityKey: null,
+    preflightTransaction: async () => ({ status: "blocked" as const, executionQualified: false as const, reason: "session_unavailable" }),
+    getSessionToken: () => 0,
+    subscribeSessionInvalidation: () => () => {},
     ...overrides,
   });
   const caps = capabilityRows({ desk: [], jev: { status: "absent", ageMs: null }, systemOne: { status: "absent", execution: null, reasons: [] }, wallet: { status: "disconnected", available: true }, operator: { status: "absent" }, hasDerivatives: false });

@@ -2,6 +2,7 @@ import {
   createWalletSession, discoverOkxProvider,
   type Eip1193Provider, type OkxDiscoverySurface, type WalletSession, type WalletSnapshot,
 } from "./okx-wallet";
+import type { WalletTransactionPreflightResult } from "./wallet-transaction-preflight";
 
 export interface SharedWalletSnapshot {
   readonly available: boolean;
@@ -42,6 +43,13 @@ export function createWalletStore() {
   let state = walletServerSnapshot;
   let references = 0;
   let revision = 0;
+  let sessionToken = 0;
+  const invalidationListeners = new Set<() => void>();
+  /** Any provider, account, network or request change retires proposals reviewed under the previous session token. */
+  const bumpSession = () => {
+    sessionToken++;
+    for (const listener of invalidationListeners) listener();
+  };
   let identityTag: string | null = null;
   let identityHash: string | null = null;
   let session: WalletSession | null = null;
@@ -68,9 +76,11 @@ export function createWalletStore() {
   };
   const invalidate = () => {
     revision++;
+    bumpSession();
     publish(Object.freeze({ ...state.snapshot, balances: null, observation: null, observedAtMs: null }), state.available);
   };
   const disposeSession = () => {
+    bumpSession();
     unsubscribe?.();
     unsubscribe = null;
     session?.dispose();
@@ -86,7 +96,7 @@ export function createWalletStore() {
     // Register invalidation before the session listeners, including repeated events.
     for (const event of ["accountsChanged", "chainChanged", "disconnect"]) provider.on(event, invalidate);
     session = createWalletSession(provider);
-    unsubscribe = session.subscribe((snapshot) => publish(snapshot, true));
+    unsubscribe = session.subscribe((snapshot) => { bumpSession(); publish(snapshot, true); });
     publish(session.getSnapshot(), true);
   };
   const inspectAnchor = () => {
@@ -127,11 +137,20 @@ export function createWalletStore() {
       let released = false;
       return () => { if (released) return; released = true; if (--references === 0) stop(); };
     },
-    connect() { revision++; return session?.connect() ?? Promise.resolve(); },
-    refresh() { return session?.refresh() ?? Promise.resolve(); },
+    connect() { revision++; bumpSession(); return session?.connect() ?? Promise.resolve(); },
+    refresh() { bumpSession(); return session?.refresh() ?? Promise.resolve(); },
     switchToMonad() { invalidate(); return session?.switchToMonad() ?? Promise.resolve(); },
     switchToXLayer() { invalidate(); return session?.switchToXLayer() ?? Promise.resolve(); },
-    disconnect() { revision++; session?.disconnect(); },
+    disconnect() { revision++; bumpSession(); session?.disconnect(); },
+    preflightTransaction(input: unknown): Promise<WalletTransactionPreflightResult> {
+      return session?.preflightTransaction(input)
+        ?? Promise.resolve({ status: "blocked", reason: "session_unavailable", executionQualified: false });
+    },
+    getSessionToken: () => sessionToken,
+    subscribeSessionInvalidation(listener: () => void) {
+      invalidationListeners.add(listener);
+      return () => { invalidationListeners.delete(listener); };
+    },
   };
 }
 
