@@ -1,0 +1,14 @@
+Independent Standards review of baseline `14cbb7bd2878eed0a930b324b0c50610be7cdab8` plus supplied WIP. I did not implement these changes. Reviewer thread: `01a12dc0-b95d-7902-bc93-86f846ff2a47`; configured GPT6.1Sol/xhigh, effective model/effort/tier unknown. Ordinary isolated copy; no OS read-only claim.
+
+Integrity: all 11 manifest entries match before/after checks. Reverse-patch reconstruction matches all eight frozen baseline SHA256s and patch blob IDs; normalized safety sources read.ts/decide.ts/public-view.ts match baseline. read.test.ts changes are fixture-only. Frozen SPEC SHA256: `10cee5fe44e7dbde5a988d34822ee99061cb24b39341e2cefe77a4bae2439c97`.
+
+- **P2 correctness, src/jev-read/feed.ts:585,593,601,610:** future timestamps advance ordering watermarks before freshness validation. Repro: mature valid BTC-USDT coverage; REST-refresh book/ticker with ts=`9007199254740991`, then refresh both with ts=`1800000060000` at that corrected clock. Both retain the future timestamp; ages are null and reasons exactly `[book_stale,ticker_stale]`. Valid refreshes cannot recover within that epoch. Quarantine invalid observations before advancing ordering state, or add bounded recovery preserving stale/duplicate protections; add this public-feed regression.
+- **Possible Duplicated Code heuristic, feed.ts:581–611:** acceptTicker/acceptBook duplicate capture ordering, `sourceTsMs < ...LastSourceTsMs`, conflict handling and watermark updates. The recovery defect affects both copies. Consider shared ordering policy with resource-specific equality.
+
+No additional documented AGENTS/CONTRIBUTING standard violation found in changed hunks; tooling-enforced items excluded. All twelve smell heuristics considered.
+
+Original probe SHA256 `a7a44e9482c1635bb73307e6bcc2a3c599591548442f1a0843953332c326091e` and raw replay hashes match. Exit1 remains: F1/F3/F4/F5/F6 FAIL, F2/TOKEN PASS. reviewer-boundary-probe.ts:9–10 omit mandatory provenance/coverage, masking candle/safety checks; :26–28 never mature 60 seconds; :40 converts any builder failure to funding null; :53 accepts any blocked flood. F2 lacks an eligible positive control.
+
+Independent offline equivalents: 46/46 F1–F6 controls and 4/4 in-memory loop controls pass; additional recovery probe FAILS. Inline probe SHA256s: `0a1ced6c60076bc8d04815815e77ba14ea429cc1c780eef9c427b6fba42c61e9`, `7a54428d89fcbedca0022100140b71f8a47d8d01dc576d999c77fb4dffe45211`.
+
+Executed with Bun --no-env-file --no-install: 129 tests pass/0 fail/1824 assertions; root tsc noEmit/incremental=false exits0. File-writing loop tests were not executed. Integrator reports backend2192pass/2skip, web909pass, typecheck:all0; not independently rerun. Physical build remains separately pending. No review dependency; recovery fix requested. Exhaustive SPEC approval is outside this axis; full native inonu-trader goal remains incomplete and unapproved.
