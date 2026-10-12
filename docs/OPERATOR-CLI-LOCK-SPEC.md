@@ -1,6 +1,6 @@
 # Proposed next operator concurrency cycle
 
-Status: research proposal only; not frozen acceptance, independent approval or permission to start implementation. Full JEV operational goal remains unchanged. Current UI cycle must complete its required gates before a new harness cycle is opened.
+Status: implementado e integrado (CLI lock: 2e704c7, main f626a30; persistência: 703c626, main ff37327); os parágrafos de proposta e de checkpoint abaixo são históricos.
 
 ## Problem and evidence
 
@@ -31,6 +31,8 @@ Expected integrator-exclusive files: scripts/okx-operator.ts, a new scripts/okx-
 The second-leg quote amount discrepancy, runtime read-only qualification, complete ecosystem integrations and strategy evaluations remain separate required work. This proposed concurrency cycle cannot certify the whole goal.
 
 ## Current recovery checkpoint
+
+Histórico: este checkpoint foi superado pelo Status acima (implementado em 2e704c7) e fica só como registro.
 
 Harness revision65, UI implementation phase. UI code review terminal limited PASS; Avicenna final audit and Turing held-lock reconciliation research submitted and last observed via a timeout, not terminal. Fresh focused UI stream: docs/research/UI-TRUTH-FOCUSED-20261011.log, SHA25612fc79a4107e3dc49234c2341e91f57268acd4a8a9bcab91deb5215207309cc4, 20pass/0fail/79assert, exit0. No production operator change, commit or merge in this continuation.
 

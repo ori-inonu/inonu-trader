@@ -204,6 +204,8 @@ Colunas: funcionalidade; endpoint ou método; cadeias; pré-requisitos; limites 
 | Payments x402 | nenhum | ausente, fora de escopo | canal de saída de fundos a bloquear |
 | Auditoria | `data/operator/cycles.jsonl`, `ledger.json`, `latest.json` | integrado | precisa correlacionar com `audit.jsonl` do CLI e `orderId` |
 
+> Nota de correção (após R8 e R10, 2026-10-12): nas linhas de gate, de signatário EVM e de signatário Solana desta tabela, os gates de execução do operador são `OPERATOR_EXECUTE`, `OPERATOR_LIVE_ACK` e `OPERATOR_PRIVATE_KEY` (mais `--jev`, o ledger e as allowlists); `DRY_RUN`, `LIVE_ACK` e `PRIVATE_KEY` do trader não são consultados pelo operador. O signatário Solana (`src/okx-wallet/solana-signer.ts`) consta como "integrado" nas linhas acima, mas só existe em testes: a execução Solana está desligada no executor (`SOLANA_LIVE_ENABLED=false`) até existir política de transação.
+
 ## 5. Como construir o agente operador com Agentic Wallet nesta aplicação
 
 ### 5.1 Princípios (mantêm as regras do projeto)
