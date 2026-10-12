@@ -80,6 +80,17 @@ function inList(list: string[] | undefined, address: string, evm: boolean): bool
   return (list ?? []).some((entry) => evm ? entry.toLowerCase() === address.toLowerCase() : entry === address);
 }
 
+/**
+ * Expected output of the second leg when only `receivedAtomic` of the quoted
+ * `quotedInAtomic` came back from the first leg: the quote scales linearly for
+ * the small sizes the policy allows (R8 C1). Floor division keeps it conservative.
+ */
+export function scaleExpectedOut(expectedOutAtomic: string, receivedAtomic: string, quotedInAtomic: string): string {
+  const quoted = BigInt(quotedInAtomic);
+  if (quoted <= BigInt(0)) throw new Error("Invalid quoted input");
+  return ((BigInt(expectedOutAtomic) * BigInt(receivedAtomic)) / quoted).toString();
+}
+
 /** True when `minReceive` is at least the quoted output reduced by the slippage cap. */
 export function minReceiveMatchesQuote(minReceiveAtomic: string, quotedOutAtomic: string, slippagePercent: number): boolean {
   const quoted = BigInt(quotedOutAtomic);
@@ -194,10 +205,15 @@ async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCa
   if (reasons.length) return blocked(reasons);
 
   const stopRequested = () => deps.killSwitchExists();
+  // Entry sends obey the plan deadline. With OPERATOR_EXIT_WINDOW_MS > 0 the exit gets its own
+  // window once leg 1 confirms, never shorter than the plan deadline (R8 C9); by default the
+  // stricter rule applies and the entry deadline also bounds the exit (owner decision D2 pending).
+  let deadlineMs = plan.expiresAtMs;
   const send = async (tx: { to: string; data: string; value: string; gasLimit: string }, stage: string) => {
     const beforeSubmit = () => {
       if (stopRequested()) throw new Error(`kill_switch_present_before_${stage}`);
-      if (!planIsFresh(plan, deps.now())) throw new Error(`plan_expired_before_${stage}`);
+      const now = deps.now();
+      if (now < plan.createdAtMs || now >= deadlineMs) throw new Error(`plan_expired_before_${stage}`);
     };
     beforeSubmit();
     return signer.sendTransaction({ chainIndex, ...tx }, beforeSubmit);
@@ -237,6 +253,7 @@ async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCa
   }
   if (!confirmed) return fail("leg1_reverted", failed("leg1_reverted", txHash));
   deps.ledger.updateLeg(plan.planId, { status: "leg1_confirmed" });
+  if (deps.policy.exitWindowMs > 0) deadlineMs = Math.max(plan.expiresAtMs, deps.now() + deps.policy.exitWindowMs);
 
   // Second leg: sell the minimum intermediate amount back; the ledger keeps the leg open until it confirms.
   let leg2: PreparedEvmTransaction;
@@ -248,7 +265,9 @@ async function executeEvmRoundTrip(plan: ExecutionPlan, candidate: OpportunityCa
   } catch (error) {
     return fail(`leg2_prepare_failed: ${sanitizeError(error)}`, { status: "sent", reasons: [`leg2_prepare_failed: ${sanitizeError(error)}`], txHash, orderId: null });
   }
-  const leg2Reasons = checkPreparedLeg(leg2, { chainIndex, fromNative: toNative, amountAtomic: leg1.minReceiveAmount!, expectedOutAtomic: candidate.expectedOutAtomic!, slippagePercent: deps.slippagePercent, policy: deps.policy });
+  // The exit sells only the guaranteed minimum of leg 1, so its expected output scales down proportionally (R8 N1).
+  const expectedLeg2Out = scaleExpectedOut(candidate.expectedOutAtomic!, leg1.minReceiveAmount!, candidate.expectedLeg1OutAtomic!);
+  const leg2Reasons = checkPreparedLeg(leg2, { chainIndex, fromNative: toNative, amountAtomic: leg1.minReceiveAmount!, expectedOutAtomic: expectedLeg2Out, slippagePercent: deps.slippagePercent, policy: deps.policy });
   if (leg2Reasons.length) return fail(`leg2_blocked: ${leg2Reasons.join(",")}`, { status: "sent", reasons: [`leg2_blocked: ${leg2Reasons.join(",")}`], txHash, orderId: null });
   try {
     if (!toNative) {
