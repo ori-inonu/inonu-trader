@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { emptyLedger, ledgerFilePersister, readLedgerFile } from "./ledger";
+import { emptyLedger, ledgerFilePersister, readLedgerFile, replaceFileBounded } from "./ledger";
 
 // Filesystem and time are external boundaries exercised through public persistence APIs.
 function withFile(run: (path: string) => void) {
@@ -157,5 +157,50 @@ test("public ledger persistence refuses an existing directory without attempting
     expect(attempts).toBe(0);
     expect(waits).toEqual([]);
     expect(lstatSync(path).isDirectory()).toBe(true);
+  });
+});
+
+test("replaceFileBounded is the shared replacement: the hook runs before every attempt and a throw from it ends the retries", () => {
+  withFile((path) => {
+    const prior = readFileSync(path, "utf8");
+    const tmp = `${path}.shared.tmp`;
+    writeFileSync(tmp, JSON.stringify({ shared: true }));
+    const events: string[] = [];
+    let attempts = 0;
+    replaceFileBounded(tmp, path, {
+      platform: "win32",
+      beforeAttempt() { events.push("check"); },
+      wait(ms) { events.push(`wait${ms}`); },
+      rename(source, destination) {
+        events.push("rename");
+        if (++attempts < 3) throw Object.assign(new Error("synthetic lock"), { code: "EPERM" });
+        renameSync(source, destination);
+      },
+    });
+    expect(events).toEqual(["check", "rename", "wait10", "check", "rename", "wait20", "check", "rename"]);
+    expect(JSON.parse(readFileSync(path, "utf8"))).toEqual({ shared: true });
+
+    writeFileSync(tmp, prior);
+    const hookError = new Error("destination changed");
+    let renames = 0;
+    let checks = 0;
+    expect(() => replaceFileBounded(tmp, path, {
+      platform: "win32",
+      beforeAttempt() { if (++checks === 2) throw hookError; },
+      wait() {},
+      rename() { renames++; throw Object.assign(new Error("synthetic lock"), { code: "EBUSY" }); },
+    })).toThrow(hookError);
+    expect(renames).toBe(1);
+    expect(JSON.parse(readFileSync(path, "utf8"))).toEqual({ shared: true });
+  });
+});
+
+test("replaceFileBounded without options renames with the real filesystem and needs no hook", () => {
+  withFile((path) => {
+    const tmp = `${path}.plain.tmp`;
+    writeFileSync(tmp, "plain");
+    replaceFileBounded(tmp, path);
+    expect(readFileSync(path, "utf8")).toBe("plain");
+    expect(readdirSync(join(path, ".."))).toEqual(["ledger.json"]);
   });
 });

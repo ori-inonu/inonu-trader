@@ -277,6 +277,41 @@ export function initLedgerFile(path: string): OperatorLedgerState {
   return state;
 }
 
+/**
+ * Bounded replacement of `path` by the already written `tmp` (R5 A3, B6; R8 N9). On Windows a rename onto a
+ * file another process holds open (the dashboard reads latest.json on every request, antivirus, indexers) fails
+ * with EPERM, EBUSY or EACCES for a moment: those three are retried, at most four attempts in total with waits
+ * of 10, 20 and 40 ms, and only on win32. Any other error, and every error elsewhere, propagates at once. The
+ * same tmp file is reused by every attempt and the destination is never removed, so a failure leaves the prior
+ * bytes in place. `beforeAttempt` runs before each attempt, so a caller can revalidate a destination that may
+ * have changed during a wait; whatever it throws ends the retries.
+ */
+export interface BoundedReplaceOptions {
+  platform?: string;
+  rename?: typeof renameSync;
+  wait?: (milliseconds: number) => void;
+  beforeAttempt?: () => void;
+}
+
+function sleepSync(milliseconds: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
+export function replaceFileBounded(tmp: string, path: string, options: BoundedReplaceOptions = {}): void {
+  const rename = options.rename ?? renameSync;
+  const wait = options.wait ?? sleepSync;
+  for (let attempt = 0; ; attempt++) {
+    options.beforeAttempt?.();
+    try { rename(tmp, path); return; }
+    catch (error) {
+      const code = (error as NodeJS.ErrnoException | null)?.code;
+      if ((options.platform ?? process.platform) !== "win32" ||
+        !["EPERM", "EBUSY", "EACCES"].includes(code ?? "") || attempt >= 3) throw error;
+      wait(10 * 2 ** attempt);
+    }
+  }
+}
+
 /** Atomic write: temp file in the same directory, then rename (R5 A3, B6). */
 export interface LedgerPersistenceOptions {
   platform?: string;
@@ -287,11 +322,7 @@ export interface LedgerPersistenceOptions {
 
 export function ledgerFilePersister(path: string, options: LedgerPersistenceOptions = {}): (state: OperatorLedgerState) => void {
   requireAbsolute(path);
-  const rename = options.rename ?? renameSync;
   const lstat = options.lstat ?? lstatSync;
-  const wait = options.wait ?? ((milliseconds: number) => {
-    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
-  });
   const validateDestination = () => {
     let destination;
     try { destination = lstat(path); }
@@ -306,16 +337,7 @@ export function ledgerFilePersister(path: string, options: LedgerPersistenceOpti
     mkdirSync(dirname(path), { recursive: true });
     const tmp = `${path}.${process.pid}.tmp`;
     writeFileSync(tmp, JSON.stringify(state, null, 2));
-    for (let attempt = 0; ; attempt++) {
-      validateDestination();
-      try { rename(tmp, path); return; }
-      catch (error) {
-        const code = (error as NodeJS.ErrnoException | null)?.code;
-        if ((options.platform ?? process.platform) !== "win32" ||
-          !["EPERM", "EBUSY", "EACCES"].includes(code ?? "") || attempt >= 3) throw error;
-        wait(10 * 2 ** attempt);
-      }
-    }
+    replaceFileBounded(tmp, path, { platform: options.platform, rename: options.rename, wait: options.wait, beforeAttempt: validateDestination });
   };
 }
 
