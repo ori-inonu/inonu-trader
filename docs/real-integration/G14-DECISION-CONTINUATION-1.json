@@ -1,0 +1,73 @@
+{
+  "kind": "continuation-1-independent-browser-verification-advisory",
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billed_cost_usd": null,
+  "advisory_only": true,
+  "receipt": {
+    "status": "assessed",
+    "receiptId": "2b3316ed-eff1-4447-acaa-474b873ef3a2",
+    "questionIds": [
+      "g14_next"
+    ],
+    "inputDigest": "c80b549f15a424476e0173ff71b271b6a2166b38bfd017c354b08d7e9248b4e7",
+    "rubricVersion": "batch-2026-09-26.2",
+    "policies": {
+      "g14_next": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "agentId": "root"
+    },
+    "model": "jev-1.13.0",
+    "answers": {
+      "g14_next": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "independent_browser_keyboard_contrast",
+        "bestCandidate": "independent_browser_keyboard_contrast",
+        "probabilities": {
+          "independent_browser_keyboard_contrast": 0.73,
+          "record_dependencies_only": 0,
+          "defer_choice": 0.12,
+          "insufficient_evidence": 0.15
+        },
+        "confidence": 0.64,
+        "disposition": "recommendation",
+        "recommendation": "independent_browser_keyboard_contrast",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 622,
+      "output_tokens": 70
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T21:30:41.005Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T21:30:41.274Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12ce1124378f5847ceac5c63a3572",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "latencyMs": 286,
+    "receiptPersisted": true
+  },
+  "permissionGranted": false
+}

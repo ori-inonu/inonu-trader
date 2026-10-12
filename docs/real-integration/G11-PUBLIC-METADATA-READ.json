@@ -1,0 +1,62 @@
+{
+  "scope": "public-runtime-metadata-research",
+  "executionEnabled": false,
+  "abiQualified": false,
+  "decoderQualified": false,
+  "startedAtMs": 1791752073942,
+  "chains": [
+    {
+      "chainIndex": "196",
+      "router": "0x7c5bee2a8091c3ef39072f64f18fac913060aeaf",
+      "block": {
+        "number": "0x459a07e",
+        "hash": "0x445eb182777a868f1e09ae2caf4e6faab878b354a04bb6c6bb5d88d02ebfb1d2"
+      },
+      "runtimeHashExpected": "0x7766cf8785ca58e8da2204bf28f5b5cb2da420e1dbad4f5b88828a7c768da885",
+      "metadata": {
+        "ipfs": {
+          "bytesHex": "1220b273dfa67606ab2bb3b6272baefca83cc85235b590bd89238fa45710e1a5ad34"
+        },
+        "solc": {
+          "bytesHex": "000811"
+        }
+      },
+      "reason": "metadata-reference-only",
+      "httpStatus": 200,
+      "responseSha256": "f348d63c95ef2da17f0c8faba02ddfac0f843d9a65b2ddcaca88727470d170eb",
+      "runtimeHashMatched": true,
+      "runtimeCodeBytes": 13322,
+      "metadataCborLength": 51,
+      "metadataCborHex": "a2646970667358221220b273dfa67606ab2bb3b6272baefca83cc85235b590bd89238fa45710e1a5ad3464736f6c6343000811",
+      "ipfsCidV0": "QmaMFkyRVcsTKzLjb825J2L1i7YVXW6uwf3G5T51nmWEcB",
+      "finishedAtMs": 1791752075199
+    },
+    {
+      "chainIndex": "143",
+      "router": "0xc1c76e784db8d68585fb608ce68fc5dcff14000e",
+      "block": {
+        "number": "0x6b5a69c",
+        "hash": "0xd359d4cd35fa84d0ffb9be2bb28acfd251c240d8752c8ce424772340e8e09d5e"
+      },
+      "runtimeHashExpected": "0x71569b9436ca69d0e1062b15bcd025ac291f9f059172ea6bb6480d1f6e3e3148",
+      "metadata": {
+        "ipfs": {
+          "bytesHex": "12202e0cdf3ba62e55d39389d7d944276f4f0833f5892f7b21fb5289d2c32497730d"
+        },
+        "solc": {
+          "bytesHex": "000811"
+        }
+      },
+      "reason": "metadata-reference-only",
+      "httpStatus": 200,
+      "responseSha256": "66a923bc388bb19692dcf2add411f42e80a752b28ad450b3ed1540e394c8744f",
+      "runtimeHashMatched": true,
+      "runtimeCodeBytes": 13322,
+      "metadataCborLength": 51,
+      "metadataCborHex": "a26469706673582212202e0cdf3ba62e55d39389d7d944276f4f0833f5892f7b21fb5289d2c32497730d64736f6c6343000811",
+      "ipfsCidV0": "QmRSQr7vAMQJBLL6JS6zBayPgejyvUc8f3Lg5BrEo8KtU4",
+      "finishedAtMs": 1791752075664
+    }
+  ],
+  "finishedAtMs": 1791752075664
+}

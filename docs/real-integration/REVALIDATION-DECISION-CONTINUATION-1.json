@@ -1,0 +1,67 @@
+{
+  "kind": "continuation-1-access-and-browser-revalidation-advisory",
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billed_cost_usd": null,
+  "advisory_only": true,
+  "receipt": {
+    "status": "assessed",
+    "receiptId": "7e04e46f-6326-4efe-94ab-1dc3de945e33",
+    "evidenceIds": [
+      "local_review",
+      "remaining_dependencies"
+    ],
+    "inputDigest": "eed5d93eafe462939f223ac2d41167ad78e6815aa6f9419467ef4ee9f3138abc",
+    "rubricVersion": "decision-2026-09-26.2",
+    "policy": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "agentId": "root"
+    },
+    "model": "jev-1.13.0",
+    "confidence": 1,
+    "probabilities": {
+      "revalidate_access_and_browser": 1,
+      "repeat_public_probes": 0,
+      "defer_choice": 0,
+      "insufficient_evidence": 0
+    },
+    "usage": {
+      "input_tokens": 875,
+      "output_tokens": 68
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T21:25:08.860Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T21:25:09.187Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12cdc01147f57a337d09f8e85f842",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "signals": {},
+    "choice": "revalidate_access_and_browser",
+    "providerChoice": "revalidate_access_and_browser",
+    "bestCandidate": "revalidate_access_and_browser",
+    "domain": "task",
+    "disposition": "recommendation",
+    "recommendation": "revalidate_access_and_browser",
+    "latencyMs": 352,
+    "receiptPersisted": true
+  },
+  "schemaCorrection": {
+    "firstAttemptReason": "unsafe_candidate_id",
+    "reservedIdReplaced": "defer_choice",
+    "apiRequestOnRejectedAttempt": false
+  },
+  "permissionGranted": false
+}

@@ -1,0 +1,71 @@
+{
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "advisoryOnly": true,
+  "billedCostUsd": null,
+  "decision": {
+    "status": "assessed",
+    "receiptId": "cddddcd1-2e77-4e52-8982-3fed3fd54726",
+    "questionIds": [
+      "checkpoint_review"
+    ],
+    "inputDigest": "61054fc56506e28fddcc2c10bd8e444ae6a61ac6494958f7500c7c284a205e90",
+    "rubricVersion": "batch-2026-09-26.2",
+    "policies": {
+      "checkpoint_review": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "agentId": "root"
+    },
+    "model": "jev-1.13.0",
+    "answers": {
+      "checkpoint_review": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "independent_doc_review",
+        "bestCandidate": "independent_doc_review",
+        "probabilities": {
+          "independent_doc_review": 0.97,
+          "root_checkpoint_only": 0.02,
+          "abstain": 0,
+          "insufficient_evidence": 0.01
+        },
+        "confidence": 0.96,
+        "disposition": "recommendation",
+        "recommendation": "independent_doc_review",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 568,
+      "output_tokens": 64
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T20:57:36.864Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T20:57:37.153Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12cc2cc03723eaa438f2f21b128cd",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "latencyMs": 310,
+    "receiptPersisted": true
+  }
+}

@@ -1,0 +1,1592 @@
+{
+  "observedAt": "2026-10-11T17:54:26.350Z",
+  "url": "http://127.0.0.1:3011/",
+  "records": [
+    {
+      "view": "desktop",
+      "focus": {
+        "focusVisible": true,
+        "outline": "rgb(79, 214, 232) solid 2px",
+        "tag": "BUTTON",
+        "text": "Conectar OKX localmente"
+      },
+      "globalOverflow": false,
+      "reducedMotion": false,
+      "viewport": [
+        1440,
+        900
+      ]
+    },
+    {
+      "view": "mobile-390",
+      "controls": [
+        {
+          "height": 44,
+          "label": "Tentar sincronizar",
+          "width": 153.5
+        },
+        {
+          "height": 44,
+          "label": "Atualizar ciclo",
+          "width": 153.5
+        },
+        {
+          "height": 68.1875,
+          "label": "Autorizo essa consulta de saldo e cotação e seus destinatários.",
+          "width": 291
+        },
+        {
+          "height": 59.9375,
+          "label": "Conectar OKX localmente",
+          "width": 140.5
+        },
+        {
+          "height": 59.9375,
+          "label": "Autorizar consulta",
+          "width": 140.5
+        },
+        {
+          "height": 44,
+          "label": "Revogar consulta",
+          "width": 291
+        },
+        {
+          "height": 36,
+          "label": "Fontes, timestamps e validade",
+          "width": 291
+        },
+        {
+          "height": 36,
+          "label": "Capacidades por módulo e rede",
+          "width": 291
+        },
+        {
+          "height": 36,
+          "label": "Histórico real de ciclos (30)",
+          "width": 291
+        },
+        {
+          "height": 44.09375,
+          "label": "Atualizar leitura pública",
+          "width": 317
+        },
+        {
+          "height": 44,
+          "label": "Proveniência das requisições públicas",
+          "width": 291
+        },
+        {
+          "height": 44,
+          "label": "Console Kuru e análises complementares",
+          "width": 325
+        }
+      ],
+      "font": "13px",
+      "globalOverflow": false,
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "view": "mobile-390-expanded",
+      "endpoints": 15,
+      "globalOverflow": false,
+      "tables": [
+        {
+          "caption": "Documentação, implementação e prova real são estados distintos",
+          "parentOverflow": "auto",
+          "parentWidth": 291,
+          "width": 360
+        },
+        {
+          "caption": "Ciclos efetivamente retornados pelo backend local",
+          "parentOverflow": "auto",
+          "parentWidth": 291,
+          "width": 0
+        }
+      ],
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "view": "mobile-360",
+      "globalOverflow": false,
+      "motion": false,
+      "viewport": [
+        360,
+        800
+      ],
+      "visibleDisabled": [
+        "Autorizar consulta",
+        "Revogar consulta"
+      ]
+    },
+    {
+      "view": "mobile-360-final-css",
+      "overflow": false,
+      "reducedMotionRules": [
+        "@media (prefers-reduced-motion: reduce) {\n  html { scroll-behavior: auto; }\n  *, ::before, ::after { transition-duration: 0.001ms !important; transition-delay: 0s !important; animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }\n  .meshLayer, .scanline, .scanline::after { animation: auto ease 0s 1 normal none running none !important; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .CommandCenter-module__8fACXG__floorGrid, .CommandCenter-module__8fACXG__tileNew, .CommandCenter-module__8fACXG__link_input, .CommandCenter-module__8fACXG__link_operator, .CommandCenter-module__8fACXG__equator, .CommandCenter-module__8fACXG__orbits, .CommandCenter-module__8fACXG__satellites, .CommandCenter-module__8fACXG__nucleusWrap { transition: none; animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .ConsoleBackdrop-module__8Ac2kG__mesh, .ConsoleBackdrop-module__8Ac2kG__blobAccent { transition: none; animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .DecisionCenter-module___l19hW__fill { transition: none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .DepthLadder-module__L0ciOq__plane, .DepthLadder-module__L0ciOq__bar, .DepthLadder-module__L0ciOq__cap { animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .DexReportPanel-module__8yNI4W__primaryButton, .DexReportPanel-module__8yNI4W__secondaryButton { transition: none; }\n  .DexReportPanel-module__8yNI4W__fileInput::file-selector-button { transition: none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .Disclosure-module__8thF4a__chevron, .Disclosure-module__8thF4a__summary { transition: none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .FlowChart-module__R1sn6a__blockCell, .FlowChart-module__R1sn6a__inspector { animation: auto ease 0s 1 normal none running none; }\n  .FlowChart-module__R1sn6a__windowButton, .FlowChart-module__R1sn6a__inspectButton { transition: none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .GrowthDeck-module__q_BQGq__panel, .GrowthDeck-module__q_BQGq__step, .GrowthDeck-module__q_BQGq__family, .GrowthDeck-module__q_BQGq__bar, .GrowthDeck-module__q_BQGq__tab, .GrowthDeck-module__q_BQGq__seg, .GrowthDeck-module__q_BQGq__stackPart { transition: none; animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .DecisionDial-module__8ued2a__arc, .DecisionDial-module__8ued2a__needle { transition: none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .JevCore-module__zcCyTa__core, .JevCore-module__zcCyTa__ring, .JevCore-module__zcCyTa__actionWord, .JevCore-module__zcCyTa__shake { transition: none; animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .KpiSurface-module__jNkQ-q__surface, .KpiSurface-module__jNkQ-q__cell { transition: none; }\n  .KpiSurface-module__jNkQ-q__cell:hover { transform: none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .MultichainPanel-module__XrlhHG__primaryButton, .MultichainPanel-module__XrlhHG__secondaryButton, .MultichainPanel-module__XrlhHG__textButton { transition: none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .Rail-module__lILSwq__rail, .Rail-module__lILSwq__wallet { transition: none; }\n  .Rail-module__lILSwq__rule { animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .RealPipeline-module__2v7bdW__panel *, .RealPipeline-module__2v7bdW__panel ::before, .RealPipeline-module__2v7bdW__panel ::after { scroll-behavior: auto !important; transition: none !important; animation: auto ease 0s 1 normal none running none !important; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .PublicMarket-module___SP07G__panel *, .PublicMarket-module___SP07G__panel ::before, .PublicMarket-module___SP07G__panel ::after { scroll-behavior: auto !important; transition: none !important; animation: auto ease 0s 1 normal none running none !important; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .SystemOne-module__9a4XFq__slab, .SystemOne-module__9a4XFq__choice, .SystemOne-module__9a4XFq__choiceWord { transition: none; animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .TelemetryStream-module__5cocda__row, .TelemetryStream-module__5cocda__stream { transition: none; animation: auto ease 0s 1 normal none running none; }\n}",
+        "@media (prefers-reduced-motion: reduce) {\n  .WalletPanel-module__iTIR7a__primaryButton, .WalletPanel-module__iTIR7a__secondaryButton, .WalletPanel-module__iTIR7a__textButton { transition: none; }\n}"
+      ],
+      "sampleColors": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Central de observação"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "INONU TRADER"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(79, 214, 232)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "OnchainOS REST V6 · fontes reais"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Pipeline real"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Observação e decisão em paper. Execução financeira desativada."
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgb(7, 12, 20)",
+          "text": "Configure as credenciais OnchainOS no backend local para consultar fon"
+        },
+        {
+          "background": "rgb(18, 29, 43)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Tentar sincronizar"
+        },
+        {
+          "background": "rgb(18, 29, 43)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Atualizar ciclo"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Faltam: OKX_WEB3_API_KEY, OKX_WEB3_API_SECRET, OKX_WEB3_API_PASSPHRASE"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "jev-latest · tarifa / milhão: Desconhecido"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Último ciclo: 2026-10-11 17:53:08.417 UTC"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Consentimento de consulta"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgb(7, 12, 20)",
+          "text": "Conectar a wallet permanece local. Esta autorização adicional envia en"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgb(7, 12, 20)",
+          "text": "Nenhum endereço é enviado ao Jev. A consulta não solicita assinaturas,"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgb(7, 12, 20)",
+          "text": "Rede: Selecione X Layer ou Monad · revisão 1. O endereço fica apenas n"
+        },
+        {
+          "background": "rgb(18, 29, 43)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Conectar OKX localmente"
+        },
+        {
+          "background": "rgb(18, 29, 43)",
+          "color": "rgb(127, 149, 172)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Autorizar consulta"
+        },
+        {
+          "background": "rgb(18, 29, 43)",
+          "color": "rgb(127, 149, 172)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Revogar consulta"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Inventário observado"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Somente tokens observados. Total conhecido não prova cobertura complet"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Saldo desconhecido. Nenhum inventário válido nesta revisão."
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Cotação e custos"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Quantidades exatas na menor unidade do token; decimais são referência "
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Unidade: Desconhecido. Sem cotação válida, nenhum custo é tratado como"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Mercado observado"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Moeda e unidades desconhecidas continuam explícitas."
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Preço desconhecido."
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Decisão observada"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(182, 200, 220)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Paper não realiza lucro ou perda. Custo não informado permanece descon"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(233, 241, 250)",
+          "parentBackground": "rgba(0, 0, 0, 0)",
+          "text": "Fontes, timestamps e validade"
+        }
+      ],
+      "summaryHeights": [
+        {
+          "height": 44,
+          "label": "Fontes, timestamps e validade"
+        },
+        {
+          "height": 44,
+          "label": "Capacidades por módulo e rede"
+        },
+        {
+          "height": 44,
+          "label": "Histórico real de ciclos (30)"
+        },
+        {
+          "height": 63.59375,
+          "label": "Proveniência das requisições públicas"
+        },
+        {
+          "height": 44,
+          "label": "Console Kuru e análises complementares"
+        }
+      ],
+      "viewport": [
+        360,
+        800
+      ]
+    },
+    {
+      "view": "contrast-opaque-backgrounds",
+      "samples": [
+        {
+          "ratio": 10.63588688180664,
+          "text": "Central de observação"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "INONU TRADER"
+        },
+        {
+          "ratio": 10.490541944661503,
+          "text": "OnchainOS REST V6 · fontes reais"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Pipeline real"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Observação e decisão em paper. Execução financeira"
+        },
+        {
+          "ratio": 17.194041169593685,
+          "text": "Configure as credenciais OnchainOS no backend loca"
+        },
+        {
+          "ratio": 14.904585274346744,
+          "text": "Tentar sincronizar"
+        },
+        {
+          "ratio": 14.904585274346744,
+          "text": "Atualizar ciclo"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Faltam: OKX_WEB3_API_KEY, OKX_WEB3_API_SECRET, OKX"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "jev-latest · tarifa / milhão: Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Último ciclo: 2026-10-11 17:53:28.605 UTC"
+        },
+        {
+          "ratio": 17.194041169593685,
+          "text": "Consentimento de consulta"
+        },
+        {
+          "ratio": 17.194041169593685,
+          "text": "Conectar a wallet permanece local. Esta autorizaçã"
+        },
+        {
+          "ratio": 17.194041169593685,
+          "text": "Nenhum endereço é enviado ao Jev. A consulta não s"
+        },
+        {
+          "ratio": 11.46207902410722,
+          "text": "Rede: Selecione X Layer ou Monad · revisão 1. O en"
+        },
+        {
+          "ratio": 14.904585274346744,
+          "text": "Conectar OKX localmente"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Inventário observado"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Somente tokens observados. Total conhecido não pro"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Valor conhecido"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Valor completo"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloco"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Ativos observados / USD conhecido"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido / Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Saldo desconhecido. Nenhum inventário válido nesta"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Cotação e custos"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Quantidades exatas na menor unidade do token; deci"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Entrada base"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Saída base"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Token de entrada"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Token de saída"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Impacto de preço (%)"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Taxa de rede estimada"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Gas estimado base"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Rotas"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Unidade: Desconhecido. Sem cotação válida, nenhum "
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Mercado observado"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Moeda e unidades desconhecidas continuam explícita"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Preço desconhecido."
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Decisão observada"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Escolha / estado"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "hold · Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Modelo"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Latência (ms)"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Tokens de entrada"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Custo real da consulta"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "PnL realizado"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Paper não realiza lucro ou perda. Custo não inform"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Fontes, timestamps e validade"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Observação: Desconhecido · revisão Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Nenhuma amostra autorizada válida nesta revisão."
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Capacidades por módulo e rede"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "196"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/market/price"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "196"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/balance/all-token-balances-by-address"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "196"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/aggregator/quote"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "196"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: não · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/pre-transaction/simulate"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "196"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/defi/product/search"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "196"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/market/signal/list"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "196"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/market/leaderboard/list"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "143"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/market/price"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "143"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/balance/all-token-balances-by-address"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "143"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/aggregator/quote"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "143"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: não · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/pre-transaction/simulate"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "143"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/defi/product/search"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "143"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/market/signal/list"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "143"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: não"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: não · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: onchainos-rest-v6"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v6/dex/market/leaderboard/list"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "exchange"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementado: sim · integrado: sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitado real: sim · financeiramente qualificado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: okx-public-v5"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "/api/v5/public/funding-rate"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Histórico real de ciclos (30)"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:53:28.605 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:53:23.486 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:53:18.478 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:53:13.456 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:53:08.417 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:53:03.385 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:58.292 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:53.184 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:48.129 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:31.258 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:26.211 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:21.175 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:16.157 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:11.133 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:06.116 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:52:01.103 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:56.078 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:51.067 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:46.048 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:41.042 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:36.029 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:31.008 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:25.987 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:20.976 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:15.960 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:10.939 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:05.919 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:51:00.899 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:50:55.893 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "2026-10-11 17:50:50.871 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Bloqueado"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.490541944661503,
+          "text": "OKX Exchange · REST público v5"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Funding e mark público"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "BTC-USDT-SWAP · leitura automática, sem chave ou c"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fonte: okx-public-v5. Estes dados são do mercado E"
+        },
+        {
+          "ratio": 17.194041169593685,
+          "text": "Obter timestamp de funding válido e compatível com"
+        },
+        {
+          "ratio": 14.904585274346744,
+          "text": "Atualizar leitura pública"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Observado pelo worker"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "2026-10-11 17:52:50.510Z"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Validade · TTL de 60 s"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Vencido em 2026-10-11 17:52:50.510Z"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Preço mark"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Unidade: SWAP linear, liquidação em USDT."
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Timestamp da fonte: 2026-10-11 17:53:59.884Z"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Previsão de funding do ciclo corrente"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Fração por ciclo, preservada como decimal. Pode mu"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Método"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "current_period"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Liquidação do ciclo"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "2026-10-12 00:00:00 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Próxima liquidação prevista"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "2026-10-12 08:00:00 UTC"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Intervalo observado"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "8 h"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Timestamp da fonte: 2026-10-11 17:53:29.180Z"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Taxa da liquidação anterior"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desconhecido"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Estado: settled. A taxa de liquidação pertence ao "
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Campo legado nextFundingRate (descontinuado): Desc"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Capacidade e dependências"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Documentada"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Implementada"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Exercitada com fonte real"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Sim, nesta coleta"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Integrada ao worker"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Sim"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Elegibilidade financeira"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Não qualificada"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "Execução"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Desabilitada"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Proveniência das requisições públicas"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "HTTP e código de resposta registram a coleta. Um t"
+        },
+        {
+          "ratio": 15.954686452283363,
+          "text": "Console Kuru e análises complementares"
+        },
+        {
+          "ratio": 10.63588688180664,
+          "text": "O feed, os blocos e o executor Kuru precisam do ba"
+        }
+      ]
+    },
+    {
+      "view": "history-open",
+      "overflow": false,
+      "rows": 31
+    },
+    {
+      "view": "public-provenance-open",
+      "overflow": false,
+      "text": "Proveniência das requisições públicasHTTP e código de resposta registram a coleta. Um teste injetado permanece não verificado.GET /api/v5/public/instrumentsHTTP 200 · código 0Pedido: 2026-10-11 17:53:50.519ZResposta: 2026-10-11 17:53:50.846ZGET /api/v5/public/funding-rateHTTP 200 · código 0Pedido: 2026-10-11 17:53:50.847ZResposta: 2026-10-11 17:53:51.831ZGET /api/v5/public/mark-priceHTTP 200 · código 0Pedido: 2026-10-11 17:53:51.831ZResposta: 2026-10-11 17:53:52.860Z"
+    },
+    {
+      "view": "final-360",
+      "globalOverflow": false,
+      "summaryHeights": [
+        {
+          "height": 44,
+          "label": "Fontes, timestamps e validade"
+        },
+        {
+          "height": 44,
+          "label": "Capacidades por módulo e rede"
+        },
+        {
+          "height": 44,
+          "label": "Histórico real de ciclos (30)"
+        },
+        {
+          "height": 63.59375,
+          "label": "Proveniência das requisições públicas"
+        },
+        {
+          "height": 44,
+          "label": "Console Kuru e análises complementares"
+        }
+      ],
+      "viewport": [
+        360,
+        800
+      ]
+    },
+    {
+      "view": "final-390",
+      "globalOverflow": false,
+      "summaryHeights": [
+        {
+          "height": 44,
+          "label": "Fontes, timestamps e validade"
+        },
+        {
+          "height": 44,
+          "label": "Capacidades por módulo e rede"
+        },
+        {
+          "height": 44,
+          "label": "Histórico real de ciclos (30)"
+        },
+        {
+          "height": 44,
+          "label": "Proveniência das requisições públicas"
+        },
+        {
+          "height": 44,
+          "label": "Console Kuru e análises complementares"
+        }
+      ],
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "view": "final-1440",
+      "globalOverflow": false,
+      "summaryHeights": [
+        {
+          "height": 44,
+          "label": "Fontes, timestamps e validade"
+        },
+        {
+          "height": 44,
+          "label": "Capacidades por módulo e rede"
+        },
+        {
+          "height": 44,
+          "label": "Histórico real de ciclos (30)"
+        },
+        {
+          "height": 44,
+          "label": "Proveniência das requisições públicas"
+        },
+        {
+          "height": 44,
+          "label": "Console Kuru e análises complementares"
+        }
+      ],
+      "viewport": [
+        1440,
+        900
+      ]
+    }
+  ],
+  "limitations": [
+    "No real wallet connected or address consent granted",
+    "Reduced motion stylesheet verified; actual reduce media preference not exercised",
+    "Viewport mouse/keyboard interactions do not certify physical touch device"
+  ],
+  "executionEnabled": false
+}

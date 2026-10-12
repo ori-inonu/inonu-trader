@@ -1,0 +1,23 @@
+{
+  "kind": "continuation-1-product-and-cleanup-audit",
+  "observedAt": "2026-10-11T21:51:59.302159+00:00",
+  "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader",
+  "conversation": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+  "head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+  "sourceManifestSha256": "0bf5458a1446a06dc6843e192682411ba6e058cbe7c0156aa7f802bf7fd867c0",
+  "sourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "productFilesChecked": 447,
+  "productFilesChanged": [],
+  "criteriaSha256": "cfa90cac735e9a838a0c4bc593276c83757905e7c5fedcd2414e499b1dad9e08",
+  "stagedFiles": [],
+  "consoleExitCode": 0,
+  "consolePortsClosed": {
+    "backend": true,
+    "frontend": true
+  },
+  "consoleLockAbsent": true,
+  "completeCoreCycles": 0,
+  "financialExecutionEnabled": false,
+  "wholeGoalComplete": false,
+  "scope": "447 frozen product files, criteria, staging and persisted local shutdown receipt; no claim of whole integration qualification."
+}

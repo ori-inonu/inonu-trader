@@ -43,6 +43,9 @@
     "okx:derivatives": "bun --no-env-file run scripts/okx-derivatives.ts",
     "okx:operator": "bun --no-env-file run scripts/okx-operator.ts",
     "system-one": "bun --no-env-file run scripts/system-one.ts",
-    "jev-read": "bun --no-env-file run scripts/jev-read.ts"
+    "jev-read": "bun --no-env-file run scripts/jev-read.ts",
+    "real:console": "bun run scripts/real-console.ts",
+    "real:start": "bun run scripts/real-start.ts",
+    "real:doctor": "bun run scripts/real-doctor.ts"
   }
 }

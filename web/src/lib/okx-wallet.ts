@@ -1,4 +1,5 @@
 import { isValidWalletTimestamp } from "./wallet-freshness";
+import { validateWalletTransactionProposal, type WalletTransactionPreflightResult } from "./wallet-transaction-preflight";
 
 export interface Eip1193RequestArguments {
   method: string;
@@ -43,16 +44,41 @@ export interface XLayerWalletBalances {
 
 export type WalletBalances = MonadWalletBalances | XLayerWalletBalances;
 
+export interface WalletAssetObservation {
+  readonly id: "mon" | "usdc" | "okb" | "usdt" | "usdt0" | "nativeUsdc" | "usdcBridged" | "usdcE";
+  readonly symbol: string;
+  readonly native: boolean;
+  readonly contract: string | null;
+  readonly rawRpc: string;
+  readonly rawUnits: string;
+  readonly decimals: number;
+  readonly decimalsSource: "configured";
+  readonly formattedBalance: string;
+}
+
+export interface WalletReadObservation {
+  readonly schemaVersion: 1;
+  readonly source: "okx-provider-reported";
+  readonly account: string;
+  readonly chainId: string;
+  readonly network: WalletBalances["network"];
+  readonly block: string;
+  readonly observedAtMs: number;
+  readonly assets: readonly WalletAssetObservation[];
+}
+
 export interface WalletSnapshot {
   status: WalletStatus;
   account: string | null;
   chainId: string | null;
   balances: WalletBalances | null;
   observedAtMs?: number | null;
+  readonly observation?: WalletReadObservation | null;
   error: string | null;
 }
 
 export interface WalletSession {
+  preflightTransaction(input: unknown): Promise<WalletTransactionPreflightResult>;
   getSnapshot(): WalletSnapshot;
   subscribe(listener: (snapshot: WalletSnapshot) => void): () => void;
   connect(): Promise<void>;
@@ -78,14 +104,29 @@ const MAX_NATIVE_BALANCE_HEX_DIGITS = 64;
 const MAX_TOKEN_BALANCE_HEX_DIGITS = 64;
 const CANONICAL_QUANTITY = /^0x(?:0|[1-9a-fA-F][0-9a-fA-F]*)(?![\s\S])/;
 const TOKEN_BALANCE = /^0x[0-9a-fA-F]{64}(?![\s\S])/;
-const MONAD_USDC_CONTRACT = "0x754704Bc059F8C67012fEd69BC8A327a5aafb603";
-const XLAYER_TOKEN_CONTRACTS = [
-  { address: "0x1E4a5963aBFD975d8c9021ce480b42188849D41d" },
-  { address: "0x779Ded0c9e1022225f8E0630b35a9b54bE713736" },
-  { address: "0xB6CEceAB302E2E4948951eE7843FC24E92933061" },
-  { address: "0x74b7F16337b8972027F6196A17a631aC6dE26d22" },
-  { address: "0xA8CE8aee21bC2A48a5EF670afCc9274C7bbbC035" },
-] as const;
+export const MONAD_USDC_CONTRACT = "0x754704Bc059F8C67012fEd69BC8A327a5aafb603";
+export const XLAYER_TOKEN_CONTRACTS = Object.freeze([
+  Object.freeze({ address: "0x1E4a5963aBFD975d8c9021ce480b42188849D41d" }),
+  Object.freeze({ address: "0x779Ded0c9e1022225f8E0630b35a9b54bE713736" }),
+  Object.freeze({ address: "0xB6CEceAB302E2E4948951eE7843FC24E92933061" }),
+  Object.freeze({ address: "0x74b7F16337b8972027F6196A17a631aC6dE26d22" }),
+  Object.freeze({ address: "0xA8CE8aee21bC2A48a5EF670afCc9274C7bbbC035" }),
+] as const);
+
+function assetObservation(
+  id: WalletAssetObservation["id"],
+  symbol: string,
+  contract: string | null,
+  rawRpc: string,
+  units: bigint,
+  decimals: number,
+): WalletAssetObservation {
+  return {
+    id, symbol, native: contract === null, contract, rawRpc,
+    rawUnits: units.toString(10), decimals, decimalsSource: "configured",
+    formattedBalance: formatUnits(units, decimals),
+  };
+}
 
 function isProvider(value: unknown): value is Eip1193Provider {
   if (!value || typeof value !== "object") return false;
@@ -103,11 +144,23 @@ function parseAccount(value: unknown): string | null {
 }
 
 function parseAccounts(value: unknown): { account: string | null; invalid: boolean } {
-  if (!Array.isArray(value)) return { account: null, invalid: true };
-  if (value.length === 0) return { account: null, invalid: false };
-  const accounts = value.map(parseAccount);
-  if (accounts.some((account) => account === null)) return { account: null, invalid: true };
-  return { account: accounts[0], invalid: false };
+  try {
+    if (!Array.isArray(value)) return { account: null, invalid: true };
+    const length = Object.getOwnPropertyDescriptor(value, "length");
+    if (!length || !("value" in length) || !Number.isInteger(length.value) ||
+      length.value < 0 || length.value > 0xffffffff) return { account: null, invalid: true };
+    let first: string | null = null;
+    for (let index = 0; index < length.value; index++) {
+      const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+      if (!descriptor || !("value" in descriptor)) return { account: null, invalid: true };
+      const account = parseAccount(descriptor.value);
+      if (account === null) return { account: null, invalid: true };
+      if (index === 0) first = account;
+    }
+    return { account: first, invalid: false };
+  } catch {
+    return { account: null, invalid: true };
+  }
 }
 
 function isBoundedCanonicalQuantity(value: unknown, maxHexDigits: number): value is string {
@@ -227,6 +280,22 @@ function chainGuidance(chainId: string | null): string | null {
   return "A rede ainda não foi confirmada. Atualize para consultar a carteira.";
 }
 
+function protectObservation(next: WalletSnapshot): WalletSnapshot {
+  const observation = next.balances ? next.observation ?? null : null;
+  const snapshot = next.balances
+    ? { ...next, observedAtMs: next.observedAtMs ?? null }
+    : { ...next, observedAtMs: null };
+  if (observation) {
+    for (const asset of observation.assets) Object.freeze(asset);
+    Object.freeze(observation.assets);
+    Object.freeze(observation);
+  }
+  Object.defineProperty(snapshot, "observation", {
+    value: observation, enumerable: true, writable: false, configurable: false,
+  });
+  return snapshot;
+}
+
 export function createWalletSession(
   provider: Eip1193Provider,
   options: WalletSessionOptions = {},
@@ -246,20 +315,19 @@ export function createWalletSession(
     chainChanged: boolean;
     cancelled: boolean;
   } | null = null;
-  let snapshot: WalletSnapshot = {
+  let snapshot: WalletSnapshot = protectObservation({
     status: "disconnected",
     account: null,
     chainId: null,
     balances: null,
     observedAtMs: null,
+    observation: null,
     error: null,
-  };
+  });
 
   const publish = (next: WalletSnapshot) => {
     if (disposed) return;
-    snapshot = next.balances
-      ? { ...next, observedAtMs: next.observedAtMs ?? null }
-      : { ...next, observedAtMs: null };
+    snapshot = protectObservation(next);
     for (const listener of listeners) listener(snapshot);
   };
 
@@ -483,6 +551,19 @@ export function createWalletSession(
           account,
           chainId,
           observedAtMs,
+          observation: {
+            schemaVersion: 1,
+            source: "okx-provider-reported",
+            account,
+            chainId,
+            network: "monad",
+            block: block.raw,
+            observedAtMs,
+            assets: [
+              assetObservation("mon", "MON", null, mon.raw, mon.integer, 18),
+              assetObservation("usdc", "USDC nativo", MONAD_USDC_CONTRACT, rawUsdc as string, usdc, 6),
+            ],
+          },
           balances: {
             network: "monad",
             mon: formatUnits(mon.integer, 18),
@@ -524,6 +605,23 @@ export function createWalletSession(
         account,
         chainId,
         observedAtMs,
+        observation: {
+          schemaVersion: 1,
+          source: "okx-provider-reported",
+          account,
+          chainId,
+          network: "xlayer",
+          block: block.raw,
+          observedAtMs,
+          assets: [
+            assetObservation("okb", "OKB", null, okb.raw, okb.integer, 18),
+            assetObservation("usdt", "USDT", XLAYER_TOKEN_CONTRACTS[0].address, rawTokens[0] as string, tokens[0]!, 6),
+            assetObservation("usdt0", "USDT0", XLAYER_TOKEN_CONTRACTS[1].address, rawTokens[1] as string, tokens[1]!, 6),
+            assetObservation("nativeUsdc", "USDC nativo", XLAYER_TOKEN_CONTRACTS[2].address, rawTokens[2] as string, tokens[2]!, 6),
+            assetObservation("usdcBridged", "USDC_Bridged", XLAYER_TOKEN_CONTRACTS[3].address, rawTokens[3] as string, tokens[3]!, 6),
+            assetObservation("usdcE", "USDC.e", XLAYER_TOKEN_CONTRACTS[4].address, rawTokens[4] as string, tokens[4]!, 6),
+          ],
+        },
         balances: {
           network: "xlayer",
           okb: formatUnits(okb.integer, 18),
@@ -732,6 +830,59 @@ export function createWalletSession(
   };
 
   return {
+    async preflightTransaction(input) {
+      const block = (reason: string): WalletTransactionPreflightResult => ({ status: "blocked", executionQualified: false, reason });
+      const operation = revision;
+      const unchanged = () => !disposed && !locallyDisconnected && revision === operation;
+      if (disposed || locallyDisconnected || snapshot.status !== "connected") return block("session_unavailable");
+      const clock = (): number | null => {
+        try {
+          const value = options.now ? options.now() : Date.now();
+          return Number.isSafeInteger(value) && value >= 0 ? value : null;
+        } catch { return null; }
+      };
+      try {
+        const configuredTimeout = options.timeoutMs;
+        const preflightTimeout = typeof configuredTimeout === "number" && Number.isFinite(configuredTimeout) && configuredTimeout > 0 ? Math.min(configuredTimeout, 8000) : 8000;
+        let observedAtMs = clock();
+        if (observedAtMs === null) return block("invalid_clock");
+        const checked = validateWalletTransactionProposal(input, observedAtMs);
+        if (!unchanged()) return block("session_changed");
+        if (checked.status === "blocked") return checked;
+        const checkpoint = (): WalletTransactionPreflightResult | null => {
+          if (!unchanged()) return block("session_changed");
+          const now = clock();
+          if (!unchanged()) return block("session_changed");
+          if (now === null) return block("invalid_clock");
+          if (now < observedAtMs!) return block("clock_regressed");
+          observedAtMs = now;
+          if (now < checked.proposal.createdAtMs) return block("not_yet_valid");
+          if (now >= checked.proposal.expiresAtMs) return block("expired");
+          return null;
+        };
+        if (snapshot.account?.toLowerCase() !== checked.proposal.from || snapshot.chainId !== checked.proposal.chainId) return block("identity_mismatch");
+        for (const method of ["eth_accounts", "eth_chainId", "eth_accounts", "eth_chainId"]) {
+          const before = checkpoint();
+          if (before) return before;
+          let response: unknown;
+          try { response = await requestWithTimeout(provider, { method }, preflightTimeout); }
+          catch (error) { return checkpoint() ?? block(isWalletTimeoutError(error) ? "provider_timeout" : "provider_error"); }
+          const after = checkpoint();
+          if (after) return after;
+          if (method === "eth_accounts") {
+            const accounts = parseAccounts(response);
+            if (accounts.invalid || !accounts.account) return block("invalid_provider_response");
+            if (accounts.account.toLowerCase() !== checked.proposal.from) return block("identity_mismatch");
+          } else {
+            const chain = parseChainId(response);
+            if (!chain) return block("invalid_provider_response");
+            if (chain !== checked.proposal.chainId) return block("identity_mismatch");
+          }
+        }
+        const final = checkpoint();
+        return final ?? { ...checked, observedAtMs: observedAtMs! };
+      } catch { return block("provider_error"); }
+    },
     getSnapshot: () => snapshot,
     subscribe(listener) {
       if (disposed) return () => {};
@@ -765,14 +916,15 @@ export function createWalletSession(
       provider.removeListener("accountsChanged", handleAccountsChanged);
       provider.removeListener("chainChanged", handleChainChanged);
       provider.removeListener("disconnect", handleDisconnect);
-      snapshot = {
+      snapshot = protectObservation({
         status: "disconnected",
         account: null,
         chainId: null,
         balances: null,
         observedAtMs: null,
+        observation: null,
         error: null,
-      };
+      });
       listeners.clear();
     },
   };

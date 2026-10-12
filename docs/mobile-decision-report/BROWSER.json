@@ -1,0 +1,397 @@
+{
+  "schema": "offline_mobile_browser_verification_v1",
+  "scope": "M08 offline synthetic HTML only",
+  "browser": "Codex In-app Browser",
+  "url": "http://127.0.0.1:4180/",
+  "metrics": [
+    {
+      "stage": "360_initial",
+      "active": {
+        "id": "",
+        "name": null,
+        "outline": "rgb(20, 35, 52) none 3px",
+        "tag": "BODY",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 345,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 0,
+      "document_width": 345,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 345,
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "stage": "360_details_open",
+      "active": {
+        "id": "",
+        "name": null,
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "SUMMARY",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 345,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 345,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 345,
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "stage": "360_skip_link",
+      "active": {
+        "id": "human-decision",
+        "name": null,
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "SECTION",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 345,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 345,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 345,
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "stage": "360_tab_radio",
+      "active": {
+        "id": "",
+        "name": "human-decision",
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "INPUT",
+        "type": "radio"
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 345,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 345,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 345,
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "stage": "360_radio_arrow",
+      "active": {
+        "id": "",
+        "name": "human-decision",
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "INPUT",
+        "type": "radio"
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 345,
+      "checked": [
+        "discuss"
+      ],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 345,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 345,
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "stage": "360_tab_notes",
+      "active": {
+        "id": "human-notes",
+        "name": null,
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "TEXTAREA",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 345,
+      "checked": [
+        "discuss"
+      ],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 345,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 345,
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "stage": "360_reload_discards_draft",
+      "active": {
+        "id": "human-decision",
+        "name": null,
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "SECTION",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 345,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 0,
+      "document_width": 345,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 345,
+      "viewport": {
+        "height": 800,
+        "width": 360
+      }
+    },
+    {
+      "stage": "390_initial",
+      "active": {
+        "id": "",
+        "name": null,
+        "outline": "rgb(20, 35, 52) none 3px",
+        "tag": "BODY",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 375,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 0,
+      "document_width": 375,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 375,
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "stage": "390_details_open",
+      "active": {
+        "id": "",
+        "name": null,
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "SUMMARY",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 375,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 375,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 375,
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "stage": "390_tab_radio",
+      "active": {
+        "id": "",
+        "name": "human-decision",
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "INPUT",
+        "type": "radio"
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 375,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 375,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 375,
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "stage": "390_tab_notes",
+      "active": {
+        "id": "human-notes",
+        "name": null,
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "TEXTAREA",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 375,
+      "checked": [
+        "discuss"
+      ],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 3,
+      "document_width": 375,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 375,
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "stage": "390_reload_discards_draft",
+      "active": {
+        "id": "human-decision",
+        "name": null,
+        "outline": "rgb(0, 95, 204) solid 3px",
+        "tag": "SECTION",
+        "type": null
+      },
+      "animation_names": [],
+      "base_font_px": "16px",
+      "body_width": 375,
+      "checked": [],
+      "choice_heights": [
+        44,
+        44,
+        44
+      ],
+      "details_open": 0,
+      "document_width": 375,
+      "external_resource_nodes": 0,
+      "form_count": 0,
+      "horizontal_overflow": false,
+      "notes": "",
+      "script_count": 0,
+      "scroll_width": 375,
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    }
+  ],
+  "screenshots": [
+    "mobile-360-top.jpg",
+    "mobile-360-human.jpg",
+    "mobile-390-top.jpg",
+    "mobile-390-human.jpg"
+  ],
+  "limitations": [
+    "Responsive viewport in desktop browser, no physical touch device qualification",
+    "No full WCAG certification",
+    "No real wallet, API, JEV or financial execution qualification"
+  ]
+}

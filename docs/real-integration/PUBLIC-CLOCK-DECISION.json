@@ -1,0 +1,80 @@
+{
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "decision_source": "jev",
+  "request": {
+    "mode": "evaluate",
+    "state": {
+      "objective": "Qualificar leitura pública OKX preservando TTL60s e limite5s para timestamps futuros, sem modificar Windows.",
+      "facts": [
+        "GET /api/v5/public/time HTTP200/code0/Date header medido em três coletas: OKX aproximadamente69.5s adiante da hora local.",
+        "Funding e mark públicos200/code0 ficam bloqueados pela diferença; frontend expiry usa hora local.",
+        "Ausentes Web3keys/wallet consentida; mudança só público v5, não prova v6."
+      ],
+      "constraints": [
+        "Manter timestamps da fonte originais, tolerância5s e TTL60s.",
+        "Sem identidade, segredos, gastos aplicativo ou alteração OS.",
+        "Nova fatia precisa TDD, clock jump/drift/expiry e revisão independente."
+      ]
+    },
+    "questions": {
+      "clock_strategy": {
+        "type": "choice",
+        "domain": "strategy",
+        "instructions": "Escolha a menor correção verificável sem enfraquecer frescor. Abstenção nativa permitida. Considere dados futuros/expirados, segurança e escopo.",
+        "candidates": [
+          {
+            "id": "bounded_public_clock",
+            "description": "Por coleta provar hora pública HTTPS OKX, RTT<=2s, offset<=180s, consistente DateHTTP, validade<=60s e estabilidade wall/monotonic. Comparar source no referencial calibrado, converter expiry para hora local, preservar original, exibir offset/uncertainty. Qualquer falha bloqueia. Só público."
+          },
+          {
+            "id": "host_clock_dependency",
+            "description": "Manter leitura bloqueada até operador sincronizar Windows; documentar offset. Não alterar OS. Não haverá leitura pública usável agora."
+          },
+          {
+            "id": "unified_provider_clock",
+            "description": "Expandir clock calibrado a Web3/Jev/v5 signing/receipts/UI. Mais amplo, provas adicionais indisponíveis sem acesso."
+          }
+        ]
+      }
+    },
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8"
+    }
+  },
+  "status": "assessed",
+  "receiptId": "0c57f32e-760b-4b27-891e-f4b676a70ca0",
+  "model": "jev-1.13.0",
+  "answers": {
+    "clock_strategy": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "bounded_public_clock",
+      "bestCandidate": "bounded_public_clock",
+      "probabilities": {
+        "bounded_public_clock": 0.99,
+        "host_clock_dependency": 0.01,
+        "unified_provider_clock": 0,
+        "insufficient_evidence": 0
+      },
+      "confidence": 0.99,
+      "disposition": "recommendation",
+      "recommendation": "bounded_public_clock",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 736,
+    "output_tokens": 61
+  },
+  "cost": null,
+  "inputDigest": "f1fd60d548d3860280c4847413fa9653716f4127021f698b679f6813c37ce854",
+  "rubricVersion": "batch-2026-09-26.2"
+}

@@ -145,7 +145,7 @@ export function DecisionCenterView({ state }: DecisionCenterViewProps) {
     <section className={styles.center} aria-labelledby="center-title">
       <header className={styles.header}>
         <div className={styles.headingGroup}>
-          <p className={styles.eyebrow}>CENTRAL DE DECISÕES</p>
+          <p className={styles.eyebrow} title="Central de decisões">CENTRAL DE DECISÕES</p>
           <h2 id="center-title" className={styles.title}>Operador Jev sobre a carteira OKX</h2>
           <p className={styles.description} title="Inventário em todas as redes, candidatos com risco e retorno, escolha do Jev e execução com gates. Atualiza sozinho a cada 5 segundos.">
             Inventário em todas as redes, candidatos com risco e retorno, escolha do Jev e execução com gates. Atualiza sozinho a cada 5 segundos.

@@ -1,0 +1,150 @@
+{
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billedCost": null,
+  "strategy": {
+    "status": "assessed",
+    "receiptId": "ab780535-aed5-4e59-a21a-ede8e6e7856b",
+    "evidenceIds": [
+      "state"
+    ],
+    "inputDigest": "0833fdbe816477c1bfdd73312528146f2434d085dfb90c979f09a5ddff2ad195",
+    "rubricVersion": "decision-2026-09-26.2",
+    "policy": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "agentId": "root"
+    },
+    "model": "jev-1.13.0",
+    "confidence": 0.98,
+    "probabilities": {
+      "isolated_baseline": 0.99,
+      "wait_shared": 0.01,
+      "insufficient_evidence": 0
+    },
+    "usage": {
+      "input_tokens": 748,
+      "output_tokens": 53
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T16:02:03.447Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T16:02:03.764Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12bb437477b4893a82b061a62491c",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "signals": {},
+    "choice": "isolated_baseline",
+    "providerChoice": "isolated_baseline",
+    "bestCandidate": "isolated_baseline",
+    "domain": "strategy",
+    "disposition": "recommendation",
+    "recommendation": "isolated_baseline",
+    "latencyMs": 364,
+    "receiptPersisted": true
+  },
+  "seams": {
+    "status": "assessed",
+    "receiptId": "7572e239-2232-41a6-b4a9-62d35395c549",
+    "questionIds": [
+      "test_seams",
+      "work_split"
+    ],
+    "inputDigest": "60f860d81ec2644e53591b94993ee47600fb7cada5d16bcf46ecdc1c43b43c8e",
+    "rubricVersion": "batch-2026-09-26.2",
+    "policies": {
+      "test_seams": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      },
+      "work_split": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "agentId": "root"
+    },
+    "model": "jev-1.13.0",
+    "answers": {
+      "test_seams": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "public_boundaries",
+        "bestCandidate": "public_boundaries",
+        "probabilities": {
+          "public_boundaries": 0.94,
+          "internals": 0.03,
+          "insufficient_evidence": 0.03
+        },
+        "confidence": 0.91,
+        "disposition": "recommendation",
+        "recommendation": "public_boundaries",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      },
+      "work_split": {
+        "type": "choice",
+        "domain": "task",
+        "providerChoice": "adapter_ui",
+        "bestCandidate": "adapter_ui",
+        "probabilities": {
+          "adapter_ui": 0.87,
+          "sequential": 0,
+          "insufficient_evidence": 0.13
+        },
+        "confidence": 0.8,
+        "disposition": "recommendation",
+        "recommendation": "adapter_ui",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 629,
+      "output_tokens": 100
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T16:04:05.803Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T16:04:06.062Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12bb61522769dbbb6736229b74854",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "latencyMs": 290,
+    "receiptPersisted": true
+  }
+}

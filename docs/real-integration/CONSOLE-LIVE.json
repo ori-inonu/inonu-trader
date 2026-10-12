@@ -1,0 +1,1075 @@
+{
+  "observation": "actual-local-processes-and-public-http",
+  "executionEnabled": false,
+  "authenticatedWeb3Exercised": false,
+  "walletConnected": false,
+  "appJevExercised": false,
+  "attempts": [
+    {
+      "attempt": 1,
+      "startedAtMs": 1791740546083,
+      "stopAtMs": 1791740556316,
+      "finishedAtMs": 1791740556371,
+      "childPid": 16268,
+      "exitCode": 0,
+      "health": {
+        "httpStatus": 200,
+        "data": {
+          "mode": "paper",
+          "executionEnabled": false,
+          "services": {
+            "onchainos": {
+              "configured": false,
+              "access": "blocked",
+              "missing": [
+                "OKX_WEB3_API_KEY",
+                "OKX_WEB3_API_SECRET",
+                "OKX_WEB3_API_PASSPHRASE"
+              ]
+            },
+            "jev": {
+              "credentialPresent": false,
+              "authorized": false,
+              "model": "jev-latest",
+              "costUsdPerMillion": null,
+              "maxCalls": 10
+            },
+            "worker": {
+              "running": true,
+              "intervalMs": 5000,
+              "lastCycleAtMs": 1791740548823,
+              "fatal": null,
+              "recoveredTailBytes": 0
+            },
+            "publicMarket": {
+              "running": true,
+              "intervalMs": 60000,
+              "lastCollectionAtMs": null,
+              "lastError": null,
+              "source": "okx-public-v5"
+            }
+          },
+          "networks": [
+            {
+              "chainIndex": "196",
+              "name": "X Layer"
+            },
+            {
+              "chainIndex": "143",
+              "name": "Monad"
+            }
+          ],
+          "quotePairConfigured": false,
+          "web3Origin": "https://web3.okx.com",
+          "ttlMs": {
+            "quote": 15000,
+            "market": 60000,
+            "inventory": 60000
+          },
+          "dependencies": [
+            "Configure OKX_WEB3_API_KEY no ambiente local do aplicativo",
+            "Configure OKX_WEB3_API_SECRET no ambiente local do aplicativo",
+            "Configure OKX_WEB3_API_PASSPHRASE no ambiente local do aplicativo",
+            "Configure TYPESAFE_AI_API_KEY do aplicativo",
+            "Consumo Jev do aplicativo ainda não autorizado na configuração",
+            "Autorize a consulta Web3 da carteira conectada",
+            "Configure o par e a quantidade em unidades mínimas para consultar DEX"
+          ],
+          "quota": {
+            "calls": {
+              "free": 0,
+              "basic": 0,
+              "premium": 0,
+              "unknown": 0,
+              "public": 0
+            },
+            "attempts": {
+              "free": 0,
+              "basic": 0,
+              "premium": 0,
+              "unknown": 0,
+              "public": 0
+            },
+            "retries": 0,
+            "totalAttempts": 0,
+            "costKnown": true
+          },
+          "worker": {
+            "running": true,
+            "intervalMs": 5000,
+            "lastCycleAtMs": 1791740548823,
+            "fatal": null,
+            "recoveredTailBytes": 0
+          },
+          "walletConsent": {
+            "active": false,
+            "identityKey": null,
+            "chainIndex": null,
+            "revision": null
+          },
+          "jevCalls": {
+            "reserved": 0,
+            "limit": 10
+          },
+          "capabilities": [
+            {
+              "id": "market:196:/api/v6/dex/market/price",
+              "family": "market",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/market/price",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "balance:196:/api/v6/dex/balance/all-token-balances-by-address",
+              "family": "balance",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/balance/all-token-balances-by-address",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "dex:196:/api/v6/dex/aggregator/quote",
+              "family": "dex",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/aggregator/quote",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "simulation:196:/api/v6/dex/pre-transaction/simulate",
+              "family": "simulation",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/pre-transaction/simulate",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": false,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "not-implemented",
+              "reason": "Whitelist, método e contrato de simulação ainda não qualificados.",
+              "nextRequirement": "Whitelist, método e contrato de simulação ainda não qualificados."
+            },
+            {
+              "id": "defi:196:/api/v6/defi/product/search",
+              "family": "defi",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/defi/product/search",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; integração, suporte e risco de lending não qualificados.",
+              "nextRequirement": "Leitura existente; integração, suporte e risco de lending não qualificados."
+            },
+            {
+              "id": "signals:196:/api/v6/dex/market/signal/list",
+              "family": "signals",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/market/signal/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; suporte por rede e entitlement premium desconhecidos.",
+              "nextRequirement": "Leitura existente; suporte por rede e entitlement premium desconhecidos."
+            },
+            {
+              "id": "signals:196:/api/v6/dex/market/leaderboard/list",
+              "family": "signals",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/market/leaderboard/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leaderboard existente; suporte e entitlement desconhecidos.",
+              "nextRequirement": "Leaderboard existente; suporte e entitlement desconhecidos."
+            },
+            {
+              "id": "market:143:/api/v6/dex/market/price",
+              "family": "market",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/market/price",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "balance:143:/api/v6/dex/balance/all-token-balances-by-address",
+              "family": "balance",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/balance/all-token-balances-by-address",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "dex:143:/api/v6/dex/aggregator/quote",
+              "family": "dex",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/aggregator/quote",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "simulation:143:/api/v6/dex/pre-transaction/simulate",
+              "family": "simulation",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/pre-transaction/simulate",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": false,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "not-implemented",
+              "reason": "Whitelist, método e contrato de simulação ainda não qualificados.",
+              "nextRequirement": "Whitelist, método e contrato de simulação ainda não qualificados."
+            },
+            {
+              "id": "defi:143:/api/v6/defi/product/search",
+              "family": "defi",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/defi/product/search",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; integração, suporte e risco de lending não qualificados.",
+              "nextRequirement": "Leitura existente; integração, suporte e risco de lending não qualificados."
+            },
+            {
+              "id": "signals:143:/api/v6/dex/market/signal/list",
+              "family": "signals",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/market/signal/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; suporte por rede e entitlement premium desconhecidos.",
+              "nextRequirement": "Leitura existente; suporte por rede e entitlement premium desconhecidos."
+            },
+            {
+              "id": "signals:143:/api/v6/dex/market/leaderboard/list",
+              "family": "signals",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/market/leaderboard/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leaderboard existente; suporte e entitlement desconhecidos.",
+              "nextRequirement": "Leaderboard existente; suporte e entitlement desconhecidos."
+            },
+            {
+              "id": "funding.public-btc",
+              "family": "funding",
+              "chainIndex": "exchange",
+              "endpoint": "/api/v5/public/funding-rate",
+              "source": "okx-public-v5",
+              "documented": true,
+              "implemented": true,
+              "exercisedReal": false,
+              "integrated": true,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Aguardando coleta pública do worker independente.",
+              "nextRequirement": "Resposta pública real com relógio e validade comprovados."
+            }
+          ]
+        }
+      },
+      "uiStatus": 200,
+      "latest": {
+        "httpStatus": 200,
+        "data": {
+          "cycle": {
+            "id": "c6f2c5d5-3a4e-4629-813b-44904f5969a5",
+            "sequence": 2,
+            "startedAtMs": 1791740553862,
+            "finishedAtMs": 1791740553862,
+            "mode": "paper",
+            "core": null,
+            "decision": {
+              "choice": "hold",
+              "status": "blocked",
+              "model": null,
+              "latencyMs": null,
+              "inputTokens": null,
+              "costUsd": null,
+              "called": false,
+              "reasons": [
+                "Consentimento Web3 ausente"
+              ]
+            },
+            "realizedPnlUsd": null,
+            "executionEnabled": false
+          },
+          "history": [
+            {
+              "id": "c6f2c5d5-3a4e-4629-813b-44904f5969a5",
+              "sequence": 2,
+              "startedAtMs": 1791740553862,
+              "finishedAtMs": 1791740553862,
+              "mode": "paper",
+              "core": null,
+              "decision": {
+                "choice": "hold",
+                "status": "blocked",
+                "model": null,
+                "latencyMs": null,
+                "inputTokens": null,
+                "costUsd": null,
+                "called": false,
+                "reasons": [
+                  "Consentimento Web3 ausente"
+                ]
+              },
+              "realizedPnlUsd": null,
+              "executionEnabled": false
+            },
+            {
+              "id": "5aff09af-192a-4832-9fab-9cec57cd5b6b",
+              "sequence": 1,
+              "startedAtMs": 1791740548820,
+              "finishedAtMs": 1791740548823,
+              "mode": "paper",
+              "core": null,
+              "decision": {
+                "choice": "hold",
+                "status": "blocked",
+                "model": null,
+                "latencyMs": null,
+                "inputTokens": null,
+                "costUsd": null,
+                "called": false,
+                "reasons": [
+                  "Consentimento Web3 ausente"
+                ]
+              },
+              "realizedPnlUsd": null,
+              "executionEnabled": false
+            }
+          ]
+        }
+      },
+      "publicMarket": {
+        "httpStatus": 200,
+        "data": {
+          "source": "okx-public-v5",
+          "mode": "real",
+          "status": "blocked",
+          "observedAtMs": 1791740551220,
+          "expiresAtMs": 1791740551220,
+          "instrument": {
+            "instType": "SWAP",
+            "instId": "BTC-USDT-SWAP",
+            "state": "live",
+            "baseCcy": null,
+            "quoteCcy": null,
+            "settleCcy": "USDT",
+            "ctValCcy": "BTC",
+            "ctType": "linear",
+            "ctVal": "0.01",
+            "ctMult": "1",
+            "tickSz": "0.1",
+            "lotSz": "0.01",
+            "minSz": "0.01",
+            "maxLeverage": 100,
+            "listTimeMs": 1573557408000,
+            "expTimeMs": null
+          },
+          "funding": {
+            "instId": "BTC-USDT-SWAP",
+            "method": "current_period",
+            "fundingRate": "-0.0000128063271663",
+            "nextFundingRate": null,
+            "fundingTimeMs": 1791763200000,
+            "nextFundingTimeMs": 1791792000000,
+            "prevFundingTimeMs": 1791734400000,
+            "intervalMs": 28800000,
+            "minFundingRate": "-0.00375",
+            "maxFundingRate": "0.00375",
+            "premium": "-0.0005403661873593",
+            "settState": "settled",
+            "settFundingRate": "-0.0000000008035808",
+            "tsMs": 1791740600149
+          },
+          "mark": {
+            "instId": "BTC-USDT-SWAP",
+            "markPx": "83960.3",
+            "tsMs": 1791740620626
+          },
+          "capability": {
+            "id": "funding.public-btc",
+            "family": "funding",
+            "source": "okx-public-v5",
+            "documented": true,
+            "implemented": true,
+            "exercisedReal": true,
+            "integrated": true,
+            "financiallyQualified": false,
+            "status": "blocked",
+            "reason": "Obter timestamp de funding válido e compatível com o relógio de coleta.",
+            "nextRequirement": "Obter timestamp de funding válido e compatível com o relógio de coleta."
+          },
+          "dependencies": [
+            "Obter timestamp de funding válido e compatível com o relógio de coleta.",
+            "Obter timestamp de mark válido e compatível com o relógio de coleta.",
+            "Coleta pública expirada; aguardar atualização do worker."
+          ],
+          "requests": [
+            {
+              "method": "GET",
+              "endpoint": "/api/v5/public/instruments",
+              "httpStatus": 200,
+              "code": "0",
+              "requestedAtMs": 1791740548857,
+              "receivedAtMs": 1791740549331
+            },
+            {
+              "method": "GET",
+              "endpoint": "/api/v5/public/funding-rate",
+              "httpStatus": 200,
+              "code": "0",
+              "requestedAtMs": 1791740549334,
+              "receivedAtMs": 1791740550208
+            },
+            {
+              "method": "GET",
+              "endpoint": "/api/v5/public/mark-price",
+              "httpStatus": 200,
+              "code": "0",
+              "requestedAtMs": 1791740550210,
+              "receivedAtMs": 1791740551219
+            }
+          ]
+        }
+      },
+      "portsClosed": {
+        "backend": true,
+        "frontend": true
+      },
+      "lockAbsent": true,
+      "stdoutSha256": "9427bcf43efd893858f0d13b6e8daa03d051116ec667f7a79c2abde2af6d2b1b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shutdownReceipt": "{\"event\":\"console-closed\",\"resourcesClosed\":true,\"forced\":false,\"unexpectedExit\":false}"
+    },
+    {
+      "attempt": 2,
+      "startedAtMs": 1791740556371,
+      "stopAtMs": 1791740564771,
+      "finishedAtMs": 1791740564941,
+      "childPid": 43460,
+      "exitCode": 0,
+      "health": {
+        "httpStatus": 200,
+        "data": {
+          "mode": "paper",
+          "executionEnabled": false,
+          "services": {
+            "onchainos": {
+              "configured": false,
+              "access": "blocked",
+              "missing": [
+                "OKX_WEB3_API_KEY",
+                "OKX_WEB3_API_SECRET",
+                "OKX_WEB3_API_PASSPHRASE"
+              ]
+            },
+            "jev": {
+              "credentialPresent": false,
+              "authorized": false,
+              "model": "jev-latest",
+              "costUsdPerMillion": null,
+              "maxCalls": 10
+            },
+            "worker": {
+              "running": true,
+              "intervalMs": 5000,
+              "lastCycleAtMs": 1791740557234,
+              "fatal": null,
+              "recoveredTailBytes": 0
+            },
+            "publicMarket": {
+              "running": true,
+              "intervalMs": 60000,
+              "lastCollectionAtMs": null,
+              "lastError": null,
+              "source": "okx-public-v5"
+            }
+          },
+          "networks": [
+            {
+              "chainIndex": "196",
+              "name": "X Layer"
+            },
+            {
+              "chainIndex": "143",
+              "name": "Monad"
+            }
+          ],
+          "quotePairConfigured": false,
+          "web3Origin": "https://web3.okx.com",
+          "ttlMs": {
+            "quote": 15000,
+            "market": 60000,
+            "inventory": 60000
+          },
+          "dependencies": [
+            "Configure OKX_WEB3_API_KEY no ambiente local do aplicativo",
+            "Configure OKX_WEB3_API_SECRET no ambiente local do aplicativo",
+            "Configure OKX_WEB3_API_PASSPHRASE no ambiente local do aplicativo",
+            "Configure TYPESAFE_AI_API_KEY do aplicativo",
+            "Consumo Jev do aplicativo ainda não autorizado na configuração",
+            "Autorize a consulta Web3 da carteira conectada",
+            "Configure o par e a quantidade em unidades mínimas para consultar DEX"
+          ],
+          "quota": {
+            "calls": {
+              "free": 0,
+              "basic": 0,
+              "premium": 0,
+              "unknown": 0,
+              "public": 0
+            },
+            "attempts": {
+              "free": 0,
+              "basic": 0,
+              "premium": 0,
+              "unknown": 0,
+              "public": 0
+            },
+            "retries": 0,
+            "totalAttempts": 0,
+            "costKnown": true
+          },
+          "worker": {
+            "running": true,
+            "intervalMs": 5000,
+            "lastCycleAtMs": 1791740557234,
+            "fatal": null,
+            "recoveredTailBytes": 0
+          },
+          "walletConsent": {
+            "active": false,
+            "identityKey": null,
+            "chainIndex": null,
+            "revision": null
+          },
+          "jevCalls": {
+            "reserved": 0,
+            "limit": 10
+          },
+          "capabilities": [
+            {
+              "id": "market:196:/api/v6/dex/market/price",
+              "family": "market",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/market/price",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "balance:196:/api/v6/dex/balance/all-token-balances-by-address",
+              "family": "balance",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/balance/all-token-balances-by-address",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "dex:196:/api/v6/dex/aggregator/quote",
+              "family": "dex",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/aggregator/quote",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "simulation:196:/api/v6/dex/pre-transaction/simulate",
+              "family": "simulation",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/pre-transaction/simulate",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": false,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "not-implemented",
+              "reason": "Whitelist, método e contrato de simulação ainda não qualificados.",
+              "nextRequirement": "Whitelist, método e contrato de simulação ainda não qualificados."
+            },
+            {
+              "id": "defi:196:/api/v6/defi/product/search",
+              "family": "defi",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/defi/product/search",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; integração, suporte e risco de lending não qualificados.",
+              "nextRequirement": "Leitura existente; integração, suporte e risco de lending não qualificados."
+            },
+            {
+              "id": "signals:196:/api/v6/dex/market/signal/list",
+              "family": "signals",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/market/signal/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; suporte por rede e entitlement premium desconhecidos.",
+              "nextRequirement": "Leitura existente; suporte por rede e entitlement premium desconhecidos."
+            },
+            {
+              "id": "signals:196:/api/v6/dex/market/leaderboard/list",
+              "family": "signals",
+              "chainIndex": "196",
+              "endpoint": "/api/v6/dex/market/leaderboard/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leaderboard existente; suporte e entitlement desconhecidos.",
+              "nextRequirement": "Leaderboard existente; suporte e entitlement desconhecidos."
+            },
+            {
+              "id": "market:143:/api/v6/dex/market/price",
+              "family": "market",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/market/price",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "balance:143:/api/v6/dex/balance/all-token-balances-by-address",
+              "family": "balance",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/balance/all-token-balances-by-address",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "dex:143:/api/v6/dex/aggregator/quote",
+              "family": "dex",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/aggregator/quote",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": true,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+              "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+            },
+            {
+              "id": "simulation:143:/api/v6/dex/pre-transaction/simulate",
+              "family": "simulation",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/pre-transaction/simulate",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": false,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "not-implemented",
+              "reason": "Whitelist, método e contrato de simulação ainda não qualificados.",
+              "nextRequirement": "Whitelist, método e contrato de simulação ainda não qualificados."
+            },
+            {
+              "id": "defi:143:/api/v6/defi/product/search",
+              "family": "defi",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/defi/product/search",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; integração, suporte e risco de lending não qualificados.",
+              "nextRequirement": "Leitura existente; integração, suporte e risco de lending não qualificados."
+            },
+            {
+              "id": "signals:143:/api/v6/dex/market/signal/list",
+              "family": "signals",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/market/signal/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leitura existente; suporte por rede e entitlement premium desconhecidos.",
+              "nextRequirement": "Leitura existente; suporte por rede e entitlement premium desconhecidos."
+            },
+            {
+              "id": "signals:143:/api/v6/dex/market/leaderboard/list",
+              "family": "signals",
+              "chainIndex": "143",
+              "endpoint": "/api/v6/dex/market/leaderboard/list",
+              "source": "onchainos-rest-v6",
+              "documented": true,
+              "implemented": true,
+              "integrated": false,
+              "exercisedReal": false,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Leaderboard existente; suporte e entitlement desconhecidos.",
+              "nextRequirement": "Leaderboard existente; suporte e entitlement desconhecidos."
+            },
+            {
+              "id": "funding.public-btc",
+              "family": "funding",
+              "chainIndex": "exchange",
+              "endpoint": "/api/v5/public/funding-rate",
+              "source": "okx-public-v5",
+              "documented": true,
+              "implemented": true,
+              "exercisedReal": false,
+              "integrated": true,
+              "financiallyQualified": false,
+              "status": "blocked",
+              "reason": "Aguardando coleta pública do worker independente.",
+              "nextRequirement": "Resposta pública real com relógio e validade comprovados."
+            }
+          ]
+        }
+      },
+      "uiStatus": 200,
+      "latest": {
+        "httpStatus": 200,
+        "data": {
+          "cycle": {
+            "id": "719b80bd-b77a-4ee4-903a-cce057e05ed3",
+            "sequence": 4,
+            "startedAtMs": 1791740562261,
+            "finishedAtMs": 1791740562262,
+            "mode": "paper",
+            "core": null,
+            "decision": {
+              "choice": "hold",
+              "status": "blocked",
+              "model": null,
+              "latencyMs": null,
+              "inputTokens": null,
+              "costUsd": null,
+              "called": false,
+              "reasons": [
+                "Consentimento Web3 ausente"
+              ]
+            },
+            "realizedPnlUsd": null,
+            "executionEnabled": false
+          },
+          "history": [
+            {
+              "id": "719b80bd-b77a-4ee4-903a-cce057e05ed3",
+              "sequence": 4,
+              "startedAtMs": 1791740562261,
+              "finishedAtMs": 1791740562262,
+              "mode": "paper",
+              "core": null,
+              "decision": {
+                "choice": "hold",
+                "status": "blocked",
+                "model": null,
+                "latencyMs": null,
+                "inputTokens": null,
+                "costUsd": null,
+                "called": false,
+                "reasons": [
+                  "Consentimento Web3 ausente"
+                ]
+              },
+              "realizedPnlUsd": null,
+              "executionEnabled": false
+            },
+            {
+              "id": "c4cb4a36-0924-441f-a87e-daec4181ead6",
+              "sequence": 3,
+              "startedAtMs": 1791740557232,
+              "finishedAtMs": 1791740557234,
+              "mode": "paper",
+              "core": null,
+              "decision": {
+                "choice": "hold",
+                "status": "blocked",
+                "model": null,
+                "latencyMs": null,
+                "inputTokens": null,
+                "costUsd": null,
+                "called": false,
+                "reasons": [
+                  "Consentimento Web3 ausente"
+                ]
+              },
+              "realizedPnlUsd": null,
+              "executionEnabled": false
+            },
+            {
+              "id": "c6f2c5d5-3a4e-4629-813b-44904f5969a5",
+              "sequence": 2,
+              "startedAtMs": 1791740553862,
+              "finishedAtMs": 1791740553862,
+              "mode": "paper",
+              "core": null,
+              "decision": {
+                "choice": "hold",
+                "status": "blocked",
+                "model": null,
+                "latencyMs": null,
+                "inputTokens": null,
+                "costUsd": null,
+                "called": false,
+                "reasons": [
+                  "Consentimento Web3 ausente"
+                ]
+              },
+              "realizedPnlUsd": null,
+              "executionEnabled": false
+            },
+            {
+              "id": "5aff09af-192a-4832-9fab-9cec57cd5b6b",
+              "sequence": 1,
+              "startedAtMs": 1791740548820,
+              "finishedAtMs": 1791740548823,
+              "mode": "paper",
+              "core": null,
+              "decision": {
+                "choice": "hold",
+                "status": "blocked",
+                "model": null,
+                "latencyMs": null,
+                "inputTokens": null,
+                "costUsd": null,
+                "called": false,
+                "reasons": [
+                  "Consentimento Web3 ausente"
+                ]
+              },
+              "realizedPnlUsd": null,
+              "executionEnabled": false
+            }
+          ]
+        }
+      },
+      "publicMarket": {
+        "httpStatus": 200,
+        "data": {
+          "source": "okx-public-v5",
+          "mode": "real",
+          "status": "blocked",
+          "observedAtMs": 1791740559609,
+          "expiresAtMs": 1791740559609,
+          "instrument": {
+            "instType": "SWAP",
+            "instId": "BTC-USDT-SWAP",
+            "state": "live",
+            "baseCcy": null,
+            "quoteCcy": null,
+            "settleCcy": "USDT",
+            "ctValCcy": "BTC",
+            "ctType": "linear",
+            "ctVal": "0.01",
+            "ctMult": "1",
+            "tickSz": "0.1",
+            "lotSz": "0.01",
+            "minSz": "0.01",
+            "maxLeverage": 100,
+            "listTimeMs": 1573557408000,
+            "expTimeMs": null
+          },
+          "funding": {
+            "instId": "BTC-USDT-SWAP",
+            "method": "current_period",
+            "fundingRate": "-0.0000128063271663",
+            "nextFundingRate": null,
+            "fundingTimeMs": 1791763200000,
+            "nextFundingTimeMs": 1791792000000,
+            "prevFundingTimeMs": 1791734400000,
+            "intervalMs": 28800000,
+            "minFundingRate": "-0.00375",
+            "maxFundingRate": "0.00375",
+            "premium": "-0.0005403661873593",
+            "settState": "settled",
+            "settFundingRate": "-0.0000000008035808",
+            "tsMs": 1791740600149
+          },
+          "mark": {
+            "instId": "BTC-USDT-SWAP",
+            "markPx": "83942.6",
+            "tsMs": 1791740629011
+          },
+          "capability": {
+            "id": "funding.public-btc",
+            "family": "funding",
+            "source": "okx-public-v5",
+            "documented": true,
+            "implemented": true,
+            "exercisedReal": true,
+            "integrated": true,
+            "financiallyQualified": false,
+            "status": "blocked",
+            "reason": "Obter timestamp de funding válido e compatível com o relógio de coleta.",
+            "nextRequirement": "Obter timestamp de funding válido e compatível com o relógio de coleta."
+          },
+          "dependencies": [
+            "Obter timestamp de funding válido e compatível com o relógio de coleta.",
+            "Obter timestamp de mark válido e compatível com o relógio de coleta.",
+            "Coleta pública expirada; aguardar atualização do worker."
+          ],
+          "requests": [
+            {
+              "method": "GET",
+              "endpoint": "/api/v5/public/instruments",
+              "httpStatus": 200,
+              "code": "0",
+              "requestedAtMs": 1791740557253,
+              "receivedAtMs": 1791740557758
+            },
+            {
+              "method": "GET",
+              "endpoint": "/api/v5/public/funding-rate",
+              "httpStatus": 200,
+              "code": "0",
+              "requestedAtMs": 1791740557761,
+              "receivedAtMs": 1791740558617
+            },
+            {
+              "method": "GET",
+              "endpoint": "/api/v5/public/mark-price",
+              "httpStatus": 200,
+              "code": "0",
+              "requestedAtMs": 1791740558619,
+              "receivedAtMs": 1791740559609
+            }
+          ]
+        }
+      },
+      "portsClosed": {
+        "backend": true,
+        "frontend": true
+      },
+      "lockAbsent": true,
+      "stdoutSha256": "73efa5dbadd4e33b745ba4b761906cf0040c7c24372646d519fb1278b0a71775",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shutdownReceipt": "{\"event\":\"console-closed\",\"resourcesClosed\":true,\"forced\":false,\"unexpectedExit\":false}"
+    }
+  ]
+}

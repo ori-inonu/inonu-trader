@@ -79,6 +79,7 @@ const CREDENTIAL_WORDS = /apiKey|secretKey|passphrase|OK-ACCESS/;
 describe("isolation: the library", () => {
   test("D23: the module has the expected files and nothing unexpected", () => {
     expect(names).toEqual([
+      "archive-discovery.ts",
       "capture-sources.ts",
       "capture-types.ts",
       "capture.ts",

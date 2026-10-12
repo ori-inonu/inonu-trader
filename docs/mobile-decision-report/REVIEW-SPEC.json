@@ -1,0 +1,451 @@
+{
+  "schema": "offline_mobile_spec_review_v1",
+  "axis": "SPEC",
+  "version": "candidate_v2",
+  "status": "no_spec_defects_found_bounded",
+  "reviewer": {
+    "role": "independent harness_reviewer",
+    "conversation": "01a12da8-0e99-7dd2-b046-021d49c0d38a",
+    "session": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+    "implemented_candidate": false
+  },
+  "workspace": "C:/Users/gabri/.codex/tmp/mobile-report-review-01a12b5f-spec-v2",
+  "isolation": "coordinator-supplied isolated copy; candidate not edited",
+  "baseline_head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+  "comparison": "20 listed candidate files are additions against BASELINE.json; 3 unchanged DEX dependencies; empty increment commit list",
+  "frozen_spec_sha256": "7fdb9f0f49ef469fb05e3d101e93f9bf2a454d84d716481f4f66b65fa97ea10b",
+  "manifest_sha256": "36436ed0892a5f1eab653bfd7585a97966e791225691665237d1c771b12c353b",
+  "manifest_digest": "5ec32260afaa982a33068b8c79ff4c49bb12dde04c4cc342694b96e96c2e3a36",
+  "canonicalization": "UTF-8 JSON, lexicographic object keys, compact separators, no newline",
+  "findings": [],
+  "missing_or_partial_requirements": [],
+  "scope_creep": [],
+  "seemingly_implemented_wrong_behaviour": [],
+  "coverage": [
+    {
+      "requirement": "M01",
+      "spec_line": 15,
+      "result": "covered",
+      "evidence": [
+        "report.ts delegates normalized facts to unchanged parseDexReport",
+        "report.test.ts compares exact normalized contract; 6 DEX regression tests",
+        "v2 delta independently confirms original JSON/facts/binding preserved"
+      ]
+    },
+    {
+      "requirement": "M02",
+      "spec_line": 16,
+      "result": "covered",
+      "evidence": [
+        "source age uses source_time only",
+        "missing/stale/future/TTL equality tests; independent time advance probe"
+      ]
+    },
+    {
+      "requirement": "M03",
+      "spec_line": 17,
+      "result": "covered",
+      "evidence": [
+        "source_after_fetch/report_after_fetch alerts",
+        "identity/revision replacement tests; independent 9 binding mutation probes; constant errors"
+      ]
+    },
+    {
+      "requirement": "M04",
+      "spec_line": 18,
+      "result": "covered",
+      "evidence": [
+        "not_evaluated absent; imported provided_unverified",
+        "hash/expiry/future/pre-fetch/unusable snapshot invalidate observations; no API path"
+      ]
+    },
+    {
+      "requirement": "M05",
+      "spec_line": 19,
+      "result": "covered",
+      "evidence": [
+        "USD strings preserved, null distinct from zero; total coverage unknown, quota null",
+        "DEX network estimates separately rendered"
+      ]
+    },
+    {
+      "requirement": "M06",
+      "spec_line": 20,
+      "result": "covered",
+      "evidence": [
+        "identity/revision/origin/schema/provenance/sources/hash/validity visible",
+        "HTML explicitly recheck at consumption; human grants_execution false"
+      ]
+    },
+    {
+      "requirement": "M07",
+      "spec_line": 21,
+      "result": "covered",
+      "evidence": [
+        "allowlisted own data fields, omitted extras, escaped rendered text, fixed invalid error",
+        "exports reproject input; no scripts/form/API/resources, restrictive CSP; supplied DOM evidence",
+        "v2 combined punctuation and injection probe retains escaping"
+      ]
+    },
+    {
+      "requirement": "M08",
+      "spec_line": 22,
+      "result": "covered_with_browser_limitation",
+      "evidence": [
+        "360x800/390x844 supplied screenshots and metrics inspected",
+        "keyboard/focus/draft reload acquisition from integrator; no independent browser execution",
+        "v2 generated example HTML byte-identical to browser artifact, no independent replay"
+      ]
+    },
+    {
+      "requirement": "M09",
+      "spec_line": 23,
+      "result": "covered",
+      "evidence": [
+        "seven fixed synthetic fixtures and example",
+        "independent generated HTML/JSON/fixtures byte-identical"
+      ]
+    },
+    {
+      "requirement": "M10",
+      "spec_line": 24,
+      "result": "supports_final_checkpoint_after_reviews",
+      "evidence": [
+        "independent 18 passing tests/170 assertions",
+        "supplied types exit 0, hashes/manifest verified; README separates pending G01-G17",
+        "final review/checkpoint intentionally post-review by coordinator"
+      ]
+    }
+  ],
+  "independent_execution": {
+    "argv": [
+      "C:/Users/gabri/.bun/bin/bun.exe",
+      "--no-env-file",
+      "test",
+      "./src/mobile-decision-report",
+      "./web/src/lib/dex-report.test.ts"
+    ],
+    "exit_code": 0,
+    "passed": 18,
+    "failed": 0,
+    "assertions": 170,
+    "bun": "1.3.14 (0d9b296a)",
+    "exact_output": "bun test v1.3.14 (0d9b296a)\n\nsrc\\mobile-decision-report\\export.test.ts:\n(pass) a standalone export separates facts, unknown context/costs, source clocks and the human draft [16.28ms]\n(pass) untrusted allowed text is escaped, extra sensitive fields disappear and projected JSON is not trusted [4.12ms]\n(pass) synthetic cases cover temporal alerts and reject malformed inputs through both exporters [9.76ms]\n(pass) imported punctuation follows display rules while JSON preserves the original facts [2.35ms]\n\nsrc\\mobile-decision-report\\report.test.ts:\n(pass) projects the actual DEX contract with exact facts and distinct source/collection clocks [1.47ms]\n(pass) missing source time remains unknown despite a freshly fetched report [1.16ms]\n(pass) a stale source cannot be refreshed by a recent collection and expires at the source TTL [1.49ms]\n(pass) future clocks and contradictory chronology are exposed without negative ages [1.42ms]\n(pass) an explicitly replaced identity/revision invalidates the snapshot [1.62ms]\n(pass) a supplied contextual receipt stays separate and preserves exact reported costs [1.53ms]\n(pass) mismatched, expired, future and pre-fetch contextual receipts are invalidated [3.64ms]\n(pass) invalid fields fail with a fixed error and unknown fields/accessors never escape [3.51ms]\n\nweb\\src\\lib\\dex-report.test.ts:\n(pass) normalizes an allowlisted report to internal V1 and strips extras at every level [0.59ms]\n(pass) rejects an envelope, unknown provenance, and unsafe execution claims with one generic error [0.39ms]\n(pass) rejects Unicode control characters in contract identity and metadata [0.25ms]\n(pass) normalizes only enumerated EVM identities and preserves exact casing elsewhere [0.46ms]\n(pass) keeps atomic formatting exact for large values and negative deltas [0.60ms]\n(pass) accepts blocked or unknown reports with zero, one, or two continuous partial legs [0.74ms]\n\n 18 pass\n 0 fail\n 170 expect() calls\nRan 18 tests across 3 files. [183.00ms]\n",
+    "additional_probes": {
+      "reproduced": [
+        {
+          "path": "example.html",
+          "sha256": "1af025fb8585a895e0c3a07df9c4d97e77e158e438dc70b53b80561dbc8523f3",
+          "match": true
+        },
+        {
+          "path": "example.json",
+          "sha256": "39af89cdba5787317a4f55c547a964f6f67a8d3ce2f8f137cc0d6334c715fdcf",
+          "match": true
+        },
+        {
+          "path": "fixtures.json",
+          "sha256": "c2259a193ea1e541921b3ac0367acd1f3be2e14ad1061a4b29ff24effea9348e",
+          "match": true
+        }
+      ],
+      "display_normalization_with_escaping": "passed",
+      "json_and_binding_exact": "passed",
+      "canonical_digest_match": true,
+      "baseline_additions_and_dependencies_match": true
+    },
+    "unchanged_source_probes_from_v1": {
+      "generated": [
+        {
+          "path": "example.html",
+          "sha256": "1af025fb8585a895e0c3a07df9c4d97e77e158e438dc70b53b80561dbc8523f3",
+          "match": true
+        },
+        {
+          "path": "example.json",
+          "sha256": "39af89cdba5787317a4f55c547a964f6f67a8d3ce2f8f137cc0d6334c715fdcf",
+          "match": true
+        },
+        {
+          "path": "fixtures.json",
+          "sha256": "c2259a193ea1e541921b3ac0367acd1f3be2e14ad1061a4b29ff24effea9348e",
+          "match": true
+        }
+      ],
+      "replacement": [
+        "identity",
+        "content",
+        "snapshot_id",
+        "revision",
+        "origin",
+        "source_time",
+        "fetched_at",
+        "max_age",
+        "api_cost"
+      ],
+      "time_advance": "stale",
+      "projected_output_rejected_by_both_exporters": true,
+      "canonical_manifest_digest": "b7883b31273801e0dcc613892f24ebd42c17960bb08c314f6938a7fc4e65478a",
+      "canonical_digest_match": true
+    },
+    "probe_correction": "Initial independent probe used tokenA equal to tokenB and correctly rejected invalid input. Corrected identity mutation to distinct token 0x...0003; no candidate change."
+  },
+  "supplied_evidence": {
+    "types": "v2 VERIFICATION.json types exit 0; toolchain not present in isolated copy; not independently rerun",
+    "browser": "BROWSER.json and four JPGs inspected; integrator acquisition, not independent execution",
+    "preservation": "PRESERVATION.json records 697 baseline files unchanged; focused isolated copy does not independently reconstruct whole working tree"
+  },
+  "limitations": [
+    "M01-M10 only; no G01-G17 approval, external integration, wallet or paid inference qualification",
+    "Viewport emulation not physical device touch, full accessibility audit, uptime or measured performance",
+    "Browser/keyboard/reload evidence remains integrator acquisition; no independent replay. v2 generated example HTML has the same exact hash as captured v1.",
+    "Full type analysis and 697-file whole-tree preservation remain supplied evidence; not independently reconstructed in focused copy.",
+    "Final checkpoint is deliberately post-review and not yet inspected; Standards axis remains separate."
+  ],
+  "allowed_writes": [
+    "REVIEW-SPEC.md",
+    "REVIEW-SPEC.json"
+  ],
+  "prior_spec_review": {
+    "workspace": "C:/Users/gabri/.codex/tmp/mobile-report-review-01a12b5f-spec",
+    "manifest_digest": "b7883b31273801e0dcc613892f24ebd42c17960bb08c314f6938a7fc4e65478a",
+    "findings": 0,
+    "test_passed": 17,
+    "assertions": 166
+  },
+  "checked_files": [
+    {
+      "path": "docs/mobile-decision-report/BASELINE.json",
+      "sha256": "d55f4340e2ab25f30ab057cd73980aafecc1e496377ae3fb219cb59bc96f9276",
+      "bytes": 107011,
+      "role": "candidate",
+      "actual_sha256": "d55f4340e2ab25f30ab057cd73980aafecc1e496377ae3fb219cb59bc96f9276",
+      "actual_bytes": 107011,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/BROWSER.json",
+      "sha256": "fd321a677f02e93f3373f566da0d7394061ca13aab46d3a3c1a13586cbdec280",
+      "bytes": 8825,
+      "role": "candidate",
+      "actual_sha256": "fd321a677f02e93f3373f566da0d7394061ca13aab46d3a3c1a13586cbdec280",
+      "actual_bytes": 8825,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/example.html",
+      "sha256": "1af025fb8585a895e0c3a07df9c4d97e77e158e438dc70b53b80561dbc8523f3",
+      "bytes": 12337,
+      "role": "candidate",
+      "actual_sha256": "1af025fb8585a895e0c3a07df9c4d97e77e158e438dc70b53b80561dbc8523f3",
+      "actual_bytes": 12337,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/example.json",
+      "sha256": "39af89cdba5787317a4f55c547a964f6f67a8d3ce2f8f137cc0d6334c715fdcf",
+      "bytes": 4135,
+      "role": "candidate",
+      "actual_sha256": "39af89cdba5787317a4f55c547a964f6f67a8d3ce2f8f137cc0d6334c715fdcf",
+      "actual_bytes": 4135,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/fixtures.json",
+      "sha256": "c2259a193ea1e541921b3ac0367acd1f3be2e14ad1061a4b29ff24effea9348e",
+      "bytes": 18758,
+      "role": "candidate",
+      "actual_sha256": "c2259a193ea1e541921b3ac0367acd1f3be2e14ad1061a4b29ff24effea9348e",
+      "actual_bytes": 18758,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-360-human.jpg",
+      "sha256": "6a4cb1ddcbfe1f2511a2f992d39987803c7c881fd46a49be22e5e832a51431bc",
+      "bytes": 40556,
+      "role": "candidate",
+      "actual_sha256": "6a4cb1ddcbfe1f2511a2f992d39987803c7c881fd46a49be22e5e832a51431bc",
+      "actual_bytes": 40556,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-360-top.jpg",
+      "sha256": "27eb008995ba835ee02cfb0990c136a8dcbc072622574ed6bd31e4ca7fe403aa",
+      "bytes": 40065,
+      "role": "candidate",
+      "actual_sha256": "27eb008995ba835ee02cfb0990c136a8dcbc072622574ed6bd31e4ca7fe403aa",
+      "actual_bytes": 40065,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-390-human.jpg",
+      "sha256": "050a0fa9fb868927fb5312a6793a0e46a45f7e7c0cd03a9c2aa27afbdb4f0899",
+      "bytes": 43889,
+      "role": "candidate",
+      "actual_sha256": "050a0fa9fb868927fb5312a6793a0e46a45f7e7c0cd03a9c2aa27afbdb4f0899",
+      "actual_bytes": 43889,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-390-top.jpg",
+      "sha256": "3971024edd3ee009fdd353abb7897fcd2f8d2d59ec4f9a834cf2827e23310bf4",
+      "bytes": 45165,
+      "role": "candidate",
+      "actual_sha256": "3971024edd3ee009fdd353abb7897fcd2f8d2d59ec4f9a834cf2827e23310bf4",
+      "actual_bytes": 45165,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/PRESERVATION.json",
+      "sha256": "c79304bfb41b54d9ecd2c489ff16f52d029ddb576d1e04e88c24df0400baf44e",
+      "bytes": 784,
+      "role": "candidate",
+      "actual_sha256": "c79304bfb41b54d9ecd2c489ff16f52d029ddb576d1e04e88c24df0400baf44e",
+      "actual_bytes": 784,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/README.md",
+      "sha256": "fe68632db6582b8fd2bd0453d70eb482358ce0606061413f93eb42db8381e238",
+      "bytes": 7867,
+      "role": "candidate",
+      "actual_sha256": "fe68632db6582b8fd2bd0453d70eb482358ce0606061413f93eb42db8381e238",
+      "actual_bytes": 7867,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/SPEC.md",
+      "sha256": "7fdb9f0f49ef469fb05e3d101e93f9bf2a454d84d716481f4f66b65fa97ea10b",
+      "bytes": 8040,
+      "role": "candidate",
+      "actual_sha256": "7fdb9f0f49ef469fb05e3d101e93f9bf2a454d84d716481f4f66b65fa97ea10b",
+      "actual_bytes": 8040,
+      "match": true
+    },
+    {
+      "path": "docs/mobile-decision-report/VERIFICATION.json",
+      "sha256": "092432258a831e967f79eca6d5b18db4252def3e6a5854733fe378f45fd2d2e4",
+      "bytes": 3306,
+      "role": "candidate",
+      "actual_sha256": "092432258a831e967f79eca6d5b18db4252def3e6a5854733fe378f45fd2d2e4",
+      "actual_bytes": 3306,
+      "match": true
+    },
+    {
+      "path": "src/mobile-decision-report/example.ts",
+      "sha256": "3836d01074eeb128d0e0e5390272baafb5212f9134320648bc365096512b4e1d",
+      "bytes": 1180,
+      "role": "candidate",
+      "actual_sha256": "3836d01074eeb128d0e0e5390272baafb5212f9134320648bc365096512b4e1d",
+      "actual_bytes": 1180,
+      "match": true
+    },
+    {
+      "path": "src/mobile-decision-report/export.test.ts",
+      "sha256": "e053b563d6c0040af98e115c2f59069e0b23b8c24e3f83d13f74250b7366dce6",
+      "bytes": 3928,
+      "role": "candidate",
+      "actual_sha256": "e053b563d6c0040af98e115c2f59069e0b23b8c24e3f83d13f74250b7366dce6",
+      "actual_bytes": 3928,
+      "match": true
+    },
+    {
+      "path": "src/mobile-decision-report/export.ts",
+      "sha256": "eb2fc9c1270b5d9f9532c5aafa6a346f4abdef6c060e54d44b0d81b2adae25ab",
+      "bytes": 13581,
+      "role": "candidate",
+      "actual_sha256": "eb2fc9c1270b5d9f9532c5aafa6a346f4abdef6c060e54d44b0d81b2adae25ab",
+      "actual_bytes": 13581,
+      "match": true
+    },
+    {
+      "path": "src/mobile-decision-report/fixtures.ts",
+      "sha256": "0c7bfe6b7287c0c89768fa70a5e0747bc011b6b693b388a404ab385b6acd3cb8",
+      "bytes": 1403,
+      "role": "candidate",
+      "actual_sha256": "0c7bfe6b7287c0c89768fa70a5e0747bc011b6b693b388a404ab385b6acd3cb8",
+      "actual_bytes": 1403,
+      "match": true
+    },
+    {
+      "path": "src/mobile-decision-report/preview.ts",
+      "sha256": "76e4191db3e809191dd40217927b3cf36eec3c6976b59fab107ae12d7492cae7",
+      "bytes": 737,
+      "role": "candidate",
+      "actual_sha256": "76e4191db3e809191dd40217927b3cf36eec3c6976b59fab107ae12d7492cae7",
+      "actual_bytes": 737,
+      "match": true
+    },
+    {
+      "path": "src/mobile-decision-report/report.test.ts",
+      "sha256": "1dbdc211309d58049de53e9e0a9b516bad7e77b1d4e40b0ccfc0ab1862050de0",
+      "bytes": 7030,
+      "role": "candidate",
+      "actual_sha256": "1dbdc211309d58049de53e9e0a9b516bad7e77b1d4e40b0ccfc0ab1862050de0",
+      "actual_bytes": 7030,
+      "match": true
+    },
+    {
+      "path": "src/mobile-decision-report/report.ts",
+      "sha256": "e072934421b8dc9f9f17aca87b1b294113a06084d3b42cb78f625cd17b575717",
+      "bytes": 12310,
+      "role": "candidate",
+      "actual_sha256": "e072934421b8dc9f9f17aca87b1b294113a06084d3b42cb78f625cd17b575717",
+      "actual_bytes": 12310,
+      "match": true
+    },
+    {
+      "path": "web/src/lib/dex-report.ts",
+      "sha256": "a0d748e9f4012c80bb355e5726e65400c915e06cfd23b2dc71695224c84c44ab",
+      "bytes": 13490,
+      "role": "unchanged_dependency",
+      "actual_sha256": "a0d748e9f4012c80bb355e5726e65400c915e06cfd23b2dc71695224c84c44ab",
+      "actual_bytes": 13490,
+      "match": true
+    },
+    {
+      "path": "web/src/lib/dex-report-example.ts",
+      "sha256": "a19cf4f79cf934c5c9e3a62f74abaddd04fa685909996f2a5b900b90d89d1800",
+      "bytes": 1691,
+      "role": "unchanged_dependency",
+      "actual_sha256": "a19cf4f79cf934c5c9e3a62f74abaddd04fa685909996f2a5b900b90d89d1800",
+      "actual_bytes": 1691,
+      "match": true
+    },
+    {
+      "path": "web/src/lib/dex-report.test.ts",
+      "sha256": "1cf93a0fbcb98881c5466f28cf194cfdd3a257825ee493ebe517dc5aa1b9f9fe",
+      "bytes": 7550,
+      "role": "unchanged_dependency",
+      "actual_sha256": "1cf93a0fbcb98881c5466f28cf194cfdd3a257825ee493ebe517dc5aa1b9f9fe",
+      "actual_bytes": 7550,
+      "match": true
+    }
+  ],
+  "changed_from_v1": [
+    {
+      "path": "docs/mobile-decision-report/README.md",
+      "old_sha256": "ef3de605c6dd536b5b2e31ecb09e1e817d4ee5939c32f0310ba0c50413d618e7",
+      "new_sha256": "fe68632db6582b8fd2bd0453d70eb482358ce0606061413f93eb42db8381e238"
+    },
+    {
+      "path": "docs/mobile-decision-report/VERIFICATION.json",
+      "old_sha256": "896f73e84a5218d77c6937d9966b9a5f94ea85bf61579a7fb99452c4d4210c29",
+      "new_sha256": "092432258a831e967f79eca6d5b18db4252def3e6a5854733fe378f45fd2d2e4"
+    },
+    {
+      "path": "src/mobile-decision-report/export.test.ts",
+      "old_sha256": "7d332cfc8142ed7b867f1259217c32c6bead2ad746359da627fc19dd2a02ed5b",
+      "new_sha256": "e053b563d6c0040af98e115c2f59069e0b23b8c24e3f83d13f74250b7366dce6"
+    },
+    {
+      "path": "src/mobile-decision-report/export.ts",
+      "old_sha256": "33486dbce3dde7c9f3e561fdda32dee4f44ea9ad601b4119af9b7c8971e255d0",
+      "new_sha256": "eb2fc9c1270b5d9f9532c5aafa6a346f4abdef6c060e54d44b0d81b2adae25ab"
+    }
+  ],
+  "delta_assessment": {
+    "M01": "Projection and financial facts unchanged. Independent combined punctuation/markup probe confirms JSON equals projector, original metadata and binding exact.",
+    "M07": "Display punctuation normalization precedes escaping; combined punctuation/script/ampersand/quotes probe passes without active markup. Export contract and CSP unchanged."
+  }
+}

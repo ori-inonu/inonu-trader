@@ -1,0 +1,166 @@
+{
+  "reviewedSourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "sourceChanged": false,
+  "criteriaChanged": false,
+  "independentReviewSha256": "85340b26dce722d56bb292caea6be8a3ff480f113da2b8ee1d708d9a7599b75c",
+  "postReviewBytesIndependentlyReviewed": false,
+  "separateResearchDocReview": {
+    "manifestSha256": "c90ada14c2adf7a63fcce378cff992f1396800fa417ea11b0579bec546e4d5c4",
+    "reportSha256": "087c2e0ebc814b61081e35991b4a9c4075cccf9d0ea6d67df495e57f5bcef0ba",
+    "frozenFiles": 81,
+    "wholeGoalApproved": false,
+    "postReviewStatusLinksIndependentlyReviewed": false
+  },
+  "changes": [
+    {
+      "path": "docs/real-integration/AUDIT-R8.json",
+      "previousSha256": "c44fc5f21801a96b1c4cfbe8c60d0680a9f05a1feccb6ae601e6bc9505500a3c",
+      "sha256": "b43444d8813df27ae6c2683c85b4f974c846691715a26cd73f62e05f9cbc2eb5"
+    },
+    {
+      "path": "docs/real-integration/CHECKPOINT.md",
+      "previousSha256": "dd10b45ea06d6cc987fafa6716327ad63d29a62dd0f69e8f8fca911700e284dd",
+      "sha256": "c03b54f3b2f1e813ebc0e2c3c420ba89bc72daf2e4db787f1136517e0f5ce8e8"
+    },
+    {
+      "path": "docs/real-integration/CONTRAST-AUDIT-DECISION.json",
+      "previousSha256": null,
+      "sha256": "4b61aa8f4b0f29dc467a1223e1459ae6d601d582d330fb455d16d5fb6d49d513"
+    },
+    {
+      "path": "docs/real-integration/CONTRAST-SOURCE-R8.json",
+      "previousSha256": null,
+      "sha256": "05257fbf07c82ec1eb714c6a4eb748de21342868a10536d0f420f05b2dcf24a5"
+    },
+    {
+      "path": "docs/real-integration/CONTRAST-SOURCE-R8.md",
+      "previousSha256": null,
+      "sha256": "a33065c0084a8e3c317f7a871ac5c7b064ad935bdf11d51d1a044a1f29cc2366"
+    },
+    {
+      "path": "docs/real-integration/DOC-REVIEW-MANIFEST-RESEARCH.json",
+      "previousSha256": null,
+      "sha256": "c90ada14c2adf7a63fcce378cff992f1396800fa417ea11b0579bec546e4d5c4"
+    },
+    {
+      "path": "docs/real-integration/FINAL-DOC-REVIEW-DECISION.json",
+      "previousSha256": null,
+      "sha256": "da0f296fc6e9fa175997ca5c7a27ea24345fbc1a672080f5a7d35870020f9a15"
+    },
+    {
+      "path": "docs/real-integration/G11-IPFS-RETRIEVAL.json",
+      "previousSha256": null,
+      "sha256": "510fa9c0fa08279b6161d1086735eacb4612b373fe58a35b4f0d46759ae557b7"
+    },
+    {
+      "path": "docs/real-integration/G11-METADATA-CONCLUSION.md",
+      "previousSha256": null,
+      "sha256": "98945ef2773b3f6951846549ffa55c947df23adad40f8a952e4a5a8ed354ffff"
+    },
+    {
+      "path": "docs/real-integration/G11-METADATA-RESEARCH-DECISION.json",
+      "previousSha256": null,
+      "sha256": "5fe8fb277ebf4f077235009661fd468d702b1530f45f3a898a0d64dc08b39377"
+    },
+    {
+      "path": "docs/real-integration/G11-PROBE-STRATEGY-ABSTENTION.json",
+      "previousSha256": null,
+      "sha256": "e1cef466a835c876e0410d1240327db182230139ea841c31b5775d29fc09e6bc"
+    },
+    {
+      "path": "docs/real-integration/G11-PUBLIC-METADATA-READ.json",
+      "previousSha256": null,
+      "sha256": "e73c0a92cc3309043859074481a2564da15efd50353b4135ffeeb39d9ea547a0"
+    },
+    {
+      "path": "docs/real-integration/G11-PUBLIC-ROUTER-READ.json",
+      "previousSha256": null,
+      "sha256": "2746f73b797cf3c3bf82f0a77faaffb94f5ccf3a08696d4cf5a9e3633ca6033b"
+    },
+    {
+      "path": "docs/real-integration/G11-RESEARCH-DECISION.json",
+      "previousSha256": null,
+      "sha256": "bf9767bb77f0ebf073d0b6795aa6246d1e1c2115a871c207b1fef5a9d7d43e17"
+    },
+    {
+      "path": "docs/real-integration/G11-SOURCE-RESEARCH.md",
+      "previousSha256": null,
+      "sha256": "fe8155bbd38c72f32202340c5ecec351fe0064de94016f92b7c3374316f58b5c"
+    },
+    {
+      "path": "docs/real-integration/G11-SOURCIFY-LOOKUP.json",
+      "previousSha256": null,
+      "sha256": "19f4498eb99c443716a3788dd7c03c5e72ab563f4f8e6b9e9452010cfc599198"
+    },
+    {
+      "path": "docs/real-integration/MATRIZ-G01-G17.md",
+      "previousSha256": "6875da22c3805f8f25dd317e6a40dda488fe6edee63e7fb3a85f3aba655c20e0",
+      "sha256": "b702034cb1e336465ef45abcbba593cdd2fc254f75ff79c4ebbc943b66fc258e"
+    },
+    {
+      "path": "docs/real-integration/R6-REGRESSION-EVIDENCE.json",
+      "previousSha256": "866327a8bffab379c06d390cabde2813325d850792b865b90411bed67bb6466e",
+      "sha256": "5728e1867f550dd78817e146716330ce878341214d4d919c16b149bb11e7c2dc"
+    },
+    {
+      "path": "docs/real-integration/research/fetch-okx-ipfs-g11-01a12b5f.ts",
+      "previousSha256": null,
+      "sha256": "cfe1487b078f8c6230ae6f611b72a7eb2e38160306fc42d2c05b1c0d7377fb45"
+    },
+    {
+      "path": "docs/real-integration/research/fetch-okx-sourcify-g11-01a12b5f.ts",
+      "previousSha256": null,
+      "sha256": "0c570b5826e8f756c18582392d899763c68cd3258b5d816dacdafa95eb2a8c7d"
+    },
+    {
+      "path": "docs/real-integration/research/probe-okx-metadata-g11-01a12b5f.ts",
+      "previousSha256": null,
+      "sha256": "cd4875033832f1dc3f1afc28e90c5d69f27296199b9581d669299c6479a072a0"
+    },
+    {
+      "path": "docs/real-integration/research/probe-okx-router-g11-01a12b5f.ts",
+      "previousSha256": null,
+      "sha256": "21bf1784cfb21bba8551616130c380073ab9a6515a40290ff9dd5b1bd5acadc1"
+    },
+    {
+      "path": "docs/real-integration/REVIEW-R8.md",
+      "previousSha256": null,
+      "sha256": "85340b26dce722d56bb292caea6be8a3ff480f113da2b8ee1d708d9a7599b75c"
+    },
+    {
+      "path": "docs/real-integration/REVIEW-RESEARCH-LINK.json",
+      "previousSha256": null,
+      "sha256": "9b0c38804e823dddaac1a351cef93cb9573de730bb75af981ed8db6cdcf8915b"
+    },
+    {
+      "path": "docs/real-integration/REVIEW-RESEARCH.md",
+      "previousSha256": null,
+      "sha256": "087c2e0ebc814b61081e35991b4a9c4075cccf9d0ea6d67df495e57f5bcef0ba"
+    },
+    {
+      "path": "docs/real-integration/router-runtime-143.hex",
+      "previousSha256": null,
+      "sha256": "8c43df13583eb5fa911ff74d190b36ad3dc75fc3d16bc55dab5b2f5d116c8b10"
+    },
+    {
+      "path": "docs/real-integration/router-runtime-196.hex",
+      "previousSha256": null,
+      "sha256": "58c99c83f0a181397997b7c8f687941f033f7aac9a6fe6281ca1495983fb6581"
+    },
+    {
+      "path": "docs/real-integration/router-sourcify-143.json",
+      "previousSha256": null,
+      "sha256": "8a00ffebe9bcc0c920b72e0c858a6cb9708af39f5b216da57b7128d51ef9b060"
+    },
+    {
+      "path": "docs/real-integration/router-sourcify-196.json",
+      "previousSha256": null,
+      "sha256": "7bbe871ca5a6e0c1140cb3050aef5cd5daaa5edddd2daaa80e476778b58ec0f9"
+    },
+    {
+      "path": "docs/real-integration/VERIFICACAO.md",
+      "previousSha256": "6ff9f26b69e39f403b1be9a4c5f364bf79aa7314b8bbd818acc00f3bb615fd35",
+      "sha256": "7c1000827d3dbf48ccfb3084f690672785f4b0a6875ada3aef83e37cfb038d43"
+    }
+  ]
+}

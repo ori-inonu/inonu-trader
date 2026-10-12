@@ -1,0 +1,886 @@
+{
+  "health": {
+    "httpStatus": 200,
+    "data": {
+      "mode": "paper",
+      "executionEnabled": false,
+      "services": {
+        "onchainos": {
+          "configured": false,
+          "access": "blocked",
+          "missing": [
+            "OKX_WEB3_API_KEY",
+            "OKX_WEB3_API_SECRET",
+            "OKX_WEB3_API_PASSPHRASE"
+          ]
+        },
+        "jev": {
+          "credentialPresent": false,
+          "authorized": false,
+          "model": "jev-latest",
+          "costUsdPerMillion": null,
+          "maxCalls": 10
+        },
+        "worker": {
+          "running": true,
+          "intervalMs": 5000,
+          "lastCycleAtMs": 1791738414291,
+          "fatal": null,
+          "recoveredTailBytes": 0
+        },
+        "publicMarket": {
+          "running": true,
+          "intervalMs": 60000,
+          "lastCollectionAtMs": 1791738381372,
+          "lastError": null,
+          "source": "okx-public-v5"
+        }
+      },
+      "networks": [
+        {
+          "chainIndex": "196",
+          "name": "X Layer"
+        },
+        {
+          "chainIndex": "143",
+          "name": "Monad"
+        }
+      ],
+      "quotePairConfigured": false,
+      "web3Origin": "https://web3.okx.com",
+      "ttlMs": {
+        "quote": 15000,
+        "market": 60000,
+        "inventory": 60000
+      },
+      "dependencies": [
+        "Configure OKX_WEB3_API_KEY no ambiente local do aplicativo",
+        "Configure OKX_WEB3_API_SECRET no ambiente local do aplicativo",
+        "Configure OKX_WEB3_API_PASSPHRASE no ambiente local do aplicativo",
+        "Configure TYPESAFE_AI_API_KEY do aplicativo",
+        "Consumo Jev do aplicativo ainda não autorizado na configuração",
+        "Autorize a consulta Web3 da carteira conectada",
+        "Configure o par e a quantidade em unidades mínimas para consultar DEX"
+      ],
+      "quota": {
+        "calls": {
+          "free": 0,
+          "basic": 0,
+          "premium": 0,
+          "unknown": 0,
+          "public": 0
+        },
+        "attempts": {
+          "free": 0,
+          "basic": 0,
+          "premium": 0,
+          "unknown": 0,
+          "public": 0
+        },
+        "retries": 0,
+        "totalAttempts": 0,
+        "costKnown": true
+      },
+      "worker": {
+        "running": true,
+        "intervalMs": 5000,
+        "lastCycleAtMs": 1791738414291,
+        "fatal": null,
+        "recoveredTailBytes": 0
+      },
+      "walletConsent": {
+        "active": false,
+        "identityKey": null,
+        "chainIndex": null,
+        "revision": null
+      },
+      "jevCalls": {
+        "reserved": 0,
+        "limit": 10
+      }
+    }
+  },
+  "publicMarket": {
+    "httpStatus": 200,
+    "data": {
+      "source": "okx-public-v5",
+      "mode": "real",
+      "status": "blocked",
+      "observedAtMs": 1791738381372,
+      "expiresAtMs": 1791738381372,
+      "instrument": {
+        "instType": "SWAP",
+        "instId": "BTC-USDT-SWAP",
+        "state": "live",
+        "baseCcy": null,
+        "quoteCcy": null,
+        "settleCcy": "USDT",
+        "ctValCcy": "BTC",
+        "ctType": "linear",
+        "ctVal": "0.01",
+        "ctMult": "1",
+        "tickSz": "0.1",
+        "lotSz": "0.01",
+        "minSz": "0.01",
+        "maxLeverage": 100,
+        "listTimeMs": 1573557408000,
+        "expTimeMs": null
+      },
+      "funding": {
+        "instId": "BTC-USDT-SWAP",
+        "method": "current_period",
+        "fundingRate": "-0.0000080302217484",
+        "nextFundingRate": null,
+        "fundingTimeMs": 1791763200000,
+        "nextFundingTimeMs": 1791792000000,
+        "prevFundingTimeMs": 1791734400000,
+        "intervalMs": 28800000,
+        "minFundingRate": "-0.00375",
+        "maxFundingRate": "0.00375",
+        "premium": "-0.0005656047854459",
+        "settState": "settled",
+        "settFundingRate": "-0.0000000008035808",
+        "tsMs": 1791738442191
+      },
+      "mark": {
+        "instId": "BTC-USDT-SWAP",
+        "markPx": "83761.6",
+        "tsMs": 1791738450840
+      },
+      "capability": {
+        "id": "funding.public-btc",
+        "family": "funding",
+        "source": "okx-public-v5",
+        "documented": true,
+        "implemented": true,
+        "exercisedReal": true,
+        "integrated": true,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Obter timestamp de funding válido e compatível com o relógio de coleta.",
+        "nextRequirement": "Obter timestamp de funding válido e compatível com o relógio de coleta."
+      },
+      "dependencies": [
+        "Obter timestamp de funding válido e compatível com o relógio de coleta.",
+        "Obter timestamp de mark válido e compatível com o relógio de coleta.",
+        "Coleta pública expirada; aguardar atualização do worker."
+      ],
+      "requests": [
+        {
+          "method": "GET",
+          "endpoint": "/api/v5/public/instruments",
+          "httpStatus": 200,
+          "code": "0",
+          "requestedAtMs": 1791738379023,
+          "receivedAtMs": 1791738379496
+        },
+        {
+          "method": "GET",
+          "endpoint": "/api/v5/public/funding-rate",
+          "httpStatus": 200,
+          "code": "0",
+          "requestedAtMs": 1791738379500,
+          "receivedAtMs": 1791738380367
+        },
+        {
+          "method": "GET",
+          "endpoint": "/api/v5/public/mark-price",
+          "httpStatus": 200,
+          "code": "0",
+          "requestedAtMs": 1791738380369,
+          "receivedAtMs": 1791738381372
+        }
+      ]
+    }
+  },
+  "paper": {
+    "httpStatus": 200,
+    "data": {
+      "cycle": {
+        "id": "9692f49c-5f1b-4844-b59d-b1645249a932",
+        "sequence": 132,
+        "startedAtMs": 1791738414291,
+        "finishedAtMs": 1791738414291,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      "history": [
+        {
+          "id": "9692f49c-5f1b-4844-b59d-b1645249a932",
+          "sequence": 132,
+          "startedAtMs": 1791738414291,
+          "finishedAtMs": 1791738414291,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "10e6fd23-17fd-4f96-876d-2db7344472b2",
+          "sequence": 131,
+          "startedAtMs": 1791738409262,
+          "finishedAtMs": 1791738409262,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "c2aa6961-2a6f-4b7f-a8c7-98bcefb052a3",
+          "sequence": 130,
+          "startedAtMs": 1791738404241,
+          "finishedAtMs": 1791738404242,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "dec5ef62-3569-49db-b0b7-0997c884db71",
+          "sequence": 129,
+          "startedAtMs": 1791738399207,
+          "finishedAtMs": 1791738399207,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "94e76dba-2a09-46f0-a18b-0e061c515b25",
+          "sequence": 128,
+          "startedAtMs": 1791738394158,
+          "finishedAtMs": 1791738394178,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "36947de1-e827-4d4b-a0d8-f8634e391345",
+          "sequence": 127,
+          "startedAtMs": 1791738389109,
+          "finishedAtMs": 1791738389110,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "5d59a847-11a6-44ce-a0f6-248f311c8f1c",
+          "sequence": 126,
+          "startedAtMs": 1791738384039,
+          "finishedAtMs": 1791738384040,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "1744938d-e867-43f3-b55a-e16a932d2cd1",
+          "sequence": 125,
+          "startedAtMs": 1791738379006,
+          "finishedAtMs": 1791738379007,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "5f25da87-271f-4f68-88c9-5411e465a99a",
+          "sequence": 124,
+          "startedAtMs": 1791738306041,
+          "finishedAtMs": 1791738306043,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "58a6242c-c7f4-41ac-8b4a-c8336a392ac1",
+          "sequence": 123,
+          "startedAtMs": 1791738300928,
+          "finishedAtMs": 1791738300928,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "1a844df0-06da-4c55-8c26-f01d4d2b7e33",
+          "sequence": 122,
+          "startedAtMs": 1791738295872,
+          "finishedAtMs": 1791738295872,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "fa048c71-4769-404a-b685-7d53d1f26049",
+          "sequence": 121,
+          "startedAtMs": 1791738290857,
+          "finishedAtMs": 1791738290858,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "a56ca216-f74e-409c-8ee9-c9de71ba6e51",
+          "sequence": 120,
+          "startedAtMs": 1791738285768,
+          "finishedAtMs": 1791738285768,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "2cc7f267-9ce1-458f-a420-76ba0dd6c1fa",
+          "sequence": 119,
+          "startedAtMs": 1791738280652,
+          "finishedAtMs": 1791738280652,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "0b6bcb9d-82f6-42d9-838b-079680a69112",
+          "sequence": 118,
+          "startedAtMs": 1791738275635,
+          "finishedAtMs": 1791738275636,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "bc11f913-3189-45da-be66-768632fca813",
+          "sequence": 117,
+          "startedAtMs": 1791738270621,
+          "finishedAtMs": 1791738270621,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "98a15db8-6706-4212-8a28-7c7d25cdf158",
+          "sequence": 116,
+          "startedAtMs": 1791738265596,
+          "finishedAtMs": 1791738265597,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "b848c458-6aa3-4d7d-a590-90d558b089ce",
+          "sequence": 115,
+          "startedAtMs": 1791738260512,
+          "finishedAtMs": 1791738260512,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "fe38dab0-29da-4dcd-97af-55c18c089cac",
+          "sequence": 114,
+          "startedAtMs": 1791738255499,
+          "finishedAtMs": 1791738255499,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "44261169-3289-480e-8596-20358275e0a2",
+          "sequence": 113,
+          "startedAtMs": 1791738250486,
+          "finishedAtMs": 1791738250486,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "5415ee5d-e745-4831-8020-13d35aca2982",
+          "sequence": 112,
+          "startedAtMs": 1791738245474,
+          "finishedAtMs": 1791738245474,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "fa47015a-68ee-4050-92a2-97d0a2de4ec0",
+          "sequence": 111,
+          "startedAtMs": 1791738240392,
+          "finishedAtMs": 1791738240392,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "532e6e94-57a8-4af7-824f-5067a4dfc23d",
+          "sequence": 110,
+          "startedAtMs": 1791738235371,
+          "finishedAtMs": 1791738235372,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "3471b2a2-dac6-4e1d-9f79-04e222a01a38",
+          "sequence": 109,
+          "startedAtMs": 1791738230352,
+          "finishedAtMs": 1791738230352,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "7251a4db-fc28-42ed-b7f1-441ff0d505c5",
+          "sequence": 108,
+          "startedAtMs": 1791738225329,
+          "finishedAtMs": 1791738225329,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "c4bd3bc9-3deb-49a2-8496-721827debf60",
+          "sequence": 107,
+          "startedAtMs": 1791738220304,
+          "finishedAtMs": 1791738220304,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "7c6f8191-1f42-4ff9-bd3d-3288e819e8fa",
+          "sequence": 106,
+          "startedAtMs": 1791738215289,
+          "finishedAtMs": 1791738215289,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "c7a84953-203b-489a-baf6-6548c745eb0d",
+          "sequence": 105,
+          "startedAtMs": 1791738210248,
+          "finishedAtMs": 1791738210248,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "73495a4f-2c25-4ee4-baf4-936a73b1c540",
+          "sequence": 104,
+          "startedAtMs": 1791738205229,
+          "finishedAtMs": 1791738205229,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        },
+        {
+          "id": "4cd72a8b-a2b2-4722-8ab3-a53092edd0ee",
+          "sequence": 103,
+          "startedAtMs": 1791738200202,
+          "finishedAtMs": 1791738200203,
+          "mode": "paper",
+          "core": null,
+          "decision": {
+            "choice": "hold",
+            "status": "blocked",
+            "model": null,
+            "latencyMs": null,
+            "inputTokens": null,
+            "costUsd": null,
+            "called": false,
+            "reasons": [
+              "Consentimento Web3 ausente"
+            ]
+          },
+          "realizedPnlUsd": null,
+          "executionEnabled": false
+        }
+      ]
+    }
+  },
+  "observedAtMs": 1791738417526
+}

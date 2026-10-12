@@ -1,27 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  createWalletSession,
-  discoverOkxProvider,
-  type OkxDiscoverySurface,
-  type WalletSession,
-  type WalletSnapshot,
-} from "./okx-wallet";
-
-const initialSnapshot: WalletSnapshot = {
-  status: "disconnected",
-  account: null,
-  chainId: null,
-  balances: null,
-  observedAtMs: null,
-  error: null,
-};
+import { useEffect, useSyncExternalStore } from "react";
+import type { OkxDiscoverySurface, WalletSnapshot } from "./okx-wallet";
+import { getBrowserWalletStore, walletServerSnapshot } from "./wallet-store";
 
 export interface UseOkxWalletResult {
   available: boolean;
   ready: boolean;
   snapshot: WalletSnapshot;
+  revision: number;
+  identityKey: string | null;
   connect(): Promise<void>;
   refresh(): Promise<void>;
   switchToMonad(): Promise<void>;
@@ -29,53 +17,13 @@ export interface UseOkxWalletResult {
   disconnect(): void;
 }
 
-/** Browser-only adapter. Discovery never requests account access. */
+/** Discovery and connection remain local. Sharing a session does not grant query consent. */
 export function useOkxWallet(): UseOkxWalletResult {
-  const sessionRef = useRef<WalletSession | null>(null);
-  const [available, setAvailable] = useState(false);
-  const [ready, setReady] = useState(false);
-  const [snapshot, setSnapshot] = useState(initialSnapshot);
-
+  const store = getBrowserWalletStore();
+  const state = useSyncExternalStore(store.subscribe, store.getSnapshot, () => walletServerSnapshot);
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    let currentSession: WalletSession | null = null;
-    let unsubscribe: (() => void) | null = null;
-    const stopDiscovery = discoverOkxProvider(
-      window as unknown as OkxDiscoverySurface,
-      (provider) => {
-        if (currentSession) {
-          unsubscribe?.();
-          currentSession.dispose();
-        }
-        currentSession = createWalletSession(provider);
-        sessionRef.current = currentSession;
-        unsubscribe = currentSession.subscribe(setSnapshot);
-        setSnapshot(currentSession.getSnapshot());
-        setAvailable(true);
-      },
-    );
-    setReady(true);
-
-    return () => {
-      stopDiscovery();
-      unsubscribe?.();
-      currentSession?.dispose();
-      if (sessionRef.current === currentSession) sessionRef.current = null;
-    };
-  }, []);
-
-  const connect = useCallback(() => sessionRef.current?.connect() ?? Promise.resolve(), []);
-  const refresh = useCallback(() => sessionRef.current?.refresh() ?? Promise.resolve(), []);
-  const switchToMonad = useCallback(
-    () => sessionRef.current?.switchToMonad() ?? Promise.resolve(),
-    [],
-  );
-  const switchToXLayer = useCallback(
-    () => sessionRef.current?.switchToXLayer() ?? Promise.resolve(),
-    [],
-  );
-  const disconnect = useCallback(() => sessionRef.current?.disconnect(), []);
-
-  return { available, ready, snapshot, connect, refresh, switchToMonad, switchToXLayer, disconnect };
+    return store.retain(window as unknown as OkxDiscoverySurface);
+  }, [store]);
+  return { ...state, connect: store.connect, refresh: store.refresh, switchToMonad: store.switchToMonad, switchToXLayer: store.switchToXLayer, disconnect: store.disconnect };
 }

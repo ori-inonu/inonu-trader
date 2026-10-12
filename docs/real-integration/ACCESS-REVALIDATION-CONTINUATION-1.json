@@ -1,0 +1,35 @@
+{
+  "kind": "bounded-current-access-revalidation",
+  "observedAt": "2026-10-11T21:25:56.599238+00:00",
+  "scope": "Only four authorized project directories and required names in inherited process environment; no global secret search.",
+  "workspaceConfigurations": [
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\.env",
+      "configuredNamesOnly": {
+        "OKX_WEB3_API_KEY": false,
+        "OKX_WEB3_API_SECRET": false,
+        "OKX_WEB3_API_PASSPHRASE": false,
+        "TYPESAFE_AI_API_KEY": true,
+        "REAL_JEV_CONSUMPTION_AUTHORIZED": false
+      }
+    }
+  ],
+  "processConfiguredNamesOnly": {
+    "OKX_WEB3_API_KEY": false,
+    "OKX_WEB3_API_SECRET": false,
+    "OKX_WEB3_API_PASSPHRASE": false,
+    "TYPESAFE_AI_API_KEY": false,
+    "REAL_JEV_CONSUMPTION_AUTHORIZED": false
+  },
+  "credentialValuesEmitted": false,
+  "credentialsCopied": false,
+  "credentialNetworkRequests": 0,
+  "accessEntitlementProven": false,
+  "ownerWalletConsentProven": false,
+  "appConsumptionAuthorizationProven": false,
+  "financialExecutionEnabled": false,
+  "productFilesChecked": 447,
+  "productFilesChanged": [],
+  "criteriaSha256": "cfa90cac735e9a838a0c4bc593276c83757905e7c5fedcd2414e499b1dad9e08",
+  "wholeGoalComplete": false
+}

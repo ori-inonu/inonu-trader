@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import CommandCenter from "@/components/CommandCenter/CommandCenter";
 import ConsoleBackdrop, { type BackdropTone } from "@/components/ConsoleBackdrop/ConsoleBackdrop";
 import { DecisionCenterView } from "@/components/DecisionCenter/DecisionCenter";
@@ -14,6 +14,8 @@ import JevCore from "@/components/JevCore/JevCore";
 import KpiSurface from "@/components/KpiSurface/KpiSurface";
 import MultichainPanel from "@/components/MultichainPanel/MultichainPanel";
 import Rail from "@/components/Rail/Rail";
+import { RealPipeline } from "@/components/RealPipeline/RealPipeline";
+import PublicMarket from "@/components/RealPipeline/PublicMarket";
 import SystemOneView from "@/components/SystemOne/SystemOne";
 import TelemetryStream from "@/components/TelemetryStream/TelemetryStream";
 import WalletPanel from "@/components/WalletPanel/WalletPanel";
@@ -39,6 +41,26 @@ function feedRate(events: { ts: number }[]): string {
 }
 
 export default function Page() {
+  const [legacyOpen, setLegacyOpen] = useState(false);
+  return <>
+    <ConsoleBackdrop tone="neutral" />
+    <main className={styles.primary}>
+      <header className={styles.primaryHeader}>
+        <div><p>Central de observação</p><h1>INONU TRADER</h1><span>OKX Wallet · OnchainOS · Jev</span></div>
+        <strong>Paper · execução financeira desativada</strong>
+      </header>
+      <section id="pipeline" aria-label="Integração real OKX e Jev"><RealPipeline apiBase={API_URL} /></section>
+      <PublicMarket apiBase={API_URL} />
+      <details className={styles.legacy} onToggle={event => setLegacyOpen(event.currentTarget.open)}>
+        <summary>Console Kuru e análises complementares</summary>
+        <p>O feed, os blocos e o executor Kuru precisam do backend legado e de sua configuração própria. O servidor independente do pipeline não fornece esse feed. As análises locais continuam disponíveis nesta seção.</p>
+        {legacyOpen && <LegacyConsole />}
+      </details>
+    </main>
+  </>;
+}
+
+function LegacyConsole() {
   const feed = useFeed(API_URL);
   const operator = useOperatorCenter(API_URL);
   const systemOne = useSystemOne(API_URL);

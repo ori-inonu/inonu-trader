@@ -1,0 +1,283 @@
+{
+  "baseline": "96d30cc387a6520aba23199e25d0d4ec71a7ad88",
+  "candidate": "2ed0324af1d539ea89e052b52309ec6365b4d2bb",
+  "preexisting_tracked_files_identical": true,
+  "log_checks": [
+    {
+      "log": "final-main-native-build.log",
+      "sha256": "00e3ecbf60dd8f06ffc6dbddd8a525833e3dc8b6e19f8225ad272a011909df02",
+      "exit_file": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-main-native-build.exit",
+      "exit_value": "0"
+    },
+    {
+      "log": "final-main-web.log",
+      "sha256": "44e348050f7807a9cd09b57f29be76d831717b6b3a71d9529ee53cb708e1ea73",
+      "exit_file": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-main-web.exit",
+      "exit_value": "0"
+    },
+    {
+      "log": "operator-7bce1e8-root.log",
+      "sha256": "1b9b112387f0d6f98fd04c81df661706788f3a991bd70ac43269bade84c69904",
+      "exit_file": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/operator-7bce1e8-root.exit",
+      "exit_value": "0"
+    },
+    {
+      "log": "operator-7bce1e8-types.log",
+      "sha256": "99fbe0fda0c8af80b347b8d5e72a970ebf4f4f6865fda925a2a1c344ef0f75c5",
+      "exit_file": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/operator-7bce1e8-types.exit",
+      "exit_value": "0"
+    }
+  ],
+  "cached_refs": [
+    {
+      "ref": "refs/heads/codex/inonu-system-one-safety",
+      "tip": "dd1ae31fe24e9ae31d2bcdcad099b07c1d46c4af",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/codex/inonu-trader-preparation",
+      "tip": "12394df44e1bd28e424fb55db462eeadf7168d41",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/codex/jev-panel-integration",
+      "tip": "2ed0324af1d539ea89e052b52309ec6365b4d2bb",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/central-ui",
+      "tip": "2f71f8ff186e77863c8095bd2aef8e8fb01a11cf",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/derivatives-and-live-qualification",
+      "tip": "62b6453e61da47928ae5086a93ad24d139edcdb3",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/jev-command-center",
+      "tip": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/jev-decision-lab",
+      "tip": "ab30273e4c0d322fe49efc888ff49061224aa32f",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/lab-real-jev",
+      "tip": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/okx-operator-r8",
+      "tip": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/onchainos-data-clients",
+      "tip": "60133ceb718d41f573fbb343e53d14248c7989ee",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/onchainos-inventory",
+      "tip": "3edfd5c5e7817f032b01f4d70ea3e190219e0483",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/feature/policy-envelope",
+      "tip": "026abdd657656901aa4d906d3f0093497011f570",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/hermes/release-v0.0.2",
+      "tip": "a14a425f9af7ceae6a24b02b32ba9fe15ce4203f",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/hermes/release-v0.0.2-ready",
+      "tip": "a2fa020ca827d283d50dfb3ade282808a7801128",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/hermes/release-v0.0.2-receipt-safety",
+      "tip": "ee4249de3be554a0f0eccfbf20d77a7f0d739cec",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/integration/v0.0.2",
+      "tip": "c352f82755862f4a4619d5e0d4411e2194f8d6a8",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/main",
+      "tip": "96d30cc387a6520aba23199e25d0d4ec71a7ad88",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/worktree-agent-a8cd8353a9c2206b8",
+      "tip": "85141d12266f824deaf7532c8b64ccb860dfe7de",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/heads/worktree-agent-ac3b992be12068e8d",
+      "tip": "667a32761f775497bc7b270b412a18e6922ab632",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/remotes/origin/codex/inonu-trader-ui",
+      "tip": "0620787aae1ba2ef1b0cf217cbd65670463ac48a",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/remotes/origin/codex/okx-readonly",
+      "tip": "ed005440ff09b46fc5b10ae1d4ed74e94f70b494",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/remotes/origin/main",
+      "tip": "b587759e459ea049590102e54a0b07800864cdc3",
+      "contained_in_candidate": true
+    },
+    {
+      "ref": "refs/remotes/upstream/main",
+      "tip": "b587759e459ea049590102e54a0b07800864cdc3",
+      "contained_in_candidate": true
+    }
+  ],
+  "worktrees": [
+    {
+      "path": "C:/Users/gabri/jev-trader",
+      "head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+      "changed_paths": 36,
+      "status": [
+        " D web/.uistub.js",
+        " M web/src/app/page.module.css",
+        " M web/src/components/DecisionCenter/DecisionCenter.module.css",
+        " M web/src/components/DecisionCenter/DecisionCenter.tsx",
+        " M web/src/components/DepthLadder/DepthLadder.module.css",
+        " M web/src/components/DepthLadder/DepthLadder.tsx",
+        " M web/src/components/DexReportPanel/DexReportPanel.module.css",
+        " M web/src/components/KpiSurface/KpiSurface.module.css",
+        " M web/src/components/MultichainPanel/MultichainPanel.module.css",
+        " M web/src/components/TelemetryStream/TelemetryStream.module.css",
+        " M web/src/components/WalletPanel/WalletPanel.module.css",
+        " M web/src/lib/okx-wallet.ts",
+        " M web/src/lib/operator-center.test.ts",
+        "?? docs/CENTRAL-JEV-CHECKPOINT.md",
+        "?? docs/CENTRAL-JEV-FINANCIAL-REVIEW.md",
+        "?? docs/CENTRAL-JEV-INTEGRATION-78ae090.md",
+        "?? docs/CENTRAL-JEV-OPERATOR-INTEGRATION-SPEC.md",
+        "?? docs/CENTRAL-JEV-OPERATOR-REVIEW-7bce1e8.md",
+        "?? docs/CENTRAL-JEV-OPERATOR-VERIFICATION-7bce1e8.md",
+        "?? docs/CENTRAL-JEV-REMOTE-INTEGRATION-SPEC.md",
+        "?? docs/CENTRAL-JEV-REVIEW-1c50fdf.md",
+        "?? docs/CENTRAL-JEV-REVIEW-FIX-SPEC.md",
+        "?? docs/CENTRAL-JEV-VERIFICATION-1c50fdf.md",
+        "?? docs/CENTRAL-JEV-ZERO-CEILING-REGRESSION.md",
+        "?? docs/OKX-HISTORICAL-ARCHIVES.md",
+        "?? docs/WALLET-TRANSACTION-PREFLIGHT.md",
+        "?? docs/okx-ecosystem-v1/",
+        "?? docs/okx-leaderboard-v1/",
+        "?? docs/okx-portfolio-v1/CAPITAL-BOUNDARY-AUDIT.md",
+        "?? docs/okx-portfolio-v1/VALUATION-DIAGNOSTICS-SPEC.md",
+        "?? scripts/okx-archive-discovery.test.ts",
+        "?? scripts/okx-archive-discovery.ts",
+        "?? src/onchainos/archive-discovery.test.ts",
+        "?? src/onchainos/archive-discovery.ts",
+        "?? web/src/lib/wallet-transaction-preflight.test.ts",
+        "?? web/src/lib/wallet-transaction-preflight.ts"
+      ]
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/inonu-system-one-safety/jev-trader",
+      "head": "dd1ae31fe24e9ae31d2bcdcad099b07c1d46c4af",
+      "changed_paths": 27,
+      "status": [
+        " M src/operator/executor.expiry.test.ts",
+        " M src/operator/ledger.ts",
+        "?? docs/OPERATOR-GETTER-RECOVERY-20261011.md",
+        "?? docs/OPERATOR-MODEL-BOUNDARY-CHECKPOINT.md",
+        "?? docs/OPERATOR-MODEL-BOUNDARY-SPEC.md",
+        "?? docs/OPERATOR-MODEL-BOUNDARY-VERIFICATION-20261011.md",
+        "?? docs/OPERATOR-MODEL-CYCLE-PROPOSAL.json",
+        "?? docs/OPERATOR-MODEL-CYCLE-REVIEW.json",
+        "?? docs/OPERATOR-MODEL-FINAL-AUDIT.md",
+        "?? docs/OPERATOR-PERSISTENCE-CHECKPOINT-20261011.md",
+        "?? docs/OPERATOR-PERSISTENCE-CYCLE-PROPOSAL.json",
+        "?? docs/OPERATOR-PERSISTENCE-CYCLE-REVIEW.json",
+        "?? docs/OPERATOR-PERSISTENCE-CYCLE-TEMPLATE.json",
+        "?? docs/OPERATOR-PERSISTENCE-FINAL-EVIDENCE-20261011.md",
+        "?? docs/OPERATOR-PERSISTENCE-REVIEW-RECOVERY-20261011.md",
+        "?? docs/OPERATOR-PERSISTENCE-SCOPE-REVIEW.md",
+        "?? docs/OPERATOR-PERSISTENCE-SPEC.md",
+        "?? docs/SYSTEM-ONE-EXPOSURE-CHECKPOINT.md",
+        "?? docs/SYSTEM-ONE-EXPOSURE-DECIMAL-CHECKPOINT.md",
+        "?? docs/SYSTEM-ONE-EXPOSURE-DECIMAL-VERIFICATION.md",
+        "?? docs/SYSTEM-ONE-EXPOSURE-FINAL-AUDIT.md",
+        "?? docs/SYSTEM-ONE-EXPOSURE-REVIEW-AUDIT.md",
+        "?? docs/SYSTEM-ONE-EXPOSURE-SPEC.md",
+        "?? docs/research/OKX-AUTH-CUSTODY-MATRIX-20261011.md",
+        "?? docs/research/ONCHAIN-CAPTURE-DECISION-GAP-20261011.md",
+        "?? docs/research/ONCHAIN-OS-RECHECK-20261011.md",
+        "?? src/operator/ledger.persistence.test.ts"
+      ]
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/jev-panel-integration/jev-trader",
+      "head": "2ed0324af1d539ea89e052b52309ec6365b4d2bb",
+      "changed_paths": 0,
+      "status": []
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/.claude/worktrees/agent-a8cd8353a9c2206b8",
+      "head": "85141d12266f824deaf7532c8b64ccb860dfe7de",
+      "changed_paths": 0,
+      "status": []
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/.claude/worktrees/agent-ac3b992be12068e8d",
+      "head": "667a32761f775497bc7b270b412a18e6922ab632",
+      "changed_paths": 0,
+      "status": []
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader-jev",
+      "head": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "changed_paths": 0,
+      "status": []
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader-main",
+      "head": "96d30cc387a6520aba23199e25d0d4ec71a7ad88",
+      "changed_paths": 0,
+      "status": []
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader-r8",
+      "head": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "changed_paths": 16,
+      "status": [
+        " M .env.example",
+        " M README.md",
+        " M docs/AUDITORIA-OBJETIVOS.md",
+        " M docs/OKX-OPERADOR-JEV.md",
+        " M package.json",
+        " M scripts/okx-operator.ts",
+        " M src/operator/config.ts",
+        " M src/operator/cycle.ts",
+        " M src/operator/decision-boundary.test.ts",
+        " M src/operator/executor.approval-identity.test.ts",
+        " M src/operator/executor.expiry.test.ts",
+        " M src/operator/executor.ts",
+        " M src/operator/operator.test.ts",
+        " M src/operator/result.test.ts",
+        " M src/operator/risk-gate.ts",
+        " M src/operator/types.ts"
+      ]
+    }
+  ],
+  "external_effects": "none",
+  "visual_acceptance": "pending",
+  "served_preview": "pending"
+}

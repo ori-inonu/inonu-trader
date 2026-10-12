@@ -1,0 +1,153 @@
+{
+  "schema": "offline_mobile_review_candidate_v1",
+  "baseline_head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+  "uncommitted_new_files": true,
+  "scope": "M01-M10 only",
+  "files": [
+    {
+      "path": "docs/mobile-decision-report/BASELINE.json",
+      "sha256": "d55f4340e2ab25f30ab057cd73980aafecc1e496377ae3fb219cb59bc96f9276",
+      "bytes": 107011,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/BROWSER.json",
+      "sha256": "fd321a677f02e93f3373f566da0d7394061ca13aab46d3a3c1a13586cbdec280",
+      "bytes": 8825,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/example.html",
+      "sha256": "1af025fb8585a895e0c3a07df9c4d97e77e158e438dc70b53b80561dbc8523f3",
+      "bytes": 12337,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/example.json",
+      "sha256": "39af89cdba5787317a4f55c547a964f6f67a8d3ce2f8f137cc0d6334c715fdcf",
+      "bytes": 4135,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/fixtures.json",
+      "sha256": "c2259a193ea1e541921b3ac0367acd1f3be2e14ad1061a4b29ff24effea9348e",
+      "bytes": 18758,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-360-human.jpg",
+      "sha256": "6a4cb1ddcbfe1f2511a2f992d39987803c7c881fd46a49be22e5e832a51431bc",
+      "bytes": 40556,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-360-top.jpg",
+      "sha256": "27eb008995ba835ee02cfb0990c136a8dcbc072622574ed6bd31e4ca7fe403aa",
+      "bytes": 40065,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-390-human.jpg",
+      "sha256": "050a0fa9fb868927fb5312a6793a0e46a45f7e7c0cd03a9c2aa27afbdb4f0899",
+      "bytes": 43889,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-390-top.jpg",
+      "sha256": "3971024edd3ee009fdd353abb7897fcd2f8d2d59ec4f9a834cf2827e23310bf4",
+      "bytes": 45165,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/PRESERVATION.json",
+      "sha256": "c79304bfb41b54d9ecd2c489ff16f52d029ddb576d1e04e88c24df0400baf44e",
+      "bytes": 784,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/README.md",
+      "sha256": "ef3de605c6dd536b5b2e31ecb09e1e817d4ee5939c32f0310ba0c50413d618e7",
+      "bytes": 7296,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/SPEC.md",
+      "sha256": "7fdb9f0f49ef469fb05e3d101e93f9bf2a454d84d716481f4f66b65fa97ea10b",
+      "bytes": 8040,
+      "role": "candidate"
+    },
+    {
+      "path": "docs/mobile-decision-report/VERIFICATION.json",
+      "sha256": "896f73e84a5218d77c6937d9966b9a5f94ea85bf61579a7fb99452c4d4210c29",
+      "bytes": 3298,
+      "role": "candidate"
+    },
+    {
+      "path": "src/mobile-decision-report/example.ts",
+      "sha256": "3836d01074eeb128d0e0e5390272baafb5212f9134320648bc365096512b4e1d",
+      "bytes": 1180,
+      "role": "candidate"
+    },
+    {
+      "path": "src/mobile-decision-report/export.test.ts",
+      "sha256": "7d332cfc8142ed7b867f1259217c32c6bead2ad746359da627fc19dd2a02ed5b",
+      "bytes": 3236,
+      "role": "candidate"
+    },
+    {
+      "path": "src/mobile-decision-report/export.ts",
+      "sha256": "33486dbce3dde7c9f3e561fdda32dee4f44ea9ad601b4119af9b7c8971e255d0",
+      "bytes": 13414,
+      "role": "candidate"
+    },
+    {
+      "path": "src/mobile-decision-report/fixtures.ts",
+      "sha256": "0c7bfe6b7287c0c89768fa70a5e0747bc011b6b693b388a404ab385b6acd3cb8",
+      "bytes": 1403,
+      "role": "candidate"
+    },
+    {
+      "path": "src/mobile-decision-report/preview.ts",
+      "sha256": "76e4191db3e809191dd40217927b3cf36eec3c6976b59fab107ae12d7492cae7",
+      "bytes": 737,
+      "role": "candidate"
+    },
+    {
+      "path": "src/mobile-decision-report/report.test.ts",
+      "sha256": "1dbdc211309d58049de53e9e0a9b516bad7e77b1d4e40b0ccfc0ab1862050de0",
+      "bytes": 7030,
+      "role": "candidate"
+    },
+    {
+      "path": "src/mobile-decision-report/report.ts",
+      "sha256": "e072934421b8dc9f9f17aca87b1b294113a06084d3b42cb78f625cd17b575717",
+      "bytes": 12310,
+      "role": "candidate"
+    },
+    {
+      "path": "web/src/lib/dex-report.ts",
+      "sha256": "a0d748e9f4012c80bb355e5726e65400c915e06cfd23b2dc71695224c84c44ab",
+      "bytes": 13490,
+      "role": "unchanged_dependency"
+    },
+    {
+      "path": "web/src/lib/dex-report-example.ts",
+      "sha256": "a19cf4f79cf934c5c9e3a62f74abaddd04fa685909996f2a5b900b90d89d1800",
+      "bytes": 1691,
+      "role": "unchanged_dependency"
+    },
+    {
+      "path": "web/src/lib/dex-report.test.ts",
+      "sha256": "1cf93a0fbcb98881c5466f28cf194cfdd3a257825ee493ebe517dc5aa1b9f9fe",
+      "bytes": 7550,
+      "role": "unchanged_dependency"
+    }
+  ],
+  "digest": "b7883b31273801e0dcc613892f24ebd42c17960bb08c314f6938a7fc4e65478a",
+  "excludes": [
+    "this manifest (self reference)",
+    "final review reports",
+    "final checkpoint written after review"
+  ],
+  "baseline_comparison": "New files only vs BASELINE.json; no commits in increment. Existing uncommitted baseline preserved by explicit hashes."
+}

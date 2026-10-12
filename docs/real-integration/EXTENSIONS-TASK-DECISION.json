@@ -1,0 +1,54 @@
+{
+  "status": "assessed",
+  "receiptId": "e1434aff-856b-4c36-9712-4accbb75b551",
+  "evidenceIds": [
+    "bounded_get_spec"
+  ],
+  "inputDigest": "7b79ae94b2ea299805d291ff7bf6866692a968dc56847ec9b6d137b28d52467b",
+  "rubricVersion": "decision-2026-09-26.2",
+  "policy": {
+    "version": "decision-policy-2026-09-26.1",
+    "mode": "conservative",
+    "minConfidence": 0.6,
+    "minProbability": 0.6,
+    "calibration": "not_locally_calibrated"
+  },
+  "authority": "advisory_only",
+  "origin": {
+    "source": "mcp",
+    "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8"
+  },
+  "model": "jev-1.13.0",
+  "confidence": 0.88,
+  "probabilities": {
+    "new_isolated_implementer": 0.92,
+    "root_after_ui": 0.03,
+    "insufficient_evidence": 0.05
+  },
+  "usage": {
+    "input_tokens": 757,
+    "output_tokens": 58
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-11T19:10:05.507Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-11T19:10:06.144Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a12c605db37a8ca580790ee36a1b2f",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null
+  },
+  "signals": {},
+  "choice": "new_isolated_implementer",
+  "providerChoice": "new_isolated_implementer",
+  "bestCandidate": "new_isolated_implementer",
+  "domain": "task",
+  "disposition": "recommendation",
+  "recommendation": "new_isolated_implementer",
+  "latencyMs": 658,
+  "receiptPersisted": true,
+  "costUsd": null,
+  "approved_by": "jev_delegated",
+  "human_response": false
+}

@@ -1078,6 +1078,7 @@ describe("OKX wallet session", () => {
       balances: null,
       observedAtMs: null,
       error: "A rede ainda não foi confirmada. Atualize para consultar a carteira.",
+      observation: null,
     });
     expect(wallet.requests).toEqual([]);
     session.dispose();

@@ -21,16 +21,22 @@
 }
 
 .headingGroup {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
+/* Single-line micro label. Wrapping here was what made the DecisionCenter header taller than
+   its two siblings in the dock row. */
 .eyebrow {
   margin: 0;
+  overflow: hidden;
   color: var(--signal);
   font: var(--fs-xs);
   font-weight: 700;
   letter-spacing: var(--track-micro);
+  text-overflow: ellipsis;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* The title is held to two lines so every card header resolves to the same height in the dock
@@ -61,9 +67,12 @@
   -webkit-line-clamp: 3;
 }
 
+/* flex-basis auto with no shrink: as a shrinkable sibling it was squeezed to a few pixels wide
+   at narrow card widths and wrapped one character per line, which broke the header height. */
 .status {
   display: flex;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
+  max-inline-size: 100%;
   min-width: 0;
   flex-wrap: wrap;
   align-items: center;

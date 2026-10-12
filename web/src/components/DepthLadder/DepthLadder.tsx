@@ -17,6 +17,8 @@ const PRICE_COL_MIN = 58;
 const SIZE_COL = 140;
 const SIZE_COL_MIN = 72;
 const SIZE_COL_SHARE = 0.3;
+/** Measured width of "sem tamanho informado" in the mono micro size. */
+const SIZE_LABEL_FULL = 118;
 /** Fallback for the first paint and for server rendering, before the frame has been measured. */
 const FALLBACK = { w: 320, h: 220 };
 
@@ -101,11 +103,18 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
   const height = Math.max(180, measured.h);
   const priceX = FRAME_PAD_X;
   const sizeRight = width - FRAME_PAD_X;
-  const plotLeft = priceX + PRICE_COL;
-  const plotRight = sizeRight - SIZE_COL;
-  const plotWidth = Math.max(60, plotRight - plotLeft);
+  // Narrow frames give up column width before they give up plot width, so the two text columns
+  // never collide with each other or with the bars.
+  const priceCol = Math.min(PRICE_COL, Math.max(PRICE_COL_MIN, width * 0.22));
+  const sizeCol = Math.min(SIZE_COL, Math.max(SIZE_COL_MIN, width * SIZE_COL_SHARE));
+  const plotLeft = priceX + priceCol;
+  const plotRight = Math.max(plotLeft + 60, sizeRight - sizeCol);
+  const plotWidth = plotRight - plotLeft;
   const midX = plotLeft + plotWidth / 2;
   const halfWidth = plotWidth / 2 - 6;
+  // "sem tamanho informado" is about 118px in the mono micro size. When the column is narrower
+  // than that the visible text is shortened and the full wording stays on the element as a title.
+  const compactSize = sizeCol < SIZE_LABEL_FULL;
 
   const rows = planes.length;
   const rowHeight = rows > 0 ? (height - FRAME_PAD_Y * 2) / rows : 0;
@@ -149,6 +158,11 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
             const from = plane.arm === "ask" ? midX : midX - barWidth;
             const to = plane.arm === "ask" ? midX + barWidth : midX;
             const capRise = 12;
+            const sizeText = plane.arm === "mid"
+              ? "mid"
+              : plane.size > 0
+                ? `${plane.size.toLocaleString("en-US", { maximumFractionDigits: 3 })} MON`
+                : "sem tamanho informado";
             return (
               <g
                 key={`${plane.arm}-${plane.price}`}
@@ -167,7 +181,8 @@ function DepthLadderView({ latest, window: windowSize = 9, reducedMotion = false
                   {fmtPrice(plane.price)}
                 </text>
                 <text className={styles.size} x={sizeRight} y={y + 4} textAnchor="end">
-                  {plane.arm === "mid" ? "mid" : plane.size > 0 ? `${plane.size.toLocaleString("en-US", { maximumFractionDigits: 3 })} MON` : "sem tamanho informado"}
+                  {compactSize && !sizeText.includes("MON") ? "sem tamanho" : sizeText}
+                  <title>{sizeText}</title>
                 </text>
                 <text className={styles.side} x={plane.arm === "ask" ? plotRight : plotLeft} y={y - capRise - 6} textAnchor={plane.arm === "ask" ? "end" : "start"}>
                   {SIDE_LABEL[plane.arm]}

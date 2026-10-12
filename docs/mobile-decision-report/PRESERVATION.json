@@ -1,0 +1,16 @@
+{
+  "schema": "offline_mobile_preservation_v1",
+  "head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+  "expected_head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+  "head_unchanged": true,
+  "baseline_files_checked": 697,
+  "baseline_files_unchanged": 697,
+  "changed_or_missing": [],
+  "staged_files": [],
+  "preview_4180_closed": true,
+  "frozen_spec_sha256": "7fdb9f0f49ef469fb05e3d101e93f9bf2a454d84d716481f4f66b65fa97ea10b",
+  "frozen_spec_unchanged": true,
+  "goal_criteria_sha256": "cfa90cac735e9a838a0c4bc593276c83757905e7c5fedcd2414e499b1dad9e08",
+  "goal_checkpoint_sha256": "25115bb54d24a67a9616b6c3091f5f26c0195f9bddf62db64f2102c6fe2f3404",
+  "scope": "Selected explicit baseline files only; no secret/environment inspection; no native goal mutation."
+}

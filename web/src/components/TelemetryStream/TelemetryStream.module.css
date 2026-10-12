@@ -13,12 +13,16 @@
   }
 }
 
+/* The stream and the ladder share a bounded block size so the row height is the same whether the
+   two sit side by side or stack, and so the list scrolls instead of growing without limit. */
 .stream {
   position: relative;
   z-index: 1;
   display: flex;
   min-width: 0;
   height: 100%;
+  min-block-size: 340px;
+  max-block-size: 560px;
   flex-direction: column;
   gap: var(--s2);
   border: 1px solid var(--edge);
@@ -276,6 +280,14 @@
   }
 }
 
+@media (max-width: 479.98px) {
+  /* The newest row is already told apart by its deck and rail, so the tag yields its width
+     to the action label instead of squeezing it into an ellipsis. */
+  .newestTag {
+    display: none;
+  }
+}
+
 @media (max-width: 379.98px) {
   .stream {
     padding: var(--s3);
@@ -283,10 +295,6 @@
 
   .filter {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .newestTag {
-    display: none;
   }
 }
 

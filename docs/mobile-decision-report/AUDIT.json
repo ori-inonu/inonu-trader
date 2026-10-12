@@ -1,0 +1,169 @@
+{
+  "schema": "offline_mobile_final_audit_v1",
+  "conversation": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+  "recorded_at_utc": "2026-10-12T01:24:54.832344+00:00",
+  "scope": "M01-M10 offline deliverable only",
+  "offline_deliverable": "complete",
+  "reviewed_candidate_digest": "5ec32260afaa982a33068b8c79ff4c49bb12dde04c4cc342694b96e96c2e3a36",
+  "reviewed_file_count": 23,
+  "native_goal": {
+    "observed_status": "blocked",
+    "observed_read_only_date_utc": "2026-10-12",
+    "mutated_in_increment": false,
+    "G01_G17_complete": false,
+    "qualified_new_core_cycles": 0,
+    "source": "get_goal read-only and prior blocked checkpoint"
+  },
+  "tests": {
+    "root_pass": 18,
+    "root_fail": 0,
+    "root_assertions": 170,
+    "independent_review_runs": 2,
+    "independent_pass_each": 18,
+    "independent_assertions_each": 170,
+    "types_exit_code": 0,
+    "types_independently_reproduced": false,
+    "full_legacy_suite_rerun": false
+  },
+  "browser": {
+    "viewport_widths": [
+      360,
+      390
+    ],
+    "acquired_by": "integrator",
+    "independently_replayed": false,
+    "horizontal_overflow": false,
+    "keyboard_exercised": true,
+    "example_html_sha256": "1af025fb8585a895e0c3a07df9c4d97e77e158e438dc70b53b80561dbc8523f3",
+    "same_bytes_as_acquired_browser_artifact": true,
+    "physical_touch_tested": false,
+    "full_WCAG_audit": false,
+    "preview_port_4180_closed": true
+  },
+  "preservation": {
+    "baseline_head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+    "selected_static_files_checked": 697,
+    "changed": [],
+    "staged": [],
+    "frozen_offline_spec_sha256": "7fdb9f0f49ef469fb05e3d101e93f9bf2a454d84d716481f4f66b65fa97ea10b",
+    "frozen_G01_G17_source": {
+      "path": "docs/real-integration/INSTRUCAO-DO-OBJETIVO.md",
+      "sha256": "cfa90cac735e9a838a0c4bc593276c83757905e7c5fedcd2414e499b1dad9e08"
+    }
+  },
+  "independent_reviews": [
+    {
+      "axis": "spec",
+      "version": 1,
+      "status": "no_spec_defects_found_bounded",
+      "files": [
+        {
+          "path": "docs/mobile-decision-report/REVIEW-SPEC-v1.md",
+          "sha256": "4be539753543681e896669b761a103c70ec305544bc9d0f8e17c1235ff7d13e7",
+          "bytes": 2225
+        },
+        {
+          "path": "docs/mobile-decision-report/REVIEW-SPEC-v1.json",
+          "sha256": "1f008b1ebe55edcb8e6821e8e952e468514ad4fbed5dec907f67d5670cdaefc0",
+          "bytes": 16379
+        }
+      ],
+      "post_review_source_copy": true
+    },
+    {
+      "axis": "spec",
+      "version": 2,
+      "status": "no_spec_defects_found_bounded",
+      "files": [
+        {
+          "path": "docs/mobile-decision-report/REVIEW-SPEC.md",
+          "sha256": "d5630fdcede8be4e3a77d607a8be5c72518ec2a3d6b5fa72fe898c8a6a98f284",
+          "bytes": 2261
+        },
+        {
+          "path": "docs/mobile-decision-report/REVIEW-SPEC.json",
+          "sha256": "99eae4f9bb0ad814fdb87628fec5a4d49f8b0585e36146cdde020a4ef2edd64c",
+          "bytes": 19394
+        }
+      ],
+      "post_review_source_copy": true
+    },
+    {
+      "axis": "standards",
+      "version": 1,
+      "status": "changes_requested",
+      "files": [
+        {
+          "path": "docs/mobile-decision-report/REVIEW-STANDARDS-v1.md",
+          "sha256": "4ae5600caf389c48ad2e05d8de0e8973833ce97e068d549cc16bf401d727bcd5",
+          "bytes": 2216
+        },
+        {
+          "path": "docs/mobile-decision-report/REVIEW-STANDARDS-v1.json",
+          "sha256": "db298e562287ec24e8538ffa99f44fdc959222f50c4b031ebf41c1085638754e",
+          "bytes": 16721
+        }
+      ],
+      "post_review_source_copy": true
+    },
+    {
+      "axis": "standards",
+      "version": 2,
+      "status": "passed_standards",
+      "files": [
+        {
+          "path": "docs/mobile-decision-report/REVIEW-STANDARDS.md",
+          "sha256": "32ab66d788b596ad00908b52bc510b1d1a4397ba6b9755a8aa8f3b14c0b8f0e5",
+          "bytes": 2035
+        },
+        {
+          "path": "docs/mobile-decision-report/REVIEW-STANDARDS.json",
+          "sha256": "0fb226412b458303d9c34951f3a1967adc8a460c685b53d4f0e2fd1eae14fe34",
+          "bytes": 36766
+        }
+      ],
+      "post_review_source_copy": true
+    }
+  ],
+  "open_findings": {
+    "Standards": 0,
+    "Spec": 0
+  },
+  "resolved_prior_finding": {
+    "axis": "Standards",
+    "id": "STANDARDS-01",
+    "prior_severity": "P2",
+    "display_only_normalization": true,
+    "JSON_and_financial_facts_unchanged": true
+  },
+  "M01_M10_evidence": {
+    "source": "REVIEW-SPEC.json coverage; CHECKPOINT.md mapping",
+    "M08_browser_limit": "Integrator acquisition inspected by independent reviewers, no independent replay",
+    "M10_final_metadata": "Integrator-written after independent candidate review"
+  },
+  "external_qualification": {
+    "real_OKX_Web3": false,
+    "real_owner_Wallet": false,
+    "real_JEV_application_inference": false,
+    "real_authenticated_DEX_build": false,
+    "financial_execution": "OFF"
+  },
+  "prohibited_effects": {
+    "external_network_by_offline_module": false,
+    "manual_paid_API": false,
+    "secret_or_environment_read": false,
+    "Wallet_connection_signature_or_broadcast": false,
+    "install": false,
+    "staging_commit_push_deploy": false,
+    "outgoing_thread_message": false
+  },
+  "unknown_billed_cost_usd": null,
+  "performance_or_savings_claim": false,
+  "post_review_metadata_independently_reviewed": false,
+  "checkpoint": {
+    "path": "docs/mobile-decision-report/CHECKPOINT.md",
+    "sha256": "323cee699dff2e6d4b689b9e06365394ed27882918f9c51be5e05092bc5de0bf",
+    "bytes": 10158
+  },
+  "remaining_G01_G17_dependencies": "CHECKPOINT.md table and unchanged original frozen acceptance; no criteria waived"
+}

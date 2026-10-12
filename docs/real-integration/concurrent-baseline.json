@@ -1,0 +1,214 @@
+[
+  {
+    "sha256": "a6552fe985f7b8896ad9bbbfa024fb1498ea79186085de8fbe54ecc92656c13f",
+    "path": "web/src/app/page.module.css"
+  },
+  {
+    "sha256": "b55a5570d5dd717dc8dc33ac08398481bf9bd42729315ad0c393ed347a75bc49",
+    "path": "web/src/components/DecisionCenter/DecisionCenter.module.css"
+  },
+  {
+    "sha256": "5e0c1692e88a735d960479902358dbde8828ac475f01b909c48601bc937704e6",
+    "path": "web/src/components/DecisionCenter/DecisionCenter.tsx"
+  },
+  {
+    "sha256": "3b558aa838c514a84f1f284d0f5d46859e9ee7f0286befe5fbcc4b651c855374",
+    "path": "web/src/components/DepthLadder/DepthLadder.module.css"
+  },
+  {
+    "sha256": "c2f2f8f6df22cc4d280e69e2f8d546f84a69160b6d68c92a1bece8df21a54ea8",
+    "path": "web/src/components/DepthLadder/DepthLadder.tsx"
+  },
+  {
+    "sha256": "cbe760fcf1d7ae28c6bd0c4c18bf4ddc8cdc3f95a23d7589268317aeb653256c",
+    "path": "web/src/components/DexReportPanel/DexReportPanel.module.css"
+  },
+  {
+    "sha256": "b3485c86ce1d9f05d2c9cde73498b355f5a198eca0c567c5c2e6c50c4a74f31f",
+    "path": "web/src/components/KpiSurface/KpiSurface.module.css"
+  },
+  {
+    "sha256": "a01aebbf74ca3af01467778afc36bb6ee772334e88b838b2eb7af13131998a88",
+    "path": "web/src/components/MultichainPanel/MultichainPanel.module.css"
+  },
+  {
+    "sha256": "f720bd0d31fb3a2f34caa55c6e909e2a7bca4b9128affc0cf3919e466cd1d0a8",
+    "path": "web/src/components/TelemetryStream/TelemetryStream.module.css"
+  },
+  {
+    "sha256": "ca310265cbf218399a469bfdba44dac0329a69862feb959958856ce748932855",
+    "path": "web/src/components/WalletPanel/WalletPanel.module.css"
+  },
+  {
+    "sha256": "8029b8312384f8cd65cf216301473d7a519e3fe5d2cfeac7f6c6ef02bda11248",
+    "path": "web/src/components/WalletPanel/WalletPanel.tsx"
+  },
+  {
+    "sha256": "d6cfc39aa62ce6dbf018f26e3848c1d3c5181f0b952eddd0a578ada02f777121",
+    "path": "web/src/lib/okx-wallet.test.ts"
+  },
+  {
+    "sha256": "59f10dc59a58235c1abb2351a5c6bd699803a25a78257abdd5af6252d856490e",
+    "path": "web/src/lib/okx-wallet.ts"
+  },
+  {
+    "sha256": "23817c3bf28d2129a6853a7176e2b1a3d36eb71ad8f3b7dd60da5639869bf1dc",
+    "path": "web/src/lib/operator-center.test.ts"
+  },
+  {
+    "sha256": "27a3af7ea134b47a1cff12a0f2b1cdfe9d62ae9ccec307299c3a4f7c9947dae2",
+    "path": "docs/CENTRAL-JEV-BLOCKED-AUDIT-20261011.md"
+  },
+  {
+    "sha256": "730784197aaee81cc3371a3fddf613f73eeb62f7804796c6703582c17bd3bb1d",
+    "path": "docs/CENTRAL-JEV-CHECKPOINT.md"
+  },
+  {
+    "sha256": "e7357407392862a65b3fbf712633fee66b82f24b4fb123ef7b7fda0c5134a74d",
+    "path": "docs/CENTRAL-JEV-COMBINED-VERIFICATION-16eb1ed.md"
+  },
+  {
+    "sha256": "40bb8fc9ef61b1dd0c95199fc33a64d46564dcf06c0813c1fe29561749111b6e",
+    "path": "docs/CENTRAL-JEV-COPY-REVIEW-714e276.md"
+  },
+  {
+    "sha256": "a3ee84663fba8307e6ed7a8cbd3d51119b4ea489894808cefb8af34fcd4c5ed3",
+    "path": "docs/CENTRAL-JEV-EXECUTION-COPY-SPEC.md"
+  },
+  {
+    "sha256": "72f44ee69c6aa31c567ba0665f1a8aebdb0a591d2607dc335344feb49a798b66",
+    "path": "docs/CENTRAL-JEV-FINAL-VERIFICATION-16eb1ed.md"
+  },
+  {
+    "sha256": "6e6b1646104717bc668218aeff70ef068983829f16218d0dd19bb813dd7f6b64",
+    "path": "docs/CENTRAL-JEV-FINANCIAL-REVIEW.md"
+  },
+  {
+    "sha256": "6a5e9804f9d1310abe501a78683462247d1b80b78750256fa8d8518f9f8c0237",
+    "path": "docs/CENTRAL-JEV-INTEGRATION-78ae090.md"
+  },
+  {
+    "sha256": "8e4a0775bf0683306c710362dcb8f7edba760b737b96cebeb8651e8ee7023fdb",
+    "path": "docs/CENTRAL-JEV-LEDGER-INTEGRATION-SPEC.md"
+  },
+  {
+    "sha256": "e8cc4d4c7954d7d41af7a72e6551b05155dc3ad9ff3e1fcb486ee4b97d387b77",
+    "path": "docs/CENTRAL-JEV-LEDGER-REVIEW-16eb1ed.md"
+  },
+  {
+    "sha256": "793f407d70cdfbc24a84327bee4754a0481e5682e13c4f3fe77674e69b34aa46",
+    "path": "docs/CENTRAL-JEV-OPERATOR-INTEGRATION-SPEC.md"
+  },
+  {
+    "sha256": "5656b3a1e517b1becf72116dc2c8a4bcc08094b230c4c1decb3fb2cb296cf0af",
+    "path": "docs/CENTRAL-JEV-OPERATOR-REVIEW-7bce1e8.md"
+  },
+  {
+    "sha256": "7f0d64eaf3b3a31213ed4b3cd9fa06bdb43fe50b0ee71e47e9297802352d9650",
+    "path": "docs/CENTRAL-JEV-OPERATOR-VERIFICATION-7bce1e8.md"
+  },
+  {
+    "sha256": "da3389ad683d5f007013e4cdc2175c11efaf0eca25a432d5f913d3fdc300ac2a",
+    "path": "docs/CENTRAL-JEV-PREVIEW-PROVENANCE-20261011.md"
+  },
+  {
+    "sha256": "05def869eec955a3324490054e008c4e8466489ebb04be3adde27733e5b4a5e8",
+    "path": "docs/CENTRAL-JEV-REMOTE-AUDIT-2ed0324.md"
+  },
+  {
+    "sha256": "f7395f11adfc236a90258f4d7a13587cbe480d84ef3b1d42980777ad1ca20cb7",
+    "path": "docs/CENTRAL-JEV-REMOTE-INTEGRATION-SPEC.md"
+  },
+  {
+    "sha256": "b223f24c60ad6c979fed4c249904ee72ac5091ba055c8ce19d54e3834f4c0f23",
+    "path": "docs/CENTRAL-JEV-REMOTE-REVIEW-2ed0324.md"
+  },
+  {
+    "sha256": "d3da5dfd6c8945303739afdb7baa86a410613c45876f97c63b23e2754e9f526d",
+    "path": "docs/CENTRAL-JEV-REMOTE-VERIFICATION-2ed0324.json"
+  },
+  {
+    "sha256": "dcfc1c7dbe94c66da0845a37e0f482f1c7862080b93878bb1eeaaf2f2f653047",
+    "path": "docs/CENTRAL-JEV-REMOTE-VERIFICATION-2ed0324.md"
+  },
+  {
+    "sha256": "de48c4a3dffb87eef0225d6b7d9fa9a73ca4bde6e3b9bf0ec7dbdd9779280d13",
+    "path": "docs/CENTRAL-JEV-REVIEW-1c50fdf.md"
+  },
+  {
+    "sha256": "bb3825d5b039d68837c0f94be8ff979709b28ca12bd528a420d8feae1700f732",
+    "path": "docs/CENTRAL-JEV-REVIEW-FIX-SPEC.md"
+  },
+  {
+    "sha256": "0cb6bf04c0533d4ce62cd3d1694aab66181fe81de92a8e81a159a31dff73c33a",
+    "path": "docs/CENTRAL-JEV-VERIFICATION-1c50fdf.md"
+  },
+  {
+    "sha256": "cde320f8fe11c04b38eac1418eeb10d372c72440aa62ee50b7331d3dafed13fe",
+    "path": "docs/CENTRAL-JEV-ZERO-CEILING-REGRESSION.md"
+  },
+  {
+    "sha256": "e4b33f54fc9339d001b4a2742f78a158bee2c1fdd7ef865b27f7c6fa69334b25",
+    "path": "docs/OKX-HISTORICAL-ARCHIVES.md"
+  },
+  {
+    "sha256": "1de5053bc033e77d4da7fb4b5b371de10d1f27aefa5390ebca3c9494720941d6",
+    "path": "docs/OKX-SESSION-READINESS-20261011.md"
+  },
+  {
+    "sha256": "f4f42eee549c5382cf663109bed80d7796af13cbc54357f0bfe0dafc3a7f9215",
+    "path": "docs/WALLET-TRANSACTION-PREFLIGHT.md"
+  },
+  {
+    "sha256": "6eaf37d2775371f954d4bf9261dbb5d148229e9e4f4c75e3d484b5b255b61785",
+    "path": "docs/okx-ecosystem-v1/DATA-INTEGRATION-AUDIT.md"
+  },
+  {
+    "sha256": "f7bbf5c1d2173134fc891b81f1d5b488aef8ff88f6bd5d3d7d3939bf4eeb962c",
+    "path": "docs/okx-ecosystem-v1/GUIA.md"
+  },
+  {
+    "sha256": "11b0d190dab6fc68d7f884d91ca925626e1c086f85e51f93256e557921a15401",
+    "path": "docs/okx-ecosystem-v1/SPEC.md"
+  },
+  {
+    "sha256": "cd93cd6171cd1fc473039c19645e92490bd99784e10d17d95edf8a3658523a5e",
+    "path": "docs/okx-leaderboard-v1/RESEARCH.md"
+  },
+  {
+    "sha256": "aecb9ee00872aefcac6eddd783d3c205481e45315a376a9ecbe0695bab12b0ac",
+    "path": "docs/okx-portfolio-v1/CAPITAL-BOUNDARY-AUDIT.md"
+  },
+  {
+    "sha256": "abc0628c97031e7bf203385ece7eaacaa3a344f0980603a4936042ff8df8076a",
+    "path": "docs/okx-portfolio-v1/VALUATION-DIAGNOSTICS-SPEC.md"
+  },
+  {
+    "sha256": "f5deb92bf3ac8d263b2a33c061fc01da21ea5cf104419b3f639ec9998e8fbf30",
+    "path": "scripts/okx-archive-discovery.test.ts"
+  },
+  {
+    "sha256": "1208bb5f51d72a768f710551adc5e1ee5248280b5c7e18cd83c49de4dcaf7c5e",
+    "path": "scripts/okx-archive-discovery.ts"
+  },
+  {
+    "sha256": "c3d1004c02fac20aa01709d725df0de2bb4635ee3e93f688c5f46d024b55dc9b",
+    "path": "src/onchainos/archive-discovery.test.ts"
+  },
+  {
+    "sha256": "f3cd8980b533ee65f39b27ab05683d097d41c72d43e2357f96db1ab1bf00c086",
+    "path": "src/onchainos/archive-discovery.ts"
+  },
+  {
+    "sha256": "05eaf846f7fb4c62cd6c1bbd700ca62c3f77955bc2d14be13996a238ab0c9386",
+    "path": "web/src/lib/wallet-observation.test.tsx"
+  },
+  {
+    "sha256": "be4d35ff0bb407106ac4427736760d0156333f2c1449eb5082565987ac9027ba",
+    "path": "web/src/lib/wallet-transaction-preflight.test.ts"
+  },
+  {
+    "sha256": "8d1c9cb415aac5774c09246a26342bbb5ce26f954a5b1bedfba2fe21e6227575",
+    "path": "web/src/lib/wallet-transaction-preflight.ts"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "advisoryOnly": true,
+  "billedCostUsd": null,
+  "decision": {
+    "status": "assessed",
+    "receiptId": "b87c070b-dc8f-42f7-928d-408e9762801f",
+    "evidenceIds": [
+      "runtime",
+      "sources"
+    ],
+    "inputDigest": "5d207ff81ccbf8589fc125a7c5a334158c14caa486d78cff9871aa99507408a1",
+    "rubricVersion": "decision-2026-09-26.2",
+    "policy": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "agentId": "root"
+    },
+    "model": "jev-1.13.0",
+    "confidence": 1,
+    "probabilities": {
+      "bounded_metadata": 1,
+      "record_dependency": 0,
+      "insufficient_evidence": 0
+    },
+    "usage": {
+      "input_tokens": 996,
+      "output_tokens": 47
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T20:49:57.395Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T20:49:57.680Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12cbbc9497c9e80089996bfc2597a",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "signals": {},
+    "choice": "bounded_metadata",
+    "providerChoice": "bounded_metadata",
+    "bestCandidate": "bounded_metadata",
+    "domain": "strategy",
+    "disposition": "recommendation",
+    "recommendation": "bounded_metadata",
+    "latencyMs": 317,
+    "receiptPersisted": true
+  }
+}

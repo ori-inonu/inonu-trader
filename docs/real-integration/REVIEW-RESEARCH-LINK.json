@@ -1,0 +1,27 @@
+{
+  "scope": "Independent bounded review of the 81 frozen research/status documents; not whole-goal approval.",
+  "reviewManifestSha256": "c90ada14c2adf7a63fcce378cff992f1396800fa417ea11b0579bec546e4d5c4",
+  "reviewReportSha256": "087c2e0ebc814b61081e35991b4a9c4075cccf9d0ea6d67df495e57f5bcef0ba",
+  "frozenFiles": 81,
+  "productSourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "productSourceChanged": false,
+  "criteriaChanged": false,
+  "wholeGoalApproved": false,
+  "statusLinksAddedAfterReview": [
+    "CHECKPOINT.md",
+    "MATRIZ-G01-G17.md",
+    "VERIFICACAO.md",
+    "AUDIT-R8.json",
+    "POST-REVIEW-DOC-DELTA-R8.json",
+    "REVIEW-RESEARCH-LINK.json",
+    "DOC-REVIEW-MANIFEST-RESEARCH.json",
+    "REVIEW-RESEARCH.md"
+  ],
+  "statusLinksIndependentlyReviewed": false,
+  "editorialDelta": {
+    "path": "G11-METADATA-CONCLUSION.md",
+    "sha256": "98945ef2773b3f6951846549ffa55c947df23adad40f8a952e4a5a8ed354ffff",
+    "scope": "One wording correction: no body recovered, not zero bytes of traffic.",
+    "independentlyReviewed": true
+  }
+}

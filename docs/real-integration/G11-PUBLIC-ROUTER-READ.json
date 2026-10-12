@@ -1,0 +1,140 @@
+{
+  "scope": "public-router-research-only",
+  "exercisedReal": true,
+  "financiallyQualified": false,
+  "executionEnabled": false,
+  "abiQualified": false,
+  "decoderQualified": false,
+  "startedAtMs": 1791751619815,
+  "chains": [
+    {
+      "chainIndex": "196",
+      "endpoint": "https://rpc.xlayer.tech",
+      "router": "0x7c5bee2a8091c3ef39072f64f18fac913060aeaf",
+      "receipts": [
+        {
+          "method": "eth_chainId",
+          "id": 1,
+          "requestedAtMs": 1791751619816,
+          "receivedAtMs": 1791751621056,
+          "httpStatus": 200,
+          "responseSha256": "348ece0a3cc2a059c4b43d2c8c5ef3ce7ea05a0b2d7bf042bf745834c40c4ea8",
+          "responseBytes": 41
+        },
+        {
+          "method": "eth_getBlockByNumber",
+          "id": 2,
+          "requestedAtMs": 1791751621057,
+          "receivedAtMs": 1791751622065,
+          "httpStatus": 200,
+          "responseSha256": "69f690ddd6030f15777b05856071c33bf4ea23e84c1e2f7f1a217d30fe2aedaf",
+          "responseBytes": 2330
+        },
+        {
+          "method": "eth_getCode",
+          "id": 3,
+          "requestedAtMs": 1791751622065,
+          "receivedAtMs": 1791751622409,
+          "httpStatus": 200,
+          "responseSha256": "2b6b9ddc2662464513638183d0dddf882457d1be58844a79f68ec7d27787130e",
+          "responseBytes": 26683
+        },
+        {
+          "method": "eth_getBlockByNumber",
+          "id": 4,
+          "requestedAtMs": 1791751622425,
+          "receivedAtMs": 1791751623433,
+          "httpStatus": 200,
+          "responseSha256": "460226d1ff4387909cb2fc8cda2480683c9d15fb69918b4925cfe52812485465",
+          "responseBytes": 2330
+        },
+        {
+          "method": "eth_chainId",
+          "id": 5,
+          "requestedAtMs": 1791751623433,
+          "receivedAtMs": 1791751624422,
+          "httpStatus": 200,
+          "responseSha256": "3fce84db66bebd446f8cb3bf6e0ffa8e92bc6b24e6d27c89028cb448cd21ef7c",
+          "responseBytes": 41
+        }
+      ],
+      "block": {
+        "number": "0x459a07e",
+        "hash": "0x445eb182777a868f1e09ae2caf4e6faab878b354a04bb6c6bb5d88d02ebfb1d2"
+      },
+      "runtimeCodeHash": "0x7766cf8785ca58e8da2204bf28f5b5cb2da420e1dbad4f5b88828a7c768da885",
+      "runtimeCodeSha256": "4e884ab2966a335f3462791c91acc1819a2209ec2ace1716e3498463ccb0a1ce",
+      "runtimeCodeBytes": 13322,
+      "blockConsistent": true,
+      "qualified": false,
+      "reason": "observed-runtime-only-abi-proxy-spender-decoder-unknown",
+      "finishedAtMs": 1791751624422,
+      "elapsedMs": 4607
+    },
+    {
+      "chainIndex": "143",
+      "endpoint": "https://rpc.monad.xyz",
+      "router": "0xc1c76e784db8d68585fb608ce68fc5dcff14000e",
+      "receipts": [
+        {
+          "method": "eth_chainId",
+          "id": 1,
+          "requestedAtMs": 1791751624422,
+          "receivedAtMs": 1791751624991,
+          "httpStatus": 200,
+          "responseSha256": "f2c8cfffaa48ef7411ca193dc71aba6aa88743516c723630eb7e5b6b2dc5b8ca",
+          "responseBytes": 40
+        },
+        {
+          "method": "eth_getBlockByNumber",
+          "id": 2,
+          "requestedAtMs": 1791751624991,
+          "receivedAtMs": 1791751625126,
+          "httpStatus": 200,
+          "responseSha256": "708ac6e4483f4a64b8abf51c10a1affc8751158c82197cfe3646d89fc18c549b",
+          "responseBytes": 2917
+        },
+        {
+          "method": "eth_getCode",
+          "id": 3,
+          "requestedAtMs": 1791751625126,
+          "receivedAtMs": 1791751625281,
+          "httpStatus": 200,
+          "responseSha256": "c9fd0988aa76245425b015c87cba0f1d748fa33ea859ed4973cffd5989b64945",
+          "responseBytes": 26682
+        },
+        {
+          "method": "eth_getBlockByNumber",
+          "id": 4,
+          "requestedAtMs": 1791751625291,
+          "receivedAtMs": 1791751625425,
+          "httpStatus": 200,
+          "responseSha256": "644dcfab73137cca5e28bbb88c61c1546733616ac1160a7f1b8c638d7e74fd21",
+          "responseBytes": 2917
+        },
+        {
+          "method": "eth_chainId",
+          "id": 5,
+          "requestedAtMs": 1791751625425,
+          "receivedAtMs": 1791751625557,
+          "httpStatus": 200,
+          "responseSha256": "9cdc45df93869198b3ce920d4dc473a8b52718bccfd5173ac75cb441d3bc9b49",
+          "responseBytes": 40
+        }
+      ],
+      "block": {
+        "number": "0x6b5a69c",
+        "hash": "0xd359d4cd35fa84d0ffb9be2bb28acfd251c240d8752c8ce424772340e8e09d5e"
+      },
+      "runtimeCodeHash": "0x71569b9436ca69d0e1062b15bcd025ac291f9f059172ea6bb6480d1f6e3e3148",
+      "runtimeCodeSha256": "9041973719e3999ffd494bfade0c44ca76732b6f796bfa21ffe65a77cfa82d52",
+      "runtimeCodeBytes": 13322,
+      "blockConsistent": true,
+      "qualified": false,
+      "reason": "observed-runtime-only-abi-proxy-spender-decoder-unknown",
+      "finishedAtMs": 1791751625557,
+      "elapsedMs": 1135
+    }
+  ],
+  "finishedAtMs": 1791751625557
+}

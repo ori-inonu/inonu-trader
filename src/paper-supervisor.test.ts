@@ -1176,29 +1176,28 @@ describe("PaperSupervisor durable lifecycle", () => {
       async drain() { return { drained: true }; },
       async close() {},
     };
-    setTimeout(() => resolveLate({ kind: "pending", reason: "late completion after bounded close" }), 120);
     const supervisor = await PaperSupervisor.open({
       store: memoryStore(),
       adapter,
       limits: { adapterTimeoutMs: 15, drainTimeoutMs: 40 },
     });
 
-    expect(await supervisor.tick({ plan: { ...plan, id: "wall-regress-close" }, expiresAtMs: Date.now() + 60_000 }))
-      .toMatchObject({ kind: "held", reason: "adapter_timeout" });
     const originalDateNow = Date.now;
     let wallReads = 0;
-    let result: Awaited<ReturnType<typeof supervisor.close>>;
     try {
+      expect(await supervisor.tick({ plan: { ...plan, id: "wall-regress-close" }, expiresAtMs: Date.now() + 60_000 }))
+        .toMatchObject({ kind: "held", reason: "adapter_timeout" });
       Date.now = () => wallReads++ === 0 ? 1_000_000 : 0;
-      result = await supervisor.close();
+      // Keep the tracked operation pending until close and quarantine have been verified.
+      const result = await supervisor.close();
+      expect(wallReads).toBe(0);
+      expect(result).toEqual({ kind: "drain_incomplete", resourcesClosed: false, ownerReleased: false });
+      expect(supervisor.status()).toMatchObject({ operationalState: "quarantined", resourcesClosed: false, ownerReleased: false });
     } finally {
       Date.now = originalDateNow;
+      resolveLate({ kind: "pending", reason: "late completion after bounded close" });
+      await lateExecution;
     }
-    await lateExecution;
-
-    expect(wallReads).toBe(0);
-    expect(result!).toEqual({ kind: "drain_incomplete", resourcesClosed: false, ownerReleased: false });
-    expect(supervisor.status()).toMatchObject({ operationalState: "quarantined", resourcesClosed: false, ownerReleased: false });
   });
 
   test("quarantines each before-save lifecycle failure at the last acknowledged stage", async () => {

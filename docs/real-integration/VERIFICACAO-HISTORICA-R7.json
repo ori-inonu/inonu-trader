@@ -1,0 +1,133 @@
+{
+  "candidate": "integrated-r7",
+  "realExternalQualification": false,
+  "records": [
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-01a12b5f-integrated-r7.json",
+      "receiptSha256": "63b4f3289aef15855213014fb89a5dd41256f040b97a4746e9dcc09964e81dc1",
+      "result": {
+        "job": "backend",
+        "exitCode": 0,
+        "durationSeconds": 243.91,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "test"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader",
+        "summary": [
+          " 2101 pass",
+          " 2 skip",
+          " 0 fail",
+          " 884339 expect() calls",
+          "Ran 2103 tests across 135 files. [242.77s]"
+        ],
+        "failureDetails": [],
+        "stdoutSha256": "7b7870e9ff4cae6d5e8b7a8957bed0f2088f74bb65c2b7ac8d8b28a09c91c37c",
+        "stderrSha256": "d6f29e8440c06644b82a8b3cc78463b35191c2e4aaff5958a958504b7f9cbee2",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-01a12b5f-integrated-r7.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-01a12b5f-integrated-r7.stderr"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-integrated-r6.json",
+      "receiptSha256": "b73d60d8687c6cdf36ef1ead5405f3c15f646646afe43da66f92e94b1b4b807e",
+      "result": {
+        "job": "webtests",
+        "exitCode": 0,
+        "durationSeconds": 6.35,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "test"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web",
+        "summary": [
+          " 579 pass",
+          " 0 fail",
+          " 4127 expect() calls",
+          "Ran 579 tests across 42 files. [5.84s]"
+        ],
+        "failureDetails": [],
+        "stdoutSha256": "9a139a9b6663cdcde2b694990fe06eeb4a2f4e7856bc5756cae9956736d5f5d5",
+        "stderrSha256": "25ef2fc558b6864a54fe3f6cb400844d87bc935be29839bbb0d38cb8ff94a87b",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-integrated-r6.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-integrated-r6.stderr"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-types-01a12b5f-integrated-r7.json",
+      "receiptSha256": "fcb9731756391f8eff2b1c4eaf5e25a2adbb1b60d2d4c5f225cf09cae6eca7a0",
+      "result": {
+        "job": "backend-types",
+        "exitCode": 0,
+        "durationSeconds": 3.65,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader",
+        "summary": [],
+        "failureDetails": [],
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "b7dc95512cdb71e1e12f2047c55eb42aa39153f3d4bbabe372034af273755ead",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-types-01a12b5f-integrated-r7.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-types-01a12b5f-integrated-r7.stderr"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-web-types-01a12b5f-integrated-r7.json",
+      "receiptSha256": "ed40589f61542b0ec33fd6e879cc6df74ac063b1caa304015183e2bfc35ce67d",
+      "result": {
+        "job": "web-types",
+        "exitCode": 0,
+        "durationSeconds": 9.61,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web",
+        "summary": [],
+        "failureDetails": [],
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "8366207267355d3e3d5bf3bf6e8c94c5f93f6078c34f08973fa2b38cdda6cc92",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-web-types-01a12b5f-integrated-r7.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-web-types-01a12b5f-integrated-r7.stderr"
+      }
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-build-01a12b5f-integrated-r7.json",
+      "receiptSha256": "a0657815bf781eb4728f45347e6a511d7f4982d46a0bcd6cdab262a85a2e9e1c",
+      "result": {
+        "job": "build",
+        "exitCode": 0,
+        "durationSeconds": 25.58,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "build"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web",
+        "summary": [
+          "\u2713 Compiled successfully in 2.4s",
+          "\u2713 Generating static pages using 5 workers (4/4) in 5.5s",
+          "Route (app)",
+          "\u250c \u25cb /",
+          "\u2514 \u25cb /_not-found"
+        ],
+        "failureDetails": [],
+        "stdoutSha256": "9e98af3cdf16fd7304537974663bb8a38e6c2834cc79959f18fa67bc99fdc16a",
+        "stderrSha256": "8c87e6c88f8aa719cdec20bba96b21a6a64d5678f80517663f3457e265cbe519",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-build-01a12b5f-integrated-r7.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-build-01a12b5f-integrated-r7.stderr"
+      }
+    }
+  ]
+}

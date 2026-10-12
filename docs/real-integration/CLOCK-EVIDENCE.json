@@ -1,0 +1,14 @@
+{
+  "source": "okx-public-v5",
+  "endpoint": "/api/v5/public/time",
+  "method": "GET",
+  "httpStatus": 200,
+  "providerCode": "0",
+  "requestedAtMs": 1791740556329,
+  "receivedAtMs": 1791740556702,
+  "serverAtMs": 1791740626085,
+  "dateHeader": "Sun, 11 Oct 2026 17:43:46 GMT",
+  "offsetFromMidpointMs": 69569.5,
+  "toleranceMs": 5000,
+  "clockChanged": false
+}

@@ -1,0 +1,26 @@
+{
+  "kind": "native-goal-status-observed",
+  "observedAt": "2026-10-11 22:08:25 UTC",
+  "goalTurnNumber": 3,
+  "nativeStatusRequested": "blocked",
+  "wholeGoalComplete": false,
+  "auditPath": "docs/real-integration/CHECKPOINT-BLOCKED-CONTINUATION-2.md",
+  "auditSha256": "25115bb54d24a67a9616b6c3091f5f26c0195f9bddf62db64f2102c6fe2f3404",
+  "accessEvidenceSha256": "45a238b8fdb4d8a866cab762abe9ad149f17cb095b63fa5194e4ebf66cd5aa43",
+  "unchangedProductFiles": 447,
+  "productSourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "criteriaSha256": "cfa90cac735e9a838a0c4bc593276c83757905e7c5fedcd2414e499b1dad9e08",
+  "nativeToolResult": {
+    "goal": {
+      "threadId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "objective": "Executar nesta sessão a instrução completa de C:/Users/gabri/.codex/visualizations/2026/10/11/01a12b5f-ca2a-7ff1-a131-07933705d3e8/objetivo-okx/INSTRUCAO-DO-OBJETIVO.md: transformar o projeto em uma central local OKX Web3 integrada com configuração validada, OKX Wallet real, inventário observado, Market/Balance/DEX OnchainOS reais, inferência Jev real da aplicação, continuidade paper/shadow e proposta de swap preparada com preflight, interface servida responsiva e módulos condicionais rastreáveis. Cumprir os critérios obrigatórios G01–G17 com evidência atual da versão final, revisão independente e auditoria; não concluir com mocks, capital configurado, relatórios isolados ou dependências obrigatórias pendentes. Preservar os contratos de privacidade, trabalho concorrente, gates financeiros e autorizações próprias de acesso/consumo; assinatura/transmissão financeiras permanecem fora desta entrega. Continuar trabalho elegível sem pedir continue por etapa.",
+      "status": "blocked",
+      "tokensUsed": 6058813,
+      "timeUsedSeconds": 22187,
+      "createdAt": 1791734313,
+      "updatedAt": 1791756501
+    },
+    "remainingTokens": null,
+    "completionBudgetReport": null
+  }
+}

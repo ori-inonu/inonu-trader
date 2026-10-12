@@ -21,7 +21,18 @@
 
 /* Each cell is a shallow slab: it lifts and tips toward the pointer on hover, 2.5D only. */
 .cell {
+  display: flex;
+  min-width: 0;
+  min-height: 104px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s2);
   transform: perspective(700px) rotateX(0deg) translateY(0);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
   transition:
     transform var(--dur-base) var(--ease-out-expo),
     box-shadow var(--dur-base) var(--ease-out-expo),
@@ -33,20 +44,6 @@
   border-color: var(--edge-strong);
   box-shadow: var(--elev-2);
   transform: perspective(700px) rotateX(4deg) translateY(-3px);
-}
-
-.cell {
-  display: flex;
-  min-width: 0;
-  min-height: 104px;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: var(--s2);
-  border: 1px solid var(--edge);
-  border-radius: var(--r-md);
-  padding: var(--s4);
-  background: var(--bg-deck);
-  box-shadow: var(--elev-1);
 }
 
 .label {
@@ -138,10 +135,9 @@
   .surface {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
 
-@media (max-width: 479.98px) {
-  /* Below this the hero track can no longer hold a seven figure mid at the hero size. */
+  /* Two columns halve the hero track, so the hero steps down with the layout instead of wrapping
+     its value onto a second line and breaking the row alignment. */
   .heroValue {
     font: var(--fs-readout);
   }

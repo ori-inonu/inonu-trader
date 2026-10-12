@@ -1,0 +1,28 @@
+{
+  "observedAt": "2026-10-11 21:33:33 UTC",
+  "observation": "actual-cua-getState-and-browser-capabilities-list",
+  "browserInventory": [
+    {
+      "id": "2",
+      "name": "Codex In-app Browser",
+      "type": "iab",
+      "tabsAtInventory": 0
+    },
+    {
+      "id": "1",
+      "name": "Codex MCP Apps",
+      "type": "mcpapps",
+      "tabsAtInventory": 0
+    }
+  ],
+  "nativeApps": [],
+  "selectedBrowserId": "2",
+  "browserCapabilities": [
+    "visibility",
+    "viewport"
+  ],
+  "touchEmulationAdvertised": false,
+  "reducedMotionEmulationAdvertised": false,
+  "ownerWalletConsentObserved": false,
+  "limitation": "An enabled capability is not inferred from an earlier browser session. Review may expand keyboard and rendered contrast proof; unavailable touch/media emulation remains unexercised."
+}
