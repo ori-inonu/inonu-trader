@@ -1,3 +1,4 @@
+import { createHash, timingSafeEqual } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { isAbsolute } from "node:path";
 import { computeInsights, parseCycleLines, type OperatorInsights } from "./insights";
@@ -21,6 +22,16 @@ export interface OperatorHttpOptions {
 export type OperatorHandler = (req: Request, pathname: string) => Response;
 
 const OPERATOR_PATHS = new Set(["/operator", "/operator/history", "/operator/insights"]);
+
+/**
+ * Constant-time comparison of the presented credential with the expected one (R8 N17). Both sides are hashed
+ * first, so the buffers always have the same length (timingSafeEqual throws otherwise) and the time taken
+ * reveals neither where the first different byte is nor how long the real token is.
+ */
+export function tokenMatches(presented: string | null, expected: string): boolean {
+  if (presented === null) return false;
+  return timingSafeEqual(createHash("sha256").update(presented).digest(), createHash("sha256").update(expected).digest());
+}
 
 export function isOperatorPath(pathname: string): boolean {
   return OPERATOR_PATHS.has(pathname);
@@ -63,7 +74,7 @@ export function createOperatorHandler(options: OperatorHttpOptions): OperatorHan
     if (!headers) return json({ error: "origin not allowed" }, 403, {});
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers });
     if (req.method !== "GET") return json({ error: "method not allowed" }, 405, headers);
-    if (token && req.headers.get("authorization") !== `Bearer ${token}`) return json({ error: "unauthorized" }, 401, headers);
+    if (token && !tokenMatches(req.headers.get("authorization"), `Bearer ${token}`)) return json({ error: "unauthorized" }, 401, headers);
     if (pathname === "/operator") {
       if (!existsSync(options.statePath)) return json({ error: "operator state not found" }, 404, headers);
       try { return json(JSON.parse(readFileSync(options.statePath, "utf8")), 200, headers); } catch { return json({ error: "operator state unreadable" }, 500, headers); }

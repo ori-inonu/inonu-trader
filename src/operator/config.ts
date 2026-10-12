@@ -4,7 +4,8 @@ import type { OperatorPolicy } from "./types";
 
 /**
  * Policy profiles by phase. "micro" is the default: single plans of at most 5 USD
- * or 5% of the known inventory, 20 USD and 4 plans per day, 15 minute cooldown.
+ * or 5% of the known inventory, 20 USD of notional per day counting both legs of a round
+ * trip (up to 2 plans of 5 USD) and at most 4 plans per day, 15 minute cooldown.
  * "standard" keeps the wider research limits. Explicit OPERATOR_* variables
  * override the profile value but never the hard ceilings below.
  */
@@ -40,6 +41,8 @@ export interface OperatorConfig {
   ledgerPath: string;
   lockPath: string;
   intervalMs: number;
+  /** Deadline for the Jev decision of one cycle, ms (OPERATOR_DECISION_TIMEOUT_MS): a whole number from 1 to 30000, default 10000. */
+  decisionTimeoutMs: number;
   /** Explicit operator gate, separate from the Kuru trader's DRY_RUN and LIVE_ACK. */
   execute: boolean;
   /** OPERATOR_LIVE_ACK=OWN_FUNDS_RISK_OPERATOR; a second, operator-specific acknowledgement. */
@@ -58,13 +61,16 @@ export interface OperatorConfig {
 }
 
 export function loadOperatorConfig(source: Record<string, string | undefined> = process.env, repoRoot = REPO_ROOT): OperatorConfig {
-  const number = (key: string, fallback: number, min = 0, max = Infinity) => {
+  const number = (key: string, fallback: number, min = 0, max = Infinity, integer = false) => {
     const raw = source[key];
     if (raw === undefined) return fallback;
     const n = Number(raw);
-    if (raw.trim() === "" || !Number.isFinite(n) || n < min || n > max) throw new Error(`Invalid ${key}`);
+    if (raw.trim() === "" || !Number.isFinite(n) || n < min || n > max || (integer && !Number.isSafeInteger(n))) throw new Error(`Invalid ${key}`);
     return n;
   };
+  // Settings that are whole numbers by nature (milliseconds, counts, gas): a fraction is refused here, once,
+  // instead of passing the loader and failing in validateOperatorPolicy on every cycle (R10 B3).
+  const whole = (key: string, fallback: number, min = 0, max = Infinity) => number(key, fallback, min, max, true);
   const bool = (key: string, fallback: boolean) => {
     const raw = source[key];
     if (raw === undefined) return fallback;
@@ -135,21 +141,21 @@ export function loadOperatorConfig(source: Record<string, string | undefined> = 
       maxCapitalFraction: number("OPERATOR_MAX_CAPITAL_FRACTION", profile.maxCapitalFraction, Number.MIN_VALUE, HARD_LIMITS.maxCapitalFraction),
       minNetUsd: number("OPERATOR_MIN_NET_USD", 0.05, 0),
       maxPriceImpactPercent: number("OPERATOR_MAX_PRICE_IMPACT_PERCENT", 1, 0, 5),
-      maxQuoteAgeMs: number("OPERATOR_MAX_QUOTE_AGE_MS", 15_000, 1, 120_000),
+      maxQuoteAgeMs: whole("OPERATOR_MAX_QUOTE_AGE_MS", 15_000, 1, 120_000),
       gasReserveNative,
       inferenceUsdPerCandidate: number("OPERATOR_INFERENCE_USD_PER_CANDIDATE", 0.0001, 0),
-      planTtlMs: number("OPERATOR_PLAN_TTL_MS", 30_000, 1, 600_000),
-      exitWindowMs: number("OPERATOR_EXIT_WINDOW_MS", 0, 0, 600_000),
+      planTtlMs: whole("OPERATOR_PLAN_TTL_MS", 30_000, 1, 600_000),
+      exitWindowMs: whole("OPERATOR_EXIT_WINDOW_MS", 0, 0, 600_000),
       maxDailyNotionalUsd: number("OPERATOR_MAX_DAILY_NOTIONAL_USD", profile.maxDailyNotionalUsd, Number.MIN_VALUE, HARD_LIMITS.maxDailyNotionalUsd),
-      maxDailyPlans: number("OPERATOR_MAX_DAILY_PLANS", profile.maxDailyPlans, 1, HARD_LIMITS.maxDailyPlans),
-      cooldownMs: number("OPERATOR_COOLDOWN_MS", profile.cooldownMs, HARD_LIMITS.minCooldownMs),
+      maxDailyPlans: whole("OPERATOR_MAX_DAILY_PLANS", profile.maxDailyPlans, 1, HARD_LIMITS.maxDailyPlans),
+      cooldownMs: whole("OPERATOR_COOLDOWN_MS", profile.cooldownMs, HARD_LIMITS.minCooldownMs),
       killSwitchPath: path("OPERATOR_KILL_SWITCH_PATH", "data/operator/STOP"),
-      staleLegMs: number("OPERATOR_STALE_LEG_MS", 15 * 60_000, 1),
+      staleLegMs: whole("OPERATOR_STALE_LEG_MS", 15 * 60_000, 1),
       routerAllowlist,
       spenderAllowlist,
       selectorAllowlist,
       maxFeeGwei: number("OPERATOR_MAX_FEE_GWEI", 400, Number.MIN_VALUE),
-      maxGasLimit: number("OPERATOR_MAX_GAS_LIMIT", 1_000_000, 21_000, HARD_LIMITS.maxGasLimit),
+      maxGasLimit: whole("OPERATOR_MAX_GAS_LIMIT", 1_000_000, 21_000, HARD_LIMITS.maxGasLimit),
       maxDailyLossUsd: number("OPERATOR_MAX_DAILY_LOSS_USD", profile.maxDailyLossUsd, Number.MIN_VALUE, HARD_LIMITS.maxDailyLossUsd),
       maxWeeklyLossUsd: number("OPERATOR_MAX_WEEKLY_LOSS_USD", profile.maxWeeklyLossUsd, Number.MIN_VALUE),
       maxDrawdownUsd: number("OPERATOR_MAX_DRAWDOWN_USD", profile.maxDrawdownUsd, Number.MIN_VALUE),
@@ -162,6 +168,7 @@ export function loadOperatorConfig(source: Record<string, string | undefined> = 
     ledgerPath: path("OPERATOR_LEDGER_PATH", "data/operator/ledger.json"),
     lockPath: path("OPERATOR_LOCK_PATH", "data/operator/LOCK"),
     intervalMs: number("OPERATOR_INTERVAL_MS", 60_000, 1_000),
+    decisionTimeoutMs: whole("OPERATOR_DECISION_TIMEOUT_MS", 10_000, 1, 30_000),
     execute: bool("OPERATOR_EXECUTE", false),
     liveAck: liveAckRaw === "OWN_FUNDS_RISK_OPERATOR",
     evmPrivateKey,

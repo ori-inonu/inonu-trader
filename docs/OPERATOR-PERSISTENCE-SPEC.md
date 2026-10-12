@@ -1,6 +1,6 @@
 # Operator persistence: bounded Windows atomic replacement
 
-Draft next cycle; not frozen or implementation approval. Full central JEV objective remains unchanged. No funds, transaction signatures, provider trade calls, push or deployment.
+Status: implementado e integrado (CLI lock: 2e704c7, main f626a30; persistência: 703c626, main ff37327); os parágrafos de proposta e de checkpoint abaixo são históricos.
 
 ## Source-backed scope
 

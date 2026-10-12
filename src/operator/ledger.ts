@@ -26,6 +26,8 @@ export interface OpenLeg {
   closeTxHash: string | null;
   /** Known closing ERC20 approval identity; omission/null means unavailable. */
   closeApproveTxHash?: string | null;
+  /** Signed realized result in USD, gas included, recorded once by the manual reconcile; absent means none recorded. */
+  realizedUsd?: number;
   note: string | null;
 }
 
@@ -97,6 +99,21 @@ function finiteMap(value: unknown): value is Record<string, number> {
   return isRecord(value) && Object.entries(value).every(([key, entry]) => /^\d{4}-\d{2}-\d{2}$/.test(key) && typeof entry === "number" && Number.isFinite(entry));
 }
 
+/** Notional per day: never negative; fractions are legitimate (sizes are in USD with cents). */
+function notionalMap(value: unknown): value is Record<string, number> {
+  return finiteMap(value) && Object.values(value).every((entry) => entry >= 0);
+}
+
+/** Plans per day: a count, so a non-negative integer. */
+function countMap(value: unknown): value is Record<string, number> {
+  return finiteMap(value) && Object.values(value).every((entry) => Number.isSafeInteger(entry) && entry >= 0);
+}
+
+/** A plan id names one leg: updateLeg and the reconcile patch every leg that carries it. */
+function distinctPlanIds(legs: OpenLeg[]): boolean {
+  return new Set(legs.map((leg) => leg.planId)).size === legs.length;
+}
+
 function validLeg(value: unknown): value is OpenLeg {
   return isRecord(value) && typeof value.planId === "string" && typeof value.candidateId === "string" && typeof value.pairKey === "string" &&
     typeof value.chainIndex === "string" && Number.isSafeInteger(value.openedAtMs) && typeof value.txHash === "string" &&
@@ -105,16 +122,17 @@ function validLeg(value: unknown): value is OpenLeg {
       (typeof value.approveTxHash === "string" && value.approveTxHash.length > 0)) &&
     (!Object.prototype.hasOwnProperty.call(value, "closeApproveTxHash") || value.closeApproveTxHash === null ||
       (typeof value.closeApproveTxHash === "string" && value.closeApproveTxHash.length > 0)) &&
+    (!Object.prototype.hasOwnProperty.call(value, "realizedUsd") || (typeof value.realizedUsd === "number" && Number.isFinite(value.realizedUsd))) &&
     (value.closeTxHash === null || typeof value.closeTxHash === "string") && (value.note === null || typeof value.note === "string");
 }
 
 /** Strict parse (R5 A3): every field must have its exact type; nothing defaults silently. */
 export function parseLedger(value: unknown): OperatorLedgerState {
   if (!isRecord(value) || value.version !== 1 || !Array.isArray(value.executedKeys) || !value.executedKeys.every((key) => typeof key === "string") ||
-    !finiteMap(value.dailyNotionalUsd) || !finiteMap(value.dailyPlans) || !finiteMap(value.dailyRealizedUsd) ||
+    !notionalMap(value.dailyNotionalUsd) || !countMap(value.dailyPlans) || !finiteMap(value.dailyRealizedUsd) ||
     typeof value.cumulativeRealizedUsd !== "number" || !Number.isFinite(value.cumulativeRealizedUsd) ||
     typeof value.peakRealizedUsd !== "number" || !Number.isFinite(value.peakRealizedUsd) ||
-    !Array.isArray(value.openLegs) || !value.openLegs.every(validLeg) ||
+    !Array.isArray(value.openLegs) || !value.openLegs.every(validLeg) || !distinctPlanIds(value.openLegs) ||
     !(value.lastExecutionAtMs === null || Number.isSafeInteger(value.lastExecutionAtMs)))
     throw new Error("Corrupt operator ledger");
   return value as unknown as OperatorLedgerState;
@@ -129,6 +147,13 @@ export interface OperatorLedger {
   openLegs(): OpenLeg[];
   /** Adds a reconciled realized result (USD, signed, gas included) to the day, the week and the running total. */
   recordRealized(nowMs: number, realizedUsd: number): void;
+  /**
+   * Manual reconcile of one open leg in a SINGLE write: the new status and note and, the first time, the signed
+   * realized result, which also feeds the day, the week and the running total (R10 M1, M2). A leg takes at most one
+   * result: a second value is refused, and without a value the leg must already carry one. Memory is replaced only
+   * after the write succeeded, so a failed write can be repeated without doubling the result.
+   */
+  reconcileLeg(planId: string, status: "closed" | "failed", realizedUsd: number | null, nowMs: number, note: string): void;
   dayRealizedUsd(nowMs: number): number;
   weekRealizedUsd(nowMs: number): number;
   drawdownUsd(): number;
@@ -192,6 +217,32 @@ export function createOperatorLedger(initial: OperatorLedgerState, persist: (sta
       };
       save();
     },
+    reconcileLeg(planId, status, realizedUsd, nowMs, note) {
+      if (status !== "closed" && status !== "failed") throw new Error("Invalid reconcile status");
+      const leg = state.openLegs.find((entry) => entry.planId === planId);
+      if (!leg || leg.status === "closed") throw new Error(`No open leg with planId ${planId}`);
+      if (realizedUsd === null) {
+        if (leg.realizedUsd === undefined) throw new Error("Realized result required: this leg has none recorded");
+      } else {
+        if (!Number.isFinite(realizedUsd)) throw new Error("Invalid realized result");
+        if (leg.realizedUsd !== undefined) throw new Error("Realized result already recorded for this leg");
+      }
+      const patch: Partial<OpenLeg> = realizedUsd === null ? { status, note } : { status, note, realizedUsd };
+      const openLegs = state.openLegs.map((entry) => entry.planId === planId ? { ...entry, ...patch } : entry);
+      let next: OperatorLedgerState = { ...state, openLegs };
+      if (realizedUsd !== null) {
+        const day = dayKey(nowMs);
+        const cumulative = state.cumulativeRealizedUsd + realizedUsd;
+        next = {
+          ...next,
+          dailyRealizedUsd: { ...state.dailyRealizedUsd, [day]: (state.dailyRealizedUsd[day] ?? 0) + realizedUsd },
+          cumulativeRealizedUsd: cumulative,
+          peakRealizedUsd: Math.max(state.peakRealizedUsd, cumulative),
+        };
+      }
+      persist(next);
+      state = next;
+    },
     dayRealizedUsd: (nowMs) => state.dailyRealizedUsd[dayKey(nowMs)] ?? 0,
     weekRealizedUsd: (nowMs) => weekSum(nowMs),
     drawdownUsd: () => state.peakRealizedUsd - state.cumulativeRealizedUsd,
@@ -226,6 +277,41 @@ export function initLedgerFile(path: string): OperatorLedgerState {
   return state;
 }
 
+/**
+ * Bounded replacement of `path` by the already written `tmp` (R5 A3, B6; R8 N9). On Windows a rename onto a
+ * file another process holds open (the dashboard reads latest.json on every request, antivirus, indexers) fails
+ * with EPERM, EBUSY or EACCES for a moment: those three are retried, at most four attempts in total with waits
+ * of 10, 20 and 40 ms, and only on win32. Any other error, and every error elsewhere, propagates at once. The
+ * same tmp file is reused by every attempt and the destination is never removed, so a failure leaves the prior
+ * bytes in place. `beforeAttempt` runs before each attempt, so a caller can revalidate a destination that may
+ * have changed during a wait; whatever it throws ends the retries.
+ */
+export interface BoundedReplaceOptions {
+  platform?: string;
+  rename?: typeof renameSync;
+  wait?: (milliseconds: number) => void;
+  beforeAttempt?: () => void;
+}
+
+function sleepSync(milliseconds: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
+export function replaceFileBounded(tmp: string, path: string, options: BoundedReplaceOptions = {}): void {
+  const rename = options.rename ?? renameSync;
+  const wait = options.wait ?? sleepSync;
+  for (let attempt = 0; ; attempt++) {
+    options.beforeAttempt?.();
+    try { rename(tmp, path); return; }
+    catch (error) {
+      const code = (error as NodeJS.ErrnoException | null)?.code;
+      if ((options.platform ?? process.platform) !== "win32" ||
+        !["EPERM", "EBUSY", "EACCES"].includes(code ?? "") || attempt >= 3) throw error;
+      wait(10 * 2 ** attempt);
+    }
+  }
+}
+
 /** Atomic write: temp file in the same directory, then rename (R5 A3, B6). */
 export interface LedgerPersistenceOptions {
   platform?: string;
@@ -236,11 +322,7 @@ export interface LedgerPersistenceOptions {
 
 export function ledgerFilePersister(path: string, options: LedgerPersistenceOptions = {}): (state: OperatorLedgerState) => void {
   requireAbsolute(path);
-  const rename = options.rename ?? renameSync;
   const lstat = options.lstat ?? lstatSync;
-  const wait = options.wait ?? ((milliseconds: number) => {
-    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
-  });
   const validateDestination = () => {
     let destination;
     try { destination = lstat(path); }
@@ -255,16 +337,7 @@ export function ledgerFilePersister(path: string, options: LedgerPersistenceOpti
     mkdirSync(dirname(path), { recursive: true });
     const tmp = `${path}.${process.pid}.tmp`;
     writeFileSync(tmp, JSON.stringify(state, null, 2));
-    for (let attempt = 0; ; attempt++) {
-      validateDestination();
-      try { rename(tmp, path); return; }
-      catch (error) {
-        const code = (error as NodeJS.ErrnoException | null)?.code;
-        if ((options.platform ?? process.platform) !== "win32" ||
-          !["EPERM", "EBUSY", "EACCES"].includes(code ?? "") || attempt >= 3) throw error;
-        wait(10 * 2 ** attempt);
-      }
-    }
+    replaceFileBounded(tmp, path, { platform: options.platform, rename: options.rename, wait: options.wait, beforeAttempt: validateDestination });
   };
 }
 

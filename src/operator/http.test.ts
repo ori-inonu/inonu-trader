@@ -21,6 +21,8 @@ test("operator handler restricts origins, honors the token, caches the journal a
     expect(get("/operator", { origin: "https://evil.example" }).status).toBe(403);
     expect(get("/operator", { origin: ORIGIN }).status).toBe(401);
     expect(get("/operator", { origin: ORIGIN, authorization: "Bearer wrong" }).status).toBe(401);
+    // Same length as the real token, one byte off: the comparison is constant time and still says no (R8 N17).
+    expect(get("/operator", { origin: ORIGIN, authorization: "Bearer secreX" }).status).toBe(401);
     const auth = { origin: ORIGIN, authorization: "Bearer secret" };
     expect(get("/operator", auth).status).toBe(404);
     expect(get("/operator/history", auth).status).toBe(404);

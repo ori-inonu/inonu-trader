@@ -24,7 +24,7 @@ Data: 2026-10-10. Compara cada item pedido nos objetivos (operador financeiro, O
 3. **Perfis de política por fase** (`OPERATOR_PROFILE`): `micro` por padrão, `standard` para pesquisa; variáveis explícitas sobrepõem.
 4. **Trust flags** para unidades e contratos não documentados (`OPERATOR_TRUST_QUOTE_UNITS`, `OPERATOR_TRUST_BRIDGE_API`): decisão humana explícita antes de dinheiro real.
 5. **Histórico como insumo** (`GET /operator/insights`): taxa de elegibilidade, escolha e acerto por tipo. Próxima etapa: incluir esses agregados no estado enviado ao Jev para que ele pondere tipos com histórico ruim.
-6. **Reconciliação por saldo**: resultado realizado medido pelo inventário, não pela cotação; perda diária para o operador.
+6. **Reconciliação manual com diagnóstico por saldo**: depois de um plano concluído o ciclo relê o inventário e informa a variação observada só como diagnóstico (`observedBalanceDeltaUsd`), sem atribuí-la ao plano; o resultado realizado fica desconhecido e o operador fica bloqueado até `--reconcile <planId> <closed|failed> --realized <usd>`, que alimenta as paradas diária, semanal e de drawdown.
 
 ## Próximas integrações sugeridas, em ordem
 

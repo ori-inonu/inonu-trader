@@ -1,4 +1,4 @@
-import { appendFileSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { createHash } from "node:crypto";
 import type { InventoryAsset, InventorySnapshot } from "../okx-wallet/portfolio";
@@ -8,7 +8,7 @@ import { executePlan, type ExecutorDeps } from "./executor";
 import { buildOperatorState, validateOperatorDecision, type OperatorModel, type OperatorState } from "./jev-selector";
 import { buildExecutionPlan, type PlanGate } from "./plan";
 import { gateCandidates } from "./risk-gate";
-import type { OperatorLedger } from "./ledger";
+import { replaceFileBounded, type BoundedReplaceOptions, type OperatorLedger } from "./ledger";
 import type { ExecutionOutcome, OperatorCycle, OperatorDecision, OperatorPolicy, OpportunityCandidate } from "./types";
 
 export interface CycleDeps {
@@ -216,12 +216,19 @@ export function redactCycle(cycle: OperatorCycle): OperatorCycle {
   return { ...cycle, inventory: { ...cycle.inventory, address: shortAddress } };
 }
 
-export function persistCycle(cycle: OperatorCycle, statePath: string, journalPath: string): void {
+/**
+ * Writes the cycle: the journal line first, then latest.json through the bounded replacement. The journal is the
+ * record of what the operator did, so a state swap that still fails after its retries (the dashboard reads
+ * latest.json on every request, which on Windows can hold it open) never costs the history line; the previous
+ * latest.json stays intact when it throws (R8 N9). `options` exists for tests (platform, rename, wait).
+ */
+export function persistCycle(cycle: OperatorCycle, statePath: string, journalPath: string, options: BoundedReplaceOptions = {}): void {
   mkdirSync(dirname(statePath), { recursive: true });
   mkdirSync(dirname(journalPath), { recursive: true });
   const redacted = redactCycle(cycle);
-  const tmp = `${statePath}.${process.pid}.tmp`;
-  writeFileSync(tmp, JSON.stringify(redacted, null, 2));
-  renameSync(tmp, statePath);
+  const state = JSON.stringify(redacted, null, 2);
   appendFileSync(journalPath, JSON.stringify(redacted) + "\n");
+  const tmp = `${statePath}.${process.pid}.tmp`;
+  writeFileSync(tmp, state);
+  replaceFileBounded(tmp, statePath, options);
 }

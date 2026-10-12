@@ -7,7 +7,7 @@ import { checkPreparedLeg, encodeApprove, executePlan, minReceiveMatchesQuote, s
 import { createOperatorLedger, emptyLedger } from "./ledger";
 import { buildOperatorState, MockOperatorModel, validateOperatorDecision, type OperatorModel } from "./jev-selector";
 import { buildExecutionPlan } from "./plan";
-import { gateCandidate, gateCandidates } from "./risk-gate";
+import { gateCandidate, gateCandidates, validateOperatorPolicy } from "./risk-gate";
 import type { ExecutionPlan, OperatorPolicy, OpportunityCandidate } from "./types";
 
 const NOW = 1_760_000_000_000;
@@ -622,4 +622,73 @@ test("R8 C4: an empty acknowledgement is absent, each gate closes alone and the 
   expect(operatorLiveGate(loadOperatorConfig(full), "mock").reasons).toEqual(["live requires the real Jev model (--jev)"]);
   expect(() => loadOperatorConfig({ ...full, PRIVATE_KEY: key.toUpperCase().replace("0X", "0x") })).toThrow("must differ from the trader PRIVATE_KEY");
   expect(loadOperatorConfig({ ...full, PRIVATE_KEY: "0x" + "22".repeat(32) }).evmPrivateKey).toBe(key);
+});
+
+
+/* ---------- R10 surviving mutants (A-6): tests only, no production change ---------- */
+
+test("R10 R03: the proportional floor rounds down, never up", () => {
+  expect(scaleExpectedOut("1001", "999", "1000")).toBe("999");
+  expect(scaleExpectedOut("5", "1", "2")).toBe("2");
+  expect(scaleExpectedOut("1", "1", "3")).toBe("0");
+  expect(scaleExpectedOut("1000", "1000", "1000")).toBe("1000");
+  expect(scaleExpectedOut("0", "999", "1000")).toBe("0");
+});
+
+test("R10 R06: the exit deadline is the later of the plan deadline and now plus the window, so a tiny window never shortens it", async () => {
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, [candidate!]), [candidate!]);
+  const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
+  // Every reading of the clock is 2 ms later than the one before; a window of 1 ms alone would expire at once.
+  let clock = NOW;
+  const sent: { to: string; value: string; gasLimit: string }[] = [];
+  const outcome = await executeSyntheticPlan(live, candidate!, { now: () => (clock += 2), slippagePercent: 0.5, ledger: createOperatorLedger(emptyLedger(), () => {}), policy: { ...livePolicy, exitWindowMs: 1 }, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: r8TradeClient(candidate!), evmSigner: r8Signer(inventory.address, sent) });
+  expect(outcome.status).toBe("completed");
+  expect(sent).toHaveLength(3);
+});
+
+test("R10 R07: the exit window never extends the entry: an approval receipt slower than the plan TTL still blocks leg 1", async () => {
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, [candidate!]), [candidate!]);
+  const live = buildExecutionPlan(candidate!, decision, policy, openGate, NOW);
+  let clock = NOW;
+  const sent: { to: string; value: string; gasLimit: string }[] = [];
+  // Hash 0x1 is the approval receipt: it alone takes longer than the plan TTL, well inside the 60 s window.
+  const signer = r8Signer(inventory.address, sent, (hash) => { if (hash === "0x1") clock += policy.planTtlMs + 1_000; });
+  const ledger = createOperatorLedger(emptyLedger(), () => {});
+  const outcome = await executeSyntheticPlan(live, candidate!, { now: () => clock, slippagePercent: 0.5, ledger, policy: { ...livePolicy, exitWindowMs: 60_000 }, inventoryAddress: inventory.address, killSwitchExists: () => false, tradeClient: r8TradeClient(candidate!), evmSigner: signer });
+  expect(outcome.status).toBe("failed");
+  expect(outcome.reasons[0]).toContain("plan_expired_before_leg1");
+  expect(sent).toHaveLength(1);
+  expect(ledger.state().openLegs[0]).toMatchObject({ status: "failed", note: expect.stringContaining("plan_expired_before_leg1") });
+});
+
+test("R10 R16: the policy validator refuses an exit window that is negative, fractional or not finite", () => {
+  expect(() => validateOperatorPolicy(policy)).not.toThrow();
+  expect(() => validateOperatorPolicy({ ...policy, exitWindowMs: 0 })).not.toThrow();
+  expect(() => validateOperatorPolicy({ ...policy, exitWindowMs: 60_000 })).not.toThrow();
+  for (const exitWindowMs of [-1, 1.5, Number.NaN, Number.POSITIVE_INFINITY]) {
+    expect(() => validateOperatorPolicy({ ...policy, exitWindowMs })).toThrow("Invalid operator policy");
+  }
+});
+
+test("R10 R33 and R34: each plan gate closes alone, so execute off or the acknowledgement off never gives a live plan", async () => {
+  const inventory = syntheticInventory(NOW);
+  const [candidate] = await buildRoundTripCandidates({ inventory, policy, nowMs: NOW, swapQuoter: quoter(0.01), pairs: DEFAULT_PAIRS.filter((pair) => pair.chainIndex === "196") });
+  const decision = await new MockOperatorModel().choose(buildOperatorState(inventory, [candidate!]), [candidate!]);
+  expect(buildExecutionPlan(candidate!, decision, policy, openGate, NOW).executionQualification).toBe("qualified_live");
+  for (const closed of [{ operatorExecute: false }, { operatorLiveAck: false }, { realModel: false }, { signerAvailable: false }]) {
+    expect(buildExecutionPlan(candidate!, decision, policy, { ...openGate, ...closed }, NOW).executionQualification).toBe("qualified_dry_run");
+  }
+});
+
+test("R8 M29: an approval amount stops at 2^256 - 1", () => {
+  const MAX = 2n ** 256n - 1n;
+  expect(() => encodeApprove(SPENDER, (2n ** 256n).toString())).toThrow("Invalid approve amount");
+  expect(() => encodeApprove(SPENDER, (2n ** 256n + 1n).toString())).toThrow("Invalid approve amount");
+  expect(encodeApprove(SPENDER, MAX.toString())).toBe("0x095ea7b3" + SPENDER.slice(2).toLowerCase().padStart(64, "0") + "f".repeat(64));
+  expect(encodeApprove(SPENDER, "0")).toBe("0x095ea7b3" + SPENDER.slice(2).toLowerCase().padStart(64, "0") + "0".repeat(64));
+  for (const bad of ["-1", "1.5", "01", "", "1e3", " 1"]) expect(() => encodeApprove(SPENDER, bad)).toThrow("Invalid approve amount");
 });

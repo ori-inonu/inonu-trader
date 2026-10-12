@@ -1,6 +1,6 @@
 # Diagnóstico patrimonial da OKX Wallet — SPEC
 
-Data: 2026-10-11. Baseline: `055a637f27f28cbf357cfb492534f7ed33d9b68f`. Entrega atual: especificação documental para revisão independente. O módulo descrito abaixo ainda não foi implementado.
+Data: 2026-10-11. Baseline: `055a637f27f28cbf357cfb492534f7ed33d9b68f`. Entrega atual: especificação documental para revisão independente. O módulo foi implementado em src/okx-wallet/valuation-diagnostics.ts (testes T01 a T11); não tem consumidor em produção por desenho.
 
 ## Objetivo e resultado observável
 
