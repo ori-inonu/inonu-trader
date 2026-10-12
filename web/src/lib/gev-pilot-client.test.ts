@@ -280,7 +280,7 @@ describe("pilot visual contract — shared snapshot only", () => {
     expect(render(NOW)).toContain("não é probabilidade de ganho");
     expect(render(NOW)).toContain("Resultado líquido hipotético");
     expect(render(NOW)).toContain("Plano hipotético ativo");
-    expect(render(NOW)).toContain("X Layer · 2 ativos · valor completo na fonte");
+    expect(render(NOW)).toContain("X Layer, 2 ativos, valor completo na fonte");
     expect(render(NOW)).toContain("qualificados na fonte");
     expect(render(NOW + 8_000)).not.toContain("Etapa hipotética USDT");
     expect(render(NOW + 8_000)).toContain("Ciclo expirado");
@@ -324,7 +324,7 @@ describe("pilot visual contract — shared snapshot only", () => {
     expect(html).toContain("net_below_minimum");
     expect(html).toContain("Acesso real ainda não certificado");
     expect(html).toContain("Cobertura do inventário");
-    expect(html).toContain("X Layer · 2 ativos · valor completo na fonte");
+    expect(html).toContain("X Layer, 2 ativos, valor completo na fonte");
     h.controller.dispose();
   });
 });

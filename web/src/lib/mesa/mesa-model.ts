@@ -8,7 +8,7 @@ import { readAgeMs, readFreshness, type JevAction, type JevReadBoardState, type 
  * value, and none of the text contains a middle dot, an em dash or an en dash.
  */
 
-export const FORBIDDEN_TEXT = /[·—–]/;
+export const FORBIDDEN_TEXT = new RegExp(`[${String.fromCharCode(0xb7, 0x2014, 0x2013)}]`);
 export const UNAVAILABLE = "Indisponivel";
 
 export type StageTone = "buy" | "sell" | "hold" | "late" | "neutral";

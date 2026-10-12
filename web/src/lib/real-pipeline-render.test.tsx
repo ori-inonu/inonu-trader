@@ -81,8 +81,8 @@ test("the health catalog exposes DeFi, signals and public funding without a wall
   expect(html).toContain("Verificar acesso a sinais");
   expect(html).toContain("Qualificação financeira pendente");
   expect(html).toContain("Fonte: okx-public-v5");
-  expect(html).toContain("Exercitado real: não · financeiramente qualificado: não");
-  expect(html).toContain("Exercitado real: Desconhecido · financeiramente qualificado: Desconhecido");
+  expect(html).toContain("Exercitado real: não, financeiramente qualificado: não");
+  expect(html).toContain("Exercitado real: Desconhecido, financeiramente qualificado: Desconhecido");
   expect(html).toContain("Não autorizado");
   expect(html).not.toContain("Ativo nesta revisão");
   expect(html).not.toContain("Capacidades ainda não observadas por uma consulta autorizada.");
@@ -132,7 +132,7 @@ test("core evidence wins its exact capability key while independent health capab
   const catalog = html.split("<summary>Capacidades por módulo e rede</summary>")[1]?.split("</details>")[0] ?? "";
   expect(catalog).toContain("Dependência observada pelo core");
   expect(catalog).not.toContain("Duplicata do health");
-  expect(catalog).toContain("Exercitado real: não · financeiramente qualificado: não");
+  expect(catalog).toContain("Exercitado real: não, financeiramente qualificado: não");
   expect(catalog).not.toContain("financeiramente qualificado: sim");
   expect(catalog).toContain("Outro módulo");
   expect(catalog).toContain("Outra rede");

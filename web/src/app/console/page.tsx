@@ -19,7 +19,7 @@ import { RealPipeline } from "@/components/RealPipeline/RealPipeline";
 import PublicMarket from "@/components/RealPipeline/PublicMarket";
 import SystemOneView from "@/components/SystemOne/SystemOne";
 import TelemetryStream from "@/components/TelemetryStream/TelemetryStream";
-import { WalletPanelView } from "@/components/WalletPanel/WalletPanel";
+import WalletPanel from "@/components/WalletPanel/WalletPanel";
 import { buildKpiCells } from "@/lib/kpi";
 import { feedFrameState } from "@/lib/feed-frame";
 import { useFeed } from "@/lib/useFeed";
@@ -48,8 +48,8 @@ export default function Page() {
     <ConsoleBackdrop tone="neutral" />
     <main className={styles.primary}>
       <header className={styles.primaryHeader}>
-        <div><p>Central de observação</p><h1>INONU TRADER</h1><span>OKX Wallet · OnchainOS · Jev</span></div>
-        <strong>Paper · execução financeira desativada</strong>
+        <div><p>Central de observação</p><h1>INONU TRADER</h1><span>OKX Wallet, OnchainOS, Jev</span></div>
+        <strong>Paper, execução financeira desativada</strong>
       </header>
       <section id="pipeline" aria-label="Integração real OKX e Jev"><RealPipeline apiBase={API_URL} /></section>
       <PublicMarket apiBase={API_URL} />
@@ -187,7 +187,7 @@ function LegacyConsole() {
 
         <section className={styles.dock}>
           <div className={styles.dockDecision}><DecisionCenterView state={operator} /></div>
-          <div className={styles.dockWallet}><WalletPanelView {...wallet} /></div>
+          <div className={styles.dockWallet}><WalletPanel /></div>
           <div className={styles.dockMultichain}><MultichainPanel /></div>
         </section>
 
