@@ -8,20 +8,40 @@ import type { TapeCandle, TapeInput, TapeState } from "./types";
 const NOW = 2_000_000_000_000;
 
 function candles(count: number): TapeCandle[] {
-  return Array.from({ length: count }, (_, i) => ({ tsMs: NOW - (count - i) * 60_000, close: 100 + Math.sin(i / 3), confirmed: true }));
+  return Array.from({ length: count }, (_, i) => ({ tsMs: NOW - (count - i) * 60_000, close: 100 + Math.sin(i / 3), confirmed: true,
+    proof: { feedId: "read-fixture", feedEpoch: 0, captureId: 3, forSpotInstId: "ETH-USDT", requestedInstId: "ETH-USDT",
+      reportedInstId: null, source: "rest_candles_1m", wsGeneration: null, sourceTsMs: NOW - (count - i) * 60_000,
+      receivedAtMs: NOW - 100, receivedAtMonoMs: 199_900 },
+  }));
 }
 
 function input(overrides: Partial<TapeInput> = {}): TapeInput {
   return {
     instId: "ETH-USDT",
+    feedId: "read-fixture",
+    feedEpoch: 0,
+    wsGeneration: 0,
+    monotonicNowMs: 200_000,
+    funding: null,
     nowMs: NOW,
     exchangeNowMs: NOW,
     tradesLive: true,
-    book: { bids: [{ px: 99.9, sz: 2 }], asks: [{ px: 100.1, sz: 2 }], receivedAtMs: NOW - 100 },
-    trades: [{ px: 100, sz: 1, side: "buy", receivedAtMs: NOW - 1_000 }],
+    coverage: { feedId: "read-fixture", feedEpoch: 0, instId: "ETH-USDT", wsGeneration: 0, source: "ws_trades",
+      acknowledgedAtMonoMs: 100_000, continuousSinceMonoMs: 100_000, observedThroughMonoMs: 200_000,
+      socketOpen: true, lostThroughMonoMs: null },
+    book: { bids: [{ px: 99.9, sz: 2 }], asks: [{ px: 100.1, sz: 2 }], receivedAtMs: NOW - 100,
+      proof: { feedId: "read-fixture", feedEpoch: 0, captureId: 1, forSpotInstId: "ETH-USDT", requestedInstId: "ETH-USDT",
+        reportedInstId: null, source: "rest_book", wsGeneration: null, sourceTsMs: NOW - 100, receivedAtMs: NOW - 100, receivedAtMonoMs: 199_900 } },
+    trades: [{ px: 100, sz: 1, side: "buy", receivedAtMs: NOW - 1_000,
+      proof: { feedId: "read-fixture", feedEpoch: 0, captureId: 4, forSpotInstId: "ETH-USDT", requestedInstId: "ETH-USDT",
+        reportedInstId: "ETH-USDT", source: "ws_trades", wsGeneration: 0, sourceTsMs: NOW - 1_000,
+        receivedAtMs: NOW - 1_000, receivedAtMonoMs: 199_000 } }],
     candles: candles(40),
-    ticker: { last: 100, open24h: 99, high24h: 101, low24h: 98, receivedAtMs: NOW - 500 },
-    fundingRate: null,
+    ticker: { last: 100, open24h: 99, high24h: 101, low24h: 98, receivedAtMs: NOW - 500,
+      proof: { feedId: "read-fixture", feedEpoch: 0, captureId: 2, forSpotInstId: "ETH-USDT", requestedInstId: "ETH-USDT",
+        reportedInstId: "ETH-USDT", source: "rest_ticker", wsGeneration: null, sourceTsMs: NOW - 500,
+        receivedAtMs: NOW - 500, receivedAtMonoMs: 199_500 } },
+    fundingMaxAgeMs: 120_000,
     ...overrides,
   };
 }
@@ -30,6 +50,12 @@ function stateOf(i: TapeInput): TapeState {
   const out = buildTapeState(i);
   if (!out.ok) throw new Error("state expected");
   return out.state;
+}
+
+function knownFunding(rate: number): NonNullable<TapeInput["funding"]> {
+  return { rate, fundingTimeMs: null, nextFundingTimeMs: null, proof: { feedId: "read-fixture", feedEpoch: 0,
+    captureId: 1, forSpotInstId: "ETH-USDT", requestedInstId: "ETH-USDT-SWAP", reportedInstId: "ETH-USDT-SWAP",
+    source: "rest_funding", wsGeneration: null, sourceTsMs: NOW, receivedAtMs: NOW, receivedAtMonoMs: 200_000 } };
 }
 
 function fakeModel(answer: () => Promise<RawTapeAnswer> | RawTapeAnswer, name = "jev-test"): TapeModel & { calls: number } {
@@ -117,7 +143,7 @@ describe("compactTapeState", () => {
   }
 
   test("keeps five significant digits so small prices keep their information", () => {
-    const s = stateOf(input({ fundingRate: 0.000123456789 }));
+    const s = stateOf(input({ funding: knownFunding(0.000123456789) }));
     const compact = compactTapeState(s) as Record<string, unknown>;
     expect(JSON.stringify(compact).length).toBeLessThan(JSON.stringify(s).length);
     expect(compact.instId).toBe("ETH-USDT");
@@ -129,15 +155,17 @@ describe("compactTapeState", () => {
     const base = input();
     const tiny = stateOf({
       ...base,
-      book: { bids: [{ px: 0.027149, sz: 1000 }], asks: [{ px: 0.027151, sz: 1000 }], receivedAtMs: NOW - 100 },
+      book: { bids: [{ px: 0.027149, sz: 1000 }], asks: [{ px: 0.027151, sz: 1000 }], receivedAtMs: NOW - 100,
+        proof: { feedId: "read-fixture", feedEpoch: 0, captureId: 1, forSpotInstId: "ETH-USDT", requestedInstId: "ETH-USDT",
+          reportedInstId: null, source: "rest_book", wsGeneration: null, sourceTsMs: NOW - 100, receivedAtMs: NOW - 100, receivedAtMonoMs: 199_900 } },
       candles: candles(40).map((c) => ({ ...c, close: 0.027 + c.close / 1e6 })),
-      ticker: { last: 0.02715, open24h: 0.02465, high24h: 0.02719, low24h: 0.02465, receivedAtMs: NOW - 100 },
+      ticker: { ...base.ticker!, last: 0.02715, open24h: 0.02465, high24h: 0.02719, low24h: 0.02465, receivedAtMs: NOW - 100 },
     });
     expect((compactTapeState(tiny) as { mid: number }).mid).toBe(0.02715);
   });
 
   test("leaves null and string fields alone", () => {
-    const s = stateOf(input({ fundingRate: null, ticker: { last: 100, open24h: null, high24h: null, low24h: null, receivedAtMs: NOW - 100 } }));
+    const s = stateOf(input({ funding: null, ticker: { ...input().ticker!, last: 100, open24h: null, high24h: null, low24h: null, receivedAtMs: NOW - 100 } }));
     const compact = compactTapeState(s) as { fundingRatePct: unknown; change24hPct: unknown };
     expect(compact.fundingRatePct).toBeNull();
     expect(compact.change24hPct).toBeNull();

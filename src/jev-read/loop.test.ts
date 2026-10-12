@@ -61,8 +61,12 @@ describe("ClockKeeper", () => {
   });
 });
 
-function candles(count: number, endTs: number): TapeCandle[] {
-  return Array.from({ length: count }, (_, i) => ({ tsMs: endTs - (count - 1 - i) * 60_000, close: 100 + i * 0.01, confirmed: true }));
+function candles(count: number, endTs: number, instId: string): TapeCandle[] {
+  return Array.from({ length: count }, (_, i) => ({ tsMs: endTs - (count - 1 - i) * 60_000, close: 100 + i * 0.01, confirmed: true,
+    proof: { feedId: "loop-fixture", feedEpoch: 0, captureId: 3, forSpotInstId: instId, requestedInstId: instId,
+      reportedInstId: null, source: "rest_candles_1m", wsGeneration: null, sourceTsMs: endTs - (count - 1 - i) * 60_000,
+      receivedAtMs: 1_000_000, receivedAtMonoMs: 199_900 },
+  }));
 }
 
 function feedStub(overrides: { bookAgeMs?: number | null; tickerAgeMs?: number | null; snapshotThrows?: boolean } = {}) {
@@ -77,14 +81,28 @@ function feedStub(overrides: { bookAgeMs?: number | null; tickerAgeMs?: number |
       if (overrides.snapshotThrows) throw new Error("boom");
       return {
         instId,
+        feedId: "loop-fixture",
+        feedEpoch: 0,
+        wsGeneration: 0,
+        monotonicNowMs: 200_000,
+        funding: null,
         nowMs,
         exchangeNowMs: exchangeNowMs ?? null,
         tradesLive: true,
-        book: { bids: [{ px: 99.9, sz: 1 }], asks: [{ px: 100.1, sz: 1 }], receivedAtMs: nowMs - 100 },
+        coverage: { feedId: "loop-fixture", feedEpoch: 0, instId, wsGeneration: 0, source: "ws_trades",
+          acknowledgedAtMonoMs: 100_000, continuousSinceMonoMs: 100_000, observedThroughMonoMs: 200_000,
+          socketOpen: true, lostThroughMonoMs: null },
+        book: { bids: [{ px: 99.9, sz: 1 }], asks: [{ px: 100.1, sz: 1 }], receivedAtMs: nowMs - 100,
+          proof: { feedId: "loop-fixture", feedEpoch: 0, captureId: 1, forSpotInstId: instId, requestedInstId: instId,
+            reportedInstId: null, source: "rest_book", wsGeneration: null, sourceTsMs: (exchangeNowMs ?? exchangeNow) - 100,
+            receivedAtMs: nowMs - 100, receivedAtMonoMs: 199_900 } },
         trades: [],
-        candles: candles(40, (exchangeNowMs ?? exchangeNow) - 30_000),
-        ticker: { last: 100, open24h: 99, high24h: 101, low24h: 98, receivedAtMs: nowMs - 100 },
-        fundingRate: null,
+        candles: candles(40, (exchangeNowMs ?? exchangeNow) - 30_000, instId),
+        ticker: { last: 100, open24h: 99, high24h: 101, low24h: 98, receivedAtMs: nowMs - 100,
+          proof: { feedId: "loop-fixture", feedEpoch: 0, captureId: 2, forSpotInstId: instId, requestedInstId: instId,
+            reportedInstId: instId, source: "rest_ticker", wsGeneration: null, sourceTsMs: (exchangeNowMs ?? exchangeNow) - 100,
+            receivedAtMs: nowMs - 100, receivedAtMonoMs: 199_900 } },
+        fundingMaxAgeMs: 120_000,
       };
     },
   };
@@ -119,6 +137,86 @@ describe("readRound", () => {
     expect(result.error).toBeNull();
     expect(result.read?.decision?.action).toBe("hold");
     expect(readdirSync(dir).sort()).toEqual(["j.jsonl", "l.json"]);
+  });
+
+  test("a slow book refresh rechecks ticker age and snapshots clocks after the last refresh", async () => {
+    const dir = tmp();
+    const store = new JevReadStore({ statePath: join(dir, "l.json"), journalPath: join(dir, "j.jsonl") });
+    let mono = 0;
+    let wall = 1_791_000_000_000;
+    const keeper = new ClockKeeper({ measure: async () => sample(70_000, 0), mono: () => mono, wall: () => wall });
+    await keeper.refresh();
+    const { feed: fixture } = feedStub();
+    const events: string[] = [];
+    const ageClocks: Array<[number, number | null]> = [];
+    const finalClocks: Array<[number, number | null | undefined]> = [];
+    const feed: ReaderFeed = {
+      ages(_instId, wallNow, exchangeNow) {
+        ageClocks.push([wallNow, exchangeNow]);
+        return { bookAgeMs: 4_000, tickerAgeMs: mono === 0 ? 9_000 : 11_000 };
+      },
+      async refreshBook() { events.push("book"); mono += 2_000; wall += 2_000; },
+      async refreshTicker() { events.push("ticker"); mono += 500; wall += 500; },
+      snapshot(instId, wallNow, exchangeNow) {
+        events.push("snapshot");
+        finalClocks.push([wallNow, exchangeNow]);
+        return fixture.snapshot(instId, wallNow, exchangeNow);
+      },
+    };
+    const result = await readRound({ feed, keeper, model: null, store, instId: "BTC-USDT", localNow: () => wall });
+    expect(events).toEqual(["book", "ticker", "snapshot"]);
+    expect(ageClocks).toEqual([[1_791_000_000_000, 1_791_000_070_000], [1_791_000_002_000, 1_791_000_072_000]]);
+    expect(finalClocks).toEqual([[1_791_000_002_500, 1_791_000_072_500]]);
+    expect(result.error).toBeNull();
+    expect(result.read?.state).not.toBeNull();
+    expect(result.read?.execution).toBe("never");
+  });
+
+  test("final clocks reject core expiry during ticker refresh and isolate expired funding", async () => {
+    for (const scenario of ["book", "ticker_failure", "funding"] as const) {
+      const dir = tmp();
+      const store = new JevReadStore({ statePath: join(dir, "l.json"), journalPath: join(dir, "j.jsonl") });
+      let mono = 200_000;
+      const wall = 1_791_000_000_000;
+      const keeper = new ClockKeeper({ measure: async () => sample(70_000, 0), mono: () => mono, wall: () => wall });
+      await keeper.refresh();
+      const { feed: fixture } = feedStub();
+      const captured = fixture.snapshot("BTC-USDT", wall, keeper.exchangeNow());
+      let modelCalls = 0;
+      const model: TapeModel = { name: "fixture", async decide() {
+        modelCalls++;
+        return { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, latencyMs: 0, inputTokens: null };
+      } };
+      const feed: ReaderFeed = {
+        ages: () => ({ bookAgeMs: 100, tickerAgeMs: 11_000 }),
+        async refreshBook() { throw new Error("unexpected book refresh"); },
+        async refreshTicker() { mono += scenario === "book" ? 5_000.5 : scenario === "ticker_failure" ? 15_000.5 : 120_000.5; },
+        snapshot(instId, nowMs, exchangeNowMs) {
+          const current = fixture.snapshot(instId, nowMs, exchangeNowMs === null || exchangeNowMs === undefined ? null : Math.floor(exchangeNowMs));
+          return { ...current, exchangeNowMs: exchangeNowMs ?? null, monotonicNowMs: mono,
+            coverage: { ...current.coverage!, observedThroughMonoMs: mono },
+            book: scenario === "funding" ? { ...current.book!, proof: { ...current.book!.proof, receivedAtMonoMs: mono - 100 } } : captured.book,
+            ticker: scenario === "ticker_failure" ? captured.ticker : { ...current.ticker!, proof: { ...current.ticker!.proof, receivedAtMonoMs: mono - 100 } },
+            funding: { rate: -0.001, fundingTimeMs: null, nextFundingTimeMs: null,
+              proof: { feedId: "loop-fixture", feedEpoch: 0, captureId: 3, forSpotInstId: instId,
+                requestedInstId: "BTC-USDT-SWAP", reportedInstId: "BTC-USDT-SWAP", source: "rest_funding", wsGeneration: null,
+                sourceTsMs: 1_791_000_070_000, receivedAtMs: wall, receivedAtMonoMs: 200_000 } },
+          };
+        },
+      };
+      const result = await readRound({ feed, keeper, model, store, instId: "BTC-USDT", localNow: () => wall });
+      expect(result.error).toBeNull();
+      expect(result.read?.execution).toBe("never");
+      if (scenario === "funding") {
+        expect(result.read?.insufficient).toEqual([]);
+        expect(result.read?.state?.fundingRatePct).toBeNull();
+        expect(modelCalls).toBe(1);
+      } else {
+        expect(result.read?.insufficient).toEqual(scenario === "book" ? ["book_stale"] : ["book_stale", "ticker_stale"]);
+        expect(result.read?.state).toBeNull();
+        expect(modelCalls).toBe(0);
+      }
+    }
   });
 
   test("does not refresh what is fresh", async () => {

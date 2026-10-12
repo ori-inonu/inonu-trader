@@ -20,19 +20,62 @@ export interface TapeTrade {
   readonly px: number;
   readonly sz: number;
   readonly side: "buy" | "sell";
-  /** Local wall clock at which the print arrived. Receipt time keeps the window independent of the clock skew. */
+  /** Diagnostic wall receipt; the flow window uses proof.receivedAtMonoMs. */
   readonly receivedAtMs: number;
+  readonly proof: ValueProof;
 }
 
 export interface TapeCandle {
   readonly tsMs: number;
   readonly close: number;
   readonly confirmed: boolean;
+  readonly proof: ValueProof;
+}
+
+export interface ValueProof {
+  readonly feedId: string;
+  readonly feedEpoch: number;
+  readonly captureId: number;
+  readonly forSpotInstId: string;
+  readonly requestedInstId: string;
+  readonly reportedInstId: string | null;
+  readonly source: "rest_book" | "ws_books5" | "rest_ticker" | "ws_tickers" | "rest_candles_1m" | "rest_funding" | "ws_trades";
+  readonly wsGeneration: number | null;
+  readonly sourceTsMs: number;
+  readonly receivedAtMs: number;
+  readonly receivedAtMonoMs: number;
+}
+
+export interface FundingObservation {
+  readonly rate: number;
+  readonly fundingTimeMs: number | null;
+  readonly nextFundingTimeMs: number | null;
+  readonly proof: ValueProof;
+}
+
+export interface CoverageProof {
+  readonly feedId: string;
+  readonly feedEpoch: number;
+  readonly instId: string;
+  readonly wsGeneration: number;
+  readonly source: "ws_trades";
+  readonly acknowledgedAtMonoMs: number;
+  readonly continuousSinceMonoMs: number;
+  readonly observedThroughMonoMs: number;
+  readonly socketOpen: boolean;
+  readonly lostThroughMonoMs: number | null;
 }
 
 /** Raw, normalized inputs of one read of one instrument. Numbers are display and analysis values, never balances. */
 export interface TapeInput {
   readonly instId: string;
+  readonly feedId: string;
+  readonly feedEpoch: number;
+  readonly monotonicNowMs: number;
+  readonly wsGeneration: number;
+  readonly funding: FundingObservation | null;
+  /** Validated per-feed funding lifetime; the builder must not supply a fallback. */
+  readonly fundingMaxAgeMs: number;
   /** Local wall clock of the evaluation. Book, ticker and trade receipts are on this clock. */
   readonly nowMs: number;
   /**
@@ -42,20 +85,20 @@ export interface TapeInput {
   readonly exchangeNowMs: number | null;
   /** True only while the socket is open and the trades channel of this instrument was acknowledged. */
   readonly tradesLive: boolean;
+  readonly coverage: CoverageProof | null;
   /** Best first on both sides. */
-  readonly book: { readonly bids: readonly TapeLevel[]; readonly asks: readonly TapeLevel[]; readonly receivedAtMs: number } | null;
+  readonly book: { readonly bids: readonly TapeLevel[]; readonly asks: readonly TapeLevel[]; readonly receivedAtMs: number; readonly proof: ValueProof } | null;
   readonly trades: readonly TapeTrade[];
   /** 1 minute bars, oldest first; the last one may still be forming. */
   readonly candles: readonly TapeCandle[];
   readonly ticker: {
+    readonly proof: ValueProof;
     readonly last: number;
     readonly open24h: number | null;
     readonly high24h: number | null;
     readonly low24h: number | null;
     readonly receivedAtMs: number;
   } | null;
-  /** Funding rate of the matching perpetual swap as a fraction, null when unknown or not applicable. */
-  readonly fundingRate: number | null;
 }
 
 /** What Jev sees: compact, relative, no addresses, no credentials, no free text from a provider. */

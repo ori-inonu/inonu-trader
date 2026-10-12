@@ -99,8 +99,11 @@ export async function readRound(deps: RoundDeps): Promise<RoundResult> {
   let read: JevRead;
   try {
     const localNow = deps.localNow ?? Date.now;
-    const ages = deps.feed.ages(deps.instId, localNow());
-    if (ages.bookAgeMs === null || ages.bookAgeMs > BOOK_REFRESH_AFTER_MS) await deps.feed.refreshBook(deps.instId);
+    let ages = deps.feed.ages(deps.instId, localNow(), deps.keeper.exchangeNow());
+    if (ages.bookAgeMs === null || ages.bookAgeMs > BOOK_REFRESH_AFTER_MS) {
+      await deps.feed.refreshBook(deps.instId);
+      ages = deps.feed.ages(deps.instId, localNow(), deps.keeper.exchangeNow());
+    }
     if (ages.tickerAgeMs === null || ages.tickerAgeMs > TICKER_REFRESH_AFTER_MS) await deps.feed.refreshTicker(deps.instId);
     read = await runJevRead(deps.feed.snapshot(deps.instId, localNow(), deps.keeper.exchangeNow()), {
       model: deps.model,

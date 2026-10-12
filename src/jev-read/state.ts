@@ -7,7 +7,6 @@ import {
   BOOK_MAX_AGE_MS,
   CANDLES_MAX_AGE_MS,
   FLOW_WINDOW_MS,
-  FUTURE_TOLERANCE_MS,
   HORIZON_MINUTES,
   MIN_CANDLES,
   TICKER_MAX_AGE_MS,
@@ -27,21 +26,103 @@ const BOOK_DEPTH_LEVELS = 5;
 
 const positive = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value) && value > 0;
 const finite = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+const unixMs = (value: unknown): value is number => typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
+const monoMs = (value: unknown): value is number => finite(value) && value >= 0;
+
+function bookFresh(input: TapeInput): boolean {
+  const proof = input.book?.proof;
+  if (!proof || typeof proof !== "object" || Array.isArray(proof) || typeof input.feedId !== "string" || input.feedId.length === 0 ||
+    proof.feedId !== input.feedId || !unixMs(input.feedEpoch) || proof.feedEpoch !== input.feedEpoch ||
+    !Number.isSafeInteger(proof.captureId) || proof.captureId <= 0 || proof.forSpotInstId !== input.instId ||
+    proof.requestedInstId !== input.instId || !unixMs(input.wsGeneration) || !unixMs(proof.sourceTsMs) ||
+    !unixMs(proof.receivedAtMs) || !monoMs(proof.receivedAtMonoMs) || !monoMs(input.monotonicNowMs)) return false;
+  if (proof.source === "rest_book") {
+    if (proof.wsGeneration !== null || (proof.reportedInstId !== null && proof.reportedInstId !== input.instId)) return false;
+  } else if (proof.source === "ws_books5") {
+    if (proof.wsGeneration !== input.wsGeneration || proof.reportedInstId !== input.instId) return false;
+  } else return false;
+  const cacheAge = input.monotonicNowMs - proof.receivedAtMonoMs;
+  if (cacheAge < 0 || cacheAge > BOOK_MAX_AGE_MS) return false;
+  // Preserve the common clock_unknown gate rather than label an unknown exchange age as stale.
+  if (!finite(input.exchangeNowMs) || input.exchangeNowMs < 0 || input.exchangeNowMs > Number.MAX_SAFE_INTEGER) return true;
+  const sourceAge = input.exchangeNowMs - proof.sourceTsMs;
+  return sourceAge >= 0 && sourceAge <= BOOK_MAX_AGE_MS;
+}
+
+function tickerFresh(input: TapeInput): boolean {
+  const proof = input.ticker?.proof;
+  if (!proof || typeof proof !== "object" || Array.isArray(proof) || typeof input.feedId !== "string" || input.feedId.length === 0 ||
+    proof.feedId !== input.feedId || !unixMs(input.feedEpoch) || proof.feedEpoch !== input.feedEpoch ||
+    !Number.isSafeInteger(proof.captureId) || proof.captureId <= 0 || proof.forSpotInstId !== input.instId ||
+    proof.requestedInstId !== input.instId || proof.reportedInstId !== input.instId || !unixMs(input.wsGeneration) ||
+    !unixMs(proof.sourceTsMs) || !unixMs(proof.receivedAtMs) || !monoMs(proof.receivedAtMonoMs) || !monoMs(input.monotonicNowMs)) return false;
+  if (proof.source === "rest_ticker") {
+    if (proof.wsGeneration !== null) return false;
+  } else if (proof.source === "ws_tickers") {
+    if (proof.wsGeneration !== input.wsGeneration) return false;
+  } else return false;
+  const cacheAge = input.monotonicNowMs - proof.receivedAtMonoMs;
+  if (cacheAge < 0 || cacheAge > TICKER_MAX_AGE_MS) return false;
+  // Unknown exchange time is reported by the common clock_unknown gate.
+  if (!finite(input.exchangeNowMs) || input.exchangeNowMs < 0 || input.exchangeNowMs > Number.MAX_SAFE_INTEGER) return true;
+  const sourceAge = input.exchangeNowMs - proof.sourceTsMs;
+  return sourceAge >= 0 && sourceAge <= TICKER_MAX_AGE_MS;
+}
+
+function fundingPercent(input: TapeInput): number | null {
+  const observation = input.funding;
+  if (!observation || !finite(observation.rate) || !Number.isSafeInteger(input.fundingMaxAgeMs) || input.fundingMaxAgeMs <= 0) return null;
+  const proof = observation.proof;
+  if (!proof || typeof input.feedId !== "string" || input.feedId.length === 0 || proof.feedId !== input.feedId ||
+    !unixMs(input.feedEpoch) || proof.feedEpoch !== input.feedEpoch || !Number.isSafeInteger(proof.captureId) || proof.captureId <= 0 ||
+    proof.source !== "rest_funding" || proof.wsGeneration !== null || proof.forSpotInstId !== input.instId ||
+    proof.requestedInstId !== `${input.instId}-SWAP` || proof.reportedInstId !== `${input.instId}-SWAP` ||
+    !unixMs(proof.sourceTsMs) || !unixMs(proof.receivedAtMs) || !monoMs(proof.receivedAtMonoMs) || !monoMs(input.monotonicNowMs) ||
+    !finite(input.exchangeNowMs) || input.exchangeNowMs < 0 || input.exchangeNowMs > Number.MAX_SAFE_INTEGER) return null;
+  const sourceAge = input.exchangeNowMs - proof.sourceTsMs;
+  const cacheAge = input.monotonicNowMs - proof.receivedAtMonoMs;
+  const percent = observation.rate * 100;
+  return sourceAge >= 0 && sourceAge <= input.fundingMaxAgeMs && cacheAge >= 0 && cacheAge <= input.fundingMaxAgeMs && finite(percent) ? percent : null;
+}
 
 function validLevels(levels: readonly TapeLevel[]): TapeLevel[] {
   return levels.filter((level) => positive(level.px) && positive(level.sz));
 }
 
 /** The tail of the candle series when it is 31 contiguous, valid one minute bars; null otherwise. */
-function contiguousTail(candles: readonly TapeCandle[]): TapeCandle[] | null {
+function contiguousTail(input: TapeInput): TapeCandle[] | null {
+  const candles = input.candles;
   if (candles.length < MIN_CANDLES) return null;
   const tail = candles.slice(-MIN_CANDLES);
   for (let i = 0; i < tail.length; i += 1) {
     const candle = tail[i]!;
-    if (!positive(candle.close) || !finite(candle.tsMs)) return null;
+    if (!positive(candle.close) || !Number.isSafeInteger(candle.tsMs) || candle.tsMs < 0) return null;
+    const proof = candle.proof;
+    if (!proof || typeof proof !== "object" || Array.isArray(proof) || typeof input.feedId !== "string" || input.feedId.length === 0 ||
+      proof.feedId !== input.feedId || !unixMs(input.feedEpoch) || proof.feedEpoch !== input.feedEpoch ||
+      !Number.isSafeInteger(proof.captureId) || proof.captureId <= 0 || proof.forSpotInstId !== input.instId ||
+      proof.requestedInstId !== input.instId || (proof.reportedInstId !== null && proof.reportedInstId !== input.instId) ||
+      proof.source !== "rest_candles_1m" || proof.wsGeneration !== null || !unixMs(input.wsGeneration) ||
+      !unixMs(proof.sourceTsMs) || proof.sourceTsMs !== candle.tsMs || !unixMs(proof.receivedAtMs) ||
+      !monoMs(proof.receivedAtMonoMs) || !monoMs(input.monotonicNowMs) || proof.receivedAtMonoMs > input.monotonicNowMs) return null;
     if (i > 0 && candle.tsMs - tail[i - 1]!.tsMs !== BAR_MS) return null;
   }
   return tail;
+}
+
+function coverageFresh(input: TapeInput): boolean {
+  const proof = input.coverage;
+  if (!proof || typeof proof !== "object" || Array.isArray(proof) ||
+    typeof input.feedId !== "string" || input.feedId.length === 0 || proof.feedId !== input.feedId ||
+    !unixMs(input.feedEpoch) || proof.feedEpoch !== input.feedEpoch || proof.instId !== input.instId ||
+    !unixMs(input.wsGeneration) || proof.wsGeneration !== input.wsGeneration ||
+    proof.source !== "ws_trades" || proof.socketOpen !== true || !monoMs(input.monotonicNowMs) ||
+    !monoMs(proof.acknowledgedAtMonoMs) || !monoMs(proof.continuousSinceMonoMs) ||
+    !monoMs(proof.observedThroughMonoMs) || proof.observedThroughMonoMs !== input.monotonicNowMs ||
+    proof.acknowledgedAtMonoMs > proof.continuousSinceMonoMs ||
+    proof.observedThroughMonoMs - proof.continuousSinceMonoMs < FLOW_WINDOW_MS) return false;
+  return proof.lostThroughMonoMs === null ||
+    (monoMs(proof.lostThroughMonoMs) && proof.observedThroughMonoMs - proof.lostThroughMonoMs > FLOW_WINDOW_MS);
 }
 
 function sampleStdDev(values: readonly number[]): number {
@@ -50,10 +131,27 @@ function sampleStdDev(values: readonly number[]): number {
   return Math.sqrt(variance);
 }
 
-function flowOf(trades: readonly TapeTrade[], nowMs: number): TapeState["flow60s"] {
+function tradesVerified(input: TapeInput): boolean {
+  if (!Array.isArray(input.trades)) return false;
+  return input.trades.every((trade) => {
+    if (!trade || typeof trade !== "object" || !positive(trade.px) || !positive(trade.sz) ||
+      (trade.side !== "buy" && trade.side !== "sell")) return false;
+    const proof = trade.proof;
+    return !!proof && typeof proof === "object" && !Array.isArray(proof) &&
+      proof.feedId === input.feedId && proof.feedEpoch === input.feedEpoch &&
+      Number.isSafeInteger(proof.captureId) && proof.captureId > 0 &&
+      proof.forSpotInstId === input.instId && proof.requestedInstId === input.instId &&
+      proof.reportedInstId === input.instId && proof.source === "ws_trades" &&
+      proof.wsGeneration === input.wsGeneration && unixMs(proof.sourceTsMs) &&
+      unixMs(proof.receivedAtMs) && proof.receivedAtMs === trade.receivedAtMs &&
+      monoMs(proof.receivedAtMonoMs) && proof.receivedAtMonoMs <= input.monotonicNowMs;
+  });
+}
+
+function flowOf(trades: readonly TapeTrade[], monotonicNowMs: number): TapeState["flow60s"] {
   const inWindow = trades
-    .filter((t) => positive(t.px) && positive(t.sz) && finite(t.receivedAtMs) && nowMs - t.receivedAtMs <= FLOW_WINDOW_MS && t.receivedAtMs <= nowMs)
-    .sort((a, b) => a.receivedAtMs - b.receivedAtMs);
+    .filter((t) => monotonicNowMs - t.proof.receivedAtMonoMs <= FLOW_WINDOW_MS)
+    .sort((a, b) => a.proof.receivedAtMonoMs - b.proof.receivedAtMonoMs);
   let buyBase = 0;
   let sellBase = 0;
   let notional = 0;
@@ -76,29 +174,31 @@ function flowOf(trades: readonly TapeTrade[], nowMs: number): TapeState["flow60s
   };
 }
 
-/** An age is acceptable when it is not older than the limit and not meaningfully in the future of the clock it is read on. */
-const fresh = (ageMs: number, maxMs: number) => ageMs <= maxMs && ageMs >= -FUTURE_TOLERANCE_MS;
-
 export function buildTapeState(input: TapeInput): TapeStateResult {
   const reasons: InsufficientReason[] = [];
 
   const bids = input.book ? validLevels(input.book.bids) : [];
   const asks = input.book ? validLevels(input.book.asks) : [];
   if (input.book === null || bids.length === 0 || asks.length === 0) reasons.push("book_missing");
-  else if (!fresh(input.nowMs - input.book.receivedAtMs, BOOK_MAX_AGE_MS)) reasons.push("book_stale");
+  else if (!bookFresh(input)) reasons.push("book_stale");
   else if (bids[0]!.px >= asks[0]!.px) reasons.push("book_crossed");
 
   if (input.ticker === null || !positive(input.ticker.last)) reasons.push("ticker_missing");
-  else if (!fresh(input.nowMs - input.ticker.receivedAtMs, TICKER_MAX_AGE_MS)) reasons.push("ticker_stale");
+  else if (!tickerFresh(input)) reasons.push("ticker_stale");
 
   // Candle stamps come from the exchange, so they are aged on the exchange clock. Without a measured offset the age is unknown.
-  const tail = contiguousTail(input.candles);
+  const tail = contiguousTail(input);
   if (tail === null) reasons.push("candles_short");
-  else if (input.exchangeNowMs === null || !Number.isFinite(input.exchangeNowMs)) reasons.push("clock_unknown");
-  else if (!fresh(input.exchangeNowMs - tail[tail.length - 1]!.tsMs, CANDLES_MAX_AGE_MS)) reasons.push("candles_stale");
+  else if (input.exchangeNowMs === null || !Number.isFinite(input.exchangeNowMs) || input.exchangeNowMs < 0 || input.exchangeNowMs > Number.MAX_SAFE_INTEGER) reasons.push("clock_unknown");
+  else {
+    // A forming bar may be current, but its opening cannot be in the future.
+    // Keep the fractional corrected exchange clock; do not round a negative age to zero.
+    const ageMs = input.exchangeNowMs - tail[tail.length - 1]!.tsMs;
+    if (ageMs < 0 || ageMs > CANDLES_MAX_AGE_MS) reasons.push("candles_stale");
+  }
 
   // Flow is read from the trades channel. Silence from a dead or unsubscribed channel must not look like a quiet market.
-  if (!input.tradesLive) reasons.push("trades_unavailable");
+  if (!input.tradesLive || !coverageFresh(input) || !tradesVerified(input)) reasons.push("trades_unavailable");
 
   if (reasons.length > 0 || input.book === null || input.ticker === null || tail === null) return { ok: false, reasons };
 
@@ -129,10 +229,10 @@ export function buildTapeState(input: TapeInput): TapeStateResult {
       depthQuoteTop5: { bid: bidQuote, ask: askQuote },
       returnsBps: { m1: returnBps(1), m5: returnBps(5), m15: returnBps(15), m30: returnBps(30) },
       volBpsPerMinute: sampleStdDev(logReturns) * 10_000,
-      flow60s: flowOf(input.trades, input.nowMs),
+      flow60s: flowOf(input.trades, input.monotonicNowMs),
       change24hPct,
       rangePosition24h,
-      fundingRatePct: finite(input.fundingRate) ? input.fundingRate * 100 : null,
+      fundingRatePct: fundingPercent(input),
     },
   };
 }
