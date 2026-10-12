@@ -92,6 +92,7 @@ describe("the account chip", () => {
     expect(html).toContain("Carteira OKX");
     expect(html).toContain("nao conectada");
     expect(html).toContain("A barra nao conecta nem assina nada.");
+    expect(html).toMatch(/<button[^>]*data-tool="wallet"[^>]*title="Carteira OKX"/);
     expect(html).not.toMatch(/>\s*(Conectar|Assinar|Enviar|Comprar|Vender)\b/);
   });
 

@@ -153,6 +153,7 @@ export default function DeskRail({ chips, skewMs, nowMs, symbolPicker = null, in
 
         <TopbarPopover
           label="Carteira OKX"
+          tool="wallet"
           tone={wallet.tone}
           face={
             <>

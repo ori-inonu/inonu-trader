@@ -134,9 +134,10 @@
   .tools button .chipDetail { max-width: 136px; }
 }
 
-/* With five tools the pills keep the dot and the name; their detail lives in the panel they open. */
+/* With six tools the pills keep the dot and the name, and full screen gives way (the F key still answers). */
 @media (max-width: 1240px) {
   .tools button .chipDetail { display: none; }
+  .toolGroup [data-tool="fullscreen"] { display: none; }
 }
 
 @media (max-width: 1200px) {
@@ -152,8 +153,8 @@
 
 @media (max-width: 960px) {
   .clockNote { display: none; }
-  /* The browser has its own full screen here, and the F key still answers. */
-  .toolGroup [data-tool="fullscreen"] { display: none; }
+  /* The pills shrink to their coloured dot; the name stays for readers and as a tooltip. */
+  .tools button .chipText { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 }
 
 @media (max-width: 820px) {
@@ -162,12 +163,11 @@
   .symbol button[aria-haspopup="dialog"] { max-width: 120px; }
   .tools button .chipLabel { max-width: 84px; overflow: hidden; text-overflow: ellipsis; }
   .toolGroup { padding-left: var(--s2); }
-  /* Below this width the desk shows one section at a time, so there is no side panel for the chart mode to hide. */
-  .toolGroup [data-tool="layout"] { display: none; }
+  /* Below this width the desk shows one section at a time: no side panel for the chart mode to hide, and the chart is a tab. */
+  .toolGroup [data-tool="layout"], .toolGroup [data-tool="capture"] { display: none; }
 }
 
 @media (max-width: 640px) {
-  .tools button .chipText { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .tools .clock { display: none; }
 }
 
@@ -177,6 +177,11 @@
 }
 
 @media (max-width: 400px) {
-  .toolGroup [data-tool="capture"] { display: none; }
   .tools { gap: var(--s1); }
+  .toolGroup { padding-left: 0; border-left: 0; }
+}
+
+/* On the narrowest phones the wallet chip yields: its state is also in the Fontes tab of the desk. */
+@media (max-width: 380px) {
+  .tools > div:has(> button[data-tool="wallet"]) { display: none; }
 }

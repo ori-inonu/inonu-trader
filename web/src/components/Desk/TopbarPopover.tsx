@@ -61,7 +61,7 @@ export default function TopbarPopover({ label, face, children, align = "end", to
 
   return (
     <div ref={rootRef} className={styles.root}>
-      <button ref={buttonRef} type="button" className={styles.trigger} data-tone={tone} data-variant={variant} data-tool={tool} aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
+      <button ref={buttonRef} type="button" className={styles.trigger} data-tone={tone} data-variant={variant} data-tool={tool} title={label} aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
         {face}
         {variant === "pill" ? (
         <svg className={styles.chevron} width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" focusable="false">

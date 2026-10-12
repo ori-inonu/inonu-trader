@@ -41,7 +41,7 @@ A topbar é aplicada sobre o projeto como ele roda hoje (a árvore de trabalho p
 - As preferências de exibição (paleta e modo gráfico) são aplicadas por um `next/script` com `beforeInteractive` no layout raiz, que roda a partir do primeiro HTML e antes da hidratação. Um `<script>` cru no layout fazia o React avisar no console do cliente.
 - Rodada 2: o sino compara o nível com o último preço conhecido na hora de criar (a direção vem daí, não de uma escolha do usuário), avalia só preços conhecidos e guarda o estado de "visto" para o selo. Preço do ativo fora da tela (fora do foco e da lista de ativos) não avalia: a linha do alerta diz "sem preco agora".
 - Rodada 2: o modo gráfico é um atributo no `html` lido por uma regra de `globals.css` sobre os `data-slot` dos painéis, sem tocar o CSS do desk; a tecla e o botão são o mesmo caminho (a tecla aperta o botão).
-- Rodada 2, prioridade quando falta largura: os detalhes das pílulas somem abaixo de 1240 px, as seções somem abaixo de 1100, a tela cheia abaixo de 960, o modo gráfico abaixo de 820 (a mesa já mostra uma seção por vez) e a captura abaixo de 400.
+- Rodada 2, prioridade quando falta largura (com seis ferramentas, contando o link de Configurações que outra sessão acrescentou à barra): os detalhes das pílulas e a tela cheia somem abaixo de 1240 px, as seções abaixo de 1100, as pílulas viram só o ponto colorido (o nome fica para leitor de tela e como dica) abaixo de 960, o modo gráfico e a captura abaixo de 820 (a mesa já mostra uma seção por vez), o chip da carteira abaixo de 380 (o estado dela também está na aba Fontes). Cada gatilho de popover tem `title` com o nome do painel.
 
 ## Verificação feita (2026-10-12)
 
