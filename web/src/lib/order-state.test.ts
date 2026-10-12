@@ -11,7 +11,7 @@ describe("orderStateFor", () => {
 
   test("covers every quote status", () => {
     const states: Record<Quote["status"], { label: string; tone: string }> = {
-      sent: { label: "Orden enviada", tone: "neutral" },
+      sent: { label: "Ordem enviada", tone: "neutral" },
       placed: { label: "Ordem no livro", tone: "buy" },
       reverted: { label: "Ordem revertida", tone: "sell" },
       lost: { label: "Ordem perdida", tone: "sell" },
