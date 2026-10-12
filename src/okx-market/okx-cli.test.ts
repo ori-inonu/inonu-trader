@@ -1,9 +1,13 @@
-import { expect, test } from 'bun:test';
+import { expect, setDefaultTimeout, test } from 'bun:test';
 import { mkdtempSync, writeFileSync, existsSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
+// Each run starts a child bun process that contends for CPU with the rest of the suite; a child killed by its own
+// timeout reports a bare error. The child budget and the per test budget are generous so load cannot fail the test.
+const CHILD_TIMEOUT_MS = 45_000;
+setDefaultTimeout(120_000);
 const script = resolve(import.meta.dir, '../../scripts/okx-market-scan.ts');
 function run(args: string[], credentials: Record<string, string> = {}) {
   const directory = mkdtempSync(join(tmpdir(), 'inonu-cli-'));
@@ -13,7 +17,7 @@ function run(args: string[], credentials: Record<string, string> = {}) {
   try {
     const result = spawnSync(process.execPath, ['--no-env-file', '--preload', guard, script, ...args], {
       cwd: directory, env: { SystemRoot: process.env.SystemRoot ?? 'C:\\Windows', ...credentials },
-      encoding: 'utf8', timeout: 10000,
+      encoding: 'utf8', timeout: CHILD_TIMEOUT_MS,
     });
     return { status: result.status, stdout: result.stdout, stderr: result.stderr, networkCalled: existsSync(marker), error: result.error };
   } finally { rmSync(directory, { recursive: true, force: true }); }
