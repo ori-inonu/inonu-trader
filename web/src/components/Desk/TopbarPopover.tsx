@@ -15,6 +15,10 @@ export interface TopbarPopoverProps {
   tone?: "live" | "late" | "down" | "off";
   /** pill: dot and words (sources, wallet). icon: a square icon button (preferences), whose face carries a hidden name. */
   variant?: "pill" | "icon";
+  /** A stable name for the trigger, read by the keyboard shortcuts of the bar (data-tool). */
+  tool?: string;
+  /** Called after every change of the open state, so a panel can react to being seen. */
+  onOpenChange?: (open: boolean) => void;
 }
 
 /**
@@ -22,11 +26,20 @@ export interface TopbarPopoverProps {
  * the content is always there for assistive technology and for the static render. Escape and a click outside close
  * it, and Escape gives the focus back to the button. No animation: nothing moves, nothing pulses.
  */
-export default function TopbarPopover({ label, face, children, align = "end", tone = "off", variant = "pill" }: TopbarPopoverProps) {
+export default function TopbarPopover({ label, face, children, align = "end", tone = "off", variant = "pill", tool, onOpenChange }: TopbarPopoverProps) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const notify = useRef(onOpenChange);
+
+  useEffect(() => {
+    notify.current = onOpenChange;
+  });
+
+  useEffect(() => {
+    notify.current?.(open);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -48,7 +61,7 @@ export default function TopbarPopover({ label, face, children, align = "end", to
 
   return (
     <div ref={rootRef} className={styles.root}>
-      <button ref={buttonRef} type="button" className={styles.trigger} data-tone={tone} data-variant={variant} aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
+      <button ref={buttonRef} type="button" className={styles.trigger} data-tone={tone} data-variant={variant} data-tool={tool} aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((value) => !value)}>
         {face}
         {variant === "pill" ? (
         <svg className={styles.chevron} width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" focusable="false">

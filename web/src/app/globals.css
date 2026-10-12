@@ -404,3 +404,11 @@ html[data-tab-hidden="true"] .scanline {
    draw, so these two lines recolour every panel and every canvas. Keep the values equal to lib/mesa/preferences.ts. */
 :root[data-palette="daltonismo"] { --buy: #56b4ff; --sell: #ff7a3d; }
 :root[data-palette="invertido"] { --buy: #ff6b81; --sell: #3ddc97; }
+
+/* Chart mode (button of the desk topbar, lib/mesa/layout.ts): the wings step aside and the Jev strip and the chart take the
+   whole width. Above the phone breakpoint only, where the desk already shows one section at a time. */
+@media (min-width: 821px) {
+  :root[data-layout="grafico"] main:has(> [data-slot="livro"]) { grid-template-columns: minmax(0, 1fr); }
+  :root[data-layout="grafico"] [data-slot="livro"],
+  :root[data-layout="grafico"] [data-slot="fluxo"] { display: none; }
+}

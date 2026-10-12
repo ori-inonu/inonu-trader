@@ -46,7 +46,7 @@
 .optionHint { color: var(--ink-3); font: var(--fs-micro); letter-spacing: 0.04em; }
 .note { color: var(--ink-3); font: var(--fs-sm); }
 
-.keys { display: flex; flex-direction: column; gap: var(--s2); list-style: none; }
+.keys { display: flex; flex-direction: column; gap: var(--s2); padding: 0; list-style: none; }
 .keys li { display: flex; align-items: center; gap: var(--s3); color: var(--ink-2); font: var(--fs-sm); }
 .kbd {
   min-width: 26px;

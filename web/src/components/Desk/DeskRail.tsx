@@ -5,7 +5,8 @@ import BrandMark from "@/components/BrandMark/BrandMark";
 import type { FeedChip } from "@/lib/mesa/mesa-model";
 import { ageLabel, shortcutFor, skewBadge, summarizeFeeds, toneWord, walletBadge, walletHint } from "@/lib/mesa/topbar-model";
 import TopbarPopover from "./TopbarPopover";
-import { CaptureButton, FullscreenButton, PreferencesMenu, toggleFullscreen } from "./TopbarTools";
+import { AlertsMenu } from "./TopbarAlerts";
+import { CaptureButton, FullscreenButton, LayoutButton, PreferencesMenu, toggleFullscreen } from "./TopbarTools";
 import styles from "./DeskRail.module.css";
 
 export interface DeskRailProps {
@@ -22,7 +23,12 @@ export interface DeskRailProps {
   ages?: Readonly<Record<string, number | null>>;
   /** The connected account, only to show its short form on the wallet chip. The bar never connects or signs. */
   account?: string | null;
+  /** Last price by instrument, null when unknown, for the price alerts. Without it the alerts cannot be created or evaluated. */
+  prices?: Readonly<Record<string, number | null>>;
 }
+
+/** The button each shortcut presses, so a key and a click are the same action. */
+const TOOL_FOR_SHORTCUT = { alerts: "alerts", layout: "layout", help: "preferences" } as const;
 
 const two = (n: number) => String(n).padStart(2, "0");
 
@@ -59,36 +65,45 @@ export function FeedChipList({ chips, className, ages }: { chips: readonly FeedC
   );
 }
 
-export default function DeskRail({ chips, skewMs, nowMs, symbolPicker = null, instId = null, ages, account = null }: DeskRailProps) {
+export default function DeskRail({ chips, skewMs, nowMs, symbolPicker = null, instId = null, ages, account = null, prices }: DeskRailProps) {
+  const railRef = useRef<HTMLElement | null>(null);
   const symbolRef = useRef<HTMLDivElement | null>(null);
   const skew = skewLabel(skewMs);
   const badge = skewBadge(skewMs);
   const exchangeNow = nowMs + (skewMs ?? 0);
+  // Alerts are stamped in exchange time; nothing is evaluated before the browser clock has ticked once.
+  const alertClock = nowMs > 0 ? exchangeNow : 0;
   const wallet = walletBadge(chips.find((chip) => chip.id === "okx-wallet"), account);
   // The wallet has its own chip, so the sources pill counts only the sources the panel lists.
   const feeds = chips.filter((chip) => chip.id !== "okx-wallet");
   const summary = summarizeFeeds(feeds);
 
-  // "/" opens the symbol search and "F" the full screen, as on the platforms this bar learns from.
+  // The keys of the platforms this bar learns from: "/" search, "A" alerts, "G" chart mode, "F" full screen, "?" preferences.
+  // A key presses the same button a click would, so there is one code path per action.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       const action = shortcutFor(event);
-      if (action === "search") {
-        const trigger = symbolRef.current?.querySelector<HTMLButtonElement>('button[aria-haspopup="dialog"]');
-        if (!trigger) return;
-        event.preventDefault();
-        trigger.click();
-      } else if (action === "fullscreen") {
+      if (action === null) return;
+      if (action === "fullscreen") {
         event.preventDefault();
         toggleFullscreen();
+        return;
       }
+      const trigger =
+        action === "search"
+          ? symbolRef.current?.querySelector<HTMLButtonElement>('button[aria-haspopup="dialog"]')
+          : railRef.current?.querySelector<HTMLButtonElement>(`button[data-tool="${TOOL_FOR_SHORTCUT[action]}"]`);
+      // A button hidden by the width of the window is not offered, so its key does nothing either.
+      if (!trigger || trigger.getClientRects().length === 0) return;
+      event.preventDefault();
+      trigger.click();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   return (
-    <header className={styles.rail}>
+    <header ref={railRef} className={styles.rail}>
       <div className={styles.brand}>
         <BrandMark decorative size={32} />
         <div className={styles.brandCopy}>
@@ -126,7 +141,7 @@ export default function DeskRail({ chips, skewMs, nowMs, symbolPicker = null, in
                 <span className={styles.chipLabel}>Fontes</span>
                 <span className={styles.chipDetail}>{summary.short}</span>
               </span>
-              <span className={styles.srOnly}>{`${summary.text}, ${toneWord(summary.tone)}`}</span>
+              <span className={styles.srOnly}>{summary.text}</span>
             </>
           }
         >
@@ -164,9 +179,11 @@ export default function DeskRail({ chips, skewMs, nowMs, symbolPicker = null, in
         </div>
 
         <div className={styles.toolGroup} role="group" aria-label="Ferramentas">
-          <PreferencesMenu />
+          <AlertsMenu instId={instId} prices={prices} nowMs={alertClock} />
+          <LayoutButton />
           <CaptureButton instId={instId} />
           <FullscreenButton />
+          <PreferencesMenu />
         </div>
       </div>
     </header>

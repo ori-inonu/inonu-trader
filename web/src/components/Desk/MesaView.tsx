@@ -6,6 +6,8 @@ import { useDesk } from "@/lib/desk/useDesk";
 import { DESK_DEFAULT_WATCHLIST, type DeskBar } from "@/lib/desk/types";
 import { useJevRead } from "@/lib/jev-read";
 import { capabilityRows, feedChips, hasModelDecision, jevStageModel, journalRows, newestReadAgeMs, systemOneLine } from "@/lib/mesa/mesa-model";
+import { priceMap } from "@/lib/mesa/alerts";
+import { feedAges } from "@/lib/mesa/topbar-model";
 import { useReducedMotion } from "@/lib/motion";
 import { useOperatorCenter } from "@/lib/operator-center";
 import { useSystemOne } from "@/lib/system-one";
@@ -70,6 +72,8 @@ export default function MesaView() {
   const skewMs = desk.clockSkewMs;
   const jevAgeMs = newestReadAgeMs(jevBoard.board, nowMs, skewMs);
   const jevDecided = useMemo(() => hasModelDecision(jevBoard.board), [jevBoard.board]);
+  const railAges = useMemo(() => feedAges(desk.feeds, nowMs), [desk.feeds, nowMs]);
+  const railPrices = useMemo(() => priceMap(desk.watchlist, focus, desk.ticker?.last), [desk.watchlist, desk.ticker, focus]);
   const stage = useMemo(
     () => jevStageModel({ status: jevBoard.status, board: jevBoard.board, focus, nowMs, browserSkewMs: skewMs }),
     [jevBoard.status, jevBoard.board, focus, nowMs, skewMs],
@@ -109,7 +113,15 @@ export default function MesaView() {
       <ConsoleBackdrop tone={stage.tone} />
       <div ref={rootRef} className={styles.root} data-tab={tab}>
         <div className={styles.rail}>
-          <DeskRail chips={chips} skewMs={skewMs} nowMs={nowMs} />
+          <DeskRail
+            chips={chips}
+            skewMs={skewMs}
+            nowMs={nowMs}
+            instId={focus}
+            ages={railAges}
+            account={wallet.snapshot.account}
+            prices={railPrices}
+          />
         </div>
 
         <main className={styles.deck}>

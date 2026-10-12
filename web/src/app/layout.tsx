@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
+import { LAYOUT_BOOT_SCRIPT } from "@/lib/mesa/layout";
 import { PALETTE_BOOT_SCRIPT } from "@/lib/mesa/preferences";
 import "./globals.css";
 
@@ -32,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`${inter.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: PALETTE_BOOT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: PALETTE_BOOT_SCRIPT + LAYOUT_BOOT_SCRIPT }} />
       </head>
       <body>{children}</body>
     </html>

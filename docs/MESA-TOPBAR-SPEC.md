@@ -21,6 +21,15 @@ A topbar é aplicada sobre o projeto como ele roda hoje (a árvore de trabalho p
 | T11 | Nada pisca nem pulsa; nenhum texto com ponto mediano, travessão ou meia-risca (o teste `typography-scan` cobre as fontes); texto sobre o fundo usa `--ink`, `--ink-2` ou `--ink-3`, nunca `--ink-4`. Nenhum controle da barra executa ordem. | `typography-scan.test.ts` verde; teste de ausência de controles de ordem. |
 | T12 | A barra cabe na linha de 48 px (44 px em largura estreita) sem rolagem horizontal em 1920, 1280, 1201, 1101, 820, 390 e 320 de largura, e o texto do popover nunca é cortado. | Verificação no navegador nas larguras listadas (`scrollWidth` igual a `clientWidth`). |
 
+### Rodada 2 (2026-10-12): mais conceitos do TradingView
+
+| ID | Requisito | Aceitação |
+| --- | --- | --- |
+| T13 | Alertas de preço (o sino do TradingView): o usuário informa um nível para o ativo em foco; a direção (acima ou abaixo) vem da comparação com o último preço conhecido. Preço indisponível nunca vira zero nem dispara: sem preço não se cria alerta e um preço desconhecido não avalia nada. Cada alerta dispara uma vez, fica na lista como disparado (nível, preço, hora UTC) e some pelo botão remover. O selo do sino mostra, sem animação, quantos disparos o usuário ainda não viu. Valem só com a aba aberta, nada é enviado e nenhuma ordem nasce: o painel diz isso. Ficam salvos neste navegador (máximo 20, valor corrompido é ignorado). | Testes puros de `alerts` (interpretação do nível em pt-BR, criação e recusas, disparo para cima e para baixo, uma vez só, preço nulo, normalização do armazenamento, mapa de preços); renderização do painel e do selo; navegador: criar, disparar e remover. |
+| T14 | Modo gráfico (o "maximizar gráfico" do TradingView): um botão com `aria-pressed` e a tecla `G` escondem livro, fita, lista de ativos e fluxo e dão a largura toda ao Jev e ao gráfico. Só acima de 820 px (abaixo a mesa já mostra uma seção por vez). Fica salvo neste navegador e é aplicado antes da pintura. | Testes de `layout` (normalização, aplicar e limpar, armazenamento bloqueado, script de arranque, folha de estilo com a regra); navegador: os painéis somem, o gráfico ocupa a largura e o botão reflete o estado. |
+| T15 | Atalhos de teclado: `A` abre os alertas, `G` alterna o modo gráfico, `?` abre as preferências com a lista de atalhos, além de `/` e `F`. Nada dispara com foco em campo de texto nem com Ctrl, Meta ou Alt. A lista de atalhos mostrada no menu é a mesma que o código atende. | Testes de `shortcutFor` e de `SHORTCUTS`; navegador: cada tecla abre ou alterna o que diz. |
+| T16 | Em 1101 px e acima a barra continua sem rolagem horizontal com os dois botões novos; abaixo de 820 px o botão do modo gráfico some; o painel dos alertas cabe na tela de 320 px. | Verificação no navegador (`scrollWidth` igual a `clientWidth`). |
+
 ## Decisões de desenho
 
 - O resumo repetido do ativo em foco (preço e variação) foi retirado da barra: já está no palco do Jev e no gráfico. No lugar entrou a busca global, que é o conceito mais usado da barra do TradingView.
@@ -29,7 +38,12 @@ A topbar é aplicada sobre o projeto como ele roda hoje (a árvore de trabalho p
 - A lógica fica em funções puras (`web/src/lib/mesa/topbar-model.ts`, `preferences.ts`, `capture.ts`) e a apresentação em `DeskRail`, `TopbarPopover` e `TopbarTools`.
 - As regras de largura estreita do CSS valem só para os botões da barra (`.tools button ...`), nunca para a lista dentro do popover.
 
+- Rodada 2: o sino compara o nível com o último preço conhecido na hora de criar (a direção vem daí, não de uma escolha do usuário), avalia só preços conhecidos e guarda o estado de "visto" para o selo. Preço do ativo fora da tela (fora do foco e da lista de ativos) não avalia: a linha do alerta diz "sem preco agora".
+- Rodada 2: o modo gráfico é um atributo no `html` lido por uma regra de `globals.css` sobre os `data-slot` dos painéis, sem tocar o CSS do desk; a tecla e o botão são o mesmo caminho (a tecla aperta o botão).
+- Rodada 2, prioridade quando falta largura: os detalhes das pílulas somem abaixo de 1240 px, as seções somem abaixo de 1100, a tela cheia abaixo de 960, o modo gráfico abaixo de 820 (a mesa já mostra uma seção por vez) e a captura abaixo de 400.
+
 ## Verificação feita (2026-10-12)
 
 - Navegador no projeto servido em `http://127.0.0.1:3031/`: `/` abre a busca com 80 linhas, as três paletas recolorem página e gráfico, a câmera gera `blob:` com o nome esperado, sem rolagem horizontal nas larguras de T12.
-- Dois defeitos achados e corrigidos nessa verificação: nomes das fontes sumindo no popover em largura de celular (regra estreita ampla demais) e painel colado na borda direita (especificidade do `data-align`).
+- Rodada 2, no mesmo endereço: `A` abre o sino com o campo em foco; dois alertas criados dispararam com o preço real da OKX (abaixo de 82.520 em 82.517,1 e acima de 82.540 em 82.540,7), o selo mostrou 2 até abrir o painel, os dados ficaram em `inonu:alerts` e o armazenamento foi limpo depois do teste; `G` escondeu os quatro painéis e o gráfico ocupou a largura toda; `?` abriu as preferências com as seis teclas; sem rolagem horizontal em 1280, 1241, 1201, 1101, 1100, 961, 960, 820, 520, 390 e 320 (em 820 e 961 o primeiro layout estourava e foi corrigido com as prioridades acima).
+- Dois defeitos achados e corrigidos na rodada 1: nomes das fontes sumindo no popover em largura de celular (regra estreita ampla demais) e painel colado na borda direita (especificidade do `data-align`).

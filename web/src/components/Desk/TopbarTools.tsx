@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { captureChart, type CaptureResult } from "@/lib/mesa/capture";
+import { applyLayout, LAYOUT_LABEL, readStoredLayout, type LayoutId } from "@/lib/mesa/layout";
 import { applyPalette, PALETTES, readStoredPalette, type PaletteId } from "@/lib/mesa/preferences";
 import { SHORTCUTS } from "@/lib/mesa/topbar-model";
 import TopbarPopover from "./TopbarPopover";
@@ -35,6 +36,26 @@ export function FullscreenButton() {
   );
 }
 
+/** Chart mode, the "maximize chart" of a charting platform: the side panels step aside and the chart takes the width. */
+export function LayoutButton() {
+  const [mode, setMode] = useState<LayoutId>("completo");
+  useEffect(() => setMode(readStoredLayout()), []);
+  const toggle = () => {
+    const next: LayoutId = mode === "grafico" ? "completo" : "grafico";
+    applyLayout(next);
+    setMode(next);
+  };
+  const label = LAYOUT_LABEL[mode];
+  return (
+    <button type="button" className={styles.iconButton} data-tool="layout" aria-pressed={mode === "grafico"} aria-label={label} title={`${label} (G)`} onClick={toggle}>
+      <svg {...ICON}>
+        <rect x="2" y="3" width="12" height="10" rx="1.5" />
+        <path d="M5.5 3v10M10.5 3v10" />
+      </svg>
+    </button>
+  );
+}
+
 const CAPTURE_NOTE: Record<CaptureResult, string> = {
   saved: "Grafico salvo como imagem",
   missing: "Grafico indisponivel para captura",
@@ -50,7 +71,7 @@ export function CaptureButton({ instId }: { instId: string | null }) {
   };
   return (
     <>
-      <button type="button" className={styles.iconButton} aria-label="Salvar o grafico como imagem" title="Salvar o grafico como imagem (PNG)" onClick={onClick}>
+      <button type="button" className={styles.iconButton} data-tool="capture" aria-label="Salvar o grafico como imagem" title="Salvar o grafico como imagem (PNG)" onClick={onClick}>
         <svg {...ICON}>
           <path d="M2 5.5h2.5l1-1.5h5l1 1.5H14V13H2z" />
           <circle cx="8" cy="8.8" r="2.2" />
@@ -73,6 +94,7 @@ export function PreferencesMenu() {
     <TopbarPopover
       label="Preferencias"
       variant="icon"
+      tool="preferences"
       face={
         <>
           <svg {...ICON}>

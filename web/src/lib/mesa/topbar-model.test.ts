@@ -120,6 +120,23 @@ describe("ageLabel, shortcutFor and captureFileName", () => {
     expect(shortcutFor({ key: "/", target: null })).toBe("search");
   });
 
+  test("a opens the alerts, g toggles the chart mode and ? opens the preferences, under the same guards", () => {
+    const body = { tagName: "BODY" };
+    expect(shortcutFor({ key: "a", target: body })).toBe("alerts");
+    expect(shortcutFor({ key: "A", target: body })).toBe("alerts");
+    expect(shortcutFor({ key: "g", target: body })).toBe("layout");
+    expect(shortcutFor({ key: "G", target: body })).toBe("layout");
+    expect(shortcutFor({ key: "?", target: body })).toBe("help");
+    for (const key of ["a", "g", "?"]) {
+      expect(shortcutFor({ key, target: { tagName: "INPUT" } })).toBeNull();
+      expect(shortcutFor({ key, ctrlKey: true, target: body })).toBeNull();
+      expect(shortcutFor({ key, metaKey: true, target: body })).toBeNull();
+      expect(shortcutFor({ key, altKey: true, target: body })).toBeNull();
+      expect(shortcutFor({ key, defaultPrevented: true, target: body })).toBeNull();
+      expect(shortcutFor({ key, target: { tagName: "DIV", isContentEditable: true } })).toBeNull();
+    }
+  });
+
   test("the capture file name carries the instrument and the UTC time and nothing unsafe", () => {
     const ms = Date.UTC(2026, 9, 12, 16, 45, 23);
     expect(captureFileName("BTC-USDT", ms)).toBe("inonu-BTC-USDT-20261012-164523Z.png");
@@ -129,7 +146,8 @@ describe("ageLabel, shortcutFor and captureFileName", () => {
   });
 
   test("the shortcut table lists what the keys really do", () => {
-    expect(SHORTCUTS.map((s) => s.keys)).toEqual(["/", "F", "Esc"]);
+    expect(SHORTCUTS.map((s) => s.keys)).toEqual(["/", "A", "G", "F", "?", "Esc"]);
+    expect(SHORTCUTS.map((s) => s.action)).toEqual(["Buscar ativo", "Alertas de preco", "Modo grafico", "Tela cheia", "Preferencias e atalhos", "Fechar o painel aberto"]);
     for (const s of SHORTCUTS) expect(`${s.keys} ${s.action}`).not.toMatch(FORBIDDEN_TEXT);
   });
 });

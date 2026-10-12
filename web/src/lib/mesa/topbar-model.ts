@@ -84,7 +84,7 @@ export function ageLabel(ageMs: number | null | undefined): string | null {
   return `ha ${Math.floor(ageMs / 60_000)} min`;
 }
 
-export type Shortcut = "search" | "fullscreen";
+export type Shortcut = "search" | "alerts" | "layout" | "fullscreen" | "help";
 
 export interface ShortcutEvent {
   readonly key: string;
@@ -102,14 +102,31 @@ export function shortcutFor(event: ShortcutEvent): Shortcut | null {
   const target = (event.target ?? null) as { tagName?: unknown; isContentEditable?: unknown } | null;
   const tag = typeof target?.tagName === "string" ? target.tagName.toUpperCase() : "";
   if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable === true) return null;
-  if (event.key === "/") return "search";
-  if (event.key === "f" || event.key === "F") return "fullscreen";
-  return null;
+  switch (event.key) {
+    case "/":
+      return "search";
+    case "a":
+    case "A":
+      return "alerts";
+    case "g":
+    case "G":
+      return "layout";
+    case "f":
+    case "F":
+      return "fullscreen";
+    case "?":
+      return "help";
+    default:
+      return null;
+  }
 }
 
 export const SHORTCUTS: readonly { readonly keys: string; readonly action: string }[] = [
   { keys: "/", action: "Buscar ativo" },
+  { keys: "A", action: "Alertas de preco" },
+  { keys: "G", action: "Modo grafico" },
   { keys: "F", action: "Tela cheia" },
+  { keys: "?", action: "Preferencias e atalhos" },
   { keys: "Esc", action: "Fechar o painel aberto" },
 ];
 

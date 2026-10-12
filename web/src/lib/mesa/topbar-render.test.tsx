@@ -144,6 +144,57 @@ describe("the tools", () => {
   });
 });
 
+describe("the price alerts menu", () => {
+  const withPrice = () => render({ instId: "BTC-USDT", prices: { "BTC-USDT": 82_500, "ETH-USDT": null } });
+
+  test("is a named icon popover with the form, the honest note and an empty list", () => {
+    const html = withPrice();
+    expect(html).toMatch(/<button[^>]*data-tool="alerts"[^>]*aria-expanded="false"/);
+    expect(html).toMatch(/role="group"[^>]*aria-label="Alertas de preco"[^>]*hidden=""/);
+    expect(html).toContain("Avisar quando BTC-USDT chegar a");
+    expect(html).toMatch(/<input[^>]*inputMode="decimal"[^>]*placeholder="82\.500,00"/);
+    expect(html).toContain("Criar alerta");
+    expect(html).toContain("Nenhum alerta ainda");
+    expect(html).toContain("Valem so com esta aba aberta. Nada e enviado e nenhuma ordem e criada.");
+  });
+
+  test("with the price unknown the field is disabled and says why, never a zero", () => {
+    const html = render({ instId: "BTC-USDT", prices: { "BTC-USDT": null } });
+    expect(html).toMatch(/<input[^>]*disabled=""/);
+    expect(html).toMatch(/<input[^>]*placeholder="Preco indisponivel"/);
+    expect(html).toContain("O preco deste ativo esta indisponivel agora");
+    expect(html).not.toMatch(/placeholder="0/);
+    const nothing = render();
+    expect(nothing).toMatch(/<input[^>]*disabled=""/);
+  });
+
+  test("a fresh render shows no badge, since nothing has fired and nothing is stored on the server", () => {
+    const html = withPrice();
+    expect(html).not.toMatch(/data-badge/);
+  });
+
+  test("the menu creates no order: its words and controls are about notices only", () => {
+    const html = withPrice();
+    expect(html).not.toMatch(/>\s*(Ordem|Ordenar|Executar|Operar|Negociar|Comprar|Vender)\b/i);
+    expect(html).not.toMatch(FORBIDDEN_TEXT);
+  });
+});
+
+describe("the chart mode button", () => {
+  test("is a pressed-state button named in words, with its key in the title", () => {
+    const html = render();
+    expect(html).toMatch(/<button[^>]*data-tool="layout"[^>]*aria-pressed="false"[^>]*aria-label="Modo grafico"[^>]*title="Modo grafico \(G\)"/);
+  });
+
+  test("the tool group keeps the new buttons next to the old ones and every key is listed in the preferences panel", () => {
+    const html = render();
+    for (const tool of ["alerts", "layout", "fullscreen", "preferences"]) expect(html).toContain(`data-tool="${tool}"`);
+    expect(html).toContain("Alertas de preco");
+    expect(html).toContain("Modo grafico");
+    expect(html).toContain("Preferencias e atalhos");
+  });
+});
+
 describe("TopbarPopover", () => {
   test("renders a closed disclosure whose trigger is named by its face and linked to the hidden panel", () => {
     const html = renderToStaticMarkup(
