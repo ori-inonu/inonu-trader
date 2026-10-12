@@ -1,5 +1,8 @@
 node_modules
 .env
+# Any other env file (for example .env.operator, where the operator guide puts the dedicated wallet key) stays out of git; only the examples are tracked
+.env.*
+!.env.example
 data/
 
 # Internal agent records and local evidence: kept on disk, never committed
