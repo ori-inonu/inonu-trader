@@ -192,6 +192,35 @@ describe("capabilityRows", () => {
     expect(by["system-one"]!.state).toBe("held");
   });
 
+  test("a System One cycle from synthetic data, the mock model or an undeclared origin is never shown as live", () => {
+    const base = { desk: [], jev: { status: "absent" as const, ageMs: null }, wallet: { status: "disconnected", available: false }, operator: { status: "absent" as const }, hasDerivatives: false };
+    const row = (origin: { marketSource?: string | null; walletSource?: string | null; model?: string | null }) =>
+      capabilityRows({ ...base, systemOne: { status: "ready", execution: "dry_run", reasons: [], ...origin } }).find((r) => r.id === "system-one")!;
+
+    const real = row({ marketSource: "okx_public_v5", walletSource: "okx_balance_api", model: "jev-latest" });
+    expect(real.state).toBe("live");
+    expect(row({ marketSource: "okx_public_v5", walletSource: "configured", model: "jev-1.13.0" }).state).toBe("live");
+
+    const syntheticMarket = row({ marketSource: "synthetic", walletSource: "okx_balance_api", model: "jev-latest" });
+    expect(syntheticMarket.state).toBe("held");
+    expect(syntheticMarket.detail).toContain("sintetico");
+
+    const syntheticWallet = row({ marketSource: "okx_public_v5", walletSource: "synthetic", model: "jev-latest" });
+    expect(syntheticWallet.state).toBe("held");
+    expect(syntheticWallet.detail).toContain("sintetica");
+
+    const mock = row({ marketSource: "okx_public_v5", walletSource: "okx_balance_api", model: "mock" });
+    expect(mock.state).toBe("held");
+    expect(mock.detail).toContain("mock");
+
+    for (const unknown of [{}, { marketSource: null, walletSource: null, model: null }, { marketSource: "unknown", walletSource: "okx_balance_api", model: "jev-latest" }, { marketSource: "okx_public_v5", walletSource: "okx_balance_api", model: "desconhecido" }]) {
+      const held = row(unknown);
+      expect(held.state).toBe("held");
+      expect(held.detail).toContain("origem");
+    }
+    expect(JSON.stringify([syntheticMarket, syntheticWallet, mock])).not.toMatch(FORBIDDEN_TEXT);
+  });
+
   test("no row is ever live from a fixture: with nothing observed every row is blocked or off", () => {
     const rows = capabilityRows({ desk: [], jev: { status: "absent", ageMs: null }, systemOne: { status: "absent", execution: null, reasons: [] }, wallet: { status: "disconnected", available: false }, operator: { status: "absent" }, hasDerivatives: false });
     expect(rows.some((r) => r.state === "live")).toBe(false);

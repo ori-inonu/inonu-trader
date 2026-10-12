@@ -82,7 +82,14 @@ export default function MesaView() {
       capabilityRows({
         desk: desk.feeds,
         jev: { status: jevBoard.status, ageMs: jevAgeMs },
-        systemOne: { status: systemOne.status, execution: systemOne.cycle?.execution.status ?? null, reasons: systemOne.cycle?.execution.reasons ?? [] },
+        systemOne: {
+          status: systemOne.status,
+          execution: systemOne.cycle?.execution.status ?? null,
+          reasons: systemOne.cycle?.execution.reasons ?? [],
+          marketSource: systemOne.cycle?.brief.market.source ?? null,
+          walletSource: systemOne.cycle?.brief.wallet.source ?? null,
+          model: systemOne.cycle?.decision?.model ?? null,
+        },
         wallet: { status: wallet.snapshot.status, available: wallet.available },
         operator: { status: operator.status },
         hasDerivatives: desk.derivatives !== null,

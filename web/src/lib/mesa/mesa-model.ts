@@ -224,7 +224,15 @@ export interface CapabilityRow {
 export interface CapabilityInput {
   readonly desk: readonly DeskFeedStatus[];
   readonly jev: { readonly status: JevReadBoardState["status"]; readonly ageMs: number | null };
-  readonly systemOne: { readonly status: JevReadBoardState["status"]; readonly execution: string | null; readonly reasons: readonly string[] };
+  /** `marketSource`, `walletSource` and `model` come from the cycle itself; absent or unknown means the origin is not declared. */
+  readonly systemOne: {
+    readonly status: JevReadBoardState["status"];
+    readonly execution: string | null;
+    readonly reasons: readonly string[];
+    readonly marketSource?: string | null;
+    readonly walletSource?: string | null;
+    readonly model?: string | null;
+  };
   readonly wallet: { readonly status: string; readonly available: boolean };
   readonly operator: { readonly status: JevReadBoardState["status"] };
   readonly hasDerivatives: boolean;
@@ -238,6 +246,20 @@ const SYSTEM_ONE_REASON: Record<string, string> = {
   market_stale: "mercado velho",
   inventory_stale: "inventario velho",
 };
+
+const UNDECLARED = new Set(["", "unknown", "desconhecido"]);
+
+/** Why a System One cycle must not be shown as live, or null when its market, wallet and model are all declared and real. */
+function systemOneNotLiveReason(one: CapabilityInput["systemOne"]): string | null {
+  const market = one.marketSource ?? null;
+  const wallet = one.walletSource ?? null;
+  const model = one.model ?? null;
+  if (market === "synthetic") return "ciclo com mercado sintetico, nao e leitura real";
+  if (wallet === "synthetic") return "ciclo com carteira sintetica, nao e leitura real";
+  if (model === "mock") return "modelo mock, o Jev nao foi consultado";
+  if (market === null || wallet === null || model === null || UNDECLARED.has(market) || UNDECLARED.has(wallet) || UNDECLARED.has(model)) return "origem do ciclo nao declarada";
+  return null;
+}
 
 export function capabilityRows(input: CapabilityInput): CapabilityRow[] {
   const ws = input.desk.find((f) => f.id === "okx-public-ws");
@@ -269,8 +291,11 @@ export function capabilityRows(input: CapabilityInput): CapabilityRow[] {
 
   if (input.systemOne.status === "ready") {
     const why = input.systemOne.reasons.map((r) => SYSTEM_ONE_REASON[r]).filter((r): r is string => r !== undefined && r !== "nunca executa");
+    const notLive = input.systemOne.execution === "dry_run" ? systemOneNotLiveReason(input.systemOne) : null;
     rows.push(input.systemOne.execution === "dry_run"
-      ? { id: "system-one", label: "System One alavancagem", state: "live", detail: "decisao de alavancagem em simulacao", next: null }
+      ? notLive === null
+        ? { id: "system-one", label: "System One alavancagem", state: "live", detail: "decisao de alavancagem em simulacao", next: null }
+        : { id: "system-one", label: "System One alavancagem", state: "held", detail: notLive, next: "Rodar bun run system-one --public --jev" }
       : { id: "system-one", label: "System One alavancagem", state: "held", detail: why.join(", ") || "execucao bloqueada", next: "Observar o inventario da carteira para liberar candidatos" });
   } else {
     rows.push({ id: "system-one", label: "System One alavancagem", state: "blocked", detail: "sem ciclo gravado", next: "Rodar bun run system-one --public --jev" });
