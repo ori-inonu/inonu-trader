@@ -148,9 +148,20 @@ export interface FeedChip {
   readonly detail: string | null;
 }
 
+/**
+ * Whether the real model has decided: at least one recent read carries a decision that the model answered (status ok)
+ * and that is not the mock. null when there is no board yet. A producer in observation mode records reads without any
+ * decision, so its reads are fresh and still not a Jev call.
+ */
+export function hasModelDecision(board: JevReadBoardView | null): boolean | null {
+  if (board === null) return null;
+  return board.recent.some((read) => read.decision !== null && read.decision.status === "ok" && read.decision.model !== "mock");
+}
+
 export interface FeedChipsInput {
   readonly desk: readonly DeskFeedStatus[];
-  readonly jev: { readonly status: JevReadBoardState["status"]; readonly ageMs: number | null };
+  /** `decided` is hasModelDecision of the board; absent or null means it is not known, and unknown is never live. */
+  readonly jev: { readonly status: JevReadBoardState["status"]; readonly ageMs: number | null; readonly decided?: boolean | null };
   readonly wallet: { readonly status: string; readonly available: boolean };
   readonly operator: { readonly status: JevReadBoardState["status"] };
 }
@@ -168,10 +179,13 @@ function deskTone(state: DeskFeedStatus["state"]): ChipTone {
   return "off";
 }
 
-function jevTone(status: JevReadBoardState["status"], ageMs: number | null): { tone: ChipTone; detail: string | null } {
+function jevTone(status: JevReadBoardState["status"], ageMs: number | null, decided: boolean | null | undefined): { tone: ChipTone; detail: string | null } {
   if (status === "ready") {
     const freshness = readFreshness(ageMs);
-    if (freshness === "fresh") return { tone: "live", detail: null };
+    if (freshness === "fresh") {
+      if (decided === true) return { tone: "live", detail: null };
+      return { tone: "late", detail: decided === false ? "leituras sem decisao do modelo" : "decisao do modelo nao confirmada" };
+    }
     if (freshness === "late" || freshness === "unknown") return { tone: "late", detail: freshness === "late" ? "leitura atrasada" : "idade desconhecida" };
     return { tone: "down", detail: "leitura velha" };
   }
@@ -197,7 +211,7 @@ export function feedChips(input: FeedChipsInput): FeedChip[] {
     const feed = input.desk.find((f) => f.id === id);
     return feed ? { id, label, tone: deskTone(feed.state), detail: feed.detail } : { id, label, tone: "off", detail: "sem dados" };
   });
-  const jev = jevTone(input.jev.status, input.jev.ageMs);
+  const jev = jevTone(input.jev.status, input.jev.ageMs, input.jev.decided);
   chips.push({ id: "jev-backend", label: "Jev", tone: jev.tone, detail: jev.detail });
   const wallet = walletTone(input.wallet);
   chips.push({ id: "okx-wallet", label: "Carteira OKX", tone: wallet.tone, detail: wallet.detail });
@@ -223,7 +237,7 @@ export interface CapabilityRow {
 
 export interface CapabilityInput {
   readonly desk: readonly DeskFeedStatus[];
-  readonly jev: { readonly status: JevReadBoardState["status"]; readonly ageMs: number | null };
+  readonly jev: { readonly status: JevReadBoardState["status"]; readonly ageMs: number | null; readonly decided?: boolean | null };
   /** `marketSource`, `walletSource` and `model` come from the cycle itself; absent or unknown means the origin is not declared. */
   readonly systemOne: {
     readonly status: JevReadBoardState["status"];
@@ -263,7 +277,7 @@ function systemOneNotLiveReason(one: CapabilityInput["systemOne"]): string | nul
 
 export function capabilityRows(input: CapabilityInput): CapabilityRow[] {
   const ws = input.desk.find((f) => f.id === "okx-public-ws");
-  const jev = jevTone(input.jev.status, input.jev.ageMs);
+  const jev = jevTone(input.jev.status, input.jev.ageMs, input.jev.decided);
   const rows: CapabilityRow[] = [];
 
   rows.push(ws?.state === "live"

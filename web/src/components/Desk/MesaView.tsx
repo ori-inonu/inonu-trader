@@ -5,7 +5,7 @@ import ConsoleBackdrop from "@/components/ConsoleBackdrop/ConsoleBackdrop";
 import { useDesk } from "@/lib/desk/useDesk";
 import { DESK_DEFAULT_WATCHLIST, type DeskBar } from "@/lib/desk/types";
 import { useJevRead } from "@/lib/jev-read";
-import { capabilityRows, feedChips, jevStageModel, journalRows, newestReadAgeMs, systemOneLine } from "@/lib/mesa/mesa-model";
+import { capabilityRows, feedChips, hasModelDecision, jevStageModel, journalRows, newestReadAgeMs, systemOneLine } from "@/lib/mesa/mesa-model";
 import { useReducedMotion } from "@/lib/motion";
 import { useOperatorCenter } from "@/lib/operator-center";
 import { useSystemOne } from "@/lib/system-one";
@@ -69,19 +69,20 @@ export default function MesaView() {
 
   const skewMs = desk.clockSkewMs;
   const jevAgeMs = newestReadAgeMs(jevBoard.board, nowMs, skewMs);
+  const jevDecided = useMemo(() => hasModelDecision(jevBoard.board), [jevBoard.board]);
   const stage = useMemo(
     () => jevStageModel({ status: jevBoard.status, board: jevBoard.board, focus, nowMs, browserSkewMs: skewMs }),
     [jevBoard.status, jevBoard.board, focus, nowMs, skewMs],
   );
   const chips = useMemo(
-    () => feedChips({ desk: desk.feeds, jev: { status: jevBoard.status, ageMs: jevAgeMs }, wallet: { status: wallet.snapshot.status, available: wallet.available }, operator: { status: operator.status } }),
-    [desk.feeds, jevBoard.status, jevAgeMs, wallet.snapshot.status, wallet.available, operator.status],
+    () => feedChips({ desk: desk.feeds, jev: { status: jevBoard.status, ageMs: jevAgeMs, decided: jevDecided }, wallet: { status: wallet.snapshot.status, available: wallet.available }, operator: { status: operator.status } }),
+    [desk.feeds, jevBoard.status, jevAgeMs, jevDecided, wallet.snapshot.status, wallet.available, operator.status],
   );
   const capabilities = useMemo(
     () =>
       capabilityRows({
         desk: desk.feeds,
-        jev: { status: jevBoard.status, ageMs: jevAgeMs },
+        jev: { status: jevBoard.status, ageMs: jevAgeMs, decided: jevDecided },
         systemOne: {
           status: systemOne.status,
           execution: systemOne.cycle?.execution.status ?? null,
@@ -94,7 +95,7 @@ export default function MesaView() {
         operator: { status: operator.status },
         hasDerivatives: desk.derivatives !== null,
       }),
-    [desk.feeds, desk.derivatives, jevBoard.status, jevAgeMs, systemOne.status, systemOne.cycle, wallet.snapshot.status, wallet.available, operator.status],
+    [desk.feeds, desk.derivatives, jevBoard.status, jevAgeMs, jevDecided, systemOne.status, systemOne.cycle, wallet.snapshot.status, wallet.available, operator.status],
   );
   const journal = useMemo(() => journalRows(jevBoard.board?.recent ?? [], 5), [jevBoard.board]);
 

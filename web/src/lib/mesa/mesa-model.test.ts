@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import type { DeskFeedStatus } from "../desk/types";
 import type { JevReadBoardView, JevReadView } from "../jev-read";
 import type { SystemOneCycleView } from "../system-one";
-import { capabilityRows, feedChips, journalRows, jevStageModel, newestReadAgeMs, reasonLabel, systemOneLine, FORBIDDEN_TEXT } from "./mesa-model";
+import { capabilityRows, feedChips, hasModelDecision, journalRows, jevStageModel, newestReadAgeMs, reasonLabel, systemOneLine, FORBIDDEN_TEXT } from "./mesa-model";
 
 const NOW = 1_791_742_100_000;
 
@@ -146,10 +146,10 @@ describe("feedChips", () => {
 
   test("jev: ready and fresh is live, ready but old is late, absent or error is down", () => {
     const base = { desk: [], wallet: { status: "disconnected", available: false } as const, operator: { status: "absent" } as const };
-    const tone = (jev: { status: "idle" | "loading" | "ready" | "absent" | "error"; ageMs: number | null }) => feedChips({ ...base, jev }).find((c) => c.id === "jev-backend")!.tone;
-    expect(tone({ status: "ready", ageMs: 20_000 })).toBe("live");
-    expect(tone({ status: "ready", ageMs: 200_000 })).toBe("late");
-    expect(tone({ status: "ready", ageMs: 900_000 })).toBe("down");
+    const tone = (jev: { status: "idle" | "loading" | "ready" | "absent" | "error"; ageMs: number | null; decided?: boolean | null }) => feedChips({ ...base, jev }).find((c) => c.id === "jev-backend")!.tone;
+    expect(tone({ status: "ready", ageMs: 20_000, decided: true })).toBe("live");
+    expect(tone({ status: "ready", ageMs: 200_000, decided: true })).toBe("late");
+    expect(tone({ status: "ready", ageMs: 900_000, decided: true })).toBe("down");
     expect(tone({ status: "absent", ageMs: null })).toBe("down");
     expect(tone({ status: "error", ageMs: null })).toBe("down");
     expect(tone({ status: "loading", ageMs: null })).toBe("off");
@@ -171,11 +171,45 @@ describe("feedChips", () => {
   });
 });
 
+describe("the Jev tape is live only when the real model decided", () => {
+  const decided = (overrides: Partial<JevReadView> = {}) => read({ readId: `jr-d-${Math.random()}`, ...overrides });
+  const observed = (instId: string) => read({ readId: `jr-o-${instId}`, instId, state: null, decision: null });
+  const base = { desk: [], wallet: { status: "disconnected", available: false }, operator: { status: "absent" as const } };
+  const tape = (jev: { status: "ready"; ageMs: number | null; decided?: boolean | null }) => capabilityRows({ ...base, jev, systemOne: { status: "absent", execution: null, reasons: [] }, hasDerivatives: false }).find((r) => r.id === "jev-tape")!;
+  const chip = (jev: { status: "ready"; ageMs: number | null; decided?: boolean | null }) => feedChips({ ...base, jev }).find((c) => c.id === "jev-backend")!;
+
+  test("hasModelDecision reads the recent reads: real model answers count, observation, the mock and failed answers do not", () => {
+    expect(hasModelDecision(null)).toBeNull();
+    expect(hasModelDecision(board([]))).toBe(false);
+    expect(hasModelDecision(board([observed("BTC-USDT"), observed("ETH-USDT")]))).toBe(false);
+    expect(hasModelDecision(board([decided({ decision: { action: "hold", probabilities: { buy: 0.2, sell: 0.2, hold: 0.6 }, confidence: 0.6, latencyMs: 200, model: "mock", status: "ok", inputTokens: null } })]))).toBe(false);
+    expect(hasModelDecision(board([decided({ decision: { action: "hold", probabilities: { buy: 0.3, sell: 0.3, hold: 0.4 }, confidence: 0.4, latencyMs: 200, model: "jev-1.13.0", status: "timeout", inputTokens: null } })]))).toBe(false);
+    expect(hasModelDecision(board([observed("BTC-USDT"), decided()]))).toBe(true);
+  });
+
+  test("fresh reads without a model decision (observation mode) are late, never live, and say why", () => {
+    for (const decidedFlag of [false, null, undefined]) {
+      const row = tape({ status: "ready", ageMs: 10_000, decided: decidedFlag });
+      expect(row.state).toBe("late");
+      expect(row.detail).toMatch(/sem decisao|nao confirmada/);
+      expect(chip({ status: "ready", ageMs: 10_000, decided: decidedFlag }).tone).toBe("late");
+    }
+    expect(JSON.stringify([tape({ status: "ready", ageMs: 10_000, decided: false })])).not.toMatch(FORBIDDEN_TEXT);
+  });
+
+  test("fresh reads with a real model decision are live, and an old read is still late or down", () => {
+    expect(tape({ status: "ready", ageMs: 10_000, decided: true }).state).toBe("live");
+    expect(chip({ status: "ready", ageMs: 10_000, decided: true }).tone).toBe("live");
+    expect(tape({ status: "ready", ageMs: 200_000, decided: true }).state).toBe("late");
+    expect(chip({ status: "ready", ageMs: 900_000, decided: true }).tone).toBe("down");
+  });
+});
+
 describe("capabilityRows", () => {
   test("lists the OKX ecosystem modules with an honest state and the next requirement when blocked", () => {
     const rows = capabilityRows({
       desk: [{ id: "okx-public-ws", state: "live", lastMessageAtMs: NOW, freshnessMs: 5000, reconnects: 0, detail: null }],
-      jev: { status: "ready", ageMs: 10_000 },
+      jev: { status: "ready", ageMs: 10_000, decided: true },
       systemOne: { status: "ready", execution: "blocked", reasons: ["inventory_value_incomplete"] },
       wallet: { status: "disconnected", available: true },
       operator: { status: "absent" },
