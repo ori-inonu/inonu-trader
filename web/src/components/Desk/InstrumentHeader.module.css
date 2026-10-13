@@ -1,0 +1,220 @@
+/* The instrument header: hero price, 24h change, 24h range and three figures, in one row that fills
+   the space between the market name and the actions of the decision bar. The row is its own width
+   oracle (container queries), so the decoration leaves before the essential figure ever clips:
+   first the figures, then the range, then the change pill; the price always stays. */
+.root {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--s4);
+  container-type: inline-size;
+}
+
+/* In the decision bar a hairline separates the market name from its figures. */
+.root[data-variant="bar"] {
+  padding-left: var(--s4);
+  border-left: 1px solid var(--edge);
+}
+
+/* The compact variant is the one line over the chart on a phone, where the decision bar is hidden
+   (MesaView hides it at 820px; the two numbers are kept equal on purpose). */
+.root[data-variant="compact"] {
+  display: none;
+  flex: none;
+  gap: var(--s3);
+  padding: 6px var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-deck);
+}
+
+@media (max-width: 820px) {
+  .root[data-variant="compact"] { display: flex; }
+}
+
+.quote {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* The hero figure. Its colour is the direction of the last print and changes with one short
+   transition: the platforms' convention, readable at a glance and never a blink. */
+.price {
+  color: var(--ink);
+  font: 500 24px/28px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out-expo);
+}
+.price[data-dir="up"] { color: var(--buy); }
+.price[data-dir="down"] { color: var(--sell); }
+.root[data-variant="compact"] .price { font: 500 20px/24px var(--font-mono); }
+
+.awaiting {
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  line-height: 28px;
+  white-space: nowrap;
+}
+.root[data-variant="compact"] .awaiting { line-height: 24px; }
+
+.caption {
+  display: flex;
+  gap: var(--s2);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.captionAbs { font-family: var(--font-mono); letter-spacing: 0.04em; }
+.captionAbs[data-tone="up"] { color: var(--buy); }
+.captionAbs[data-tone="down"] { color: var(--sell); }
+.staleWord { color: var(--hold); }
+.root[data-variant="compact"] .caption { display: none; }
+
+/* The 24h change, a pill in the vocabulary of the feed chips, only larger. */
+.pill {
+  --tone: var(--ink-3);
+  display: inline-flex;
+  flex: none;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  color: var(--tone);
+  font: 600 13px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pill[data-tone="up"] { --tone: var(--buy); }
+.pill[data-tone="down"] { --tone: var(--sell); }
+.pill[data-tone="flat"] { --tone: var(--ink-2); }
+.pillMicro { font: var(--fs-micro); letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
+.root[data-variant="compact"] .pill { padding: 2px 7px; font-size: 12px; }
+.root[data-variant="compact"] .pillMicro { display: none; }
+
+/* The 24h range: the two ends with their labels and a thin track with the marker where the last
+   price sits. The track is tinted from the sell colour at the low end to the buy colour at the high end. */
+.range {
+  display: grid;
+  /* No min-width: 0 here on purpose: the grid shrinks to its content and never squeezes the two
+     ends over the track; past that the width step below removes it whole. */
+  flex: 0 1 300px;
+  grid-template-columns: auto minmax(32px, 1fr) auto;
+  align-items: center;
+  gap: var(--s2);
+}
+.root[data-variant="compact"] .range { flex: 1 1 auto; }
+
+.rangeEnd {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.rangeEndHigh { align-items: flex-end; text-align: right; }
+.root[data-variant="compact"] .rangeEnd .micro { display: none; }
+
+.rangeValue {
+  color: var(--ink-2);
+  font: 500 10.5px/14px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rangeValue[data-known="false"] { color: var(--ink-3); font-family: var(--font-sans); }
+
+.rangeTrack {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--sell) 55%, var(--edge-strong)), var(--edge-strong) 50%, color-mix(in srgb, var(--buy) 55%, var(--edge-strong)));
+}
+
+/* The marker moves with one short transition when the price moves; it is absent while the range is unknown. */
+.rangeMark {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--p, 0) * 100%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--bg-deck);
+  transform: translate(-50%, -50%);
+  transition: left var(--dur-base) var(--ease-out-expo);
+}
+
+/* The figures: label over value, in the order volume, spread, funding. */
+.stats {
+  display: flex;
+  flex: none;
+  gap: var(--s5);
+  margin: 0;
+}
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.statValue {
+  margin: 0;
+  color: var(--ink-2);
+  font: 500 12px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.statValue[data-tone="up"] { color: var(--buy); }
+.statValue[data-tone="down"] { color: var(--sell); }
+.statValue[data-known="false"] { color: var(--ink-3); font-family: var(--font-sans); }
+.root[data-variant="compact"] .stats { display: none; }
+
+.micro {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Old data: the figures dim the way the panel bodies do; the word beside the caption says why. */
+.root[data-stale="true"] .price,
+.root[data-stale="true"] .pill,
+.root[data-stale="true"] .range,
+.root[data-stale="true"] .stats { opacity: 0.55; }
+
+/* Width steps, measured on the strip itself. The order matches the comment at the top: at the
+   1440 px desk the strip is about 440 px wide and shows price, change and the range; the figures
+   arrive as the window widens. The compact line keeps its range down to a 320 px phone. */
+@container (max-width: 720px) {
+  .stat[data-stat="spread"] { display: none; }
+  .stats { gap: var(--s4); }
+}
+
+@container (max-width: 600px) {
+  .stats,
+  .captionAbs { display: none; }
+}
+
+@container (max-width: 500px) {
+  .rangeEnd .micro { display: none; }
+}
+
+@container (max-width: 410px) {
+  .root[data-variant="bar"] .range { display: none; }
+}
+
+@container (max-width: 300px) {
+  .root[data-variant="compact"] .range { display: none; }
+}
+
+@container (max-width: 210px) {
+  .pill { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .price,
+  .rangeMark { transition: none; }
+}
