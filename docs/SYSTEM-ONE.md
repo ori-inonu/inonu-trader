@@ -36,6 +36,16 @@ O loop aguarda o ciclo terminar antes de contar o proximo intervalo. `latest.jso
 - Nao inventa dados. Sigma desconhecida, funding desconhecido ou inventario incompleto deixam todos os candidatos inelegiveis e o Jev nao e consultado.
 - Nao sobe acima do envelope. O cap e o teto sao paredes: candidatos acima deles existem no brief so para leitura e nunca sao elegiveis.
 
+## Anexo quantitativo (`--quant`)
+
+`bun run system-one --public --quant` anexa ao brief a evidencia numerica de `src/quant` (SPEC em docs/sdd/dados-quant/SPEC.md, medicao em docs/sdd/dados-quant/REPORT.md). Fica desligado por padrao e, sem a opcao, o ciclo, o jornal e o texto enviado ao Jev sao identicos aos de antes. Com a opcao, o envelope continua lendo as mesmas velas de antes (96 por padrao, ou `--candles`) e produz os mesmos numeros: o anexo faz leituras publicas proprias e mantem em memoria um historico de `--quant-days` dias (7 por padrao, de 1 a 30, no maximo 3000 barras), paginando o historico da OKX so na primeira leitura e depois de um buraco. Uma falha do anexo (leitura, orcamento de calculo) vira aviso e o ciclo segue sem ele; uma simulacao acima do orcamento cai para a forma fechada e o motivo fica registrado.
+
+O Jev passa a ver, alem do `touchProbability` do envelope, um bloco `quant` com a nota dos dados (A limpo, B marcas, C velas perdidas; ausente quando velhos ou poucos), a faixa de sigma diaria (estimadores de faixa, EWMA e MAD), a forma da cauda e, por candidato elegivel, `sideAwareTouch` (forma fechada com a barreira em log-preco do lado), `simulatedTouch` (simulacao com cauda pesada e agrupamento de volatilidade) e seu erro padrao, alem do numero de caminhos simulados. O texto de instrucoes diz que um simulado de zero e menos de 1 acerto nos caminhos, que valores baixos sao piso (a simulacao subestimou a cauda em 90 dias de dados reais) e que a calibracao cobriu barreiras de 1 a 4 sigmas do horizonte. O anexo descreve o risco; nao muda elegibilidade, envelope nem escolha, e nunca carrega ordem, compra, venda ou recomendacao (testes fixam as chaves exatas e o texto).
+
+`GET /system-one` publica o bloco por lista de permissao (nota, faixa de sigma, forma da cauda, caminhos simulados e as tres probabilidades por candidato; agrupamento, semente e detalhes de qualidade ficam privados) e o painel do console mostra a tabela "Risco medido de liquidacao" com as colunas Envelope, Por lado e Simulado.
+
+Dois fatos medidos que o leitor deve conhecer: o `touchProbability` do envelope usa a distancia linear 1/L para os dois lados (para um vendido a barreira em log-preco e mais proxima, para um comprado e mais distante), e as probabilidades gaussianas subestimam a cauda de cripto. As probabilidades do anexo continuam sendo pesos de decisao sob um modelo declarado, sem deriva, e a calibracao da cauda profunda ainda e otimista (veja o REPORT).
+
 ## Proximos passos (R9, fases A a E)
 
 Sombra com mock e jornal; Jev real com medicao de latencia e custo; janela congelada de 90 dias no laboratorio (src/lab) para medir vantagem; spot 1x so com os quatro itens da decisao D11; alavancagem 2x so com leitor de fator de saude e executor revisado. A pesquisa nao recomenda iniciar a ultima fase hoje.

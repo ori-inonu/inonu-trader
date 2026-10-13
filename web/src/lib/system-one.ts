@@ -18,6 +18,29 @@ export interface SystemOneCandidateView {
   reasons: string[];
 }
 
+/** Measured liquidation risk from src/quant, as projected by GET /system-one. Evidence only: it never carries a choice. */
+export interface SystemOneQuantCandidateView {
+  id: string;
+  sideAwareTouch: number | null;
+  simulatedTouch: number | null;
+  simulatedStdError: number | null;
+}
+
+export type SystemOneQuantView =
+  | { status: "unavailable"; reason: string; dataGrade: QuantGrade }
+  | {
+      status: "ok";
+      dataGrade: QuantGrade;
+      horizonDays: number | null;
+      sigma: { low: number | null; central: number | null; high: number | null; regime: string | null };
+      tail: { excessKurtosis: number | null; hillIndex: number | null; heavyTailed: boolean | null };
+      /** Paths behind the simulated column (a simulated 0 means fewer than 1 hit in this many), or why it did not run. */
+      simulation: { paths: number | null; skipped: string | null };
+      candidates: SystemOneQuantCandidateView[];
+    };
+
+export type QuantGrade = "A" | "B" | "C" | "F";
+
 export interface SystemOneCycleView {
   cycleId: string;
   startedAtMs: number;
@@ -41,6 +64,7 @@ export interface SystemOneCycleView {
     candidates: SystemOneCandidateView[];
     eligibleIds: string[];
     notes: string[];
+    quant?: SystemOneQuantView;
   };
   decision: { choice: string; probabilities: Record<string, number>; confidence: number | null; latencyMs: number; model: string; status: string } | null;
   chosen: SystemOneCandidateView | null;
@@ -104,6 +128,44 @@ function parseCandidate(value: unknown): SystemOneCandidateView | null {
   };
 }
 
+function probability(value: unknown): number | null {
+  const n = num(value);
+  return n !== null && n >= 0 && n <= 1 ? n : null;
+}
+
+const GRADES: readonly QuantGrade[] = ["A", "B", "C", "F"];
+
+const SKIPPED = ["too_few_returns", "returns_invalid", "sigma_zero", "budget_exceeded"];
+
+function parseSimulation(value: unknown): { paths: number | null; skipped: string | null } {
+  if (!isRecord(value)) return { paths: null, skipped: null };
+  const paths = num(value.paths);
+  return {
+    paths: paths !== null && Number.isInteger(paths) && paths > 0 ? paths : null,
+    skipped: typeof value.skipped === "string" && SKIPPED.includes(value.skipped) ? value.skipped : null,
+  };
+}
+
+/** The annex is optional evidence: anything unreadable drops it, and never rejects the cycle. */
+function parseQuant(value: unknown): SystemOneQuantView | null {
+  if (!isRecord(value)) return null;
+  const dataGrade = GRADES.find((grade) => grade === value.dataGrade);
+  if (dataGrade === undefined) return null;
+  if (value.status === "unavailable") return { status: "unavailable", reason: str(value.reason, "unknown"), dataGrade };
+  if (value.status !== "ok" || !isRecord(value.sigma) || !isRecord(value.tail) || !Array.isArray(value.candidates)) return null;
+  return {
+    status: "ok",
+    dataGrade,
+    horizonDays: num(value.horizonDays),
+    sigma: { low: num(value.sigma.low), central: num(value.sigma.central), high: num(value.sigma.high), regime: typeof value.sigma.regime === "string" ? value.sigma.regime : null },
+    tail: { excessKurtosis: num(value.tail.excessKurtosis), hillIndex: num(value.tail.hillIndex), heavyTailed: typeof value.tail.heavyTailed === "boolean" ? value.tail.heavyTailed : null },
+    simulation: parseSimulation(value.simulation),
+    candidates: value.candidates.filter(isRecord).filter((c) => /^(long|short)-(1|2|3|5)x$/.test(str(c.id))).map((c) => ({
+      id: str(c.id), sideAwareTouch: probability(c.sideAwareTouch), simulatedTouch: probability(c.simulatedTouch), simulatedStdError: probability(c.simulatedStdError),
+    })),
+  };
+}
+
 /** Strict enough to never render a partial cycle as a decision. */
 export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
   if (!isRecord(value) || !isRecord(value.brief) || !isRecord(value.execution)) return null;
@@ -137,6 +199,7 @@ export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
   if (value.chosen !== null && (!chosen || !decision || decision.status !== "ok" || decision.choice !== chosen.id || !strings(brief.eligibleIds).includes(chosen.id))) return null;
   if ((value.execution.status === "dry_run") !== (chosen !== null)) return null;
   if (decision?.choice !== undefined && decision.choice !== "hold" && !chosen) return null;
+  const quant = parseQuant(brief.quant);
   return {
     cycleId,
     startedAtMs: num(value.startedAtMs) ?? 0,
@@ -174,6 +237,7 @@ export function parseSystemOneCycle(value: unknown): SystemOneCycleView | null {
       candidates,
       eligibleIds: strings(brief.eligibleIds),
       notes: strings(brief.notes),
+      ...(quant ? { quant } : {}),
     },
     decision,
     chosen,

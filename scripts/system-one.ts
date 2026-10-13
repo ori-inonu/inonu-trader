@@ -22,6 +22,10 @@ import { correctedClock, measureServerClockOffset } from "../src/system-one/cloc
 import { runSystemOneCycle } from "../src/system-one/cycle";
 import { JevSystemOneModel, MockSystemOneModel, type SystemOneModel } from "../src/system-one/decide";
 import { BAR_MS, configuredWallet, readPublicMarket, syntheticReadings } from "../src/system-one/readings";
+import { LEVERAGE_LADDER, SIDES } from "../src/system-one/types";
+import { buildQuantAnnex, type QuantAnnex } from "../src/quant/annex";
+import { QuantHistory } from "../src/system-one/quant-history";
+import type { PublicBar } from "../src/onchainos/public-okx";
 
 const ROOT = resolve(import.meta.dir, "..");
 const args = process.argv.slice(2);
@@ -42,8 +46,8 @@ function numberFlag(name: string, fallback: number): number {
   return value;
 }
 
-const switches = new Set(["--public", "--jev", "--loop", "--help", "-h"]);
-const values = new Set(["--phase", "--kelly", "--capital", "--inst", "--bar", "--candles", "--horizon"]);
+const switches = new Set(["--public", "--jev", "--loop", "--quant", "--help", "-h"]);
+const values = new Set(["--phase", "--kelly", "--capital", "--inst", "--bar", "--candles", "--horizon", "--quant-days"]);
 const seen = new Set<string>();
 for (let i = 0; i < args.length; i += 1) {
   const arg = args[i]!;
@@ -58,7 +62,9 @@ for (let i = 0; i < args.length; i += 1) {
 if (hasFlag("--help") || hasFlag("-h")) {
   console.log([
     "System One: um ciclo de decisao de alavancagem do Jev. Nunca assina nem envia.",
-    "Flags: --public (API publica OKX v5, sem credenciais), --jev (Jev real), --loop, --phase fase-0|fase-1|fase-2,",
+    "Flags: --public (API publica OKX v5, sem credenciais), --jev (Jev real), --loop, --quant (anexo quantitativo: qualidade dos dados,",
+    "       faixa de sigma e probabilidade de toque por lado; so com --public; faz leituras proprias e mantem um historico de --quant-days dias,",
+    "       7 por padrao, de 1 a 30; nao altera o envelope), --phase fase-0|fase-1|fase-2,",
     "       --kelly <limite inferior de Kelly>, --capital <USD>, --inst <instId>, --bar 1m|5m|15m|1H|4H|1D, --candles <n>, --horizon <dias>.",
     "Saida: SYSTEM_ONE_STATE_PATH (data/system-one/latest.json) e SYSTEM_ONE_JOURNAL_PATH (data/system-one/cycles.jsonl).",
   ].join("\n"));
@@ -76,6 +82,11 @@ const horizonDays = numberFlag("--horizon", 7);
 const instId = flagValue("--inst") ?? process.env.SYSTEM_ONE_INST_ID ?? "MON-USDT-SWAP";
 const bar = (flagValue("--bar") ?? "15m") as keyof typeof BAR_MS;
 if (!Object.hasOwn(BAR_MS, bar)) throw new Error(`--bar must be one of ${Object.keys(BAR_MS).join(", ")}`);
+const useQuant = hasFlag("--quant");
+const quantDays = numberFlag("--quant-days", 7);
+if (!Number.isInteger(quantDays) || quantDays > 30) throw new Error("--quant-days must be an integer from 1 to 30");
+const MAX_QUANT_BARS = 3_000;
+// The envelope keeps its own 96 bar default with or without --quant: the annex never changes what the envelope computes.
 const candles = numberFlag("--candles", 96);
 if (!Number.isInteger(candles) || candles < 2 || candles > 300) throw new Error("--candles must be an integer from 2 to 300");
 const usePublic = hasFlag("--public");
@@ -108,13 +119,36 @@ async function cycleClock(): Promise<() => number> {
   return correctedClock(sample);
 }
 
+if (useQuant && !usePublic) console.error("system-one: --quant precisa de --public (o modo sintetico nao tem velas OHLC); anexo omitido.");
+
+// The recent window is at most 300 bars (3 days of 15 minute bars); the annex keeps a longer one across cycles.
+const quantBars = Math.max(2, Math.round((quantDays * 86_400_000) / BAR_MS[bar]!));
+if (useQuant && quantBars > MAX_QUANT_BARS) throw new Error(`--quant-days ${quantDays} on ${bar} bars needs ${quantBars} bars; the limit is ${MAX_QUANT_BARS}`);
+const quantHistory = useQuant && usePublic ? new QuantHistory({ instId, bar: bar as PublicBar, barMs: BAR_MS[bar]!, targetBars: quantBars }) : null;
+
+const LADDER_CANDIDATES = SIDES.flatMap((side) => LEVERAGE_LADDER.map((leverage) => ({ id: `${side}-${leverage}x`, side, leverage })));
+
 async function once(): Promise<void> {
   const clock = await cycleClock();
   const nowMs = clock();
   const readings = publicHttp
     ? { market: await readPublicMarket(publicHttp, { instId, bar, candles, nowMs, now: clock }), wallet: configuredWallet(capitalUsd, clock()) }
     : syntheticReadings({ nowMs, capitalUsd, instId, candles });
-  const cycle = await runSystemOneCycle({ ...readings, phase, horizonDays, kellyLowerBound }, { model, now: clock });
+  // Evidence only: the annex describes data quality and liquidation risk; it never changes eligibility or the choice, and a
+  // failure of the evidence layer never suppresses the cycle.
+  let quant: QuantAnnex | undefined;
+  if (quantHistory && publicHttp) {
+    try {
+      const refreshed = await quantHistory.refresh(publicHttp, clock());
+      if (!refreshed.complete) console.error(`system-one: historico quant incompleto (${refreshed.candles.length} velas${refreshed.error ? `, ${refreshed.error}` : ""}); o anexo usa o trecho continuo disponivel`);
+      if (refreshed.restatedBars > 0) console.error(`system-one: ${refreshed.restatedBars} vela(s) fechada(s) reescrita(s) pela exchange na leitura; a versao nova foi usada`);
+      const annexNow = clock();
+      quant = buildQuantAnnex({ candles: refreshed.candles, barMs: BAR_MS[bar]!, nowMs: annexNow, horizonDays, candidates: LADDER_CANDIDATES, seed: Math.floor(annexNow / 1000) });
+    } catch (error) {
+      console.error(`system-one: anexo quant omitido (${error instanceof Error ? error.message : "erro"}); o ciclo segue sem ele`);
+    }
+  }
+  const cycle = await runSystemOneCycle({ ...readings, phase, horizonDays, kellyLowerBound, ...(quant ? { quant } : {}) }, { model, now: clock });
   mkdirSync(dirname(statePath), { recursive: true });
   mkdirSync(dirname(journalPath), { recursive: true });
   const temporary = `${statePath}.${randomUUID()}.tmp`;
@@ -131,6 +165,13 @@ async function once(): Promise<void> {
     `teto=${cycle.brief.limits.leverageCeiling}x cap=${cycle.brief.limits.leverageCap ?? "indefinido"} elegiveis=${cycle.brief.eligibleIds.length}/${cycle.brief.candidates.length}`,
     `decisao=${cycle.decision ? `${cycle.decision.choice} (${cycle.decision.model}, ${Math.round(cycle.decision.latencyMs)} ms, ${cycle.decision.status})` : "Jev nao consultado"} execucao=${cycle.execution.status}: ${cycle.execution.reasons.join(", ")}`,
   ];
+  if (cycle.brief.quant) {
+    const q = cycle.brief.quant;
+    const pct = (value: number | null) => (value === null ? "n/d" : `${(value * 100).toFixed(2)}%`);
+    summary.push(q.status === "ok"
+      ? `quant dados=${q.quality.grade} sigma_dia=${pct(q.sigma.low)} a ${pct(q.sigma.high)} regime=${q.sigma.regime ?? "n/d"} curtose=${q.tail.excessKurtosis ?? "n/d"}`
+      : `quant indisponivel: ${q.reason} (dados ${q.quality.grade})`);
+  }
   console.log(summary.join("\n"));
   if (cycle.warnings.length) console.error(`avisos: ${cycle.warnings.join("; ")}`);
 }

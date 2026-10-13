@@ -6,6 +6,7 @@
 
 import { experimental_evaluate } from "ai";
 import { typeSafeAi } from "@ai-sdk/typesafe-ai";
+import type { QuantAnnex } from "../quant/annex";
 import { isRecord, finiteOrNull, type LeverageBrief, type LeverageCandidate, type LeverageDecision } from "./types";
 
 export interface SystemOneModel {
@@ -39,6 +40,50 @@ export interface SystemOneState {
     fundingCarryUsd: number | null;
   }>;
   notes: string[];
+  /** Present only when the brief carries a quant annex. Evidence about the data and the risk, never a choice. */
+  quant?: SystemOneQuantState;
+}
+
+export type SystemOneQuantState =
+  | { status: "unavailable"; reason: string; dataGrade: string }
+  | {
+      status: "ok";
+      dataGrade: string;
+      sigmaDaily: { low: number | null; central: number | null; high: number | null };
+      regime: string | null;
+      tailRatio: number | null;
+      excessKurtosis: number | null;
+      hillIndex: number | null;
+      /** Null when the clustering fit sat on the edge of its search grid or did not run. */
+      clusteringHalfLifeBars: number | null;
+      /** Paths behind simulatedTouch, null when the simulation did not run. A simulatedTouch of 0 means fewer than 1 hit in this many. */
+      simulationPaths: number | null;
+      simulationSkipped: string | null;
+      candidates: Array<{ id: string; sideAwareTouch: number | null; simulatedTouch: number | null; simulatedStdError: number | null }>;
+    };
+
+/** Compact quant view for the eligible candidates only. */
+function quantState(annex: QuantAnnex, eligible: LeverageCandidate[]): SystemOneQuantState {
+  if (annex.status !== "ok") return { status: "unavailable", reason: annex.reason, dataGrade: annex.quality.grade };
+  const byId = new Map(annex.candidates.map((candidate) => [candidate.id, candidate]));
+  return {
+    status: "ok",
+    dataGrade: annex.quality.grade,
+    sigmaDaily: { low: annex.sigma.low, central: annex.sigma.central, high: annex.sigma.high },
+    regime: annex.sigma.regime,
+    tailRatio: annex.sigma.tailRatio,
+    excessKurtosis: annex.tail.excessKurtosis,
+    hillIndex: annex.tail.hillIndex,
+    clusteringHalfLifeBars: annex.clustering?.halfLifeBars ?? null,
+    simulationPaths: annex.simulation?.paths ?? null,
+    simulationSkipped: annex.simulationSkipped,
+    candidates: eligible.map((candidate) => ({
+      id: candidate.id,
+      sideAwareTouch: byId.get(candidate.id)?.sideAwareTouch ?? null,
+      simulatedTouch: byId.get(candidate.id)?.simulatedTouch ?? null,
+      simulatedStdError: byId.get(candidate.id)?.simulatedStdError ?? null,
+    })),
+  };
 }
 
 /** The sanitized view: no address, no source, no timestamps, only the eligible candidates. */
@@ -46,7 +91,7 @@ export function buildSystemOneState(brief: LeverageBrief, eligible: LeverageCand
   const mark = brief.market.markPrice;
   const index = brief.market.indexPrice;
   const basisBps = mark !== null && index !== null && index > 0 ? Math.round(((mark - index) / index) * 10_000 * 100) / 100 : null;
-  return {
+  const state: SystemOneState = {
     phase: brief.phase,
     horizonDays: brief.horizonDays,
     market: {
@@ -86,6 +131,8 @@ export function buildSystemOneState(brief: LeverageBrief, eligible: LeverageCand
     })),
     notes: brief.notes,
   };
+  if (brief.quant !== undefined) state.quant = quantState(brief.quant, eligible);
+  return state;
 }
 
 function normalize(probabilities: Record<string, number>, keys: string[]): Record<string, number> {
@@ -156,6 +203,15 @@ export function decisionFromEvaluation(result: unknown, eligible: LeverageCandid
   return validateLeverageDecision({ choice, probabilities, confidence: answer.confidence, latencyMs, model }, eligible);
 }
 
+const BASE_INPUTS = "Every candidate already passed the phase envelope: leverage cap, liquidation floor, order and exposure caps, complete inventory. Touch probabilities assume no drift. Funding carry is from the candidate side's point of view. Probabilities are decision weights, not win rates.";
+
+const QUANT_INPUTS = " The state may also carry a quant block. It describes risk and data quality and does not change which candidates are eligible; touchProbability above is the envelope figure. dataGrade: A clean, B some bars were marked as outliers, C bars were lost so only the newest continuous stretch is used. sigmaDaily is the band of daily volatility from several estimators; regime says whether recent volatility is calm, normal or stressed against the sample; tailRatio is close to close sigma over robust sigma, and well above 1 means a few extreme bars dominate; excessKurtosis and hillIndex describe fat tails, where a lower hillIndex is a heavier tail, about 2 to 4 is typical for crypto, and it uses the largest 10 percent of moves so it is biased for other shapes; clusteringHalfLifeBars is how many bars a volatility shock takes to halve, null when the fit was unreliable. Per candidate, sideAwareTouch is a closed form that uses the liquidation barrier of the candidate side and simulatedTouch is a simulation that keeps fat tails and volatility clustering. Both assume no drift and are decision weights, not win rates. A simulatedTouch of 0 means fewer than 1 hit in simulationPaths, not impossibility, and simulatedStdError is its standard error. In 90 days of real data for five perpetuals the simulation still underestimated low probabilities by a factor of about 4 to 22, and it was calibrated for barriers 1 to 4 horizon sigmas away. Read low values as a floor and far barriers as extrapolation.";
+
+/** The inputs paragraph the model reads. Unchanged unless the brief carries a quant annex. */
+export function inputsText(brief: LeverageBrief): string {
+  return brief.quant === undefined ? BASE_INPUTS : BASE_INPUTS + QUANT_INPUTS;
+}
+
 function criteriaFor(eligible: LeverageCandidate[]): Record<string, string> {
   const criteria: Record<string, string> = {
     hold: "Do not open or add to a position now. Choose this when the funding carry, the basis and the realized volatility do not justify the liquidation risk inside the horizon, or when any input is missing.",
@@ -186,7 +242,7 @@ export class JevSystemOneModel implements SystemOneModel {
         instructions: {
           question: "Which single leverage candidate should System One open now, or should it hold?",
           goal: "Act as the fast decision layer of the wallet. Grow median wealth over the horizon while keeping the probability of touching liquidation low. Never exceed the listed caps; prefer hold when carry and basis are small relative to drag and liquidation risk.",
-          inputs: "Every candidate already passed the phase envelope: leverage cap, liquidation floor, order and exposure caps, complete inventory. Touch probabilities assume no drift. Funding carry is from the candidate side's point of view. Probabilities are decision weights, not win rates.",
+          inputs: inputsText(brief),
         },
         criteria: criteriaFor(eligible),
       },

@@ -9,6 +9,7 @@
  */
 
 import type { DerivedLimits, PhaseId } from "../policy/envelope";
+import type { QuantAnnex } from "../quant/annex";
 
 export const SYSTEM_ONE_SCHEMA_VERSION = 1;
 /** Conservative analysis freshness gate, not an execution SLA. */
@@ -85,6 +86,11 @@ export interface LeverageBrief {
   eligibleIds: string[];
   /** Plain statements Jev also sees: what is missing, what the phase forbids. */
   notes: string[];
+  /**
+   * Optional numerical evidence from src/quant (data quality, volatility band, side aware and simulated touch
+   * probabilities). Present only when the cycle was given an annex. It never changes eligibility or the envelope.
+   */
+  quant?: QuantAnnex;
 }
 
 export type DecisionStatus = "ok" | "invalid-choice" | "malformed" | "timeout" | "error";

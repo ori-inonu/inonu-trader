@@ -18,6 +18,31 @@ const requiredNumbers = (input: Record<string, unknown>, fields: string, positiv
 });
 const validCandidate = (input: Record<string, unknown>) => requiredNumbers(input, "marginUsd notionalUsd") && requiredNumbers(input, "leverage liquidationDistance", true);
 
+const quantReasons = ["too_few_candles", "stale", "sigma_unknown"];
+const probability = (input: unknown) => { const value = finiteOrNull(input); return value !== null && value >= 0 && value <= 1 ? value : null; };
+
+/** Allowlisted projection of the optional quant annex: evidence about data and risk, never a choice. */
+function publicQuant(input: unknown): Record<string, unknown> | null {
+  if (!isRecord(input) || !isRecord(input.quality)) return null;
+  const dataGrade = member(input.quality.grade, ["A", "B", "C", "F"], null);
+  if (dataGrade === null) return null;
+  if (input.status === "unavailable") return { status: "unavailable", reason: member(input.reason, quantReasons), dataGrade };
+  if (input.status !== "ok" || !isRecord(input.sigma) || !isRecord(input.tail) || !Array.isArray(input.candidates)) return null;
+  const horizon = finiteOrNull(input.horizonDays);
+  return {
+    status: "ok", dataGrade, horizonDays: horizon !== null && horizon > 0 ? horizon : null,
+    sigma: { ...numbers(input.sigma, "low central high"), regime: member(input.sigma.regime, ["calm", "normal", "stressed"], null) },
+    tail: { ...numbers(input.tail, "excessKurtosis hillIndex"), heavyTailed: typeof input.tail.heavyTailed === "boolean" ? input.tail.heavyTailed : null },
+    simulation: {
+      paths: isRecord(input.simulation) && Number.isInteger(input.simulation.paths) && (input.simulation.paths as number) > 0 ? input.simulation.paths : null,
+      skipped: member(input.simulationSkipped, ["too_few_returns", "returns_invalid", "sigma_zero", "budget_exceeded"], null),
+    },
+    candidates: input.candidates.slice(0, 8).filter(isRecord).filter(c => candidateId(c.id)).map(c => ({
+      id: candidateId(c.id), sideAwareTouch: probability(c.sideAwareTouch), simulatedTouch: probability(c.simulatedTouch), simulatedStdError: probability(c.simulatedStdError),
+    })),
+  };
+}
+
 /** Explicit dashboard projection. Never publish free-form provider text or extra journal fields. */
 export function publicSystemOneView(input: unknown): Record<string, unknown> | null {
   if (!isRecord(input) || input.schemaVersion !== 1 || !isRecord(input.brief) || !isRecord(input.execution)) return null;
@@ -49,6 +74,7 @@ export function publicSystemOneView(input: unknown): Record<string, unknown> | n
   if (chosen && (decision?.status !== "ok" || decision.choice !== chosen.id)) return null;
   if (decision && decision.choice !== "hold" && !chosen) return null;
   const market = brief.market, wallet = brief.wallet;
+  const quant = publicQuant(brief.quant);
   return {
     schemaVersion: 1, cycleId: typeof input.cycleId === "string" && /^so-[a-z0-9-]{1,64}$/.test(input.cycleId) ? input.cycleId : `so-${started}`,
     startedAtMs: started, completedAtMs: completed,
@@ -58,6 +84,7 @@ export function publicSystemOneView(input: unknown): Record<string, unknown> | n
       wallet: { ...numbers(wallet, "capitalUsd knownValueUsd openNotionalUsd observedAtMs"), valueComplete: wallet.valueComplete === true, openSide: member(wallet.openSide, ["long", "short"], null), source: member(wallet.source, ["synthetic", "configured", "okx_balance_api"]) },
       limits: numbers(brief.limits, "leverageCeiling leverageCap orderCapUsd exposureCapUsd liquidationDistanceFloor dailyStopUsd"),
       candidates, eligibleIds, notes: [],
+      ...(quant ? { quant } : {}),
     },
     decision, chosen, execution: { status: execution.status, reasons: codes(execution.reasons) }, warnings: codes(input.warnings),
   };

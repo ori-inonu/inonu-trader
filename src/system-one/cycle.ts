@@ -5,6 +5,7 @@
  */
 
 import type { PhaseId } from "../policy/envelope";
+import type { QuantAnnex } from "../quant/annex";
 import { buildLeverageBrief, type BuildBriefInput } from "./brief";
 import { validateLeverageDecision, type SystemOneModel } from "./decide";
 import { SYSTEM_ONE_SCHEMA_VERSION, type LeverageBrief, type LeverageCandidate, type LeverageDecision, type MarketReading, type SystemOneCycle, type WalletReading } from "./types";
@@ -23,6 +24,8 @@ export interface CycleInput {
   phase: PhaseId;
   horizonDays?: number;
   kellyLowerBound?: number | null;
+  /** Optional evidence from src/quant. Copied onto the brief; it does not enter eligibility. */
+  quant?: QuantAnnex;
 }
 
 function defaultCycleId(now: number): string {
@@ -33,6 +36,7 @@ export async function runSystemOneCycle(input: CycleInput, deps: CycleDeps): Pro
   const startedAtMs = deps.now();
   const briefInput: BuildBriefInput = { ...structuredClone(input), nowMs: startedAtMs };
   const brief: LeverageBrief = buildLeverageBrief(briefInput);
+  if (input.quant !== undefined) brief.quant = structuredClone(input.quant);
   const eligible: LeverageCandidate[] = brief.candidates.filter((candidate) => candidate.eligible);
   const warnings: string[] = [];
 

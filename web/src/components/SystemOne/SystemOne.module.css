@@ -314,6 +314,57 @@
   transition: none;
 }
 
+/* Measured liquidation risk (src/quant). Static: nothing here animates. */
+.quant {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  padding: var(--s3);
+  background: var(--bg-deck-2);
+}
+
+.quantTitle {
+  margin: 0;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+}
+
+.quantScroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.quantTable {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.quantTable th,
+.quantTable td {
+  border-bottom: 1px solid var(--edge);
+  padding: var(--s1) var(--s2);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.quantTable th:first-child {
+  text-align: left;
+}
+
+.quantTable thead th {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
 @media (max-width: 1279.98px) {
   .readouts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -338,6 +389,20 @@
 @media (max-width: 479.98px) {
   .readouts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quantTable {
+    font-size: 11px;
+  }
+
+  .quantTable th,
+  .quantTable td {
+    padding: var(--s1) 3px;
+  }
+
+  .quantTable thead th {
+    font-size: 9px;
+    letter-spacing: 0;
   }
 
   .ladderSlabs {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { SystemOneCandidateView, SystemOneCycleView, SystemOneState } from "@/lib/system-one";
+import type { SystemOneCandidateView, SystemOneCycleView, SystemOneQuantView, SystemOneState } from "@/lib/system-one";
 import styles from "./SystemOne.module.css";
 
 const UNAVAILABLE = "Indisponivel";
@@ -131,6 +131,87 @@ function Slab({ candidate, chosen, index, ceiling, cap, modelLabel }: { candidat
   );
 }
 
+const GRADE_WORD: Record<string, string> = {
+  A: "Dados limpos",
+  B: "Dados com marcas (retornos ou faixas atipicos)",
+  C: "Dados com velas perdidas, usando o trecho continuo mais recente",
+  F: "Dados insuficientes ou velhos",
+};
+
+const QUANT_WHY: Record<string, string> = {
+  too_few_candles: "poucas velas",
+  stale: "velas velhas",
+  sigma_unknown: "volatilidade desconhecida",
+};
+
+const REGIME: Record<string, string> = { calm: "calmo", normal: "normal", stressed: "agitado" };
+
+/** Touch probabilities span many orders of magnitude: say "<0.01%" instead of a misleading 0.00%. */
+function touchPct(value: number | null): string {
+  if (value === null) return "n/d";
+  if (value === 0) return "0%";
+  if (value < 0.0001) return "<0.01%";
+  return pct(value, 2);
+}
+
+/** A simulated zero is "fewer than one hit in the paths that ran", not impossible. */
+function simulatedPct(value: number | null, paths: number | null): string {
+  if (value === 0 && paths !== null) return `<${((100 / paths)).toFixed(2)}%`;
+  return touchPct(value);
+}
+
+/**
+ * Measured liquidation risk from the quant layer. It describes the risk of touching liquidation in the horizon and
+ * never changes which candidates are eligible or what the model chose.
+ */
+function QuantBlock({ quant, candidates }: { quant: SystemOneQuantView; candidates: SystemOneCandidateView[] }) {
+  const grade = GRADE_WORD[quant.dataGrade] ?? quant.dataGrade;
+  if (quant.status !== "ok") {
+    return (
+      <section className={styles.quant} aria-label="Risco medido de liquidacao">
+        <h4 className={styles.quantTitle}>Risco medido de liquidacao</h4>
+        <p className={styles.note}>Indisponivel: {QUANT_WHY[quant.reason] ?? quant.reason}. {grade}.</p>
+      </section>
+    );
+  }
+  const byId = new Map(quant.candidates.map((candidate) => [candidate.id, candidate]));
+  return (
+    <section className={styles.quant} aria-label="Risco medido de liquidacao">
+      <h4 className={styles.quantTitle}>Risco medido de liquidacao</h4>
+      <p className={styles.note}>{grade}.</p>
+      <dl className={styles.readouts}>
+        <div className={styles.readout}><dt>Sigma diario, faixa</dt><dd>{quant.sigma.low === null || quant.sigma.high === null ? UNAVAILABLE : `${pct(quant.sigma.low, 2)} a ${pct(quant.sigma.high, 2)}`}</dd></div>
+        <div className={styles.readout}><dt>Regime</dt><dd>{quant.sigma.regime ? REGIME[quant.sigma.regime] ?? quant.sigma.regime : UNAVAILABLE}</dd></div>
+        <div className={styles.readout}><dt>Curtose em excesso</dt><dd>{quant.tail.excessKurtosis === null ? UNAVAILABLE : quant.tail.excessKurtosis.toFixed(2)}</dd></div>
+        <div className={styles.readout}><dt>Indice de cauda</dt><dd>{quant.tail.hillIndex === null ? UNAVAILABLE : quant.tail.hillIndex.toFixed(2)}</dd></div>
+      </dl>
+      <div className={styles.quantScroll}>
+        <table className={styles.quantTable}>
+          <thead>
+            <tr><th scope="col">Candidato</th><th scope="col">Envelope</th><th scope="col">Por lado</th><th scope="col">Simulado</th></tr>
+          </thead>
+          <tbody>
+            {candidates.map((candidate) => {
+              const row = byId.get(candidate.id);
+              return (
+                <tr key={candidate.id}>
+                  <th scope="row">{candidate.id}</th>
+                  <td>{touchPct(candidate.touchProbability)}</td>
+                  <td>{touchPct(row?.sideAwareTouch ?? null)}</td>
+                  <td>{simulatedPct(row?.simulatedTouch ?? null, quant.simulation.paths)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className={styles.note}>
+        Probabilidade de tocar a liquidacao no horizonte de {quant.horizonDays ?? "?"} dias, sem deriva. Envelope e a formula atual, com a mesma distancia para comprado e vendido. Por lado usa a barreira de cada lado em log-preco. Simulado mantem cauda pesada e agrupamento de volatilidade{quant.simulation.paths !== null ? `; um simulado de zero significa menos de 1 acerto em ${quant.simulation.paths} caminhos, nao impossibilidade` : quant.simulation.skipped !== null ? "; a simulacao nao rodou neste ciclo" : ""}. Estas colunas descrevem o risco e nao mudam quais candidatos sao elegiveis. Em 90 dias de 5 perpetuos reais a probabilidade simulada ainda subestimou a cauda profunda: leia valores baixos como piso.
+      </p>
+    </section>
+  );
+}
+
 export function SystemOneView({ state, reducedMotion = false }: SystemOneProps) {
   const cycle = state.cycle;
   const mock = cycle?.decision?.model === "mock";
@@ -187,6 +268,7 @@ export function SystemOneView({ state, reducedMotion = false }: SystemOneProps) 
           </dl>
           <p className={styles.note}>Motivos da execucao: {cycle.execution.reasons.map(reason => REASON[reason] ?? reason).join("; ") || "nenhum motivo informado"}.</p>
           <Ladder cycle={cycle} reducedMotion={reducedMotion} />
+          {cycle.brief.quant ? <QuantBlock quant={cycle.brief.quant} candidates={cycle.brief.candidates} /> : null}
           <p className={styles.note}>
             Probabilidades sao pesos de decisao, nao taxas de acerto. O toque de liquidacao assume deriva zero no horizonte de {cycle.brief.horizonDays} dias. O System One nunca executa: a execucao fica atras dos gates do operador e da autorizacao do dono.
             {cycle.warnings.length ? ` Avisos: ${cycle.warnings.join("; ")}.` : ""}
