@@ -367,7 +367,31 @@ describe("watchlist layout: rows first, decoration after", () => {
     expect(narrow.spark).toBe(true);
     const tiny = watchlistLayout(220, 400, 5);
     expect(tiny.spark).toBe(false);
-    expect(tiny.template).toBe("56px minmax(0, 1fr) 58px");
+    expect(tiny.template).toBe("56px minmax(60px, 1fr) 54px");
+  });
+
+  test("a narrow wing keeps a slimmer sparkline: the columns tighten before the trend line is dropped", () => {
+    // 268 px of panel at 1280x720 and 272 px at 1440x900, both with the pin star. The compact tier (under 300 px) trims the
+    // padding, the change column and the sparkline itself so the trend stays; the price never goes below its 60 px floor.
+    for (const width of [268, 272]) {
+      const l = watchlistLayout(width, 133, 5, 20);
+      expect(l.spark).toBe(true);
+      expect(l.template).toBe("56px minmax(60px, 1fr) 54px 40px");
+      expect(l.padX).toBe(6);
+      expect(l.minW).toBeLessThanOrEqual(width);
+    }
+  });
+
+  test("the price column keeps its floor: below the compact tier's room the sparkline drops before the price clips", () => {
+    const l = watchlistLayout(260, 133, 5, 20);
+    expect(l.spark).toBe(false);
+    expect(l.template).toContain("minmax(60px, 1fr)");
+    expect(l.minW).toBeLessThanOrEqual(260);
+  });
+
+  test("narrower than the essential columns scrolls sideways instead of clipping", () => {
+    const l = watchlistLayout(200, 400, 5, 20);
+    expect(l.minW).toBeGreaterThan(200);
   });
 
   test("the sparkline and the volume bar follow the row height", () => {

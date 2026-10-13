@@ -26,6 +26,8 @@ export interface WatchlistLayout {
   readonly scroll: boolean;
   /** grid-template-columns for the header and every row. */
   readonly template: string;
+  /** Minimum width a row needs before a column would clip. The panel scrolls sideways past it. */
+  readonly minW: number;
   readonly padX: number;
 }
 
@@ -33,11 +35,22 @@ function clamp(v: number, lo: number, hi: number): number {
   return Math.min(hi, Math.max(lo, v));
 }
 
+/** The last price is essential content: its grid track never shrinks below this width. */
+export const WATCH_PX_MIN_W = 60;
+
+const WATCH_GAP = 8;
+const WATCH_VOL_W = 78;
+const WATCH_FUND_W = 62;
+
 /**
  * Rows keep priority over everything else. As the height shrinks the header goes, then the
  * sparkline and the volume bar, and rows only get thinner (down to 15px) before the list would scroll.
+ * In width the rule is the same: the symbol, price and change always stay readable, decoration
+ * (funding, then volume, then the sparkline) drops when it no longer fits, and only when even the
+ * essential columns overflow does the panel scroll sideways. Under 300 px (the right wing of a
+ * 1280 to 1440 px desk) the columns tighten first, so the trend line survives as a slimmer one.
  */
-export function watchlistLayout(width: number, height: number, rowCount: number): WatchlistLayout {
+export function watchlistLayout(width: number, height: number, rowCount: number, starW = 0): WatchlistLayout {
   const n = Math.max(1, rowCount);
   const withHeader = (height - WATCH_HEADER_H) / n;
   const header = withHeader >= 26;
@@ -45,16 +58,27 @@ export function watchlistLayout(width: number, height: number, rowCount: number)
   const level = rawRowH >= 30 ? "full" : rawRowH >= 22 ? "snug" : "tight";
   const tight = level === "tight";
   const rowH = clamp(Math.floor(rawRowH), WATCH_MIN_ROW_H, WATCH_MAX_ROW_H);
-  const spark = width >= 250 && !tight;
-  const vol = width >= 350 && !tight;
-  const fund = width >= 430;
 
-  const sym = width >= 350 ? 62 : width >= 250 ? 58 : 56;
-  const chg = width >= 350 ? 62 : 58;
-  const tracks = [`${sym}px`, "minmax(0, 1fr)", `${chg}px`];
-  if (spark) tracks.push(width >= 350 ? "60px" : "56px");
-  if (vol) tracks.push("78px");
-  if (fund) tracks.push("62px");
+  const compact = width < 300;
+  const sym = width >= 350 ? 62 : compact ? 56 : 58;
+  const chg = width >= 350 ? 62 : compact ? 54 : 58;
+  const padX = width >= 350 ? 12 : compact ? 6 : 8;
+  const sparkW = width >= 350 ? 60 : compact ? 40 : 56;
+  const core = starW + 2 * padX + sym + WATCH_PX_MIN_W + chg + 2 * WATCH_GAP;
+
+  let spark = width >= 250 && !tight;
+  if (spark && core + WATCH_GAP + sparkW > width) spark = false;
+  let vol = width >= 350 && !tight;
+  if (vol && core + (spark ? WATCH_GAP + sparkW : 0) + WATCH_GAP + WATCH_VOL_W > width) vol = false;
+  let fund = width >= 430;
+  if (fund && core + (spark ? WATCH_GAP + sparkW : 0) + (vol ? WATCH_GAP + WATCH_VOL_W : 0) + WATCH_GAP + WATCH_FUND_W > width) fund = false;
+
+  const tracks = [`${sym}px`, `minmax(${WATCH_PX_MIN_W}px, 1fr)`, `${chg}px`];
+  if (spark) tracks.push(`${sparkW}px`);
+  if (vol) tracks.push(`${WATCH_VOL_W}px`);
+  if (fund) tracks.push(`${WATCH_FUND_W}px`);
+
+  const minW = core + (spark ? WATCH_GAP + sparkW : 0) + (vol ? WATCH_GAP + WATCH_VOL_W : 0) + (fund ? WATCH_GAP + WATCH_FUND_W : 0);
 
   return {
     header,
@@ -67,7 +91,8 @@ export function watchlistLayout(width: number, height: number, rowCount: number)
     volH: clamp(rowH - 8, 10, 18),
     scroll: rawRowH < WATCH_MIN_ROW_H,
     template: tracks.join(" "),
-    padX: width < 350 ? 8 : 12,
+    minW,
+    padX,
   };
 }
 
