@@ -44,6 +44,6 @@ export function useBalanceReader(wallet: UseOkxWalletResult): BalanceReader {
   }, []);
   const connected = wallet.snapshot.account !== null && wallet.snapshot.status !== "disconnected" ? wallet.snapshot.account : null;
   const accounts = useMemo(() => resolveAccounts({ connectedEvm: connected, solana: solana.snapshot.account, watched }), [connected, solana.snapshot.account, watched]);
-  const read = useCallback((signal?: AbortSignal) => readBalance(createHoldingsReader(), accounts, { now: Date.now, ...(signal ? { signal } : {}) }), [accounts]);
+  const read = useCallback((signal?: AbortSignal) => readBalance(createHoldingsReader(), accounts, { now: Date.now, scope: "all", ...(signal ? { signal } : {}) }), [accounts]);
   return { accounts, hasAccount: accounts.evm !== null || accounts.solana !== null, read };
 }

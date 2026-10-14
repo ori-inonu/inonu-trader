@@ -2,7 +2,8 @@
 // the button, and "Preparar compra" only fills the ticket. origin: synthetic_fixture, tests only.
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { JevPicksView, type JevPicksViewProps } from "@/components/Desk/Dock/JevPicks";
+import { JevPicksView, type JevPicksManagementProps, type JevPicksViewProps } from "@/components/Desk/Dock/JevPicks";
+import type { BalanceRead } from "./balance";
 import { createLastPicksStore, LAST_PICKS_KEY, type LastPicks } from "./last-picks";
 import { parseEcoAnswer, type EcoAnswer } from "./picks";
 
@@ -32,8 +33,12 @@ const answer = (picks: unknown[], over: Record<string, unknown> = {}): EcoAnswer
 };
 const kept = (a: EcoAnswer, over: Partial<LastPicks> = {}): LastPicks => ({ answer: a, atMs: NOW - 120_000, briefHash: "abc123", modelo: "jev-test", ...over });
 
+const mgmt = (over: Partial<JevPicksManagementProps> = {}): JevPicksManagementProps => ({
+  hasAccount: true, reading: null, readiness: "unavailable", consent: false,
+  onRead: noop, onConsent: noop, onAnalyzeMarket: noop, onAnalyzePortfolio: noop, ...over,
+});
 const props = (over: Partial<JevPicksViewProps> = {}): JevPicksViewProps => ({
-  phase: "idle", last: null, failure: null, balanceNote: null, modelConfigured: true, nowMs: NOW, onAsk: noop, onCancel: noop, onOpen: noop, onPrepare: noop, ...over,
+  phase: "idle", last: null, failure: null, balanceNote: null, modelConfigured: true, nowMs: NOW, management: mgmt(), onCancel: noop, onOpen: noop, onPrepare: noop, canPrepare: () => true, ...over,
 });
 const draw = (over: Partial<JevPicksViewProps> = {}) => renderToStaticMarkup(<JevPicksView {...props(over)} />);
 /** bun gives css-module names as undefined: what is asserted is the words and the attributes, not the class names. */
@@ -79,7 +84,8 @@ describe("before the first request", () => {
   const html = plain(draw());
 
   test("it says what one click costs and that the dollars stay on this machine", () => {
-    expect(html).toContain("Atualizar decisoes");
+    expect(html).toContain("Analisar mercado");
+    expect(html).toContain("Analisar carteira");
     expect(html).toContain("Sem pedido");
     const visible = html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, "");
     expect(visible).toContain("Ate 2 avaliacoes por consulta.");
@@ -103,7 +109,7 @@ describe("while it works", () => {
   test("reading the balance and asking the Inonu are two different lines, the button is off and the cancel is there", () => {
     const reading = plain(draw({ phase: "reading" }));
     expect(reading).toContain("Lendo seu saldo");
-    expect(reading).toMatch(/<button[^>]*disabled=""[^>]*>Atualizar decisoes/);
+    expect(reading).toMatch(/<button[^>]*disabled=""[^>]*>Analisar mercado/);
     expect(reading).toContain(">Cancelar<");
     expect(plain(draw({ phase: "asking" }))).toContain("Perguntando ao Inonu");
   });
@@ -210,8 +216,129 @@ describe("a failure", () => {
   });
 });
 
+const READY_READ: BalanceRead = {
+  saldo: { observedAtMs: NOW - 10_000, totalUsd: 1_234, cashUsd: 500, chains: [{ chainIndex: "8453", cashUsd: 500 }], holdings: [], riskPct: null },
+  missing: [],
+  coverage: { requestedChains: ["1", "8453", "501"], skippedChains: [], networkListKnown: true, stale: false, unpricedRows: 0, flaggedRows: 0, truncated: false },
+};
+const PARTIAL_READ: BalanceRead = {
+  ...READY_READ,
+  missing: ["501"],
+  coverage: { ...READY_READ.coverage, unpricedRows: 2 },
+};
+const EMPTY_READ: BalanceRead = { ...READY_READ, saldo: null };
+
+describe("the read, review and analysis steps", () => {
+  test("the three steps and the spot posture are named, and the two kinds of analysis are told apart", () => {
+    const html = plain(draw());
+    expect(html).toContain("1 Ler carteira");
+    expect(html).toContain("2 Conferir dados");
+    expect(html).toContain("3 Analisar com Inonu");
+    expect(html).toContain("A vista / Sem margem");
+    expect(html).toContain(">Analisar mercado<");
+    expect(html).toContain(">Analisar carteira<");
+    expect(html).toContain('aria-label="Etapas da analise da carteira"');
+    expect(html).toContain("Cobertura limitada as redes e aos tokens retornados pela OKX");
+  });
+
+  test("before any click nothing was read or asked, and the personal analysis stays off", () => {
+    const html = plain(draw());
+    expect(html).toContain(">Ler carteira</button>");
+    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Analisar carteira/);
+    expect(html).not.toMatch(/<button[^>]*disabled=""[^>]*>Analisar mercado/);
+    expect(html).not.toContain(">Preparar compra</button>");
+  });
+
+  test("without an account it says where to connect, keeps the market analysis and shows no zero", () => {
+    const html = plain(draw({ management: mgmt({ hasAccount: false }) }));
+    expect(html).toContain("aba Carteira");
+    expect(html).toContain(">Analisar mercado<");
+    expect(html).not.toContain(">Ler carteira</button>");
+    expect(html).not.toContain("US$ 0");
+    expect(html).not.toContain("patrimonio");
+  });
+
+  test("a fresh complete read shows the known value of the consulted networks and the consent, off by default", () => {
+    const html = plain(draw({ management: mgmt({ reading: READY_READ, readiness: "ready" }) }));
+    expect(html).toContain("Valor conhecido estimado nas redes consultadas: US$ 1.234,00 no total, US$ 500,00 em moeda estavel");
+    expect(html).toContain("Leitura recente, sem lacunas detectadas nas redes consultadas.");
+    expect(html).toContain("3 redes consultadas");
+    expect(html).toContain('type="checkbox"');
+    expect(html).not.toContain("checked");
+    expect(html).toContain("nucleo local");
+    expect(html).toContain("percentuais");
+    expect(html).toContain("nunca o endereco");
+    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Analisar carteira/);
+  });
+
+  test("with consent marked the personal analysis can be clicked", () => {
+    const html = plain(draw({ management: mgmt({ reading: READY_READ, readiness: "ready", consent: true }) }));
+    expect(html).toMatch(/<input[^>]*checked=""[^>]*type="checkbox"|type="checkbox"[^>]*checked=""/);
+    expect(html).not.toMatch(/<button[^>]*disabled=""[^>]*>Analisar carteira/);
+  });
+
+  test("a partial read names what is missing and never claims the whole wallet", () => {
+    const html = plain(draw({ management: mgmt({ reading: PARTIAL_READ, readiness: "partial" }) }));
+    expect(html).toContain("Leitura parcial: confira as lacunas antes da analise da carteira.");
+    expect(html).toContain("Solana");
+    expect(html).toContain("sem preco");
+    expect(html).toContain("redes consultadas");
+    expect(html).not.toContain('type="checkbox"');
+    expect(html).not.toContain("patrimonio");
+    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Analisar carteira/);
+  });
+
+  test("a stale read and an unavailable one block the personal analysis with their own reasons", () => {
+    const stale = plain(draw({ management: mgmt({ reading: READY_READ, readiness: "stale" }) }));
+    expect(stale).toContain("vencida");
+    expect(stale).toMatch(/<button[^>]*disabled=""[^>]*>Analisar carteira/);
+    const empty = plain(draw({ management: mgmt({ reading: EMPTY_READ, readiness: "unavailable" }) }));
+    expect(empty).toContain("Saldo indisponivel");
+    expect(empty).not.toContain("US$ 0");
+    expect(empty).toMatch(/<button[^>]*disabled=""[^>]*>Analisar carteira/);
+  });
+
+  test("while something runs the buttons are off and the consent cannot change", () => {
+    const html = plain(draw({ phase: "reading", management: mgmt({ reading: READY_READ, readiness: "ready", consent: true }) }));
+    for (const label of ["Ler carteira", "Analisar mercado", "Analisar carteira"]) expect(html).toMatch(new RegExp(`<button[^>]*disabled=""[^>]*>${label}`));
+    expect(html).toMatch(/<input[^>]*disabled=""[^>]*type="checkbox"|type="checkbox"[^>]*disabled=""/);
+    expect(html).toContain(">Cancelar<");
+  });
+
+  test("a read too large for the request says so and keeps the market analysis, and a model that is not configured invites no ask", () => {
+    const big: BalanceRead = {
+      ...READY_READ,
+      saldo: {
+        observedAtMs: NOW - 10_000,
+        totalUsd: 1_060,
+        cashUsd: 400,
+        chains: [{ chainIndex: "8453", cashUsd: 400 }],
+        holdings: Array.from({ length: 22 }, (_, i) => ({ chainIndex: i === 0 ? "1" : "8453", address: `0x${(i + 1).toString(16).padStart(40, "0")}`, usd: 30 })),
+        riskPct: null,
+      },
+    };
+    const html = plain(draw({ management: mgmt({ reading: big, readiness: "partial", consent: true }) }));
+    expect(html).toContain("Os dados excedem o limite desta consulta; a analise de mercado segue disponivel.");
+    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>Analisar carteira/);
+    expect(html).not.toMatch(/<button[^>]*disabled=""[^>]*>Analisar mercado/);
+    const off = plain(draw({ modelConfigured: false, management: mgmt({ reading: READY_READ, readiness: "ready", consent: true }) }));
+    for (const label of ["Analisar mercado", "Analisar carteira"]) expect(off).toMatch(new RegExp(`<button[^>]*disabled=""[^>]*>${label}`));
+  });
+});
+
 describe("the words on the screen", () => {
-  const all = [draw(), draw({ phase: "asking" }), draw({ last: kept(TWO) }), draw({ last: kept(TWO, { atMs: NOW - 20 * 60_000 }) }), draw({ last: kept(answer([])) }), draw({ last: kept(answer([pick(1, "501", SOL_MINT, "WSOL")])) })];
+  const all = [
+    draw(),
+    draw({ phase: "asking" }),
+    draw({ phase: "reading", management: mgmt({ reading: READY_READ, readiness: "ready", consent: true }) }),
+    draw({ management: mgmt({ hasAccount: false }) }),
+    draw({ management: mgmt({ reading: PARTIAL_READ, readiness: "partial" }) }),
+    draw({ management: mgmt({ reading: READY_READ, readiness: "ready", consent: true }), last: kept(TWO) }),
+    draw({ last: kept(TWO) }),
+    draw({ last: kept(TWO, { atMs: NOW - 20 * 60_000 }) }),
+    draw({ last: kept(answer([])) }),
+    draw({ last: kept(answer([pick(1, "501", SOL_MINT, "WSOL")])) }),
+  ];
 
   test("no middle dot, em dash or en dash anywhere, and no order word written by the code", () => {
     for (const html of all) {

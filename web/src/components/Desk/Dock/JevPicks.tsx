@@ -5,11 +5,14 @@ import { createInonuClient, type InonuStatus } from "@/lib/inonu/client";
 import { sharedLedgerSignal } from "@/lib/inonu/ledger-signal";
 import { fmtNumber } from "@/lib/desk/ui/format";
 import { motivoText } from "@/lib/inonu/view";
+import type { BalanceRead } from "@/lib/opportunity/balance";
 import { type LastPicks, sharedLastPicks } from "@/lib/opportunity/last-picks";
-import { decisionCards, excludedLine, PICKS_STALE_MS, type DecisionCard, type PickCard, type TokenCard, picksAgeText } from "@/lib/opportunity/picks";
+import { balanceReadiness, balanceRequestFits, createManagementSession, type BalanceReadiness, type ManagementSession, type ManagementSnapshot } from "@/lib/opportunity/management-session";
+import { decisionCards, excludedLine, PICKS_STALE_MS, type DecisionCard, type PickCard, type TokenCard, chainName, picksAgeText } from "@/lib/opportunity/picks";
 import { useBalanceReader } from "@/lib/opportunity/useBalanceReader";
 import type { UseOkxWalletResult } from "@/lib/useOkxWallet";
 import { draftFromDecision, sharedTicket, ticketPlan } from "@/lib/wallet/ticket";
+import { usdText } from "@/lib/wallet/holdings";
 import { AssetIcon } from "../AssetIcon";
 import styles from "./JevPicks.module.css";
 
@@ -20,7 +23,18 @@ import styles from "./JevPicks.module.css";
  * model. One click asks, and it is the only thing that ever asks. "Preparar compra" only FILLS the ticket of the Carteira tab: nothing is sent from here.
  */
 
-export type PicksPhase = "idle" | "reading" | "asking";
+export type PicksPhase = "idle" | "reading" | "ready" | "asking";
+
+export interface JevPicksManagementProps {
+  readonly hasAccount: boolean;
+  readonly reading: BalanceRead | null;
+  readonly readiness: BalanceReadiness;
+  readonly consent: boolean;
+  readonly onRead: () => void;
+  readonly onConsent: (value: boolean) => void;
+  readonly onAnalyzeMarket: () => void;
+  readonly onAnalyzePortfolio: () => void;
+}
 
 export interface JevPicksViewProps {
   readonly phase: PicksPhase;
@@ -33,7 +47,8 @@ export interface JevPicksViewProps {
   readonly modelConfigured: boolean | null;
   /** The clock of the screen; 0 until mounted. */
   readonly nowMs: number;
-  readonly onAsk: () => void;
+  readonly management: JevPicksManagementProps;
+  readonly canPrepare: (last: LastPicks) => boolean;
   readonly onCancel: () => void;
   readonly onOpen: (card: TokenCard) => void;
   readonly onPrepare: (card: PickCard, last: LastPicks) => void;
@@ -46,18 +61,54 @@ const HOW_LINES: readonly string[] = [
   "Ao modelo vao so percentuais do saldo; os dolares e o endereco da carteira ficam nesta maquina. Os limites sao escolhas conservadoras do codigo, nao calibradas, e a medicao no historico de precos nao achou vantagem firme: o resultado e uma leitura para decidir, nao uma promessa de ganho.",
 ];
 
+const FAILURE_TEXT: Readonly<Record<string, string>> = {
+  leitura_falhou: "Nao foi possivel ler a carteira agora",
+  pedido_falhou: "Nao foi possivel pedir agora",
+  sem_consentimento: "A analise da carteira precisa da autorizacao marcada",
+  resposta_incompativel: "A resposta nao corresponde a leitura desta consulta. Analise de novo.",
+};
+const failureText = (code: string): string => FAILURE_TEXT[code] ?? motivoText(code);
+
 function statusLine(p: JevPicksViewProps): string {
   if (p.phase === "reading") return "Lendo seu saldo";
   if (p.phase === "asking") return "Perguntando ao Inonu";
   if (p.failure !== null) return p.failure;
-  if (p.last === null) return "Sem pedido";
-  return `Inonu respondeu ${picksAgeText(p.last.atMs, p.nowMs)}`;
+  if (p.last !== null) return `Inonu respondeu ${picksAgeText(p.last.atMs, p.nowMs)}`;
+  if (p.phase === "ready") return "Leitura pronta: confira os dados antes de analisar";
+  return "Sem pedido";
 }
 
-function PickItem({ card, last, stale, onOpen, onPrepare }: { readonly card: DecisionCard; readonly last: LastPicks; readonly stale: boolean; readonly onOpen: () => void; readonly onPrepare: (card: PickCard) => void }) {
+function coverageLine(read: BalanceRead, nowMs: number): string {
+  const c = read.coverage;
+  const parts: string[] = [`${c.requestedChains.length} ${c.requestedChains.length === 1 ? "rede consultada" : "redes consultadas"}`];
+  if (read.saldo !== null) parts.push(`lido ${picksAgeText(read.saldo.observedAtMs, nowMs)}`);
+  if (!c.networkListKnown) parts.push("a lista de redes do provedor nao veio");
+  if (c.skippedChains.length > 0) parts.push(`${c.skippedChains.length} ${c.skippedChains.length === 1 ? "rede fora" : "redes fora"} da leitura`);
+  if (read.missing.length > 0) parts.push(`sem resposta: ${read.missing.map(chainName).join(", ")}`);
+  if (c.unpricedRows > 0) parts.push(`${c.unpricedRows} ${c.unpricedRows === 1 ? "ativo com saldo" : "ativos com saldo"} sem preco`);
+  if (c.flaggedRows > 0) parts.push(`${c.flaggedRows} ${c.flaggedRows === 1 ? "marcado" : "marcados"} pelo provedor como risco`);
+  if (c.truncated) parts.push("a lista foi cortada pelo provedor");
+  if (c.stale) parts.push("copia antiga servida");
+  return `${parts.join("; ")}.`;
+}
+
+function readinessLine(readiness: BalanceReadiness): string {
+  switch (readiness) {
+    case "ready":
+      return "Leitura recente, sem lacunas detectadas nas redes consultadas.";
+    case "partial":
+      return "Leitura parcial: confira as lacunas antes da analise da carteira.";
+    case "stale":
+      return "Leitura vencida: leia a carteira de novo antes de analisar.";
+    case "unavailable":
+      return "Sem saldo lido: a analise da carteira fica indisponivel.";
+  }
+}
+
+function PickItem({ card, last, stale, allowed, onOpen, onPrepare }: { readonly card: DecisionCard; readonly last: LastPicks; readonly stale: boolean; readonly allowed: boolean; readonly onOpen: () => void; readonly onPrepare: (card: PickCard) => void }) {
   const draft = card.action === "watch" ? null : draftFromDecision({ candidateId: card.candidateId, action: "buy", briefHash: last.briefHash, symbol: card.symbol, atMs: last.atMs });
   const plan = draft === null ? null : ticketPlan(draft);
-  const preparable = !stale && card.action === "buy" && card.hasAmount && last.answer.saldo !== null && plan !== null && plan.quotable;
+  const preparable = !stale && card.action === "buy" && card.hasAmount && last.answer.saldo !== null && plan !== null && plan.quotable && allowed;
   const main = card.families.find((f) => f.main);
   return (
     <li className={styles.card} data-rank={card.rank} data-action={card.action}>
@@ -122,7 +173,7 @@ function PickItem({ card, last, stale, onOpen, onPrepare }: { readonly card: Dec
         <button type="button" className={styles.ghost} onClick={onOpen}>
           Abrir no grafico
         </button>
-        {card.action === "watch" ? null : <button type="button" className={styles.prepare} disabled={!preparable} onClick={() => onPrepare(card)} title={preparable ? "Preenche o ticket da aba Carteira. Nada e enviado." : stale ? "Atualize a decisao antes de preparar" : !card.hasAmount || last.answer.saldo === null ? "Sem saldo elegivel para esta compra" : (plan?.reason ?? "Este token nao pode ser preparado")}>
+        {card.action === "watch" ? null : <button type="button" className={styles.prepare} disabled={!preparable} onClick={() => onPrepare(card)} title={preparable ? "Preenche o ticket da aba Carteira. Nada e enviado." : stale ? "Atualize a decisao antes de preparar" : !allowed ? "A leitura ou a resposta mudou: leia a carteira e analise de novo antes de preparar" : !card.hasAmount || last.answer.saldo === null ? "Sem saldo elegivel para esta compra" : (plan?.reason ?? "Este token nao pode ser preparado")}>
           Preparar compra
         </button>}
       </div>
@@ -132,9 +183,13 @@ function PickItem({ card, last, stale, onOpen, onPrepare }: { readonly card: Dec
 
 /** What the person reads, a pure function of the state: every state is drawn in tests without a server, a wallet or a model. */
 export function JevPicksView(p: JevPicksViewProps) {
-  const busy = p.phase !== "idle";
+  const busy = p.phase === "reading" || p.phase === "asking";
+  const m = p.management;
   const cards = useMemo(() => (p.last === null ? [] : decisionCards(p.last.answer)), [p.last]);
   const stale = p.last !== null && p.nowMs > 0 && p.nowMs - p.last.atMs > PICKS_STALE_MS;
+  const read = m.reading;
+  const oversized = read !== null && !balanceRequestFits(read);
+  const personal = read !== null && read.saldo !== null && m.readiness === "ready" && m.consent && p.modelConfigured !== false;
   return (
     <section className={styles.root} aria-label="Melhores oportunidades do ecossistema">
       <div className={styles.head}>
@@ -142,20 +197,69 @@ export function JevPicksView(p: JevPicksViewProps) {
           <span className={styles.eyebrow}>Inonu</span>
           <h3 className={styles.title}>Proximos movimentos</h3>
         </div>
-        <div className={styles.controls}>
-          <button type="button" className={styles.ask} onClick={p.onAsk} disabled={busy} aria-busy={busy ? "true" : undefined}>
-            Atualizar decisoes
-          </button>
-          {busy ? (
-            <button type="button" className={styles.ghost} onClick={p.onCancel}>
-              Cancelar
-            </button>
-          ) : null}
-        </div>
+        <span className={styles.spotBadge}>A vista / Sem margem</span>
       </div>
       <p className={styles.status} role="status" data-failed={p.failure !== null && !busy ? "true" : undefined}>
         {statusLine(p)}
       </p>
+
+      <div className={styles.manage}>
+        <ol className={styles.stages} aria-label="Etapas da analise da carteira">
+          <li>1 Ler carteira</li>
+          <li>2 Conferir dados</li>
+          <li>3 Analisar com Inonu</li>
+        </ol>
+        <p className={styles.stepNote}>Cobertura limitada as redes e aos tokens retornados pela OKX; filtros do provedor podem omitir ativos.</p>
+
+        <div className={styles.stageBody}>
+          {m.hasAccount ? (
+            <button type="button" className={styles.ghost} onClick={m.onRead} disabled={busy} aria-busy={p.phase === "reading" ? "true" : undefined}>
+              Ler carteira
+            </button>
+          ) : (
+            <p className={styles.stepNote}>Sem carteira conectada nem endereco acompanhado: conecte na aba Carteira. A analise de mercado segue disponivel.</p>
+          )}
+          <p className={styles.stepNote}>A leitura envia o endereco da carteira ao nucleo local, que consulta a OKX. So leitura: nada e assinado e nenhuma ordem sai daqui.</p>
+        </div>
+
+        {read === null ? (
+          <p className={styles.stepNote}>Nenhuma leitura ainda: Ler carteira so consulta saldos e nunca chama o modelo.</p>
+        ) : (
+          <div className={styles.stageBody} data-readiness={m.readiness}>
+            <p className={styles.stepNote}>
+              {read.saldo === null ? "Saldo indisponivel nas redes consultadas." : `Valor conhecido estimado nas redes consultadas: ${usdText(read.saldo.totalUsd)} no total, ${usdText(read.saldo.cashUsd)} em moeda estavel.`}
+            </p>
+            <p className={styles.stepNote}>{coverageLine(read, p.nowMs)}</p>
+            <p className={styles.stepNote} data-blocked={m.readiness === "ready" ? undefined : "true"}>
+              {oversized && m.readiness === "partial" ? "Os dados excedem o limite desta consulta; a analise de mercado segue disponivel." : readinessLine(m.readiness)}
+            </p>
+          </div>
+        )}
+
+        <div className={styles.stageBody}>
+          <div className={styles.controls}>
+            <button type="button" className={styles.ghost} onClick={m.onAnalyzeMarket} disabled={busy || p.modelConfigured === false} aria-busy={p.phase === "asking" ? "true" : undefined}>
+              Analisar mercado
+            </button>
+            <button type="button" className={styles.ask} onClick={m.onAnalyzePortfolio} disabled={busy || !personal} aria-busy={p.phase === "asking" ? "true" : undefined} title={personal ? "Analisa a carteira lida com o consentimento marcado" : "Precisa de uma leitura recente, sem lacunas detectadas, do consentimento marcado e do modelo configurado"}>
+              Analisar carteira
+            </button>
+            {busy ? (
+              <button type="button" className={styles.ghost} onClick={p.onCancel}>
+                Cancelar
+              </button>
+            ) : null}
+          </div>
+          {read === null || read.saldo === null || m.readiness !== "ready" ? null : (
+            <label className={styles.consent}>
+              <input type="checkbox" checked={m.consent} disabled={busy} onChange={(e) => m.onConsent(e.currentTarget.checked)} />
+              <span>Autorizo enviar ao nucleo local os valores em dolar e os contratos publicos dos tokens lidos; o modelo recebe so percentuais e o contexto publico de mercado, nunca o endereco nem os dolares da carteira.</span>
+            </label>
+          )}
+          <p className={styles.stepNote}>A analise de mercado nao envia nada da carteira.</p>
+        </div>
+      </div>
+
       <p className={styles.hint}>Ate 2 avaliacoes por consulta.</p>
       {p.modelConfigured === false ? (
         <p className={styles.hint}>
@@ -173,7 +277,7 @@ export function JevPicksView(p: JevPicksViewProps) {
           ) : (
             <ol className={styles.list} aria-label="Tokens escolhidos, do primeiro ao ultimo">
               {cards.map((card) => (
-                <PickItem key={card.candidateId} card={card} last={p.last!} stale={stale} onOpen={() => p.onOpen(card)} onPrepare={(buy) => p.onPrepare(buy, p.last!)} />
+                <PickItem key={card.candidateId} card={card} last={p.last!} stale={stale} allowed={p.canPrepare(p.last!)} onOpen={() => p.onOpen(card)} onPrepare={(buy) => p.onPrepare(buy, p.last!)} />
               ))}
             </ol>
           )}
@@ -213,111 +317,101 @@ export interface JevPicksProps {
 }
 
 const REFRESH_MS = 30_000;
+const EMPTY_SNAPSHOT: ManagementSnapshot = { phase: "idle", reading: null, consent: false, last: null, failure: null };
 
 export default function JevPicks({ wallet, onOpen, onPrepared }: JevPicksProps) {
   const client = useMemo(() => createInonuClient(), []);
   const reader = useBalanceReader(wallet);
-  const [phase, setPhase] = useState<PicksPhase>("idle");
-  const [last, setLast] = useState<LastPicks | null>(null);
-  const [failure, setFailure] = useState<string | null>(null);
-  const [balanceNote, setBalanceNote] = useState<string | null>(null);
-  const [status, setStatus] = useState<InonuStatus | null>(null);
-  const [nowMs, setNowMs] = useState(0);
-  const controller = useRef<AbortController | null>(null);
-  const alive = useRef(true);
   const readerRef = useRef(reader);
   readerRef.current = reader;
+  const key = JSON.stringify([reader.accounts.evm?.toLowerCase() ?? null, reader.accounts.solana ?? null]);
+  const contextRef = useRef(key);
+  contextRef.current = key;
+  const sessionRef = useRef<ManagementSession | null>(null);
+  const [binding, setBinding] = useState<{ readonly key: string; readonly session: ManagementSession; readonly snapshot: ManagementSnapshot } | null>(null);
+  const [status, setStatus] = useState<InonuStatus | null>(null);
+  const [nowMs, setNowMs] = useState(0);
 
-  // the page and the server render the same first paint: what was kept for this tab is read after mount
   useEffect(() => {
-    alive.current = true;
+    const s = createManagementSession({
+      hasAccount: reader.accounts.evm !== null || reader.accounts.solana !== null,
+      read: (signal) => readerRef.current.read(signal),
+      ask: (request, signal, requestId) => client.ask(request, signal, requestId),
+      cancelRequest: (requestId) => client.cancelRequest(requestId),
+      now: () => Date.now(),
+      requestId: () => crypto.randomUUID(),
+      isCurrent: () => contextRef.current === key,
+      onAnswer: (last) => sharedLastPicks().set(last),
+      // the ledger has a new line whichever panel is on screen now: the tail of the Inonu tab reads it again
+      onLedger: () => sharedLedgerSignal().notify(),
+    });
+    sessionRef.current = s;
+    const sync = () => {
+      setBinding({ key, session: s, snapshot: s.get() });
+      setNowMs(Date.now());
+    };
+    const off = s.subscribe(sync);
+    sync();
+    return () => {
+      off();
+      if (sessionRef.current === s) sessionRef.current = null;
+      s.dispose();
+    };
+  }, [key, client]);
+
+  // the page and the server render the same first paint: the clock and the status of the core are read after mount
+  useEffect(() => {
+    let live = true;
     setNowMs(Date.now());
-    setLast(sharedLastPicks().get());
-    const refresh = () => void client.status().then((s) => alive.current && setStatus(s));
+    const refresh = () => void client.status().then((s) => live && setStatus(s));
     refresh();
     const timer = setInterval(() => {
       setNowMs(Date.now());
       refresh();
     }, REFRESH_MS);
-    const off = sharedLastPicks().subscribe(() => alive.current && setLast(sharedLastPicks().get()));
     return () => {
-      alive.current = false;
+      live = false;
       clearInterval(timer);
-      off();
     };
   }, [client]);
 
-  const ask = useCallback(async () => {
-    if (controller.current !== null) return;
-    const mine = new AbortController();
-    controller.current = mine;
-    setFailure(null);
-    setBalanceNote(null);
-    setPhase("reading");
-    try {
-      let saldo = null;
-      if (readerRef.current.hasAccount) {
-        const read = await readerRef.current.read(mine.signal);
-        if (mine.signal.aborted || !alive.current) return;
-        saldo = read.saldo;
-        if (read.saldo === null) setBalanceNote("Saldo indisponivel. A consulta identifica ativos para acompanhar, sem valor de compra.");
-        else if (read.missing.length > 0) setBalanceNote(`Saldo parcial: ${read.missing.length} ${read.missing.length === 1 ? "rede nao respondeu" : "redes nao responderam"}, e o caixa nelas nao foi contado. Isso so deixa os tetos menores.`);
-      } else {
-        setBalanceNote("Carteira desconectada. Consulta de mercado para acompanhar, sem valor de compra.");
-      }
-      setPhase("asking");
-      const answer = await client.ask({ modo: "ecossistema", ...(saldo === null ? {} : { saldo }) }, mine.signal);
-      // the ledger has a new line whichever panel is on screen now: the tail of the Inonu tab reads it again
-      sharedLedgerSignal().notify();
-      if (mine.signal.aborted || !alive.current) return;
-      setNowMs(Date.now());
-      if (answer.status === "respondido" && answer.oportunidades !== undefined) {
-        sharedLastPicks().set({ answer: answer.oportunidades, atMs: Date.now(), briefHash: answer.briefHash, modelo: answer.modelo ?? null });
-      } else {
-        setFailure(motivoText(answer.motivo ?? answer.status));
-      }
-      void client.status().then((s) => alive.current && setStatus(s));
-    } finally {
-      if (controller.current === mine) controller.current = null;
-      if (alive.current) setPhase("idle");
-    }
-  }, [client]);
-
-  const cancel = useCallback(() => {
-    const mine = controller.current;
-    if (mine === null) return;
-    if (phase === "asking") {
-      void client.status().then(async (s) => {
-        if (s?.running) await client.cancel(s.running.id);
-      });
-    }
-    mine.abort();
-    controller.current = null;
-    setFailure(null);
-    setPhase("idle");
-  }, [client, phase]);
+  const bound = binding !== null && binding.key === key && binding.session === sessionRef.current ? binding : null;
+  const snap = bound === null ? EMPTY_SNAPSHOT : bound.snapshot;
 
   const prepare = useCallback(
     (card: PickCard, kept: LastPicks) => {
+      if (bound === null || !bound.session.canPrepare(kept)) return;
       if (!card.hasAmount || kept.answer.saldo === null || Date.now() - kept.atMs > PICKS_STALE_MS) return;
       const draft = draftFromDecision({ candidateId: card.candidateId, action: "buy", briefHash: kept.briefHash, symbol: card.symbol, atMs: Date.now(), suggestUsd: card.hasAmount ? card.usd : null });
       if (draft === null) return;
       sharedTicket().fill(draft);
       onPrepared();
     },
-    [onPrepared],
+    [bound, onPrepared],
   );
+
+  const readiness = balanceReadiness(snap.reading, nowMs);
 
   return (
     <JevPicksView
-      phase={phase}
-      last={last}
-      failure={failure}
-      balanceNote={balanceNote}
+      phase={snap.phase}
+      last={snap.last}
+      failure={snap.failure === null ? null : failureText(snap.failure)}
+      balanceNote={null}
       modelConfigured={status === null ? null : status.modelConfigured}
       nowMs={nowMs}
-      onAsk={() => void ask()}
-      onCancel={cancel}
+      management={{
+        hasAccount: reader.hasAccount,
+        reading: snap.reading,
+        readiness,
+        consent: snap.consent,
+        onRead: () => void sessionRef.current?.read(),
+        onConsent: (value) => sessionRef.current?.consent(value),
+        onAnalyzeMarket: () => void sessionRef.current?.analyze("market"),
+        onAnalyzePortfolio: () => void sessionRef.current?.analyze("portfolio"),
+      }}
+      canPrepare={(last) => bound !== null && bound.session.canPrepare(last)}
+      onCancel={() => sessionRef.current?.cancel()}
       onOpen={onOpen}
       onPrepare={prepare}
     />
