@@ -1,0 +1,241 @@
+/* The radar of the Inonu tab: a header with the lens control, one line saying what is measured, a strip of cards and the
+   filter in plain words. Cards are flat surfaces with a hairline and one neutral elevation step, a marker on the left edge for
+   the pair on the chart, a ring for the pairs ticked for the ranking, and a thin volume bar on the bottom edge. Nothing here moves:
+   state is read from colour, shape and words, never from motion. Text uses --ink, --ink-2 and --ink-3 only. */
+.root {
+  display: grid;
+  min-width: 0;
+  gap: var(--s3);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s2) var(--s4);
+}
+
+.titleBox { display: grid; min-width: 0; gap: 2px; }
+
+.eyebrow {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: var(--ink);
+  font: 600 17px/22px var(--font-sans);
+  letter-spacing: -0.005em;
+}
+
+/* The lens control: a pill track with three options, the chosen one lifted and underlined in the signal colour. */
+.lenses {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg-well) 70%, transparent);
+}
+
+.lens {
+  min-height: 28px;
+  padding: 0 var(--s3);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out-expo), background-color var(--dur-fast) var(--ease-out-expo);
+}
+.lens:hover { color: var(--ink); }
+.lens[aria-pressed="true"] { background: var(--bg-deck-3); color: var(--ink); box-shadow: inset 0 -2px 0 var(--signal); }
+.lens:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 1px; }
+
+.hint { margin: 0; color: var(--ink-2); font: var(--fs-sm); }
+
+.status {
+  margin: 0;
+  padding: var(--s4);
+  border: 1px dashed var(--edge-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  text-align: center;
+}
+
+/* The strip: as many cards as fit, and the rest a sideways scroll with a thin bar, like the tab strip of the dock. */
+.cards {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(138px, 1fr);
+  gap: var(--s2);
+  margin: 0;
+  padding: 0 0 var(--s1);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--edge-strong) transparent;
+}
+
+.card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: linear-gradient(180deg, var(--bg-deck-2), var(--bg-deck));
+  box-shadow: var(--elev-0);
+  transition: border-color var(--dur-fast) var(--ease-out-expo);
+}
+.card:hover { border-color: var(--edge-strong); }
+
+/* The pair the chart is on: a marker on the left edge, as in the asset list. */
+.card[data-focus="true"] { border-color: var(--signal-deep); }
+.card[data-focus="true"]::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--signal);
+  content: "";
+}
+
+/* A pair ticked for the ranking: the ring and a faint fill, so the choice reads at a glance without the control. */
+.card[data-chosen="true"] {
+  border-color: var(--signal);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--signal) 10%, var(--bg-deck-2)), var(--bg-deck));
+}
+
+.open {
+  display: grid;
+  width: 100%;
+  gap: 6px;
+  padding: 10px 12px 13px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.open:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
+
+.top { display: flex; min-width: 0; align-items: center; gap: 6px; padding-right: 26px; }
+.rank { color: var(--ink-3); font: 600 10px/12px var(--font-mono); }
+.symbol { overflow: hidden; color: var(--ink); font: 600 13px/16px var(--font-sans); text-overflow: ellipsis; white-space: nowrap; }
+
+.price {
+  color: var(--ink);
+  font: 500 16px/20px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.meta { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
+
+.chg {
+  --tone: var(--ink-2);
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  color: var(--tone);
+  font: 600 11px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.chg[data-tone="up"] { --tone: var(--buy); }
+.chg[data-tone="down"] { --tone: var(--sell); }
+
+.vol { color: var(--ink-3); font: 500 10.5px/16px var(--font-mono); white-space: nowrap; }
+
+/* The 24h volume against the largest on the strip, on the bottom edge. */
+.bar {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: color-mix(in srgb, var(--bg-well) 85%, transparent);
+  pointer-events: none;
+}
+.bar::after {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--signal) 50%, transparent);
+  content: "";
+  transform: scaleX(var(--v, 0));
+  transform-origin: left center;
+}
+
+/* The round control that ticks a pair for the ranking, over the top right corner of its card. */
+.pick {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--edge-strong);
+  border-radius: 50%;
+  background: var(--bg-deck);
+  color: var(--ink-3);
+  cursor: pointer;
+}
+.pick:hover:not(:disabled) { border-color: var(--signal); color: var(--ink); }
+.pick[aria-pressed="true"] { border-color: var(--signal); background: var(--signal-deep); color: var(--ink); }
+.pick:disabled { cursor: default; opacity: 0.45; }
+.pick:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+@media (pointer: coarse) {
+  .pick { width: 28px; height: 28px; }
+  .top { padding-right: 34px; }
+  .lens { min-height: 36px; }
+}
+
+.foot { margin: 0; color: var(--ink-3); font: var(--fs-xs); }
+
+/* Below the strip: the ranking of the ticked pairs and the network discovery, side by side when there is room. */
+.lower {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  align-items: start;
+  gap: var(--s3);
+}
+
+.picked {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--bg-well) 45%, transparent);
+}
+.pickedHead { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.pickedLine { margin: 0; color: var(--ink-2); font: var(--fs-sm); }
+
+.clear {
+  padding: var(--s1) var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  cursor: pointer;
+}
+.clear:hover:not(:disabled) { border-color: var(--edge-focus); color: var(--ink); }
+.clear:disabled { color: var(--ink-3); cursor: default; }
+.clear:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+
+.network { display: grid; gap: var(--s2); min-width: 0; }
+.networkText { margin: 0; color: var(--ink-2); font: var(--fs-sm); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lens,
+  .card { transition: none; }
+}
