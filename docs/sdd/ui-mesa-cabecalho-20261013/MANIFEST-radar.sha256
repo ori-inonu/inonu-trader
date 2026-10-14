@@ -1,0 +1,5 @@
+077732c223fb764f7844aedae69d3ce845089295f96986976603e3e71ab775af *web/src/components/Desk/Dock/OpportunityRadar.tsx
+16550b61ed669f9fd0ac3d6a174f51464db9957bdaacd3f5838b656e99d54436 *web/src/components/Desk/Dock/OpportunityRadar.module.css
+a2b5d0f678b9dbaa8b4b6216b989f49ad767b9a044488a57a11e5f0ffd80c478 *web/src/lib/desk/ui/opportunity-radar.ts
+d8007983bbb9f72c194945055d8d91b64122e82e1ad92dba1fb46ba6b87f24e8 *web/src/lib/desk/ui/opportunity-radar.test.ts
+bba8e5d90b0573376b86ead73afd2251dd5b3a7552582c6d3673032f328182a3 *web/src/lib/desk/ui/opportunity-radar-render.test.tsx
