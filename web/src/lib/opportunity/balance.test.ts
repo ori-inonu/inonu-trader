@@ -2,6 +2,7 @@
 import { describe, expect, test } from "bun:test";
 import type { OnchainMeta } from "../onchain/client";
 import type { BalanceRow, HoldingsReader, HoldingsResult, BalancesData, NetworkRow } from "../wallet/holdings";
+import { evmNetworksToRead } from "../wallet/portfolio-read";
 import { BALANCE_EVM_NETWORKS, readBalance } from "./balance";
 import { resolveAccounts } from "./useBalanceReader";
 
@@ -10,10 +11,13 @@ const META = (ageMs = 5_000): OnchainMeta => ({ tier: "free", cachedAtMs: NOW - 
 const USDC = "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913";
 const row = (chainIndex: string, symbol: string, valueUsd: number, tokenAddress: string | null = null): BalanceRow => ({ chainIndex, symbol, tokenAddress, balance: 1, priceUsd: valueUsd, valueUsd, flaggedRisk: false });
 
-function fakeReader(over: { answer?: (chains: readonly string[], address: string) => HoldingsResult<BalancesData> } = {}) {
+function fakeReader(over: { answer?: (chains: readonly string[], address: string) => HoldingsResult<BalancesData>; networks?: HoldingsResult<NetworkRow[]> } = {}) {
   const calls: { address: string; chains: readonly string[] }[] = [];
+  const listed = { count: 0 };
   const reader: Pick<HoldingsReader, "balances" | "networks"> = {
     async networks() {
+      listed.count += 1;
+      if (over.networks) return over.networks;
       return { ok: true, data: ["1", "8453", "56", "501", "0"].map((chainIndex) => ({ chainIndex, name: chainIndex }) as NetworkRow), meta: META() };
     },
     async balances(params) {
@@ -23,16 +27,25 @@ function fakeReader(over: { answer?: (chains: readonly string[], address: string
       return { ok: true, data: { rows, total: rows.length }, meta: META() };
     },
   };
-  return { reader, calls };
+  return { reader, calls, listed };
 }
+
+const MANY_EVM = ["1", "8453","42161", "10", "137", "56", "196", "143", "43114", "59144", "324", "534352", "81457", "5000", "130", "146", "5003", "480", "57073", "80094"];
+const networkList = (chains: readonly string[]): HoldingsResult<NetworkRow[]> => ({ ok: true, data: chains.map((chainIndex) => ({ chainIndex, name: chainIndex })), meta: META() });
+const EVM_ACCOUNT = "0xAbCdEf0123456789aBcDeF0123456789AbCdEf01";
 
 const options = { now: () => NOW };
 
 describe("no account, no balance", () => {
   test("nothing is read and the picks will come without dollars", async () => {
-    const { reader, calls } = fakeReader();
-    expect(await readBalance(reader, { evm: null, solana: null }, options)).toEqual({ saldo: null, missing: [] });
+    const { reader, calls, listed } = fakeReader();
+    expect(await readBalance(reader, { evm: null, solana: null }, options)).toEqual({
+      saldo: null,
+      missing: [],
+      coverage: { requestedChains: [], skippedChains: [], networkListKnown: true, stale: false, unpricedRows: 0, flaggedRows: 0, truncated: false },
+    });
     expect(calls).toEqual([]);
+    expect(listed.count).toBe(0);
   });
 });
 
@@ -109,5 +122,84 @@ describe("which accounts", () => {
 
   test("an account that is not an address is no account", () => {
     expect(resolveAccounts({ connectedEvm: "not an address", solana: null, watched: null })).toEqual({ evm: null, solana: null });
+  });
+});
+
+describe("what the read says about itself", () => {
+  test("the default scope asks the first fourteen and names the rest as not consulted", async () => {
+    const { reader } = fakeReader({ networks: networkList([...MANY_EVM, "501", "0"]) });
+    const read = await readBalance(reader, { evm: EVM_ACCOUNT, solana: null }, options);
+    expect(read.coverage.requestedChains).toEqual(MANY_EVM.slice(0, BALANCE_EVM_NETWORKS));
+    expect(read.coverage.requestedChains.length).toBe(14);
+    expect(read.coverage.skippedChains).toEqual(MANY_EVM.slice(BALANCE_EVM_NETWORKS));
+    expect(read.coverage.networkListKnown).toBe(true);
+  });
+
+  test("the full scope asks every EVM network the provider listed and leaves none out", async () => {
+    const { reader, calls } = fakeReader({ networks: networkList([...MANY_EVM, "501", "0"]) });
+    const read = await readBalance(reader, { evm: EVM_ACCOUNT, solana: null }, { ...options, scope: "all" });
+    expect(read.coverage.requestedChains).toEqual(MANY_EVM);
+    expect(read.coverage.skippedChains).toEqual([]);
+    const asked = new Set(calls.flatMap((c) => c.chains));
+    for (const chain of MANY_EVM) expect(asked.has(chain)).toBe(true);
+  });
+
+  test("the networks asked and the ones that did not answer are named, Solana included", async () => {
+    const { reader } = fakeReader({ answer: (chains) => (chains.includes("501") ? { ok: false, error: "provider_error" } : { ok: true, data: { rows: [row("8453", "USDC", 300, USDC)], total: 1 }, meta: META() }) });
+    const read = await readBalance(reader, { evm: EVM_ACCOUNT, solana: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU" }, options);
+    expect(read.coverage.requestedChains).toContain("501");
+    expect(read.coverage.requestedChains).toContain("1");
+    expect(read.missing).toEqual(["501"]);
+    expect(read.saldo!.totalUsd).toBe(300);
+  });
+
+  test("an answer served from an old copy marks the read stale", async () => {
+    const old = { ...META(), stale: true };
+    const { reader } = fakeReader({ answer: () => ({ ok: true, data: { rows: [row("8453", "USDC", 100, USDC)], total: 1 }, meta: old }) });
+    const read = await readBalance(reader, { evm: EVM_ACCOUNT, solana: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU" }, options);
+    expect(read.coverage.stale).toBe(true);
+  });
+
+  test("the provider keeping only the largest rows marks the read truncated", async () => {
+    const { reader } = fakeReader({ answer: (chains) => (chains.includes("501") ? { ok: true, data: { rows: [row("501", "SOL", 800)], total: 9 }, meta: META() } : { ok: true, data: { rows: [], total: 0 }, meta: META() }) });
+    const read = await readBalance(reader, { evm: null, solana: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU" }, options);
+    expect(read.coverage.truncated).toBe(true);
+  });
+
+  test("rows without a price and rows the provider flagged are counted, never read as zero", async () => {
+    const rows = [
+      row("8453", "USDC", 500, USDC),
+      { chainIndex: "8453", symbol: "NOPX", tokenAddress: null, balance: 3, priceUsd: null, valueUsd: null, flaggedRisk: false },
+      { chainIndex: "8453", symbol: "NOPZ", tokenAddress: null, balance: 2, priceUsd: 0, valueUsd: null, flaggedRisk: false },
+      { chainIndex: "8453", symbol: "SCAM", tokenAddress: null, balance: 7, priceUsd: 1, valueUsd: 7, flaggedRisk: true },
+      { chainIndex: "8453", symbol: "DUST0", tokenAddress: null, balance: 0, priceUsd: null, valueUsd: null, flaggedRisk: false },
+    ];
+    const answer = (chains: readonly string[]): HoldingsResult<BalancesData> => ({
+      ok: true,
+      data: { rows: chains.includes("501") ? [] : rows.filter((r) => chains.includes(r.chainIndex)), total: 5 },
+      meta: META(),
+    });
+    const { reader } = fakeReader({ answer });
+    const read = await readBalance(reader, { evm: EVM_ACCOUNT, solana: null }, options);
+    expect(read.coverage.unpricedRows).toBe(2);
+    expect(read.coverage.flaggedRows).toBe(1);
+    expect(read.saldo!.totalUsd).toBe(500);
+  });
+
+  test("a network list that does not come says so, and the read falls back to the networks the app knows", async () => {
+    const { reader } = fakeReader({ networks: { ok: false, error: "provider_error" } });
+    const read = await readBalance(reader, { evm: EVM_ACCOUNT, solana: null }, options);
+    expect(read.coverage.networkListKnown).toBe(false);
+    expect(read.coverage.requestedChains).toEqual(evmNetworksToRead(null));
+    expect(read.coverage.requestedChains).not.toContain("501");
+    expect(read.saldo).not.toBeNull();
+  });
+
+  test("a cancelled read still says what it had asked for, but hands no balance", async () => {
+    const controller = new AbortController();
+    const { reader } = fakeReader({ networks: networkList(MANY_EVM), answer: () => (controller.abort(), { ok: true, data: { rows: [row("8453", "USDC", 10, USDC)], total: 1 }, meta: META() }) });
+    const read = await readBalance(reader, { evm: EVM_ACCOUNT, solana: null }, { ...options, signal: controller.signal });
+    expect(read.saldo).toBeNull();
+    expect(read.coverage.requestedChains.length).toBeGreaterThan(0);
   });
 });
