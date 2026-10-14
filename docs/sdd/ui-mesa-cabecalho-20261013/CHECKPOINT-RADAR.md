@@ -1,5 +1,7 @@
 # CHECKPOINT: radar de oportunidades na aba Inonu
 
+> **Atualizacao (2026-10-14, commit 778bfd0).** Este checkpoint descreve o radar como ele era na aba Inonu. Outra frente o substituiu: a aba Inonu agora abre com `JevPicks` (melhores oportunidades do ecossistema) e o radar de pares virou a vista **Pares OKX** do Radar, em `EngineRadar`, que le o historico de cada par e usa o meu `OpportunityRadar` so como lista de reserva (por volume) quando o motor nao le nada. O modelo (`opportunity-radar.ts`) e o componente continuam em uso. A secao "Se a MesaView for regravada" abaixo ficou obsoleta: o `MesaView` inteiro, e tudo o que ele importa de `web/src`, esta commitado no `778bfd0`, entao o `git` e a fonte de verdade.
+
 Sessao: Devin (Claude), 2026-10-13. Pedido do usuario: a aba Inonu do painel inferior deve ser um rastreador de oportunidades (nao so do ativo do grafico), com visual mais sofisticado. Continuacao de [CHECKPOINT.md](CHECKPOINT.md). Nada foi publicado, nenhuma chamada a modelo, assinatura ou ordem.
 
 ## O que a tela faz e o que ela se recusa a fazer
