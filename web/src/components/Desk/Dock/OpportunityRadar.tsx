@@ -3,7 +3,7 @@
 import { type CSSProperties, type ReactNode, useMemo, useState } from "react";
 import { type AssetCatalog } from "@/lib/desk/useAssetCatalog";
 import { RADAR_LENSES, RADAR_MIN_QUOTE_VOLUME, radarRows, type RadarLens, type RadarRow } from "@/lib/desk/ui/opportunity-radar";
-import { type AskSubject, subjectKey } from "@/lib/inonu/ask-target";
+import { subjectKey } from "@/lib/inonu/ask-target";
 import { instrumentIconSymbol } from "@/lib/onchain/icons";
 import { CHOOSE_MAX, chosenIds, chosenLine, rankingSubjectOf, toggleChosen } from "@/lib/rastreador/choose";
 import { AssetIcon } from "../AssetIcon";
@@ -55,14 +55,13 @@ export function OpportunityRadarView(p: OpportunityRadarViewProps) {
           <span className={styles.eyebrow}>Radar de oportunidades</span>
           <h3 className={styles.title}>Onde olhar agora</h3>
         </div>
+        <p className={styles.hint}>{lens.hint}. Ordem por fato medido, nao previsao.</p>
         <div className={styles.lenses} role="group" aria-label="Criterio do radar">
           {RADAR_LENSES.map((l) => (
             <button key={l.id} type="button" className={styles.lens} aria-pressed={l.id === p.lens} onClick={() => p.onLens(l.id)}>{l.label}</button>
           ))}
         </div>
       </div>
-
-      <p className={styles.hint}>{lens.hint}. Ordem por fato medido, nao previsao.</p>
 
       {p.status === "loading" ? <p className={styles.status} role="status">Lendo a lista da OKX</p> : null}
       {p.status === "error" ? <p className={styles.status} role="status">Lista da OKX indisponivel agora, e nada foi inventado para preencher o radar.</p> : null}
@@ -126,25 +125,28 @@ export function OpportunityRadarView(p: OpportunityRadarViewProps) {
   );
 }
 
-/** The card of the network discovery: the whole network is the subject, and the one button inside is the only thing that reads it. */
-function NetworkCard({ chainIndex, chainName }: { readonly chainIndex: string; readonly chainName: string }) {
-  const subject: AskSubject = { kind: "descoberta", chainIndex, chainName };
+/**
+ * The door to the on-chain side of the market. The reads and the question to the model about a whole network already live in the
+ * view "Onde comprar" of the Radar tab (with the network chips), so this card does not ask anything: it only takes the person there.
+ */
+function NetworkCard({ chainName, onOpen }: { readonly chainName: string; readonly onOpen: () => void }) {
   return (
     <div className={styles.network}>
       <span className={styles.eyebrow}>Ecossistema on-chain</span>
       <p className={styles.networkText}>
-        Tokens com carteiras rastreadas comprando na rede {chainName}. Nada roda antes do clique: ele usa ate 15 leituras da OKX OnchainOS e uma consulta ao modelo.
+        Tokens com carteiras rastreadas comprando na rede {chainName}. A leitura e a pergunta ao modelo ficam na vista Onde comprar, e so rodam quando voce pedir.
       </p>
-      <InonuAsk key={subjectKey(subject)} instId={`descoberta:${chainIndex}`} subject={subject} />
+      <button type="button" className={styles.networkOpen} onClick={onOpen}>Abrir Onde comprar</button>
     </div>
   );
 }
 
 /**
  * The radar with its own state: the lens, the rows ticked for the ranking and whether a request holds them. Nothing here asks the
- * model by itself; the two buttons it can show (rank the chosen rows, the best entries of a network) are the only triggers.
+ * model by itself; the one button it can show that asks (rank the chosen rows) is the only trigger, and the door to the networks
+ * only moves the person to the view that already holds that question.
  */
-export default function OpportunityRadar({ catalog, focus, onOpen, network }: { readonly catalog: AssetCatalog; readonly focus: string; readonly onOpen: (instId: string) => void; readonly network?: { readonly chainIndex: string; readonly chainName: string } }) {
+export default function OpportunityRadar({ catalog, focus, onOpen, network }: { readonly catalog: AssetCatalog; readonly focus: string; readonly onOpen: (instId: string) => void; readonly network?: { readonly chainName: string; readonly onOpen: () => void } }) {
   const [lens, setLens] = useState<RadarLens>("volume");
   const [chosenRaw, setChosenRaw] = useState<readonly string[]>([]);
   const [locked, setLocked] = useState(false);
@@ -167,7 +169,7 @@ export default function OpportunityRadar({ catalog, focus, onOpen, network }: { 
       onToggle={(id) => setChosenRaw((c) => toggleChosen(chosenIds(c, catalog.status === "ready" ? catalog.spot.map((r) => ({ id: r.instId })) : null), id))}
       onClear={() => setChosenRaw([])}
       rankingSlot={subject === null ? null : <InonuAsk key={subjectKey(subject)} instId={subjectKey(subject)} subject={subject} onBusyChange={setLocked} />}
-      networkSlot={network ? <NetworkCard chainIndex={network.chainIndex} chainName={network.chainName} /> : null}
+      networkSlot={network ? <NetworkCard chainName={network.chainName} onOpen={network.onOpen} /> : null}
     />
   );
 }

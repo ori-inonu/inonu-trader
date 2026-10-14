@@ -142,20 +142,22 @@ describe("the states without data", () => {
 });
 
 describe("the stateful radar", () => {
-  test("starts on the most traded, with nothing chosen, and holds the network card with the discovery button", () => {
-    const html = renderToStaticMarkup(<OpportunityRadar catalog={READY} focus="ETH-USDT" onOpen={noop} network={{ chainIndex: "196", chainName: "X Layer" }} />);
+  test("starts on the most traded, with nothing chosen, and holds the door to the on-chain view, which asks nothing itself", () => {
+    const html = renderToStaticMarkup(<OpportunityRadar catalog={READY} focus="ETH-USDT" onOpen={noop} network={{ chainName: "X Layer", onOpen: noop }} />);
     expect(html.match(/aria-pressed="true"[^>]*>Mais negociados/g)).toHaveLength(1);
     expect(html.match(/data-card="true"/g)).toHaveLength(6);
     expect(html).toContain("X Layer");
-    expect(html).toContain("Pedir ao Inonu: melhores entradas agora");
-    expect(html).toContain("ate 15 leituras");
+    expect(html).toContain(">Abrir Onde comprar<");
+    expect(html).toContain("so rodam quando voce pedir");
+    // the question to the model about a network lives in the Radar tab: a second button here would be a second way to spend the same reads
+    expect(html).not.toContain("Pedir ao Inonu");
     expect(html).not.toContain("linhas escolhidas");
     expectClean(html);
   });
 
-  test("without a network there is no discovery card, and the radar still stands", () => {
+  test("without a network there is no door, and the radar still stands", () => {
     const html = renderToStaticMarkup(<OpportunityRadar catalog={READY} focus="BTC-USDT" onOpen={noop} />);
-    expect(html).not.toContain("melhores entradas agora");
+    expect(html).not.toContain("Abrir Onde comprar");
     expect(html.match(/data-card="true"/g)).toHaveLength(6);
   });
 
