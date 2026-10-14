@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { ageText } from "@/lib/desk/chart/inonu-layer";
 import { fmtPctSigned } from "@/lib/desk/ui/format";
+import type { EngineAlert } from "@/lib/inonu/engine-alerts";
 import { alertProblemText, alertState, describeAlert, fmtLevel, levelPreview, type LevelPreview } from "@/lib/mesa/alerts";
 import { useAlerts } from "@/lib/mesa/useAlerts";
 import TopbarPopover from "./TopbarPopover";
@@ -31,14 +33,24 @@ export interface AlertsMenuProps {
   prices?: Readonly<Record<string, number | null>>;
   /** Exchange time in ms, 0 until measured. */
   nowMs?: number;
+  /** The alerts of the flow engine for the focused instrument (ASK-13). Absent: the bell is only the price alerts. */
+  engineAlerts?: readonly EngineAlert[];
+  /** How many of them the person has not seen. */
+  engineUnseen?: number;
+  /** The browser clock, to tell how long ago each one was. */
+  engineNowMs?: number;
+  /** The button of an alert: the only thing that starts a consultation, and it asks the Inonu panel, not the model. */
+  onEngineAsk?: (alert: EngineAlert) => void;
+  onEngineSeen?: () => void;
 }
 
 /**
  * Price alerts, the bell of a charting platform. A notice the user sets for a level: it fires once while this tab is
  * open, shows a still badge with the number of unseen fires, and never sends anything nor creates an order.
  */
-export function AlertsMenu({ instId = null, prices, nowMs = 0 }: AlertsMenuProps) {
-  const { alerts, unseen, create, remove, clearFired, markSeen } = useAlerts(prices, nowMs);
+export function AlertsMenu({ instId = null, prices, nowMs = 0, engineAlerts, engineUnseen = 0, engineNowMs = 0, onEngineAsk, onEngineSeen }: AlertsMenuProps) {
+  const { alerts, unseen: priceUnseen, create, remove, clearFired, markSeen } = useAlerts(prices, nowMs);
+  const unseen = priceUnseen + engineUnseen;
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [refusal, setRefusal] = useState<string | null>(null);
@@ -47,8 +59,11 @@ export function AlertsMenu({ instId = null, prices, nowMs = 0 }: AlertsMenuProps
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (open && unseen > 0) markSeen();
-  }, [open, unseen, markSeen]);
+    if (open && priceUnseen > 0) markSeen();
+  }, [open, priceUnseen, markSeen]);
+  useEffect(() => {
+    if (open && engineUnseen > 0) onEngineSeen?.();
+  }, [open, engineUnseen, onEngineSeen]);
 
   // Opening the panel, by click or by the "A" key, puts the cursor in the field, as a trading platform does.
   useEffect(() => {
@@ -151,6 +166,30 @@ export function AlertsMenu({ instId = null, prices, nowMs = 0 }: AlertsMenuProps
       ) : null}
 
       <p className={styles.note}>Valem so com esta aba aberta. Nada e enviado e nenhuma ordem e criada.</p>
+
+      {engineAlerts !== undefined ? (
+        <>
+          <h2 className={styles.heading}>Alertas do motor</h2>
+          {engineAlerts.length === 0 ? (
+            <p className={styles.empty}>Nenhuma mudanca do fluxo ou das zonas ainda.</p>
+          ) : (
+            <ul className={styles.list} aria-label="Alertas do motor">
+              {engineAlerts.map((alert) => (
+                <li key={alert.id} className={styles.item} data-state="fired">
+                  <span className={styles.itemText}>
+                    <span className={styles.itemTitle}>{alert.text}</span>
+                    <span className={styles.itemState}>{`${alert.instId}, ${engineNowMs > 0 ? ageText(engineNowMs - alert.atMs) : "agora"}`}</span>
+                  </span>
+                  <button type="button" className={styles.create} aria-label={`Pedir ao Inonu sobre: ${alert.text}`} onClick={() => onEngineAsk?.(alert)}>
+                    Pedir ao Inonu
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className={styles.note}>Calculados aqui, sem modelo. So o botao Pedir ao Inonu consulta o modelo.</p>
+        </>
+      ) : null}
     </TopbarPopover>
     <span className={styles.srOnly} role="status" aria-live="polite">{unseen > 0 ? firedPhrase : ""}</span>
     </>

@@ -90,6 +90,13 @@
   text-transform: uppercase;
 }
 
+.cols > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Ladder sides: asks hug the spread row from above, bids hang from it below. */
 .side {
   display: flex;
@@ -143,7 +150,7 @@
 .cum {
   position: relative;
   overflow: hidden;
-  text-overflow: clip;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -243,6 +250,19 @@
 
   .mid {
     font-size: 13px;
+  }
+}
+
+/* Narrower still and the accumulated column goes: price and size stay readable. */
+@container (max-width: 235px) {
+  .cols,
+  .row {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+
+  .cols > span:last-child,
+  .row > .cum {
+    display: none;
   }
 }
 

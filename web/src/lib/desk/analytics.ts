@@ -55,6 +55,7 @@ export const EMPTY_METRICS: DeskMetrics = {
   sellVolBase60s: null,
   flowImbalance60s: null,
   tradesPerSecond60s: null,
+  tradeCount60s: null,
   cvd: null,
   vwap: null,
   realizedSigmaDaily: null,
@@ -358,6 +359,7 @@ export function computeMetrics(input: MetricsInput): DeskMetrics {
     flowImbalance60s: window === null || imbalanceTotal <= 0 ? null : (window.buy - window.sell) / imbalanceTotal,
     tradesPerSecond60s:
       window === null || observedMs === null || observedMs < MIN_RATE_WINDOW_MS ? null : window.trades / (observedMs / 1000),
+    tradeCount60s: window === null || input.flow.length === 0 ? null : window.trades,
     cvd: cvdOf(input.trades),
     vwap: vwapOf(input.trades),
     realizedSigmaDaily: realizedSigmaDaily(input.candles, input.bar),

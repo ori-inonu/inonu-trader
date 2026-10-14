@@ -37,9 +37,15 @@ export function FullscreenButton() {
 }
 
 /** Chart mode, the "maximize chart" of a charting platform: the side panels step aside and the chart takes the width. */
-export function LayoutButton() {
+export function LayoutButton({ labelled = false }: { labelled?: boolean }) {
   const [mode, setMode] = useState<LayoutId>("completo");
-  useEffect(() => setMode(readStoredLayout()), []);
+  useEffect(() => {
+    const sync = () => setMode(document.documentElement.dataset.layout === "grafico" ? "grafico" : "completo");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-layout"] });
+    return () => observer.disconnect();
+  }, []);
   const toggle = () => {
     const next: LayoutId = mode === "grafico" ? "completo" : "grafico";
     applyLayout(next);
@@ -47,11 +53,12 @@ export function LayoutButton() {
   };
   const label = LAYOUT_LABEL[mode];
   return (
-    <button type="button" className={styles.iconButton} data-tool="layout" aria-pressed={mode === "grafico"} aria-label={label} title={`${label} (G)`} onClick={toggle}>
+    <button type="button" className={labelled ? styles.labelButton : styles.iconButton} data-tool="layout" aria-pressed={mode === "grafico"} aria-label={label} title={`${label} (G)`} onClick={toggle}>
       <svg {...ICON}>
         <rect x="2" y="3" width="12" height="10" rx="1.5" />
         <path d="M5.5 3v10M10.5 3v10" />
       </svg>
+      {labelled ? <span>{mode === "grafico" ? "Restaurar mesa" : "Ampliar grafico"}</span> : null}
     </button>
   );
 }

@@ -97,8 +97,8 @@ describe("jevStageModel", () => {
   });
 
   test.each([
-    ["idle", "Consultando o Jev"],
-    ["loading", "Consultando o Jev"],
+    ["idle", "Consultando o Inonu"],
+    ["loading", "Consultando o Inonu"],
     ["absent", "produtor"],
     ["error", "backend"],
   ] as const)("when the board is %s the stage says what to do, with no number", (status: "idle" | "loading" | "absent" | "error", text: string) => {
@@ -310,7 +310,7 @@ describe("systemOneLine", () => {
 
   test("says what the leverage layer decided and why it is held", () => {
     expect(systemOneLine({ status: "ready", cycle: cycle(null, ["system_one_never_executes", "no_eligible_candidate", "jev_not_asked", "inventory_value_incomplete"]) }))
-      .toBe("System One, alavancagem em MON-USDT-SWAP: Jev nao consultado, nenhum candidato elegivel, Jev nao consultado, inventario nao observado.");
+      .toBe("System One, alavancagem em MON-USDT-SWAP: Inonu nao consultado, nenhum candidato elegivel, Inonu nao consultado, inventario nao observado.");
     expect(systemOneLine({ status: "ready", cycle: cycle("hold", ["hold"]) })).toBe("System One, alavancagem em MON-USDT-SWAP: manter.");
   });
 

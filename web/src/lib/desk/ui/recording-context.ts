@@ -72,6 +72,17 @@ export class RecordingContext implements Ctx2DLike {
     }
     this.log("restore");
   }
+  createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient {
+    this.log("createLinearGradient", [x0, y0, x1, y1]);
+    const stops: string[] = [];
+    const fake = {
+      addColorStop: (offset: number, color: string) => {
+        stops.push(`${offset}:${color}`);
+      },
+      toString: () => `[gradient ${x0},${y0} -> ${x1},${y1} ${stops.join(" ")}]`,
+    };
+    return fake as unknown as CanvasGradient;
+  }
   beginPath(): void { this.log("beginPath"); }
   closePath(): void { this.log("closePath"); }
   moveTo(x: number, y: number): void { this.log("moveTo", [x, y]); }

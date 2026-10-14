@@ -23,6 +23,8 @@
 .primaryHeader h1 { margin: var(--s2) 0; font: var(--fs-lg); letter-spacing: 0.12em; }
 .primaryHeader p, .primaryHeader span { color: var(--ink-2); }
 .primaryHeader strong { color: var(--hold); font: var(--fs-sm); }
+.backLink { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.backLink:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 3px; border-radius: var(--r-xs); }
 .legacy { min-width: 0; padding: var(--s4); border: 1px solid var(--edge); border-radius: var(--r-md); background: var(--bg-deck); }
 .legacy > summary { min-height: 44px; display: list-item; padding-block: var(--s3); cursor: pointer; color: var(--ink); }
 .legacy > summary:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }

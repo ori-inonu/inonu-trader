@@ -31,7 +31,7 @@
   flex: none;
   align-items: center;
   gap: var(--s2);
-  height: 30px;
+  height: 26px;
   padding: 0 var(--s3);
   background: var(--bg-deck-2);
 }
@@ -102,6 +102,23 @@
   height: 5px;
   border-radius: 50%;
   background: currentColor;
+}
+
+/* In a narrow wing cell the instrument id and the right slot leave first so the title
+   and the feed chip keep their full text; even narrower, the chip keeps only its dot
+   (the state stays in the chip's own label) and the title is never clipped for it. */
+@container (max-width: 272px) {
+  .subtitle,
+  .right { display: none; }
+
+  .head { padding: 0 var(--s2); }
+
+  .title { letter-spacing: 0.05em; }
+}
+
+@container (max-width: 214px) {
+  .chipLabel { display: none; }
+  .chip { padding: 1px 6px; }
 }
 
 .body {

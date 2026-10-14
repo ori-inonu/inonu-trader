@@ -1,0 +1,70 @@
+.root {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  grid-auto-rows: max-content;
+  gap: var(--s4);
+  padding: var(--s4) var(--s5);
+  min-height: 0;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--edge-strong) transparent;
+}
+
+/* The two zones: the radar of opportunities on the left, wide, and the consultation of the asset in focus on the right. Below a
+   thousand pixels they stack, radar first. Without a radar (the tab alone) the consultation takes the whole width. */
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s5);
+  min-width: 0;
+}
+@media (min-width: 1000px) {
+  .main[data-radar="true"] { grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); }
+  /* a hairline between the zones, as a trading terminal separates its panes */
+  .main[data-radar="true"] > .askZone { padding-left: var(--s5); border-left: 1px solid var(--edge); }
+}
+
+.radarZone { min-width: 0; }
+
+.askZone { display: grid; min-width: 0; align-content: start; gap: var(--s3); }
+.askZone > section { max-width: none; }
+
+.zoneHead { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2); margin: 0; }
+.zoneEyebrow { color: var(--ink-3); font: var(--fs-micro); letter-spacing: var(--track-micro); text-transform: uppercase; }
+.zoneName { color: var(--ink); font: 600 15px/20px var(--font-mono); overflow-wrap: anywhere; }
+
+.legacy { min-width: 0; }
+
+.tail {
+  display: grid;
+  gap: var(--s2);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--edge);
+}
+
+.tailTitle {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tailHead {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+
+.tailList {
+  display: grid;
+  gap: var(--s1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-3);
+  font-size: 12px;
+}

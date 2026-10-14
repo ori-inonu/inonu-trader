@@ -6,6 +6,14 @@
   inset: 0;
   display: flex;
   flex-direction: column;
+  /* Even the essential columns may not fit: the panel scrolls sideways, header included. */
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.cols,
+.list {
+  min-width: var(--wl-min-w, 0);
 }
 
 .cols,
@@ -31,6 +39,54 @@
 .cols span:nth-child(3),
 .colFund {
   text-align: right;
+}
+
+/* One row of the list: the pin star sits beside the grid button, never inside it. */
+.lineWrap {
+  display: flex;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.lineWrap .item {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.star {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  align-self: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-4);
+  cursor: pointer;
+}
+.star:hover:not(:disabled) { color: var(--hold); }
+.star:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: -2px; border-radius: var(--r-xs); }
+.star:disabled { cursor: default; }
+.star[data-filled="true"] { color: var(--hold); }
+
+.starIcon {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+.star[data-filled="true"] .starIcon { fill: currentColor; }
+
+.extraSep {
+  padding: 4px var(--wl-pad, 8px) 2px;
+  border-top: 1px solid var(--edge);
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .list {
@@ -135,7 +191,7 @@
 .px {
   overflow: hidden;
   color: var(--ink);
-  text-overflow: clip;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

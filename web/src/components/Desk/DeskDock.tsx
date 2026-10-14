@@ -40,7 +40,7 @@ function balanceRows(snapshot: WalletSnapshot): { label: string; value: string }
   return [{ label: "OKB", value: b.okb }, { label: "USDT", value: b.usdt }, { label: "USDC", value: b.nativeUsdc }, { label: "Bloco", value: b.block }];
 }
 
-function WalletModule({ wallet }: { wallet: UseOkxWalletResult }) {
+export function WalletModule({ wallet }: { wallet: UseOkxWalletResult }) {
   const { snapshot, available } = wallet;
   const rows = balanceRows(snapshot);
   const busy = snapshot.status === "connecting" || snapshot.status === "reading";
@@ -79,18 +79,18 @@ function WalletModule({ wallet }: { wallet: UseOkxWalletResult }) {
           </>
         )}
       </div>
-      <p className={styles.note}>Leitura local no navegador. Conta e saldos nao vao ao backend nem ao Jev.</p>
+      <p className={styles.note}>Leitura local no navegador. Conta e saldos nao vao ao backend nem ao Inonu.</p>
     </section>
   );
 }
 
-function CapabilityModule({ rows }: { rows: readonly CapabilityRow[] }) {
+export function CapabilityModule({ rows, wide = false }: { rows: readonly CapabilityRow[]; wide?: boolean }) {
   return (
     <section className={styles.module} aria-label="Ecossistema OKX e OnchainOS">
       <header className={styles.moduleHead}>
         <h3>Ecossistema OKX e OnchainOS</h3>
       </header>
-      <ul className={styles.matrix}>
+      <ul className={`${styles.matrix}${wide ? ` ${styles.matrixWide}` : ""}`}>
         {rows.map((row) => (
           <li key={row.id} className={styles.cap} data-state={row.state} title={row.next ?? row.detail}>
             <span className={styles.capState}>{STATE_LABEL[row.state]}</span>
@@ -103,15 +103,15 @@ function CapabilityModule({ rows }: { rows: readonly CapabilityRow[] }) {
   );
 }
 
-function JournalModule({ rows }: { rows: readonly JournalRow[] }) {
+export function JournalModule({ rows }: { rows: readonly JournalRow[] }) {
   return (
-    <section className={styles.module} aria-label="Diario de decisoes do Jev">
+    <section className={styles.module} aria-label="Diario de decisoes do Inonu">
       <header className={styles.moduleHead}>
-        <h3>Diario do Jev</h3>
+        <h3>Diario do Inonu</h3>
         <span className={styles.badge} data-on="false">Consultivo</span>
       </header>
       {rows.length === 0 ? (
-        <p className={styles.muted}>Nenhuma leitura do Jev ainda.</p>
+        <p className={styles.muted}>Nenhuma leitura do Inonu ainda.</p>
       ) : (
         <ol className={styles.journal}>
           {rows.map((row) => (

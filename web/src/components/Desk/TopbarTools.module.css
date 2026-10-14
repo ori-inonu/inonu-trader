@@ -1,19 +1,22 @@
+/* The tool buttons of the bar are ghosts: no frame at rest, a lit square on hover, a tinted one while a mode is on. */
 .iconButton {
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   flex: none;
   place-items: center;
-  border: 1px solid var(--edge);
+  border: 1px solid transparent;
   border-radius: var(--r-sm);
-  background: color-mix(in srgb, var(--bg-deck) 80%, transparent);
+  background: transparent;
   color: var(--ink-2);
   cursor: pointer;
   transition: border-color var(--dur-fast) var(--ease-out-expo), color var(--dur-fast) var(--ease-out-expo), background var(--dur-fast) var(--ease-out-expo);
 }
-.iconButton:hover { border-color: var(--edge-strong); background: color-mix(in srgb, var(--bg-deck-2) 85%, transparent); color: var(--ink); }
+.iconButton:hover { border-color: var(--edge); background: var(--bg-deck-3); color: var(--ink); }
 .iconButton:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
-.iconButton[aria-pressed="true"] { border-color: var(--edge-focus); color: var(--ink); }
+.iconButton[aria-pressed="true"] { border-color: color-mix(in srgb, var(--signal) 40%, var(--edge-strong)); background: color-mix(in srgb, var(--signal) 12%, var(--bg-deck-2)); color: var(--signal); }
+.labelButton { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 6px 10px; border: 1px solid var(--edge); border-radius: var(--r-sm); background: var(--bg-deck); color: var(--ink-2); font: var(--fs-xs); cursor: pointer; }
+.labelButton:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
 
 .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 

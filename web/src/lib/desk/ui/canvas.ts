@@ -5,6 +5,7 @@
  */
 export interface Ctx2DLike {
   fillStyle: string | CanvasGradient | CanvasPattern;
+  createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient;
   strokeStyle: string | CanvasGradient | CanvasPattern;
   lineWidth: number;
   font: string;

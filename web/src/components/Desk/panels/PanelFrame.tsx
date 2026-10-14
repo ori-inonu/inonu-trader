@@ -48,9 +48,9 @@ export function PanelFrame({ title, subtitle, right, stale, empty, children }: P
         {subtitle ? <span className={styles.subtitle}>{subtitle}</span> : null}
         <span className={styles.spacer} />
         {right ? <div className={styles.right}>{right}</div> : null}
-        <span className={styles.chip} data-state={state}>
+        <span className={styles.chip} data-state={state} title={CHIP_LABEL[state]} aria-label={CHIP_LABEL[state]}>
           <span className={styles.dot} aria-hidden="true" />
-          {CHIP_LABEL[state]}
+          <span className={styles.chipLabel}>{CHIP_LABEL[state]}</span>
         </span>
       </header>
       <div className={styles.body}>{children}</div>

@@ -1,0 +1,78 @@
+/* The signal strip under the chart toolbar: small toggles, a select or two, one status line. Nothing moves. */
+.strip {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--s2);
+  padding: 2px var(--s3);
+  color: var(--ink-3);
+  font: 500 10px/14px var(--font-mono);
+}
+
+.name {
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font: 600 9px/14px var(--font-sans);
+}
+
+.toggle {
+  appearance: none;
+  min-height: 18px;
+  padding: 0 6px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--ink-4);
+  font: inherit;
+  cursor: pointer;
+}
+
+.toggle[aria-pressed="true"] {
+  border-color: var(--edge-focus);
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
+.toggle:hover {
+  border-color: var(--edge-focus);
+}
+
+.toggle:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--edge-focus);
+  outline-offset: 1px;
+}
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-3);
+}
+
+.field select {
+  min-height: 18px;
+  padding: 0 2px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-3);
+  color: var(--ink-2);
+  font: inherit;
+}
+
+.status {
+  min-width: 0;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (pointer: coarse) {
+  .toggle,
+  .field select {
+    min-height: 28px;
+  }
+}

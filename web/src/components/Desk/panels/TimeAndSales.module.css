@@ -34,6 +34,13 @@
   text-transform: uppercase;
 }
 
+.cols > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .left {
   text-align: left;
 }
@@ -61,18 +68,23 @@
 }
 
 .time {
+  overflow: hidden;
   color: var(--ink-3);
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .px {
+  overflow: hidden;
   color: var(--hc);
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .sz {
   overflow: hidden;
   color: var(--ink-2);
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -106,5 +118,25 @@
     grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr) minmax(0, 1fr) 20px;
     padding-inline: var(--s2);
     gap: 0 var(--s1);
+  }
+}
+
+/* Narrower still and the side letter goes: the price colour already carries it. The
+   column headers keep a tighter tracking and degrade to an ellipsis before clipping. */
+@container (max-width: 235px) {
+  .cols,
+  .row {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.15fr) minmax(0, 1.15fr);
+    gap: 0 var(--s2);
+    padding-inline: var(--s2);
+  }
+
+  .cols {
+    letter-spacing: 0.06em;
+  }
+
+  .cols > span:last-child,
+  .row > .side {
+    display: none;
   }
 }

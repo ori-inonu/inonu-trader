@@ -33,9 +33,9 @@ describe("JevStage", () => {
     expect(html).toContain('data-tone="sell"');
     expect(html).toContain("VENDER");
     expect(html).toContain("63% de peso");
-    expect(html).toContain('aria-label="Decisao do Jev"');
+    expect(html).toContain('aria-label="Decisao do Inonu"');
     expect(html).toContain("Comprar");
-    expect(html).toContain("O que o Jev viu");
+    expect(html).toContain("O que o Inonu viu");
     expect(html).toContain("nao executa ordem nem assina nada");
     expect(html).toContain("jev-1.13.0, 291 ms");
     expect(html).toContain("83.957,4");
@@ -127,8 +127,8 @@ describe("DeskDock", () => {
     expect(html).toContain("Desconectada");
     expect(html).toContain(">Conectar<");
     expect(html).not.toContain(">Atualizar<");
-    expect(html).toContain("Conta e saldos nao vao ao backend nem ao Jev.");
-    expect(html).toContain("Nenhuma leitura do Jev ainda.");
+    expect(html).toContain("Conta e saldos nao vao ao backend nem ao Inonu.");
+    expect(html).toContain("Nenhuma leitura do Inonu ainda.");
     expect(html).not.toMatch(FORBIDDEN_TEXT);
   });
 
@@ -163,7 +163,7 @@ describe("DeskDock", () => {
   test("the journal lists real reads newest first with their weights", () => {
     const rows = journalRows([read, { ...read, readId: "jr-2", instId: "ETH-USDT", decision: { ...read.decision!, action: "hold", confidence: 0.57, probabilities: { buy: 0.2, sell: 0.23, hold: 0.57 } } }], 5);
     const html = renderToStaticMarkup(<DeskDock wallet={wallet()} capabilities={caps} journal={rows} />);
-    expect(html).toContain("Diario do Jev");
+    expect(html).toContain("Diario do Inonu");
     expect(html).toContain("Vender");
     expect(html).toContain("63%");
     expect(html).toContain("Manter");

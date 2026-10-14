@@ -13,8 +13,8 @@ export interface InstrumentHeaderProps {
   derivatives: DeskDerivatives | null;
   /** The feed behind the ticker is silent past its freshness window: the figures dim and say so. */
   stale?: boolean;
-  /** "bar" sits inside the decision bar of the wide desk; "compact" is the one line over the chart on a phone. */
-  variant?: "bar" | "compact";
+  /** "legend" is the first line of the legend of the chart (the quote, in the chart's own frame); "bar" sat inside the old decision bar; "compact" is the one line over the chart on a phone. */
+  variant?: "bar" | "compact" | "legend";
   /** Name the selected provider when its ticker has not arrived. */
   awaitingLabel?: string;
 }

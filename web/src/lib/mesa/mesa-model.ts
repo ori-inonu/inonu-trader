@@ -67,7 +67,7 @@ export interface JevStageInput {
   readonly browserSkewMs: number | null;
 }
 
-const ADVISORY = "Leitura consultiva do Jev: nao executa ordem nem assina nada.";
+const ADVISORY = "Leitura consultiva do Inonu: nao executa ordem nem assina nada.";
 const EMPTY_PROBABILITIES: readonly StageProbability[] = (["buy", "sell", "hold"] as const).map((key) => ({ key, label: ACTION_LABEL[key], p: null }));
 
 function empty(instId: string, headline: string, statusLine: string): JevStageModel {
@@ -91,14 +91,14 @@ function seenOf(read: JevReadView): { label: string; value: string }[] {
 export function jevStageModel(input: JevStageInput): JevStageModel {
   const { status, board, focus, nowMs, browserSkewMs } = input;
   if (board === null) {
-    if (status === "absent") return empty(focus, "INDISPONIVEL", "O produtor de leituras do Jev nao esta rodando. Inicie com: bun run jev-read --jev");
-    if (status === "error") return empty(focus, "INDISPONIVEL", "O backend das leituras do Jev nao respondeu. Verifique a origem permitida e o servico.");
-    return empty(focus, "AGUARDANDO", "Consultando o Jev");
+    if (status === "absent") return empty(focus, "INDISPONIVEL", "O produtor de leituras do Inonu nao esta rodando. Inicie com: bun run jev-read --jev");
+    if (status === "error") return empty(focus, "INDISPONIVEL", "O backend das leituras do Inonu nao respondeu. Verifique a origem permitida e o servico.");
+    return empty(focus, "AGUARDANDO", "Consultando o Inonu");
   }
   const read = board.reads[focus] ?? null;
   if (read === null) {
     const others = Object.keys(board.reads).length;
-    return empty(focus, "AGUARDANDO", others > 0 ? `O Jev ainda nao leu ${focus}. Ele le um mercado por vez, em rodizio.` : `O Jev ainda nao leu ${focus}.`);
+    return empty(focus, "AGUARDANDO", others > 0 ? `O Inonu ainda nao leu ${focus}. Ele le um mercado por vez, em rodizio.` : `O Inonu ainda nao leu ${focus}.`);
   }
 
   const ageMs = readAgeMs(read, nowMs, browserSkewMs);
@@ -107,7 +107,7 @@ export function jevStageModel(input: JevStageInput): JevStageModel {
   const base = { instId: focus, freshness, ageMs, model: read.decision?.model ?? null, latencyMs: read.decision?.latencyMs ?? null, seen: seenOf(read), advisoryNote: ADVISORY };
 
   if (read.decision === null && read.state === null) {
-    return { ...base, tone: "neutral", headline: "SEM LEITURA", statusLine: `O Jev nao foi consultado: ${read.insufficient.map(reasonLabel).join(", ") || "dado insuficiente"}.${connection}`, dimmed: false, probabilities: EMPTY_PROBABILITIES, confidenceText: UNAVAILABLE };
+    return { ...base, tone: "neutral", headline: "SEM LEITURA", statusLine: `O Inonu nao foi consultado: ${read.insufficient.map(reasonLabel).join(", ") || "dado insuficiente"}.${connection}`, dimmed: false, probabilities: EMPTY_PROBABILITIES, confidenceText: UNAVAILABLE };
   }
   if (read.decision === null) {
     return { ...base, tone: "neutral", headline: "SEM DECISAO", statusLine: `Estado registrado em modo observacao: o produtor nao consulta o modelo.${connection}`, dimmed: false, probabilities: EMPTY_PROBABILITIES, confidenceText: UNAVAILABLE };
@@ -120,7 +120,7 @@ export function jevStageModel(input: JevStageInput): JevStageModel {
   let statusLine: string;
   let dimmed = false;
   if (d.status !== "ok") {
-    statusLine = `Resposta do Jev: ${STATUS_LABEL[d.status] ?? "invalida"}. Mantendo por seguranca.`;
+    statusLine = `Resposta do Inonu: ${STATUS_LABEL[d.status] ?? "invalida"}. Mantendo por seguranca.`;
     tone = "hold";
   } else if (freshness === "fresh") {
     statusLine = `Leitura de ${Math.round((ageMs ?? 0) / 1000)} s atras, horizonte de ${read.state?.horizonMinutes ?? 5} min.`;
@@ -146,6 +146,8 @@ export interface FeedChip {
   readonly label: string;
   readonly tone: ChipTone;
   readonly detail: string | null;
+  /** What a live chip says instead of "ao vivo": a source that answers a click is "pronto", it is not streaming. */
+  readonly word?: string;
 }
 
 /**
@@ -212,7 +214,7 @@ export function feedChips(input: FeedChipsInput): FeedChip[] {
     return feed ? { id, label, tone: deskTone(feed.state), detail: feed.detail } : { id, label, tone: "off", detail: "sem dados" };
   });
   const jev = jevTone(input.jev.status, input.jev.ageMs, input.jev.decided);
-  chips.push({ id: "jev-backend", label: "Jev", tone: jev.tone, detail: jev.detail });
+  chips.push({ id: "jev-backend", label: "Inonu", tone: jev.tone, detail: jev.detail });
   const wallet = walletTone(input.wallet);
   chips.push({ id: "okx-wallet", label: "Carteira OKX", tone: wallet.tone, detail: wallet.detail });
   const op = input.operator.status;
@@ -256,7 +258,7 @@ const SYSTEM_ONE_REASON: Record<string, string> = {
   inventory_value_incomplete: "inventario nao observado",
   no_eligible_candidate: "nenhum candidato elegivel",
   system_one_never_executes: "nunca executa",
-  jev_not_asked: "Jev nao consultado",
+  jev_not_asked: "Inonu nao consultado",
   market_stale: "mercado velho",
   inventory_stale: "inventario velho",
 };
@@ -270,7 +272,7 @@ function systemOneNotLiveReason(one: CapabilityInput["systemOne"]): string | nul
   const model = one.model ?? null;
   if (market === "synthetic") return "ciclo com mercado sintetico, nao e leitura real";
   if (wallet === "synthetic") return "ciclo com carteira sintetica, nao e leitura real";
-  if (model === "mock") return "modelo mock, o Jev nao foi consultado";
+  if (model === "mock") return "modelo mock, o Inonu nao foi consultado";
   if (market === null || wallet === null || model === null || UNDECLARED.has(market) || UNDECLARED.has(wallet) || UNDECLARED.has(model)) return "origem do ciclo nao declarada";
   return null;
 }
@@ -285,10 +287,10 @@ export function capabilityRows(input: CapabilityInput): CapabilityRow[] {
     : { id: "market-v5", label: "Mercado OKX v5", state: ws && ws.state !== "failed" && ws.state !== "idle" ? "late" : "blocked", detail: ws?.detail ?? "sem conexao com o feed publico", next: "Verificar a rede e o acesso a ws.okx.com" });
 
   rows.push(jev.tone === "live"
-    ? { id: "jev-tape", label: "Jev lendo a fita", state: "live", detail: "decisoes reais do modelo, consultivas", next: null }
+    ? { id: "jev-tape", label: "Inonu lendo a fita", state: "live", detail: "decisoes reais do modelo, consultivas", next: null }
     : jev.tone === "late"
-      ? { id: "jev-tape", label: "Jev lendo a fita", state: "late", detail: jev.detail ?? "leitura atrasada", next: null }
-      : { id: "jev-tape", label: "Jev lendo a fita", state: "blocked", detail: jev.detail ?? "sem leituras", next: "Rodar bun run jev-read --jev com a chave do app" });
+      ? { id: "jev-tape", label: "Inonu lendo a fita", state: "late", detail: jev.detail ?? "leitura atrasada", next: null }
+      : { id: "jev-tape", label: "Inonu lendo a fita", state: "blocked", detail: jev.detail ?? "sem leituras", next: "Rodar bun run jev-read --jev com a chave do app" });
 
   rows.push(input.hasDerivatives
     ? { id: "derivatives", label: "Funding e derivativos", state: "live", detail: "funding, marca e open interest do perpetuo", next: null }
@@ -361,7 +363,7 @@ export function systemOneLine(input: { readonly status: JevReadBoardState["statu
   if (input.status !== "ready" || input.cycle === null) return null;
   const { cycle } = input;
   const decision = cycle.decision;
-  const what = decision === null ? "Jev nao consultado" : decision.choice === "hold" ? "manter" : decision.choice;
+  const what = decision === null ? "Inonu nao consultado" : decision.choice === "hold" ? "manter" : decision.choice;
   const why = cycle.execution.reasons.map((r) => SYSTEM_ONE_REASON[r]).filter((r): r is string => r !== undefined && r !== "nunca executa");
   return `System One, alavancagem em ${cycle.brief.market.instId}: ${what}${why.length > 0 ? `, ${why.join(", ")}` : ""}.`;
 }

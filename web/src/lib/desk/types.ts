@@ -144,6 +144,11 @@ export interface DeskMetrics {
   /** (buy - sell) / (buy + sell) over the window, from -1 to 1. */
   readonly flowImbalance60s: number | null;
   readonly tradesPerSecond60s: number | null;
+  /**
+   * How many trades the window really holds, as counted (not the rate times sixty): the first seconds of a page, a reconnect or a new instrument show a rate over a few
+   * seconds, and a handful of trades says nothing about who is in charge. Absent in a reading made before the field existed.
+   */
+  readonly tradeCount60s?: number | null;
   /** Cumulative volume delta over the retained trades, base units. */
   readonly cvd: number | null;
   /** Volume weighted average price of the retained trades. */

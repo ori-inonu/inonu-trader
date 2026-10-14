@@ -1,0 +1,305 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+}
+
+.trigger {
+  display: inline-flex;
+  min-width: 0;
+  max-width: 190px;
+  height: 22px;
+  align-items: center;
+  gap: var(--s2);
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  cursor: pointer;
+  font: 600 11px/20px var(--font-mono);
+  transition: border-color var(--dur-fast) linear, background-color var(--dur-fast) linear;
+}
+.trigger:hover { background: var(--bg-deck-3); border-color: var(--edge-strong); }
+.trigger[aria-expanded="true"] { border-color: var(--signal-deep); }
+
+.triggerId {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* CSS caret: a triangle, so no glyph is needed. */
+.caret {
+  width: 0;
+  height: 0;
+  flex: none;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-top: 5px solid var(--ink-3);
+}
+
+.backdrop {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+}
+
+.popover {
+  position: absolute;
+  z-index: 31;
+  top: calc(100% + 6px);
+  left: 0;
+  display: flex;
+  width: 300px;
+  max-width: calc(100vw - 24px);
+  max-height: min(60vh, 420px);
+  flex-direction: column;
+  gap: var(--s2);
+  padding: var(--s2);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--bg-deck) 96%, transparent);
+  box-shadow: var(--elev-3);
+}
+
+/* On-chain mode: wider popover so the two-line token rows breathe, capped by the viewport. */
+.popoverOnchain { width: 380px; }
+
+/* The on-chain branch header: the fixed OKX chip plus the network chips of ChainChips. */
+.chainPick {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.chainOkx {
+  height: 22px;
+  flex: none;
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  font: 600 11px/20px var(--font-sans);
+}
+.chainOkx:hover { color: var(--ink); }
+.chainOkx[aria-checked="true"] { border-color: var(--signal-deep); color: var(--signal); }
+.chainOkx:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 1px; }
+
+.searchRow {
+  display: flex;
+  flex: none;
+  gap: var(--s2);
+}
+
+.searchGo {
+  height: 28px;
+  flex: none;
+  padding: 0 var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-2);
+  color: var(--ink-2);
+  cursor: pointer;
+  font: 600 11px/26px var(--font-sans);
+}
+.searchGo:hover:not(:disabled) { color: var(--ink); }
+.searchGo:disabled { opacity: 0.5; cursor: default; }
+.searchGo:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: -2px; }
+
+.ocHeader {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  justify-content: space-between;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ocSearchTag {
+  color: var(--ink-4);
+  text-transform: none;
+}
+
+/* On-chain rows are two full lines of text: symbol + optional name + price, then the context. */
+.ocRow {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 1px;
+  padding: 5px var(--s2);
+  border: 0;
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  font: 500 11px/16px var(--font-mono);
+  text-align: left;
+}
+.ocRow:hover,
+.ocRow[data-active="true"] { background: var(--bg-deck-3); color: var(--ink); }
+
+.ocTop {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.ocSymbol {
+  flex: none;
+  color: var(--ink);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ocName {
+  overflow: hidden;
+  min-width: 0;
+  flex: 1 1 auto;
+  color: var(--ink-3);
+  font: 500 10px/16px var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ocPrice {
+  flex: none;
+  margin-left: auto;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.ocBottom {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: var(--s3);
+  color: var(--ink-3);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.ocBottom .change { min-width: 0; }
+.ocMeta {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ocBottom .ocMeta:last-child { margin-left: auto; }
+
+/* The on-chain list always shows at least five rows and scrolls beyond them. */
+.list.listOnchain { min-height: 208px; }
+
+.searchInput {
+  width: 100%;
+  height: 28px;
+  flex: none;
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  background: var(--bg-well);
+  color: var(--ink);
+  font: 500 12px/28px var(--font-mono);
+}
+.searchInput::placeholder { color: var(--ink-4); }
+.searchInput:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: -2px; }
+
+.tabs {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
+.tab {
+  height: 22px;
+  padding: 0 var(--s3);
+  border: 0;
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  font: 500 11px/22px var(--font-sans);
+}
+.tab:hover { background: var(--bg-deck-3); color: var(--ink); }
+.tab[aria-selected="true"] { background: var(--bg-deck-3); color: var(--ink); box-shadow: inset 0 -2px 0 var(--signal); }
+
+.notice {
+  flex: none;
+  color: var(--hold);
+  font: var(--fs-xs);
+}
+
+.list {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: var(--s2);
+  padding: 4px var(--s2);
+  border: 0;
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  font: 500 11px/18px var(--font-mono);
+  text-align: left;
+}
+.row:hover,
+.row[data-active="true"] { background: var(--bg-deck-3); color: var(--ink); }
+.row[data-current="true"] .instId { color: var(--signal); }
+
+.instId {
+  overflow: hidden;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jevTag {
+  padding: 0 5px;
+  border: 1px solid color-mix(in srgb, var(--signal) 45%, var(--edge));
+  border-radius: var(--r-pill);
+  color: var(--signal);
+  font: 600 9px/14px var(--font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.last {
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.change {
+  min-width: 56px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.change[data-tone="up"] { color: var(--buy); }
+.change[data-tone="down"] { color: var(--sell); }
+
+.empty,
+.more {
+  padding: var(--s2);
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trigger { transition: none; }
+}

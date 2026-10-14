@@ -1,0 +1,148 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-void);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  padding: var(--s6) var(--s6) var(--s8);
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s4);
+  margin-bottom: var(--s5);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.title {
+  margin: 2px 0 0;
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.backLink {
+  color: var(--signal);
+  text-decoration: none;
+  font-size: 13px;
+  padding: var(--s2) var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  white-space: nowrap;
+}
+.backLink:hover { border-color: var(--edge-focus); }
+.backLink:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+
+.notice {
+  background: var(--bg-deck-2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s3) var(--s4);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 0 0 var(--s4);
+}
+
+.summary {
+  margin: 0 0 var(--s4);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+.list {
+  list-style: none;
+  margin: 0 0 var(--s5);
+  padding: 0;
+  display: grid;
+  gap: var(--s3);
+}
+
+.item {
+  background: var(--bg-deck);
+  border: 1px solid var(--edge);
+  border-left-width: 3px;
+  border-radius: var(--r-md);
+  padding: var(--s4) var(--s5);
+  box-shadow: var(--elev-0);
+}
+.item[data-status="ok"] { border-left-color: var(--buy); }
+.item[data-status="atencao"] { border-left-color: var(--hold); }
+.item[data-status="falha"] { border-left-color: var(--sell); }
+.item[data-status="nao_verificado"] { border-left-color: var(--ink-4); }
+
+.itemHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.itemLabel {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.badge[data-status="ok"] { color: var(--buy); }
+.badge[data-status="atencao"] { color: var(--hold); }
+.badge[data-status="falha"] { color: var(--sell); }
+.badge[data-status="nao_verificado"] { color: var(--ink-4); }
+
+.message {
+  margin: var(--s2) 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.action {
+  margin: var(--s2) 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.button {
+  appearance: none;
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s4);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.button:hover:not(:disabled) { border-color: var(--edge-focus); }
+.button:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+.button:disabled { color: var(--ink-4); cursor: default; }
+
+@media (max-width: 520px) {
+  .page { padding: var(--s4); }
+  .header { flex-direction: column; }
+}

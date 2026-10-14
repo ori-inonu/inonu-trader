@@ -1,0 +1,89 @@
+/* The Mercado tab of the simple desk: one card. Same visual language as the thermometer and the dock tables; nothing animates, nothing blinks. */
+.root {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--s3);
+  overflow-y: auto;
+}
+
+.head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2); }
+/* one column on a narrow dock; the cost table on the left and what surrounds it on the right once the dock is wide, so the card fits a short dock */
+.body { display: grid; gap: var(--s2); min-width: 0; }
+.left, .right { display: grid; align-content: start; gap: var(--s2); min-width: 0; }
+@container (min-width: 760px) {
+  .body { grid-template-columns: minmax(340px, 1fr) minmax(300px, 1fr); gap: var(--s4); }
+}
+.title { margin: 0; color: var(--ink-3); font-size: 12px; font-weight: 600; }
+.subtitle { color: var(--ink-4); font: 11px/14px var(--font-mono); }
+.pill {
+  margin-left: auto;
+  padding: 1px var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  color: var(--ink-2);
+  font-size: 11px;
+  font-weight: 600;
+}
+.pill[data-thickness="fluido"] { border-color: var(--buy); color: var(--buy); }
+.pill[data-thickness="raso"] { border-color: var(--sell); color: var(--sell); }
+
+.headline { margin: 0; color: var(--ink); font-size: 14px; font-weight: 600; line-height: 19px; }
+.empty { margin: 0; padding: var(--s3); border: 1px dashed var(--edge); border-radius: var(--r-sm); color: var(--ink-3); font-size: 12px; }
+
+.table { min-width: 0; overflow-x: auto; border: 1px solid var(--edge); border-radius: var(--r-sm); }
+.row {
+  display: grid;
+  grid-template-columns: minmax(80px, 1fr) minmax(130px, 1.3fr) minmax(130px, 1.3fr);
+  align-items: center;
+  min-width: 340px;
+  min-height: 24px;
+  border-bottom: 1px solid var(--edge);
+  font: 500 12px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.row:last-child { border-bottom: 0; }
+.headRow { background: var(--bg-deck-2); color: var(--ink-3); font: 600 11px/16px var(--font-sans); }
+.cell { min-width: 0; padding: 2px var(--s2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-2); }
+.total { color: var(--ink); font-weight: 700; }
+
+.walls { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; color: var(--ink-2); font-size: 12px; line-height: 16px; }
+.walls li { padding: 0 var(--s2); }
+.walls li[data-side="compradores"] { box-shadow: inset 2px 0 0 var(--buy); }
+.walls li[data-side="vendedores"] { box-shadow: inset 2px 0 0 var(--sell); }
+
+.plan {
+  margin: 0;
+  padding: var(--s2);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-2);
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 16px;
+}
+.plan[data-kind="maior"] { box-shadow: inset 2px 0 0 var(--sell); color: var(--ink); }
+.plan[data-kind="menor"],
+.plan[data-kind="parecido"] { box-shadow: inset 2px 0 0 var(--edge-strong); }
+
+.note { margin: 0; color: var(--ink-3); font-size: 11px; line-height: 15px; }
+
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2); margin-top: auto; }
+.source { color: var(--ink-4); font-size: 11px; }
+.details {
+  appearance: none;
+  padding: 3px var(--s3);
+  border: 1px solid var(--edge-focus);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.details:hover { border-color: var(--signal); }
+.details:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }

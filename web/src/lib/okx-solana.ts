@@ -30,7 +30,7 @@ export interface SolanaTokenSpec {
 /** Mainnet mints; identity is the mint address, never the symbol. */
 export const SOLANA_TOKENS: readonly SolanaTokenSpec[] = [
   { symbol: "USDC", mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", decimals: 6 },
-  { symbol: "USDT", mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCdmgwKTnd", decimals: 6 },
+  { symbol: "USDT", mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", decimals: 6 },
 ];
 
 export const SOLANA_RPC_DEFAULT = "https://api.mainnet-beta.solana.com";

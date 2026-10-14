@@ -14,7 +14,11 @@ import {
 import { type WatchlistLayout, watchlistLayout } from "@/lib/desk/ui/right-wing-layout";
 import { sparkArea, sparkPath } from "@/lib/desk/ui/spark";
 import { useElementSize } from "@/lib/desk/ui/useElementSize";
+import type { AssetCatalogRow } from "@/lib/desk/useAssetCatalog";
 import type { DeskWatchRow } from "@/lib/desk/types";
+import type { WatchPins } from "@/lib/mesa/watch-pins";
+import { instrumentIconSymbol } from "@/lib/onchain/icons";
+import { AssetIcon } from "../AssetIcon";
 import { PanelEmpty, PanelFrame } from "./PanelFrame";
 import styles from "./Watchlist.module.css";
 
@@ -29,6 +33,10 @@ export interface WatchlistProps {
   onSelect?: (instId: string) => void;
   stale?: boolean;
   reducedMotion?: boolean;
+  /** Star column of the pinned instruments; defaults show a filled star that never unpins. */
+  pins?: WatchPins | null;
+  /** Volume-ranked catalog rows under "Mais ativos por volume": no sparkline, never fabricated. */
+  extras?: readonly AssetCatalogRow[];
 }
 
 /** Percent change of the last price against the 24h open, null when either is unknown. */
@@ -57,10 +65,33 @@ interface LineProps {
   focused: boolean;
   maxVol: number;
   layout: WatchlistLayout;
+  pins?: WatchPins | null;
   onSelect?: (instId: string) => void;
 }
 
-function Line({ row, focused, maxVol, layout, onSelect }: LineProps) {
+/** The star that pins a row: the five defaults are always pinned and their star never unpins. */
+export function Star({ instId, pins }: { instId: string; pins: WatchPins }) {
+  const pinned = pins.isPinned(instId);
+  const removable = pins.canPin(instId);
+  return (
+    <button
+      type="button"
+      className={styles.star}
+      aria-pressed={pinned}
+      aria-label={pinned ? `Remover ${instId} da lista` : `Fixar ${instId} na lista`}
+      title={pinned ? (removable ? "Remover da lista" : "Fixado na lista") : "Fixar na lista"}
+      disabled={pinned && !removable}
+      data-filled={pinned ? "true" : undefined}
+      onClick={() => pins.toggle(instId)}
+    >
+      <svg viewBox="0 0 12 12" aria-hidden="true" className={styles.starIcon}>
+        <path d="M6 1l1.5 3.1 3.4.5-2.5 2.4.6 3.4L6 8.7 3 10.4l.6-3.4L1.1 4.6l3.4-.5z" />
+      </svg>
+    </button>
+  );
+}
+
+function Line({ row, focused, maxVol, layout, pins, onSelect }: LineProps) {
   const t = row.ticker;
   const change = change24h(row);
   const tone = toneOf(change);
@@ -72,9 +103,12 @@ function Line({ row, focused, maxVol, layout, onSelect }: LineProps) {
   const sym = baseSymbol(row.instId);
   return (
     <li className={styles.li}>
-      <button
+      <div className={styles.lineWrap}>
+        {pins ? <Star instId={row.instId} pins={pins} /> : null}
+        <button
         type="button"
         className={styles.item}
+        data-row="true"
         aria-current={focused ? "true" : undefined}
         data-focus={focused ? "true" : undefined}
         data-tone={tone}
@@ -82,6 +116,7 @@ function Line({ row, focused, maxVol, layout, onSelect }: LineProps) {
         onClick={() => onSelect?.(row.instId)}
       >
         <span className={styles.sym}>
+          <AssetIcon ccy={instrumentIconSymbol(row.instId)} size={14} />
           <span className={styles.symName}>{sym}</span>
           {swap ? <span className={styles.tag}>PERP</span> : null}
           <span className="srOnly">{swap ? ", contrato perpetuo" : ", a vista"}{focused ? ", ativo em foco" : ""}</span>
@@ -118,7 +153,56 @@ function Line({ row, focused, maxVol, layout, onSelect }: LineProps) {
             )}
           </span>
         ) : null}
-      </button>
+        </button>
+      </div>
+    </li>
+  );
+}
+
+/**
+ * A volume-ranked catalog row under the separator: last price, 24h change and volume are real
+ * REST values, but there is no WebSocket sparkline so the trend column stays honestly empty.
+ */
+function ExtraLine({ row, focused, layout, pins, onSelect }: { row: AssetCatalogRow; focused: boolean; layout: WatchlistLayout; pins?: WatchPins | null; onSelect?: (instId: string) => void }) {
+  const change = row.change24hPct;
+  const tone = toneOf(change);
+  const swap = isSwapId(row.instId);
+  const sym = baseSymbol(row.instId);
+  return (
+    <li className={styles.li}>
+      <div className={styles.lineWrap}>
+        {pins ? <Star instId={row.instId} pins={pins} /> : null}
+        <button
+          type="button"
+          className={styles.item}
+          data-row="true"
+          aria-current={focused ? "true" : undefined}
+          data-focus={focused ? "true" : undefined}
+          data-tone={tone}
+          onClick={() => onSelect?.(row.instId)}
+        >
+          <span className={styles.sym}>
+            <AssetIcon ccy={instrumentIconSymbol(row.instId)} size={14} />
+            <span className={styles.symName}>{sym}</span>
+            {swap ? <span className={styles.tag}>PERP</span> : null}
+            <span className="srOnly">{swap ? ", contrato perpetuo" : ", a vista"}{focused ? ", ativo em foco" : ""}</span>
+          </span>
+          <span className={styles.px}>
+            {row.last === null ? <span className={styles.na} title={UNAVAILABLE}>-<span className="srOnly">{UNAVAILABLE}</span></span> : fmtNumber(row.last, priceDecimalsForMagnitude(row.last))}
+          </span>
+          <span className={styles.chg}>
+            {change === null ? <span className={styles.na} title={UNAVAILABLE}>-<span className="srOnly">{UNAVAILABLE}</span></span> : fmtPctSigned(change)}
+          </span>
+          {layout.spark ? <span className={styles.spark} aria-hidden="true" /> : null}
+          {layout.vol ? (
+            <span className={styles.vol}>
+              <span className={styles.volBar} aria-hidden="true" />
+              <span className={styles.volText}>{row.volQuote24h === null ? <span className={styles.na}>-<span className="srOnly">{UNAVAILABLE}</span></span> : fmtCompact(row.volQuote24h)}</span>
+            </span>
+          ) : null}
+          {layout.fund ? <span className={styles.fund} /> : null}
+        </button>
+      </div>
     </li>
   );
 }
@@ -133,16 +217,17 @@ function Line({ row, focused, maxVol, layout, onSelect }: LineProps) {
  * the sparkline and the volume bar, and the rows themselves only get thinner. The list scrolls
  * inside the panel only when even rows of 15px could not fit.
  */
-export function Watchlist({ rows, focus, onSelect, stale = false }: WatchlistProps) {
+export function Watchlist({ rows, focus, onSelect, stale = false, pins = null, extras = [] }: WatchlistProps) {
   const [ref, size] = useElementSize<HTMLDivElement>(FALLBACK);
   const maxVol = useMemo(() => rows.reduce((m, r) => Math.max(m, r.ticker?.volQuote24h ?? 0), 0), [rows]);
-  const hasData = rows.length > 0;
-  const layout = watchlistLayout(size.width, size.height, rows.length);
+  const hasRows = rows.length > 0 || extras.length > 0;
+  const hasData = rows.some((row) => row.ticker !== null) || extras.some((row) => row.last !== null);
+  const layout = watchlistLayout(size.width, size.height, rows.length, pins ? 20 : 0);
 
   function onKeyDown(event: KeyboardEvent<HTMLUListElement>): void {
     const { key } = event;
     if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") return;
-    const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
+    const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button[data-row]"));
     if (!buttons.length) return;
     const at = buttons.findIndex((b) => b === document.activeElement);
     let next = at;
@@ -156,6 +241,7 @@ export function Watchlist({ rows, focus, onSelect, stale = false }: WatchlistPro
 
   const vars = {
     "--wl-cols": layout.template,
+    "--wl-min-w": `${layout.minW}px`,
     "--wl-pad": `${layout.padX}px`,
     "--row-h": `${layout.rowH}px`,
     "--spark-h": `${layout.sparkH}px`,
@@ -165,7 +251,7 @@ export function Watchlist({ rows, focus, onSelect, stale = false }: WatchlistPro
   return (
     <PanelFrame title="Ativos" subtitle={null} stale={stale} empty={!hasData}>
       <div ref={ref} className={styles.root} style={vars} data-level={layout.level} data-scroll={layout.scroll ? "true" : undefined}>
-        {hasData ? (
+        {hasRows ? (
           <>
             {layout.header ? (
               <div className={styles.cols} aria-hidden="true">
@@ -179,7 +265,11 @@ export function Watchlist({ rows, focus, onSelect, stale = false }: WatchlistPro
             ) : null}
             <ul className={styles.list} aria-label="Lista de ativos" onKeyDown={onKeyDown}>
               {rows.map((row) => (
-                <Line key={row.instId} row={row} focused={row.instId === focus} maxVol={maxVol} layout={layout} onSelect={onSelect} />
+                <Line key={row.instId} row={row} focused={row.instId === focus} maxVol={maxVol} layout={layout} pins={pins} onSelect={onSelect} />
+              ))}
+              {extras.length > 0 ? <li className={styles.extraSep} aria-hidden="true">Mais ativos por volume</li> : null}
+              {extras.map((row) => (
+                <ExtraLine key={row.instId} row={row} focused={row.instId === focus} layout={layout} pins={pins} onSelect={onSelect} />
               ))}
             </ul>
           </>

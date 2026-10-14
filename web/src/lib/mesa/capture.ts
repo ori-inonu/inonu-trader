@@ -39,7 +39,7 @@ export async function captureChart(root: Document, instId: string, nowMs: number
   const source = pickChartCanvas(root);
   if (!source || source.width < 40 || source.height < 40) return "missing";
   const stamp = new Date(nowMs).toISOString().slice(0, 19).replace("T", " ");
-  const out = composeCapture(source, `INONU TRADER  ${instId}  ${stamp} UTC  decisao consultiva do Jev, nada foi enviado`, "#0a1018");
+  const out = composeCapture(source, `INONU TRADER  ${instId}  ${stamp} UTC  decisao consultiva do Inonu, nada foi enviado`, "#0a1018");
   if (!out) return "failed";
   const blob = await new Promise<Blob | null>((resolve) => out.toBlob(resolve, "image/png"));
   if (!blob) return "failed";

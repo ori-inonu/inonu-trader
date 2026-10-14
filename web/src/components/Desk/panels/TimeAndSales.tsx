@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import {
+  fmtClockSec,
   fmtNumber,
   fmtTimeMs,
   priceDecimals,
@@ -39,6 +40,9 @@ export function TimeAndSales({ trades, instrument, stale = false }: TimeAndSales
   const pxDec = priceDecimals(instrument?.tickSz, priceDecimalsForMagnitude(rows[0]?.trade.px));
   const szDec = columnSizeDecimals(rows.map((r) => r.trade.sz), instrument?.lotSz);
   const label = `Fita de negocios${instrument ? ` de ${instrument.instId}` : ""}`;
+  // In a narrow wing the millisecond stamp does not fit the column: seconds are kept,
+  // milliseconds stay out only until the panel grows again.
+  const narrowTime = size.width < 245;
 
   return (
     <PanelFrame title="Fita de negocios" subtitle={instrument?.instId ?? null} stale={stale} empty={!hasData}>
@@ -48,7 +52,7 @@ export function TimeAndSales({ trades, instrument, stale = false }: TimeAndSales
             <div className={styles.cols} role="row">
               <span role="columnheader" className={styles.left}>Hora UTC</span>
               <span role="columnheader">Preco</span>
-              <span role="columnheader">Tamanho</span>
+              <span role="columnheader">{narrowTime ? "Tam" : "Tamanho"}</span>
               <span role="columnheader" className={styles.center}>Lado</span>
             </div>
             <div className={styles.rows} role="rowgroup">
@@ -60,7 +64,7 @@ export function TimeAndSales({ trades, instrument, stale = false }: TimeAndSales
                   data-large={large ? "true" : undefined}
                   role="row"
                 >
-                  <span className={`${styles.time} ${styles.left}`} role="cell">{fmtTimeMs(trade.tsMs)}</span>
+                  <span className={`${styles.time} ${styles.left}`} role="cell">{narrowTime ? fmtClockSec(trade.tsMs) : fmtTimeMs(trade.tsMs)}</span>
                   <span className={styles.px} role="cell">{fmtNumber(trade.px, pxDec)}</span>
                   <span className={styles.sz} role="cell">
                     {fmtSizeAt(trade.sz, szDec)}

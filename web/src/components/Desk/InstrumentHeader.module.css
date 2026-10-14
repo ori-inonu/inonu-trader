@@ -17,6 +17,9 @@
   border-left: 1px solid var(--edge);
 }
 
+/* In the legend of the chart the quote is bare: no frame of its own, the chart's frame is the card. */
+.root[data-variant="legend"] { gap: var(--s5); }
+
 /* The compact variant is the one line over the chart on a phone, where the decision bar is hidden
    (MesaView hides it at 820px; the two numbers are kept equal on purpose). */
 .root[data-variant="compact"] {

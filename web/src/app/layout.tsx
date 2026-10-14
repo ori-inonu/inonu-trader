@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "INONU TRADER",
-  description: "Central Jev de decisoes e acompanhamento das operacoes.",
+  description: "Central Inonu de decisoes e acompanhamento das operacoes.",
 };
 
 export const viewport: Viewport = {

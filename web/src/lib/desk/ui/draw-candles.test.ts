@@ -110,10 +110,10 @@ describe("candle geometry", () => {
 
   test("vwap far outside the range is not drawn and does not distort the scale", () => {
     const base = computeGeometry(input());
-    const far = computeGeometry(input({ vwap: 9_999 }));
+    const far = computeGeometry(input({ vwap: 9_999, indicators: ["vwap"] }));
     expect(far.vwapVisible).toBe(false);
     expect(far.hi).toBeCloseTo(base.hi, 6);
-    const near = computeGeometry(input({ vwap: 125 }));
+    const near = computeGeometry(input({ vwap: 125, indicators: ["vwap"] }));
     expect(near.vwapVisible).toBe(true);
   });
 
@@ -274,7 +274,7 @@ describe("drawCandleChart", () => {
 
   test("the last price line is dashed and the vwap line is solid", () => {
     const ctx = new RecordingContext();
-    drawCandleChart(ctx, input({ last: 141.4, vwap: 118 }));
+    drawCandleChart(ctx, input({ last: 141.4, vwap: 118, indicators: ["vwap"] }));
     const dashedStrokes = ctx.of("stroke").filter((s) => s.dash.length > 0);
     expect(dashedStrokes.length).toBeGreaterThanOrEqual(1);
     const vwapStroke = ctx.of("stroke").find((s) => s.strokeStyle === withAlpha(DEFAULT_PALETTE.signal, 0.85));

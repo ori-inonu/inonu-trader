@@ -13,7 +13,8 @@
   flex-direction: column;
   gap: var(--s2);
   padding: var(--s3) var(--s4);
-  overflow: hidden;
+  /* The dock is at most 120 px tall now: what does not fit scrolls inside the module. */
+  overflow: hidden auto;
   border: 1px solid var(--edge);
   border-radius: var(--r-md);
   background: color-mix(in srgb, var(--bg-deck) 90%, transparent);
@@ -69,6 +70,8 @@
 .ghost:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
 
 .matrix { display: grid; gap: 3px; list-style: none; }
+/* In the dock the matrix spreads across the wide panel instead of stacking in one column. */
+.matrixWide { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 3px var(--s4); }
 
 .cap {
   --c: var(--ink-4);
@@ -106,10 +109,10 @@
   gap: var(--s2);
   font: var(--fs-xs);
 }
-.time { color: var(--ink-3); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-.inst { color: var(--ink); font-family: var(--font-mono); }
-.action { font-weight: 600; }
-.weightText { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.time { overflow: hidden; color: var(--ink-3); font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
+.inst { overflow: hidden; color: var(--ink); font-family: var(--font-mono); text-overflow: ellipsis; white-space: nowrap; }
+.action { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.weightText { overflow: hidden; color: var(--ink-2); font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
 .toneBuy { color: var(--buy); }
 .toneSell { color: var(--sell); }
 .toneHold { color: var(--hold); }
@@ -119,6 +122,12 @@
 @media (max-width: 1100px) {
   .cap { grid-template-columns: 84px minmax(0, 1fr); }
   .capDetail { display: none; }
+}
+
+/* Narrow docks drop the journal timestamp first: instrument, action and weight remain. */
+@media (max-width: 1200px) {
+  .entry { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto; }
+  .entry .time { display: none; }
 }
 
 @media (max-width: 820px) {

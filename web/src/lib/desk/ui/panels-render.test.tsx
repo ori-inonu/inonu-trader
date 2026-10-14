@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import {
+  AssetPicker,
+  DecisionCard,
   DerivativesStrip,
   FlowGauge,
   LiquiditySurface,
@@ -11,6 +13,15 @@ import {
   TimeAndSales,
   Watchlist,
 } from "@/components/Desk/panels";
+import type { DecisionMarker } from "../chart/decisions";
+import { defaultChartPrefs } from "../chart/prefs";
+import { SMC_CHIPS_TITLE } from "../chart/smc-chips";
+import { IndicatorOptions, SmcChipGroup, type PriceChartOnchain } from "@/components/Desk/panels/PriceChart";
+import { OnchainTokenRow, type AssetPickerOnchain } from "@/components/Desk/panels/AssetPicker";
+import type { OnchainClient, OnchainMeta } from "../../onchain/client";
+import type { OnchainFocus } from "../../onchain/focus";
+import type { WatchPins } from "../../mesa/watch-pins";
+import type { AssetCatalog } from "../useAssetCatalog";
 import type { DeskDerivatives, DeskInstrument, DeskMetrics, DeskState, DeskWatchRow } from "../types";
 import { createLabMarket, LAB_PRESETS } from "./lab-fixture";
 
@@ -72,7 +83,7 @@ describe("PanelFrame", () => {
 
   test("the chip carries its state in words, never in the dot alone", () => {
     const html = renderToStaticMarkup(<PanelFrame title="Teste"><p>x</p></PanelFrame>);
-    expect(html).toMatch(/aria-hidden="true"[^>]*><\/span>Ao vivo/);
+    expect(html).toMatch(/aria-hidden="true"[^>]*><\/span><span[^>]*>Ao vivo<\/span>/);
   });
 });
 
@@ -194,9 +205,50 @@ describe("TimeAndSales", () => {
   });
 });
 
+describe("PriceChart, simple by default", () => {
+  const s = lab();
+  const draw = (extra: Partial<React.ComponentProps<typeof PriceChart>> = {}) =>
+    renderToStaticMarkup(<PriceChart candles={s.candles} bar="1m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} onBarChange={() => undefined} {...extra} />);
+
+  test("a new person sees the chart and the button that opens the details, and none of the specialist's controls or lines", () => {
+    const html = draw();
+    expect(html).toContain("Detalhes");
+    expect(html).not.toContain("Indicadores");
+    expect(html).not.toContain("Heikin Ashi");
+    expect(html).not.toContain("Renko");
+    expect(html).not.toContain('aria-label="Indicadores ativos"');
+    expect(html).not.toContain("Camadas do Inonu no grafico");
+    expect(html).not.toContain("Leituras do Inonu indisponiveis");
+    // the readout of the candle (open, high, low, close, volume) appears when the person points at one, not before
+    expect(html).not.toContain("<span>Vol</span>");
+    expect(html).not.toContain("OHLCV indisponivel");
+    // the bar selector and the 24h change stay: they are what anyone reads
+    expect(html).toContain("1m");
+    expect(html).toContain("24h");
+  });
+
+  test("the complete chart has the specialist's controls and a button that goes back", () => {
+    const html = draw({ initialDetail: "completo" });
+    expect(html).toContain("Indicadores");
+    expect(html).toContain("Heikin Ashi");
+    expect(html).toContain("Camadas do Inonu no grafico");
+    expect(html).toContain("Simples");
+    expect(html).not.toContain(">Detalhes<");
+  });
+
+  test("the simple chart ignores a stored choice of kind and indicators without rewriting it", () => {
+    const stored = { ...defaultChartPrefs(), kind: "renko" as const };
+    const html = draw({ initialPrefs: stored });
+    expect(html).not.toContain("Tijolo");
+    expect(html).toContain("Detalhes");
+    expect(stored.kind).toBe("renko");
+    expect(draw({ initialPrefs: stored, initialDetail: "completo" })).toContain("Tijolo");
+  });
+});
+
 describe("PriceChart", () => {
   test("empty: waiting state, selector still there", () => {
-    const html = renderToStaticMarkup(<PriceChart candles={[]} bar="1m" metrics={EMPTY_METRICS} ticker={null} instrument={BTC} />);
+    const html = renderToStaticMarkup(<PriceChart candles={[]} bar="1m" metrics={EMPTY_METRICS} ticker={null} instrument={BTC} initialDetail="completo" />);
     expect(html).toContain(AWAITING);
     expect(html).toContain("OHLCV indisponivel");
     expect(html).toContain("Intervalo das velas");
@@ -206,11 +258,17 @@ describe("PriceChart", () => {
 
   test("populated: canvas, readout of the newest candle and a bar selector with the current bar pressed", () => {
     const s = lab();
-    const html = renderToStaticMarkup(<PriceChart candles={s.candles} bar="5m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} onBarChange={() => undefined} />);
+    const html = renderToStaticMarkup(<PriceChart candles={s.candles} bar="5m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} onBarChange={() => undefined} initialDetail="completo" />);
     expect(html).toContain("<canvas");
     for (const bar of ["1m", "5m", "15m", "1H", "4H", "1D"]) expect(html).toContain(`>${bar}</button>`);
     expect(html).toMatch(/aria-pressed="true"[^>]*>5m</);
-    expect((html.match(/aria-pressed="false"/g) ?? []).length).toBe(5);
+    // Five unpressed bar buttons plus five unpressed chart type buttons (Velas is pressed).
+    expect((html.match(/aria-pressed="false"/g) ?? []).length).toBe(10);
+    for (const kind of ["Velas", "Heikin Ashi", "Barras", "Linha", "Area", "Renko"]) expect(html).toContain(`>${kind}</button>`);
+    expect(html).toContain("Indicadores");
+    // The brick size controls belong to the Renko kind only.
+    expect(html).not.toContain("Tamanho do tijolo Renko");
+    expect(html).toContain("Leituras do Inonu indisponiveis");
     expect(html).toContain("Vol");
     expect(html).toContain("em formacao");
     expect(html).toContain("Ultima vela");
@@ -235,6 +293,73 @@ describe("PriceChart", () => {
     const s = lab();
     const html = renderToStaticMarkup(<PriceChart candles={s.candles} bar="1m" metrics={{ ...s.metrics, change24hPct: 1.234 }} ticker={s.ticker} instrument={s.instrument} />);
     expect(html).toContain("+1,23%");
+  });
+
+  test("renko kind shows the brick size select and the size label", () => {
+    const s = lab();
+    const prefs = { ...defaultChartPrefs(), kind: "renko" as const };
+    const html = renderToStaticMarkup(
+      <PriceChart candles={s.candles} bar="1m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} initialPrefs={prefs} initialDetail="completo" />,
+    );
+    expect(html).toContain("Tamanho do tijolo Renko");
+    for (const size of ["ATR", "0,1%", "0,25%", "0,5%", "1%"]) expect(html).toContain(`>${size}<`);
+    expect(html).toContain("Tijolo");
+    expect(html).toContain("(ATR)");
+    expect(html).toMatch(/aria-pressed="true"[^>]*>Renko</);
+    expectNoForbidden(html);
+  });
+
+  test("renko with too few confirmed candles shows the empty state", () => {
+    const s = lab();
+    const prefs = { ...defaultChartPrefs(), kind: "renko" as const };
+    const html = renderToStaticMarkup(
+      <PriceChart candles={s.candles.slice(0, 3)} bar="1m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} initialPrefs={prefs} initialDetail="completo" />,
+    );
+    expect(html).toContain("Renko indisponivel: poucas velas confirmadas");
+    expectNoForbidden(html);
+  });
+
+  test("renko with smart money groups on announces it in the legend strip", () => {
+    const s = lab();
+    const prefs = { ...defaultChartPrefs(), kind: "renko" as const };
+    const html = renderToStaticMarkup(
+      <PriceChart candles={s.candles} bar="1m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} initialPrefs={prefs} initialDetail="completo" />,
+    );
+    expect(html).toContain("Smart money indisponivel no Renko");
+    expect(html).toContain(SMC_CHIPS_TITLE);
+    expectNoForbidden(html);
+  });
+});
+
+describe("IndicatorOptions", () => {
+  test("the popover is grouped with smart money, jev, volume and classics plus the pivot select", () => {
+    const html = renderToStaticMarkup(<IndicatorOptions prefs={defaultChartPrefs()} onToggle={() => undefined} onPivot={() => undefined} />);
+    for (const label of ["Smart money", "Inonu", "Volume", "Classicos"]) expect(html).toContain(`>${label}<`);
+    for (const opt of ["Estrutura BOS e CHoCH", "Blocos de ordem", "Imbalances FVG", "Liquidez", "Premium e desconto", "Niveis do Inonu", "EMA 9", "EMA 200", "Bandas de Bollinger 20/2", "VWAP", "Supertrend 10/3", "RSI 14", "MACD 12/26/9"]) {
+      expect(html).toContain(opt);
+    }
+    // The default set checks the five smart money boxes, volume and levels.
+    const checked = html.match(/checked=""/g) ?? [];
+    expect(checked.length).toBe(7);
+    for (const n of ["2", "3", "5", "8"]) expect(html).toContain(`value="${n}"`);
+    expect(html).toContain("Forca do pivo smart money");
+    expectNoForbidden(html);
+  });
+});
+
+describe("SmcChipGroup", () => {
+  test("chips render text, title and tone inside the fixed group label", () => {
+    const chips = [
+      { id: "position", text: "Desconto 34%", title: `${SMC_CHIPS_TITLE}. def`, tone: "buy" },
+      { id: "poolBelow", text: "Liquidez abaixo a 40 bps", title: `${SMC_CHIPS_TITLE}. def`, tone: "sell" },
+    ];
+    const html = renderToStaticMarkup(<SmcChipGroup chips={chips} />);
+    expect(html).toContain(SMC_CHIPS_TITLE);
+    expect(html).toContain("Desconto 34%");
+    expect(html).toContain("Liquidez abaixo a 40 bps");
+    expect(html).toContain('data-tone="buy"');
+    expect(html).toContain('data-tone="sell"');
+    expectNoForbidden(html);
   });
 });
 
@@ -325,6 +450,16 @@ function row(instId: string, last: number, open: number | null, over: Partial<De
 }
 
 describe("Watchlist", () => {
+  test("symbols without quotes stay selectable and announce missing data rather than a live feed", () => {
+    const rows = [{ instId: "BTC-USDT", ticker: null, spark: [], fundingRate: null }];
+    const html = renderToStaticMarkup(<Watchlist rows={rows} focus="BTC-USDT" onSelect={() => undefined} />);
+    expect(html).toContain("Sem dados");
+    expect(html).not.toContain("Ao vivo");
+    expect(html).toContain('data-row="true"');
+    expect(html).toContain(">BTC<");
+    expect(html).toContain("Indisponivel");
+  });
+
   test("empty", () => {
     const html = renderToStaticMarkup(<Watchlist rows={[]} focus="BTC-USDT" />);
     expect(html).toContain(AWAITING);
@@ -534,5 +669,249 @@ describe("tiny base sizes never print as zero", () => {
     );
     expect(html).toContain("12,50");
     expect(html).toContain("1.234,5");
+  });
+});
+
+function marker(over: Partial<DecisionMarker> = {}): DecisionMarker {
+  return {
+    readId: "r-1",
+    action: "buy",
+    anchorMs: T,
+    barIndex: 3,
+    price: 100.5,
+    weights: { buy: 0.63, sell: 0.22, hold: 0.15 },
+    confidence: 0.63,
+    model: "jev-test-1",
+    latencyMs: 291,
+    horizonMinutes: 5,
+    atMs: T,
+    outcome: { kind: "measured", bps: 10.5, favourable: true },
+    ...over,
+  };
+}
+
+describe("DecisionCard", () => {
+  test("a measured buy names the action, the weights, the model, the price and the advisory line", () => {
+    const html = renderToStaticMarkup(<DecisionCard marker={marker()} x={100} y={40} plotWidth={400} plotHeight={220} decimals={1} />);
+    expect(html).toContain('role="status"');
+    expect(html).toContain("Comprar");
+    expect(html).toContain("63%");
+    expect(html).toContain("22%");
+    expect(html).toContain("15%");
+    expect(html).toContain("jev-test-1");
+    expect(html).toContain("291 ms");
+    expect(html).toContain("100,5");
+    expect(html).toContain("Resultado apos 5 min: +10,5 bps a favor, bruto");
+    expect(html).toContain("Decisao consultiva do Inonu, nada foi enviado");
+    expect(html).toMatch(/\d\d:\d\d:\d\d/);
+    expectNoForbidden(html);
+  });
+
+  test("a losing sell reads contra, a pending read reads em andamento, a wide bar is not measured", () => {
+    const against = renderToStaticMarkup(<DecisionCard marker={marker({ action: "sell", outcome: { kind: "measured", bps: -4.2, favourable: false } })} x={10} y={10} plotWidth={300} plotHeight={200} decimals={1} />);
+    expect(against).toContain("Vender");
+    expect(against).toContain("contra, bruto");
+    const pending = renderToStaticMarkup(<DecisionCard marker={marker({ outcome: { kind: "pending" } })} x={10} y={10} plotWidth={300} plotHeight={200} decimals={1} />);
+    expect(pending).toContain("em andamento");
+    const wide = renderToStaticMarkup(<DecisionCard marker={marker({ outcome: { kind: "not_measured", reason: "scale" } })} x={10} y={10} plotWidth={300} plotHeight={200} decimals={1} />);
+    expect(wide).toContain("nao medido nesta escala");
+  });
+
+  test("a hold decision prints no outcome line", () => {
+    const html = renderToStaticMarkup(<DecisionCard marker={marker({ action: "hold", outcome: { kind: "none" } })} x={10} y={10} plotWidth={300} plotHeight={200} decimals={1} />);
+    expect(html).toContain("Manter");
+    expect(html).not.toContain("Resultado");
+    expectNoForbidden(html);
+  });
+});
+
+describe("AssetPicker", () => {
+  const catalog: AssetCatalog = {
+    status: "ready",
+    spot: [
+      { instId: "BTC-USDT", last: 83957.4, change24hPct: 1.4, volQuote24h: 9e9 },
+      { instId: "ETH-USDT", last: 3250.5, change24hPct: -1.5, volQuote24h: 4e9 },
+    ],
+    swap: [{ instId: "BTC-USDT-SWAP", last: 83960.1, change24hPct: 1.42, volQuote24h: 2e10 }],
+  };
+
+  test("the trigger shows the instrument in focus", () => {
+    const html = renderToStaticMarkup(<AssetPicker focus="BTC-USDT" catalog={catalog} jevReads={new Set()} />);
+    expect(html).toContain("BTC-USDT");
+    expect(html).toContain('aria-haspopup="dialog"');
+    expect(html).not.toContain("Buscar ativo");
+    expectNoForbidden(html);
+  });
+
+  test("open: search box, tabs, rows with price and signed change, and the Inonu le tag", () => {
+    const html = renderToStaticMarkup(<AssetPicker focus="ETH-USDT" catalog={catalog} jevReads={new Set(["BTC-USDT"])} defaultOpen />);
+    expect(html).toContain("Buscar ativo");
+    expect(html).toContain(">Spot<");
+    expect(html).toContain(">Perpetuos<");
+    expect(html).toContain("Inonu le");
+    expect(html).toContain("+1,40%");
+    expect(html).toContain("-1,50%");
+    expect((html.match(/role="option"/g) ?? []).length).toBe(2);
+    expectNoForbidden(html);
+  });
+
+  test("a failed catalog lists the fallback and says the full list is unavailable", () => {
+    const html = renderToStaticMarkup(<AssetPicker focus="BTC-USDT" catalog={{ status: "error", spot: [], swap: [] }} jevReads={new Set()} defaultOpen />);
+    expect(html).toContain("Lista completa indisponivel");
+    expect(html).toContain("BTC-USDT");
+    expect(html).not.toContain("+0,00%");
+    expectNoForbidden(html);
+  });
+});
+
+/* ---------- E6b: on-chain focus ---------- */
+
+const OC_FOCUS: OnchainFocus = { chainIndex: "1", address: "0xdef1ce", symbol: "PEPE", name: null };
+const OC_META: OnchainMeta = { tier: "basic", cachedAtMs: T - 5_000, ageMs: 5_000, stale: false, budget: { tier: "basic", used: 10, cap: 50_000 } };
+const STUB_CLIENT = {} as unknown as OnchainClient;
+const OC_PICKER: AssetPickerOnchain = { client: STUB_CLIENT, chainIndex: "1", onChainSelect: () => {}, onSelectToken: () => {} };
+
+function ocChart(over: Partial<PriceChartOnchain> = {}): PriceChartOnchain {
+  return {
+    focus: OC_FOCUS,
+    chainName: "Ethereum",
+    status: "ready",
+    error: null,
+    meta: OC_META,
+    wallets: null,
+    onBack: () => {},
+    picker: OC_PICKER,
+    ...over,
+  };
+}
+
+describe("PriceChart in onchain mode", () => {
+  test("title, chain, honesty strip and the back button; no Jev line", () => {
+    const s = lab();
+    const html = renderToStaticMarkup(
+      <PriceChart candles={s.candles} bar="1m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} onBarChange={() => undefined} onchain={ocChart()} />,
+    );
+    expect(html).toContain("Grafico on-chain PEPE");
+    expect(html).toContain("(Ethereum)");
+    expect(html).toContain("On-chain, via OnchainOS");
+    expect(html).toContain("Sem WebSocket no plano gratuito");
+    // the Inonu reads a token too (the button asks it through the OnchainOS gateway): the strip no longer says it does not
+    expect(html).not.toContain("O Inonu nao le este ativo");
+    expect(html).toContain("Voltar para OKX");
+    expect(html).not.toContain("Leitura do Inonu");
+    expectNoForbidden(html);
+  });
+
+  test("1D is disabled with its reason", () => {
+    const s = lab();
+    const html = renderToStaticMarkup(
+      <PriceChart candles={s.candles} bar="1m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} onBarChange={() => undefined} onchain={ocChart()} />,
+    );
+    expect(html).toContain("Sem 1D on-chain");
+    expect(html).toMatch(/<button[^>]*disabled=""[^>]*>1D<\/button>/);
+  });
+
+  test("loading, per-code error and empty states", () => {
+    const base = { metrics: EMPTY_METRICS, ticker: null, instrument: BTC, onchain: ocChart({ status: "loading", meta: null }) };
+    expect(renderToStaticMarkup(<PriceChart candles={[]} bar="1m" {...base} />)).toContain("Carregando velas on-chain");
+    const err = renderToStaticMarkup(<PriceChart candles={[]} bar="1m" metrics={EMPTY_METRICS} ticker={null} instrument={BTC} onchain={ocChart({ status: "error", error: "provider_unauthorized" })} />);
+    expect(err).toContain("Chave, segredo ou passphrase recusados");
+    const empty = renderToStaticMarkup(<PriceChart candles={[]} bar="1m" metrics={EMPTY_METRICS} ticker={null} instrument={BTC} onchain={ocChart()} />);
+    expect(empty).toContain("Sem velas para este token nesta barra");
+    expectNoForbidden(err);
+    expectNoForbidden(empty);
+  });
+
+  test("a stale meta marks the panel and the strip Dado velho", () => {
+    const s = lab();
+    const html = renderToStaticMarkup(
+      <PriceChart candles={s.candles} bar="1m" metrics={s.metrics} ticker={s.ticker} instrument={s.instrument} onchain={ocChart({ meta: { ...OC_META, stale: true } })} />,
+    );
+    expect(html).toContain("Dado velho");
+  });
+});
+
+describe("Watchlist pins and volume extras", () => {
+  const pins: WatchPins = {
+    pins: ["SOL-USDT"],
+    isPinned: (id) => id === "BTC-USDT" || id === "SOL-USDT",
+    canPin: (id) => id !== "BTC-USDT",
+    toggle: () => {},
+  };
+
+  test("every row has a star; the default shows a filled disabled star, the extra none of the columns invents", () => {
+    const html = renderToStaticMarkup(
+      <Watchlist
+        rows={[row("BTC-USDT", 100, 90), row("SOL-USDT", 20, 18)]}
+        focus="BTC-USDT"
+        pins={pins}
+        extras={[{ instId: "DOGE-USDT", last: 0.2, change24hPct: 1.5, volQuote24h: 5_000 }]}
+      />,
+    );
+    expect(html).toContain("Mais ativos por volume");
+    expect(html).toContain(">DOGE<");
+    expect(html).toContain("Fixado na lista");
+    expect(html).toContain("Remover da lista");
+    expect(html).toContain("Fixar na lista");
+    // Two real rows keep their sparklines; the extra row has none.
+    expect((html.match(/Tendencia de /g) ?? []).length).toBe(2);
+    expectNoForbidden(html);
+  });
+});
+
+describe("AssetPicker in onchain mode", () => {
+  const catalog: AssetCatalog = {
+    status: "ready",
+    spot: [{ instId: "BTC-USDT", last: 1, change24hPct: 1, volQuote24h: 100 }],
+    swap: [],
+  };
+
+  test("the trigger reads SYMBOL (network) under an onchain focus", () => {
+    const html = renderToStaticMarkup(
+      <AssetPicker focus="BTC-USDT" catalog={catalog} jevReads={new Set()} onchainFocus={OC_FOCUS} onchain={OC_PICKER} />,
+    );
+    expect(html).toContain("PEPE (Ethereum)");
+    expectNoForbidden(html);
+  });
+
+  test("open on a chain: OKX chip, network chips, Trending header and a commit-only search", () => {
+    const html = renderToStaticMarkup(
+      <AssetPicker focus="BTC-USDT" catalog={catalog} jevReads={new Set()} onchainFocus={OC_FOCUS} onchain={OC_PICKER} defaultOpen />,
+    );
+    expect(html).toContain(">OKX<");
+    expect(html).toContain("Ethereum");
+    expect(html).toContain("Solana");
+    expect(html).toContain(">Trending<");
+    expect(html).toContain("Buscar");
+    // The list has not answered in a static render: honest loading, no invented rows.
+    expect(html).toContain("Carregando");
+    expectNoForbidden(html);
+  });
+
+  test("a token row is two full lines: bold symbol, no invented name, signed change and context", () => {
+    const html = renderToStaticMarkup(
+      <OnchainTokenRow
+        active={false}
+        row={{ key: "k", symbol: "FXD", name: null, price: 1.23, changePct: -4.5, liquidityUsd: 8_800_000, holders: 90_200, chainIndex: "1", address: "0x1" }}
+      />,
+    );
+    expect(html).toContain(">FXD<");
+    // The hot-token answer carries no name: the word never stands in for it.
+    expect(html).not.toContain("Indisponivel");
+    expect(html).toContain("US$ 1,23");
+    expect(html).toContain("-4,5%");
+    expect(html).toContain("liq US$ 8,8 mi");
+    expect(html).toContain("90,2 mil holders");
+    const named = renderToStaticMarkup(
+      <OnchainTokenRow
+        active={false}
+        row={{ key: "k2", symbol: "JUP", name: "Jupiter", price: 0.4, changePct: 1.2, liquidityUsd: null, holders: null, chainIndex: "501", address: "0x2" }}
+      />,
+    );
+    expect(named).toContain("Jupiter");
+    expect(named).not.toContain("holders");
+    expect(named).not.toContain("liq");
+    expectNoForbidden(html);
+    expectNoForbidden(named);
   });
 });

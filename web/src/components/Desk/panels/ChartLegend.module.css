@@ -1,0 +1,84 @@
+/* The legend of the chart: the quote, then the reading of the moment. Same vocabulary as the bar and the thermometer: wells, hairlines, one lit border. Nothing animates. */
+.legend { display: flex; min-width: 0; flex-direction: column; gap: var(--s2); }
+
+.chips { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+
+/* The second line: the reading of the moment on the left, the portfolio question at the right end. */
+.under { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.portfolio {
+  height: 24px;
+  margin-left: auto;
+  padding: 0 var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  font: var(--fs-xs);
+  white-space: nowrap;
+  transition: border-color var(--dur-fast) var(--ease-out-expo), background var(--dur-fast) var(--ease-out-expo), color var(--dur-fast) var(--ease-out-expo);
+}
+.portfolio:hover { border-color: var(--edge-strong); background: var(--bg-deck-3); color: var(--ink); }
+.portfolio:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+
+.chip {
+  --tone: var(--ink-3);
+  display: inline-flex;
+  min-width: 0;
+  height: 24px;
+  align-items: center;
+  gap: var(--s2);
+  padding: 0 var(--s3) 0 var(--s2);
+  border: 1px solid color-mix(in srgb, var(--tone) 30%, var(--edge));
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--tone) 8%, var(--bg-deck));
+  color: var(--ink);
+  font: var(--fs-xs);
+  white-space: nowrap;
+}
+.text { overflow: hidden; text-overflow: ellipsis; }
+
+.chip[data-tone="buy"] { --tone: var(--buy); }
+.chip[data-tone="sell"] { --tone: var(--sell); }
+.chip[data-tone="flat"] { --tone: var(--ink-2); }
+
+/* Who is in charge: a small bar from all sellers to all buyers, with the mark where the flow sits. */
+.meter { position: relative; width: 44px; height: 4px; flex: none; border-radius: 2px; background: linear-gradient(90deg, color-mix(in srgb, var(--sell) 55%, var(--edge-strong)), var(--edge-strong) 50%, color-mix(in srgb, var(--buy) 55%, var(--edge-strong))); }
+.meterCenter { position: absolute; top: -2px; bottom: -2px; left: 50%; width: 1px; background: var(--ink-4); }
+.meterMark { position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: var(--tone); box-shadow: 0 0 0 2px var(--bg-deck); transform: translate(-50%, -50%); }
+
+/* How many conditions line up: one pip each, filled when it holds, an outline when it does not, dashed when it could not be read. */
+.pips { display: inline-flex; flex: none; gap: 3px; }
+.pips > span { width: 10px; height: 4px; border-radius: 2px; background: var(--edge-strong); }
+.pips > span[data-ok="true"] { background: var(--signal); }
+.pips > span[data-ok="unknown"] { background: transparent; box-shadow: inset 0 0 0 1px var(--edge-strong); }
+.chip[data-kind="scenario"][data-worth="true"] { --tone: var(--signal); }
+
+.chip[data-kind="answer"] { --tone: var(--ink-2); padding-left: var(--s3); }
+.chip[data-kind="answer"][data-fresh="true"][data-action="buy"] { --tone: var(--buy); }
+.chip[data-kind="answer"][data-fresh="true"][data-action="sell"] { --tone: var(--sell); }
+.chip[data-kind="answer"][data-fresh="true"][data-action="hold"] { --tone: var(--hold); }
+.chip[data-kind="answer"]:not([data-fresh="true"]) { color: var(--ink-3); }
+
+.ask {
+  height: 24px;
+  padding: 0 var(--s3);
+  border: 1px solid color-mix(in srgb, var(--signal) 40%, var(--edge));
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--signal) 10%, var(--bg-deck));
+  color: var(--ink);
+  cursor: pointer;
+  font: var(--fs-xs);
+  white-space: nowrap;
+  transition: border-color var(--dur-fast) var(--ease-out-expo), background var(--dur-fast) var(--ease-out-expo);
+}
+.ask:hover { border-color: var(--signal); background: color-mix(in srgb, var(--signal) 20%, var(--bg-deck)); }
+.ask:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+.ask[data-worth="true"] { border-color: var(--signal); background: color-mix(in srgb, var(--signal) 26%, var(--bg-deck)); font-weight: 600; }
+
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* On a phone the desk has its own row of actions above the chart, so the second line of the legend leaves; the quote stays. */
+@media (max-width: 820px) {
+  .under { display: none; }
+}

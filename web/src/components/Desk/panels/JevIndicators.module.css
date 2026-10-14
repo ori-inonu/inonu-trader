@@ -1,0 +1,134 @@
+/* "Indicadores do Jev": one line of descriptive chips between the Jev strip and the chart. It scrolls
+   horizontally before it ever wraps, and dims whole when the read or the digest is too old to trust. */
+.row {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  align-items: center;
+  gap: 0 var(--s3);
+  padding: 0 var(--s3);
+  overflow: visible;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-deck) 88%, transparent), color-mix(in srgb, var(--bg-hull) 94%, transparent));
+  font: var(--fs-micro);
+  white-space: nowrap;
+}
+
+/* The chips scroll horizontally inside their own box so the details popover can overflow the row. */
+.chips {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: center;
+  gap: 0 var(--s3);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.row[data-dim] {
+  opacity: 0.55;
+}
+
+.title {
+  flex: none;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.age {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.chip {
+  flex: none;
+  padding: 1px var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-3);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--ink-4);
+}
+
+.details {
+  flex: none;
+  position: relative;
+  min-width: 0;
+}
+
+.detailsToggle {
+  cursor: pointer;
+  color: var(--ink-3);
+  list-style: none;
+}
+
+.detailsToggle::-webkit-details-marker {
+  display: none;
+}
+
+.detailsToggle::before {
+  content: "+ ";
+}
+
+.details[open] .detailsToggle::before {
+  content: "- ";
+}
+
+.detailsBody {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  right: 0;
+  width: min(320px, 72vw);
+  max-height: 280px;
+  overflow-y: auto;
+  padding: var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-2);
+  white-space: normal;
+}
+
+.detailsNote {
+  margin: 0 0 var(--s2);
+  color: var(--ink-3);
+}
+
+.detailsList {
+  display: grid;
+  gap: 2px 10px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin: 0;
+}
+
+.detailsItem {
+  display: contents;
+}
+
+.detailsName {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-3);
+  text-overflow: ellipsis;
+}
+
+.detailsValue {
+  margin: 0;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}

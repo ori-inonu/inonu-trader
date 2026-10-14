@@ -24,7 +24,7 @@ describe("the topbar keeps the identity and gains sections", () => {
     const html = render();
     expect(html).toContain("<svg");
     expect(html).toContain("INONU TRADER");
-    expect(html).toContain("Mesa de decisao do Jev");
+    expect(html).toContain("Mesa de decisao do Inonu");
   });
 
   test("two sections, the current one marked, and the Central reachable twice (bar and popover)", () => {

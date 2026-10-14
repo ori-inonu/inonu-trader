@@ -209,6 +209,13 @@ export function fmtTimeMs(tsMs: number | null | undefined): string {
   return `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())}.${pad3(d.getUTCMilliseconds())}`;
 }
 
+/** Hour, minute and second in UTC: "13:05:09". */
+export function fmtClockSec(tsMs: number | null | undefined): string {
+  if (!isNum(tsMs)) return UNAVAILABLE;
+  const d = new Date(tsMs);
+  return `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())}`;
+}
+
 /** Hour and minute in UTC: "13:05". */
 export function fmtClock(tsMs: number | null | undefined): string {
   if (!isNum(tsMs)) return UNAVAILABLE;

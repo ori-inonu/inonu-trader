@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { createJevReadLoader, parseJevReadBoard, readAgeMs, readFreshness, type JevReadBoardState } from "./jev-read";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { createJevReadLoader, parseAnalysis, parseJevRead, parseJevReadBoard, readAgeMs, readFreshness, type JevReadBoardState } from "./jev-read";
 
 const state = {
   instId: "BTC-USDT",
@@ -70,6 +72,66 @@ describe("parseJevReadBoard", () => {
   test("a non finite number in the state drops the read", () => {
     const bad = { ...state, mid: "83957" };
     expect(parseJevReadBoard(board({ "BTC-USDT": read({ state: bad }) }, []))!.reads["BTC-USDT"]).toBeUndefined();
+  });
+});
+
+describe("parseAnalysis", () => {
+  // Written by the backend contract test in src/jev-read/analytics.test.ts: it is exactly the analysis the
+  // producer projects from the sample pack for ETH-USDT, so this file is the drift guard in both directions.
+  const fixture = JSON.parse(readFileSync(join(import.meta.dir, "test-fixtures", "analysis-view.eth.json"), "utf8")) as unknown;
+
+  test("the backend contract parses with every section present", () => {
+    const parsed = parseAnalysis(fixture);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.trend).not.toBeNull();
+    expect(parsed!.momentum).not.toBeNull();
+    expect(parsed!.volatility).not.toBeNull();
+    expect(parsed!.structure).not.toBeNull();
+    expect(parsed!.derivatives).not.toBeNull();
+    expect(parsed!.crossAsset).not.toBeNull();
+    expect(parsed!.cost).not.toBeNull();
+    expect(parsed!.structure!.levels.length).toBeGreaterThan(0);
+    expect(parsed!.ageSec).toBe(0);
+  });
+
+  test("the same analysis inside a read survives the whole parser", () => {
+    const parsed = parseJevRead(read({ state: { ...state, analysis: fixture } }));
+    expect(parsed!.state!.analysis).toEqual(fixture);
+  });
+
+  test.each([
+    ["a section out of range", { ageSec: 5, trend: { regime: "up", adx15m: 200, efficiency15m: 0.5, emaStack15m: 1, emaStack1h: 0, emaStack4h: 0, extensionAtr15m: 1 } }],
+    ["a forbidden key deep inside", { ageSec: 5, trend: { nested: { buy: 1 } }, cost: { assumedRoundTripFeeBps: 20, spreadBps: 0.4, moveToCost: 1.1 } }],
+    ["a non integer age", { ageSec: 1.5, cost: { assumedRoundTripFeeBps: 20, spreadBps: 0.4, moveToCost: 1.1 } }],
+    ["no surviving section", { ageSec: 5, momentum: { rsi5m: "x" } }],
+  ])("rejects %s and omits the key, keeping the read", (_label: string, analysis: unknown) => {
+    expect(parseAnalysis(analysis)).toBeNull();
+    const parsed = parseJevRead(read({ state: { ...state, analysis } }));
+    expect(parsed).not.toBeNull();
+    expect("analysis" in parsed!.state!).toBe(false);
+  });
+
+  test("the smart money digest parses on both timeframes and a broken one is dropped without losing the structure", () => {
+    const base = fixture as { structure: Record<string, unknown> };
+    const parsed = parseAnalysis(fixture);
+    expect(parsed!.structure!.smc15m).toBeDefined();
+    expect(parsed!.structure!.smc1h).toBeDefined();
+    const smc = base.structure.smc15m as Record<string, unknown>;
+    for (const broken of [{ ...smc, rangePos: 3 }, { ...smc, rangeState: "middle" }, { ...smc, gapsUp: 1.5 }, { ...smc, lastBreak: { kind: "BOS", dir: "left", ageBars: 1 } }, { ...smc, demandBlockBps: -5 }]) {
+      const out = parseAnalysis({ ...(fixture as object), structure: { ...base.structure, smc15m: broken } });
+      expect(out!.structure).toBeDefined();
+      expect(out!.structure!.smc15m).toBeUndefined();
+      expect(out!.structure!.smc1h).toBeDefined();
+    }
+    expect(parseAnalysis({ ...(fixture as object), structure: { ...base.structure, smc15m: { ...smc, action: "buy" } } })).toBeNull();
+  });
+
+  test("an out-of-range section is dropped while the valid ones stay", () => {
+    const mixed = { ageSec: 5, ...((fixture as Record<string, unknown>)), trend: { regime: "moon" } };
+    const parsed = parseAnalysis(mixed);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.trend).toBeUndefined();
+    expect(parsed!.cost).not.toBeNull();
   });
 });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import CommandCenter from "@/components/CommandCenter/CommandCenter";
 import ConsoleBackdrop, { type BackdropTone } from "@/components/ConsoleBackdrop/ConsoleBackdrop";
 import { DecisionCenterView } from "@/components/DecisionCenter/DecisionCenter";
@@ -48,7 +49,7 @@ export default function Page() {
     <ConsoleBackdrop tone="neutral" />
     <main className={styles.primary}>
       <header className={styles.primaryHeader}>
-        <div><p>Central de observação</p><h1>INONU TRADER</h1><span>OKX Wallet, OnchainOS, Jev</span></div>
+        <div><Link className={styles.backLink} href="/">Voltar para Mesa</Link><p>Central de observação</p><h1>INONU TRADER</h1><span>OKX Wallet, OnchainOS, Jev</span></div>
         <strong>Paper, execução financeira desativada</strong>
       </header>
       <section id="pipeline" aria-label="Integração real OKX e Jev"><RealPipeline apiBase={API_URL} /></section>

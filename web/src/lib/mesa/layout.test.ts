@@ -40,6 +40,18 @@ describe("layout preference (chart mode)", () => {
     for (const label of Object.values(LAYOUT_LABEL)) expect(label).not.toMatch(FORBIDDEN_TEXT);
   });
 
+  test("on a phone the chart mode leaves the dock sections whole: the rule that folds the dock to its tab strip is wide-window only", () => {
+    const css = readFileSync(new URL("../../components/Desk/Dock/DockPanel.module.css", import.meta.url), "utf8");
+    const at = css.indexOf('data-layout="grafico"');
+    expect(at).toBeGreaterThan(0);
+    const before = css.slice(0, at);
+    const lastMedia = before.lastIndexOf("@media");
+    expect(lastMedia).toBeGreaterThanOrEqual(0);
+    expect(before.slice(lastMedia)).toContain("(min-width: 821px)");
+    // the media block is still open at that rule: no closing brace of the block sits between them
+    expect(before.slice(lastMedia).split("{").length - 1).toBeGreaterThan(before.slice(lastMedia).split("}").length - 1);
+  });
+
   test("the boot script is tiny, guarded and sets only the known mode before paint", () => {
     expect(LAYOUT_BOOT_SCRIPT).toContain(LAYOUT_KEY);
     expect(LAYOUT_BOOT_SCRIPT).toContain("try");
