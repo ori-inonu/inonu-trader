@@ -12,7 +12,7 @@ import { bearishFlags, bullishFlags } from "../opportunity/risk-tags";
 import type { Verdict } from "./conviction";
 import { facetQuestions, facetTexts, readFacets } from "./facets";
 import { canonicalJson, sha256Hex } from "./decision-metadata";
-import type { ExecBrief } from "./fills";
+import type { ExecBrief, TokenTripBrief } from "./fills";
 import { CONCENTRATIONS, LOOKS, RESERVES, RISKS, parseMandate, type Mandate } from "./mandate";
 import { POSTURES, type Book, type Candidate } from "./types";
 
@@ -42,6 +42,9 @@ export interface AgentBrief {
 /** The legend of the real round trips: added to the Brief only when the key itself is. */
 const EXEC_LEGEND =
   "your REAL trades as the chain recorded them, closed round trips only (bought, then sold): voltas how many, retorno what came back minus what went out as a percent of what went out, in the same stablecoin (cash before the network fee, not profit, not converted to dollars; null when the trips were settled in different stablecoins; what is still held is not in it), ultimas the latest ones with s symbol, m minutes held, p the same percent; sem_entrada sales of tokens the agent never bought, which have no entry and so no result; desconhecidas sales that could not be valued, never a result of zero. Fees and short trades cost real money: weigh it against the target of a plan";
+
+const ULT_LEGEND =
+  "your own closed round trips on THIS token: n how many, m minutes held in the last one, p its cash return percent in the same stablecoin before the network fee, ag minutes since that exit. Re-entering a token you just exited minutes ago without a material change in the facts repeats the round-trip spread and fee";
 
 const LEGEND: Readonly<Record<string, string>> = {
   caixa: "share of the agent wallet in dollar coins, percent",
@@ -132,6 +135,8 @@ export interface BriefInput {
   readonly history: FamilyHistory | null;
   /** The real round trips (fills.ts `execBrief`), when the agent has any. */
   readonly exec?: ExecBrief | null;
+  /** Closed round trips by token address (`tokenTripsBrief`), so each candidate shows its own recent round-trip history when any exists. */
+  readonly tokenTrips?: Readonly<Record<string, TokenTripBrief>> | null;
   /** The last network fee quoted on a network (see fees.ts): what a swap costs there, in dollars; null when none was read. */
   readonly feeOf?: (chainIndex: string) => { readonly usd: number; readonly ageMin: number | null } | null;
   readonly mandate?: { readonly mandate: Mandate; readonly aggressiveOpen: boolean; /** How many purchases each level of risk would put on offer (see `openByRisk`). */ readonly openByRisk?: Readonly<Record<string, number>> } | null;
@@ -186,7 +191,7 @@ export function agentBrief(input: BriefInput): AgentBrief {
       e: r1(f?.sinceEntryPct ?? null),
       h: heldHoursBrief(f?.heldHours ?? null),
       // what the token is doing right now, and how old what the facts say is: only the keys that have a value (a missing one is not a zero, and a null costs bytes)
-      ...present({ g: f === null || bullishFlags(f.riskFlags).length === 0 ? null : bullishFlags(f.riskFlags).length, c5: r1(f?.change5mPct ?? null), c1: r1(f?.change1hPct ?? null), n5: r0(f?.txs5m ?? null), ag: r0(f?.dataAgeMin ?? null), mo: momentumBrief(c.momentum), tm: timingBrief(c.timing), f: c.families.length > 0 ? c.families : null }),
+      ...present({ g: f === null || bullishFlags(f.riskFlags).length === 0 ? null : bullishFlags(f.riskFlags).length, c5: r1(f?.change5mPct ?? null), c1: r1(f?.change1hPct ?? null), n5: r0(f?.txs5m ?? null), ag: r0(f?.dataAgeMin ?? null), mo: momentumBrief(c.momentum), tm: timingBrief(c.timing), f: c.families.length > 0 ? c.families : null, ult: input.tokenTrips?.[c.address] ?? null }),
       t: c.triggers,
       o: c.stances,
       pl: c.plan === null ? null : { pf: c.plan.profile, e: r1(c.plan.sinceEntryPct), a: r1(c.plan.toTargetPct), s: r1(c.plan.toStopPct), hl: r0(c.plan.hoursLeft), th: c.plan.targetHit },
@@ -209,10 +214,11 @@ export function agentBrief(input: BriefInput): AgentBrief {
       f: c.families,
       o: c.stances,
       pf: c.profiles,
-      ...present({ mo: momentumBrief(c.momentum), k: feeUsd(input.feeOf?.(c.chainIndex) ?? null) }),
+      ...present({ mo: momentumBrief(c.momentum), k: feeUsd(input.feeOf?.(c.chainIndex) ?? null), ult: input.tokenTrips?.[c.address] ?? null }),
       tm: timingBrief(t),
     };
   }
+  const hasUlt = [...input.holdings, ...input.buys].some((c) => input.tokenTrips?.[c.address] !== undefined);
   return {
     v: 1,
     carteira: {
@@ -221,7 +227,7 @@ export function agentBrief(input: BriefInput): AgentBrief {
       principal: total === null || book.agentUsd === null ? null : r1(((total - book.agentUsd) / total) * 100),
       posicoes: book.positions.filter((p) => !p.isCash && p.usd !== null && p.usd > 0).length,
     },
-    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }) },
+    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(hasUlt ? { ult: ULT_LEGEND } : {}) },
     posicoes,
     compras,
     contexto: boundedContext(input.context),

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { SolanaReceiptEvidence } from "../server/solana-receipts";
-import { createFillStore, execBrief, fillFrom, roundTrips, type FillRecord } from "./fills";
+import { createFillStore, execBrief, fillFrom, roundTrips, tokenTripsBrief, type FillRecord } from "./fills";
 
 const USDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 const USDT = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB";
@@ -170,6 +170,17 @@ describe("what the model reads: the return of closed round trips in the same sta
     expect(brief.voltas).toBe(0);
     expect(brief.retorno).toBeNull();
     expect(brief.desconhecidas).toBe(1);
+  });
+
+  test("tokenTripsBrief groups closed round trips by token mint with trip count, last hold minutes, last return percent and minutes since exit", () => {
+    expect(tokenTripsBrief([])).toEqual({});
+    const fills: FillRecord[] = [
+      f({ orderKey: "b1", side: "buy", signature: sig(1), cashUnits: 11, atMs: T0 }),
+      f({ orderKey: "s1", side: "sell", signature: sig(2), cashUnits: 10.9689, atMs: T0 + 2 * MIN }),
+      f({ orderKey: "b2", side: "buy", signature: sig(3), cashUnits: 11, atMs: T0 + 4 * MIN }),
+      f({ orderKey: "s2", side: "sell", signature: sig(4), cashUnits: 10.9914, atMs: T0 + 6 * MIN }),
+    ];
+    expect(tokenTripsBrief(fills, T0 + 8 * MIN)).toEqual({ [MINT]: { n: 2, m: 2, p: -0.08, ag: 2 } });
   });
 });
 

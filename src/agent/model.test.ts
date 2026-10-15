@@ -88,6 +88,15 @@ describe("the Brief the agent's model reads", () => {
     expect(new TextEncoder().encode(JSON.stringify(brief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
   });
 
+  test("a candidate the agent already round-tripped carries its own recent trip record (`ult`) and adds `ult` to the legend; candidates never traded carry none", () => {
+    const { book, holdings, buys, ecoCtx } = build(1, 2);
+    const tradedAddr = buys[0]!.address;
+    const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null, tokenTrips: { [tradedAddr]: { n: 5, m: 2, p: -0.08, ag: 2 } } });
+    expect((brief.compras[buys[0]!.id] as Record<string, unknown>).ult).toEqual({ n: 5, m: 2, p: -0.08, ag: 2 });
+    expect((brief.compras[buys[1]!.id] as Record<string, unknown>).ult).toBeUndefined();
+    expect(brief.chaves.ult).toMatch(/closed round trips on THIS token/);
+  });
+
   describe("a short key means what its SCOPE says: the same letter is a different fact for a holding and for a purchase candidate", () => {
     const { book, holdings, buys, ecoCtx } = build(2, 2);
     const full = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null, mandate: { mandate: { risk: "agressivo", reserve: "baixa", concentration: "grande", look: "rapido" }, aggressiveOpen: true } });

@@ -21,7 +21,7 @@ import { applyCaps, gate, type AgentCaps, type LimitedFacts, splitToPolicy } fro
 import { halfDone, halfProgress } from "./exit";
 import { orderKey, type AgentLedger, type OrderRecord, type OrderStage } from "./ledger";
 import type { Mandate } from "./mandate";
-import type { ExecBrief } from "./fills";
+import type { ExecBrief, TokenTripBrief } from "./fills";
 import { agentBrief, physicalRequestsOf, type AgentBrief, type AgentModel, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
 import { offeredProfiles, planKey, PROFILES, type PlanStore, type ProfileId } from "./plans";
 import { pendingBuys } from "./pending-buys";
@@ -148,6 +148,8 @@ export interface CycleDeps {
   readonly quoteOf?: (orderKey: string) => QuoteFacts | null;
   /** The real round trips of the agent (fills.ts), for the Brief; absent or null when there are none. */
   readonly execFacts?: () => ExecBrief | null;
+  /** The closed round trips per token address (`tokenTripsBrief`), for the Brief items; absent or null when there are none. */
+  readonly tokenTrips?: () => Readonly<Record<string, TokenTripBrief>> | null;
   /** The share of the portfolio the person accepts to lose in one operation; null for the default. */
   readonly riskPct: () => number | null;
   /** The owner's bold profile is in force: a purchase is let through on a lean of the model, by rank of the size on offer (conviction.ts). Absent or false: the plain bars. */
@@ -853,7 +855,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       if (candidates.every((c) => c.stances.length <= 1) && !mandateWouldOpenMore(openedNow, mandateNow)) return no("nada_a_decidir");
       const model = typeof deps.model === "function" ? deps.model() : deps.model;
       if (model === null) return no("sem_modelo");
-      const brief = agentBrief({ book: view, holdings, buys: shownBuys, eco, context: deps.context(), history: deps.history(), exec: deps.execFacts?.() ?? null, mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) });
+      const brief = agentBrief({ book: view, holdings, buys: shownBuys, eco, context: deps.context(), history: deps.history(), exec: deps.execFacts?.() ?? null, ...(deps.tokenTrips === undefined ? {} : { tokenTrips: deps.tokenTrips() }), mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) });
       const hash = hashOf(brief);
       // the Brief is ready: no fact in it is later than this instant
       const briefReadyAtMs = deps.now();

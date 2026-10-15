@@ -15,7 +15,7 @@ import { createHash } from "node:crypto";
 import { equityPause, equitySeries, parseSnapshotLine, snapshotOf, tradesOf } from "./equity-log";
 import type { Snapshot } from "./equity";
 import { halfDone } from "./exit";
-import { createFillStore, execBrief, fillFrom } from "./fills";
+import { createFillStore, execBrief, fillFrom, tokenTripsBrief } from "./fills";
 import { newReconcileMemory, settleByReceipts, type RefRecovery } from "./reconcile";
 import { installCli, PINNED_SHA256, pollLogin, readAddresses, startLogin, type InstallResult } from "./agent-wallet";
 import { createSolanaReceiptReader, createSolanaSwapFinder, withSolanaReceiptFallback } from "../server/solana-receipts";
@@ -609,6 +609,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     context: () => marketContext.get(),
     // the model reads its own measured record: how often each kind of decision beat the alternative one hour later, from the last two weeks
     execFacts: () => execBrief(fills.all()),
+    tokenTrips: () => tokenTripsBrief(fills.all(), localNow()),
     feeOf: (chainIndex) => {
       const fee = fees.get(chainIndex);
       return fee === undefined ? null : { usd: fee.tradeFeeUsd, ageMin: fees.ageMinutes(chainIndex, localNow()) };

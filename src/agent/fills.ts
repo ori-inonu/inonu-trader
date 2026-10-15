@@ -198,6 +198,39 @@ export function execBrief(fills: readonly FillRecord[]): ExecBrief | null {
   };
 }
 
+export interface TokenTripBrief {
+  /** Closed round trips on this token (same mint). */
+  readonly n: number;
+  /** Minutes held in the latest closed trip on this token. */
+  readonly m: number;
+  /** Cash return percent (same stablecoin, before network fee) of the latest closed trip on this token. */
+  readonly p: number;
+  /** Minutes since the latest trip on this token closed, when `nowMs` is given and >= `closedAtMs`. */
+  readonly ag?: number;
+}
+
+/** Closed round trips grouped by token mint/address, attached directly to the candidate items in the Brief so the model knows its own recent history on that exact token. */
+export function tokenTripsBrief(fills: readonly FillRecord[], nowMs?: number): Readonly<Record<string, TokenTripBrief>> {
+  if (fills.length === 0) return {};
+  const { trips } = roundTrips(fills);
+  if (trips.length === 0) return {};
+  const byMint = new Map<string, RoundTrip[]>();
+  for (const t of trips) {
+    const list = byMint.get(t.mint) ?? [];
+    list.push(t);
+    byMint.set(t.mint, list);
+  }
+  const pct = (net: number, cost: number): number => (cost > 0 ? r2((100 * net) / cost) : 0);
+  const out: Record<string, TokenTripBrief> = {};
+  for (const [mint, list] of byMint) {
+    const sorted = [...list].sort((a, b) => b.closedAtMs - a.closedAtMs);
+    const last = sorted[0]!;
+    const ag = nowMs !== undefined && Number.isFinite(nowMs) && nowMs >= last.closedAtMs ? Math.round((nowMs - last.closedAtMs) / 60_000) : undefined;
+    out[mint] = { n: sorted.length, m: last.minutes, p: pct(last.netUnits, last.costUnits), ...(ag === undefined ? {} : { ag }) };
+  }
+  return out;
+}
+
 export interface FillStore {
   has(orderKey: string): boolean;
   /** False when the order already has its fill, or another order already has the fill of the same transaction. */
