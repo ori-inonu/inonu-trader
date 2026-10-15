@@ -21,6 +21,9 @@ export const memoryHookEnabled = (env: Readonly<Record<string, string | undefine
 const sha = (text: string): string => createHash("sha256").update(text).digest("hex");
 /** What the effective decision version has to carry for this block: the contract hash and the hash of the legend the model was told. */
 export const MEMORY_HOOK_VERSION = Object.freeze({ schema: BRIEF_MEMORY_SCHEMA_VERSION, versionHash: BRIEF_MEMORY_VERSION_HASH, legendHash: sha(BRIEF_MEMORY_LEGEND) });
+/** The legend as it is recorded in the effective version of a decision: unchanged without a memory block, and with one it carries the contract hash and the hash of the legend the model was told, so a legend change changes the version. */
+export const effectiveLegend = (legend: string, memoria: BriefMemory | undefined): string => (memoria === undefined ? legend : `${legend}+memoria:${MEMORY_HOOK_VERSION.versionHash}:${MEMORY_HOOK_VERSION.legendHash}`);
+
 /** The reader takes at most this many queries at once (a representation bound of the reader, not a financial limit). */
 const MAX_QUERIES = 64;
 const NO_CONTEXT = { regime: "unknown", riskCheck: "unknown", liquidityBand: "unknown", codes: [] } as const;

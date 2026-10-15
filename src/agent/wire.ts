@@ -34,6 +34,7 @@ import { resourceView } from "./resources";
 import { executionGuards } from "./guards";
 import { createFeeMemory } from "./fees";
 import { decisionMetadata, decisionVersionOf, placarEvaluatorHash } from "./decision-metadata";
+import { buildMemoryBrief, effectiveLegend, type MemoryHookDeps } from "./memory-hook";
 import { buildAnalysis, type AnalysisView } from "./analysis";
 import { eventsAllowed, priceMoveEvents, pricesOf } from "./event-source";
 import type { QuoteFacts } from "./quote-facts";
@@ -66,6 +67,9 @@ const ANALYSIS_MEMO_MS = 5_000;
 const EVENT_TOKEN_ESTIMATE = 4_000;
 /** How long the facts of the money side are reused (the guard asks every few seconds). */
 const LIMITED_FACTS_TTL_MS = 60_000;
+
+/** How many ledger records the cohort of the memory hook is searched in (the ledger keeps this many in memory). */
+const MEMORY_TAIL_FOR_COHORT = 500;
 
 export interface AgentServiceOptions {
   /** How often the guard looks over the positions between the cycles, in ms; 0 turns it off. Default 45 s. */
@@ -112,6 +116,11 @@ export interface AgentServiceOptions {
   readonly minBuyUsd?: (chainIndex: string) => number;
   /** Where the latest reading of System One is kept. */
   readonly systemOneFile?: string;
+  /**
+   * The memory hook of the Brief (memory-hook.ts), OFF by default: it exists only when this is given AND `enabled` is true. `read` is the batch reader of the captured experiences, bound by the host to a read-only store (the agent
+   * never opens a writer on it); `cohortSize` is how many of the latest cycles of the ledger make the explicit cohort (default 24); `maxBytes` is the room the Brief leaves for the block (a block that does not fit is left out, never cut).
+   */
+  readonly memory?: { readonly enabled: boolean; readonly read: MemoryHookDeps["read"]; readonly arm?: "A" | "B"; readonly cohortSize?: number; readonly maxBytes?: number; readonly clock?: () => number };
   /** Test seam: installs the signing tool. The default downloads OKX's release and checks it against the checksums published beside it. */
   readonly installCli?: (dir: string) => Promise<InstallResult>;
 }
@@ -610,6 +619,19 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     context: () => marketContext.get(),
     // the model reads its own measured record: how often each kind of decision beat the alternative one hour later, from the last two weeks
     execFacts: () => execBrief(fills.all()),
+    ...(options.memory === undefined || !options.memory.enabled
+      ? {}
+      : {
+          memoryHook: (ask: { readonly asOfMs: number; readonly cycleId: string; readonly itemIds: readonly string[] }) => {
+            const memory = options.memory!;
+            // the cohort is explicit: the latest cycles of the ledger before this one, never the whole history
+            const cohortCycleIds = ledger.tail(MEMORY_TAIL_FOR_COHORT).flatMap((r) => (r.kind === "cycle" && r.cycleId !== ask.cycleId ? [r.cycleId] : [])).slice(-(memory.cohortSize ?? 24));
+            return buildMemoryBrief(
+              { enabled: true, asOfMs: ask.asOfMs, cycleId: ask.cycleId, arm: memory.arm ?? "A", cohortCycleIds, itemIds: ask.itemIds, ...(memory.maxBytes === undefined ? {} : { maxBytes: memory.maxBytes }) },
+              { read: memory.read, clock: memory.clock ?? (() => performance.now()) },
+            );
+          },
+        }),
     tokenTrips: () => tokenTripsBrief(fills.all(), localNow()),
     feeOf: (chainIndex) => {
       const fee = fees.get(chainIndex);
@@ -651,7 +673,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
         const metadata = decisionMetadata({
           recordLine: line,
           snapshotHash: meta.briefHash,
-          decisionVersion: decisionVersionOf({ criteria: entry.criteria, legend: entry.legend, briefVersion: entry.briefVersion, model: meta.model, questions: questionsDigest() }),
+          decisionVersion: decisionVersionOf({ criteria: entry.criteria, legend: effectiveLegend(entry.legend, entry.brief.memoria), briefVersion: entry.briefVersion, model: meta.model, questions: questionsDigest() }),
           evaluatorHash: placarEvaluatorHash(),
           factAvailableAtMs: meta.factAvailableAtMs,
           askedAtMs: meta.askedAtMs,
