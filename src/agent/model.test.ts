@@ -3,7 +3,7 @@ import { candidateOf, type EcoFacts } from "../opportunity/ecosystem";
 import type { Candle } from "../quant/types";
 import { buyCandidates, holdingCandidates, openByRisk, saldoOf, withTiming } from "./candidates";
 import { timingFacts, type TimingFacts } from "./timing";
-import { agentBrief, agentQuestions, BRIEF_MAX_BYTES, createJevAgentModel, estimateTokens, physicalRequestsOf } from "./model";
+import { agentBrief, agentQuestions, BRIEF_MAX_BYTES, createJevAgentModel, estimateTokens, physicalRequestsOf, questionTexts } from "./model";
 import type { Book, Candidate, HoldingFacts, Position } from "./types";
 
 const addr = (n: number) => `0x${n.toString(16).padStart(40, "0")}`;
@@ -33,6 +33,32 @@ const build = (holdN: number, buyN: number) => {
   const buys = buyCandidates(ecoCtx, () => calm, () => 10);
   return { book, saldo, holdings, buys, ecoCtx, candidates: [...holdings, ...buys] as Candidate[] };
 };
+
+describe("the track record carries the tail as well as the hit rate", () => {
+  test("the average, the best and the worst move of the token after those decisions ride in historico when the core measured them, and a value that is not a finite percent drops the whole block (null, never a made-up number)", () => {
+    const { book, buys, ecoCtx } = build(1, 1);
+    const history = { vender: { n: 17, acerto: 47, medio: 59.8, melhor: 199, pior: -4.2 }, manter: { n: 9, acerto: 44 } };
+    const brief = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history });
+    expect(brief.historico).toEqual(history);
+    expect(brief.chaves.historico).toMatch(/melhor/);
+    expect(brief.chaves.historico).toMatch(/tail|hides/i);
+    const bad = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: { vender: { n: 17, acerto: 47, melhor: Number.POSITIVE_INFINITY } } });
+    expect(bad.historico).toBeNull();
+    const absurd = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: { vender: { n: 17, acerto: 47, pior: -250 } } });
+    expect(absurd.historico).toBeNull();
+  });
+});
+
+describe("the purpose the owner gave the agent is part of what the model reads (the owner's answer of 2026-10-15)", () => {
+  test("the goal says the agent exists to find fast chances of a large asymmetric return, that idle cash is not to be lent out for a low rate, and that this is a purpose and not a promise: most chances fail and a move that already ran is no chance", () => {
+    const goal = String(questionTexts().goal);
+    expect(goal).toMatch(/asymmetric/i);
+    expect(goal).toMatch(/100 percent/);
+    expect(goal).toMatch(/NOT something to lend out/);
+    expect(goal).toMatch(/not a promise/i);
+    expect(goal).toMatch(/already ran/i);
+  });
+});
 
 describe("the network fee of a swap rides in the Brief of a purchase as a fact (ADENDO-C, FEE-3)", () => {
   test("`k` is the fee of one swap on the network of the token, in dollars with two significant digits, from the last quote read there; a network with no measured fee carries no `k` at all (absent is unknown, never zero), and the legend says what it is", () => {

@@ -403,8 +403,8 @@ describe("the track record the model reads: how often each kind of decision beat
     for (let i = 11; i <= 15; i++) board.mark(skip(i, ["liquidez"]));
     await settle(board, (d) => (["fluxo"].every((f) => d.families.includes(f)) ? (Number(d.candidateId.split(":")[1]) <= 4 ? 2.4 : 1.6) : 1.6));
     const r = board.record("1h", T0 + 2 * H);
-    expect(r.fluxo).toEqual({ n: 6, acerto: 67 });
-    expect(r.liquidez).toEqual({ n: 5, acerto: 0 });
+    expect(r.fluxo).toEqual({ n: 6, acerto: 67, medio: 6.7, melhor: 20, pior: -20 });
+    expect(r.liquidez).toEqual({ n: 5, acerto: 0, medio: -20, melhor: -20, pior: -20 });
   });
 
   test("keeping a holding and selling are their own records, and a purchase the code closed (not the model's choice) never counts toward a family", async () => {
@@ -415,9 +415,21 @@ describe("the track record the model reads: how often each kind of decision beat
     await settle(board, () => 2.2);
     const r = board.record("1h", T0 + 2 * H);
     // price rose 10 percent: keeping was right (5 of 5), selling was wrong (0 of 5)
-    expect(r.manter).toEqual({ n: 5, acerto: 100 });
-    expect(r.vender).toEqual({ n: 5, acerto: 0 });
+    expect(r.manter).toEqual({ n: 5, acerto: 100, medio: 10, melhor: 10, pior: 10 });
+    expect(r.vender).toEqual({ n: 5, acerto: 0, medio: 10, melhor: 10, pior: 10 });
     expect(r.tracao).toBeUndefined();
+  });
+
+  test("the record also says what the TOKEN did in the hour after those decisions, whatever the side (the average, the best and the worst percent move), so that a hit rate cannot hide a tail: selling five winners that then rose 10, 20, 30, 40 and 199 percent is `vender` with a medio of 59.8 and a melhor of 199", async () => {
+    const board = createScoreboard(memory().deps);
+    for (let i = 21; i <= 25; i++) board.mark(mark({ key: `c${i}:sell:x`, cycleId: `c${i}`, address: token(i), stance: "exit_all", side: "sell", usd: 40 }));
+    const after = [2.2, 2.4, 2.6, 2.8, 5.98];
+    await settle(board, (d) => after[Number(d.cycleId.slice(1)) - 21] ?? 2);
+    const r = board.record("1h", T0 + 2 * H);
+    expect(r.vender?.n).toBe(5);
+    expect(r.vender?.acerto).toBe(0);
+    expect(r.vender?.melhor).toBeGreaterThan(100);
+    expect(r.vender).toEqual({ n: 5, acerto: 0, medio: 59.8, melhor: 199, pior: 10 });
   });
 
   test("under five measured decisions the hit rate is null: a small n is not evidence, and what is not measured yet is not in the record", async () => {
@@ -426,6 +438,7 @@ describe("the track record the model reads: how often each kind of decision beat
     board.mark(skip(9, ["seguranca"]));
     await settle(board, () => 2.2);
     const r = board.record("1h", T0 + 2 * H);
+    // a small sample carries no tail either: one anecdote is not a measure
     expect(r.carteiras).toEqual({ n: 3, acerto: null });
     // a decision whose window has not closed yet does not count
     const early = createScoreboard(memory().deps);

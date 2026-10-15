@@ -16,14 +16,14 @@ import type { ExecBrief, TokenTripBrief } from "./fills";
 import { CONCENTRATIONS, LOOKS, RESERVES, RISKS, parseMandate, type Mandate } from "./mandate";
 import { POSTURES, type Book, type Candidate } from "./types";
 
-/** The biggest Brief the model is sent (eight holdings and eight purchases measure about 9.6 KB, the production maximum of seven purchases with a mandate about 9.8 KB): it was 9 KB before the executable maximum (x, i), the fourth size and the fourth profile of a purchase were added. */
-export const BRIEF_MAX_BYTES = 10_000;
+/** The biggest Brief the model is sent: eight holdings and eight purchases measure about 10 KB, a real consultation about 10.2 KB (it was 9 KB before the executable maximum, the fourth size, the fourth profile, the fee and the tail of the record were added). It is enforced by the tests, not cut at run time. */
+export const BRIEF_MAX_BYTES = 12_000;
 const DEFAULT_MODEL_ID = "jev-latest";
 
 /** What the code knows about the market around the portfolio, as short codes and numbers (never text from the outside). */
 export type MarketContext = Readonly<Record<string, string | number | null>>;
 /** The measured track record per family of evidence: how many decisions and the hit rate in percent, from the Placar. */
-export type FamilyHistory = Readonly<Record<string, { readonly n: number; readonly acerto: number | null }>>;
+export type FamilyHistory = Readonly<Record<string, { readonly n: number; readonly acerto: number | null; readonly medio?: number; readonly melhor?: number; readonly pior?: number }>>;
 
 export interface AgentBrief {
   readonly v: 1;
@@ -96,7 +96,7 @@ const LEGEND: Readonly<Record<string, string>> = {
   mo: "the last hour in 5-minute bars: r5 r15 r1 percent change over 5 min, 15 min, 1 h; rg percent range of the hour (under 0.5 nothing moved); vr volume of the last 15 min over the 45 before; ag minutes since the last bar",
   tm: "moment of a purchase: rsi 0-100; rp position in the 2-day range 0-100; r4 r24 percent in 4 and 24 h; up percent from the 2-day low; dd percent below the 2-day high; sg normal hourly move percent",
   pf: "target and stop profiles offered for the purchase (pick one with the stance)",
-  historico: "your own measured record one hour after each decision (n samples, acerto hit rate percent, null when n is under 5): per family of evidence, how often BUYING a candidate that had it beat keeping dollars (skipped purchases included); manter, keeping a holding beat selling it; vender, selling beat keeping. A small n is not evidence",
+  historico: "your own measured record one hour after each decision (n samples, acerto hit rate percent, null when n is under 5; medio, melhor and pior are the average, best and worst percent move of the TOKEN in that hour after those decisions, whatever the side, only when n is 5 or more: a hit rate counts signs and hides a tail, so read them together): per family of evidence, how often BUYING a candidate that had it beat keeping dollars (skipped purchases included); manter, keeping a holding beat selling it; vender, selling beat keeping. A small n is not evidence",
   contexto: "the market around: btc_24h eth_24h percent; tendencia; vol_btc volatility regime; fund_btc_bps BTC perpetual funding in basis points (positive: longs pay shorts); oi_btc_1h percent change of its open interest in an hour (rising with price: leverage building); s1_* latest System One reading",
   mandato: "the mandate in force; agressivo_liberado false: the track record has not earned the aggressive stance yet, so asking for it changes nothing; abertas: how many of the purchase candidates have something to buy under each level of risk; the risk of the mandate no longer sizes a purchase, so the levels open the same, and 0 means no cash on the network of any candidate",
 };
@@ -130,6 +130,8 @@ function boundedHistory(raw: FamilyHistory | null): FamilyHistory | null {
   for (const [k, v] of entries) {
     if (!CODE.test(k) || v === null || typeof v !== "object" || !Number.isSafeInteger(v.n) || v.n < 0) return null;
     if (v.acerto !== null && (typeof v.acerto !== "number" || !Number.isFinite(v.acerto) || v.acerto < 0 || v.acerto > 100)) return null;
+    // the move of the token after those decisions, in percent: a price cannot fall under minus 100 and a sane tail stays under a million percent
+    for (const move of [v.medio, v.melhor, v.pior]) if (move !== undefined && (typeof move !== "number" || !Number.isFinite(move) || move < -100 || move > 1_000_000)) return null;
   }
   return Object.fromEntries(entries);
 }
@@ -284,7 +286,7 @@ const STANCE_CRITERIA: Readonly<Record<string, string>> = {
 const GOAL =
   "You are the decision layer of an autonomous portfolio manager whose only measure of success is the net financial result of the portfolio, compounded cycle after cycle, against simply keeping dollars. The state lists the holdings and the purchase candidates, each with measured facts, " +
   "triggers the code noticed and the stances you may choose. Weigh all the facts together, not one. Protecting capital from a bad holding and finding a good purchase are equally your job: keeping dollars is also a position and it has an opportunity cost, which the track record measures too " +
-  "(a purchase you skipped that then rose counts against you). The owner's profile is bold: the work is growth and leverage of capital, the owner has AUTHORIZED the use of financial leverage, and the decision to take a good chance is yours, not the code's. The code has no leverage instrument yet (no borrow, margin or perpetual path is implemented), so none of the stances in this state uses it: do not invent one and do not treat the absence as a refusal of the owner. Do not wait for a perfect case: when a candidate on offer has several independent families of evidence in its favour (wallets buying, flow, liquidity, healthy distribution), " +
+  "(a purchase you skipped that then rose counts against you). The owner's profile is bold, and the purpose he gave this agent is to take fast decisions aimed at large asymmetric returns: a chance that could return 100 percent or more is exactly what it exists to find, short operations that leave with a gain are welcome, and idle cash is ammunition for the next chance, NOT something to lend out for a low rate. This is a purpose, not a promise: most chances fail, so the size you choose and the marks of care still matter, and a move that already ran is no chance. The work is growth and leverage of capital, the owner has AUTHORIZED the use of financial leverage, and the decision to take a good chance is yours, not the code's. The code has no leverage instrument yet (no borrow, margin or perpetual path is implemented), so none of the stances in this state uses it: do not invent one and do not treat the absence as a refusal of the owner. Do not wait for a perfect case: when a candidate on offer has several independent families of evidence in its favour (wallets buying, flow, liquidity, healthy distribution), " +
   "buy it in the size its evidence supports; when the evidence is thin, stale or conflicting, skip it. When a holding has an active plan in pl, the code enforces its stop, trailing stop, target and time limit automatically between looks: do not exit a freshly opened position (h under 1) over entry spread or unchanged 24h numbers alone unless the facts in tm, mo or t materially worsened since entry, and check ult before re-entering a token you just sold. The marks esticado, parabolico, caindo, estagnado, disparando and caindo_agora are facts about the move, not vetoes: the code no longer closes an entry because of them, so you are the one who judges whether the move is spent (late, near a top) or still has room, " +
   "whether a fall has stopped or is a falling knife, whether a still token is dead capital, and whether a token marked volatilidade_extrema (its moves are so large that the stop of any profile may be touched by noise alone; every profile is on offer and none of them sizes the purchase, so you pick the one that fits the noise) is a chance worth that noise; weigh them with the numbers in tm (rsi, rp range position, r4 and r24 returns, up run-up from the low, dd distance under the high) and mo (the last hour in minutes), and answer the facet questions about the top and the fall honestly, because they decide the entry. You never choose an amount: a stance is a fraction of the holding or of a ceiling the code computed. Do not invent confidence, freshness, safety or a guaranteed return.";
 

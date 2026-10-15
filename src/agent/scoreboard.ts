@@ -124,7 +124,7 @@ export interface Scoreboard {
    * the price rose after), and `manter` and `vender` for how often keeping a holding and selling one beat the alternative. Only the model's own decisions, one sample per bet per window, only what the window
    * has already closed; a hit rate is null under RECORD_MIN_N samples. Nothing here moves money.
    */
-  record(window: WindowId, nowMs: number, sinceMs?: number): Readonly<Record<string, { readonly n: number; readonly acerto: number | null }>>;
+  record(window: WindowId, nowMs: number, sinceMs?: number): Readonly<Record<string, { readonly n: number; readonly acerto: number | null; readonly medio?: number; readonly melhor?: number; readonly pior?: number }>>;
   /** The board; given `sinceMs`, only the decisions taken from then on (the autonomy of the agent reads the last days, not all of history). */
   summary(nowMs: number, sinceMs?: number): ScoreboardSummary;
 }
@@ -328,10 +328,12 @@ export function createScoreboard(deps: ScoreboardDeps): Scoreboard {
         } else if (d.side === "sell") add("vender", d);
         else for (const f of d.families) add(f, d);
       }
-      const out: Record<string, { n: number; acerto: number | null }> = {};
+      const out: Record<string, { n: number; acerto: number | null; medio?: number; melhor?: number; pior?: number }> = {};
       for (const [key, list] of groups) {
         let n = 0;
         let hits = 0;
+        // what the TOKEN did in the window after each decision, whatever the side (a hit rate counts signs and hides a tail: selling five winners that rose 199 percent at best still reads as a rate)
+        const moves: number[] = [];
         for (const d of independent(list, window).counted) {
           // only a window that has CLOSED and been priced counts (nowMs is the clock the closing is judged on)
           if (nowMs < d.atMs + window.ms) continue;
@@ -342,8 +344,14 @@ export function createScoreboard(deps: ScoreboardDeps): Scoreboard {
           // a family is about BUYING: a skipped purchase is a hit for the family when the price rose (the skip's effect is negative); a real purchase when it earned. Keeping and selling are hits when they earned.
           const hit = d.inaction === true && d.stance === "skip" ? effect < 0 : effect > 0;
           if (hit) hits++;
+          const p0 = d.entryPriceUsd;
+          if (s !== undefined && s.priceUsd !== null && p0 !== null && Number.isFinite(p0) && p0 > 0 && Number.isFinite(s.priceUsd)) moves.push((s.priceUsd / p0 - 1) * 100);
         }
-        if (n > 0) out[key] = { n, acerto: n >= RECORD_MIN_N ? Math.round((100 * hits) / n) : null };
+        if (n > 0) {
+          const measured = n >= RECORD_MIN_N && moves.length > 0;
+          const one = (v: number): number => Math.round(v * 10) / 10;
+          out[key] = { n, acerto: n >= RECORD_MIN_N ? Math.round((100 * hits) / n) : null, ...(measured ? { medio: one(moves.reduce((a, b) => a + b, 0) / moves.length), melhor: one(Math.max(...moves)), pior: one(Math.min(...moves)) } : {}) };
+        }
       }
       return out;
     },
