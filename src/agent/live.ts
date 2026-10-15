@@ -9,6 +9,7 @@ import { buildOnchainDigest } from "../intel/onchain-digest";
 import type { GatewayLike } from "../intel/onchain-nulos";
 import type { InternalGatewayResult, OnchainGatewayInternal } from "../onchain-read/gateway";
 import { candidateOf, type EcoContext, type EcoFacts, type Saldo } from "../opportunity/ecosystem";
+import { bearishFlags, bullishFlags } from "../opportunity/risk-tags";
 import { regimeOf as volatilityRegime } from "../quant/volatility";
 import type { Candle } from "../quant/types";
 import { bookFromAssets, type WalletRead } from "./book";
@@ -213,15 +214,16 @@ export function createHoldingFactsReader(deps: {
 }): HoldingFactsReader {
   const max = deps.max ?? 20;
   const infoTtl = deps.infoTtlMs ?? 10 * 60_000;
+  const planInfoTtl = Math.min(infoTtl, 2 * 60_000);
   const dustTtl = Math.max(infoTtl, 60 * 60_000);
   const riskTtl = deps.riskTtlMs ?? 6 * HOUR_MS;
   const infos = new Map<string, { readonly atMs: number; readonly value: Info | null }>();
   const risks = new Map<string, { readonly atMs: number; readonly value: Risk | null }>();
 
-  async function info(p: Position): Promise<Info | null> {
+  async function info(p: Position, hasPlan: boolean): Promise<Info | null> {
     const hit = infos.get(p.id);
-    // a position the person could still act on is looked at often; dust, rarely: the quota goes where the decisions are
-    const ttl = p.usd !== null && p.usd >= SIZING.minOrderUsd ? infoTtl : dustTtl;
+    // a position with an active plan is refreshed every two minutes (matching the hot cycle); other actionable positions every ten minutes; dust, rarely
+    const ttl = hasPlan ? planInfoTtl : p.usd !== null && p.usd >= SIZING.minOrderUsd ? infoTtl : dustTtl;
     if (hit !== undefined && deps.now() - hit.atMs < ttl) return hit.value;
     const result = await deps.gateway.callInternal("/onchain/price-info", { chainIndex: p.chainIndex, token: p.address }, "background");
     const row = result.ok && Array.isArray(result.data) ? rec(result.data[0]) : null;
@@ -252,7 +254,8 @@ export function createHoldingFactsReader(deps: {
     let value: Risk | null = null;
     if (result.ok) {
       const digest = buildOnchainDigest({ sources: { risk: like(result) }, sets: { netUnsoldUsd: [], liquidityUsd: [] }, quality: null, symbol: { origin: "onchain_token", communityRecognized: null, sameSymbolMatches: 0 } });
-      const flags = digest.honeypot === true ? ["honeypot"] : (digest.risco?.flags ?? []).filter((f) => FLAG.test(f)).slice(0, 3);
+      const valid = (digest.risco?.flags ?? []).filter((f) => FLAG.test(f));
+      const flags = digest.honeypot === true ? ["honeypot"] : [...bearishFlags(valid).slice(0, 3), ...bullishFlags(valid).slice(0, 3)];
       value = { level: num(rec(result.data)?.riskLevel), flags };
     }
     risks.set(p.id, { atMs: deps.now(), value });
@@ -270,7 +273,8 @@ export function createHoldingFactsReader(deps: {
       const facts = new Map<string, HoldingFacts>();
       for (const p of chosen) {
         if (signal.aborted) break;
-        const [i, r] = await Promise.all([info(p).catch(() => null), risk(p).catch(() => null)]);
+        const isPlanned = planned.has(planKey(p.chainIndex, p.address));
+        const [i, r] = await Promise.all([info(p, isPlanned).catch(() => null), risk(p).catch(() => null)]);
         const plan = deps.plans.get(planKey(p.chainIndex, p.address));
         const price = p.priceUsd ?? i?.priceUsd ?? null;
         const liquidity = i?.liquidityUsd ?? null;

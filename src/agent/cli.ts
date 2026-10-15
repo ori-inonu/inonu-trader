@@ -533,6 +533,18 @@ export function createCliExecutor(deps: CliExecutorDeps): Executor {
       const adverse = order.side === "sell" ? -impact : Math.abs(impact);
       if (adverse > impactCap) return fail("impacto_alto");
 
+      // the native coin pays the gas the quote announces (ADENDO-C, FEE-4): with a balance of it that is listed, exact and smaller than that gas the order is refused here, before anything is signed (a sale of the native
+      // coin itself leaves the gas out of what it sells). What is not known stops nothing: no estimate in the quote, a native balance that is not listed or not exact, or the native coin of another network.
+      const gasText = typeof q.estimateGasFee === "number" && Number.isSafeInteger(q.estimateGasFee) && q.estimateGasFee >= 0 ? String(q.estimateGasFee) : q.estimateGasFee;
+      const gasNeed = typeof gasText === "string" && /^\d{1,40}$/.test(gasText) ? BigInt(gasText) : null;
+      if (gasNeed !== null && book !== null) {
+        const nativeHeld = book.positions.find((p) => p.wallet === "agente" && p.address === "native" && p.chainIndex === order.chainIndex);
+        if (nativeHeld !== undefined && nativeHeld.balanceMinor !== null && /^\d+$/.test(nativeHeld.balanceMinor)) {
+          const selling = order.side === "sell" && order.address === "native" && order.amountMinor !== null && /^\d+$/.test(order.amountMinor) ? BigInt(order.amountMinor) : 0n;
+          if (BigInt(nativeHeld.balanceMinor) - selling < gasNeed) return fail("taxa_sem_saldo");
+        }
+      }
+
       // nothing has been signed yet: a stop or a cancel that came during the quote is honoured here
       if (signal.aborted || shouldStop?.() === true) return fail("parado");
 

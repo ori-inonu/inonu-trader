@@ -633,4 +633,22 @@ describe("the facts of a holding carry how fresh they are and what the last minu
     await read();
     expect(g.calls.filter((c) => c.route === "/onchain/price-info" && c.params.token === EVM2)).toHaveLength(2);
   });
+
+  test("a position with an active plan refreshes price-info every two minutes, and risk flags preserve both bearish and bullish tags without alphabetical truncation", async () => {
+    const g = gatewayOf((c) =>
+      c.route === "/onchain/price-info"
+        ? ok([{ price: 2, liquidityUsd: 80_000, change: { m5: 1, h1: 2, h24: 3 }, volume: { h24: 1 }, tsMs: NOW }])
+        : ok({ riskLevel: 1, tags: ["communityRecognized", "devAddLiquidity", "dexBoost", "lowLiquidity"], devRugCount: 1 }),
+    );
+    let now = NOW;
+    const plans = createPlanStore({ read: () => null, write: () => {} });
+    plans.open({ key: planKey("1", TOKEN), chainIndex: "1", address: TOKEN, symbol: "AAA", profile: "alvo_5", entryPriceUsd: 2, entryAtMs: NOW, peakPriceUsd: 2, targetHit: false, trimmed: false, cycleId: "c1" });
+    const reader = createHoldingFactsReader({ gateway: g.gateway, plans, now: () => now });
+    const p = held({ usd: 60 });
+    const first = (await reader.read(bookOf([p]), live))(p)!;
+    expect(first.riskFlags).toEqual(expect.arrayContaining(["lowLiquidity", "dev_com_rug", "communityRecognized"]));
+    now += 3 * 60_000;
+    await reader.read(bookOf([p]), live);
+    expect(g.calls.filter((c) => c.route === "/onchain/price-info")).toHaveLength(2);
+  });
 });

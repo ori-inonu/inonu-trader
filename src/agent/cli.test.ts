@@ -510,6 +510,40 @@ describe("the executor: quote, check, then swap", () => {
   });
 });
 
+describe("the native coin must pay the gas the quote announces, and the order is refused BEFORE it is signed when it cannot (ADENDO-C, FEE-4)", () => {
+  const native = (balanceMinor: string | null, chainIndex = "1"): Position => ({ id: `token:${chainIndex}:native`, chainIndex, address: "native", symbol: "ETH", wallet: "agente", usd: 1, balanceMinor, decimals: 18, isCash: false });
+  const withNative = (...positions: Position[]) => (): Book => ({ observedAtMs: NOW, positions: [cashPos, ...positions], cashByChain: { "1": 500 }, totalUsd: 500, agentUsd: 500 });
+  const run = (gas: string | undefined, bookOf: () => Book, o: PlannedOrder = order()) => {
+    const s = script({ "swap quote": () => quoteOk(gas === undefined ? {} : { estimateGasFee: gas }), "swap execute": () => execOk() });
+    return { s, result: createCliExecutor({ runner: s.runner, config: () => agentic(), book: bookOf, timeouts: { quoteMs: 1000, executeMs: 1000 } }).execute(o, ctx) };
+  };
+
+  test("a native balance under the gas of the quote refuses the order with a named reason and nothing is signed; exactly the gas goes through", async () => {
+    const short = run("5000", withNative(native("4999")));
+    expect(await short.result).toEqual({ status: "falhou", reason: "taxa_sem_saldo" });
+    expect(short.s.calls.some((c) => c.join(" ").startsWith("swap execute"))).toBe(false);
+    expect(await run("5000", withNative(native("5000"))).result).toMatchObject({ status: "transmitida" });
+  });
+
+  test("the comparison is in whole units and does not lose digits: a gas of 3 * 10^15 wei against 3 * 10^15 - 1 is refused", async () => {
+    expect(await run("3000000000000000", withNative(native("2999999999999999"))).result).toEqual({ status: "falhou", reason: "taxa_sem_saldo" });
+    expect(await run("3000000000000000", withNative(native("3000000000000000"))).result).toMatchObject({ status: "transmitida" });
+  });
+
+  test("what is not known stops nothing: a quote with no gas estimate, a native balance that is not listed, one that is not exact, or the native coin of ANOTHER network", async () => {
+    expect(await run(undefined, withNative(native("0"))).result).toMatchObject({ status: "transmitida" });
+    expect(await run("5000", withNative()).result).toMatchObject({ status: "transmitida" });
+    expect(await run("5000", withNative(native(null))).result).toMatchObject({ status: "transmitida" });
+    expect(await run("5000", withNative(native("1", "56"))).result).toMatchObject({ status: "transmitida" });
+  });
+
+  test("a sale of the native coin itself must leave the gas: what is sold comes off the balance first", async () => {
+    const sellNative = order({ side: "sell", address: "native", symbol: "ETH", amountMinor: "9000", usd: 5, profile: null, stance: "exit_all" });
+    expect(await run("5000", withNative(native("10000")), sellNative).result).toEqual({ status: "falhou", reason: "taxa_sem_saldo" });
+    expect(await run("5000", withNative(native("14000")), sellNative).result).toMatchObject({ status: "transmitida" });
+  });
+});
+
 describe("the price impact of a quote is SIGNED: a loss is negative, and only a loss counts against the cap of a sale (the live case of CARDBACK on 2026-10-15)", () => {
   const sell = (over: Record<string, unknown> = {}) => order({ side: "sell", amountMinor: "5", usd: 100, profile: null, stance: "exit_all", ...over } as never);
   const run = (impact: string, o: ReturnType<typeof sell>) => executor({ "swap quote": () => quoteOk({ priceImpactPercent: impact }), "swap execute": () => execOk() }).exec.execute(o, ctx);
