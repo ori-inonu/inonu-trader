@@ -77,6 +77,15 @@ describe("what a purchase already sent has spent of the cash, until the wallet s
     for (const usd of Object.values(sizesFor(tiny))) expect(sentRaw(usd, 6)).toBeLessThanOrEqual(399_996_000n);
   });
 
+  test("RED of the independent review (18 decimals): a book of 1.01000005 USDT on BNB Chain with 0.0100001 dollars already sent offers at most what is physically left (999999950000000000 units), never the 1 USDT the six-decimal debit allowed", () => {
+    const USDT_BSC = "0x55d398326f99059ff775485246999027b3197955";
+    const book = bookOf(asset({ chainIndex: "56", tokenContractAddress: USDT_BSC, symbol: "USDT", balance: "1.01000005", rawBalance: "1010000050000000000" }));
+    const bnb = (raw: bigint) => saldoOf(book, null, null, { byChain: {}, rawByChain: { "56": raw } })!.chains.find((c) => c.chainIndex === "56")!.cashUsd;
+    const left = bnb(10_000_100_000_000_000n);
+    expect(left).toBe(0.99);
+    for (const usd of Object.values(sizesFor(left))) expect(sentRaw(usd, 18)).toBeLessThanOrEqual(999_999_950_000_000_000n);
+  });
+
   test("a hand-made book with cash stated for a network and no coin position there takes the debit in dollars, cut down to the cent", () => {
     const hand = { observedAtMs: NOW, positions: [], cashByChain: { "501": 100 }, totalUsd: 100, agentUsd: 100 };
     expect(saldoOf(hand, null, null, { byChain: { "501": 33.333 }, rawByChain: {} })!.chains.find((c) => c.chainIndex === "501")!.cashUsd).toBe(66.66);

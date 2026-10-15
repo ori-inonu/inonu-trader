@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { pendingBuys } from "./pending-buys";
+import { buildSwapArgs, settlementFor } from "./swap-args";
 import type { OrderRecord } from "./ledger";
 import type { Book, Position } from "./types";
 
@@ -57,6 +58,15 @@ describe("the purchases the wallet does not show yet", () => {
     expect(p.byChain["1"]).toBeCloseTo(400 / 3, 12);
     const two = pendingBuys({ records: [third, order({ orderKey: "k2", address: B, candidateId: `buy:token:1:${B}`, usd: 0.004 })], book: bookWith([]), nowMs: NOW, settleWindowMs: WINDOW });
     expect(two.rawByChain).toEqual({ "1": 133_337_333n });
+  });
+
+  test("RED of the independent review (18 decimals): a coin with 18 decimals (USDT on BNB Chain) is paid with the amount at the FULL precision of the coin, exactly as `buildSwapArgs` writes it, so the debit of 0.0100001 dollars is 10000100000000000 units and not the six-decimal 10000000000000000", () => {
+    const bnb = order({ chainIndex: "56", address: B, candidateId: `buy:token:56:${B}`, usd: 0.0100001 });
+    const p = pendingBuys({ records: [bnb], book: bookWith([]), nowMs: NOW, settleWindowMs: WINDOW });
+    expect(p.rawByChain).toEqual({ "56": 10_000_100_000_000_000n });
+    // the same units the order argument carries
+    const args = buildSwapArgs("execute", { ...bnb, wallet: "agente" }, settlementFor(bookWith([]), "56")!, "0x1111111111111111111111111111111111111111");
+    expect(args[args.indexOf("--amount") + 1]).toBe("10000100000000000");
   });
 
   test("a network whose paying coin has no known decimals has a debit in dollars and none in units (nothing is invented), and an amount that is zero after the cut sends nothing", () => {

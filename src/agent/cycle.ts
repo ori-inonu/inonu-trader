@@ -28,6 +28,7 @@ import { pendingBuys } from "./pending-buys";
 import { holdingId, protect } from "./protection";
 import type { Scoreboard } from "./scoreboard";
 import type { RunState } from "./state";
+import type { MemoryHookOutcome, MemoryHookRecord } from "./memory-hook";
 import type { TimingFacts } from "./timing";
 import { AGENT_BUY_SIZES } from "./sizing-agent";
 import type { Book, Candidate, Decision, HoldingFacts, Mode, PlannedOrder, Position, Posture } from "./types";
@@ -66,7 +67,9 @@ export interface ConsultRecord {
   readonly briefBytes: number;
   readonly candidates: readonly { readonly id: string; readonly kind: "holding" | "buy"; readonly stances: readonly string[]; readonly marks: readonly string[]; readonly families: readonly string[]; readonly triggers: readonly string[]; readonly cap?: { readonly maxUsd: number; readonly binding: string; readonly sharePct: number | null; readonly riskPct?: number | null; readonly tightest?: string; readonly tightestUsd?: number } }[];
   /** The Brief entries the model read, whole (holdings, purchases and the split of the portfolio): percentages and codes only, so a decision can be rebuilt and its facts joined to what the price did later. */
-  readonly brief: { readonly carteira: AgentBrief["carteira"]; readonly chaves: AgentBrief["chaves"]; readonly posicoes: AgentBrief["posicoes"]; readonly compras: AgentBrief["compras"]; readonly execucoes?: AgentBrief["execucoes"]; readonly mandato: AgentBrief["mandato"] };
+  readonly brief: { readonly carteira: AgentBrief["carteira"]; readonly chaves: AgentBrief["chaves"]; readonly posicoes: AgentBrief["posicoes"]; readonly compras: AgentBrief["compras"]; readonly execucoes?: AgentBrief["execucoes"]; readonly memoria?: AgentBrief["memoria"]; readonly mandato: AgentBrief["mandato"] };
+  /** What the memory hook cost and found, when it was asked (counts, quality, bytes, hash, version, duration; tokens and cost unknown). Absent when the hook is off. */
+  readonly memoryHook?: MemoryHookRecord;
   /** The version of the Brief's own layout: 1. The optional key `execucoes` (the real fills) is kept in `brief` when the model read it, in the place the hash saw it (after `historico`, before `mandato`). */
   readonly briefVersion: number;
   /** How many requests really went to the provider for this consultation: 2 when one was refused for its shape and asked again without the facets. */
@@ -148,6 +151,8 @@ export interface CycleDeps {
   readonly quoteOf?: (orderKey: string) => QuoteFacts | null;
   /** The real round trips of the agent (fills.ts), for the Brief; absent or null when there are none. */
   readonly execFacts?: () => ExecBrief | null;
+  /** The memory hook (memory-hook.ts): OFF unless the host binds it. Asked once per consultation, AFTER the "nothing changed" check and BEFORE the model, with the as-of time read here; what it returns goes into the Brief as `memoria` and into the consultation record. It never throws into the cycle and never closes anything. */
+  readonly memoryHook?: (ask: { readonly asOfMs: number; readonly cycleId: string; readonly itemIds: readonly string[] }) => MemoryHookOutcome;
   /** The closed round trips per token address (`tokenTripsBrief`), for the Brief items; absent or null when there are none. */
   readonly tokenTrips?: () => Readonly<Record<string, TokenTripBrief>> | null;
   /** The share of the portfolio the person accepts to lose in one operation; null for the default. */
@@ -872,11 +877,28 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       if (candidates.every((c) => c.stances.length <= 1) && !mandateWouldOpenMore(openedNow, mandateNow)) return no("nada_a_decidir");
       const model = typeof deps.model === "function" ? deps.model() : deps.model;
       if (model === null) return no("sem_modelo");
-      const brief = agentBrief({ book: view, holdings, buys: shownBuys, eco, context: deps.context(), history: deps.history(), exec: deps.execFacts?.() ?? null, ...(deps.tokenTrips === undefined ? {} : { tokenTrips: deps.tokenTrips() }), mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) });
+      const briefInput: BriefInput = { book: view, holdings, buys: shownBuys, eco, context: deps.context(), history: deps.history(), exec: deps.execFacts?.() ?? null, ...(deps.tokenTrips === undefined ? {} : { tokenTrips: deps.tokenTrips() }), mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) };
+      const baseBrief = agentBrief(briefInput);
+      // the "nothing changed" key is the Brief WITHOUT the memory: the memory carries the as-of time of the cycle and would make every Brief look new and ask the model again
+      const baseHash = hashOf(baseBrief);
+      if (lastConsult !== null && lastConsult.hash === baseHash && deps.now() - lastConsult.atMs < deps.refreshMs) return no("sem_mudanca");
+      // the memory hook (OFF unless the host binds it): the as-of time is read here, before the model, and a hook that fails costs the cycle nothing
+      let brief = baseBrief;
+      let memoryRecord: MemoryHookRecord | undefined;
+      if (deps.memoryHook !== undefined) {
+        try {
+          const outcome = deps.memoryHook({ asOfMs: deps.now(), cycleId, itemIds: candidates.map((c) => c.id) });
+          if (outcome.enabled) {
+            memoryRecord = outcome.record;
+            if (outcome.memoria !== undefined) brief = agentBrief({ ...briefInput, memory: outcome.memoria });
+          }
+        } catch {
+          notes.push("memoria_falhou");
+        }
+      }
       const hash = hashOf(brief);
       // the Brief is ready: no fact in it is later than this instant
       const briefReadyAtMs = deps.now();
-      if (lastConsult !== null && lastConsult.hash === hash && deps.now() - lastConsult.atMs < deps.refreshMs) return no("sem_mudanca");
       const estimate = model.estimateTokens(brief, candidates);
       const budgetCheck = deps.budget.check(estimate);
       if (!budgetCheck.ok) return no(budgetCheck.reason);
@@ -902,7 +924,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       deps.budget.finish(ticket, answer.usage);
       // two physical requests for one choice: the refused one has no usage to report, so it counts as a consultation of unknown usage
       for (let i = 1; i < (answer.physicalRequests ?? 1); i++) deps.budget.countExtra(estimate);
-      lastConsult = { hash, atMs: deps.now() };
+      lastConsult = { hash: baseHash, atMs: deps.now() };
       const extra = { consulted: true, modelo: model.name, usage: answer.usage };
       // what the Jev chose is the decision: no bar of conviction, no smaller size, no veto of the code stands between its choice and the order (the owner's decision of 2026-10-14). How sure it was is recorded next to it.
       const raw = answer.raw;
@@ -921,7 +943,8 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
           mode: runMode,
           briefBytes: JSON.stringify(brief).length,
           candidates: candidates.map((c) => ({ id: c.id, kind: c.kind, stances: c.stances, marks: c.marks.slice(0, 8), families: c.families, triggers: c.triggers.slice(0, 8), ...(c.cap === undefined ? {} : { cap: c.cap }) })),
-          brief: { carteira: brief.carteira, chaves: brief.chaves, posicoes: brief.posicoes, compras: brief.compras, ...(brief.execucoes === undefined ? {} : { execucoes: brief.execucoes }), mandato: brief.mandato },
+          brief: { carteira: brief.carteira, chaves: brief.chaves, posicoes: brief.posicoes, compras: brief.compras, ...(brief.execucoes === undefined ? {} : { execucoes: brief.execucoes }), ...(brief.memoria === undefined ? {} : { memoria: brief.memoria }), mandato: brief.mandato },
+          ...(memoryRecord === undefined ? {} : { memoryHook: memoryRecord }),
           briefHash: hash.slice(0, 16),
           briefVersion: brief.v,
           physicalRequests: answer.physicalRequests ?? 1,

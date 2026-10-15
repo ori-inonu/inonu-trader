@@ -14,6 +14,7 @@ import { facetQuestions, facetTexts, readFacets } from "./facets";
 import { canonicalJson, sha256Hex } from "./decision-metadata";
 import type { ExecBrief, TokenTripBrief } from "./fills";
 import { CONCENTRATIONS, LOOKS, RESERVES, RISKS, parseMandate, type Mandate } from "./mandate";
+import { BRIEF_MEMORY_LEGEND, type BriefMemory } from "./memory-hook";
 import { POSTURES, type Book, type Candidate } from "./types";
 
 /** The biggest Brief the model is sent: eight holdings and eight purchases measure about 10 KB, a real consultation about 10.2 KB (it was 9 KB before the executable maximum, the fourth size, the fourth profile, the fee and the tail of the record were added). It is enforced by the tests, not cut at run time. */
@@ -35,6 +36,8 @@ export interface AgentBrief {
   readonly historico: FamilyHistory | null;
   /** The real round trips of the agent (fills.ts), as percentages of what went out; null when there is nothing real to say yet. */
   readonly execucoes?: ExecBrief;
+  /** The earlier choices made on these very items, from an explicit cohort of earlier cycles (the memory hook, OFF unless switched on): pending, inconclusive, never a recommendation or a result. The key exists only when the hook produced a value. */
+  readonly memoria?: BriefMemory;
   /** The mandate in force, in the model's own words, and whether the aggressive stance is open to it: the measurement has to earn that. */
   readonly mandato: { readonly risco: string; readonly reserva: string; readonly concentracao: string; readonly olhar: string; readonly agressivo_liberado: boolean; readonly abertas: Readonly<Record<string, number>> | null } | null;
 }
@@ -145,6 +148,8 @@ export interface BriefInput {
   readonly history: FamilyHistory | null;
   /** The real round trips (fills.ts `execBrief`), when the agent has any. */
   readonly exec?: ExecBrief | null;
+  /** The memory block (memory-hook.ts), already projected; null or absent when the hook is off or produced nothing. */
+  readonly memory?: BriefMemory | null;
   /** Closed round trips by token address (`tokenTripsBrief`), so each candidate shows its own recent round-trip history when any exists. */
   readonly tokenTrips?: Readonly<Record<string, TokenTripBrief>> | null;
   /** The last network fee quoted on a network (see fees.ts): what a swap costs there, in dollars; null when none was read. */
@@ -252,13 +257,15 @@ export function agentBrief(input: BriefInput): AgentBrief {
       principal: total === null || book.agentUsd === null ? null : r1(((total - book.agentUsd) / total) * 100),
       posicoes: book.positions.filter((p) => !p.isCash && p.usd !== null && p.usd > 0).length,
     },
-    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(hasUlt ? { ult: ULT_LEGEND } : {}), ...extraCompraKeys },
+    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(input.memory == null ? {} : { memoria: BRIEF_MEMORY_LEGEND }), ...(hasUlt ? { ult: ULT_LEGEND } : {}), ...extraCompraKeys },
     posicoes,
     compras,
     contexto: boundedContext(input.context),
     historico: boundedHistory(input.history),
     // the key exists only when there is something real to say: a Brief without fills is exactly the one it always was
     ...(input.exec == null ? {} : { execucoes: input.exec }),
+    // the memory sits after the real fills and before the mandate, exactly where contract 121 puts it
+    ...(input.memory == null ? {} : { memoria: input.memory }),
     mandato: input.mandate == null ? null : { risco: input.mandate.mandate.risk, reserva: input.mandate.mandate.reserve, concentracao: input.mandate.mandate.concentration, olhar: input.mandate.mandate.look, agressivo_liberado: input.mandate.aggressiveOpen, abertas: input.mandate.openByRisk === undefined ? null : { ...input.mandate.openByRisk, ...(input.mandate.aggressiveOpen || input.mandate.openByRisk.agressivo === undefined ? {} : { agressivo: 0 }) } },
   };
 }

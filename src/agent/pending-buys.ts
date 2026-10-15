@@ -4,12 +4,12 @@
  * held when the order was written (the cash of that same reading already lost the dollars), or, for one that was confirmed, until the settling window is over; one still in flight counts until its answer or the wallet
  * frees it. A balance that was not known exactly cannot prove the wallet caught up, so the purchase stays pending.
  *
- * The debit is kept in the UNITS of the coin the order pays in, exactly what the order sends (the dollars cut down to six decimals of the coin, as `buildSwapArgs` writes them): a debit rounded to a cent would leave the
+ * The debit is kept in the UNITS of the coin the order pays in, exactly what the order sends (the dollars cut down at the full precision of the coin, as `buildSwapArgs` writes them): a debit rounded to a cent would leave the
  * next offer above what the wallet physically holds (RED 1 of the independent review of the v2 package). Dollars are kept too, unrounded, for what only needs to say that something is pending. Pure: no clock, no storage.
  */
 import type { OrderRecord } from "./ledger";
 import { planKey } from "./plans";
-import { decimalDigits, settlementFor } from "./swap-args";
+import { settlementFor, usdToRaw } from "./swap-args";
 import type { Book } from "./types";
 
 export interface PendingBuys {
@@ -23,12 +23,13 @@ export interface PendingBuys {
 
 const DIGITS = /^\d+$/;
 
-/** What the order sends of a coin with `decimals` places: the dollars cut down to six decimals, in raw units; null when nothing is sent. */
+/**
+ * What the order sends of the coin it pays in, in raw units: the SAME representation `buildSwapArgs` writes (the independent review reproduced the difference with 18 decimals). A coin whose decimals are known (2 to 24) is paid with the
+ * dollars cut down at the FULL precision of the coin (`usdToRaw`); any other coin is sent as a readable amount that this module cannot turn into units, so it has no debit in units (null).
+ */
 function sentRaw(usd: number, decimals: number): bigint | null {
-  const d = decimalDigits(usd, 6);
-  if (d === null || !Number.isInteger(decimals) || decimals < 0 || decimals > 36) return null;
-  const fraction = decimals >= d.fraction.length ? d.fraction.padEnd(decimals, "0") : d.fraction.slice(0, decimals);
-  return BigInt(d.whole + fraction);
+  if (!Number.isInteger(decimals) || decimals < 2 || decimals > 24) return null;
+  return usdToRaw(usd, decimals);
 }
 
 export function pendingBuys(input: { readonly records: readonly OrderRecord[]; readonly book: Book; readonly nowMs: number; readonly settleWindowMs: number }): PendingBuys {
