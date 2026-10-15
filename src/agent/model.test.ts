@@ -504,9 +504,12 @@ describe("the closed questions", () => {
 
   test("the instructions tell the model it writes no amount and that unknown is not zero", () => {
     const { candidates } = build(1, 1);
-    const q = agentQuestions(candidates) as Record<string, { instructions: { goal: string; inputs: string } }>;
+    const q = agentQuestions(candidates) as Record<string, { instructions: { goal: string; inputs: string }; criteria: Record<string, string> }>;
     expect(q.stance_0!.instructions.goal).toMatch(/never choose an amount/i);
     expect(q.stance_0!.instructions.inputs).toMatch(/null is unknown/i);
+    expect(q.posture!.instructions.goal).toMatch(/active plan in pl/i);
+    expect(q.stance_0!.criteria.exit_all).toMatch(/do not exit a freshly opened plan/i);
+    expect(q.stance_1!.criteria.skip).toMatch(/ult shows you just exited/i);
   });
 });
 

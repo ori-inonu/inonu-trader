@@ -247,11 +247,11 @@ const POSTURE_CRITERIA: Readonly<Record<(typeof POSTURES)[number], string>> = {
 };
 
 const STANCE_CRITERIA: Readonly<Record<string, string>> = {
-  hold: "Keep the holding as it is: the evidence does not justify selling any of it now.",
+  hold: "Keep the holding as it is: the entry thesis in tm and f still holds, or the position is inside its active plan pl (whose stop, target and time are enforced automatically by the code between looks) and no new material deterioration outweighs the round-trip spread and fee of selling.",
   trim_third: "Sell one third of what the wallet holds of it: take some risk off while keeping the position.",
   trim_half: "Sell half of what the wallet holds of it: the case against holding it has grown.",
-  exit_all: "Sell everything the wallet holds of it: the case for holding it is gone or the risk is unacceptable.",
-  skip: "Do not buy it: the evidence is thin, conflicting, or the marks of care outweigh it.",
+  exit_all: "Sell everything the wallet holds of it: the entry thesis has broken down, new material risk appeared since entry, or the position is dead capital; do not exit a freshly opened plan (h under 1) over entry spread or noise alone when the facts in tm and f have not worsened.",
+  skip: "Do not buy it: the evidence is thin, conflicting, the marks of care outweigh it, or ult shows you just exited this same token minutes ago without a material improvement in the facts.",
   buy_tenth: "Buy a tenth of the executable maximum of this candidate: a small first step, the case is worth a try.",
   buy_third: "Buy one third of the executable maximum of this candidate: the case is good but not strong.",
   buy_two_thirds: "Buy two thirds of the executable maximum of this candidate: the case is strong.",
@@ -262,7 +262,7 @@ const GOAL =
   "You are the decision layer of an autonomous portfolio manager whose only measure of success is the net financial result of the portfolio, compounded cycle after cycle, against simply keeping dollars. The state lists the holdings and the purchase candidates, each with measured facts, " +
   "triggers the code noticed and the stances you may choose. Weigh all the facts together, not one. Protecting capital from a bad holding and finding a good purchase are equally your job: keeping dollars is also a position and it has an opportunity cost, which the track record measures too " +
   "(a purchase you skipped that then rose counts against you). The owner's profile is bold: the work is growth and leverage of capital, the owner has AUTHORIZED the use of financial leverage, and the decision to take a good chance is yours, not the code's. The code has no leverage instrument yet (no borrow, margin or perpetual path is implemented), so none of the stances in this state uses it: do not invent one and do not treat the absence as a refusal of the owner. Do not wait for a perfect case: when a candidate on offer has several independent families of evidence in its favour (wallets buying, flow, liquidity, healthy distribution), " +
-  "buy it in the size its evidence supports; when the evidence is thin, stale or conflicting, skip it. The marks esticado, parabolico, caindo, estagnado, disparando and caindo_agora are facts about the move, not vetoes: the code no longer closes an entry because of them, so you are the one who judges whether the move is spent (late, near a top) or still has room, " +
+  "buy it in the size its evidence supports; when the evidence is thin, stale or conflicting, skip it. When a holding has an active plan in pl, the code enforces its stop, trailing stop, target and time limit automatically between looks: do not exit a freshly opened position (h under 1) over entry spread or unchanged 24h numbers alone unless the facts in tm, mo or t materially worsened since entry, and check ult before re-entering a token you just sold. The marks esticado, parabolico, caindo, estagnado, disparando and caindo_agora are facts about the move, not vetoes: the code no longer closes an entry because of them, so you are the one who judges whether the move is spent (late, near a top) or still has room, " +
   "whether a fall has stopped or is a falling knife, whether a still token is dead capital, and whether a token marked volatilidade_extrema (its moves are so large that the stop of any profile may be touched by noise alone; every profile is on offer and none of them sizes the purchase, so you pick the one that fits the noise) is a chance worth that noise; weigh them with the numbers in tm (rsi, rp range position, r4 and r24 returns, up run-up from the low, dd distance under the high) and mo (the last hour in minutes), and answer the facet questions about the top and the fall honestly, because they decide the entry. You never choose an amount: a stance is a fraction of the holding or of a ceiling the code computed. Do not invent confidence, freshness, safety or a guaranteed return.";
 
 const INPUTS =
@@ -306,7 +306,7 @@ const MANDATE_QUESTIONS = {
 
 /** Every constant text the model reads in a consultation (the goal, the entries, the rules of each question, the legend of the Brief and the facet questions): the digest of these is part of the version of the decider. */
 export function questionTexts(): Readonly<Record<string, unknown>> {
-  return { goal: GOAL, goalShort: GOAL_SHORT, inputs: INPUTS, inputsShort: INPUTS_SHORT, posture: POSTURE_CRITERIA, stance: STANCE_CRITERIA, mandate: MANDATE_CRITERIA, mandateQuestions: MANDATE_QUESTIONS, profile: PROFILE_CRITERIA, legend: LEGEND, execLegend: EXEC_LEGEND, facets: facetTexts() };
+  return { goal: GOAL, goalShort: GOAL_SHORT, inputs: INPUTS, inputsShort: INPUTS_SHORT, posture: POSTURE_CRITERIA, stance: STANCE_CRITERIA, mandate: MANDATE_CRITERIA, mandateQuestions: MANDATE_QUESTIONS, profile: PROFILE_CRITERIA, legend: { ...LEGEND, ult: ULT_LEGEND }, execLegend: EXEC_LEGEND, facets: facetTexts() };
 }
 export const questionsDigestOf = (texts: Readonly<Record<string, unknown>>): string => sha256Hex(canonicalJson(texts));
 export const questionsDigest = (): string => questionsDigestOf(questionTexts());
