@@ -246,6 +246,15 @@ describe("the quick rhythm lasts only while the day's quota of the data provider
     expect(hotWithinQuota({ basic: tier(Number.NaN), premium: tier(0) }, NOON)).toBe(false);
     expect(DAY).toBe(86_400_000);
   });
+
+  test("when unused quota from earlier in the month covers the full daily pace limit for every remaining day until the monthly reset, the day gets a wider head start", () => {
+    // At 03:00 UTC on Oct 15 (17 days remaining), 1500 used today exceeds the 0.15 head start, but with only 2000 used in the whole month out of 100k, remainingPerDay is ~5764 >= 4838
+    const earlyMorning = Date.UTC(2026, 9, 15, 3, 0, 0);
+    expect(hotWithinQuota({ basic: { today: 1500, cap: 100_000 }, premium: tier(0) }, earlyMorning)).toBe(false);
+    expect(hotWithinQuota({ basic: { today: 1500, used: 2000, cap: 100_000 }, premium: { today: 0, used: 500, cap: 100_000 } }, earlyMorning)).toBe(true);
+    // And if the monthly cap is already exhausted, it is never hot
+    expect(hotWithinQuota({ basic: { today: 10, used: 100_000, cap: 100_000 }, premium: tier(0) }, earlyMorning)).toBe(false);
+  });
 });
 
 describe("what the owner authorized", () => {

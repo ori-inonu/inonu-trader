@@ -263,8 +263,9 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   const factsReader = createHoldingFactsReader({ gateway: options.gateway, plans, now: localNow });
   const timingReader = createTimingReader({ gateway: options.gateway, now: localNow });
   const momentumReader = createMomentumReader({ gateway: options.gateway, now: localNow });
-  // the market is HOT while the last cycle found a purchase open or a level of risk that would open one: the scan is then read every ten minutes instead of thirty, and the agent looks every two minutes
+  // the market is HOT while a position plan is open, or while the last cycle found a purchase open or a level of risk that would open one: the scan is then read every ten minutes instead of thirty, and the agent looks every two minutes
   const marketHot = (): boolean => {
+    if (plans.all().length > 0) return true;
     const last = cycles.last();
     if (last === null) return false;
     return (last.view ?? []).some((v) => v.kind === "buy" && v.closed === null) || Object.values(last.opened ?? {}).some((n) => n > 0);

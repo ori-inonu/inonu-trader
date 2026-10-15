@@ -40,26 +40,33 @@ export const HOT_INTERVAL_MIN = 2;
 /** The interval between looks: the rhythm, or the hot interval when it is shorter and the market is hot. A rhythm that is not a number is left as it is. */
 export const effectiveIntervalMin = (rhythmMin: number, hot: boolean): number => (hot && Number.isFinite(rhythmMin) ? Math.min(rhythmMin, HOT_INTERVAL_MIN) : rhythmMin);
 
-/** The quota of a tier of the data provider as the gateway counts it: what was used today (UTC day) and the monthly cap; null when the cap is not known. */
+/** The quota of a tier of the data provider as the gateway counts it: what was used today (UTC day), the monthly cap, and optionally the month's total used so far; null when the cap is not known. */
 export interface QuotaTier {
   readonly today: number;
   readonly cap: number | null;
+  readonly used?: number;
 }
 
 /**
  * Whether the quick rhythm can be paid for. The provider's free plan is a monthly quota, and the gateway refuses background calls once a day goes past one and a half times the monthly average (`budget.ts`): a market
  * looked at every two minutes uses that in half a day and leaves the agent blind until midnight. So the quick rhythm lasts while the use of the day stays under the fair burn of the day (the share of the day gone
- * plus a head start of fifteen percent) of that allowance, on the busiest tier; past it, the normal rhythm keeps the quota alive until the day ends. No cap known is no limit. CHOICES of this code, not calibrated.
+ * plus a head start of fifteen percent, or thirty-five percent when unused quota from earlier days of the month covers the full 1.5x daily ceiling for every remaining day until the UTC month resets) of that allowance,
+ * on the busiest tier; past it, the normal rhythm keeps the quota alive until the day ends. No cap known is no limit. CHOICES of this code, not calibrated.
  */
 export function hotWithinQuota(tiers: { readonly basic: QuotaTier; readonly premium: QuotaTier }, nowMs: number): boolean {
   const d = new Date(nowMs);
   const days = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  const remainingDays = Math.max(1, days - d.getUTCDate() + 1);
   const elapsed = (nowMs - Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())) / 86_400_000;
   for (const t of [tiers.basic, tiers.premium]) {
     if (t.cap === null || !Number.isFinite(t.cap) || t.cap <= 0) continue;
     if (!Number.isFinite(t.today)) return false;
+    if (t.used !== undefined && (!Number.isFinite(t.used) || t.used >= t.cap)) return false;
     const allowance = (1.5 * t.cap) / days;
-    if (t.today >= allowance * Math.min(1, elapsed + 0.15)) return false;
+    const usedBeforeToday = t.used !== undefined && t.used >= t.today ? t.used - t.today : null;
+    const remainingPerDay = usedBeforeToday !== null ? Math.max(0, t.cap - usedBeforeToday) / remainingDays : null;
+    const headStart = remainingPerDay !== null && remainingPerDay >= allowance ? 0.35 : 0.15;
+    if (t.today >= allowance * Math.min(1, elapsed + headStart)) return false;
   }
   return true;
 }
