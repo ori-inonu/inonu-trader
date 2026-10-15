@@ -481,7 +481,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     // what purchases already sent have spent and the wallet does not show yet comes off the cash of the look (and their tokens are not offered as new ideas): the same dollars are never spent twice
     const pending = pendingBuys({ records: deps.ledger.orderRecords(), book: view, nowMs: deps.now(), settleWindowMs: PENDING_SETTLE_MS });
     if (Object.keys(pending.byChain).length > 0 && !notes.includes("compras_pendentes")) notes.push("compras_pendentes");
-    const saldo = saldoOf(view, deps.riskPct(), deps.reserveShare?.() ?? null, pending.byChain);
+    const saldo = saldoOf(view, deps.riskPct(), deps.reserveShare?.() ?? null, pending);
     const exiting = new Set(protectionOrders.map((o) => planKey(o.chainIndex, o.address)));
 
     // what is read after the plans' exits (the ecosystem, the moment of each entry) is filled in below, once the exits are on their way

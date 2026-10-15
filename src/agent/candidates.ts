@@ -137,10 +137,21 @@ export function holdingCandidates(
 
 const floorCents = (v: number): number => Math.floor(Number((v * 100).toFixed(6))) / 100;
 
-/** Whole units of a coin that the wallet holds, cut DOWN to the cent; null when the balance or its decimals are not known exactly. */
-function unitsFloorCents(balanceMinor: string | null, decimals: number | null): number | null {
+/**
+ * What purchases already sent have spent and the wallet does not show yet: in raw units of the coin each network pays in (what is taken off the balance of that coin, exactly) and, for a book that states cash with no coin
+ * position behind it, in dollars.
+ */
+export interface PendingDebit {
+  readonly byChain: Readonly<Record<string, number>>;
+  readonly rawByChain: Readonly<Record<string, bigint>>;
+}
+const NO_PENDING: PendingDebit = { byChain: {}, rawByChain: {} };
+
+/** Whole units of a coin that the wallet holds less `debitMinor` (never below zero), cut DOWN to the cent; null when the balance or its decimals are not known exactly. */
+function unitsFloorCents(balanceMinor: string | null, decimals: number | null, debitMinor: bigint = 0n): number | null {
   if (balanceMinor === null || !/^\d+$/.test(balanceMinor) || decimals === null || !Number.isInteger(decimals) || decimals < 0 || decimals > 36) return null;
-  const cents = (BigInt(balanceMinor) * 100n) / 10n ** BigInt(decimals);
+  const left = BigInt(balanceMinor) - debitMinor;
+  const cents = ((left > 0n ? left : 0n) * 100n) / 10n ** BigInt(decimals);
   return cents > 100_000_000_000_000n ? 1e12 : Number(cents) / 100;
 }
 
@@ -149,7 +160,7 @@ function unitsFloorCents(balanceMinor: string | null, decimals: number | null): 
  * sends dollars as units of that coin, so the cash offered is what THAT coin holds in whole units, cut down to the cent: never the sum of several coins, never the balance times a price above one, never a rounded-up cent.
  * A coin whose balance or decimals are not known exactly cannot pay (cash zero), and the native coin is never cash. What purchases already sent have spent and the wallet does not show yet comes off, never below zero.
  */
-export function executableCashByChain(book: Book, pendingByChain: Readonly<Record<string, number>> = {}): Record<string, number> {
+export function executableCashByChain(book: Book, pending: PendingDebit = NO_PENDING): Record<string, number> {
   const best = new Map<string, Position>();
   for (const p of book.positions) {
     if (p.wallet !== "agente" || !p.isCash || p.address === "native" || p.usd === null || !(p.usd > 0)) continue;
@@ -161,15 +172,12 @@ export function executableCashByChain(book: Book, pendingByChain: Readonly<Recor
   const hasCoin = new Set(book.positions.filter((p) => p.wallet === "agente" && p.isCash && p.address !== "native").map((p) => p.chainIndex));
   for (const [chainIndex, usd] of Object.entries(book.cashByChain)) {
     if (best.has(chainIndex) || hasCoin.has(chainIndex) || !Number.isFinite(usd) || !(usd > 0)) continue;
-    const pending = pendingByChain[chainIndex];
-    const cash = floorCents(usd);
-    out[chainIndex] = pending !== undefined && Number.isFinite(pending) && pending > 0 ? Math.max(0, Math.round((cash - pending) * 100) / 100) : cash;
+    const spent = pending.byChain[chainIndex];
+    out[chainIndex] = floorCents(spent !== undefined && Number.isFinite(spent) && spent > 0 ? Math.max(0, usd - spent) : usd);
   }
   for (const [chainIndex, coin] of best) {
-    const units = unitsFloorCents(coin.balanceMinor, coin.decimals);
-    const cash = units === null ? 0 : Math.min(floorCents(coin.usd as number), units);
-    const pending = pendingByChain[chainIndex];
-    out[chainIndex] = pending !== undefined && Number.isFinite(pending) && pending > 0 ? Math.max(0, Math.round((cash - pending) * 100) / 100) : cash;
+    const units = unitsFloorCents(coin.balanceMinor, coin.decimals, pending.rawByChain[chainIndex] ?? 0n);
+    out[chainIndex] = units === null ? 0 : Math.min(floorCents(coin.usd as number), units);
   }
   return out;
 }
@@ -178,9 +186,9 @@ export function executableCashByChain(book: Book, pendingByChain: Readonly<Recor
  * The balance the sizing of purchases reads: the wallet the agent executes in, nothing else. The principal wallet is read for the picture of the whole portfolio, but the agent never buys with it. Null
  * when the value of the wallet is unknown or the numbers do not add up (the same strict schema the page balance goes through).
  */
-export function saldoOf(book: Book, riskPct: number | null, reserveShare: number | null = null, pendingByChain: Readonly<Record<string, number>> = {}): Saldo | null {
+export function saldoOf(book: Book, riskPct: number | null, reserveShare: number | null = null, pending: PendingDebit = NO_PENDING): Saldo | null {
   if (book.agentUsd === null) return null;
-  const cashEntries = Object.entries(executableCashByChain(book, pendingByChain));
+  const cashEntries = Object.entries(executableCashByChain(book, pending));
   const holdings = book.positions
     .filter((p) => p.wallet === "agente" && !p.isCash && p.usd !== null && p.usd > 0)
     .sort((a, b) => (b.usd as number) - (a.usd as number))

@@ -3,7 +3,7 @@
  * order that was sent and never settled is `em voo` after a restart and is never sent again. A line that cannot be read makes the ledger unhealthy and the agent holds; a write that fails throws, so the agent
  * never acts on something it could not record. Append-only JSON lines; the file is the truth, the memory is a view of it.
  */
-import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, renameSync, writeFileSync, writeSync } from "node:fs";
+import { closeSync, existsSync, fstatSync, fsyncSync, ftruncateSync, mkdirSync, openSync, readFileSync, readSync, renameSync, writeFileSync, writeSync } from "node:fs";
 import { dirname } from "node:path";
 import { dayKey } from "../operator/ledger";
 import { MODES, POSTURES, type Mode, type Posture, type WalletKind } from "./types";
@@ -209,12 +209,34 @@ export function createAgentLedger(deps: AgentLedgerDeps): AgentLedger {
   };
 }
 
+/** The few calls of the file system the ledger makes, so a test can make a write come back short or fail; the real ones by default. */
+export interface LedgerFs {
+  readonly writeSync: (fd: number, buffer: Uint8Array, offset: number, length: number) => number;
+  readonly fsyncSync: (fd: number) => void;
+}
+const REAL_FS: LedgerFs = { writeSync: (fd, buffer, offset, length) => writeSync(fd, buffer, offset, length), fsyncSync: (fd) => fsyncSync(fd) };
+
+/**
+ * Every byte of the text into the file, or an error: a write may come back with FEWER bytes than asked without throwing (RED 2 of the independent review of the v2 package), and half a record must never count as
+ * written. It goes on until all the bytes are in; a write that reports nothing is a failure, not a loop. Only then is the disk told to flush.
+ */
+function writeAll(fd: number, text: string, fs: LedgerFs): void {
+  const bytes = Buffer.from(text, "utf8");
+  let done = 0;
+  while (done < bytes.length) {
+    const n = fs.writeSync(fd, bytes, done, bytes.length - done);
+    if (!(Number.isInteger(n) && n > 0)) throw new Error("short_write");
+    done += n;
+  }
+  fs.fsyncSync(fd);
+}
+
 /**
  * A power cut in the middle of the last write leaves a last line that is cut short and has no newline (the independent review of 2026-10-15, SF-4). That line is the ONE known shape of such a cut: it is set aside, in a file
  * beside the ledger kept for the audit, and the ledger goes on with every whole record before it; a last line that is a whole record and only lost its newline is kept and the newline put back. A line that cannot be read
  * anywhere else, or one that ends with a newline, is not a torn write: it stays a corrupt ledger and everything is refused.
  */
-function repairTail(path: string, nowMs: number): void {
+function repairTail(path: string, nowMs: number, fs: LedgerFs): void {
   if (!existsSync(path)) return;
   const text = readFileSync(path, "utf8");
   if (text.length === 0 || text.endsWith("\n")) return;
@@ -227,37 +249,70 @@ function repairTail(path: string, nowMs: number): void {
     whole = false;
   }
   if (whole) {
-    writeDurable(path, `${text}\n`);
+    writeDurable(path, `${text}\n`, fs);
     return;
   }
   writeFileSync(`${path}.torn-${nowMs}`, fragment);
-  writeDurable(path, text.slice(0, cut));
+  writeDurable(path, text.slice(0, cut), fs);
 }
 
-/** The file replaced as a whole by a temporary one in the same folder, written to the disk before the rename. */
-function writeDurable(path: string, content: string): void {
+/** The file replaced as a whole by a temporary one in the same folder, written whole and to the disk before the rename. */
+function writeDurable(path: string, content: string, fs: LedgerFs): void {
   const temp = `${path}.tmp-${process.pid}`;
   const fd = openSync(temp, "w");
   try {
-    writeSync(fd, content);
-    fsyncSync(fd);
+    writeAll(fd, content, fs);
   } finally {
     closeSync(fd);
   }
   renameSync(temp, path);
 }
 
-export function createFileAgentLedger(path: string): AgentLedger {
-  repairTail(path, Date.now());
+/** Whether the file is empty or ends on a whole line: a cheap look at its last byte. */
+function endsCleanly(path: string): boolean {
+  if (!existsSync(path)) return true;
+  const fd = openSync(path, "r");
+  try {
+    const size = fstatSync(fd).size;
+    if (size === 0) return true;
+    const last = Buffer.alloc(1);
+    readSync(fd, last, 0, 1, size - 1);
+    return last[0] === 10;
+  } finally {
+    closeSync(fd);
+  }
+}
+
+export function createFileAgentLedger(path: string, overrides: Partial<LedgerFs> = {}): AgentLedger {
+  const fs: LedgerFs = { ...REAL_FS, ...overrides };
+  repairTail(path, Date.now(), fs);
   return createAgentLedger({
     read: () => (existsSync(path) ? readFileSync(path, "utf8").split("\n") : []),
     append: (line) => {
       mkdirSync(dirname(path), { recursive: true });
-      // the mark of an order is written to the DISK before the order goes out: a power cut right after the send must not forget it
+      // a tail left torn while the process was running (a take-back that failed) is set aside first: a record is never glued onto it
+      if (!endsCleanly(path)) repairTail(path, Date.now(), fs);
+      // the mark of an order is written to the DISK before the order goes out, every byte of it: a power cut right after the send must not forget it, and half a line must never count as written. A write that fails
+      // takes what it did write back out of the file and throws, so nothing goes out on the strength of it.
       const fd = openSync(path, "a");
       try {
-        writeSync(fd, `${line}\n`);
-        fsyncSync(fd);
+        const size = fstatSync(fd).size;
+        try {
+          writeAll(fd, `${line}\n`, fs);
+        } catch (error) {
+          // the append handle cannot shorten the file on Windows: a second one, opened for reading and writing, takes back what was written
+          try {
+            const back = openSync(path, "r+");
+            try {
+              ftruncateSync(back, size);
+            } finally {
+              closeSync(back);
+            }
+          } catch {
+            // the next append sets a torn tail aside before it writes
+          }
+          throw error;
+        }
       } finally {
         closeSync(fd);
       }

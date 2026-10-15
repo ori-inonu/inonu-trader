@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync, writeSync as realWriteSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createFileAgentLedger, type OrderRecord } from "./ledger";
@@ -78,5 +78,83 @@ describe("a power cut in the middle of the last write must not stop the agent (t
     expect(text.endsWith("\n")).toBe(true);
     expect(text.split("\n").filter((l) => l.length > 0)).toHaveLength(2);
     expect(createFileAgentLedger(path).orderStage("k1")).toBe("incerta");
+  });
+});
+
+describe("a write that is only partly done must never count as written (RED 2 of the independent review of the v2 package)", () => {
+  const half = (fd: number, buffer: Uint8Array, offset: number, length: number): number => realWriteSync(fd, buffer, offset, Math.max(1, Math.floor(length / 2)));
+
+  test("a write that returns FEWER bytes than asked is completed until every byte is in the file, and the disk is told to flush only after the last one", () => {
+    const path = join(dir, "ledger.jsonl");
+    const calls: string[] = [];
+    let first = true;
+    const ledger = createFileAgentLedger(path, {
+      writeSync: (fd, buffer, offset, length) => {
+        calls.push("write");
+        if (first) { first = false; return half(fd, buffer, offset, length); }
+        return realWriteSync(fd, buffer, offset, length);
+      },
+      fsyncSync: () => void calls.push("fsync"),
+    });
+    ledger.append(order("k1", "enviando"));
+    expect(calls).toEqual(["write", "write", "fsync"]);
+    const again = createFileAgentLedger(path);
+    expect(again.health()).toEqual({ ok: true });
+    expect(again.orderStage("k1")).toBe("enviando");
+    expect(readFileSync(path, "utf8")).toBe(`${line(order("k1", "enviando"))}
+`);
+  });
+
+  test("a write that writes half and then FAILS throws, takes the half line back out of the file, and the order is not in the ledger: nothing may go out on the strength of it", () => {
+    const path = join(dir, "ledger.jsonl");
+    writeFileSync(path, `${line(order("k0", "preparada"))}
+`);
+    const before = readFileSync(path, "utf8");
+    let n = 0;
+    const ledger = createFileAgentLedger(path, {
+      writeSync: (fd, buffer, offset, length) => {
+        if (++n === 1) { half(fd, buffer, offset, length); throw new Error("disk went away"); }
+        return realWriteSync(fd, buffer, offset, length);
+      },
+    });
+    expect(() => ledger.append(order("k1", "enviando"))).toThrow("ledger_nao_gravou");
+    expect(ledger.orderStage("k1")).toBeNull();
+    expect(readFileSync(path, "utf8")).toBe(before);
+    // the next write works and the whole file reads back
+    ledger.append(order("k1", "enviando"));
+    const again = createFileAgentLedger(path);
+    expect(again.health()).toEqual({ ok: true });
+    expect(again.orderStage("k1")).toBe("enviando");
+  });
+
+  test("a write that reports ZERO bytes is a failure, not a loop and not a success", () => {
+    const path = join(dir, "ledger.jsonl");
+    const ledger = createFileAgentLedger(path, { writeSync: () => 0 });
+    expect(() => ledger.append(order("k1", "enviando"))).toThrow("ledger_nao_gravou");
+    expect(ledger.orderStage("k1")).toBeNull();
+    expect(createFileAgentLedger(path).health()).toEqual({ ok: true });
+  });
+
+  test("if the file was left with a torn tail while the process was running (a failed take-back), the next append sets that tail aside first instead of gluing a record onto it", () => {
+    const path = join(dir, "ledger.jsonl");
+    const ledger = createFileAgentLedger(path);
+    ledger.append(order("k0", "preparada"));
+    appendFileSync(path, line(order("kx", "enviando")).slice(0, 40));
+    ledger.append(order("k1", "enviando"));
+    const again = createFileAgentLedger(path);
+    expect(again.health()).toEqual({ ok: true });
+    expect(again.orderStage("k1")).toBe("enviando");
+    expect(again.orderStage("kx")).toBeNull();
+    expect(readdirSync(dir).filter((f) => f.includes(".torn-")).length).toBe(1);
+  });
+
+  test("the repair that puts a missing newline back is written whole too", () => {
+    const path = join(dir, "ledger.jsonl");
+    writeFileSync(path, `${line(order("k1", "enviando"))}`);
+    let n = 0;
+    const ledger = createFileAgentLedger(path, { writeSync: (fd, buffer, offset, length) => (++n === 1 ? half(fd, buffer, offset, length) : realWriteSync(fd, buffer, offset, length)) });
+    expect(ledger.health()).toEqual({ ok: true });
+    expect(readFileSync(path, "utf8")).toBe(`${line(order("k1", "enviando"))}
+`);
   });
 });

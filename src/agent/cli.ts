@@ -225,7 +225,11 @@ const asNumber = (v: unknown): number | null => {
 /** A number that may be signed (the impact of a quote can be written "-0.4" or -0.4): both forms read the same. */
 const signedNumber = (v: unknown): number | null => {
   if (typeof v === "number") return Number.isFinite(v) ? v : null;
-  if (typeof v === "string" && /^-?\d+(\.\d+)?$/.test(v.trim())) return Number(v);
+  if (typeof v === "string" && /^-?\d+(\.\d+)?$/.test(v.trim())) {
+    // a decimal string so long that it reads as infinity is not a measure: unknown, never an unlimited gain
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
   return null;
 };
 const flagOn = (v: unknown): boolean => v === true || v === 1 || v === "1" || (typeof v === "string" && v.trim().toLowerCase() === "true");
@@ -586,7 +590,8 @@ export function createCliExecutor(deps: CliExecutorDeps): Executor {
       if (hash === null) return { status: "incerta", reason: "sem_recibo" };
       // what the order cost, when the quote gave both parts: the network fee in dollars and the price impact on the size. One part alone is not the cost.
       const fee = asNumber(q.tradeFee);
-      const costUsd = fee !== null ? fee + (order.usd * Math.abs(impact)) / 100 : undefined;
+      // the cost is the fee plus the ADVERSE part of the price effect only: a favourable effect is never booked as a cost (it stays signed in the facts of the quote, and no gain is inferred from a quote)
+      const costUsd = fee !== null ? fee + (order.usd * Math.max(0, -impact)) / 100 : undefined;
       // `swap execute` prints ok and the hash once the transaction is BROADCAST (the tool's source, v4.6.4): it does not wait for the swap's receipt. So this is a transmitted order, not an executed one; it stays in flight
       // with its hash and only a receipt of the tool's history (SUCCESS) makes it executed, ERROR and CANCELLED make it failed.
       return costUsd !== undefined && Number.isFinite(costUsd) ? { status: "transmitida", ref: hash, costUsd } : { status: "transmitida", ref: hash };

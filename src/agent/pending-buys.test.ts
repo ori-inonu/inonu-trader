@@ -50,6 +50,24 @@ describe("the purchases the wallet does not show yet", () => {
     expect([...p.tokens].sort()).toEqual([`1:${A}`, `1:${B}`]);
   });
 
+  test("the debit is ALSO kept in the raw units of the coin the order pays in, exactly what the order sends (cut down to six decimals of the coin): a third of 400 dollars sends 133333333 units and the debit is that, not 133.33 rounded to a cent", () => {
+    const third = order({ usd: 400 / 3 });
+    const p = pendingBuys({ records: [third], book: bookWith([]), nowMs: NOW, settleWindowMs: WINDOW });
+    expect(p.rawByChain).toEqual({ "1": 133_333_333n });
+    expect(p.byChain["1"]).toBeCloseTo(400 / 3, 12);
+    const two = pendingBuys({ records: [third, order({ orderKey: "k2", address: B, candidateId: `buy:token:1:${B}`, usd: 0.004 })], book: bookWith([]), nowMs: NOW, settleWindowMs: WINDOW });
+    expect(two.rawByChain).toEqual({ "1": 133_337_333n });
+  });
+
+  test("a network whose paying coin has no known decimals has a debit in dollars and none in units (nothing is invented), and an amount that is zero after the cut sends nothing", () => {
+    const odd = order({ chainIndex: "99999", address: B, candidateId: `buy:token:99999:${B}` });
+    const p = pendingBuys({ records: [odd], book: bookWith([]), nowMs: NOW, settleWindowMs: WINDOW });
+    expect(p.byChain).toEqual({ "99999": 400 });
+    expect(p.rawByChain).toEqual({});
+    const dust = pendingBuys({ records: [order({ usd: 0.0000004 })], book: bookWith([]), nowMs: NOW, settleWindowMs: WINDOW });
+    expect(dust.rawByChain).toEqual({});
+  });
+
   test("a Solana address is compared as written, an EVM one without regard to case", () => {
     const sol = order({ chainIndex: "501", address: "AbCdEfGhJkLmNpQrStUvWxYz123456789", candidateId: "buy:token:501:AbCdEfGhJkLmNpQrStUvWxYz123456789" });
     expect(pendingBuys({ records: [sol], book: bookWith([]), nowMs: NOW, settleWindowMs: WINDOW }).byChain).toEqual({ "501": 400 });

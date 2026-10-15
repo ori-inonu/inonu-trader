@@ -236,7 +236,7 @@ describe("the executor: quote, check, then swap", () => {
   });
 
   test("what the order cost is known only when the quote said both parts of it: the network fee in dollars and the price impact; never guessed from one", async () => {
-    const both = executor({ "swap quote": () => quoteOk({ tradeFee: "0.5" }), "swap execute": () => execOk() });
+    const both = executor({ "swap quote": () => quoteOk({ tradeFee: "0.5", priceImpactPercent: "-0.4" }), "swap execute": () => execOk() });
     const r = await both.exec.execute(order(), ctx);
     // 25 dollars at 0.4% impact is 0.10, plus the 0.50 fee
     expect(r).toMatchObject({ status: "transmitida", ref: OK_HASH });
@@ -510,6 +510,33 @@ describe("the executor: quote, check, then swap", () => {
   });
 });
 
+describe("the cost of an order is the fee plus the ADVERSE part of the price effect only, and a number that is not finite is not an impact (the independent review of the v3 quote)", () => {
+  const sell = (over: Record<string, unknown> = {}) => order({ side: "sell", amountMinor: "5", usd: 100, profile: null, stance: "exit_all", ...over } as never);
+  const done = (impact: string, o: PlannedOrder, fee = "0.01") => executor({ "swap quote": () => quoteOk({ tradeFee: fee, priceImpactPercent: impact }), "swap execute": () => execOk() }).exec.execute(o, ctx);
+
+  test("a sale that pays MORE than its value (+9.68) costs the network fee and nothing else: the favourable effect is never booked as a cost, and it stays signed in the facts of the quote", async () => {
+    const r = await done("9.68", sell());
+    expect(r).toMatchObject({ status: "transmitida", costUsd: 0.01 });
+    const seen: { impactPct?: number }[] = [];
+    const s = script({ "swap quote": () => quoteOk({ tradeFee: "0.01", priceImpactPercent: "9.68" }), "swap execute": () => execOk() });
+    await createCliExecutor({ runner: s.runner, config: () => agentic(), book: () => book(), timeouts: { quoteMs: 1000, executeMs: 1000 }, onQuote: ((_k: string, f: { impactPct?: number }) => void seen.push(f)) as never }).execute(sell(), ctx);
+    expect(seen[0]!.impactPct).toBe(9.68);
+  });
+
+  test("a loss counts as cost: 2 percent of 100 dollars plus the fee", async () => {
+    expect(await done("-2", sell())).toMatchObject({ status: "transmitida", costUsd: 2.01 });
+    expect(await done("0", sell())).toMatchObject({ status: "transmitida", costUsd: 0.01 });
+  });
+
+  test("a decimal string so long that it reads as infinity is not an impact: unknown, refused before anything is signed, on a sale as on a purchase", async () => {
+    const huge = "9".repeat(400);
+    expect(await done(huge, sell())).toEqual({ status: "falhou", reason: "impacto_desconhecido" });
+    expect(await done(`-${huge}`, sell())).toEqual({ status: "falhou", reason: "impacto_desconhecido" });
+    expect(await done(huge, order())).toEqual({ status: "falhou", reason: "impacto_desconhecido" });
+    expect(await done("1e999", sell())).toEqual({ status: "falhou", reason: "impacto_desconhecido" });
+  });
+});
+
 describe("the native coin must pay the gas the quote announces, and the order is refused BEFORE it is signed when it cannot (ADENDO-C, FEE-4)", () => {
   const native = (balanceMinor: string | null, chainIndex = "1"): Position => ({ id: `token:${chainIndex}:native`, chainIndex, address: "native", symbol: "ETH", wallet: "agente", usd: 1, balanceMinor, decimals: 18, isCash: false });
   const withNative = (...positions: Position[]) => (): Book => ({ observedAtMs: NOW, positions: [cashPos, ...positions], cashByChain: { "1": 500 }, totalUsd: 500, agentUsd: 500 });
@@ -580,11 +607,11 @@ describe("the quote leaves its allowlisted facts for the record, and changes not
 
   test("a good purchase hands over the facts of its quote under its order key, with the hour, and the result is the same as ever", async () => {
     const seen: [string, Record<string, unknown>][] = [];
-    const e = withFacts({ "swap quote": () => quoteOk({ tradeFee: "0.0005", estimateGasFee: "5000", contextSlot: 99 }), "swap execute": () => execOk() }, (k, f) => void seen.push([k, f as Record<string, unknown>]));
+    const e = withFacts({ "swap quote": () => quoteOk({ tradeFee: "0.0005", estimateGasFee: "5000", contextSlot: 99, priceImpactPercent: "-0.4" }), "swap execute": () => execOk() }, (k, f) => void seen.push([k, f as Record<string, unknown>]));
     expect(await e.exec.execute(order(), ctx)).toEqual({ status: "transmitida", ref: OK_HASH, costUsd: 0.0005 + (25 * 0.4) / 100 });
     expect(seen).toHaveLength(1);
     expect(seen[0]![0]).toBe("c1:buy:x");
-    expect(seen[0]![1]).toMatchObject({ atMs: NOW, action: "ok", impactPct: 0.4, tradeFee: 0.0005, gasEstimate: 5000, slot: 99, taxFromPct: 0, taxToPct: 0, feeUnit: "usd", gasUnit: "native_minor" });
+    expect(seen[0]![1]).toMatchObject({ atMs: NOW, action: "ok", impactPct: -0.4, tradeFee: 0.0005, gasEstimate: 5000, slot: 99, taxFromPct: 0, taxToPct: 0, feeUnit: "usd", gasUnit: "native_minor" });
   });
 
   test("the quote also says which network and which side it was for, so the network fee it carries can be kept per network", async () => {

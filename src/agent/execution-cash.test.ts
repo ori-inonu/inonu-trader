@@ -56,11 +56,29 @@ describe("the cash a purchase may use is what the coin that pays HOLDS, in whole
   });
 });
 
-describe("what a purchase already sent has spent of the cash, until the wallet shows it (SF-1)", () => {
-  test("the dollars of purchases not yet reflected are taken off the cash of their network, and never below zero", () => {
+describe("what a purchase already sent has spent of the cash, until the wallet shows it (SF-1), counted in the UNITS of the coin that pays", () => {
+  const cashAfter = (book: ReturnType<typeof bookOf>, raw: Record<string, bigint>) => saldoOf(book, null, null, { byChain: {}, rawByChain: raw })!.chains.find((c) => c.chainIndex === "501")?.cashUsd ?? 0;
+
+  test("the units of purchases not yet reflected are taken off the balance of the paying coin, and never below zero", () => {
     const book = bookOf(asset({ balance: "400", rawBalance: "400000000" }));
-    expect(saldoOf(book, null, null, { "501": 150 })!.chains.find((c) => c.chainIndex === "501")!.cashUsd).toBe(250);
-    expect(saldoOf(book, null, null, { "501": 900 })!.chains.find((c) => c.chainIndex === "501")!.cashUsd).toBe(0);
-    expect(saldoOf(book, null, null, { "1": 50 })!.chains.find((c) => c.chainIndex === "501")!.cashUsd).toBe(400);
+    expect(cashAfter(book, { "501": 150_000_000n })).toBe(250);
+    expect(cashAfter(book, { "501": 900_000_000n })).toBe(0);
+    expect(cashAfter(book, { "1": 50_000_000n })).toBe(400);
+  });
+
+  test("RED 1 of the independent review: with 400 and a third already sent (133333333 units) what is offered next never passes the 266666667 units that are left, and a debit of a fraction of a cent still takes its units", () => {
+    const book = bookOf(asset({ balance: "400", rawBalance: "400000000" }));
+    const left = cashAfter(book, { "501": 133_333_333n });
+    expect(left).toBe(266.66);
+    for (const usd of Object.values(sizesFor(left))) expect(sentRaw(usd, 6)).toBeLessThanOrEqual(266_666_667n);
+    // 0.004 dollars is 4000 units: the old rounding to the cent made it zero and offered 400 against 399996000 units
+    const tiny = cashAfter(book, { "501": 4_000n });
+    expect(tiny).toBe(399.99);
+    for (const usd of Object.values(sizesFor(tiny))) expect(sentRaw(usd, 6)).toBeLessThanOrEqual(399_996_000n);
+  });
+
+  test("a hand-made book with cash stated for a network and no coin position there takes the debit in dollars, cut down to the cent", () => {
+    const hand = { observedAtMs: NOW, positions: [], cashByChain: { "501": 100 }, totalUsd: 100, agentUsd: 100 };
+    expect(saldoOf(hand, null, null, { byChain: { "501": 33.333 }, rawByChain: {} })!.chains.find((c) => c.chainIndex === "501")!.cashUsd).toBe(66.66);
   });
 });
