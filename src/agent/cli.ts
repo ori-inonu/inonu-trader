@@ -528,7 +528,10 @@ export function createCliExecutor(deps: CliExecutorDeps): Executor {
       const impact = signedNumber(q.priceImpactPercent);
       if (impact === null) return fail("impacto_desconhecido");
       const impactCap = order.source === "protecao" ? IMPACT_CAP_PCT.protecao : order.side === "buy" ? buyCostCapPct(order.profile, IMPACT_CAP_PCT.buy) : IMPACT_CAP_PCT.sell;
-      if (Math.abs(impact) > impactCap) return fail("impacto_alto");
+      // the impact is SIGNED (a loss is negative): a sale or a stop is refused only when it would LOSE more than the cap, a gain of any size goes through (a sale of 8 dollars that would pay 9.68 percent MORE than its value was
+      // refused every look on 2026-10-15). A purchase keeps the symmetric rule: a quote that gives far more than it should is the pattern of a trap.
+      const adverse = order.side === "sell" ? -impact : Math.abs(impact);
+      if (adverse > impactCap) return fail("impacto_alto");
 
       // nothing has been signed yet: a stop or a cancel that came during the quote is honoured here
       if (signal.aborted || shouldStop?.() === true) return fail("parado");

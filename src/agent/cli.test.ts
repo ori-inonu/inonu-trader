@@ -510,6 +510,34 @@ describe("the executor: quote, check, then swap", () => {
   });
 });
 
+describe("the price impact of a quote is SIGNED: a loss is negative, and only a loss counts against the cap of a sale (the live case of CARDBACK on 2026-10-15)", () => {
+  const sell = (over: Record<string, unknown> = {}) => order({ side: "sell", amountMinor: "5", usd: 100, profile: null, stance: "exit_all", ...over } as never);
+  const run = (impact: string, o: ReturnType<typeof sell>) => executor({ "swap quote": () => quoteOk({ priceImpactPercent: impact }), "swap execute": () => execOk() }).exec.execute(o, ctx);
+
+  test("a sale that would pay MORE than the market value (a positive impact of 9.68) goes through: the quote is in the seller's favour, there is nothing to protect from", async () => {
+    expect(await run("9.68", sell())).toMatchObject({ status: "transmitida" });
+    expect(await run("0.4", sell())).toMatchObject({ status: "transmitida" });
+  });
+
+  test("a sale that would LOSE more than five percent to the price impact is still refused, and exactly five percent goes through", async () => {
+    expect(await run("-5.01", sell())).toEqual({ status: "falhou", reason: "impacto_alto" });
+    expect(await run("-9.68", sell())).toEqual({ status: "falhou", reason: "impacto_alto" });
+    expect(await run("-5", sell())).toMatchObject({ status: "transmitida" });
+  });
+
+  test("a stop (protection) accepts up to ten percent of loss and a gain of any size", async () => {
+    const stop = sell({ source: "protecao" });
+    expect(await run("-10", stop)).toMatchObject({ status: "transmitida" });
+    expect(await run("-10.01", stop)).toEqual({ status: "falhou", reason: "impacto_alto" });
+    expect(await run("25", stop)).toMatchObject({ status: "transmitida" });
+  });
+
+  test("a PURCHASE keeps the symmetric rule: a quote that gives far more than it should is the pattern of a trap, so a large impact of either sign is refused", async () => {
+    expect(await run("9.68", order())).toEqual({ status: "falhou", reason: "impacto_alto" });
+    expect(await run("-9.68", order())).toEqual({ status: "falhou", reason: "impacto_alto" });
+  });
+});
+
 describe("the quote leaves its allowlisted facts for the record, and changes nothing else", () => {
   const withFacts = (map: Record<string, (args: readonly string[]) => CliResult>, onQuote: (key: string, facts: unknown) => void, now = () => NOW) => {
     const s = script(map);
