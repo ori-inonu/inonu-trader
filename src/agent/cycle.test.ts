@@ -1890,4 +1890,25 @@ describe("the quality of the entry", () => {
     expect(consulted!.f).toEqual(expect.arrayContaining(["liquidez", "distribuicao", "seguranca"]));
     expect(consulted!.pl).toMatchObject({ pf: "alvo_5", th: false });
   });
+
+  test("when more than five open purchases are in the pool, clean pullback/early candidates are ranked ahead of parabolic heavily-marked ones and up to seven open candidates are shown", async () => {
+    const pool8 = Array.from({ length: 8 }, (_, i) => {
+      const addr = `0x${(i + 50).toString(16).padStart(40, "0")}`;
+      const base = eco(addr, `P${i}`);
+      return i < 5 ? { ...base, changePct: 2500, liquidityUsd: 35_000, riskFlags: ["lowLiquidity"] } : { ...base, changePct: 8, liquidityUsd: 800_000, riskFlags: [] };
+    });
+    const r = rig({ mode: "sombra", positions: [cash(1000)], ecoFacts: pool8 });
+    await createCycleRunner({
+      ...r.deps,
+      timingOf: async (f) => (f.changePct !== null && f.changePct > 500 ? noisyParabola : calm),
+    }).run();
+    const shownBuys = r.shown[0]!.filter((id) => id.startsWith("buy:"));
+    expect(shownBuys).toHaveLength(7);
+    // the 3 clean early candidates (P5, P6, P7) come before the parabolic ones (P0..P4)
+    expect(shownBuys.slice(0, 3)).toEqual([
+      `buy:token:1:0x${(55).toString(16).padStart(40, "0")}`,
+      `buy:token:1:0x${(56).toString(16).padStart(40, "0")}`,
+      `buy:token:1:0x${(57).toString(16).padStart(40, "0")}`,
+    ]);
+  });
 });

@@ -274,6 +274,15 @@ const MAX_BUYS_SHOWN = 7;
 /** After the model sold part of a token, its partial sales are not offered again for this long. */
 const TRIM_COOLDOWN_MS = 60 * 60_000;
 
+/** Structural quality of an open purchase candidate after hourly timing is attached: clean pullback/continuation setups ahead of already-parabolic or heavily marked tokens. */
+function buyQuality(c: Candidate): number {
+  let score = c.families.length * 2 - c.marks.length * 2;
+  if (c.families.includes("retracao") || c.families.includes("alta_com_folego")) score += 4;
+  if (c.marks.includes("parabolico") || c.marks.includes("esticado")) score -= 5;
+  if (c.marks.includes("caindo") || c.marks.includes("caindo_agora")) score -= 3;
+  return score;
+}
+
 class Deadline extends Error {}
 
 async function withDeadline<T>(ms: number, run: (signal: AbortSignal) => Promise<T>): Promise<T> {
@@ -747,10 +756,14 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     // what the plan is selling this very cycle is not bought back by the model in the same cycle; a token with an order in flight is not touched by the model at all
     const paused = deps.buyingPaused?.() ?? false;
     if (paused) notes.push("compras_pausadas");
-    // what the few tokens that matter are doing in the last hour (five-minute bars): at most three purchases that are still open and three holdings, so the quota goes where the decisions are
+    // what the few tokens that matter are doing in the last hour (five-minute bars): at most three purchases that are still open (cleanest structure first) and three holdings, so the quota goes where the decisions are
     const momentum = new Map<string, MomentumFacts | null>();
     if (deps.momentumOf !== undefined) {
-      const open = paused ? [] : buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, undefined, limited?.policy?.perTxUsd ?? null).filter((c) => c.stances.length > 1).slice(0, MOMENTUM_READS);
+      const open = paused
+        ? []
+        : [...buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, undefined, limited?.policy?.perTxUsd ?? null).filter((c) => c.stances.length > 1)]
+            .sort((a, b) => buyQuality(b) - buyQuality(a))
+            .slice(0, MOMENTUM_READS);
       await Promise.all(
         [...open, ...holdingsPlain.slice(0, MOMENTUM_READS)].map(async (c) => {
           momentum.set(c.id, await withDeadline(deps.timeouts.readMs, (signal) => deps.momentumOf!(identityOf(c), signal)).catch(() => null));
@@ -783,9 +796,12 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     };
     const holdings = holdingsPlain.map((c) => cooled(momentum.has(c.id) ? withMomentum(c, momentum.get(c.id) ?? null) : c));
     const buys = paused ? [] : buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, (f) => momentum.get(`buy:${f.candidateId}`) ?? null, limited?.policy?.perTxUsd ?? null, (chainIndex, address) => (heldKeys.has(planKey(chainIndex, address)) ? (deps.plans.get(planKey(chainIndex, address))?.profile ?? null) : null)).filter((c) => !exiting.has(planKey(c.chainIndex, c.address)) && !inflightTokens.has(planKey(c.chainIndex, c.address)) && !pending.tokens.has(planKey(c.chainIndex, c.address)));
-    // the model is shown the purchases the code left OPEN first (up to MAX_OPEN_BUYS), and closed ones only to fill (up to MAX_BUYS_SHOWN in all): a wide pool is no use if the few shown are all closed
-    const openBuys = buys.filter((c) => c.stances.length > 1).slice(0, MAX_OPEN_BUYS);
-    const closedBuys = buys.filter((c) => c.stances.length <= 1).slice(0, Math.max(0, MAX_BUYS_SHOWN - openBuys.length));
+    // the model is shown the purchases the code left OPEN first (up to MAX_OPEN_BUYS when closed ones exist, or up to MAX_BUYS_SHOWN when fewer are closed), ranked with clean/early setups ahead of parabolic ones
+    const openAll = [...buys.filter((c) => c.stances.length > 1)].sort((a, b) => buyQuality(b) - buyQuality(a));
+    const closedAll = buys.filter((c) => c.stances.length <= 1);
+    const openCap = Math.min(MAX_BUYS_SHOWN, Math.max(MAX_OPEN_BUYS, MAX_BUYS_SHOWN - closedAll.length));
+    const openBuys = openAll.slice(0, openCap);
+    const closedBuys = closedAll.slice(0, Math.max(0, MAX_BUYS_SHOWN - openBuys.length));
     const shownBuys = [...openBuys, ...closedBuys];
     // what each level of the mandate would open, counted from the same candidates and the same sizing: the model chooses its own risk, so it is shown what the choice buys
     const mandateNow = deps.mandate?.() ?? null;

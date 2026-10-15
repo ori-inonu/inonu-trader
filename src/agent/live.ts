@@ -325,8 +325,9 @@ const REFRESH_ON_NEW_CHAINS_MS = 2 * 60_000;
 /** The scan while the market has something to offer: it costs the calls of the provider, so it is read more often only where there is a chance. */
 const HOT_TTL_MS = 10 * 60_000;
 
-export function createEcosystemReader(deps: { readonly source: BriefSource; readonly now: () => number; readonly ttlMs?: number; readonly maxStaleMs?: number; /** True while a purchase is open or a higher level of risk would open one: the scan is then read at the hot interval. */ readonly hot?: () => boolean }): EcosystemReader {
+export function createEcosystemReader(deps: { readonly source: BriefSource; readonly now: () => number; readonly ttlMs?: number; readonly hotTtlMs?: number; readonly maxStaleMs?: number; /** True while a purchase is open or a higher level of risk would open one: the scan is then read at the hot interval. */ readonly hot?: () => boolean }): EcosystemReader {
   const baseTtl = deps.ttlMs ?? 30 * 60_000;
+  const hotTtl = Math.min(baseTtl, deps.hotTtlMs ?? HOT_TTL_MS);
   const isHot = (): boolean => {
     try {
       return deps.hot?.() === true;
@@ -347,7 +348,7 @@ export function createEcosystemReader(deps: { readonly source: BriefSource; read
   return {
     async read(saldo, signal) {
       const key = cashChains(saldo);
-      const ttl = isHot() ? Math.min(baseTtl, HOT_TTL_MS) : baseTtl;
+      const ttl = isHot() ? hotTtl : baseTtl;
       if (scan === null || deps.now() - scan.atMs >= ttl || (scan.key !== key && deps.now() - scan.atMs >= REFRESH_ON_NEW_CHAINS_MS)) {
         try {
           const built = await deps.source.build({ modo: "ecossistema", ...(saldo === null ? {} : { saldo }) }, { signal, maxOnchainosCalls: 15, candidates: AGENT_POOL });

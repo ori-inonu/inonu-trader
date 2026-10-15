@@ -262,15 +262,15 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   // what is read about them and the market
   const factsReader = createHoldingFactsReader({ gateway: options.gateway, plans, now: localNow });
   const timingReader = createTimingReader({ gateway: options.gateway, now: localNow });
-  const momentumReader = createMomentumReader({ gateway: options.gateway, now: localNow });
-  // the market is HOT while a position plan is open, or while the last cycle found a purchase open or a level of risk that would open one: the scan is then read every ten minutes instead of thirty, and the agent looks every two minutes
+  const momentumReader = createMomentumReader({ gateway: options.gateway, now: localNow, ttlMs: 2 * 60_000 });
+  // the market is HOT while a position plan is open, or while the last cycle found a purchase open or a level of risk that would open one: the scan is then read every five minutes (matching the gateway TTL) and the agent looks every two minutes
   const marketHot = (): boolean => {
     if (plans.all().length > 0) return true;
     const last = cycles.last();
     if (last === null) return false;
     return (last.view ?? []).some((v) => v.kind === "buy" && v.closed === null) || Object.values(last.opened ?? {}).some((n) => n > 0);
   };
-  const ecosystemReader = createEcosystemReader({ source: options.source, now: localNow, hot: marketHot });
+  const ecosystemReader = createEcosystemReader({ source: options.source, now: localNow, hot: marketHot, hotTtlMs: 5 * 60_000 });
   const systemOneFile = options.systemOneFile ?? join(options.dataDir, "system-one", "latest.json");
   const marketContext = createMarketContext({
     candles: options.publicCandles ?? okxPublicCandles(fetchImpl),
