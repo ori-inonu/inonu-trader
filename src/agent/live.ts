@@ -395,18 +395,20 @@ export function createMarketContext(deps: { readonly candles: PublicCandles; rea
   let current: MarketContext | null = null;
   // the open interest is sampled at every refresh: its change over an hour needs two samples an hour apart, so it appears once the agent has been looking for that long
   const oiSamples: OiSample[] = [];
-  const ret24 = (candles: readonly Candle[] | null): number | null => {
-    if (candles === null || candles.length < 25) return null;
+  const retN = (candles: readonly Candle[] | null, barsBack: number): number | null => {
+    if (candles === null || candles.length < barsBack + 1) return null;
     const last = candles[candles.length - 1]!.close;
-    const before = candles[candles.length - 25]!.close;
+    const before = candles[candles.length - 1 - barsBack]!.close;
     return before > 0 ? Math.round((last / before - 1) * 1000) / 10 : null;
   };
   return {
     get: () => current,
     async refresh(signal) {
       const [btc, eth] = await Promise.all([deps.candles("BTC-USDT", "1H", 72, signal).catch(() => null), deps.candles("ETH-USDT", "1H", 72, signal).catch(() => null)]);
-      const btc24 = ret24(btc);
-      const eth24 = ret24(eth);
+      const btc1h = retN(btc, 1);
+      const btc4h = retN(btc, 4);
+      const btc24 = retN(btc, 24);
+      const eth24 = retN(eth, 24);
       let vol: string | null = null;
       if (btc !== null && btc.length >= 49) {
         const returns = logReturns(btc.slice(-49).map((c) => c.close));
@@ -438,7 +440,7 @@ export function createMarketContext(deps: { readonly candles: PublicCandles; rea
         const variation = oiVariationPct(oiSamples);
         oiVar = variation === null ? null : Math.round(variation * 10) / 10;
       }
-      const next: MarketContext = { btc_24h: btc24, eth_24h: eth24, tendencia: trend, vol_btc: vol, fund_btc_bps: fundBps === null ? null : Math.round(fundBps * 100) / 100, oi_btc_1h: oiVar, s1_escolha: s1Choice, s1_regime: s1Regime, s1_idade_min: fresh && completed !== null ? Math.round((deps.now() - completed) / 60_000) : null };
+      const next: MarketContext = { btc_1h: btc1h, btc_4h: btc4h, btc_24h: btc24, eth_24h: eth24, tendencia: trend, vol_btc: vol, fund_btc_bps: fundBps === null ? null : Math.round(fundBps * 100) / 100, oi_btc_1h: oiVar, s1_escolha: s1Choice, s1_regime: s1Regime, s1_idade_min: fresh && completed !== null ? Math.round((deps.now() - completed) / 60_000) : null };
       current = Object.values(next).every((v) => v === null) ? null : next;
     },
   };

@@ -367,6 +367,8 @@ describe("the market context", () => {
     });
     await reader.refresh(live);
     const c = reader.get()!;
+    expect(c.btc_1h).toBeGreaterThan(0);
+    expect(c.btc_4h).toBeGreaterThan(0);
     expect(c.btc_24h).toBeGreaterThan(4);
     expect(c.eth_24h).toBe(0);
     expect(c.tendencia).toBe("alta");
