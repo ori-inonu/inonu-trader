@@ -32,6 +32,7 @@ import { createScoreboard } from "./scoreboard";
 import { createOpportunityDispatcher } from "../decision-review/events";
 import { resourceView } from "./resources";
 import { executionGuards } from "./guards";
+import { createFeeMemory } from "./fees";
 import { decisionMetadata, decisionVersionOf, placarEvaluatorHash } from "./decision-metadata";
 import { buildAnalysis, type AnalysisView } from "./analysis";
 import { eventsAllowed, priceMoveEvents, pricesOf } from "./event-source";
@@ -178,6 +179,8 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   const ledger = createFileAgentLedger(join(dir, "ledger.jsonl"));
   const mandateStore = createMandateStore(mandateFileStore(join(dir, "mandate.json")));
   const plans = createPlanStore(planFileStore(join(dir, "plans.json")));
+  // the last network fee quoted on each network (ADENDO-C, FEE-1): what the Jev is shown as the cost of a swap there
+  const fees = createFeeMemory(planFileStore(join(dir, "fees.json")));
   const scoreboardPath = join(dir, "scoreboard.jsonl");
   const scoreboard = createScoreboard({
     read: () => linesOf(scoreboardPath),
@@ -328,10 +331,11 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     book: () => lastBook ?? guardBook,
     timeouts: { quoteMs: 30_000, executeMs: 90_000 },
     sessionLeftMs,
-    onQuote: (key, facts) => {
+    onQuote: (key, facts, order) => {
       quotes.delete(key);
       quotes.set(key, facts);
       while (quotes.size > 300) quotes.delete(quotes.keys().next().value!);
+      fees.observe(order.chainIndex, facts, order.side === "buy" ? "cotacao_de_compra" : "cotacao_de_venda");
     },
     now: localNow,
   });
@@ -605,6 +609,10 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     context: () => marketContext.get(),
     // the model reads its own measured record: how often each kind of decision beat the alternative one hour later, from the last two weeks
     execFacts: () => execBrief(fills.all()),
+    feeOf: (chainIndex) => {
+      const fee = fees.get(chainIndex);
+      return fee === undefined ? null : { usd: fee.tradeFeeUsd, ageMin: fees.ageMinutes(chainIndex, localNow()) };
+    },
     quoteOf: (key) => quotes.get(key) ?? null,
     history: () => {
       const record = scoreboard.record("1h", localNow(), localNow() - 14 * 24 * 3_600_000);

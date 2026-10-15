@@ -525,6 +525,13 @@ describe("the quote leaves its allowlisted facts for the record, and changes not
     expect(seen[0]![1]).toMatchObject({ atMs: NOW, action: "ok", impactPct: 0.4, tradeFee: 0.0005, gasEstimate: 5000, slot: 99, taxFromPct: 0, taxToPct: 0, feeUnit: "usd", gasUnit: "native_minor" });
   });
 
+  test("the quote also says which network and which side it was for, so the network fee it carries can be kept per network", async () => {
+    const seen: unknown[] = [];
+    const e = withFacts({ "swap quote": () => quoteOk(), "swap execute": () => execOk() }, ((_k: string, _f: unknown, o: unknown) => void seen.push(o)) as never);
+    await e.exec.execute(order(), ctx);
+    expect(seen).toEqual([{ chainIndex: "1", side: "buy" }]);
+  });
+
   test("a quote that refused the order is recorded too (the impact that stopped it is a fact), and one that is not a record is not", async () => {
     const seen: unknown[] = [];
     const refusedByImpact = withFacts({ "swap quote": () => quoteOk({ priceImpactPercent: "7.5" }) }, (_k, f) => void seen.push(f));

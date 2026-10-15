@@ -14,7 +14,7 @@ import type { QuoteFacts } from "./quote-facts";
 import { runClosing, type ClosingCandidate, type ClosingDeps } from "./closing-phase";
 import type { ClosingRecord } from "./closing";
 import { RISK_PCT } from "./autopilot";
-import { buyCandidates, holdingCandidates, minBuyUsd, openByRisk, priceOnlyFacts, saldoOf, withMomentum } from "./candidates";
+import { buyCandidates, holdingCandidates, minBuyUsd, openByRisk, priceOnlyFacts, saldoOf, withMomentum, withTiming } from "./candidates";
 import type { MomentumFacts } from "./momentum";
 import { planOrders, validateDecision } from "./decision";
 import { applyCaps, gate, type AgentCaps, type LimitedFacts, splitToPolicy } from "./gate";
@@ -159,6 +159,8 @@ export interface CycleDeps {
   /** Called once per consultation with what the model was shown (the candidates, with what was on offer and the marks of care) and what it answered: for whoever studies how the decisions can be improved. Never given a balance or an address. */
   /** Called with the record of each primary consultation and, apart from it, the real clocks and the full hash of the Brief (ADENDO-D, V2-4): what lets the study of the agent bind a decision to the moment it was asked and answered. */
   readonly onConsult?: (entry: ConsultRecord, meta?: ConsultMeta) => void;
+  /** The last network fee quoted on a network (fees.ts), for the Brief: what a swap costs there. Absent: the Brief carries none. */
+  readonly feeOf?: (chainIndex: string) => { readonly usd: number; readonly ageMin: number | null } | null;
   /** The book the guard read, raw: it gives the signing side the dollar coin to settle in when no full cycle has published a book yet (right after a start). Not shown anywhere. */
   readonly onGuardBook?: (book: Book) => void;
   /** Settles the orders in flight by what the wallet shows (reconcile.ts); the number settled. Called with every reading of the wallet, before the cycle looks at what is in flight. */
@@ -721,16 +723,24 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     );
     // the agent decides about the wallet it manages; the other wallets it reads are part of the picture and nothing can be done about them
     const holdingsBase = holdingCandidates(view, factsOf, (p) => protection.views.get(holdingId(p)) ?? null).candidates.filter((c) => c.wallet === "agente" && !protection.handled.has(c.id) && !inflightTokens.has(planKey(c.chainIndex, c.address)));
-    // a holding with no plan (one the agent did not open) is offered the profiles that fit the volatility of its token: the model chooses the protection and the code carries it out between the looks
+    // every holding that can be kept gets its two-day hourly structure read (reusing the ecosystem timing when the same token is in both), and a holding with no plan is offered the profiles that fit its volatility
     const holdingTimings = new Map<string, TimingFacts | null>();
     await Promise.all(
       holdingsBase
-        .filter((c) => c.plan === null && c.stances.includes("hold") && c.address !== "native")
+        .filter((c) => c.stances.includes("hold") && c.address !== "native")
         .map(async (c) => {
-          holdingTimings.set(c.id, await withDeadline(deps.timeouts.readMs, (signal) => deps.timingOf(identityOf(c), signal)).catch(() => null));
+          const ecoKey = `token:${c.chainIndex}:${c.address}`;
+          const existing = timings.get(ecoKey);
+          holdingTimings.set(c.id, existing !== undefined ? existing : await withDeadline(deps.timeouts.readMs, (signal) => deps.timingOf(identityOf(c), signal)).catch(() => null));
         }),
     );
-    const holdingsPlain = holdingsBase.map((c) => (holdingTimings.has(c.id) ? { ...c, profiles: offeredProfiles(holdingTimings.get(c.id)?.sigmaHourPct ?? null) } : c));
+    const ecoFamiliesByKey = new Map(eco.candidates.map((e) => [planKey(e.facts.chainIndex, e.facts.address), e.families]));
+    const holdingsPlain = holdingsBase.map((c) => {
+      const tf = holdingTimings.get(c.id) ?? null;
+      const ecoFams = ecoFamiliesByKey.get(planKey(c.chainIndex, c.address)) ?? [];
+      const withT = tf !== null || ecoFams.length > 0 ? withTiming(c, tf, ecoFams) : c;
+      return c.plan === null && holdingTimings.has(c.id) ? { ...withT, profiles: offeredProfiles(tf?.sigmaHourPct ?? null) } : withT;
+    });
     // what the plan is selling this very cycle is not bought back by the model in the same cycle; a token with an order in flight is not touched by the model at all
     const paused = deps.buyingPaused?.() ?? false;
     if (paused) notes.push("compras_pausadas");
@@ -843,7 +853,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       if (candidates.every((c) => c.stances.length <= 1) && !mandateWouldOpenMore(openedNow, mandateNow)) return no("nada_a_decidir");
       const model = typeof deps.model === "function" ? deps.model() : deps.model;
       if (model === null) return no("sem_modelo");
-      const brief = agentBrief({ book: view, holdings, buys: shownBuys, eco, context: deps.context(), history: deps.history(), exec: deps.execFacts?.() ?? null, mandate: mandateView });
+      const brief = agentBrief({ book: view, holdings, buys: shownBuys, eco, context: deps.context(), history: deps.history(), exec: deps.execFacts?.() ?? null, mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) });
       const hash = hashOf(brief);
       // the Brief is ready: no fact in it is later than this instant
       const briefReadyAtMs = deps.now();

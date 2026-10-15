@@ -385,7 +385,8 @@ export interface CliExecutorDeps {
   /** How long the session of the tool still has, looked at again before each order; null when unknown. Not given: not checked here (the gate checks it once per cycle). */
   readonly sessionLeftMs?: () => number | null;
   /** Receives the allowlisted facts of each quote read (quote-facts.ts), under the order key, for the record. Telemetry: a failure here never changes what the executor does. */
-  readonly onQuote?: (orderKey: string, facts: QuoteFacts) => void;
+  /** The facts of each quote under its order key, and which network and side it was for (the network fee it carries is kept per network). */
+  readonly onQuote?: (orderKey: string, facts: QuoteFacts, order: { readonly chainIndex: string; readonly side: "buy" | "sell" }) => void;
   /** The clock the quote is stamped with; this machine's by default. */
   readonly now?: () => number;
 }
@@ -502,7 +503,7 @@ export function createCliExecutor(deps: CliExecutorDeps): Executor {
       const q = oneRecord(quoted.data);
       if (q === null) return fail("quote_ilegivel");
       try {
-        deps.onQuote?.(orderKey, quoteFactsOf(q, (deps.now ?? Date.now)()));
+        deps.onQuote?.(orderKey, quoteFactsOf(q, (deps.now ?? Date.now)()), { chainIndex: order.chainIndex, side: order.side });
       } catch {
         // telemetry only
       }

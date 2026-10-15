@@ -486,6 +486,17 @@ describe("the money mode, end to end", () => {
     expect(svc.status().wallet.sessionLeftMs).toBeNull();
   });
 
+  test("the fee of the quote of an order is kept for its network, with the hour it was read and where it came from, in a file that outlives the process", async () => {
+    const withFee: CliRunner = { run: async (args, o) => (`${args[0]} ${args[1]}` === "swap quote" ? cliOut([{ action: "ok", priceImpactPercent: "0.3", tradeFee: "0.02", estimateGasFee: "5000", fromToken: { isHoneyPot: false, taxRate: "0" }, toToken: { isHoneyPot: false, taxRate: "0" } }]) : fakeCli.run(args, o)) };
+    const svc = make({ processRunner: withFee });
+    await live(svc);
+    await svc.runNow();
+    const saved = JSON.parse(readFileSync(join(dir, "agent", "fees.json"), "utf8")) as { version: number; fees: Record<string, Record<string, unknown>> };
+    expect(saved.version).toBe(1);
+    expect(saved.fees["1"]).toMatchObject({ chainIndex: "1", tradeFeeUsd: 0.02, gasEstimate: 5000, source: "cotacao_de_compra" });
+    expect(typeof saved.fees["1"]!.observedAtMs).toBe("number");
+  });
+
   test("a purchase is quoted, executed, recorded before and after, and its plan opened", async () => {
     cliCalls.length = 0;
     const svc = make();

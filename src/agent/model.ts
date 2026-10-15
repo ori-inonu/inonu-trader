@@ -68,10 +68,11 @@ const LEGEND: Readonly<Record<string, string>> = {
   "compras.d": "creator share of the supply, percent",
   "compras.u": "bundlers' share of the supply, percent",
   "compras.m": "care codes, a list (supply concentration, creator or bundler supply, low liquidity, few holders, risk or a warning tag, entry moment, short history; soma_ao_plano: you already hold it under a plan, so a new purchase keeps that plan and only its profile is offered)",
-  "compras.f": "families of positive evidence, a list (wallets, flow, liquidity, supply distribution, traction, security, pullback)",
+  f: "families of positive evidence, a list (wallets, flow, liquidity, supply distribution, traction, security, pullback)",
   "compras.x": "executable maximum of a purchase, percent of the agent wallet: the cash the agent wallet holds on this token's network (and the limit per transaction of the OKX account, when it has one); every size is a fraction of it (buy_tenth 10 percent, buy_third 33, buy_two_thirds 67, buy_full 100); 0 cannot buy; null balance unknown",
   "compras.i": "the executable maximum as a percent of the pool liquidity: how much price the largest size would move; null when the liquidity is unknown",
   "compras.y": "already held of this token, percent of the portfolio",
+  "compras.k": "network fee of one swap on this token's network, in dollars, from the last quote read there; absent when none was read (unknown, never zero)",
   l: "pool liquidity, thousands of dollars",
   "posicoes.i": "position as a percent of the pool liquidity: how hard it is to leave",
   r: "provider risk 0-5; null unknown",
@@ -131,8 +132,13 @@ export interface BriefInput {
   readonly history: FamilyHistory | null;
   /** The real round trips (fills.ts `execBrief`), when the agent has any. */
   readonly exec?: ExecBrief | null;
+  /** The last network fee quoted on a network (see fees.ts): what a swap costs there, in dollars; null when none was read. */
+  readonly feeOf?: (chainIndex: string) => { readonly usd: number; readonly ageMin: number | null } | null;
   readonly mandate?: { readonly mandate: Mandate; readonly aggressiveOpen: boolean; /** How many purchases each level of risk would put on offer (see `openByRisk`). */ readonly openByRisk?: Readonly<Record<string, number>> } | null;
 }
+
+/** The fee of a swap with two significant digits: 3.4567 is 3.5 and 0.000512 is 0.00051, never rounded to a cent that would make a fee of a fraction of a cent look like zero. */
+const feeUsd = (fee: { readonly usd: number } | null): number | null => (fee === null || !Number.isFinite(fee.usd) || fee.usd < 0 ? null : Number(fee.usd.toPrecision(2)));
 
 const withoutMandate = (legend: Readonly<Record<string, string>>): Readonly<Record<string, string>> => Object.fromEntries(Object.entries(legend).filter(([k]) => k !== "mandato"));
 
@@ -146,6 +152,15 @@ function momentumBrief(m: Candidate["momentum"]): Record<string, number | null> 
   if (m === undefined || m === null) return null;
   return { r5: r1(m.ret5mPct), r15: r1(m.ret15mPct), r1: r1(m.ret1hPct), rg: r1(m.rangeHourPct), vr: r1(m.volRatio), ag: r0(m.barAgeMin) };
 }
+
+/** The two-day hourly structure of a token as short keys; null when there is none. */
+function timingBrief(t: Candidate["timing"]): Record<string, number | null> | null {
+  if (t === undefined || t === null) return null;
+  return { rsi: r0(t.rsi), rp: t.rangePos === null ? null : r0(t.rangePos * 100), r4: r1(t.ret4hPct), r24: r1(t.ret24hPct), up: r0(t.runUpPct), dd: r1(t.drawFromHighPct), sg: r2(t.sigmaHourPct) };
+}
+
+/** Hours held: to a tenth of an hour while under one hour (so a 2-minute position is 0.1, never 0), whole hours from one hour up. */
+const heldHoursBrief = (v: number | null): number | null => (v === null || !Number.isFinite(v) ? null : v > 0 && v < 1 ? Math.max(0.1, r1(v) ?? 0.1) : r0(v));
 
 export function agentBrief(input: BriefInput): AgentBrief {
   const { book } = input;
@@ -169,9 +184,9 @@ export function agentBrief(input: BriefInput): AgentBrief {
       // the provider's tags that WARN, and apart from them the ones in favour (smart money buying, a recognised community): two numbers, not one "risk" count
       m: f === null ? null : bearishFlags(f.riskFlags).length,
       e: r1(f?.sinceEntryPct ?? null),
-      h: r0(f?.heldHours ?? null),
+      h: heldHoursBrief(f?.heldHours ?? null),
       // what the token is doing right now, and how old what the facts say is: only the keys that have a value (a missing one is not a zero, and a null costs bytes)
-      ...present({ g: f === null || bullishFlags(f.riskFlags).length === 0 ? null : bullishFlags(f.riskFlags).length, c5: r1(f?.change5mPct ?? null), c1: r1(f?.change1hPct ?? null), n5: r0(f?.txs5m ?? null), ag: r0(f?.dataAgeMin ?? null), mo: momentumBrief(c.momentum) }),
+      ...present({ g: f === null || bullishFlags(f.riskFlags).length === 0 ? null : bullishFlags(f.riskFlags).length, c5: r1(f?.change5mPct ?? null), c1: r1(f?.change1hPct ?? null), n5: r0(f?.txs5m ?? null), ag: r0(f?.dataAgeMin ?? null), mo: momentumBrief(c.momentum), tm: timingBrief(c.timing), f: c.families.length > 0 ? c.families : null }),
       t: c.triggers,
       o: c.stances,
       pl: c.plan === null ? null : { pf: c.plan.profile, e: r1(c.plan.sinceEntryPct), a: r1(c.plan.toTargetPct), s: r1(c.plan.toStopPct), hl: r0(c.plan.hoursLeft), th: c.plan.targetHit },
@@ -194,8 +209,8 @@ export function agentBrief(input: BriefInput): AgentBrief {
       f: c.families,
       o: c.stances,
       pf: c.profiles,
-      ...present({ mo: momentumBrief(c.momentum) }),
-      tm: t === null ? null : { rsi: r0(t.rsi), rp: t.rangePos === null ? null : r0(t.rangePos * 100), r4: r1(t.ret4hPct), r24: r1(t.ret24hPct), up: r0(t.runUpPct), dd: r1(t.drawFromHighPct), sg: r2(t.sigmaHourPct) },
+      ...present({ mo: momentumBrief(c.momentum), k: feeUsd(input.feeOf?.(c.chainIndex) ?? null) }),
+      tm: timingBrief(t),
     };
   }
   return {

@@ -66,10 +66,23 @@ export interface HoldingCandidates {
   readonly excluded: Readonly<Record<string, number>>;
 }
 
-/** A holding with the last hour of its token attached: the view, and its marks among the triggers (observations: never a sale by themselves). */
+/** A holding with the last hour of its token attached: the view, and its marks among the triggers (observations: never a sale by itself). */
 export function withMomentum(c: Candidate, m: MomentumFacts | null): Candidate {
   if (m === null) return c;
   return { ...c, triggers: [...c.triggers, ...m.marks.filter((mark) => !c.triggers.includes(mark))], momentum: momentumView(m) };
+}
+
+/** A holding with the two-day hourly history and positive families of its token attached, so the model keeps the same structural view after buying. */
+export function withTiming(c: Candidate, tf: TimingFacts | null, extraFamilies: readonly string[] = []): Candidate {
+  if (tf === null && extraFamilies.length === 0) return c;
+  const tFamilies = tf === null ? [] : timingFamilies(tf);
+  const families = [...c.families];
+  for (const fam of [...extraFamilies, ...tFamilies]) if (!families.includes(fam)) families.push(fam);
+  const timing: Candidate["timing"] =
+    tf === null
+      ? c.timing
+      : { rsi: tf.rsi, rangePos: tf.rangePos, ret4hPct: tf.ret4hPct, ret24hPct: tf.ret24hPct, runUpPct: tf.runUpPct, drawFromHighPct: tf.drawFromHighPct, sigmaHourPct: tf.sigmaHourPct };
+  return { ...c, families, timing };
 }
 
 export function holdingCandidates(

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { candidateOf, type EcoFacts } from "../opportunity/ecosystem";
 import type { Candle } from "../quant/types";
-import { buyCandidates, holdingCandidates, openByRisk, saldoOf } from "./candidates";
+import { buyCandidates, holdingCandidates, openByRisk, saldoOf, withTiming } from "./candidates";
 import { timingFacts, type TimingFacts } from "./timing";
 import { agentBrief, agentQuestions, BRIEF_MAX_BYTES, createJevAgentModel, estimateTokens, physicalRequestsOf } from "./model";
 import type { Book, Candidate, HoldingFacts, Position } from "./types";
@@ -33,6 +33,24 @@ const build = (holdN: number, buyN: number) => {
   const buys = buyCandidates(ecoCtx, () => calm, () => 10);
   return { book, saldo, holdings, buys, ecoCtx, candidates: [...holdings, ...buys] as Candidate[] };
 };
+
+describe("the network fee of a swap rides in the Brief of a purchase as a fact (ADENDO-C, FEE-3)", () => {
+  test("`k` is the fee of one swap on the network of the token, in dollars with two significant digits, from the last quote read there; a network with no measured fee carries no `k` at all (absent is unknown, never zero), and the legend says what it is", () => {
+    const { book, buys, ecoCtx } = build(1, 2);
+    const feeOf = (chainIndex: string) => (chainIndex === "1" ? { usd: 3.4567, ageMin: 5 } : null);
+    const brief = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: null, feeOf });
+    const first = brief.compras[buys[0]!.id] as Record<string, unknown>;
+    expect(first.k).toBe(3.5);
+    const tiny = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: null, feeOf: () => ({ usd: 0.000512, ageMin: 1 }) });
+    expect((tiny.compras[buys[0]!.id] as Record<string, unknown>).k).toBe(0.00051);
+    const none = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: null, feeOf: () => null });
+    expect(Object.hasOwn(none.compras[buys[0]!.id] as object, "k")).toBe(false);
+    const legacy = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: null });
+    expect(Object.hasOwn(legacy.compras[buys[0]!.id] as object, "k")).toBe(false);
+    expect(brief.chaves["compras.k"]).toMatch(/fee/i);
+    expect(new TextEncoder().encode(JSON.stringify(brief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
+  });
+});
 
 describe("the Brief the agent's model reads", () => {
   test("the minutes of a token and how fresh the facts are ride in the Brief as plain numbers, and a token with none carries none", () => {
@@ -158,6 +176,16 @@ describe("the Brief the agent's model reads", () => {
     const item = brief.posicoes[holdings[0]!.id] as Record<string, unknown>;
     expect(item).toMatchObject({ s: "H16", wl: "a", e: -3.1, p: 2.5, i: 0.12, v: 12, r: 2, m: 2, h: 31, o: ["hold", "trim_third", "trim_half", "exit_all"] });
     expect(item.l).toBe(1235);
+  });
+
+  test("a holding with two-day hourly timing and families keeps them in the Brief, and a freshly opened position under one hour shows tenths of an hour instead of zero", () => {
+    const { book, holdings, buys, ecoCtx } = build(1, 0);
+    const freshHoldings = holdings.map((c) => withTiming({ ...c, facts: { ...c.facts!, heldHours: 2 / 60 } }, calm, ["liquidez", "distribuicao", "seguranca"]));
+    const brief = agentBrief({ book, holdings: freshHoldings, buys, eco: ecoCtx, context: null, history: null });
+    const item = brief.posicoes[freshHoldings[0]!.id] as Record<string, unknown>;
+    expect(item.h).toBe(0.1);
+    expect(item.f).toEqual(expect.arrayContaining(["liquidez", "distribuicao", "seguranca"]));
+    expect(item.tm).toMatchObject({ rsi: expect.any(Number), rp: expect.any(Number), sg: expect.any(Number) });
   });
 
   test("a holding says how many of the provider's tags warn and how many are in favour, apart: the two are not one number", () => {

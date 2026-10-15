@@ -591,6 +591,18 @@ describe("limited mode: carries the orders out inside the policy", () => {
     expect(r.deps.ledger.inFlight()).toHaveLength(1);
   });
 
+  test("the network fee last measured on the network of a purchase reaches the Brief the model reads, and is in the record: absent where none was measured", async () => {
+    const entries: { brief: { compras: Record<string, Record<string, unknown>> } }[] = [];
+    const r = rig({ mode: "sombra", positions: [cash(1000), pos()] });
+    await createCycleRunner({ ...r.deps, feeOf: (chainIndex) => (chainIndex === "1" ? { usd: 3.4567, ageMin: 4 } : null), onConsult: (e) => void entries.push(e as never) }).run();
+    const buy = Object.values(entries[0]!.brief.compras)[0]!;
+    expect(buy.k).toBe(3.5);
+    const bare = rig({ mode: "sombra", positions: [cash(1000), pos()] });
+    const plain: { brief: { compras: Record<string, Record<string, unknown>> } }[] = [];
+    await createCycleRunner({ ...bare.deps, onConsult: (e) => void plain.push(e as never) }).run();
+    expect(Object.hasOwn(Object.values(plain[0]!.brief.compras)[0]!, "k")).toBe(false);
+  });
+
   test("the consultation tells the study of the agent the four real clocks and the full hash of the Brief the model read, apart from the record (ADENDO-D, V2-4)", async () => {
     let t = NOW;
     const metas: { factAvailableAtMs: number; askedAtMs: number; answeredAtMs: number; briefHash: string; model: string }[] = [];
@@ -1866,5 +1878,16 @@ describe("the quality of the entry", () => {
     const r = rig({});
     await createCycleRunner(r.deps).run();
     expect(r.offered[`buy:token:1:${B}`]!.length).toBeGreaterThan(1);
+  });
+
+  test("a holding with an open plan keeps its hourly timing and ecosystem families in the Brief so the entry thesis is not lost on the next look", async () => {
+    const planA: PositionPlan = { key: planKey("1", A), chainIndex: "1", address: A, symbol: "AAA", profile: "alvo_5", entryPriceUsd: 2, entryAtMs: NOW - 120_000, peakPriceUsd: 2, targetHit: false, trimmed: false, cycleId: "c0" };
+    const r = rig({ mode: "sombra", plans: [planA], positions: [cash(1000), pos({ priceUsd: 2 })], ecoFacts: [eco(A, "AAA"), eco(B, "BBB")] });
+    let consulted: Record<string, unknown> | null = null;
+    await createCycleRunner({ ...r.deps, onConsult: (entry) => void (consulted = entry.brief.posicoes[`hold:token:1:${A}@agente`] ?? null) }).run();
+    expect(consulted).not.toBeNull();
+    expect(consulted!.tm).toMatchObject({ rsi: expect.any(Number), rp: expect.any(Number), sg: expect.any(Number) });
+    expect(consulted!.f).toEqual(expect.arrayContaining(["liquidez", "distribuicao", "seguranca"]));
+    expect(consulted!.pl).toMatchObject({ pf: "alvo_5", th: false });
   });
 });
