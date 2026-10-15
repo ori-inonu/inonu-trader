@@ -1,0 +1,81 @@
+bun test v1.3.14 (0d9b296a)
+
+src\lib\mesa\market-inputs.test.tsx:
+11 | 
+12 | describe("focused market display", () => {
+13 |   test.each(["bar", "compact"] as const)("%s header never inherits exchange values for an empty on-chain source", (variant) => {
+14 |     const inputs = marketInputsFor(exchange, empty);
+15 |     const html = renderToStaticMarkup(<InstrumentHeader {...inputs} variant={variant} />);
+16 |     expect(inputs.ticker).toBeNull();
+                               ^
+error: expect(received).toBeNull()
+
+Received: {
+  instId: "BTC-USDT-SWAP",
+  last: 67428.1,
+  open24h: 68026.11418023716,
+  high24h: 68842.4275504,
+  low24h: 66622.9148,
+  volBase24h: 162944.52523199967,
+  volQuote24h: 10987034334.61079,
+  bidPx: 67428,
+  bidSz: 13.583886,
+  askPx: 67428.1,
+  askSz: 19.151438,
+  tsMs: 1791720000000,
+}
+
+      at <anonymous> (C:\Users\gabri\.codex\workspaces\ui-audit-01a13627\candidate\web\src\lib\mesa\market-inputs.test.tsx:16:27)
+(fail) focused market display > bar header never inherits exchange values for an empty on-chain source [26.57ms]
+11 | 
+12 | describe("focused market display", () => {
+13 |   test.each(["bar", "compact"] as const)("%s header never inherits exchange values for an empty on-chain source", (variant) => {
+14 |     const inputs = marketInputsFor(exchange, empty);
+15 |     const html = renderToStaticMarkup(<InstrumentHeader {...inputs} variant={variant} />);
+16 |     expect(inputs.ticker).toBeNull();
+                               ^
+error: expect(received).toBeNull()
+
+Received: {
+  instId: "BTC-USDT-SWAP",
+  last: 67428.1,
+  open24h: 68026.11418023716,
+  high24h: 68842.4275504,
+  low24h: 66622.9148,
+  volBase24h: 162944.52523199967,
+  volQuote24h: 10987034334.61079,
+  bidPx: 67428,
+  bidSz: 13.583886,
+  askPx: 67428.1,
+  askSz: 19.151438,
+  tsMs: 1791720000000,
+}
+
+      at <anonymous> (C:\Users\gabri\.codex\workspaces\ui-audit-01a13627\candidate\web\src\lib\mesa\market-inputs.test.tsx:16:27)
+(fail) focused market display > compact header never inherits exchange values for an empty on-chain source [3.45ms]
+29 |   test("a partial on-chain response cannot fill its missing instrument or book from the exchange", () => {
+30 |     const candles = [{ tsMs: 1000, open: 2, high: 3, low: 1, close: 2.5, volBase: 10, volQuote: 25, confirmed: true }];
+31 |     const onchain = { candles, ticker: onchainTickerFor(candles, { symbol: "TOKEN", chainIndex: "1", address: "0x1" }), metrics: onchainMetricsFor(candles), instrument: null };
+32 |     const inputs = marketInputsFor(exchange, onchain);
+33 |     expect(inputs.ticker?.instId).toBe("TOKEN");
+34 |     expect(inputs.instrument).toBeNull();
+                                   ^
+error: expect(received).toBeNull()
+
+Received: {
+  instId: "BTC-USDT-SWAP",
+  instType: "SWAP",
+  base: "BTC",
+  quote: "USDT",
+  tickSz: "0.1",
+  lotSz: "0.01",
+}
+
+      at <anonymous> (C:\Users\gabri\.codex\workspaces\ui-audit-01a13627\candidate\web\src\lib\mesa\market-inputs.test.tsx:34:31)
+(fail) focused market display > a partial on-chain response cannot fill its missing instrument or book from the exchange [1.02ms]
+(pass) focused market display > without on-chain focus it preserves the exchange slices and derivatives [0.19ms]
+
+ 1 pass
+ 3 fail
+ 10 expect() calls
+Ran 4 tests across 1 file. [374.00ms]

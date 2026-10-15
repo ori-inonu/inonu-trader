@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createInonuClient, type AskAnswer } from "@/lib/inonu/client";
-import { portfolioMatches } from "@/lib/inonu/portfolio";
+import { portfolioMatches, type PortfolioAnswer } from "@/lib/inonu/portfolio";
 import { pctText, usdText, type BalanceRow } from "@/lib/wallet/holdings";
 import type { OnchainFocus } from "@/lib/onchain/focus";
-import { CONSULT_COST_TEXT, consultNetworks, type ConsultNetwork, type ConsultPrepared, PLAN_WORD, prepareConsult } from "@/lib/wallet/holdings-consult";
+import { CONSULT_COST_TEXT, consultNetworks, consultReadingKey, type ConsultNetwork, type ConsultPrepared, PLAN_WORD, prepareConsult } from "@/lib/wallet/holdings-consult";
 import { networkLabel } from "@/lib/wallet/network-label";
 import styles from "./HoldingsPanel.module.css";
 
@@ -122,7 +122,7 @@ export interface HoldingsConsultViewProps {
 }
 
 export function HoldingsConsultView(p: HoldingsConsultViewProps) {
-  const plan = p.prepared.ok ? p.answer?.carteira ?? null : null;
+  const plan = p.answer?.carteira?.chainIndex === p.chainIndex ? p.answer.carteira : null;
   const needsRefresh = !p.prepared.ok && p.ageSeconds !== null && p.ageSeconds > 60 && p.onRefresh !== undefined;
   return (
     <section className={styles.decision} aria-label="O que fazer com a minha carteira">
@@ -176,6 +176,7 @@ export function HoldingsConsultView(p: HoldingsConsultViewProps) {
       {p.note === null ? null : <p className={styles.note}>{p.note}</p>}
       {plan === null ? null : (
         <>
+          {!p.prepared.ok ? <p className={styles.note}>Resultado da leitura anterior. Atualize antes de uma nova analise.</p> : null}
           <p className={styles.note}>{plan.positionsEmpty === true ? "Sem saldo nos ativos lidos." : "Plano por ativo, na rede " + networkLabel(plan.chainIndex) + ":"}</p>
           {plan.assets.every((asset) => asset.action === "abstain") ? <p className={styles.analysisLimit} role="status">Nenhuma acao indicada pelo Inonu nesta consulta. A abstencao nao identifica sozinha qual dado impediu a decisao.</p> : null}
           {plan.assets.some((asset) => asset.evidence.gaps.length > 0) ? <p className={styles.note}>Lacunas da coleta, nao uma justificativa do modelo. Contexto complementar ausente nao prova, por si so, risco no ativo.</p> : null}
@@ -202,11 +203,16 @@ export function HoldingsConsultView(p: HoldingsConsultViewProps) {
                 <div className={styles.cell} role="cell">{asset.balance === null ? "desconhecido" : asset.balance}</div>
                 <div className={`${styles.cell} ${styles.verdict}`} role="cell">{asset.action === "abstain" ? "Nenhuma acao indicada" : PLAN_WORD[asset.action]}</div>
                 <div className={`${styles.cell} ${styles.evidence}`} role="cell" data-evidence="details">
+                  <details><summary>Evidencia</summary>
                   {available.length > 0 ? <p><span className={styles.evidenceLabel}>Dados disponiveis</span>{available.join("; ")}</p> : market === null ? <p>Resumo de fluxo e risco indisponivel</p> : null}
                   {market === null ? null : <MarketEvidence market={market} origin={asset.evidence.origin} />}
+                  {asset.evidence.riskDetails ? <p>{`Risco: ${asset.evidence.riskDetails.level ?? "desconhecido"}; alertas: ${asset.evidence.riskDetails.tags.join(", ") || "nenhum informado"}; LP queimada: ${pctText(asset.evidence.riskDetails.lpBurnedPct)}`}</p> : null}
+                  {asset.evidence.concentration ? <p>{`Concentracao: top 10 ${pctText(asset.evidence.concentration.top10HoldPct)}; desenvolvedor ${pctText(asset.evidence.concentration.devHoldPct)}; bundles ${pctText(asset.evidence.concentration.bundleHoldPct)}${asset.evidence.concentration.stale ? "; leitura antiga" : ""}`}</p> : null}
+                  {asset.evidence.poolLiquidity ? <p>{`Pools consultados: ${asset.evidence.poolLiquidity.poolCount}; liquidez parcial ${usdText(asset.evidence.poolLiquidity.topPoolsLiquidityUsd)}; maior pool nesta amostra ${pctText(asset.evidence.poolLiquidity.largestPoolSharePct)}`}</p> : null}
                   {gaps.length > 0 ? <p><span className={styles.evidenceLabel}>Lacunas da coleta</span>{gaps.map(gapText).join("; ")}</p> : null}
                   {optional.length > 0 ? <details><summary>Contexto complementar ausente ({optional.length})</summary><p>{[...new Set(optional.map(gapText))].join("; ")}</p></details> : null}
                   {inapplicable.length > 0 ? <p>{[...new Set(inapplicable.map(gapText))].join("; ")}</p> : null}
+                  </details>
                 </div>
               </div>
               );
@@ -222,7 +228,7 @@ export function HoldingsConsultView(p: HoldingsConsultViewProps) {
 }
 
 /** The decision about one reading: the holdings of the last "Ler minha carteira", the moment the gateway observed them, and the clock of the screen. */
-export default function HoldingsConsult({ rows, receivedAtMs, ageMs, nowMs, candidate = null, onRefresh }: { readonly rows: readonly BalanceRow[]; readonly receivedAtMs: number; readonly ageMs: number; readonly nowMs: number; readonly candidate?: OnchainFocus | null; readonly onRefresh?: () => void }) {
+export default function HoldingsConsult({ rows, receivedAtMs, ageMs, nowMs, candidate = null, onRefresh, onDecision }: { readonly rows: readonly BalanceRow[]; readonly receivedAtMs: number; readonly ageMs: number; readonly nowMs: number; readonly candidate?: OnchainFocus | null; readonly onRefresh?: () => void; readonly onDecision?: (plan: PortfolioAnswer) => void }) {
   const networks = useMemo(() => consultNetworks(rows), [rows]);
   const [picked, setPicked] = useState<string | null>(null);
   const preferred = candidate !== null && networks.some((n) => n.chainIndex === candidate.chainIndex) ? candidate.chainIndex : (networks[0]?.chainIndex ?? "");
@@ -238,7 +244,7 @@ export default function HoldingsConsult({ rows, receivedAtMs, ageMs, nowMs, cand
 
   const observedAtMs = Math.min(receivedAtMs, Math.max(0, receivedAtMs - Math.max(0, ageMs)));
   const prepared = useMemo(() => prepareConsult(rows, chainIndex, observedAtMs, nowMs, candidate), [rows, chainIndex, observedAtMs, nowMs, candidate]);
-  const requestKey = prepared.ok ? JSON.stringify(prepared.request) : "unavailable";
+  const requestKey = consultReadingKey(rows, chainIndex, receivedAtMs, ageMs, candidate);
 
   const stop = () => {
     generation.current++;
@@ -273,6 +279,7 @@ export default function HoldingsConsult({ rows, receivedAtMs, ageMs, nowMs, cand
         if (result.carteira && portfolioMatches(result.carteira, request)) {
           setAnswer(result);
           setAnswerKey(requestKey);
+          onDecision?.(result.carteira);
         }
         else setNote(OUTCOMES[result.status] ?? "A resposta nao corresponde aos ativos enviados. Tente de novo com uma leitura nova.");
       })

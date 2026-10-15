@@ -1,0 +1,192 @@
+/*
+ * The command centre. The drawing is an SVG written as a string (lib/hud/draw), so its classes are plain names; everything is scoped under .hud-root so none of them can touch another screen.
+ * Motion here is rotation, flow along a line, a sweep, a draw-in and a rise or a slide into place. Nothing blinks and nothing pulses: no keyframe changes opacity or visibility, and no loop is faster than
+ * one turn every 1.4 seconds. A person who asks the system for less motion gets none (the last rule).
+ */
+.hud-root {
+  --bg: #02070d;
+  --cy: #2ee6ff;
+  --cy-soft: #7df3ff;
+  --mute: #5fa3b5;
+  --amber: #ffb23e;
+  --green: #38ffb4;
+  --text: #bfefff;
+  --white: #e9fbff;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Bahnschrift, "Segoe UI", var(--font-inter), system-ui, sans-serif;
+}
+.hud-root.hud-tall { overflow-x: hidden; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #17687f #02070d; }
+/* the tabs of a scene that scrolls keep to the top of the window: their plate shows only once they have left their own place (HudView moves the group) */
+.hud-root .sticky-plate { opacity: 0; transition: opacity .2s ease; }
+.hud-root svg.stuck .sticky-plate { opacity: .96; }
+.hud-root svg.hud-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.hud-root.hud-tall svg.hud-svg { position: relative; height: auto; }
+.hud-root.hud-gate > *:not(.hud-rain) { position: relative; z-index: 1; }
+.hud-root.hud-gate > .hud-modal-scrim { position: fixed; z-index: 5; }
+
+.hud-root text { fill: var(--text); letter-spacing: .06em; }
+.hud-root .t-title { font-size: 14px; fill: var(--cy-soft); letter-spacing: .26em; }
+.hud-root .t-sub { font-size: 11.5px; fill: var(--mute); letter-spacing: .14em; }
+.hud-root .t-big { font-size: 38px; fill: var(--white); letter-spacing: .02em; font-weight: 600; }
+.hud-root .t-num { font-size: 22px; fill: var(--white); letter-spacing: .02em; font-weight: 600; }
+.hud-root .t-mono { font-family: Consolas, "Cascadia Mono", var(--font-geist-mono), monospace; font-size: 12.5px; letter-spacing: .02em; }
+.hud-root .glow { filter: url(#glow); }
+.hud-root .glow2 { filter: url(#glow2); }
+
+@keyframes hud-spin { to { transform: rotate(360deg); } }
+@keyframes hud-spin-rev { to { transform: rotate(-360deg); } }
+@keyframes hud-flow { to { stroke-dashoffset: -200; } }
+@keyframes hud-flow-rev { to { stroke-dashoffset: 200; } }
+@keyframes hud-drift { to { transform: translate(-96px, -96px); } }
+@keyframes hud-scan { from { transform: translateX(0); } to { transform: translateX(var(--w)); } }
+@keyframes hud-scany { from { transform: translateY(0); } to { transform: translateY(var(--h)); } }
+@keyframes hud-rise { to { transform: translateY(var(--h)); } }
+@keyframes hud-bob { from { transform: scaleY(.35); } to { transform: scaleY(1); } }
+@keyframes hud-wave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes hud-drawin { to { stroke-dashoffset: 0; } }
+@keyframes hud-growy { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes hud-growx { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes hud-enter { from { transform: translateY(18px); } to { transform: translateY(0); } }
+@keyframes hud-slide { from { transform: translateX(-18px); } to { transform: translateX(0); } }
+@keyframes hud-sweep { from { transform: translateX(0); } to { transform: translateX(var(--w)); } }
+@keyframes hud-tabrun { to { stroke-dashoffset: -100; } }
+@keyframes hud-shine { from { transform: translateX(0); } to { transform: translateX(var(--w)); } }
+@keyframes hud-rain { from { transform: translateY(-100%); } to { transform: translateY(100vh); } }
+
+.hud-root .spin-b { animation: hud-spin-rev 140s linear infinite; }
+.hud-root .spin-c { animation: hud-spin 38s linear infinite; }
+.hud-root .spin-d { animation: hud-spin-rev 24s linear infinite; }
+.hud-root .spin-e { animation: hud-spin 14s linear infinite; }
+.hud-root .spin-f { animation: hud-spin 220s linear infinite; }
+.hud-root .flow { stroke-dasharray: 6 14; animation: hud-flow 6s linear infinite; }
+.hud-root .flow-fast { stroke-dasharray: 4 10; animation: hud-flow 3s linear infinite; }
+.hud-root .flow-rev { stroke-dasharray: 6 14; animation: hud-flow-rev 9s linear infinite; }
+.hud-root .flow-slow { animation: hud-flow 9s linear infinite; }
+.hud-root .bar { transform-box: fill-box; transform-origin: center bottom; animation: hud-bob 1.8s ease-in-out infinite alternate; }
+.hud-root .drift { animation: hud-drift 30s linear infinite; }
+.hud-root .wave { transform-box: fill-box; animation: hud-wave 4.2s ease-in-out infinite; }
+.hud-root .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: hud-drawin 1.6s ease-out forwards; }
+.hud-root .grow-y { transform-box: fill-box; transform-origin: center bottom; animation: hud-growy .9s ease-out both; }
+.hud-root .grow-x { transform-box: fill-box; transform-origin: left center; animation: hud-growx .9s ease-out both; }
+.hud-root .enter { animation: hud-enter .7s cubic-bezier(.2, .8, .2, 1) both; }
+.hud-root .slide { animation: hud-slide .6s cubic-bezier(.2, .8, .2, 1) both; }
+.hud-root .boot-sweep { animation: hud-sweep 1.2s ease-out both; }
+
+.hud-root .blip { transition: r .6s ease, stroke-width .6s ease; cursor: pointer; }
+.hud-root .hexfill { transition: opacity .8s ease, fill .8s ease; }
+/* the tabs: a light runs along the outline of the one that is open, and along any other one when it is looked at; they rise a little under the pointer and sink when pressed */
+.hud-root .tab { cursor: pointer; outline: none; transform-box: fill-box; transform-origin: center; transition: transform .25s ease; }
+.hud-root .tab text { fill: var(--cy-soft); transition: fill .25s ease; }
+.hud-root .tab path.plate { transition: fill .25s ease, stroke .25s ease; }
+.hud-root .tab .tab-flow { stroke: #bff6ff; stroke-dasharray: 14 86; animation: hud-tabrun 4s linear infinite; stroke-opacity: 0; transition: stroke-opacity .3s ease; pointer-events: none; }
+.hud-root .tab:hover { transform: translateY(-2px); }
+.hud-root .tab:active { transform: translateY(0) scale(.97); }
+.hud-root .tab:hover text, .hud-root .tab:focus-visible text, .hud-root .tab[aria-selected="true"] text { fill: var(--white); }
+.hud-root .tab:hover path.plate, .hud-root .tab:focus-visible path.plate { stroke: var(--cy-soft); fill: #08303c; }
+.hud-root .tab:focus-visible path.plate { stroke-width: 3; }
+.hud-root .tab:hover .tab-flow, .hud-root .tab:focus-visible .tab-flow, .hud-root .tab[aria-selected="true"] .tab-flow { stroke-opacity: .95; }
+.hud-root .tab .tab-icon { stroke: var(--cy-soft); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke .25s ease; }
+.hud-root .tab:hover .tab-icon, .hud-root .tab[aria-selected="true"] .tab-icon { stroke: var(--white); }
+
+.hud-root .btn { cursor: pointer; outline: none; transform-box: fill-box; transform-origin: center; transition: transform .2s ease; }
+.hud-root .btn path.plate { transition: stroke .3s ease, fill .3s ease; }
+.hud-root .btn .btn-flow { stroke-dasharray: 12 88; animation: hud-tabrun 3.2s linear infinite; stroke-opacity: .3; transition: stroke-opacity .3s ease; pointer-events: none; }
+.hud-root .btn .btn-shine { transform: translateX(-90px); pointer-events: none; }
+.hud-root .btn:hover { transform: translateY(-1px); }
+.hud-root .btn:active { transform: translateY(0) scale(.985); }
+.hud-root .btn:hover path.plate, .hud-root .btn:focus-visible path.plate { stroke: var(--white); fill: #07303c; }
+.hud-root .btn:hover .btn-flow, .hud-root .btn:focus-visible .btn-flow { stroke-opacity: 1; }
+.hud-root .btn:hover .btn-shine, .hud-root .btn:focus-visible .btn-shine { animation: hud-shine .9s ease-out; }
+.hud-root .btn.off { cursor: default; }
+.hud-root .btn.off .btn-flow, .hud-root .btn.off .btn-shine { display: none; }
+.hud-root .btn.off:hover { transform: none; }
+.hud-root .btn.off:hover path.plate { stroke: #2c5563; fill: #041a23; }
+
+/* the quiet rain behind everything: faint digits falling slowly, dimmer in the middle where the core is, brighter at the edges. It moves and never blinks. */
+.hud-root .hud-rain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 46%, rgba(0, 0, 0, .3) 0, rgba(0, 0, 0, .55) 32%, #000 78%);
+  mask-image: radial-gradient(ellipse at 50% 46%, rgba(0, 0, 0, .3) 0, rgba(0, 0, 0, .55) 32%, #000 78%);
+}
+.hud-root .hud-rain-col {
+  position: absolute;
+  top: 0;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  white-space: nowrap;
+  font-family: Consolas, "Cascadia Mono", var(--font-geist-mono), monospace;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .3em;
+  color: transparent;
+  background: linear-gradient(to bottom, rgba(46, 230, 255, 0) 0%, rgba(46, 230, 255, .55) 70%, #bff6ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: var(--o, .1);
+  animation-name: hud-rain;
+  animation-duration: var(--d, 24s);
+  animation-delay: var(--delay, 0s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.hud-root svg.hud-svg { z-index: 1; }
+
+/* standby: the same plate and the same type as the centre */
+.hud-root.hud-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 42%, #06222e 0%, #03111a 55%, #02070d 100%),
+    var(--bg);
+  overflow-y: auto;
+}
+.hud-root .hud-ring { width: min(60vw, 340px); height: auto; flex: none; }
+.hud-root .hud-gate-brand { margin: 0; font-size: 12px; letter-spacing: .4em; color: var(--mute); }
+.hud-root .hud-gate-headline { margin: 0; max-width: 760px; font-size: clamp(20px, 3.4vw, 34px); font-weight: 600; letter-spacing: .12em; line-height: 1.25; color: var(--white); }
+.hud-root .hud-gate-lead { margin: 0; max-width: 640px; font-size: 14px; line-height: 1.6; color: var(--text); }
+.hud-root .hud-gate-notice { margin: 0; max-width: 640px; font-size: 13px; line-height: 1.5; }
+.hud-root .hud-gate-notice.ok { color: var(--green); }
+.hud-root .hud-gate-notice.bad { color: var(--amber); }
+.hud-root .hud-cta {
+  font: 600 13px/1 Bahnschrift, "Segoe UI", system-ui, sans-serif;
+  letter-spacing: .2em;
+  color: var(--white);
+  background: #0b4252;
+  border: 1px solid var(--cy);
+  padding: 15px 26px;
+  cursor: pointer;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  transition: background .3s ease, border-color .3s ease;
+}
+.hud-root .hud-cta:hover:not(:disabled), .hud-root .hud-cta:focus-visible { background: #0f6279; outline: none; }
+.hud-root .hud-cta:disabled { opacity: .5; cursor: default; }
+.hud-root .hud-cta.quiet { background: #041a23; border-color: #17687f; color: var(--cy-soft); }
+.hud-root .hud-modal-scrim { position: fixed; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(2, 7, 13, .88); }
+.hud-root .hud-modal { max-width: 640px; max-height: 100%; overflow-y: auto; text-align: left; padding: 26px 28px; background: #041a23; border: 1px solid #17687f; }
+.hud-root .hud-modal h2 { margin: 0 0 14px; font-size: 15px; letter-spacing: .22em; color: var(--cy-soft); }
+.hud-root .hud-modal p { margin: 0 0 12px; font-size: 14px; line-height: 1.6; color: var(--text); }
+.hud-root .hud-modal p.warn { color: var(--amber); }
+.hud-root .hud-modal-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+
+.hud-root .hud-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-root .hud-rain { display: none; }
+  .hud-root *, .hud-root *::before, .hud-root *::after { animation: none !important; transition: none !important; }
+  .hud-root .draw { stroke-dasharray: none; stroke-dashoffset: 0; }
+}

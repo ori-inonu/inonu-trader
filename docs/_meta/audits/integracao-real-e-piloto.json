@@ -1,0 +1,853 @@
+{
+  "owner": "integracao-real-e-piloto",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T12:23:17-03:00",
+  "branch": "main",
+  "page": {
+    "path": "docs/concepts/integracao-real-e-piloto.md",
+    "absolute_path": "C:/Users/gabri/jev-trader/docs/concepts/integracao-real-e-piloto.md",
+    "line_count": 73,
+    "sha256": "40f16249f1cec98e6b839908c010344858d586a2394299840e07211345626c7e"
+  },
+  "documents": [
+    {
+      "path": "docs/gev-wallet-pilot/CHECKPOINT.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint antigo; hold default/P2 pendente, não prova serviço atual.",
+      "code_refs": [
+        "src/pilot/service.ts:evaluatePilot"
+      ]
+    },
+    {
+      "path": "docs/gev-wallet-pilot/IMPLEMENTATION-NOTES.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "Portas e default sem source conferem com o código atual.",
+      "code_refs": [
+        "src/pilot/ports.ts:resolvePilotPorts",
+        "scripts/gev-wallet-pilot.ts:7-12"
+      ]
+    },
+    {
+      "path": "docs/gev-wallet-pilot/SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Critérios P1-P7; P2 exige fonte real, sem autorizar assinatura/envio.",
+      "code_refs": [
+        "src/pilot/service.ts:validateBundle",
+        "src/pilot/protocol.ts:PilotCycle"
+      ]
+    },
+    {
+      "path": "docs/gev-wallet-pilot/VERIFICATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Resultados são do snapshot histórico; P2 continuava pendente.",
+      "code_refs": [
+        "scripts/gev-wallet-pilot.ts:7-12",
+        "src/pilot/service.ts:evaluatePilot"
+      ]
+    },
+    {
+      "path": "docs/real-integration/CHECKPOINT-BLOCKED-CONTINUATION-2.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint e bloqueios de outro turno/worktree."
+    },
+    {
+      "path": "docs/real-integration/CHECKPOINT.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Progresso G01-G17 de candidato, sem autoridade live atual."
+    },
+    {
+      "path": "docs/real-integration/CONTRAST-SOURCE-R8.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Contraste CSS r8c; não certifica acessibilidade atual.",
+      "code_refs": [
+        "web/src/components/RealPipeline/RealPipelineView.tsx"
+      ]
+    },
+    {
+      "path": "docs/real-integration/CORE-IMPLEMENTATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Entrega isolada de core em 2026-10-11; não prova operação."
+    },
+    {
+      "path": "docs/real-integration/ESTADO-ATUAL.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Análise de checkout datada e proposta; não retrato do HEAD/live atual."
+    },
+    {
+      "path": "docs/real-integration/EXECUTION-SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Aceitação G01-G17; critérios não concedem autorização financeira."
+    },
+    {
+      "path": "docs/real-integration/EXTENSIONS-SPEC.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Dizia ausente no snapshot isolado; hoje adapter GET existe, opt-in e não qualificado.",
+      "code_refs": [
+        "src/real/extensions.ts:createRealExtensions",
+        "src/real/extension-integration.ts:attachRealExtensions",
+        "scripts/real-start.ts"
+      ]
+    },
+    {
+      "path": "docs/real-integration/G11-METADATA-CONCLUSION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Hash/runtime observado, metadata ausente e Sourcify 404; ABI/decoder não qualificados.",
+      "code_refs": [
+        "src/real/rpc-read.ts:createRpcReadAdapter",
+        "src/real/semantic-proof.ts:createSemanticProofEvaluator"
+      ]
+    },
+    {
+      "path": "docs/real-integration/G11-SOURCE-RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa/proposta distingue source, ABI e deployment; não valida decoder atual.",
+      "code_refs": [
+        "src/real/rpc-read.ts:createRpcReadAdapter",
+        "src/real/semantic-proof.ts:createSemanticProofEvaluator"
+      ]
+    },
+    {
+      "path": "docs/real-integration/GUIA-LOCAL.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Defaults coincidem, mas worktree e receipts/ports 4130/4131 são específicos do candidato.",
+      "code_refs": [
+        "scripts/real-console.ts",
+        "src/real/config.ts:loadRealConfig"
+      ]
+    },
+    {
+      "path": "docs/real-integration/INSTRUCAO-DO-OBJETIVO.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "G01-G17 permanecem critérios; instrução não é prova de conclusão."
+    },
+    {
+      "path": "docs/real-integration/INTEGRATION-SEAMS-SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "IS01-IS06 preservam unknowns, opt-in e separação de estados."
+    },
+    {
+      "path": "docs/real-integration/INVENTARIO-ESPECIFICACOES.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Inventário de especificações de outubro usado para planejar implementação."
+    },
+    {
+      "path": "docs/real-integration/MATRIZ-G01-G17.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Matriz de progresso de candidato; objetivo/G17 não aprovados."
+    },
+    {
+      "path": "docs/real-integration/PESQUISA-OKX.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa oficial não prova entitlement, acesso ou conta atual."
+    },
+    {
+      "path": "docs/real-integration/PUBLIC-CADENCE-SPEC.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Requisitos de cadência correspondem ao worker; receipt histórico não prova coleta atual.",
+      "code_refs": [
+        "src/real/public-runtime.ts:createPublicRuntime",
+        "src/real/public-market.ts:createPublicMarket"
+      ]
+    },
+    {
+      "path": "docs/real-integration/PUBLIC-IMPLEMENTATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Exchange v5 público, explicitamente sem wallet/OnchainOS autenticado/qualificação.",
+      "code_refs": [
+        "src/real/public-market.ts:createPublicMarket",
+        "src/real/public-runtime.ts:createPublicRuntime"
+      ]
+    },
+    {
+      "path": "docs/real-integration/REVIEW-G14-CONTINUATION-1.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Parecer G14 parcial; browser/accessibility integral não reproduzidos."
+    },
+    {
+      "path": "docs/real-integration/REVIEW-R7.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Parecer sobre r7 rejeitou R6/P2; escopo de candidato, não estado atual."
+    },
+    {
+      "path": "docs/real-integration/REVIEW-R8.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Aprova R1-R6 no recorte; objetivo/G17/Web3 não aprovados."
+    },
+    {
+      "path": "docs/real-integration/REVIEW-RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Revisão documental; não é nova revisão de código/rede/decoder."
+    },
+    {
+      "path": "docs/real-integration/RPC-READ-SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Receipts v1 ficam unverified; deployment/decoder nulos até prova.",
+      "code_refs": [
+        "src/real/rpc-read.ts:createRpcReadAdapter",
+        "src/real/observation-integration.ts:attachObservedInventory"
+      ]
+    },
+    {
+      "path": "docs/real-integration/SEMANTIC-PROOF.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Prova semântica local/unsigned; não prova transporte, ABI nem simulação de produção.",
+      "code_refs": [
+        "src/real/semantic-proof.ts:createSemanticProofEvaluator",
+        "src/real/observation-integration.ts:attachObservedInventory"
+      ]
+    },
+    {
+      "path": "docs/real-integration/UI-IMPLEMENTATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Entrega/testes de seam sem provider live, gesto wallet ou qualificação financeira.",
+      "code_refs": [
+        "web/src/components/RealPipeline/RealPipeline.tsx",
+        "web/src/lib/real-pipeline.ts"
+      ]
+    },
+    {
+      "path": "docs/real-integration/VERIFICACAO.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Logs/build/testes do candidato r8c; wallet/Web3/Jev/G01-G17 ainda não concluídos."
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/integration-coverage-next.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Pesquisa e próximos receipts de checkout distinto; adapters descritos não provam integração atual."
+    },
+    {
+      "path": "docs/research/spec-review-20261012/implementacao-real-web-hardening.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Mudanças/testes em branch/worktree separada; não reexecutados nem importados."
+    },
+    {
+      "path": "docs/research/spec-review-20261012/review-real-web-hardening.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Review da branch 6a9e356 e cópias próprias, não do HEAD atual."
+    },
+    {
+      "path": "docs/research/spec-review-20261012/spec-review-real-pilot.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Review de snapshots/branches distintos; não certifica esta árvore."
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-DELIVERY-SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "I1-I7 separam implementação, prova e qualificação; não presumem execução.",
+      "code_refs": [
+        "src/real/runtime.ts:createRealRuntime",
+        "src/pilot/service.ts:evaluatePilot"
+      ]
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-READINESS.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Rótulo Current pertence ao ciclo2 de 2026-10-10; não é status de 10-13.",
+      "code_refs": [
+        "src/real/runtime.ts:createRealRuntime",
+        "src/pilot/service.ts:evaluatePilot"
+      ]
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-REVIEW-CYCLE-2.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Ciclo limitado deixa parent_complete/autorização falsos; snapshot antigo.",
+      "code_refs": [
+        "src/pilot/service.ts:evaluatePilot",
+        "src/operator/plan.ts:buildExecutionPlan"
+      ]
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-REVIEW-FOLLOWUP.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Repairs e critérios follow-up propostos para janela histórica.",
+      "code_refs": [
+        "src/pilot/service.ts:evaluatePilot",
+        "src/operator/plan.ts:buildExecutionPlan"
+      ]
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-REVIEW-REMEDIATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Remediation/findings de snapshot exato, não verdict desta árvore.",
+      "code_refs": [
+        "src/pilot/service.ts:evaluatePilot",
+        "src/real/runtime.ts:createRealRuntime"
+      ]
+    }
+  ],
+  "documents_read_count": 38,
+  "document_classification_counts": {
+    "historical_evidence": 25,
+    "current_reference": 1,
+    "frozen_contract": 6,
+    "proposal": 4,
+    "stale_reference": 2
+  },
+  "claims": [
+    {
+      "statement": "Capability documented/implemented/integrated/exercised/financially qualified are separate flags; default capability is unqualified.",
+      "source_path": "src/real/types.ts",
+      "lines": "21-34"
+    },
+    {
+      "statement": "Aggregate OnchainOS access becomes ready if any capability was exercised, not all capabilities.",
+      "source_path": "src/real/runtime.ts",
+      "lines": "47-54"
+    },
+    {
+      "statement": "Transport proof correlates production fetch receipts, cycle/network/endpoint/method and success response.",
+      "source_path": "src/real/transport-proof.ts",
+      "lines": "3-22"
+    },
+    {
+      "statement": "Unsigned preflight remains blocked, semantic false, simulation unexercised and execution disabled.",
+      "source_path": "src/real/preflight.ts",
+      "lines": "34-70"
+    },
+    {
+      "statement": "Semantic proof remains blocked/unverified and false for real exercise, financial qualification, semantic pass and execution.",
+      "source_path": "src/real/semantic-proof.ts",
+      "lines": "85-99,269-274"
+    },
+    {
+      "statement": "Observed inventory keeps deployment/allowance/fees unqualified and decoder null.",
+      "source_path": "src/real/observation-integration.ts",
+      "lines": "39-45"
+    },
+    {
+      "statement": "RPC snapshot defaults unverified/blocked with deployment and decoder null.",
+      "source_path": "src/real/rpc-read.ts",
+      "lines": "119-127"
+    },
+    {
+      "statement": "Runtime requires explicit read consent, maintains holds and persists paper cycle with pnl null/execution false.",
+      "source_path": "src/real/runtime.ts",
+      "lines": "31-45,55-70,73-110"
+    },
+    {
+      "statement": "Jev payload is sanitized; allowed decisions are hold/insufficient_evidence and billed cost null.",
+      "source_path": "src/real/jev.ts",
+      "lines": "8-15,18-29,31-42"
+    },
+    {
+      "statement": "Extensions are opt-in GET; latest-signals POST is excluded; capabilities are not financially qualified.",
+      "source_path": "src/real/extensions.ts",
+      "lines": "105-119,159-170,194-205"
+    },
+    {
+      "statement": "Default pilot entrypoint supplies no source/model; initial path is hold and unexecuted.",
+      "source_path": "scripts/gev-wallet-pilot.ts",
+      "lines": "7-12"
+    },
+    {
+      "statement": "Pilot bundle source provenance fields are declarations without authenticated transport receipt.",
+      "source_path": "src/pilot/service.ts",
+      "lines": "11-48"
+    },
+    {
+      "statement": "Eligible pilot still constructs hypothetical plan with execution gates false.",
+      "source_path": "src/pilot/service.ts",
+      "lines": "151-178"
+    },
+    {
+      "statement": "Pilot HTTP host/origin and body boundaries are local; no financial-operation handler.",
+      "source_path": "src/pilot/http.ts",
+      "lines": "22-56"
+    },
+    {
+      "statement": "Historical console receipt says Web3/wallet/app Jev unexercised and execution disabled.",
+      "source_path": "docs/real-integration/CONSOLE-LIVE-R8.json",
+      "lines": "4-7"
+    },
+    {
+      "statement": "Historical public receipts differ in time: blocked at LIVE-SERVICES and later ready at LIVE-FINAL, both financially unqualified.",
+      "source_path": "docs/real-integration/LIVE-SERVICES.json",
+      "lines": "109-158"
+    },
+    {
+      "statement": "G11 proves bounded public reads/runtime-hash observation, not ABI/decoder or financial qualification.",
+      "source_path": "docs/real-integration/G11-PUBLIC-ROUTER-READ.json",
+      "lines": "3-7,68-69,132-133"
+    },
+    {
+      "statement": "Snapshot owner paths and inspected code files match recorded SHA-256.",
+      "source_path": "docs/_meta/project-state-20261013.json",
+      "symbol": "owners.integracao-real-e-piloto"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "id": "pilot-p2",
+      "classification": "frozen_contract",
+      "finding_kind": "implementation_gap",
+      "statement": "P2 requires a real source/cotação/GEV episode; current default entrypoint injects no source/model, so the historical pending gate remains unproved.",
+      "refs": [
+        "docs/gev-wallet-pilot/SPEC.md:7-12",
+        "docs/gev-wallet-pilot/VERIFICATION.md:15-16,39-43",
+        "scripts/gev-wallet-pilot.ts:7-12",
+        "src/pilot/service.ts:99-131"
+      ]
+    },
+    {
+      "id": "r8-scope",
+      "classification": "historical_evidence",
+      "finding_kind": "proof-scope",
+      "statement": "R8 proves captured paper/browser slices only: wallet gesture, authenticated Web3, app Jev and whole G01-G17 remain false/unproved; no current live-process receipt was obtained.",
+      "refs": [
+        "docs/real-integration/CONSOLE-LIVE-R8.json:4-7",
+        "docs/real-integration/BROWSER-EVIDENCE-R8.json:4-5",
+        "docs/real-integration/AUDIT-R8.json:308-312",
+        "src/real/runtime.ts:31-45,55-70,73-110"
+      ]
+    },
+    {
+      "id": "public-read-not-readiness",
+      "classification": "historical_evidence",
+      "finding_kind": "semantic-proof-limit",
+      "statement": "Historical public HTTP 200/exercisedReal coexists with blocked status in one sample and ready status later; both do not imply financial qualification or current status.",
+      "refs": [
+        "docs/real-integration/LIVE-SERVICES.json:109-158",
+        "docs/real-integration/LIVE-FINAL.json:2,32,319-383",
+        "src/real/public-runtime.ts:24-35"
+      ]
+    },
+    {
+      "id": "g11-bounded",
+      "classification": "historical_evidence",
+      "finding_kind": "proof-scope",
+      "statement": "G11 records public read and hash observation; ABI/deployment/decoder/authenticated wallet qualification remains absent.",
+      "refs": [
+        "docs/real-integration/G11-PUBLIC-ROUTER-READ.json:3-7,68-69,132-133",
+        "docs/real-integration/G11-METADATA-CONCLUSION.md:3-20",
+        "src/real/rpc-read.ts:119-127"
+      ]
+    },
+    {
+      "id": "guide-drift",
+      "classification": "stale_reference",
+      "finding_kind": "path-and-port-drift",
+      "statement": "GUIA-local worktree and receipts/ports 4130/4131 are candidate-specific; current UI/backend defaults 3001/3000.",
+      "refs": [
+        "docs/real-integration/GUIA-LOCAL.md:7-18",
+        "scripts/real-console.ts:7-15",
+        "src/real/config.ts:53-55"
+      ]
+    },
+    {
+      "id": "extension-proposal",
+      "classification": "proposal",
+      "finding_kind": "dated-status-change",
+      "statement": "Proposal said source files absent in isolated snapshot; current GET adapter exists, is opt-in, and remains unqualified. This is a scoped status change, not retroactive falsehood.",
+      "refs": [
+        "docs/real-integration/EXTENSIONS-SPEC.md:3,13-21",
+        "src/real/extensions.ts:105-119,159-170,194-205",
+        "scripts/real-start.ts:14-15,37-41"
+      ]
+    },
+    {
+      "id": "alternate-snapshots",
+      "classification": "stale_reference",
+      "finding_kind": "provenance",
+      "statement": "Dated readiness and alternate branch/worktree reports cannot transfer test counts or status to this HEAD; ESTADO-ATUAL remains historical checkout analysis, not a live report.",
+      "refs": [
+        "docs/real-integration/ESTADO-ATUAL.md:3-18,56-66",
+        "docs/WEB3-INTEGRATION-READINESS.md:3-8,141-151",
+        "docs/research/spec-review-20261012/implementacao-real-web-hardening.md:3-5,20-29",
+        "docs/research/spec-review-20261012/spec-review-real-pilot.md:3-5,164-179"
+      ]
+    }
+  ],
+  "code_inspected": [
+    {
+      "path": "src/real/capabilities.ts",
+      "scope": "capability catalog/default flags",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/preflight.ts",
+      "scope": "unsigned structural/semantic gates",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/transport-proof.ts",
+      "scope": "transport receipt correlation and gates",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/semantic-proof.ts",
+      "scope": "semantic evaluator and blocked proof",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/semantic-integration.ts",
+      "scope": "core semantic integration",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/observation-integration.ts",
+      "scope": "observed inventory composition",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/core.ts",
+      "scope": "balance/market/quote/unsigned build",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/rpc-read.ts",
+      "scope": "public RPC read receipts",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/runtime.ts",
+      "scope": "health, consent, holds, cycle",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/config.ts",
+      "scope": "defaults and config presence",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/types.ts",
+      "scope": "source/capability/proof status schema",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/runtime-types.ts",
+      "scope": "paper/no-execution cycle contract",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/server.ts",
+      "scope": "real runtime routes",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/supervisor.ts",
+      "scope": "child lifecycle/shutdown",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/extensions.ts",
+      "scope": "opt-in GET / excluded POST",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/extension-integration.ts",
+      "scope": "extension adapter integration",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/jev.ts",
+      "scope": "sanitized Jev state and response",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/public-market.ts",
+      "scope": "public Exchange v5 reads",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/real/public-runtime.ts",
+      "scope": "expiry and clock invalidation",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/service.ts",
+      "scope": "deps, validation, hold and gates",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/ports.ts",
+      "scope": "default ports and resolution",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/policy.ts",
+      "scope": "pilot limits/allowlists",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/protocol.ts",
+      "scope": "cycle public contract",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/http.ts",
+      "scope": "loopback/origin/body limits",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/journal.ts",
+      "scope": "pilot journal boundary",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/testing-fixture.ts",
+      "scope": "synthetic fixture only",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/pilot/isolation.test.ts",
+      "scope": "static import isolation test; not run",
+      "snapshot_match": true
+    },
+    {
+      "path": "src/operator/plan.ts",
+      "scope": "execution-plan gates",
+      "snapshot_match": true
+    },
+    {
+      "path": "scripts/real-start.ts",
+      "scope": "real composition and entrypoint",
+      "snapshot_match": true
+    },
+    {
+      "path": "scripts/real-console.ts",
+      "scope": "console child/ports/shutdown",
+      "snapshot_match": true
+    },
+    {
+      "path": "scripts/real-doctor.ts",
+      "scope": "sanitized doctor",
+      "snapshot_match": true
+    },
+    {
+      "path": "scripts/gev-wallet-pilot.ts",
+      "scope": "default pilot with no source/model",
+      "snapshot_match": true
+    },
+    {
+      "path": "scripts/gev-wallet-pilot-fixture.ts",
+      "scope": "explicit fixture command",
+      "snapshot_match": true
+    },
+    {
+      "path": "web/src/components/RealPipeline/RealPipeline.tsx",
+      "scope": "pipeline client/wallet integration",
+      "snapshot_match": true
+    },
+    {
+      "path": "web/src/components/RealPipeline/RealPipelineView.tsx",
+      "scope": "pipeline UI and consent/provenance",
+      "snapshot_match": true
+    },
+    {
+      "path": "web/src/components/GevPilotPanel/GevPilotPanel.tsx",
+      "scope": "pilot source labels and P2 warning",
+      "snapshot_match": true
+    },
+    {
+      "path": "web/src/lib/real-pipeline.ts",
+      "scope": "browser real transport/consent",
+      "snapshot_match": true
+    },
+    {
+      "path": "web/src/lib/gev-pilot-client.ts",
+      "scope": "browser pilot HTTP/ports",
+      "snapshot_match": true
+    }
+  ],
+  "code_inspected_count": 38,
+  "artifacts_reviewed": [
+    {
+      "path": "docs/real-integration/CONSOLE-LIVE-R8.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "4-7",
+      "finding": "Historical console: authenticated Web3, wallet, app Jev false; execution false.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/BROWSER-EVIDENCE-R8.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "4-5",
+      "finding": "Page served true; wallet gesture false.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/AUDIT-R8.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "308-312",
+      "finding": "G01-G17 qualification incomplete; execution not approved.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/LIVE-SERVICES.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "109-158",
+      "finding": "Public HTTP 200/exercisedReal with publicMarket blocked; financially unqualified.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/LIVE-FINAL.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "2,32,319-383",
+      "finding": "Later publicMarket ready/HTTP 200; financial qualification still false.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/G11-PUBLIC-ROUTER-READ.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "3-7,68-69,132-133",
+      "finding": "Public read/block consistency; chain qualifications false.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/G11-PUBLIC-METADATA-READ.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "4-5,27,53",
+      "finding": "Runtime hash match without ABI/decoder qualification.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/G11-IPFS-RETRIEVAL.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "4-5,18,32",
+      "finding": "Metadata not retrieved; retry 0; execution false.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/G11-SOURCIFY-LOOKUP.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "5-6,13,24",
+      "finding": "Two lookups HTTP 404; ABI qualification false.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/VERIFICACAO.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "safe selected fields",
+      "finding": "Historical external qualification and G14/G17 status only.",
+      "secret_values_copied": false
+    },
+    {
+      "path": "docs/real-integration/DOCTOR-CONTINUATION-1.json",
+      "read_mode": "safe_field_projection",
+      "classification": "historical_evidence",
+      "lines_or_pointer": "safe selected fields",
+      "finding": "Sanitized config status only; no secret values copied.",
+      "secret_values_copied": false
+    }
+  ],
+  "artifact_review_count": 11,
+  "artifact_hash_scope": {
+    "assigned": 75,
+    "matched_snapshot": 75,
+    "content_reviewed": 11,
+    "note": "Remaining assigned artifacts were hash-checked but not content-reviewed."
+  },
+  "source_drift": {
+    "snapshot": "docs/_meta/project-state-20261013.json",
+    "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+    "sources": {
+      "assigned": 77,
+      "matched_snapshot": 77,
+      "missing": [],
+      "changed": [],
+      "without_snapshot_hash": []
+    },
+    "documents": {
+      "assigned": 38,
+      "matched_snapshot": 38,
+      "missing": [],
+      "changed": [],
+      "without_snapshot_hash": []
+    },
+    "artifacts": {
+      "assigned": 75,
+      "matched_snapshot": 75,
+      "missing": [],
+      "changed": [],
+      "without_snapshot_hash": []
+    },
+    "code_inspected": {
+      "assigned": 38,
+      "matched_snapshot": 38,
+      "missing": [],
+      "changed": [],
+      "without_snapshot_hash": []
+    },
+    "working_tree": {
+      "clean": false,
+      "observed_branch_status": "main...upstream/main [ahead 205]",
+      "note": "Repository was broadly dirty. Only the two exclusive owner outputs were written by this agent; no global clean-tree claim is made."
+    },
+    "output_paths_not_in_snapshot": [
+      "docs/concepts/integracao-real-e-piloto.md",
+      "docs/_meta/audits/integracao-real-e-piloto.json"
+    ]
+  },
+  "verification_scope": "static_source_and_document_inspection",
+  "tests_run": [],
+  "verification_actions": {
+    "repo_product_tests": false,
+    "services_started": false,
+    "network_or_api_calls": 0,
+    "model_calls": 0,
+    "env_or_credential_values_read": false,
+    "git_writes": false,
+    "install_or_restart": false,
+    "secret_or_address_values_copied": false
+  },
+  "unverified": [
+    "Current process/listener/service availability and authenticated/public network state.",
+    "Current credentials, entitlement, wallet provider connection, owner gesture and consent; no .env or credential values were read.",
+    "Complete authenticated OnchainOS inventory, qualified units, allowances, fees, spender, router ABI/deployment/decoder.",
+    "Current remote simulation, Jev inference/authorization, consumption and billed model cost.",
+    "A current real pilot source adapter or P2 episode.",
+    "Current complete real cycle, signing, broadcast, financial execution, realized PnL, profitability or 24-hour operation.",
+    "Current test-suite status; tests were not run.",
+    "External validity of historical receipts beyond their captured dates/snapshots."
+  ],
+  "billed_cost": null
+}

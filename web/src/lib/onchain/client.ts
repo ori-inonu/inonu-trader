@@ -1,10 +1,11 @@
 /**
- * Browser client for the local /onchain/* gateway (ONC-8). Every call is a GET with credentials omitted and
+ * Browser client for the /onchain/* gateway (ONC-8). Calls omit credentials to external origins; relative app APIs may carry the login session, with
  * an optional x-inonu-intent marker; the single envelope and every payload are validated defensively so a
  * response outside the contract becomes an error, never data. No OKX credential ever reaches this side.
  */
 
 import { launchGuard, type Launch, type MemeStage } from "./memepump";
+import { backendSession } from "../backend-session";
 
 export const ONCHAIN_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:3000";
 
@@ -330,14 +331,14 @@ const SIGNAL_TYPES = new Set(["smart_money", "kol", "whale"]);
 
 /* ---------- transport ---------- */
 
-type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string>; credentials?: "omit" }) => Promise<Response>;
+type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string>; credentials?: "omit" | "same-origin" }) => Promise<Response>;
 
 async function getJson(fetchImpl: FetchLike, base: string, path: string, intent: OnchainIntent): Promise<unknown> {
   let res: Response;
   try {
     res = await fetchImpl(`${base}${path}`, {
       method: "GET",
-      credentials: "omit",
+      credentials: backendSession(base),
       headers: intent === "user" ? { "x-inonu-intent": "user" } : {},
     });
   } catch {

@@ -197,6 +197,18 @@ describe("the memory hook inside a cycle (fake model, fake reader, no money)", (
   });
 });
 
+describe("what the memory adds to the Brief", () => {
+  test("addedBytes in the record is exactly the growth of the Brief the model reads (value, key, legend and its key)", async () => {
+    const without = rig();
+    await createCycleRunner(without.deps).run();
+    const withMemory = rig(hookWith(goodRead));
+    await createCycleRunner(withMemory.deps).run();
+    const grew = Buffer.byteLength(JSON.stringify(withMemory.briefs[0]!)) - Buffer.byteLength(JSON.stringify(without.briefs[0]!));
+    expect(grew).toBeGreaterThan(0);
+    expect(withMemory.records[0]!.memoryHook!.addedBytes).toBe(grew);
+  });
+});
+
 describe("the effective version of a decision", () => {
   const base = { criteria: "rank-v1", briefVersion: 1, model: "fake", questions: "q".repeat(64) };
   test("without a memory block the legend, and so the version, are unchanged", () => {

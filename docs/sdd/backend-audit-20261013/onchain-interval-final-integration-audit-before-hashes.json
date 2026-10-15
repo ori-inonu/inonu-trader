@@ -1,0 +1,31 @@
+{
+  "reviewer_id": "audit_intelligence",
+  "phase": "before independent final integration audit",
+  "observed_utc": "2026-10-13T19:00:44.1323752Z",
+  "files": [
+    {
+      "path": "src/onchain-read/client.ts",
+      "live_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "isolated_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "equal": true
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "live_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "isolated_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "equal": true
+    },
+    {
+      "path": "src/onchain-read/gateway.ts",
+      "live_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "isolated_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "equal": true
+    },
+    {
+      "path": "src/onchain-read/gateway.test.ts",
+      "live_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "isolated_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "equal": true
+    }
+  ]
+}

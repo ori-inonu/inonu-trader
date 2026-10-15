@@ -1,0 +1,38 @@
+bun test v1.3.14 (0d9b296a)
+
+src\onchain-read\client.test.ts:
+(pass) onchain client > queued calls observe newly opened cooldown %s [5.76ms]
+(pass) onchain client > queued calls observe newly opened cooldown %s [0.60ms]
+(pass) onchain client > sends OK-ACCESS headers with a signature computed over the exact request [0.59ms]
+(pass) onchain client > global queue: at most one request per interval [96.14ms]
+(pass) onchain client > no credentials -> no_credentials, never touches fetch [0.96ms]
+(pass) onchain client > maps 401 to %s [1.02ms]
+(pass) onchain client > maps 403 to %s [0.21ms]
+(pass) onchain client > maps 429 to %s [0.05ms]
+(pass) onchain client > maps 500 to %s [0.08ms]
+(pass) onchain client > maps code 50111 to %s [1.18ms]
+(pass) onchain client > maps code 50114 to %s [0.22ms]
+(pass) onchain client > maps code 50011 to %s [0.13ms]
+(pass) onchain client > maps code 99999 to %s [0.07ms]
+(pass) onchain client > network throw, timeout and invalid JSON are provider_error [44.20ms]
+(pass) onchain client > envelope without data -> schema; oversized body refused [1.98ms]
+(pass) onchain client > 402 blocks the tier for an hour; 429 cools down for 30s; status exposes codes [1.42ms]
+(pass) onchain client > 429 opens a 30s cooldown that short-circuits later calls [1.11ms]
+(pass) onchain client > provider msg never propagates and credentials never appear in results [1.14ms]
+(pass) clock skew handling > learns the offset from the Date header and retries 50102 once in the same slot [1.10ms]
+(pass) clock skew handling > a second 50102 inside the same call reports clock_skew, not unauthorized [0.62ms]
+(pass) clock skew handling > 50102 with a Date near the used offset reports clock_skew without retrying [1.09ms]
+(pass) clock skew handling > 401 with an auth code stays provider_unauthorized [0.67ms]
+(pass) clock skew handling > 401 with a non-JSON body stays provider_unauthorized [1.19ms]
+(pass) clock skew handling > body code 50103 maps to provider_unauthorized [0.81ms]
+(pass) clock skew handling > body code 50104 maps to provider_unauthorized [0.35ms]
+(pass) clock skew handling > body code 50105 maps to provider_unauthorized [0.23ms]
+(pass) clock skew handling > body code 50112 maps to provider_unauthorized [0.14ms]
+(pass) clock skew handling > body code 50113 maps to provider_unauthorized [0.08ms]
+(pass) clock skew handling > body code 50038 maps to unsupported_chain [0.68ms]
+(pass) clock skew handling > a small measured skew is not applied and clockOffsetMs is still reported [0.58ms]
+
+ 30 pass
+ 0 fail
+ 93 expect() calls
+Ran 30 tests across 1 file. [256.00ms]

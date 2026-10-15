@@ -1,0 +1,44 @@
+[
+  {
+    "name": "desktop",
+    "posts": 2,
+    "deletes": 1,
+    "geometry": {
+      "viewport": 1440,
+      "width": 1440
+    },
+    "pageErrors": [],
+    "screenshot": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/wallet-desktop.png",
+    "claims": [
+      "no-auto-model",
+      "minimal-payload",
+      "single-manual-post",
+      "real-wallet-label",
+      "owned-cancel",
+      "expiry-invalidation",
+      "account-invalidation"
+    ],
+    "qualification": "synthetic wallet and intercepted model response, no live wallet/model/order qualification"
+  },
+  {
+    "name": "mobile",
+    "posts": 2,
+    "deletes": 1,
+    "geometry": {
+      "viewport": 390,
+      "width": 390
+    },
+    "pageErrors": [],
+    "screenshot": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/wallet-mobile.png",
+    "claims": [
+      "no-auto-model",
+      "minimal-payload",
+      "single-manual-post",
+      "real-wallet-label",
+      "owned-cancel",
+      "expiry-invalidation",
+      "account-invalidation"
+    ],
+    "qualification": "synthetic wallet and intercepted model response, no live wallet/model/order qualification"
+  }
+]

@@ -9,6 +9,7 @@ import type { TapeModel } from "./decide";
 import type { OkxTapeFeed } from "./feed";
 import { runJevRead } from "./read";
 import type { JevReadStore } from "./store";
+import type { TapeAnalysis } from "./analytics";
 import type { JevRead } from "./types";
 
 /** A sample that keeps failing to refresh is not trusted forever: past this age the clock is unknown again. */
@@ -86,6 +87,8 @@ export interface RoundDeps {
   readonly instId: string;
   readonly localNow?: () => number;
   readonly timeoutMs?: number;
+  /** Optional Python analytics digest; a throwing source is treated as no analysis. */
+  readonly analytics?: { read(instId: string, nowMs: number): TapeAnalysis | null };
 }
 
 export interface RoundResult {
@@ -105,7 +108,17 @@ export async function readRound(deps: RoundDeps): Promise<RoundResult> {
       ages = deps.feed.ages(deps.instId, localNow(), deps.keeper.exchangeNow());
     }
     if (ages.tickerAgeMs === null || ages.tickerAgeMs > TICKER_REFRESH_AFTER_MS) await deps.feed.refreshTicker(deps.instId);
-    read = await runJevRead(deps.feed.snapshot(deps.instId, localNow(), deps.keeper.exchangeNow()), {
+    const nowMs = localNow();
+    let analysis: TapeAnalysis | null = null;
+    if (deps.analytics !== undefined) {
+      try {
+        analysis = deps.analytics.read(deps.instId, nowMs);
+      } catch {
+        analysis = null;
+      }
+    }
+    const input = deps.feed.snapshot(deps.instId, nowMs, deps.keeper.exchangeNow());
+    read = await runJevRead(analysis === null ? input : { ...input, analysis }, {
       model: deps.model,
       now: () => deps.keeper.stamp(),
       clockOffsetMs: deps.keeper.offsetMs(),

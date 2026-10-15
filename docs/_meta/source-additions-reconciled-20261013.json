@@ -1,0 +1,773 @@
+{
+  "format": "docs-source-additions-v1",
+  "captured": "2026-10-13T15:00:12.367358-03:00",
+  "origin": "sources_present_at_reconciliation; authorship_and_creation_time_not_inferred",
+  "baseline": "docs/_meta/source-manifest-20261013.json",
+  "files": [
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/01-antes-desktop-1440x900.png",
+      "sha256": "ba81560ca47dd6231d6e1d1fcddff3f094557f84b90a239f5c315e0d95ca9a5a",
+      "bytes": 249347,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/02-antes-celular-390x844.png",
+      "sha256": "b3cb5af5c269ac1c136220c8514bb6a4c9455d6b701d7b506bdc03d3b051b643",
+      "bytes": 88915,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/03-depois-desktop-1440x900.png",
+      "sha256": "783a39022f2aa67f2da6988577b61131357f81f7cf73c5210b59eb0a363a57e2",
+      "bytes": 253284,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/04-depois-barra-1440.png",
+      "sha256": "b5ca884894f3cd362b7dfd0e754132526b20b35dd971f9553b9446d5a6ef0938",
+      "bytes": 21043,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/05-depois-barra-1920.png",
+      "sha256": "f044f7eb1cb71eb28d04ac1b58009886eb61233bbefb7b1224cf1c51d8aa4d80",
+      "bytes": 27570,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/06-depois-celular-390x844.png",
+      "sha256": "dde1e9b54dd02d8e2e566247d40c862dd67d2d15dad5849af785d44ccae8afeb",
+      "bytes": 97330,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/07-depois-dock-carteira-rolando.png",
+      "sha256": "4f439c327d7a43160bc722a397562356afc2a2d01235bdf482eb73565b1e210f",
+      "bytes": 253353,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/08-depois-celular-fontes.png",
+      "sha256": "bc1baea17331b5b0ac971bf8f86764e883e78d518d9f9099b24d2007480cb5db",
+      "bytes": 128536,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/web-tests-desk-mesa-scans.log",
+      "sha256": "3febc8486dfca16d4e497f8da8327cb0bf5b1e8ba29d40376fc48bfbb39f82f7",
+      "bytes": 104117,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/evidence/ui-mesa-cabecalho-20261013/web-tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/INTELLIGENCE-AUDIT.md",
+      "sha256": "38b241c52528e446e8c272579aa60a675187386dd561c4a2ef7966e21254c9f3",
+      "bytes": 23286,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/NEXT-CYCLE.md",
+      "sha256": "f801daa4d9b23892bdde3f71038875e8987460bfe620924440c6917415b58cf5",
+      "bytes": 2854,
+      "extension": ".md",
+      "owner": "governanca-e-historico",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/OKX-AUDIT.md",
+      "sha256": "0bb76ce2455dcbb4063dd14623b3f6a0e43ae7bc2baf083a156173a2d91d386d",
+      "bytes": 28594,
+      "extension": ".md",
+      "owner": "mercado-e-dados",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/PORTFOLIO-SPEC-REVIEW.md",
+      "sha256": "cc78950c6a487fa388222958ea50f143e385d3b45e4e3eb5e6d8c15d603089b2",
+      "bytes": 8563,
+      "extension": ".md",
+      "owner": "carteira-e-patrimonio",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/PORTFOLIO-STANDARDS-REVIEW.md",
+      "sha256": "f2c9fc7756718c9348a522d368b18ee70361404ea05e83679efdca1b5100610a",
+      "bytes": 8040,
+      "extension": ".md",
+      "owner": "carteira-e-patrimonio",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/SPEC.md",
+      "sha256": "354aba6ef3fbda4175e59a698c1304105610211fb5805df43e6b4d3dbacaffc1",
+      "bytes": 3361,
+      "extension": ".md",
+      "owner": "governanca-e-historico",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/portfolio-tests.log",
+      "sha256": "2a579ffc44bf95d7ecb2aade14403c3ac85cfa45f78e6e1a8f9a111c19eaf8b9",
+      "bytes": 18544,
+      "extension": ".log",
+      "owner": "carteira-e-patrimonio",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/quant-portfolio.baseline.txt",
+      "sha256": "d608fc5a00bf561eb62ee8e75a2e55536f7995f8228864f03940031a25f682a7",
+      "bytes": 6162,
+      "extension": ".txt",
+      "owner": "grafico-e-analytics",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/dados-quant/REPORT.md",
+      "sha256": "9ed51fe3d90845fa7acfcb6f24c2863556fa9b802d2827f245f2abcf51a65bf4",
+      "bytes": 17853,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "relatorio",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/dados-quant/SPEC.md",
+      "sha256": "1c7405a7f748ac6fd0d9c3ae1ee7681c6d741cbe2559f24d7698b173ba494b1a",
+      "bytes": 7865,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-latest.json",
+      "sha256": "976bfd66151c30f8bace122ab3a0d344a75bfbc602d94508e25a23fa8b73a271",
+      "bytes": 34302,
+      "extension": ".json",
+      "owner": "grafico-e-analytics",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-train30.json",
+      "sha256": "cf2aa9e57bba41c833ecf801fa6f80e3a2e0970af37cc63420c2f2b02a2e3d4b",
+      "bytes": 34201,
+      "extension": ".json",
+      "owner": "grafico-e-analytics",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/README.md",
+      "sha256": "8e75142bb542d9ebe539b69ac4ad569001e473b5d84d27a99ca10e8ae2e042fe",
+      "bytes": 2860,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/acceptance.md",
+      "sha256": "96df61f77df70ada8b47f7c4cdeaabe8cb3b03709a15299f923e7aeec6e4a88f",
+      "bytes": 2374,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/audit.md",
+      "sha256": "d01ac42693f721fef5a6a99a8f21a5a44b90c4847dc12761802d3c01ba916525",
+      "bytes": 12959,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/candidate-manifest.json",
+      "sha256": "3963945b2079a65d4c79875deff39ac2e85f8e63c9d4df6032574e6c747b4352",
+      "bytes": 3353,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/decisions.json",
+      "sha256": "818183f458476c8f9144a4fde2a7b29eee46317907f878e3e7876cf0c959d82f",
+      "bytes": 3038,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/design.md",
+      "sha256": "4d43beedfa1e9520f861cda6539ded2997c11cc512b5287f1724e2103b519519",
+      "bytes": 12302,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/docs-research.md",
+      "sha256": "53bdbfb7deed01c4eb754c733724b807ec8c79d7a489c26417ba03f22574ea40",
+      "bytes": 20753,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/docs-revalidation.md",
+      "sha256": "6fb68b2088374f45858fa7cc754f2211f6af591f7426b432fd4a4c5a87dcea5e",
+      "bytes": 15542,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/frontend-research.md",
+      "sha256": "ad1cf8cdcca8471aa257d48a389ff5d473040bc6673b0272a62a99a542eebd22",
+      "bytes": 29719,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/frontend-revalidation.md",
+      "sha256": "b5b219379c6daab239951864f4995218597da66fa51b3fdb99903afbcf16691d",
+      "bytes": 13896,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/inventory.json",
+      "sha256": "e48c7a2e27373ec36a237c09810706cae47d1a43e1ab49756cd9feccb75c8f5a",
+      "bytes": 594657,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/local-1440x900.png",
+      "sha256": "2ba7afc24ca13f7a6cf0b3b6accd629b3c7f4df3acc16861b80936b1897d4320",
+      "bytes": 207470,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/local-390x844.png",
+      "sha256": "8256427cf7dd5d803c0a1c8724a2e05ab27c329a499f391b11ef9b6632460817",
+      "bytes": 174386,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/local-observation.json",
+      "sha256": "abe6d5b06bb5bbe5aa3e9dca9167eadd8d83cabd166bc9037e80707949d0ae21",
+      "bytes": 3889,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/local-tracker-390x844.png",
+      "sha256": "434697733c9f1b4cbecdf791866d460791476ffb692b049d2868a71b6265fe45",
+      "bytes": 65125,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/public-1440x900.png",
+      "sha256": "b1a917578a85ca1c699244f66b14dc9aa50415253406be3116db78245a08f115",
+      "bytes": 188938,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/public-390x844.png",
+      "sha256": "ad37ba4235450fec3d01fc136546c92625d07191f330d69eadbdd83e124085ef",
+      "bytes": 69571,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/public-observation.json",
+      "sha256": "fc377fe53833372d63ea4caf8ff04c8571882cbb3dbed68531bf2f177ddc1f74",
+      "bytes": 1734,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/requirements.md",
+      "sha256": "aca328141bf1de9ca59bbe182c9a1c8a3be1877129cdcb1b522c6986fe1a08e2",
+      "bytes": 8874,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/review.md",
+      "sha256": "c4b4d453dedf4b0531cf99d39baeec166b55fba99f18437e862cefd503bd7381",
+      "bytes": 17415,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/source-revalidation.json",
+      "sha256": "6e4567c0bc54efa013457442bb97a5e1f4e996e703d5d5692d3ad5ee9944ea65",
+      "bytes": 9965,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/sources.json",
+      "sha256": "490ecb715654bce482ac18c7306e76e5eb2e1ea2c988d2c37c1e804ee1401865",
+      "bytes": 20298,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/supplemental-source-manifest.json",
+      "sha256": "f76b2c9ae0514a79e8357879391157749b2cedd39fa95c7f764f5353f1d54c9c",
+      "bytes": 4079,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/tasks.md",
+      "sha256": "3830c11eec4cf9d189475f5c3c6bf81ab6d58edf0f558b4406761b1091ec604e",
+      "bytes": 15255,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "plano",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/verification.json",
+      "sha256": "30b4b9dc59656983749c0615db4842a02c782433117383fbdc2a2de1a87508f3",
+      "bytes": 419,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/frontend-ux-20261013/verify-plan.mjs",
+      "sha256": "295b5df41c6e3754771a738d7810481f4929703887e4922ddf115864e8b090c9",
+      "bytes": 3417,
+      "extension": ".mjs",
+      "owner": "interface-e-central",
+      "role": "ferramenta",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-4.md",
+      "sha256": "54cc85e2ee05aa54cbde4bbca4b868aba1ec0ce22b04f56fa38690306b0f7747",
+      "bytes": 8858,
+      "extension": ".md",
+      "owner": "instalavel-e-inonu",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-5.md",
+      "sha256": "852c0ab255426fe439e899a0f3f90d40e2a7853d0c30b4d1296f5e368e78e6e7",
+      "bytes": 6420,
+      "extension": ".md",
+      "owner": "instalavel-e-inonu",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/spikes/T9.3.md",
+      "sha256": "444fdbebb0d705dce2500c35c1016dae558e6c25efcbd04dad090cb572e1c58d",
+      "bytes": 2532,
+      "extension": ".md",
+      "owner": "instalavel-e-inonu",
+      "role": "proposta",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/README.md",
+      "sha256": "24c9c35325c40d01bf94699cf937c7aefabc24b570a267af7d473fc83b3275e5",
+      "bytes": 3401,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "guia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/SPEC.md",
+      "sha256": "23ec48e6c4a858f6844263e8995124823c2f817fb8ac020a184dbfb81c04c961",
+      "bytes": 11900,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/TASKS.md",
+      "sha256": "7d37646c28837764d19b0523aacd78f76d6f96abf0a4146a47eaa570a28e29dc",
+      "bytes": 9567,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "plano",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/evidence/C1-ao-vivo.md",
+      "sha256": "aa9344150c710804cdb2882d4a8fc76bfee77e066baeb900be31ccaafad37657",
+      "bytes": 2123,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "guia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/evidence/baseline.md",
+      "sha256": "0949fd7d3f3e58922c9820d1ebfff9e5cd34c7399312a2d8d2bee667069bf37a",
+      "bytes": 579,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "guia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/evidence/git-status-inicio.txt",
+      "sha256": "a4dd34c124934b7311466f5583fd41b371bac3a2947b1cb68441b2106cac9bff",
+      "bytes": 6640,
+      "extension": ".txt",
+      "owner": "grafico-e-analytics",
+      "role": "guia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/REPORT.md",
+      "sha256": "e1f1eff4ca56ca987eb57507d3397f19b655c7bb3b95b273d780ae01179a1ffa",
+      "bytes": 7002,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/SPEC.md",
+      "sha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298",
+      "bytes": 6127,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/backend-metrics.json",
+      "sha256": "ae96658439985a5559d75c117144a0cd266d745b2a1a87fefb67985aa78d05e3",
+      "bytes": 500,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/backend-tests.log",
+      "sha256": "937cef4a0b5e2dc60a6ab94e74a9f18c4f905e6535c0cee3383da72d6e6c4b5f",
+      "bytes": 60796,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/cancel-web-red.log",
+      "sha256": "5f63ad16cc8fd24a3e7a76685cb276da95022a629605347fba75b692ea0a2525",
+      "bytes": 3688,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/cancel-wrapper-red.log",
+      "sha256": "c5268c431718062370caa4f6329749aa429631bac2cc6fb280b09446eaf81dc7",
+      "bytes": 2947,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/change-manifest.json",
+      "sha256": "89b828fa1a8b3d8a9e7a607902d32cff205c557f1daf362df0414ba0c47ff878",
+      "bytes": 11258,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/credential-evidence.md",
+      "sha256": "2566110112fad14a21b4563b0045ef27da94df9476d1429b321b0b11d283cf19",
+      "bytes": 4288,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/final-backend-metrics.json",
+      "sha256": "36a0a8efeb79abec5e3105fd7e0b8623ddacfd6d5b17063957e2583e67b5c8c1",
+      "bytes": 504,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/final-web-metrics.json",
+      "sha256": "073a38de12c4d949ace0115d5a96e9fdde81e04bdd4765a9637578ef0bd548ee",
+      "bytes": 504,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/jev-cancellation-receipt.json",
+      "sha256": "37b3b5c069f67d464acd1486ee1140ad2bc8bb72d92992a1b3b139b01f0e6822",
+      "bytes": 519,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/jev-purity-receipt.json",
+      "sha256": "2ca4e07975472fbf3d5051c9e32f63c064ad9e8fcb595c94be8e03fcc4807b3b",
+      "bytes": 1040,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/jev-receipt.json",
+      "sha256": "c30887efb1f8988f27a1db43ce1eef9919c2c9458c3d0f11ca14fddbe70ed5af",
+      "bytes": 3803,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/portfolio-evidence.json",
+      "sha256": "2c3118b15edcd79798651943858e56ea875918e06b339af49aa2366be4c7c6bd",
+      "bytes": 10276,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/purity-final.log",
+      "sha256": "e405b80542247ae6db3bd703fc93ec3cb3759e6a9f6402cd79af43cf1eaf64bb",
+      "bytes": 1918,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/typecheck-root.log",
+      "sha256": "27c1f71f1597c81ed3a1974cc8ece11a676a1665e53368561f671be9728bc324",
+      "bytes": 46,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/typecheck-web.log",
+      "sha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "bytes": 16,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/ui-client-red.log",
+      "sha256": "85e30bbf3102441e9ca5359747f496c504390df7a6d118a572e99735cb114963",
+      "bytes": 1311,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/ui-red.log",
+      "sha256": "c253e2535c5192a571962e5a7e5eba845aa6c9271daacd6f3378fd569f7a76b2",
+      "bytes": 345,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/web-targeted-final.log",
+      "sha256": "7ce73714da67f017f2b5d296e06fa528091baa9ae098d85b8ba5d968d5c17f47",
+      "bytes": 6242,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/web-targeted-metrics.json",
+      "sha256": "0b15a072663cd0a9dc20de37cf5793c22a0f88d35a58b6b1009e3f4666c9b360",
+      "bytes": 503,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/web-targeted.log",
+      "sha256": "290e2704304cf2f350be06335012f118538ac4b4172100811b9369dcefa89265",
+      "bytes": 2356,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/web-tests-metrics.json",
+      "sha256": "df3d81e2f634dc5d2e32a6f6b682ad6a7f1beb73d49c49bdaa0f681e923d253b",
+      "bytes": 505,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/web-tests.log",
+      "sha256": "a51958fbb5b9f38c76953ab653a30c3849e4e0514e2d0409c723b708a8514fed",
+      "bytes": 297335,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/baseline-hashes.json",
+      "sha256": "1c29055c3fd89c4bc6b5b03cecfc5b2c92e731edb81bf9ab91adecbe743613bb",
+      "bytes": 65598,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/baseline-status.txt",
+      "sha256": "43b6501127289b11cd09c4e6ecd50c327acc556768f95961ac0aba1d212c3eda",
+      "bytes": 7314,
+      "extension": ".txt",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-mesa-cabecalho-20261013/CHECKPOINT.md",
+      "sha256": "ed9e038dda256f6c346402807134c9c7dca4022d36800012e1cc52b67770fa37",
+      "bytes": 8260,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "plano",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-mesa-cabecalho-20261013/MANIFEST.sha256",
+      "sha256": "7fae517675c01fdc5b054a5ee5cad8a4a807d0ba645b37b3c884963a023a9d78",
+      "bytes": 906,
+      "extension": ".sha256",
+      "owner": "interface-e-central",
+      "role": "ferramenta",
+      "hidden": false
+    }
+  ]
+}

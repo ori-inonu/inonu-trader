@@ -1,0 +1,99 @@
+{
+  "status": "assessed",
+  "receiptId": "bbf6cbc0-7069-4971-8b73-5da0ba58599e",
+  "questionIds": [
+    "priority",
+    "seam"
+  ],
+  "inputDigest": "fd5c7861ee4d0a0392306129c6fab0a4ee4e2557af98068d9095c9184e186c4b",
+  "rubricVersion": "batch-2026-09-26.2",
+  "policies": {
+    "priority": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "seam": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    }
+  },
+  "authority": "advisory_only",
+  "origin": {
+    "source": "mcp",
+    "chatId": "01a135ff-362e-7cf0-ac4f-ef678d322188",
+    "agentId": "root-interface-01a135ff"
+  },
+  "model": "jev-1.13.0",
+  "answers": {
+    "priority": {
+      "type": "choice",
+      "domain": "task",
+      "providerChoice": "capture_only",
+      "bestCandidate": "capture_only",
+      "probabilities": {
+        "local_import": 0.16,
+        "browser_mirror": 0.01,
+        "capture_only": 0.69,
+        "insufficient_evidence": 0.14
+      },
+      "confidence": 0.59,
+      "disposition": "abstained",
+      "reasonCode": "low_confidence",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "seam": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "parser_and_cli",
+      "bestCandidate": "parser_and_cli",
+      "probabilities": {
+        "parser_and_cli": 0.8099999999999999,
+        "file_only": 0.01,
+        "internal_helpers": 0.01,
+        "insufficient_evidence": 0.17
+      },
+      "confidence": 0.75,
+      "disposition": "recommendation",
+      "recommendation": "parser_and_cli",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 675,
+    "output_tokens": 112
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-13T19:33:49.862Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-13T19:33:51.028Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a136c1c56277209e1fbf54f34ffcb2",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null
+  },
+  "latencyMs": 1828,
+  "receiptPersisted": true,
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billed_cost_usd": null,
+  "priority_resolution": "local_fallback_grounded_in_authorized_T2.4"
+}

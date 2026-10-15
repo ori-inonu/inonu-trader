@@ -1,0 +1,99 @@
+{
+  "status": "assessed",
+  "receiptId": "fbbf7687-ce63-4b89-baa2-699c32b909ec",
+  "questionIds": [
+    "surface_architecture",
+    "delivery_sequence"
+  ],
+  "inputDigest": "407ad0ad5d4ca425fd11fe3b7969d1c96b3fa2a54461f2364795fd7a93af8049",
+  "rubricVersion": "batch-2026-09-26.2",
+  "policies": {
+    "surface_architecture": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "delivery_sequence": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    }
+  },
+  "authority": "advisory_only",
+  "origin": {
+    "source": "mcp",
+    "chatId": "01a135ff-9686-7e92-b4cb-b23db7525fac"
+  },
+  "correlation": {
+    "requestId": "frontend-architecture-sequence-20261013"
+  },
+  "model": "jev-1.13.0",
+  "answers": {
+    "surface_architecture": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "shared-primitives-separated-modes",
+      "bestCandidate": "shared-primitives-separated-modes",
+      "probabilities": {
+        "shared-primitives-separated-modes": 0.78,
+        "independent-design-systems": 0,
+        "abstain": 0.12,
+        "insufficient_evidence": 0.1
+      },
+      "confidence": 0.71,
+      "disposition": "recommendation",
+      "recommendation": "shared-primitives-separated-modes",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "delivery_sequence": {
+      "type": "choice",
+      "domain": "task",
+      "providerChoice": "trust-accessibility-first",
+      "bestCandidate": "trust-accessibility-first",
+      "probabilities": {
+        "trust-accessibility-first": 0.94,
+        "performance-first": 0.03,
+        "visual-system-first": 0,
+        "abstain": 0,
+        "insufficient_evidence": 0.03
+      },
+      "confidence": 0.92,
+      "disposition": "recommendation",
+      "recommendation": "trust-accessibility-first",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 826,
+    "output_tokens": 145
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-13T16:18:06.697Z",
+    "responseReceivedAt": "2026-10-13T16:18:07.123Z",
+    "responseStatus": 200,
+    "validatedResponse": true
+  },
+  "latencyMs": 544,
+  "receiptPersisted": true,
+  "approved_by": "jev_delegated",
+  "decision_source": "jev",
+  "human_response": false,
+  "cost_usd": null,
+  "note": "Advice within planning scope; no financial or publication authority. Payload was minimal sanitized evidence, no private code, transcript or market feed."
+}

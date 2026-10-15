@@ -1,0 +1,43 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": {
+    "articles": [
+      {
+        "id": "89880580950304",
+        "importance": "high",
+        "source": "jinse.com.cn",
+        "summary": "A poll shows 69% of Democrats and 61% of Republi",
+        "timestamp": 1791840951000,
+        "title": "Most Americans oppose betting on elections and g",
+        "tokenSymbolSentiments": [],
+        "tokenSymbols": []
+      },
+      {
+        "id": "89879967858976",
+        "importance": "high",
+        "source": "jinse.com.cn",
+        "summary": "Blur will depreciate its blur.io frontend on Nov ",
+        "timestamp": "1791840324000",
+        "title": "The frontend will be deprecated on November 12, ",
+        "tokenSymbolSentiments": [
+          { "sentiment": "bullish", "tokenSymbol": "BLUR" },
+          { "sentiment": "excited", "tokenSymbol": "BLUR" }
+        ],
+        "tokenSymbols": ["BLUR"]
+      },
+      {
+        "id": "bad-article",
+        "importance": "urgent",
+        "source": "nope.example",
+        "summary": "this row has no usable timestamp and drops",
+        "timestamp": "not-a-time",
+        "title": "Broken row",
+        "tokenSymbolSentiments": [],
+        "tokenSymbols": []
+      }
+    ],
+    "cursor": "MTc5MTgzMjAzMTAwMDo4OTg3MTM2NDc4NzQ4OA=="
+  },
+  "msg": ""
+}

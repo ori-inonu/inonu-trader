@@ -24,6 +24,18 @@ export interface PortfolioMarket {
   readonly ageMs: number | null;
   readonly stale: boolean;
 }
+interface Observation { readonly origin: "onchainos"; readonly ageMs: number | null; readonly stale: boolean }
+export interface PortfolioRisk extends Observation {
+  readonly level: number | null; readonly tags: readonly string[]; readonly lpBurnedPct: number | null;
+  readonly devCreateCount: number | null; readonly devLaunchedCount: number | null; readonly devRugCount: number | null;
+}
+export interface PortfolioConcentration extends Observation {
+  readonly top10HoldPct: number | null; readonly devHoldPct: number | null; readonly bundleHoldPct: number | null;
+  readonly sniperHoldPct: number | null; readonly suspiciousHoldPct: number | null;
+}
+export interface PortfolioPools extends Observation {
+  readonly poolCount: number; readonly topPoolsLiquidityUsd: number | null; readonly largestPoolSharePct: number | null; readonly partial: true;
+}
 export interface PortfolioAnswer extends Omit<PortfolioInput, "assets"> {
   readonly netWorthUsd: null;
   readonly positionsEmpty: boolean | null;
@@ -38,6 +50,9 @@ export interface PortfolioAnswer extends Omit<PortfolioInput, "assets"> {
       readonly flow: null | { readonly buyShare: number | null; readonly tradeCount: number | null };
       readonly risk: string | number | null;
       readonly market?: PortfolioMarket | null;
+      readonly riskDetails?: PortfolioRisk | null;
+      readonly concentration?: PortfolioConcentration | null;
+      readonly poolLiquidity?: PortfolioPools | null;
     };
   })[];
 }
@@ -53,6 +68,9 @@ const balance = /^(0|[1-9]\d*)(\.\d+)?$/;
 const rec = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
 const nonnegative = (v: unknown): v is number | null => v === null || (typeof v === "number" && Number.isFinite(v) && v >= 0);
 const finite = (v: unknown): v is number | null => v === null || (typeof v === "number" && Number.isFinite(v));
+const percent = (v: unknown): v is number | null => nonnegative(v) && (v === null || v <= 100);
+const count = (v: unknown): v is number | null => nonnegative(v) && (v === null || Number.isSafeInteger(v));
+const observation = (v: unknown): v is Record<string, unknown> & Observation => rec(v) && v.origin === "onchainos" && nonnegative(v.ageMs) && typeof v.stale === "boolean";
 
 /** The number the provider gives Solana: its contracts are base58 mints, and the case of a mint is part of its identity. */
 const SOLANA_CHAIN = "501";
@@ -121,7 +139,25 @@ export function parsePortfolioAnswer(raw: unknown): PortfolioAnswer | null {
       if (![c.m5, c.h1, changeH4, c.h24].every(finite) || ![v.m5, v.h1, volumeH4, v.h24].every(nonnegative)) return null;
       market = { priceUsd: m.priceUsd, liquidityUsd: m.liquidityUsd, ageMs: m.ageMs, stale: m.stale, changePct: { m5: c.m5 as number | null, h1: c.h1 as number | null, h4: changeH4 as number | null, h24: c.h24 as number | null }, volumeUsd: { m5: v.m5 as number | null, h1: v.h1 as number | null, h4: volumeH4 as number | null, h24: v.h24 as number | null } };
     }
-    assets.push({ contract: value.contract, symbol: value.symbol, balance: value.balance as string | null, candidateId: value.candidateId as string, action: value.action as PortfolioAction, model: value.model, evidence: { origin: e.origin, ageMs: e.ageMs, gaps: e.gaps as string[], flow, risk: e.risk as string | number | null, market } });
+    let riskDetails: PortfolioRisk | null = null;
+    if (e.riskDetails != null) {
+      const r = e.riskDetails;
+      if (!observation(r) || !(r.level === null || (typeof r.level === "number" && Number.isInteger(r.level) && r.level >= 1 && r.level <= 5)) || !Array.isArray(r.tags) || r.tags.length > 23 || !r.tags.every(t => typeof t === "string" && /^[A-Za-z][A-Za-z0-9_]{0,39}$/.test(t)) || !percent(r.lpBurnedPct) || ![r.devCreateCount, r.devLaunchedCount, r.devRugCount].every(count)) return null;
+      riskDetails = { origin: r.origin, ageMs: r.ageMs, stale: r.stale, level: r.level as number | null, tags: r.tags as string[], lpBurnedPct: r.lpBurnedPct, devCreateCount: r.devCreateCount as number | null, devLaunchedCount: r.devLaunchedCount as number | null, devRugCount: r.devRugCount as number | null };
+    }
+    let concentration: PortfolioConcentration | null = null;
+    if (e.concentration != null) {
+      const c = e.concentration;
+      if (!observation(c) || ![c.top10HoldPct, c.devHoldPct, c.bundleHoldPct, c.sniperHoldPct, c.suspiciousHoldPct].every(percent)) return null;
+      concentration = { origin: c.origin, ageMs: c.ageMs, stale: c.stale, top10HoldPct: c.top10HoldPct as number | null, devHoldPct: c.devHoldPct as number | null, bundleHoldPct: c.bundleHoldPct as number | null, sniperHoldPct: c.sniperHoldPct as number | null, suspiciousHoldPct: c.suspiciousHoldPct as number | null };
+    }
+    let poolLiquidity: PortfolioPools | null = null;
+    if (e.poolLiquidity != null) {
+      const p = e.poolLiquidity;
+      if (!observation(p) || !count(p.poolCount) || p.poolCount === null || p.poolCount > 5 || !nonnegative(p.topPoolsLiquidityUsd) || !percent(p.largestPoolSharePct) || p.partial !== true) return null;
+      poolLiquidity = { origin: p.origin, ageMs: p.ageMs, stale: p.stale, poolCount: p.poolCount, topPoolsLiquidityUsd: p.topPoolsLiquidityUsd, largestPoolSharePct: p.largestPoolSharePct, partial: true };
+    }
+    assets.push({ contract: value.contract, symbol: value.symbol, balance: value.balance as string | null, candidateId: value.candidateId as string, action: value.action as PortfolioAction, model: value.model, evidence: { origin: e.origin, ageMs: e.ageMs, gaps: e.gaps as string[], flow, risk: e.risk as string | number | null, market, riskDetails, concentration, poolLiquidity } });
   }
   const expectedEmpty = assets.some(a => a.balance !== null && !/^0(?:\.0+)?$/.test(a.balance)) ? false : assets.some(a => a.balance === null) ? null : true;
   if (raw.positionsEmpty !== expectedEmpty) return null;
@@ -144,7 +180,7 @@ export interface SolanaHolding {
   readonly balance: number;
   readonly valueUsd: number | null;
   /** The provider's own mark for a token it considers risky. */
-  readonly flaggedRisk: boolean;
+  readonly flaggedRisk: boolean | null;
 }
 
 /** A balance as the plain decimal text the server takes (no exponent, no trailing zeros), or null when the number cannot be carried that way. */

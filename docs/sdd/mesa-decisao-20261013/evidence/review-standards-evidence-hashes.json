@@ -1,0 +1,95 @@
+{
+  "reviewer": "01a13637-811f-70d0-be0c-4f717d4105e8",
+  "core": [
+    {
+      "path": "src/trader.ts",
+      "candidate": "a2ec56b8be8ff1046222248e098da495885cea903e49e34665b0137a9bd751be",
+      "baseline": "a2ec56b8be8ff1046222248e098da495885cea903e49e34665b0137a9bd751be",
+      "unchanged": true
+    },
+    {
+      "path": "src/chain.ts",
+      "candidate": "b94a062562b5b6b018fb58c8f9987681e2bbaf8437b7abae0e514b175da22cb5",
+      "baseline": "b94a062562b5b6b018fb58c8f9987681e2bbaf8437b7abae0e514b175da22cb5",
+      "unchanged": true
+    },
+    {
+      "path": "src/model.ts",
+      "candidate": "2c076f42e33261619a7e791479fe9200ed6865213406314344ea0772a657185d",
+      "baseline": "2c076f42e33261619a7e791479fe9200ed6865213406314344ea0772a657185d",
+      "unchanged": true
+    },
+    {
+      "path": "src/config.ts",
+      "candidate": "8383abb4a2e6a3bf913dcd12b809c1ad5ad2e5e765b97de78f2aba09242154d5",
+      "baseline": "8383abb4a2e6a3bf913dcd12b809c1ad5ad2e5e765b97de78f2aba09242154d5",
+      "unchanged": true
+    },
+    {
+      "path": "src/index.ts",
+      "candidate": "7275a80b361e5d9a9700a4196518cc3d64d2244bfa7e23b25052a3e73336ecfa",
+      "baseline": "7275a80b361e5d9a9700a4196518cc3d64d2244bfa7e23b25052a3e73336ecfa",
+      "unchanged": true
+    }
+  ],
+  "currentEvidence": [
+    {
+      "path": "review-candidate/AGENTS.md",
+      "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34"
+    },
+    {
+      "path": "review-candidate/docs/sdd/mesa-decisao-20261013/SPEC.md",
+      "sha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298"
+    },
+    {
+      "path": "review-candidate/docs/sdd/mesa-decisao-20261013/REPORT.md",
+      "sha256": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779"
+    },
+    {
+      "path": "review-candidate/docs/sdd/mesa-decisao-20261013/evidence/concurrent-sync.json",
+      "sha256": "5c05a0fcb48eeee935ddf034a6643458996eeefb551eb6b2d6d71319b5611349"
+    },
+    {
+      "path": "review-candidate/docs/sdd/mesa-decisao-20261013/verification.md",
+      "sha256": "77ed3bb1bd2e11b97001362d07a5e3851d8c8d31af217b8713a07c0935791b02"
+    },
+    {
+      "path": "chart-ui-results.json",
+      "sha256": "34dfacc7cb59063288afc757f7ec6a935d4e7159879fc19794c23820667b33c9"
+    },
+    {
+      "path": "verify-chart-ui.mjs",
+      "sha256": "e8ca19f0b691c22a9b4fa5902e5886d967464271946d78667ac9de2e8b4a92c1"
+    },
+    {
+      "path": "wallet-ui-results.json",
+      "sha256": "3e861a262c9f34e7313f34afd6de81a5dcdd8841e3557ee61c0ce98ed4732e57"
+    },
+    {
+      "path": "final-build-mobile.log",
+      "sha256": "c883d2a6995b0668499238535752df0120fb8a960a654a802a2c537178551c39"
+    },
+    {
+      "path": "final-web-mobile.log",
+      "sha256": "ef9251fbf47dacde56a9d99b3d0ecb7657b9e91b4d477f58b4873a5cfeb5f990"
+    },
+    {
+      "path": "pre-menu/PriceChart.module.css",
+      "sha256": "916670a862909d12061b0199eb3b57807fda821a04d95ff15b01d8ba9b07976b"
+    },
+    {
+      "path": "review-standards-workspace/final-mobile-web.log",
+      "sha256": "df316815c9da934e98440f7c03440d4c22b1e3deb3f77e6cbee90ffdaa1e91d8"
+    },
+    {
+      "path": "review-standards-workspace/final-concurrent-independent.log",
+      "sha256": "e4e60b3cc375447dfec81d64c01bcd753ef2814fcef71c5c3649ba1f18f63906"
+    },
+    {
+      "path": "review-standards-workspace/final-concurrent-types-existing-config-result.json",
+      "sha256": "c5a37f947ac0b7e836fa178cf211fd28029c8927c19cba3dca754796c7cad47b"
+    }
+  ],
+  "authorship": "Independent reviewer; application/main/candidate/criteria never edited",
+  "candidateSourceHashes": "final-mobile-integrity.json"
+}

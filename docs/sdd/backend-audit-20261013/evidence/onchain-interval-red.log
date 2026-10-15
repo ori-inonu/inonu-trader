@@ -1,0 +1,51 @@
+bun test v1.3.14 (0d9b296a)
+
+src\onchain-read\client.test.ts:
+226 |     });
+227 |     const client = createOnchainClient({ credentials: () => credential, fetch: f, now: Date.now, minIntervalMs: 40 });
+228 |     const results = await Promise.all([client.call(REQ, "free"), client.call(REQ, "free")]);
+229 |     expect(results.every((result) => result.ok)).toBe(true);
+230 |     expect(calls).toHaveLength(2);
+231 |     expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38);
+                                          ^
+error: expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 38
+Received: 0
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:231:37)
+(fail) onchain client > queue interval starts at fetch after delayed secret preparation [89.21ms]
+226 |     });
+227 |     const client = createOnchainClient({ credentials: () => credential, fetch: f, now: Date.now, minIntervalMs: 40 });
+228 |     const results = await Promise.all([client.call(REQ, "free"), client.call(REQ, "free")]);
+229 |     expect(results.every((result) => result.ok)).toBe(true);
+230 |     expect(calls).toHaveLength(2);
+231 |     expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38);
+                                          ^
+error: expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 38
+Received: 0
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:231:37)
+(fail) onchain client > queue interval starts at fetch after delayed apiKey preparation [81.42ms]
+226 |     });
+227 |     const client = createOnchainClient({ credentials: () => credential, fetch: f, now: Date.now, minIntervalMs: 40 });
+228 |     const results = await Promise.all([client.call(REQ, "free"), client.call(REQ, "free")]);
+229 |     expect(results.every((result) => result.ok)).toBe(true);
+230 |     expect(calls).toHaveLength(2);
+231 |     expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38);
+                                          ^
+error: expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 38
+Received: 1
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:231:37)
+(fail) onchain client > queue interval starts at fetch after delayed passphrase preparation [81.98ms]
+
+ 0 pass
+ 44 filtered out
+ 3 fail
+ 9 expect() calls
+Ran 3 tests across 1 file. [430.00ms]

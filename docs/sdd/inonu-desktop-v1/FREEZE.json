@@ -1,0 +1,64 @@
+{
+ "revisoes": [
+  {
+   "revisao": "rascunho-1",
+   "congeladoEm": "2026-10-12",
+   "hashes": {
+    "SPEC.md": "278f366457c93d84478b11cf44da58cdc40f82a5658e1996977c8cb4ed641ed5",
+    "PLAN.md": "51d5d59f418fd668763697dc7bfa604d2c69d207b8be9b865973f6c41b7f1e3a",
+    "TASKS.md": "fc78e4d280c72e1588d6938612e1c6f4da62434ae87db47250c4606702a421eb",
+    "OWNERSHIP.md": "3e223f51f90c9e562198f41ccc088fc1461a77bb3d92752a1af3f9dee9952895",
+    "flow-engine.md": "5b4800f6182eebffba70c4027552c6fed1e04c57c69ba6b3184368172121d4eb",
+    "rastreador.md": "ae59769b9d20729705a4540014f71181b82989a13739afb28e92b4f961e3b2c8",
+    "info-diet.md": "593f9a052b508024f13a30620fb2445d22eb8bbc8f78fa81bb8c3ba6b9eb9894",
+    "wallet.md": "7f8af86e40ddefec85f23dcc99aba763a72aaba733eefdad744b840486860059",
+    "onchainos-coverage.json": "20bed6c4db507b61c03aa3bdeb44e4d9892033e7a122458f78b571e97edd16af",
+    "onchainos-coverage.md": "8457fee4faf118d0a5bdbc7a3270ccc39c3e65268cc9c350be76cdd4c5e77625",
+    "adr/ADR-1-instalavel.md": "a7db54fa52ba13ab09d2951aa3ce96a2c58db777b3dd7622fb010f918d562a4f",
+    "adr/ADR-2-segredos.md": "1c9aa163bff9138a2019c0fdd921030b89ac3bb99e4957f4ea4783f57eeccbec",
+    "adr/ADR-3-camadas-e-nomenclatura.md": "b31b9766a2c2790ccb7efa80dd6a925187403747d085937a32d7e8a14f8d9e71",
+    "adr/ADR-4-sem-simulado.md": "8856c56580aff47455e0d062672e7c158ca4cf1c87edfd0851b9d3ab716f5550",
+    "adr/ADR-5-carteira.md": "9bade3faaa8e525a0e235410dee805ffa98648023816339fa22f2ea2b49c3190",
+    "adr/ADR-6-custo-e-formas-de-uso.md": "0c8de0b074dca75c1db755712023b655c54766538d76f910d781246d45c2a73e"
+   }
+  },
+  {
+   "revisao": "r2",
+   "congeladoEm": "2026-10-13",
+   "hashes": {
+    "SPEC.md": "75fea1d9ff4c99486c8580f2a00b221cea2be96e868c5051c1431b84772f830c",
+    "flow-engine.md": "4ccfc5444d6a4c7ba5722ca17af63b2aac9f2f74b8522ac56e4d596a9f8f60ca",
+    "rastreador.md": "4457c870ea8aba45c254eed35935cb0ab6c193d2eb6e998c194e3ad0c696643c",
+    "info-diet.md": "f4402d875fcca40ccfe3eccaec8ff6edbc9e1cb290bd6b3f5d1b831983b23101",
+    "wallet.md": "a22dcdfbbcd247ff9a4c5faf0b022862b1ff3cc7ba604af44742bf4a71910ca8",
+    "onchainos-coverage.json": "102225743394f501dcfc3235366624d6ba4976d4749feb121ed6cd4f8edf3e48",
+    "onchainos-coverage.md": "dd41e1072461cb2cfda1a02f37ec740ef23e0dbf9b91a72c8fd41defa8a5dacd",
+    "adr/ADR-1-instalavel.md": "92ba20f5da1df1d66d3591d8bd276b828c3dbb403acd865a4223d100df4e55b6",
+    "adr/ADR-2-segredos.md": "b4c33e9537d82ba4de8f755781a6c01bf9ee46c24f3bede4be8673b78204aa7e",
+    "adr/ADR-3-camadas-e-nomenclatura.md": "14624483ca9f065ffdf207a3a79d317076d1f39fe7fa0e25f4f74bd8d0ce9e4e",
+    "adr/ADR-4-sem-simulado.md": "8856c56580aff47455e0d062672e7c158ca4cf1c87edfd0851b9d3ab716f5550",
+    "adr/ADR-5-carteira.md": "9bade3faaa8e525a0e235410dee805ffa98648023816339fa22f2ea2b49c3190",
+    "adr/ADR-6-custo-e-formas-de-uso.md": "ac4b1dcf68c729bc1f164b3b6b11c97c1127e977b8a4acd3a1197b6e406e516f"
+   }
+  },
+  {
+   "revisao": "r3",
+   "congeladoEm": "2026-10-13",
+   "hashes": {
+    "SPEC.md": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+    "flow-engine.md": "8ad8e3fc9c84d70eaea9a18fd1ea6aeaa33f0f2a18f4dfd28f76084810334b31",
+    "rastreador.md": "22aff83b9975ea5fbae73a75be2b2f90480c651990f387cb6ed496cce9ddf0ec",
+    "info-diet.md": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+    "wallet.md": "a22dcdfbbcd247ff9a4c5faf0b022862b1ff3cc7ba604af44742bf4a71910ca8",
+    "onchainos-coverage.json": "4633bea4d4061b30bee39dae398e4107e3342973e9e95ef8edbdeb7020b84ae3",
+    "onchainos-coverage.md": "23c396d1c17d032690085f1c583031745436bfecae083603f44d25eb9f2b9707",
+    "adr/ADR-1-instalavel.md": "92ba20f5da1df1d66d3591d8bd276b828c3dbb403acd865a4223d100df4e55b6",
+    "adr/ADR-2-segredos.md": "b4c33e9537d82ba4de8f755781a6c01bf9ee46c24f3bede4be8673b78204aa7e",
+    "adr/ADR-3-camadas-e-nomenclatura.md": "14624483ca9f065ffdf207a3a79d317076d1f39fe7fa0e25f4f74bd8d0ce9e4e",
+    "adr/ADR-4-sem-simulado.md": "8856c56580aff47455e0d062672e7c158ca4cf1c87edfd0851b9d3ab716f5550",
+    "adr/ADR-5-carteira.md": "9bade3faaa8e525a0e235410dee805ffa98648023816339fa22f2ea2b49c3190",
+    "adr/ADR-6-custo-e-formas-de-uso.md": "ac4b1dcf68c729bc1f164b3b6b11c97c1127e977b8a4acd3a1197b6e406e516f"
+   }
+  }
+ ]
+}

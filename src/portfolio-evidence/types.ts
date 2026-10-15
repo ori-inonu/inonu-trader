@@ -5,7 +5,7 @@
  * never a JavaScript number. Unknown is a state, never a zero.
  */
 
-export const EVIDENCE_SCHEMA = "wallet_evidence_v1" as const;
+export const EVIDENCE_SCHEMA = "wallet_evidence_v2" as const;
 export const ADAPTER_VERSION = "portfolio-evidence-adapters-1" as const;
 
 export type Origin = "synthetic_fixture" | "local_import" | "browser_wallet" | "public_rpc" | "okx_web3_api";
@@ -278,6 +278,66 @@ export interface PnlPosition {
   readonly state: EvidenceState;
 }
 
+export type DexTradeKind = "buy" | "sell" | "transfer_in" | "transfer_out" | "unknown";
+
+/** One DEX trade or transfer of the provider's trade history (a different family from the on-chain transaction history). */
+export interface DexTrade {
+  readonly tradeId: string;
+  readonly identity: AssetIdentity;
+  readonly display: AssetDisplay;
+  readonly kind: DexTradeKind;
+  /** Token units, decimal text as sent; the unit is not declared by the provider. */
+  readonly amountText: string | null;
+  /** USD, decimal text as sent. */
+  readonly valueUsdText: string | null;
+  /** Price as sent; its unit is not declared. */
+  readonly priceText: string | null;
+  readonly pnlUsdText: string | null;
+  readonly timeMs: number | null;
+  readonly state: EvidenceState;
+}
+
+/**
+ * Sums over the trades OBSERVED in the requested window. This is NOT a cost basis and NOT a historical cost: the window is
+ * bounded, the provider keeps at most 1000 records and declares no completeness, and a transfer in has no price.
+ */
+export interface ObservedAcquisition {
+  readonly identity: AssetIdentity;
+  readonly buyCount: number;
+  readonly buyAmountText: string | null;
+  readonly buyValueUsdText: string | null;
+  readonly sellCount: number;
+  readonly sellAmountText: string | null;
+  readonly sellValueUsdText: string | null;
+  readonly transferInCount: number;
+  readonly transferInAmountText: string | null;
+  readonly transferOutCount: number;
+  readonly transferOutAmountText: string | null;
+  /** Trades of this asset that did not read cleanly and are NOT in the sums above. */
+  readonly excludedTradeCount: number;
+  readonly window: { readonly fromMs: number; readonly toMs: number };
+  readonly coverage: "partial_window";
+  readonly state: EvidenceState;
+}
+
+/** The provider's own consistency: its total PnL of a token against realized plus unrealized. */
+export interface TokenPnlCheck {
+  readonly identity: AssetIdentity;
+  /** `isPnlSupported` as sent; null when it is not a boolean. */
+  readonly supported: boolean | null;
+  readonly totalText: string | null;
+  readonly partsSumText: string | null;
+  /** total minus (realized + unrealized), exact. */
+  readonly deltaText: string | null;
+  readonly state: EvidenceState;
+}
+
+export interface PortfolioSupport {
+  /** Chains the provider lists for the portfolio family, or null when the list was not asked for. A sample list is not proof of absence. */
+  readonly listedChains: readonly string[] | null;
+  readonly requestedChainListed: boolean | null;
+}
+
 export interface AddressAnalysisSection {
   readonly kind: "address_analysis";
   readonly source: SourceInfo;
@@ -287,6 +347,11 @@ export interface AddressAnalysisSection {
   readonly timeFrame: string;
   readonly positions: readonly PnlPosition[];
   readonly statements: readonly PnlStatement[];
+  readonly tokenPnlChecks: readonly TokenPnlCheck[];
+  readonly trades: readonly DexTrade[];
+  readonly tradesDuplicatesCollapsed: number;
+  readonly acquisitions: readonly ObservedAcquisition[];
+  readonly portfolioSupport: PortfolioSupport;
   readonly rejected: readonly RejectedRow[];
   readonly issues: readonly Issue[];
   readonly status: Status;
@@ -301,7 +366,10 @@ export interface PriceEvidence {
   readonly priceText: string | null;
   /** The documentation does not declare the currency of the market price. */
   readonly currency: null;
+  /** The provider's own clock for the price, in milliseconds; null when absent or not a plain millisecond value. */
   readonly timeMs: number | null;
+  /** Local clock when THIS price answer was read. The price clock is judged against it, not against the balances read. */
+  readonly fetchedAtMs: number | null;
   readonly state: EvidenceState;
 }
 
@@ -347,8 +415,8 @@ export interface MarketSection {
 // Reconciliation and aggregate
 // ---------------------------------------------------------------------------
 
-/** RC1 to RC6 are the SDD reconciliation rules. RK carries risk and liquidity observations; it reconciles nothing. */
-export type ReconciliationRule = "RC1" | "RC2" | "RC3" | "RC4" | "RC5" | "RC6" | "RK";
+/** RC1 to RC6 are the SDD reconciliation rules. RK carries risk and liquidity observations; PN the provider's own PnL consistency. */
+export type ReconciliationRule = "RC1" | "RC2" | "RC3" | "RC4" | "RC5" | "RC6" | "RK" | "PN";
 
 export interface Finding {
   readonly rule: ReconciliationRule;
@@ -373,7 +441,10 @@ export interface TotalVsSum {
 export interface ReconciliationReport {
   readonly findings: readonly Finding[];
   readonly totalVsSum: TotalVsSum | null;
+  /** Worst status over EVERYTHING reconciled. */
   readonly status: Status;
+  /** Worst status over the findings that bear on the active balances only (RC1, RC2, RC3, RC6 and RC4 of the balance rows). The net worth uses this one. */
+  readonly balanceStatus: Status;
 }
 
 export interface NetWorth {

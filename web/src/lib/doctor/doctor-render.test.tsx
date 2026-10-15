@@ -33,7 +33,7 @@ describe("a ready report", () => {
     expect(html).toContain("1 ok");
     expect(html).toContain("1 atencao");
     expect(html).toContain("1 falha");
-    expect(html).toContain('href="/"');
+    expect(html).toContain('href="/mesa"');
   });
 
   test("the status is carried by data attributes for styling and by text for reading", () => {

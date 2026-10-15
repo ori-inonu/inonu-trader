@@ -1,0 +1,1430 @@
+{
+  "format": "docs-source-additions-v1",
+  "captured": "2026-10-13T16:16:55.990340-03:00",
+  "origin": "sources_present_at_reconciliation; authorship_and_creation_time_not_inferred",
+  "baseline": "docs/_meta/source-manifest-20261013.json",
+  "files": [
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-DIAGNOSIS.md",
+      "sha256": "e9253abca718575cf16bfd85f005b357fa69789b93a65e2c7ca06f383506cdfe",
+      "bytes": 9018,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-AUDIT.md",
+      "sha256": "0e09952da8047e2b97601da9652dfba542cd1885e2acab8c15e1e3e1575f42db",
+      "bytes": 9454,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-LIVE-VERIFICATION.md",
+      "sha256": "4039245af4c7067e71bd2c72dff0fbbf606374be60ec62df99654a8e03eca380",
+      "bytes": 1345,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+      "sha256": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "bytes": 9882,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+      "sha256": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "bytes": 11420,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-VERIFICATION.md",
+      "sha256": "e8f0451c0446ee176cea3f1aa73eb5c6547b2fb02f8b1c481b20277c2bc56f3a",
+      "bytes": 1472,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+      "sha256": "77d3139a57a5512fe836a4b029aa4d1050b4705f2877f1a949b41f6e77fc81bb",
+      "bytes": 9719,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-STANDARDS-REVIEW.md",
+      "sha256": "3f68fac4086574e55660b12d1f16ab774a01e17766b913d5867532986bf0a2b5",
+      "bytes": 11792,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-VERIFICATION.md",
+      "sha256": "82acb3e9332da6c05787e628125d2019697651f487efb0804f53000e248cb3d4",
+      "bytes": 1403,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-SPEC-PREFLIGHT.md",
+      "sha256": "d406c54100cc639fd8d6a572b7e2d1c14ead36c9274a48af74238e3948a1d303",
+      "bytes": 8416,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-SPEC-REVIEW.md",
+      "sha256": "b13fd96e61e77e73985825d179f1e14b21fe3b4ba6dec1bc2df7b46cfc79b489",
+      "bytes": 7160,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-SPEC.md",
+      "sha256": "4ef3aadfbb0baec1c9fdd4fb262312fd425864d53718abad9d9ba6fe94735ec3",
+      "bytes": 4943,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-STANDARDS-REVIEW.md",
+      "sha256": "85e7c3552f63861a58ca809cea3225ca0a9e9ca9f4a4ba0918d837548eedc976",
+      "bytes": 10032,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-VERIFICATION.md",
+      "sha256": "bd0af58d7b4d152d188966a19f8c429e06221c19a3dd3f35cd077ee6e0f316b6",
+      "bytes": 2839,
+      "extension": ".md",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/PORTFOLIO-FINAL-AUDIT.md",
+      "sha256": "5efd0c2f1ea46fcfbea0d434cb6ac6b3dd6c76c6b5d1933d4eebdc5e1d46f6c8",
+      "bytes": 8693,
+      "extension": ".md",
+      "owner": "carteira-e-patrimonio",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/PORTFOLIO-INTEGRATION.md",
+      "sha256": "3e912bad84ec71723796b337cc68577d9da0e08e432ed05f01da5a2658b8e140",
+      "bytes": 1891,
+      "extension": ".md",
+      "owner": "carteira-e-patrimonio",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-cap-green.log",
+      "sha256": "247cc91d970958b99524a10b127ee661276669333b64142b703e4a3cd52a83bd",
+      "bytes": 980,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-cap-red.log",
+      "sha256": "01db95043de8adeae7d26e9138258e4a4ba93ebc41091b090683f1d2ceb8ef4e",
+      "bytes": 1689,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-client.baseline.txt",
+      "sha256": "118b8e32651986e57a83876cf84f75da533b8a6425b7f5f05f3b69379adbd1ea",
+      "bytes": 9299,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-cycle-review.json",
+      "sha256": "bc4b62f3d2c37aeab7e91fa971ed3fcb0d6c6d9704c6e22421da49376d4a5082",
+      "bytes": 1766,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-deadline-green.log",
+      "sha256": "0671015bb61532a9ad51179fd105cc2deed522ba7a2c94f3e4cbeb84a145ae2c",
+      "bytes": 2933,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-deadline-red.log",
+      "sha256": "249199f5ecec32f40adb222dad0000df9194513cc7b1f4bbafd5073e3633b62c",
+      "bytes": 5618,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-full-final.log",
+      "sha256": "d78db36a81956c2b7154e5641a19fa6230acba3f4e3e27699653b470a0586174",
+      "bytes": 19657,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-gateway.baseline.txt",
+      "sha256": "0b4ce61c93037d9319913ddbaaa92d5d5892ffe33bfe7317177cd16f7ea95d0d",
+      "bytes": 5998,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-integration-manifest.json",
+      "sha256": "a73053ae93ba23c4e728208cb42182e7fe784a6f0b59e7c5c77896f4f50b4595",
+      "bytes": 8797,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-intent-decision.json",
+      "sha256": "401cb8fd72c2d946b4f61bdd9b93faffc226db9111eafe1ebdd33e320805c50c",
+      "bytes": 1775,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-intent-green.log",
+      "sha256": "d8997813fec35748845a6c670aa4786890f5bcf3ca2ce687f08d682df905d57a",
+      "bytes": 1095,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-intent-red.log",
+      "sha256": "a611abe56346ff29ed1593a95b1d2599eef8bdfdd04a2cd6f203100bf1f924f0",
+      "bytes": 1967,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-candidate.json",
+      "sha256": "e0941d26ea67987e07d2909536a0552779dcf4b4018e62a45d98e2f29283b317",
+      "bytes": 1977,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-candidate.json",
+      "sha256": "ce8ccd1ff91cfcad4d377f391bfec7c08ce3f8861a9a7785f31587e34e881318",
+      "bytes": 2185,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-full.log",
+      "sha256": "a82ed66f8b38e1a354496842235eaa4279a48d42b054b5bc30ff041190999ebc",
+      "bytes": 20160,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-live-global-types.log",
+      "sha256": "27c1f71f1597c81ed3a1974cc8ece11a676a1665e53368561f671be9728bc324",
+      "bytes": 46,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-live-global-types.metrics.json",
+      "sha256": "a528d9ea3746769e15d08e7b0926e6f5b1292f4eb224973e6e0e753c965475ef",
+      "bytes": 498,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-live-tests.log",
+      "sha256": "1a3ce4de6c96c21dd4bdbc4827b12720fd0c7c2c1bfaf9f5d6552476b4951e10",
+      "bytes": 23479,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-live-tests.metrics.json",
+      "sha256": "dde62ad39af83e8a078463c9c8dc39f4e21dfb99ae9b059b629e36be2d494fab",
+      "bytes": 504,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-live-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-live-types.metrics.json",
+      "sha256": "28a75af4e899c310daaf6f4195ab0a0bcb7f43fae042161ea68acf885f35d512",
+      "bytes": 497,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-live.json",
+      "sha256": "e5e25048babcd8455576851eef10efbe52f9d32b46502e2d8f4377abefb224e4",
+      "bytes": 2756,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-full.log",
+      "sha256": "eb2fa5984c4ead0f5fce811e7931d882959dd0297a30eb270b4b47165477c324",
+      "bytes": 19970,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-green.log",
+      "sha256": "d4e73cfbed99af998f322583eb3f491f88360bc9b057c364fec5cdf9c1bef398",
+      "bytes": 4189,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-integration-manifest.json",
+      "sha256": "d2dcf7c6283def98ec9019f1a6314d5524f06ceb7afc72f27fc58aa6306732f7",
+      "bytes": 6853,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.test.ts.txt",
+      "sha256": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "bytes": 21935,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.ts.txt",
+      "sha256": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "bytes": 10344,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.test.ts.txt",
+      "sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "bytes": 15254,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.ts.txt",
+      "sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "bytes": 6850,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-red.log",
+      "sha256": "e5a225f07dae9dc2ceb7e1fba50648c383c261d54c14ea2f8b20685ba39bcbd1",
+      "bytes": 2511,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-live-tests.log",
+      "sha256": "9db21bf243246facca5737ce690bdca65192a23d7ca5a0e42d73fc741d87f70a",
+      "bytes": 20372,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-lookup-red.log",
+      "sha256": "ef96f69b8a461a8ac797ca133df78989503f25307a1f23d47ec164b8bddfc2a9",
+      "bytes": 867,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-preintegration/src/onchain-read/client.test.ts.txt",
+      "sha256": "c1c5cee59e4498268ef6788e1f7b75cddae73d84c04ec42344ee7f80c66434e6",
+      "bytes": 14144,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-preintegration/src/onchain-read/client.ts.txt",
+      "sha256": "118b8e32651986e57a83876cf84f75da533b8a6425b7f5f05f3b69379adbd1ea",
+      "bytes": 9299,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-preintegration/src/onchain-read/gateway.test.ts.txt",
+      "sha256": "aef810c529c376c58c36bf4d6938ce722bc567d656c97ff5ced74076bb3c3374",
+      "bytes": 6778,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-preintegration/src/onchain-read/gateway.ts.txt",
+      "sha256": "0b4ce61c93037d9319913ddbaaa92d5d5892ffe33bfe7317177cd16f7ea95d0d",
+      "bytes": 5998,
+      "extension": ".txt",
+      "owner": "onchainos-e-configuracoes",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-queue-green.log",
+      "sha256": "6fcaa783f8e4bfb95822afc1b14dfa7113d5cf1ce1774502c105b895bc524c8f",
+      "bytes": 2637,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-queue-red.log",
+      "sha256": "002907c508d8bb33b731d7f728f0bea5172667f0c8c3f821e5e955ca550d9d1d",
+      "bytes": 5015,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-test-seam-decision.json",
+      "sha256": "b2a505448c8102f394ba01004c02b1cd2bc5e5ca0ec9e1e63808272a34c35fc5",
+      "bytes": 1726,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-url-red.log",
+      "sha256": "a803b027ffc035c7e637f9f3afc2603903ed2ed39898802fa4b30f99aebed0f0",
+      "bytes": 953,
+      "extension": ".log",
+      "owner": "onchainos-e-configuracoes",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/portfolio-integrated.log",
+      "sha256": "0e1888dfea2ba6d903a41acf73628352b0f1f3129114c4f11578b5a60c97a6a8",
+      "bytes": 21825,
+      "extension": ".log",
+      "owner": "carteira-e-patrimonio",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/preintegration-diff.txt",
+      "sha256": "6c9f733f7a11b2193e37879bc00b92a981addc0f619680c25cd6e84e0b8ff726",
+      "bytes": 1545,
+      "extension": ".txt",
+      "owner": "governanca-e-historico",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/quant-portfolio.preintegration.txt",
+      "sha256": "c69731e0a88c1007a50543228e3082aab9f91f841e5f2dcca7fb45ceb785d0a9",
+      "bytes": 6117,
+      "extension": ".txt",
+      "owner": "grafico-e-analytics",
+      "role": "registro-textual",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/onchain-interval-final-integration-audit-after-hashes.json",
+      "sha256": "2bcefc888c3f706878ffed212992519e0a0953b3fe419b7044ae0cada18017e5",
+      "bytes": 2901,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/onchain-interval-final-integration-audit-before-hashes.json",
+      "sha256": "9dee2c24c08ada01387c352b35269dfb624a11f12018c87f571dee7626d58fdd",
+      "bytes": 1243,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/onchain-interval-final-integration-audit-evidence.json",
+      "sha256": "a29d779565653fa767b262d8da15bb9083c439a93453b3b9b97f6643b33c0140",
+      "bytes": 42884,
+      "extension": ".json",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/onchain-interval-final-integration-audit-inspect.py",
+      "sha256": "648b023de9180defe313999e4dfc38b935da9dc508831aab67ede435ae219da2",
+      "bytes": 8444,
+      "extension": ".py",
+      "owner": "onchainos-e-configuracoes",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T3.12-rotas-da-carteira.md",
+      "sha256": "51f5796bad8d8d534cb774523591bf973d3c1861d9cd9b0f2669c738d463f6ef",
+      "bytes": 8566,
+      "extension": ".md",
+      "owner": "instalavel-e-inonu",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/CHECKPOINT.md",
+      "sha256": "aeccb1436fcdfec6f5479c2751448fb984af024235c309386f0d05dc6d74601f",
+      "bytes": 5019,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "guia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/after-desktop-expanded.png",
+      "sha256": "be80459c805f4460472d32e715fc0f548928ece1f424a8f05168ab809437f71b",
+      "bytes": 197492,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/after-desktop.png",
+      "sha256": "d6e1e37f3a730447c7ea9120c70bdd83d6d888e91f58f75b14c67a25d6907930",
+      "bytes": 232718,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/after-mobile.png",
+      "sha256": "a6be7589dad4531606b788190d3b3122620133f90c13dab8418ba8a81343e7f5",
+      "bytes": 95267,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/chart-final-accessibility.log",
+      "sha256": "e4d32362b756b9d14a7429faa80e04c92074b955554905c046657994406308a7",
+      "bytes": 4683,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/chart-menu-diagnosis.json",
+      "sha256": "d6a59d112544556347d7c523c626c18e698b38def5d6970ddd98727a2710bf4d",
+      "bytes": 4054,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/chart-ui-results.json",
+      "sha256": "34dfacc7cb59063288afc757f7ec6a935d4e7159879fc19794c23820667b33c9",
+      "bytes": 8070,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/concurrent-sync.json",
+      "sha256": "5c05a0fcb48eeee935ddf034a6643458996eeefb551eb6b2d6d71319b5611349",
+      "bytes": 1632,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-backend-tests.log",
+      "sha256": "b5d54384daef3c1f19aba417010c98bbbbbcab3434b60ed500931b038e83a402",
+      "bytes": 62955,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-build-mobile.log",
+      "sha256": "c883d2a6995b0668499238535752df0120fb8a960a654a802a2c537178551c39",
+      "bytes": 766,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-concurrent-tests.log",
+      "sha256": "131dd5cbb8399aa4c8b73c6318d3072471d1193ff3bb5c5baab3315495825578",
+      "bytes": 5305,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-purity-tests.log",
+      "sha256": "bed6fb8a313a24e63e4b9bc5d6f2d0a4838c970e2519c907f5c13852eee2cda8",
+      "bytes": 2668,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-typecheck-concurrent.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-typecheck-mobile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-typecheck-root-qualified.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-web-mobile.log",
+      "sha256": "ef9251fbf47dacde56a9d99b3d0ecb7657b9e91b4d477f58b4873a5cfeb5f990",
+      "bytes": 289493,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/review-spec-concurrent.log",
+      "sha256": "2a45ed4f17ddb71be0c2e8ac778ffef89562385115fdc2846645ac59021a9dc5",
+      "bytes": 5310,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/review-spec-integrity.json",
+      "sha256": "5e7b24c033deced9106a6da3c9a5d6d1cac00ac22d147e63ed793d2e84b3733b",
+      "bytes": 32967,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/review-spec-mobile.log",
+      "sha256": "dba486f8c66283a4b54664d5cdb2ba823a51c06acd784655a1ae2fc4ad2b381f",
+      "bytes": 8617,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/review-standards-acceptance.json",
+      "sha256": "54cd9d9f8b0fb26835ccacb3fcd7068a221e76f8cc307fa8c2d9e42ac4359504",
+      "bytes": 12519,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/review-standards-close.json",
+      "sha256": "1dc53f6ed2593793fd51c7353b733cd870965cedc2552aadf9aa8435a1103c0f",
+      "bytes": 21775,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/review-standards-evidence-hashes.json",
+      "sha256": "6b4234d1c62bbd9dfd7af98fef23368b5da96111b5fdb708f410099b72be3243",
+      "bytes": 3736,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/review-standards-integrity.json",
+      "sha256": "cd4d9bfc08a5e81b2087e20e99b1cc7f5122fa6c05f377f197a141d0c7d29fe5",
+      "bytes": 15991,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/verify-chart-ui.mjs",
+      "sha256": "e8ca19f0b691c22a9b4fa5902e5886d967464271946d78667ac9de2e8b4a92c1",
+      "bytes": 6353,
+      "extension": ".mjs",
+      "owner": "interface-e-central",
+      "role": "ferramenta",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/verify-wallet-ui.mjs",
+      "sha256": "cbdbd12ecc603a7f12fc76474ef994f5b41f01d5a5eff8e5e832ded6ddb2a7e2",
+      "bytes": 7002,
+      "extension": ".mjs",
+      "owner": "interface-e-central",
+      "role": "ferramenta",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/visual-results.json",
+      "sha256": "b00414004fe3a0595cf2fbcb0cfafc8b297cbfd1e54428220b8e3b98eb9b6f12",
+      "bytes": 3620,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/wallet-desktop.png",
+      "sha256": "de4019b8d08936de499fae46a762fcb62d93019e106fd38aa3b20559fd462bde",
+      "bytes": 249799,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/wallet-mobile.png",
+      "sha256": "9cc00a78f82319d3708506437b07735c11fcd5c2ad7c9363d50ce8d5c1a0ea89",
+      "bytes": 119741,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/wallet-ui-results.json",
+      "sha256": "3e861a262c9f34e7313f34afd6de81a5dcdd8841e3557ee61c0ce98ed4732e57",
+      "bytes": 1200,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/integrity-final.json",
+      "sha256": "ba65b1e5148eecfb9fae52c5039005ce0c4920085f4314a607c0f298599286e4",
+      "bytes": 29993,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/review-spec.md",
+      "sha256": "d263824ff331dc7f2cb15c17baf934e641dfd159e1d77a3e2dd9bac44a39af22",
+      "bytes": 15974,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/review-standards.md",
+      "sha256": "9d7b6b01ee0da4baee63b56cf0ab8ec1dd9e995c02aa7ecd94f029e8e017e421",
+      "bytes": 2987,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/verification.md",
+      "sha256": "ee41ff59bb0b8285857c1f3cbd32fb5257507dab0aa9fad45fdfa734c8e5529a",
+      "bytes": 6834,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/CHECKPOINT.md",
+      "sha256": "68c024b65e0c1f2a33d3728ded75c61d4c941294d5a9fcd0c5b2708890a4da87",
+      "bytes": 2688,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "plano",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/REPORT.md",
+      "sha256": "c09383acbd9a513292b382516e3f95cbbcc29fe8ba884773b3d4225a763fa97d",
+      "bytes": 4142,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/SPEC.md",
+      "sha256": "e5cc175407637b903721cb8415bfe4ea89004d94c7c28f1978d40ed887706d55",
+      "bytes": 3071,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "contrato",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/browser-matrix.md",
+      "sha256": "575fb464bf71fd4537fccbb3187c2c405f777a20df2b7053bd71ecb8202684ee",
+      "bytes": 4162,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/build-responsive.log",
+      "sha256": "1d231b3f281d8d09cb467d5b0be718d8511d2082937f6da9f294162eefa6a592",
+      "bytes": 973,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/copy-green.log",
+      "sha256": "ad1038f4b377b95b3cfe3496252eef12a5a174c889502196a8d21b2d30046f51",
+      "bytes": 4054,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/copy-red.log",
+      "sha256": "fb568e24e24c99cb6f6aa9f7cf7ac75703924dc78bf7a117047c2e42665e46c2",
+      "bytes": 5884,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/evidence-references.json",
+      "sha256": "234038b7c6889ffbf782637d57512dc4a1c3ac76547d02f1423b4c75236540b4",
+      "bytes": 8008,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/final-manifest.json",
+      "sha256": "97af97aa3b99fff34a2ebaa6c23322d8ae009e6d5f56fd286703bce13aac254e",
+      "bytes": 5500,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/integration-audit-independent.md",
+      "sha256": "1df8d44a60348418377fb57ab83a6cc32c0c45442c609ab81246a89a5d77d071",
+      "bytes": 2521,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/integration-manifest.json",
+      "sha256": "c8981a94580f366089535609bf117be1d694cbc9e214935a80b3bf7d5269323e",
+      "bytes": 8205,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/jev-integration-receipt.json",
+      "sha256": "fa5f45384f5e404a4516a0a1058cee106209fe3a9b9cb15c7af2f4554e4702ab",
+      "bytes": 1819,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/jev-responsive-receipt.json",
+      "sha256": "96c8cd421e6cd2d0cd4bb7af9885f8b70f4a550c352254d595ed91861563ab6f",
+      "bytes": 767,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/jev-source-repair-receipt.json",
+      "sha256": "2a11182008137d61164ae7f444d93f05d6992a98271a767d39b2259064f2893b",
+      "bytes": 774,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/market-inputs-green.log",
+      "sha256": "3b331df5af6365bfb7d2b6216e5f14fa72636c70c879d7505f990ae5f503d2be",
+      "bytes": 1306,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/market-inputs-red.log",
+      "sha256": "72c9a3a61fb4968f62e0b10b76a793aaeda4fa18b74820b290cc1d5b03443c27",
+      "bytes": 3376,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/reconciliation-manifest.json",
+      "sha256": "471a304a1576ba7585363aa9f1c7e7b119142c84a55e1427e84b0303662470ac",
+      "bytes": 2273,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshot-manifest.json",
+      "sha256": "a6bd6ad7be3d93150f40d1cef307d96aae32064d8cb88d421cbd99cc5695075c",
+      "bytes": 5262,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia-estruturada",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/console-1024.png",
+      "sha256": "2ee3f71c98c06b1bb492e14a87cfbcc483e3f387f0b7b4f1abfd1ae7eeb8de10",
+      "bytes": 52499,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/console-1440.png",
+      "sha256": "90481f25696d6d166ef5160102de23822c4387df8a7ce4bc853dc29b82a75f85",
+      "bytes": 82806,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/console-320-end.png",
+      "sha256": "09e13142b81c31facd63964e4016abfee49fb9a135a4cd1c201409d670fe2423",
+      "bytes": 21684,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/console-390.png",
+      "sha256": "78a91c338aabcfe92d36e637e00ad2d6079e2a8f3c15cf91f3fe63e309a07338",
+      "bytes": 35992,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/doctor-1024.png",
+      "sha256": "4ee8ba711d9b1e0a1b47f5ea35282567bde24345f10cd2a1422cbcf5fc770b73",
+      "bytes": 21307,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/doctor-1440.png",
+      "sha256": "39ea981a5abc49da7ae1cc150470a9136d7c03cefa018af65ff0359cd21d6d4c",
+      "bytes": 24416,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/doctor-320.png",
+      "sha256": "1a890bb35404ad0f3ea5a4bdc276c2fd2ef6ca2313b2f3a6e6c2ef5ff0910c7f",
+      "bytes": 15913,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/doctor-390.png",
+      "sha256": "75bef0a561ecb94cdca466789ce2f0ac7f5e5bceae332dfdb5847954138be4c8",
+      "bytes": 16799,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/final-wallet-1024.png",
+      "sha256": "0cfacd9e3194b20cdcf02dc1ea0beb040a156cf72b086b92c7b650a48c474035",
+      "bytes": 105540,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/integrated-radar-320.png",
+      "sha256": "f7fab40be35547f0be198efe39866146a7d0b2cf012a193aa6e276f1581e1b6d",
+      "bytes": 28613,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/integrated-wallet-1024.png",
+      "sha256": "35491236cc308f92039c77c9ff789a526309621488c56511c89ef9a39f835640",
+      "bytes": 109847,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/integrated-wallet-320-end.png",
+      "sha256": "debb7880adc82a02bcef31d053aa509bef3a2d0857e0891d20f0a1dad6c9b9fd",
+      "bytes": 31226,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/rastreador-1024.png",
+      "sha256": "3e25265f913484e513d8898e0e2b0c0b85cb635cf1668b648d61b052eb8af20a",
+      "bytes": 90869,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/rastreador-1440-top.png",
+      "sha256": "deb2f6fa6b4a0424c1f91bf4d98c836f5fde2ddeab40ad64c70c2ccf3081855c",
+      "bytes": 108769,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/rastreador-320-bottom.png",
+      "sha256": "f8b74ef93a85836ae8de8dde08d82cc97fe5c72758c2d426ec8bae09fa07c745",
+      "bytes": 27579,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/rastreador-320.png",
+      "sha256": "7edf20d9fbeb80f0754e0c99dd6454376b4a0760ce9305a5fb31c0297eb9ad28",
+      "bytes": 25199,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/rastreador-390.png",
+      "sha256": "ddd723e0960b6245136d8e38293f0d27c178e26039e027c003157566413b8bf1",
+      "bytes": 38282,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-chart-390.png",
+      "sha256": "cedee3ddb622e0869e2f0c4b720f1ff15dbafd32b0b461b49f105af8714c0535",
+      "bytes": 49959,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-console-320.png",
+      "sha256": "bd95ed9b218431257a1444d845805567202b49e8cad48156ec26e31fca2b6684",
+      "bytes": 28772,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-radar-1440.png",
+      "sha256": "738a1a7e0f039f3bf35416515a1a505dd384c97b4228bd286196251f7071e8c5",
+      "bytes": 140555,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-radar-320.png",
+      "sha256": "ae715795ed1669cbf7eee4928b77e31e352b255c7e28b458fe8d4f563301d415",
+      "bytes": 27792,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-wallet-1024.png",
+      "sha256": "bed5000be300fcd4c99cf3e1dc160ab32b7034de6ee147039443586932d2f482",
+      "bytes": 106572,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-wallet-320-end.png",
+      "sha256": "7720c408dae2cf59ce6a993d3dd0973aaaf9643cb2b5fbb0759b314e263e78d7",
+      "bytes": 32772,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-wallet-390-bottom.png",
+      "sha256": "38d5c33cb744c78273bddca0da638733aa942d393eb8ce8d2b543c018639d82c",
+      "bytes": 48999,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-wallet-390.png",
+      "sha256": "4da2cc4309fd69f05b52b12f1278facc055c940408f33cf23b4ade5ef42f461b",
+      "bytes": 48531,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/responsive-wallet-821.png",
+      "sha256": "1b4197aa5a7a174ca2d36d25a1359870ed9cf8a70e12d2a6f1d43955f31fd15c",
+      "bytes": 93455,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/settings-1024.png",
+      "sha256": "a8167644cd96d91f78269238d2ca7578346e78183feea4c3dd19743362cc70f2",
+      "bytes": 56238,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/settings-1440-bottom.png",
+      "sha256": "e830819076fa1504e5c88042ecbf48f8514580de7270307dc2e977533699f7c8",
+      "bytes": 59797,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/settings-1440.png",
+      "sha256": "393701e2f79dc0f2ea043943ec1dec0d209713d91a8da246b289efe3d0cd810a",
+      "bytes": 65203,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/settings-320-bottom.png",
+      "sha256": "8d15f33615dab5ff985f06d1902d34040f5d99b9d318a5e31f2e87846a590917",
+      "bytes": 26311,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/settings-320.png",
+      "sha256": "d7fabb42708fa076bb721d16987432a5653d03ecc2b75a107db83d84f94248d7",
+      "bytes": 25847,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/screenshots/settings-390.png",
+      "sha256": "26b159a1f3da6ff2c2c295beccab5f8fa8a1d090427fbc6364552bc8ca8129ce",
+      "bytes": 31757,
+      "extension": ".png",
+      "owner": "interface-e-central",
+      "role": "imagem",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/spec-review-final.md",
+      "sha256": "950e7f95b5b895dc290b589187a4921b9de25f8d644a8233bbfb797c10ded951",
+      "bytes": 2882,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/spec-review-responsive.md",
+      "sha256": "7ba26b563e1d866c7cc1defe03f8ba15f11120316cc6f45eae9585a08931c5b2",
+      "bytes": 2382,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/standards-review-final.md",
+      "sha256": "72b4475d5ae213dde97bf497d9b21c6a365c70b521f5ca97ecefc8dbe2446558",
+      "bytes": 2541,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/standards-review-responsive.md",
+      "sha256": "e7accb0bb37317dc03577ee880f7e0b679b9c1d9eaf633b181ccc3188c835141",
+      "bytes": 2240,
+      "extension": ".md",
+      "owner": "interface-e-central",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/tests-baseline-final.log",
+      "sha256": "4a232e9e5b02137f7d0851a054c66cbc3c7b3f5813612e05360071cbeea4c0eb",
+      "bytes": 295774,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/tests-complete-final.log",
+      "sha256": "d7fe5514841497f0663f2e0e7c29e5a48154959e5b5200499f1d0eca84c00dad",
+      "bytes": 296116,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/tests-integrated-original.log",
+      "sha256": "f55eead088dcb2ce42e39443c20b3d9239db2af81ca3b31cafae63da9f729ecf",
+      "bytes": 17493,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/ui-audit-20261013/typecheck-integrated-original.log",
+      "sha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+      "bytes": 16,
+      "extension": ".log",
+      "owner": "interface-e-central",
+      "role": "log",
+      "hidden": false
+    }
+  ]
+}

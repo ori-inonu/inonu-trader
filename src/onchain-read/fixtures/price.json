@@ -1,0 +1,13 @@
+{
+  "origin": "synthetic_fixture",
+  "code": "0",
+  "data": [
+    {
+      "chainIndex": "66",
+      "tokenContractAddress": "0x382bb369d343125bfb2117af9c149795c6c65c50",
+      "time": "1716892020000",
+      "price": "26.458143090226812"
+    }
+  ],
+  "msg": ""
+}

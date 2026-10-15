@@ -1,4 +1,6 @@
-import { describe, expect, test } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
+import { rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DEFAULT_CONFIG, type AgentConfig } from "./config";
 import { assertCommand, childEnv, resolveCliPath, createCliExecutor, createEntryQuoter, createReceiptLookup, createGuardedRunner, createProcessRunner, createLimitedFactsReader, createVerifiedRunner, parseEnvelope, parsePolicy, type CliResult, type CliRunner } from "./cli";
@@ -738,17 +740,19 @@ describe("the facts the money mode needs", () => {
 });
 
 describe("the real process runner", () => {
-  const home = `${process.env.TEMP ?? "."}\inonu-cli-runner-test`;
+  // a folder of its own under the real temp directory (a path built by hand with a single backslash loses it in a JS string and lands NEXT to the temp directory); removed when the block ends
+  const home = join(tmpdir(), "inonu-cli-runner-test");
+  afterAll(() => rmSync(home, { recursive: true, force: true }));
   const runner = (env: Record<string, string | undefined> = {}) => createProcessRunner({ binary: process.execPath, home, env });
 
   test("captures what the process prints and its exit code", async () => {
-    const r = await runner().run(["-e", "console.log(JSON.stringify({ok:true,data:{n:1}})); process.exit(3)"], { timeoutMs: 20_000, signal });
+    const r = await runner().run(["--no-env-file", "-e", "console.log(JSON.stringify({ok:true,data:{n:1}})); process.exit(3)"], { timeoutMs: 20_000, signal });
     expect(parseEnvelope(r.stdout)).toEqual({ ok: true, data: { n: 1 } });
     expect(r).toMatchObject({ exitCode: 3, timedOut: false });
   });
 
   test("the child sees ONCHAINOS_HOME and no secret of the app", async () => {
-    const r = await runner({ SystemRoot: process.env.SystemRoot, TYPESAFE_API_KEY: "model-secret", OKX_SECRET_KEY: "exchange-secret", PATH: process.env.PATH }).run(["-e", "console.log(JSON.stringify(process.env))"], { timeoutMs: 20_000, signal });
+    const r = await runner({ SystemRoot: process.env.SystemRoot, TYPESAFE_API_KEY: "model-secret", OKX_SECRET_KEY: "exchange-secret", PATH: process.env.PATH }).run(["--no-env-file", "-e", "console.log(JSON.stringify(process.env))"], { timeoutMs: 20_000, signal });
     const seen = JSON.parse(r.stdout) as Record<string, string>;
     expect(seen.ONCHAINOS_HOME).toBe(home);
     expect(seen.ONCHAINOS_NO_BROWSER).toBe("1");
@@ -758,7 +762,7 @@ describe("the real process runner", () => {
 
   test("a process that runs too long is killed, and says so", async () => {
     const started = Date.now();
-    const r = await runner().run(["-e", "setTimeout(() => {}, 30000)"], { timeoutMs: 300, signal });
+    const r = await runner().run(["--no-env-file", "-e", "setTimeout(() => {}, 30000)"], { timeoutMs: 300, signal });
     expect(r).toMatchObject({ exitCode: null, timedOut: true });
     expect(Date.now() - started).toBeLessThan(10_000);
   });
@@ -766,13 +770,13 @@ describe("the real process runner", () => {
   test("a cancel kills it too", async () => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), 200);
-    const r = await runner().run(["-e", "setTimeout(() => {}, 30000)"], { timeoutMs: 20_000, signal: controller.signal });
+    const r = await runner().run(["--no-env-file", "-e", "setTimeout(() => {}, 30000)"], { timeoutMs: 20_000, signal: controller.signal });
     expect(r.exitCode).toBeNull();
     expect(r.timedOut).toBe(false);
   });
 
   test("a binary that does not exist is a result, not a crash", async () => {
-    const r = await createProcessRunner({ binary: "C:\definitely\not\here.exe", home, env: {} }).run(["wallet", "status"], { timeoutMs: 5000, signal });
+    const r = await createProcessRunner({ binary: join(tmpdir(), "inonu-no-such-binary-dir", "here.exe"), home, env: {} }).run(["wallet", "status"], { timeoutMs: 5000, signal });
     expect(r.exitCode).toBeNull();
     expect(r.stdout).toBe("");
   });

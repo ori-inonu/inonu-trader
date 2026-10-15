@@ -1,0 +1,275 @@
+import { describe, expect, test } from "bun:test";
+import { createOnchainClient, type OkxCredentials } from "./client";
+import { signRequest } from "./sign";
+
+const CREDS: OkxCredentials = { apiKey: "TEST-KEY-a77z", secret: "TEST-SECRET-s3cr", passphrase: "TEST PASS 1" };
+const REQ = { method: "GET" as const, path: "/api/v6/dex/market/supported/chain" };
+
+function okBody(data: unknown = []) {
+  return new Response(JSON.stringify({ code: "0", data, msg: "" }), { status: 200 });
+}
+function errBody(code: string, msg = "provider internal message") {
+  return new Response(JSON.stringify({ code, data: [], msg }), { status: 200 });
+}
+
+type FetchCall = { url: string; init: RequestInit | undefined };
+function fakeFetch(handler: (call: FetchCall) => Response | Promise<Response>) {
+  const calls: FetchCall[] = [];
+  const f = (async (url: string | URL | Request, init?: RequestInit) => {
+    calls.push({ url: String(url), init });
+    return handler(calls[calls.length - 1]!);
+  }) as typeof fetch;
+  return { calls, f };
+}
+
+describe("onchain client", () => {
+  test("sends OK-ACCESS headers with a signature computed over the exact request", async () => {
+    const { calls, f } = fakeFetch(() => okBody([{ chainIndex: "1" }]));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => 1_700_000_000_000, minIntervalMs: 0 });
+    const res = await client.call(REQ, "free");
+    expect(res.ok).toBe(true);
+    const h = calls[0]!.init!.headers as Record<string, string>;
+    expect(calls[0]!.url).toBe("https://web3.okx.com/api/v6/dex/market/supported/chain");
+    expect(h["OK-ACCESS-KEY"]).toBe("TEST-KEY-a77z");
+    expect(h["OK-ACCESS-TIMESTAMP"]).toBe("2023-11-14T22:13:20.000Z");
+    expect(h["OK-ACCESS-SIGN"]).toBe(signRequest("TEST-SECRET-s3cr", "2023-11-14T22:13:20.000Z", "GET", REQ.path, ""));
+    expect(h["OK-ACCESS-PASSPHRASE"]).toBe("TEST PASS 1");
+    expect(calls[0]!.init!.credentials).toBe("omit");
+    expect(calls[0]!.init!.cache).toBe("no-store");
+    expect(calls[0]!.init!.redirect).toBe("error");
+  });
+
+  test("global queue: at most one request per interval", async () => {
+    const sentAt: number[] = [];
+    const { calls, f } = fakeFetch(() => {
+      sentAt.push(Date.now());
+      return okBody();
+    });
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: Date.now, minIntervalMs: 40 });
+    await Promise.all([client.call(REQ, "free"), client.call(REQ, "free"), client.call(REQ, "free")]);
+    expect(calls).toHaveLength(3);
+    expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38); // 2ms timer slack
+    expect(sentAt[2]! - sentAt[1]!).toBeGreaterThanOrEqual(38);
+  });
+
+  test("no credentials -> no_credentials, never touches fetch", async () => {
+    const { calls, f } = fakeFetch(() => okBody());
+    const client = createOnchainClient({ credentials: () => null, fetch: f, now: () => 0, minIntervalMs: 0 });
+    const res = await client.call(REQ, "basic");
+    expect(res).toEqual({ ok: false, error: "no_credentials", sent: false });
+    expect(calls).toHaveLength(0);
+  });
+
+  test.each([
+    ["401", new Response("x", { status: 401 }), "provider_unauthorized"],
+    ["403", new Response("x", { status: 403 }), "provider_unauthorized"],
+    ["429", new Response("x", { status: 429 }), "rate_limited"],
+    ["500", new Response("x", { status: 500 }), "provider_error"],
+    ["code 50111", null, "provider_unauthorized"],
+    ["code 50114", null, "provider_unauthorized"],
+    ["code 50011", null, "rate_limited"],
+    ["code 99999", null, "provider_error"],
+  ])("maps %s to %s", async (_name, res, expected) => {
+    const { f } = fakeFetch(() => (res instanceof Response ? res : errBody(String(_name).split(" ")[1]!)));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => Date.now(), minIntervalMs: 0 });
+    const out = await client.call(REQ, "basic");
+    expect(out.ok).toBe(false);
+    if (!out.ok) expect(out.error as string).toBe(expected);
+  });
+
+  test("network throw, timeout and invalid JSON are provider_error", async () => {
+    const { f } = fakeFetch(() => { throw new Error("socket died"); });
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => 0, minIntervalMs: 0 });
+    const r1 = await client.call(REQ, "free");
+    expect(r1.ok).toBe(false);
+    if (!r1.ok) expect(r1.error).toBe("provider_error");
+
+    const slow = createOnchainClient({
+      credentials: () => CREDS,
+      // hangs until the client's AbortController fires, like a stalled socket
+      fetch: ((...args: unknown[]) => new Promise<Response>((_res, rej) => {
+        const init = args[1] as RequestInit | undefined;
+        init?.signal?.addEventListener("abort", () => rej(new DOMException("aborted", "AbortError")));
+      })) as typeof fetch,
+      now: () => Date.now(),
+      minIntervalMs: 0,
+      timeoutMs: 25,
+    });
+    const r2 = await slow.call(REQ, "free");
+    expect(r2.ok).toBe(false);
+    if (!r2.ok) expect(r2.error).toBe("provider_error");
+
+    const badJson = createOnchainClient({ credentials: () => CREDS, fetch: (async () => new Response("not json", { status: 200 })) as unknown as typeof fetch, now: () => 0, minIntervalMs: 0 });
+    const r3 = await badJson.call(REQ, "free");
+    expect(r3.ok).toBe(false);
+    if (!r3.ok) expect(r3.error).toBe("provider_error");
+  });
+
+  test("envelope without data -> schema; oversized body refused", async () => {
+    const { f } = fakeFetch(() => new Response(JSON.stringify({ code: "0", msg: "x" }), { status: 200 }));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => 0, minIntervalMs: 0 });
+    const r = await client.call(REQ, "free");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe("schema");
+
+    const big = createOnchainClient({ credentials: () => CREDS, fetch: (async () => okBody("x".repeat(100))) as unknown as typeof fetch, now: () => 0, minIntervalMs: 0, maxBytes: 50 });
+    const r2 = await big.call(REQ, "free");
+    expect(r2.ok).toBe(false);
+    if (!r2.ok) expect(r2.error).toBe("provider_error");
+  });
+
+  test("402 blocks the tier for an hour; 429 cools down for 30s; status exposes codes", async () => {
+    let t = 1_000_000;
+    const { calls, f } = fakeFetch(() => new Response("x", { status: 402 }));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+    const r1 = await client.call(REQ, "premium");
+    expect(r1.ok).toBe(false);
+    if (!r1.ok) expect(r1.error).toBe("provider_payment_required");
+    // same tier short-circuits without a send; other tiers still go out
+    const r2 = await client.call(REQ, "premium");
+    expect(r2.ok).toBe(false);
+    if (!r2.ok) expect(r2.error).toBe("provider_payment_required");
+    expect(r2.sent).toBe(false);
+    expect(calls).toHaveLength(1);
+  });
+
+  test("429 opens a 30s cooldown that short-circuits later calls", async () => {
+    let t = 1_000_000;
+    const { calls, f } = fakeFetch(() => new Response("x", { status: 429 }));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+    await client.call(REQ, "free");
+    t += 10_000;
+    const r = await client.call(REQ, "free");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe("rate_limited");
+    expect(calls).toHaveLength(1);
+    expect(client.status().cooldownUntilMs).toBe(t + 20_000);
+    t += 25_000;
+    const r2 = await client.call(REQ, "free");
+    expect(r2.ok).toBe(false); // still 429 from the fake fetch, but it DID reach the provider
+    expect(calls).toHaveLength(2);
+    const st = client.status();
+    expect(st.lastCallMs).toBe(t);
+    expect(st.lastCode).toBe(429);
+  });
+
+  test("provider msg never propagates and credentials never appear in results", async () => {
+    const { f } = fakeFetch(() => errBody("99001", "leaks TEST-SECRET-s3cr and TEST-KEY-a77z"));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => 0, minIntervalMs: 0 });
+    const r = await client.call(REQ, "free");
+    const s = JSON.stringify(r);
+    expect(s).not.toContain("leaks");
+    expect(s).not.toContain("TEST-SECRET");
+    expect(s).not.toContain("TEST-KEY");
+    expect(s).not.toContain("TEST PASS");
+    if (!r.ok) expect(r.error).toBe("provider_error");
+  });
+});
+
+describe("clock skew handling", () => {
+  /**
+   * A fake provider whose clock runs 76 s ahead of deps.now(): it answers 401/50102 to any
+   * OK-ACCESS-TIMESTAMP farther than 30 s from its clock and always returns a Date header.
+   */
+  function skewedServer(localNow: () => number, alwaysFail = false) {
+    const calls: FetchCall[] = [];
+    const serverNow = () => localNow() + 76_000;
+    const f = (async (_url: string | URL | Request, init?: RequestInit) => {
+      calls.push({ url: String(_url), init });
+      const ts = Date.parse((init?.headers as Record<string, string>)["OK-ACCESS-TIMESTAMP"] ?? "");
+      const headers = { date: new Date(serverNow()).toUTCString(), "content-type": "application/json" };
+      if (alwaysFail || !Number.isFinite(ts) || Math.abs(ts - serverNow()) > 30_000) {
+        return new Response(JSON.stringify({ code: "50102", msg: "Timestamp request expired" }), { status: 401, headers });
+      }
+      return new Response(JSON.stringify({ code: "0", data: [], msg: "" }), { status: 200, headers });
+    }) as typeof fetch;
+    return { calls, f };
+  }
+
+  test("learns the offset from the Date header and retries 50102 once in the same slot", async () => {
+    let t = 1_700_000_000_000;
+    const { calls, f } = skewedServer(() => t);
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+
+    const r1 = await client.call(REQ, "free");
+    expect(r1.ok).toBe(true);
+    expect(calls).toHaveLength(2); // first signed with the wrong clock, retried with the learned offset
+    const ts2 = Date.parse((calls[1]!.init!.headers as Record<string, string>)["OK-ACCESS-TIMESTAMP"]!);
+    expect(Math.abs(ts2 - (t + 76_000))).toBeLessThanOrEqual(2_000);
+    expect(client.status().clockOffsetMs).not.toBeNull();
+    expect(Math.abs(client.status().clockOffsetMs! - 76_000)).toBeLessThanOrEqual(1_000);
+
+    const r2 = await client.call(REQ, "free");
+    expect(r2.ok).toBe(true);
+    expect(calls).toHaveLength(3); // offset already learned: one request only
+  });
+
+  test("a second 50102 inside the same call reports clock_skew, not unauthorized", async () => {
+    const t = 1_700_000_000_000;
+    const { calls, f } = skewedServer(() => t, true);
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+    const r = await client.call(REQ, "free");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe("clock_skew");
+    expect(calls).toHaveLength(2); // retried once, then gave up
+  });
+
+  test("50102 with a Date near the used offset reports clock_skew without retrying", async () => {
+    const t = 1_700_000_000_000;
+    const calls: FetchCall[] = [];
+    const f = (async (_url: string | URL | Request, init?: RequestInit) => {
+      calls.push({ url: String(_url), init });
+      return new Response(JSON.stringify({ code: "50102", msg: "x" }), { status: 401, headers: { date: new Date(t + 1_000).toUTCString() } });
+    }) as typeof fetch;
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+    const r = await client.call(REQ, "free");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe("clock_skew");
+    expect(calls).toHaveLength(1);
+  });
+
+  test("401 with an auth code stays provider_unauthorized", async () => {
+    const { calls, f } = fakeFetch(() =>
+      new Response(JSON.stringify({ code: "50111", msg: "Invalid OK-ACCESS-KEY" }), { status: 401 }));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => Date.now(), minIntervalMs: 0 });
+    const r = await client.call(REQ, "free");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe("provider_unauthorized");
+    expect(calls).toHaveLength(1);
+  });
+
+  test("401 with a non-JSON body stays provider_unauthorized", async () => {
+    const { f } = fakeFetch(() => new Response("denied", { status: 401 }));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => Date.now(), minIntervalMs: 0 });
+    const r = await client.call(REQ, "free");
+    if (!r.ok) expect(r.error).toBe("provider_unauthorized");
+  });
+
+  test.each(["50103", "50104", "50105", "50112", "50113"])("body code %s maps to provider_unauthorized", (code) => {
+    return (async () => {
+      const { f } = fakeFetch(() => errBody(code));
+      const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => Date.now(), minIntervalMs: 0 });
+      const r = await client.call(REQ, "basic");
+      if (!r.ok) expect(r.error).toBe("provider_unauthorized");
+    })();
+  });
+
+  test("body code 50038 maps to unsupported_chain", async () => {
+    const { f } = fakeFetch(() => errBody("50038", "This chain does not currently support"));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => Date.now(), minIntervalMs: 0 });
+    const r = await client.call(REQ, "basic");
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toBe("unsupported_chain");
+  });
+
+  test("a small measured skew is not applied and clockOffsetMs is still reported", async () => {
+    const t = 1_700_000_000_000;
+    const { calls, f } = fakeFetch(() =>
+      new Response(JSON.stringify({ code: "0", data: [], msg: "" }), { status: 200, headers: { date: new Date(t + 3_000).toUTCString() } }));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+    await client.call(REQ, "free");
+    const ts = Date.parse((calls[0]!.init!.headers as Record<string, string>)["OK-ACCESS-TIMESTAMP"]!);
+    expect(ts).toBe(t); // 3 s skew stays below the 10 s threshold
+    expect(client.status().clockOffsetMs).not.toBeNull();
+  });
+});

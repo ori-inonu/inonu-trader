@@ -1,0 +1,19 @@
+{
+  "decision_source": "jev",
+  "receiptId": "14ef1bc3-7ff0-40b2-971a-5f26fff27a68",
+  "approved_by": "jev_delegated",
+  "evaluatedAt": "2026-10-13T17:10:59Z",
+  "choice": "owned_request_token",
+  "probability": 0.94,
+  "latencyMs": 394,
+  "inputDigest": "5b9c2c6f45f26252bc5ae2a8f98178a0534a7fceac918475642b21cbc54dccd6",
+  "mode": "evaluate",
+  "usage": {
+    "inputTokens": 586,
+    "outputTokens": 69,
+    "usd": null
+  },
+  "confidence": 0.92,
+  "model": "jev-1.13.0",
+  "human_response": false
+}

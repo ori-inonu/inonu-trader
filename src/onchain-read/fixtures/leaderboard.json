@@ -1,0 +1,21 @@
+{
+  "origin": "synthetic_fixture",
+  "code": "0",
+  "data": [
+    {
+      "walletAddress": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
+      "realizedPnlUsd": "125430.56",
+      "realizedPnlPercent": "312.45",
+      "winRatePercent": "68.5",
+      "avgBuyValueUsd": "2340.00",
+      "topPnlTokenList": [
+        { "tokenContractAddress": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "tokenSymbol": "USDC", "tokenPnlUsd": "45230.12", "tokenPnlPercent": "156.78" },
+        { "tokenContractAddress": "So11111111111111111111111111111111111111112", "tokenSymbol": "SOL", "tokenPnlUsd": "38120.00", "tokenPnlPercent": "98.34" }
+      ],
+      "txVolume": "890234.50",
+      "txs": "342",
+      "lastActiveTimestamp": "1697630501000"
+    }
+  ],
+  "msg": ""
+}

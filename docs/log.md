@@ -1,0 +1,131 @@
+---
+title: "Log da wiki documental"
+created: 2026-10-13
+updated: 2026-10-15
+type: summary
+tags: ["documentacao", "governanca"]
+sources: ["docs/SCHEMA.md", "docs/_meta/source-manifest-20261013.json"]
+confidence: medium
+---
+
+# Log da wiki documental
+
+Registro append-only dos lotes desta wiki. Consulte [[manutencao-da-documentacao]] e [[governanca-e-historico]]. Nenhuma entrada conclui tarefa de produto ou autoriza ação financeira.
+
+## [2026-10-13] create | Wiki documental e inventário inicial
+
+- Domínio: documentação local do Inonu/Jev Trader. Baseline: 988 arquivos, 407 Markdown; 5 configurações ocultas excluídas da navegação.
+- Estrutura in-place recomendada pelo Jev; recibo real em `_meta/navigation-decision.json`, aprovado por delegação técnica, não aprovação humana. Custo faturado desconhecido.
+- Criados schema, entrada, índice, mapa, 36 catálogos paginados, manifesto de hashes e verificador offline. Fontes originais não foram editadas.
+- Arquivos criados neste lote:
+- `docs/README.md`
+- `docs/SCHEMA.md`
+- `docs/_meta/catalog.json`
+- `docs/_meta/catalogs/carteira-e-patrimonio-artefatos-01.md`
+- `docs/_meta/catalogs/carteira-e-patrimonio-documentos-01.md`
+- `docs/_meta/catalogs/defi-e-oportunidades-artefatos-01.md`
+- `docs/_meta/catalogs/defi-e-oportunidades-documentos-01.md`
+- `docs/_meta/catalogs/fita-e-decisao-jev-artefatos-01.md`
+- `docs/_meta/catalogs/fita-e-decisao-jev-documentos-01.md`
+- `docs/_meta/catalogs/governanca-e-historico-artefatos-01.md`
+- `docs/_meta/catalogs/governanca-e-historico-documentos-01.md`
+- `docs/_meta/catalogs/grafico-e-analytics-artefatos-01.md`
+- `docs/_meta/catalogs/grafico-e-analytics-documentos-01.md`
+- `docs/_meta/catalogs/instalavel-e-inonu-artefatos-01.md`
+- `docs/_meta/catalogs/instalavel-e-inonu-documentos-01.md`
+- `docs/_meta/catalogs/integracao-real-e-piloto-artefatos-01.md`
+- `docs/_meta/catalogs/integracao-real-e-piloto-artefatos-02.md`
+- `docs/_meta/catalogs/integracao-real-e-piloto-documentos-01.md`
+- `docs/_meta/catalogs/interface-e-central-artefatos-01.md`
+- `docs/_meta/catalogs/interface-e-central-documentos-01.md`
+- `docs/_meta/catalogs/laboratorio-e-paper-artefatos-01.md`
+- `docs/_meta/catalogs/laboratorio-e-paper-documentos-01.md`
+- `docs/_meta/catalogs/mercado-e-dados-artefatos-01.md`
+- `docs/_meta/catalogs/mercado-e-dados-documentos-01.md`
+- `docs/_meta/catalogs/onchainos-e-configuracoes-artefatos-01.md`
+- `docs/_meta/catalogs/onchainos-e-configuracoes-artefatos-02.md`
+- `docs/_meta/catalogs/onchainos-e-configuracoes-documentos-01.md`
+- `docs/_meta/catalogs/operador-e-execucao-artefatos-01.md`
+- `docs/_meta/catalogs/operador-e-execucao-documentos-01.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-artefatos-01.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-artefatos-02.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-artefatos-03.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-artefatos-04.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-artefatos-05.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-artefatos-06.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-artefatos-07.md`
+- `docs/_meta/catalogs/relatorios-e-evidencias-documentos-01.md`
+- `docs/_meta/catalogs/seguranca-e-qualificacao-artefatos-01.md`
+- `docs/_meta/catalogs/seguranca-e-qualificacao-documentos-01.md`
+- `docs/_meta/navigation-decision.json`
+- `docs/_meta/organization-spec.md`
+- `docs/_meta/source-manifest-20261013.json`
+- `docs/_meta/tools/verify.py`
+- `docs/_meta/topic-map.md`
+- `docs/index.md`
+- `docs/raw/README.md`
+- `docs/sdd/inonu-desktop-v1/spikes/T1.1.md`
+- `docs/log.md`
+
+## [2026-10-13] update | Ampliação para auditoria do projeto atual
+
+- Pedido adicional do usuário: atualizar a wiki contra o código atual, com 15 subagentes em paralelo. SPEC ampliada em `_meta/organization-spec.md`.
+- Snapshot do working tree em `_meta/project-state-20261013.json`: 1048 arquivos de primeira parte/configuração/testes/fixtures atribuídos; 984 fontes visíveis, das quais 408 Markdown. Atribuição não prova inspeção.
+- **Correção do lote anterior:** `docs/sdd/inonu-desktop-v1/spikes/T1.1.md` foi criado por outra sessão, não por esta organização. Sua inclusão na lista automática anterior foi um erro de atribuição. A fonte foi preservada e registrada em `_meta/source-additions-20261013.json`; o manifesto inicial não foi sobrescrito.
+- 15 subagentes realmente despachados em `deleg_6e7c6418`, conforme `_meta/delegation-dispatch.json`; no momento deste registro isso não comprova conclusão. Escrita exclusiva por página e recibo, contrato em `_meta/delegation-contract.md`.
+- Catálogo e navegação atualizados para a fonte concorrente. Fontes originais e critérios congelados não foram editados.
+- Verificador documental exercitado em fixtures sintéticas isoladas: `python -B docs/_meta/tools/verify.test.py`, 12 testes aprovados, saída 0. A primeira execução reproduziu uma falha no tratamento de fonte ausente; o verificador foi corrigido e a regressão passou. Isso não é verificação do produto.
+- Arquivos criados: `_meta/project-state-20261013.json`, `_meta/source-additions-20261013.json`, `_meta/delegation-contract.md`, `_meta/delegation-dispatch.json`, `_meta/tools/verify.test.py`, `_meta/checkpoint.md`.
+- Arquivos atualizados: `_meta/organization-spec.md`, `_meta/catalog.json`, `_meta/catalogs/instalavel-e-inonu-documentos-01.md`, `_meta/topic-map.md`, `_meta/tools/verify.py`, `index.md`, `log.md`.
+
+## [2026-10-13] update | Verificação real do projeto e deriva concorrente
+
+- `python -B docs/_meta/tools/verify.test.py`: 12 aprovados, 0 falhas.
+- `bun --no-env-file run test`: 4420 aprovados, 2 ignorados, 0 falhas, 252 arquivos.
+- `bun --no-env-file run build`: build de produção aprovado.
+- `bun --no-env-file run typecheck:all`: raiz e web sem erro.
+- `bun --no-env-file run --cwd web test`: 2260 aprovados, 0 falhas, 150 arquivos.
+- Todos os comandos retornaram saída 0. Recibo com logs e hashes em `_meta/product-verification-20261013.json`. Boot do trader não executado; nenhuma execução financeira ou chamada real ao modelo foi qualificada.
+- Deriva posterior ao snapshot observada em 44 arquivos de código/testes: `_meta/concurrent-source-drift-20261013.json`. Os quatro responsáveis afetados receberam steer de releitura. Isso não concede permissão de corrigir o código de outras sessões.
+- Criados `_meta/product-verification-20261013.json` e `_meta/concurrent-source-drift-20261013.json`; atualizados `_meta/checkpoint.md` e `log.md`. Integração das 15 frentes e lint completo da wiki permanecem pendentes.
+
+## [2026-10-15] update | Hierarquia por versão, fase e tarefa
+
+- Pedido desta conversa: evolução do segundo cérebro em `docs/`, sem retomar objetivos ou agentes de outra conversa. SPEC própria em `_meta/evolucao/SPEC.md`.
+- Nova camada: 1.358 fontes visíveis (549 Markdown e 809 artefatos), 17 pacotes, 41 agrupamentos nativos/derivados explicitamente rotulados e 331 tarefas com namespace, ID original, fonte e linha. A lista exata das 452 páginas compiladas, do grafo e do recibo, com hashes, está em `_meta/evolucao/outputs.json`.
+- v0.0.2 comprovada como declaração em manifests/candidato local, não publicação atual. v0.0.1 não comprovada nas refs/manifests consultados. Tarefas recentes sem release atribuída; nenhum número foi inventado para completar a árvore.
+- Síntese do refactor e sete relações com escopo/fonte em `concepts/estado-atual-do-projeto.md`; conflito de relato sobre alavancagem continua aberto. Rótulos de conclusão das fontes não viraram prova de implementação.
+- Auditorias independentes de história e atualidade recebidas em `deleg_93eb7540`; referências principais reconferidas pelo integrador. Custo de processamento desconhecido. Nenhuma chamada ao modelo/API do produto.
+- Compilador offline exercitado: 19 testes aprovados; regressão de deriva primeiro falhou (`test_inventory_drift_is_not_certified`), foi corrigida e passou. Regressões das fatias E/F também reproduzidas antes da extensão. Compilação real com zero erros próprios. Revisão independente final em curso (`deleg_7894268e`).
+- Seis controles preexistentes recebem integração limitada: `README.md`, `index.md`, `SCHEMA.md`, `_meta/currentness.md`, `log.md`, `_meta/generated-files.json`. Fontes, contratos canônicos, código de produto e `.obsidian` não são alvos de edição.
+- Novos controles e ferramentas: `_meta/evolucao/{SPEC.md,checkpoint.md,RUNBOOK.md,compiler.py,test_compiler.py,curation.json,baseline-20261015.json,legacy-baseline-20261015.json,outputs.json}`. Recibos de aceitação/revisão serão registrados ao encerrar; as páginas materiais exatas estão no manifesto de saídas, sem duplicar o plano canônico.
+- O harness antigo é preservado. Suas falhas anteriores estão em `legacy-baseline-20261015.json`, não corrigidas nem ocultadas para declarar verde global. Compilar documentação não executa produto nem qualifica funcionamento financeiro.
+
+## [2026-10-15] review | Três achados bloqueadores e correção delimitada
+
+- Revisão real `deleg_7894268e`, `passed=false`, preservada em `_meta/evolucao/review-1.json`. Não é aprovação humana nem resultado verde.
+- Achados: traversal em evidence, propagação de metadados/hash legado da fonte sensível e exclusão irrestrita do prefixo de evolução com cobertura autorreferente.
+- Fixer distinto, `deleg_0e1905a5`, recebe só compiler.py/test_compiler.py; correção com regressões e sem alteração de fontes/produto. Integração e reavaliação permanecem com o integrador.
+- Aceitação adaptada para registros sensíveis contendo apenas caminho. A contagem de 1.358 fontes é o retrato anterior à inclusão explícita dos controles estáticos como inputs, não uma cobertura final reafirmada.
+- Deriva de COORDENACAO registrada em `_meta/evolucao/observed-source-drift-20261015.json`, sem atribuição de autoria ou reversão. Fontes originais e baseline inicial não foram reescritas.
+
+## [2026-10-15] update | Correções de segurança, cobertura e materialização
+
+- Fixer distinto deleg_0e1905a5 corrigiu somente compiler.py/test_compiler.py. Recibo fix-1.json. Reportou regressões antes da implementação; integrador reexecutou 28 testes novos, 21 legados e a compilação/aceitação reais, tudo com saída 0.
+- A referência sensível no inventário materializado contém apenas path. Leituras de curadoria recusam traversal, symlink externo e privados antes de abrir. A cobertura inclui seis inputs estáticos, exclui derivados por registro e é enumerada separadamente.
+- Contagens corrigidas: 1.364 fontes (550 Markdown, 813 artefatos e uma referência sensível sem leitura), 17 pacotes, 41 agrupamentos, 331 tarefas, 454 páginas compiladas, 1.765 nós e 1.486 relações. Novo catálogo meta/fontes sensíveis registrado; outputs.json lista exatamente as saídas.
+- Checagem real dos ponteiros: 309 IDs nativos conferidos contra suas linhas, zero divergências, e 22 itens sem ID original claramente rotulados. Não se atribuiu release recente nem verificação de implementação de produto.
+- acceptance.json às 16:08 -03:00 registra materialização exata, rebuild idêntico, validação própria verde e nenhum novo erro atômico legado. A deriva original registrada continua visível como byte_preservation_ok=false; não foi ocultada nem revertida.
+- README, índice, schema e RUNBOOK atualizados. Revisão2 delimitada deleg_e6a1a10c ainda pendente neste registro; não declarar aprovação antes do retorno real.
+
+## [2026-10-15] verify | Entrega documental concluída
+
+- Revisão2 real deleg_e6a1a10c: passed=true, REV1-S1/REV1-S2/REV1-L1 resolvidos, nenhuma preocupação de segurança ou erro de lógica remanescente no escopo revisado. Recibo `_meta/evolucao/review-2.json`; `_meta/evolucao/fix-1.json` atualizado. Integrador conferiu os hashes atuais contra início/fim do revisor, todos iguais.
+- Aceitação final executada às 16:11 -03:00: saída 0, 28 testes próprios e 21 legados aprovados, páginas/manifesto byte-exatos e rebuild do grafo idêntico. Nenhum erro atômico novo no harness legado, que permanece com falhas anteriores.
+- Entrega final: 1.364 fontes, 17 pacotes, 41 agrupamentos, 331 tarefas e 454 páginas compiladas. IDs nativos preservados, relações de substituição com escopo, versões desconhecidas não inventadas e fonte sensível apenas por caminho.
+- Fontes canônicas não foram movidas, apagadas ou reescritas por esta tarefa; deriva externa observada fica registrada sem autoria inferida e sem reversão. Não há alegação de preservação global byte a byte.
+- Checkpoint próprio encerrado. Não foram abertos novos objetivos, agendamentos, operações financeiras, publicação ou commits. Critérios/evidências exatos em `_meta/evolucao/SPEC.md`, `outputs.json`, `acceptance.json` e recibos das duas revisões. Atualização sob demanda documentada em RUNBOOK.
+
+
+
+

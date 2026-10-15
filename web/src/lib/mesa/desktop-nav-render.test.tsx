@@ -23,7 +23,7 @@ describe("the topbar of the desktop build", () => {
     expect(html).not.toContain("/console");
     expect(html).not.toContain(">Central<");
     expect(html).not.toContain("Central de observacao");
-    expect(html).toMatch(/<a[^>]*href="\/"[^>]*aria-current="page"[^>]*>Mesa<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/mesa"[^>]*aria-current="page"[^>]*>Mesa<\/a>/);
   });
 
   test("the developer's build keeps both links", () => {
@@ -44,7 +44,7 @@ describe("the Rastreador entry (RAS-1, T8.1)", () => {
       if (desktop === undefined) delete process.env.NEXT_PUBLIC_INONU_DESKTOP;
       else process.env.NEXT_PUBLIC_INONU_DESKTOP = desktop;
       const html = render();
-      expect(html).toMatch(/<a[^>]*href="\/"[^>]*aria-current="page"[^>]*>Mesa<\/a><a[^>]*href="\/rastreador"[^>]*>Rastreador<\/a>/);
+      expect(html).toMatch(/<a[^>]*href="\/mesa"[^>]*aria-current="page"[^>]*>Mesa<\/a><a[^>]*href="\/rastreador"[^>]*>Rastreador<\/a>/);
       expect(html.match(/aria-current="page"/g)?.length).toBe(1);
     }
   });

@@ -9,6 +9,9 @@ import {
 } from "@/lib/wallet/holdings";
 import { networkLabel } from "@/lib/wallet/network-label";
 import HoldingsConsult from "./HoldingsConsult";
+import HoldingsShadow from "./HoldingsShadow";
+import { reconcileValue } from "@/lib/wallet/shadow";
+import type { PortfolioAnswer } from "@/lib/inonu/portfolio";
 import { createRunGuard } from "@/lib/wallet/run-guard";
 import type { UseOkxWalletResult } from "@/lib/useOkxWallet";
 import { useChartDetail } from "@/lib/desk/chart/detail-store";
@@ -99,6 +102,7 @@ export interface HoldingsPanelViewProps {
   /** The simple desk: the holdings and the decision about them, and nothing else (the history and the result by token wait for the complete one). */
   readonly simple?: boolean;
   readonly candidate?: OnchainFocus | null;
+  readonly onDecision?: (plan: PortfolioAnswer) => void;
   readonly networkSwitch?: ReactNode;
   /** Both accounts are known (the EVM one and the Solana one, connected or followed): the one reading of both is offered, and both addresses are shown. */
   readonly joint?: { readonly evmAddress: string; readonly solanaAddress: string };
@@ -347,6 +351,19 @@ export function HoldingsPanelView(p: HoldingsPanelViewProps) {
             <Failure text={holdingsErrorText(r.value.error)} />
           )}
 
+          {r.balances.ok ? (() => {
+            const value = reconcileValue(r.balances.data.rows, r.balances.data.total, r.value.ok ? r.value.data.totalValueUsd : null);
+            return <section className={styles.decision} aria-label="Patrimonio verificavel">
+              <h4 className={styles.subtitle}>Valor verificavel dos tokens</h4>
+              <p className={styles.headline}>{usdText(value.knownUsd)}</p>
+              <p className={styles.note}>{`${value.unpriced} ativo${value.unpriced === 1 ? "" : "s"} sem valor${value.omitted ? `; ${value.omitted} fora desta leitura` : ""}`}</p>
+              <details className={styles.evidence}><summary>Conferir patrimonio</summary>
+                <p>{`Diferenca com o provedor: ${usdText(value.differenceUsd)}. Mesmo escopo de tokens, incluindo os marcados como risco. Posicoes DeFi ficam fora.`}</p>
+                <p>Preco informado nao comprova valor realizavel.</p>
+              </details>
+            </section>;
+          })() : null}
+
           <h4 className={styles.subtitle}>Saldos</h4>
           {!r.balances.ok ? (
             <Failure text={holdingsErrorText(r.balances.error)} />
@@ -363,18 +380,18 @@ export function HoldingsPanelView(p: HoldingsPanelViewProps) {
                   ))}
                 </div>
                 {r.balances.data.rows.map((row, index) => (
-                  <div key={`${row.chainIndex}-${row.tokenAddress ?? "native"}-${index}`} className={`${styles.row} ${styles.balances}`} role="row" data-tom={row.flaggedRisk ? "alerta" : "normal"}>
+                  <div key={`${row.chainIndex}-${row.tokenAddress ?? "native"}-${index}`} className={`${styles.row} ${styles.balances}`} role="row" data-tom={row.flaggedRisk === null ? "desconhecido" : row.flaggedRisk ? "alerta" : "normal"}>
                     <div className={styles.cell} role="cell">{row.symbol}</div>
                     <div className={styles.cell} role="cell">{networkLabel(row.chainIndex)}</div>
                     <div className={styles.cell} role="cell">{amountText(row.balance)}</div>
                     <div className={styles.cell} role="cell">{priceText(row.priceUsd)}</div>
                     <div className={styles.cell} role="cell">{usdText(row.valueUsd)}</div>
-                    <div className={styles.cell} role="cell">{row.flaggedRisk ? "Marcado como risco pelo provedor" : "-"}</div>
+                    <div className={styles.cell} role="cell">{row.flaggedRisk === null ? "Risco desconhecido" : row.flaggedRisk ? "Marcado como risco pelo provedor" : "-"}</div>
                   </div>
                 ))}
               </div>
               <p className={styles.note}>{`Mostrando ${r.balances.data.rows.length} de ${r.balances.data.total}, do maior valor para o menor. Saldo sem preco fica por ultimo e o valor dele e um traco, nao zero. Preco e valor vem do provedor, sem checar liquidez: um token recebido sem voce pedir pode ter um preco que nao se realiza.`}</p>
-              <HoldingsConsult rows={r.balances.data.rows} receivedAtMs={r.receivedAtMs} ageMs={r.balances.meta.ageMs} nowMs={p.nowMs ?? r.receivedAtMs} candidate={p.candidate} onRefresh={p.onRead} />
+              <HoldingsConsult rows={r.balances.data.rows} receivedAtMs={r.receivedAtMs} ageMs={r.balances.meta.ageMs} nowMs={p.nowMs ?? r.receivedAtMs} candidate={p.candidate} onRefresh={p.onRead} onDecision={p.onDecision} />
             </>
           )}
 
@@ -585,6 +602,7 @@ export default function HoldingsPanel({ wallet, candidate = null }: { readonly w
   const active = scope === "solana" ? { address: solanaAccount, chain: SOLANA_CHAIN_INDEX } : { address: account, chain: chainHex };
   const [readout, setReadout] = useState<HoldingsReadout | null>(null);
   const [readoutSubject, setReadoutSubject] = useState<string | null>(null);
+  const [shadowPlan, setShadowPlan] = useState<{ subject: string; plan: PortfolioAnswer } | null>(null);
   const [reading, setReading] = useState(false);
   const [timeFrame, setTimeFrame] = useState(3);
   const [result, setResult] = useState<ResultReadout | null>(null);
@@ -638,6 +656,7 @@ export default function HoldingsPanel({ wallet, candidate = null }: { readonly w
         setReading(false);
         setResult(null);
         setReadingResult(false);
+        setShadowPlan(null);
       }),
     [scope],
   );
@@ -703,6 +722,7 @@ export default function HoldingsPanel({ wallet, candidate = null }: { readonly w
 
   useEffect(() => {
     guard.current.invalidate();
+    setShadowPlan(null);
     setReadout(null);
     setReadoutSubject(subject);
     setReading(false);
@@ -723,6 +743,7 @@ export default function HoldingsPanel({ wallet, candidate = null }: { readonly w
   };
 
   return (
+    <>
     <HoldingsPanelView
       account={account}
       current={current}
@@ -743,6 +764,7 @@ export default function HoldingsPanel({ wallet, candidate = null }: { readonly w
       joint={joint}
       simple={detail === "simples"}
       candidate={candidate}
+      onDecision={(plan) => setShadowPlan({ subject, plan })}
       networkSwitch={<WalletChainSwitch wallet={wallet} scope={scope} onScope={setScope} />}
       connect={detail === "simples" ? { available: wallet.available, connecting: snapshot.status === "connecting", onConnect: () => void wallet.connect() } : undefined}
       watch={{
@@ -752,5 +774,7 @@ export default function HoldingsPanel({ wallet, candidate = null }: { readonly w
         onStop: watch.onStop,
       }}
     />
+    {shadowPlan?.subject === subject ? <HoldingsShadow key={`${subject}:${shadowPlan.plan.observedAtMs}`} plan={shadowPlan.plan} readout={readoutSubject === subject ? readout : null} nowMs={nowMs} onRefresh={read} /> : null}
+    </>
   );
 }

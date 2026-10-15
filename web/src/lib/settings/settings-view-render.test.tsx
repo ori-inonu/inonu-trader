@@ -42,11 +42,22 @@ describe("a vault that did not answer", () => {
 });
 
 describe("SettingsScreen", () => {
+  test("hosted read-only settings expose status without editable credentials or unrelated local configuration", () => {
+    const html = renderToStaticMarkup(<SettingsScreen phase="ready" snapshot={snap({ readOnly: true })} apiUrl="" onSave={() => {}} onClear={() => {}} extra={<div>SYNTHETIC_LOCAL_EXTRA</div>} />);
+    expect(html).toContain("AMBIENTE ONLINE");
+    expect(html).toContain("provisionadas no servidor");
+    const inputs = html.match(/<input[^>]*type="password"[^>]*>/g) ?? [];
+    expect(inputs).toHaveLength(4);
+    expect(inputs.every((tag) => tag.includes('disabled=""'))).toBe(true);
+    expect(html).not.toContain("SYNTHETIC_LOCAL_EXTRA");
+    expect(html).not.toContain("A deteccao do Windows");
+    expectNoForbidden(html);
+  });
   test("empty state: all four fields present, okx absent", () => {
     const html = renderToStaticMarkup(<SettingsScreen phase="ready" snapshot={snap()} apiUrl="http://127.0.0.1:3000" />);
     for (const text of [
       "Configuracoes",
-      "Voltar a mesa",
+      "Voltar ao agente",
       "Conexoes",
       "Chave do Jev",
       "TYPESAFE_AI_API_KEY",
@@ -59,8 +70,6 @@ describe("SettingsScreen", () => {
       "A deteccao do Windows tem cache de ate 60 s",
       "Uso da API OnchainOS",
       "o sistema nunca paga",
-      "Aparencia e mesa",
-      "Atalhos",
       "Privacidade",
     ]) {
       expect(html).toContain(text);

@@ -1,0 +1,321 @@
+{
+  "format": "docs-integration-review-v1",
+  "reviewed_at": "2026-10-13T12:57:48.349888-03:00",
+  "delegation_id": "deleg_6e7c6418",
+  "observed_completed_children": 15,
+  "pages_read": [
+    "docs/concepts/governanca-e-historico.md",
+    "docs/concepts/laboratorio-e-paper.md",
+    "docs/concepts/seguranca-e-qualificacao.md",
+    "docs/concepts/interface-e-central.md",
+    "docs/concepts/operador-e-execucao.md",
+    "docs/concepts/defi-e-oportunidades.md",
+    "docs/concepts/relatorios-e-evidencias.md",
+    "docs/concepts/carteira-e-patrimonio.md",
+    "docs/concepts/integracao-real-e-piloto.md",
+    "docs/concepts/fita-e-decisao-jev.md",
+    "docs/concepts/onchainos-e-configuracoes.md",
+    "docs/concepts/mercado-e-dados.md",
+    "docs/concepts/grafico-e-analytics.md",
+    "docs/concepts/instalavel-e-inonu.md",
+    "docs/concepts/manutencao-da-documentacao.md"
+  ],
+  "receipts_read": [
+    "docs/_meta/audits/governanca-e-historico.json",
+    "docs/_meta/audits/laboratorio-e-paper.json",
+    "docs/_meta/audits/seguranca-e-qualificacao.json",
+    "docs/_meta/audits/interface-e-central.json",
+    "docs/_meta/audits/operador-e-execucao.json",
+    "docs/_meta/audits/defi-e-oportunidades.json",
+    "docs/_meta/audits/relatorios-e-evidencias.json",
+    "docs/_meta/audits/carteira-e-patrimonio.json",
+    "docs/_meta/audits/integracao-real-e-piloto.json",
+    "docs/_meta/audits/fita-e-decisao-jev.json",
+    "docs/_meta/audits/onchainos-e-configuracoes.json",
+    "docs/_meta/audits/mercado-e-dados.json",
+    "docs/_meta/audits/grafico-e-analytics.json",
+    "docs/_meta/audits/instalavel-e-inonu.json",
+    "docs/_meta/audits/manutencao-da-documentacao.json"
+  ],
+  "assigned_markdown_coverage": {
+    "expected": 408,
+    "covered_unique": 408,
+    "missing": []
+  },
+  "integrated_markdown_coverage": {
+    "expected": 412,
+    "classified_unique": 412
+  },
+  "external_context_document": "web/OKX-WALLET.md",
+  "integration_documents_reread_full": [
+    "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+    "docs/sdd/inonu-desktop-v1/TASKS.md",
+    "docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md",
+    "docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md",
+    "docs/sdd/inonu-desktop-v1/evidence/RAS-6-T4.5-T9.2-ranking-cauda-e-troca-de-rede.md",
+    "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-2.md",
+    "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-3.md",
+    "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md"
+  ],
+  "integration_code_reread": [
+    {
+      "path": "src/inonu/source-ranking.ts",
+      "sha256": "b832511c1ccd212b5a68ef93440a1c688216c783a570322cad3c1eb67fc5ae46"
+    },
+    {
+      "path": "src/desktop/handlers.ts",
+      "sha256": "b1141640a7e30035d721390d0584252294b73cb5d5972cf4e0722697e703a593"
+    },
+    {
+      "path": "web/src/components/Rastreador/OnchainBody.tsx",
+      "sha256": "d793533bf8976e39d66ee1ffaac48d3d12cb7d157571c95c063c9dd2cceb9758"
+    },
+    {
+      "path": "web/src/lib/rastreador/onchain-model.ts",
+      "sha256": "99fc1d17d64200c67513710337d459abea3c9e0554b3eea5197081f1032ade65"
+    },
+    {
+      "path": "web/src/lib/rastreador/onchain-state.ts",
+      "sha256": "f2c7615edcb0a0c86834faa77dc5c86fceff7e072f2bbe6cd21fbd9229f8acd8"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/InonuLedgerTail.tsx",
+      "sha256": "e7e120ad82c0464b6dfddc810cd8fb56bdf9b00f57b9b45e1e144a7fcbc5e0ea"
+    },
+    {
+      "path": "web/src/lib/wallet/chains.ts",
+      "sha256": "47d3964af9ed8dfe3811f307be265d7e361a874efcfc8893d9dd9883158c73b7"
+    },
+    {
+      "path": "package.json",
+      "sha256": "aae8e38198e9b301f2478c8e7ce2ea15e61072de68a11ce8b1efc357da5fd58e"
+    }
+  ],
+  "child_reported_code_inspection": {
+    "unique_paths": 412,
+    "note": "Self-reported inspection, not independently reproduced full-code review. Ownership is exhaustive within the declared snapshot, inspection is selective."
+  },
+  "changes_since_dispatch_snapshot": {
+    "changed_code": [
+      "src/desktop/cleanup.test.ts",
+      "src/desktop/cleanup.ts",
+      "src/desktop/doctor.test.ts",
+      "src/desktop/doctor.ts",
+      "src/desktop/handlers.test.ts",
+      "src/desktop/handlers.ts",
+      "src/desktop/launcher.ts",
+      "src/desktop/vault.test.ts",
+      "src/desktop/vault.ts",
+      "src/inonu/ask.test.ts",
+      "src/inonu/ask.ts",
+      "src/inonu/collector.test.ts",
+      "src/inonu/collector.ts",
+      "src/inonu/flow-memory.test.ts",
+      "src/inonu/flow-memory.ts",
+      "src/inonu/http.ts",
+      "src/inonu/jev-model.test.ts",
+      "src/inonu/jev-model.ts",
+      "src/inonu/ledger.test.ts",
+      "src/inonu/ledger.ts",
+      "src/inonu/okx-public.test.ts",
+      "src/inonu/okx-public.ts",
+      "src/inonu/overlay.test.ts",
+      "src/inonu/overlay.ts",
+      "src/inonu/source-discovery.test.ts",
+      "src/inonu/source.test.ts",
+      "src/inonu/source.ts",
+      "src/intel/brief.ts",
+      "src/intel/thresholds.ts",
+      "src/settings/http.ts",
+      "src/settings/store.ts",
+      "web/src/components/Desk/Dock/DockInonu.module.css",
+      "web/src/components/Desk/Dock/DockInonu.tsx",
+      "web/src/components/Desk/Dock/DockPanel.tsx",
+      "web/src/components/Desk/InonuAsk.tsx",
+      "web/src/components/Desk/MesaView.tsx",
+      "web/src/components/Desk/TopbarDiscovery.tsx",
+      "web/src/components/Rastreador/RastreadorView.module.css",
+      "web/src/components/Rastreador/RastreadorView.tsx",
+      "web/src/components/Settings/SettingsView.tsx",
+      "web/src/lib/animation-scan.test.ts",
+      "web/src/lib/inonu/ask-target.test.ts",
+      "web/src/lib/inonu/ask-target.ts",
+      "web/src/lib/inonu/ask-trigger.test.ts",
+      "web/src/lib/inonu/ask-trigger.ts",
+      "web/src/lib/inonu/client.ts",
+      "web/src/lib/inonu/overlay-feed.test.ts",
+      "web/src/lib/inonu/overlay-feed.ts",
+      "web/src/lib/inonu/usage-render.test.tsx",
+      "web/src/lib/inonu/usage.test.ts",
+      "web/src/lib/inonu/usage.ts",
+      "web/src/lib/inonu/view.test.ts",
+      "web/src/lib/inonu/view.ts",
+      "web/src/lib/mesa/dock-subviews.test.ts",
+      "web/src/lib/mesa/dock-subviews.ts",
+      "web/src/lib/mesa/engine-alerts-render.test.tsx",
+      "web/src/lib/no-send-scan.test.ts",
+      "web/src/lib/rastreador/screen-render.test.tsx",
+      "web/src/lib/settings/client.test.ts",
+      "web/src/lib/settings/client.ts",
+      "web/src/lib/settings/settings-view-render.test.tsx"
+    ],
+    "new_code": [
+      "src/inonu/source-ranking.test.ts",
+      "src/inonu/source-ranking.ts",
+      "web/src/components/Desk/Dock/DockWalletTab.tsx",
+      "web/src/components/Desk/Dock/InonuLedgerTail.tsx",
+      "web/src/components/Desk/Dock/WalletChainSwitch.module.css",
+      "web/src/components/Desk/Dock/WalletChainSwitch.tsx",
+      "web/src/components/Rastreador/OnchainBody.tsx",
+      "web/src/lib/inonu/ask-keyed.test.tsx",
+      "web/src/lib/inonu/ledger-signal.test.ts",
+      "web/src/lib/inonu/ledger-signal.ts",
+      "web/src/lib/inonu/tail-render.test.tsx",
+      "web/src/lib/mesa/clock.test.ts",
+      "web/src/lib/mesa/clock.ts",
+      "web/src/lib/rastreador/choose.test.ts",
+      "web/src/lib/rastreador/choose.ts",
+      "web/src/lib/rastreador/onchain-body-render.test.tsx",
+      "web/src/lib/rastreador/onchain-model.test.ts",
+      "web/src/lib/rastreador/onchain-model.ts",
+      "web/src/lib/rastreador/onchain-state.test.ts",
+      "web/src/lib/rastreador/onchain-state.ts",
+      "web/src/lib/wallet/chain-switch-render.test.tsx",
+      "web/src/lib/wallet/chains.test.ts",
+      "web/src/lib/wallet/chains.ts",
+      "web/src/lib/wallet/errors.test.ts",
+      "web/src/lib/wallet/errors.ts"
+    ],
+    "new_documentation": [
+      "docs/sdd/inonu-desktop-v1/evidence/capturas/ras6-ranking-375.jpg",
+      "docs/sdd/inonu-desktop-v1/evidence/capturas/T5.7-grafico-ao-vivo-com-motor-pronto-800x450.jpg",
+      "docs/sdd/inonu-desktop-v1/evidence/capturas/T7.10-alertas-de-corrida-ao-vivo-800x450.jpg",
+      "docs/sdd/inonu-desktop-v1/evidence/RAS-6-T4.5-T9.2-ranking-cauda-e-troca-de-rede.md",
+      "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-2.md",
+      "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-3.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md"
+    ],
+    "changed_documents": [
+      "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md"
+    ]
+  },
+  "contract_deviations": [
+    {
+      "owner": "defi-e-oportunidades",
+      "issue": "Product suites executed despite read-only/no-parallel-product-test contract; retained as evidence, not retroactive authorization."
+    },
+    {
+      "owner": "carteira-e-patrimonio",
+      "issue": "Product suites executed despite read-only/no-parallel-product-test contract; retained as evidence, not retroactive authorization."
+    }
+  ],
+  "unverified": [
+    "Current runtime",
+    "Credentials or account access",
+    "Order execution",
+    "All image pixels",
+    "External URLs and current provider quotas",
+    "Exhaustive correctness of every source line",
+    "Final independent review of the integration"
+  ],
+  "billed_cost": null,
+  "reconciliation": {
+    "captured": "2026-10-13T16:16:55.990340-03:00",
+    "snapshot": "docs/_meta/project-state-reconciled-current-20261013.json",
+    "snapshot_scope": "working-tree-with-uncommitted-and-untracked-files",
+    "code_paths_in_snapshot": 1233,
+    "documentation_paths_in_snapshot": 1239,
+    "markdown_sources": 476,
+    "supporting_artifacts": 763,
+    "previous_additions": 98,
+    "newly_registered_additions": 158,
+    "registered_source_drifts": 18,
+    "source_drift_paths": [
+      "docs/.obsidian/graph.json",
+      "docs/.obsidian/workspace.json",
+      "docs/SYSTEM-ONE.md",
+      "docs/sdd/dados-quant/REPORT.md",
+      "docs/sdd/dados-quant/SPEC.md",
+      "docs/sdd/dados-quant/evidence/calibration-latest.json",
+      "docs/sdd/dados-quant/evidence/calibration-train30.json",
+      "docs/sdd/dados-quant/evidence/calibration-train300bars.json",
+      "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "docs/sdd/inonu-desktop-v1/OWNERSHIP.md",
+      "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T9.5-T9.7-escada-e-ticket.md",
+      "docs/sdd/inteligencia-decisao/evidence/C1-ao-vivo.md",
+      "docs/sdd/mesa-decisao-20261013/REPORT.md",
+      "docs/sdd/mesa-decisao-20261013/change-manifest.json"
+    ],
+    "status_documents": 476,
+    "classification_counts": {
+      "current_reference": 27,
+      "frozen_contract": 58,
+      "historical_evidence": 289,
+      "needs_review": 54,
+      "proposal": 30,
+      "stale_reference": 18
+    },
+    "new_status_needing_semantic_review": [
+      "docs/research/UI-EXECUTION-CLAIMS-20261011.md",
+      "docs/sdd/backend-audit-20261013/INTELLIGENCE-AUDIT.md",
+      "docs/sdd/backend-audit-20261013/NEXT-CYCLE.md",
+      "docs/sdd/backend-audit-20261013/OKX-AUDIT.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-DIAGNOSIS.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-AUDIT.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-LIVE-VERIFICATION.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-VERIFICATION.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-STANDARDS-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-VERIFICATION.md",
+      "docs/sdd/backend-audit-20261013/PORTFOLIO-SPEC-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/PORTFOLIO-STANDARDS-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/SPEC.md",
+      "docs/sdd/frontend-ux-20261013/acceptance.md",
+      "docs/sdd/frontend-ux-20261013/audit.md",
+      "docs/sdd/frontend-ux-20261013/design.md",
+      "docs/sdd/frontend-ux-20261013/docs-research.md",
+      "docs/sdd/frontend-ux-20261013/docs-revalidation.md",
+      "docs/sdd/frontend-ux-20261013/frontend-research.md",
+      "docs/sdd/frontend-ux-20261013/frontend-revalidation.md",
+      "docs/sdd/frontend-ux-20261013/README.md",
+      "docs/sdd/frontend-ux-20261013/requirements.md",
+      "docs/sdd/frontend-ux-20261013/review.md",
+      "docs/sdd/frontend-ux-20261013/tasks.md",
+      "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-5.md",
+      "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-6.md",
+      "docs/sdd/inteligencia-decisao/evidence/C1-ao-vivo.md",
+      "docs/sdd/inteligencia-decisao/evidence/C3-pesquisa-2026-10-13.md",
+      "docs/sdd/mesa-decisao-20261013/credential-evidence.md",
+      "docs/sdd/ui-audit-20261013/browser-matrix.md",
+      "docs/sdd/ui-audit-20261013/CHECKPOINT.md",
+      "docs/sdd/ui-audit-20261013/integration-audit-independent.md",
+      "docs/sdd/ui-audit-20261013/REPORT.md",
+      "docs/sdd/ui-audit-20261013/spec-review-final.md",
+      "docs/sdd/ui-audit-20261013/spec-review-responsive.md",
+      "docs/sdd/ui-audit-20261013/SPEC.md",
+      "docs/sdd/ui-audit-20261013/standards-review-final.md",
+      "docs/sdd/ui-audit-20261013/standards-review-responsive.md",
+      "docs/sdd/ui-mesa-cabecalho-20261013/CHECKPOINT.md"
+    ],
+    "sensitive_path_not_opened": "docs/sdd/mesa-decisao-20261013/credential-evidence.md",
+    "new_cross_cutting_pages": [
+      "docs/concepts/risco-quantitativo.md",
+      "docs/concepts/inteligencia-e-resultados.md"
+    ],
+    "limitations": [
+      "The 15 dispatched agents covered the dispatch snapshot; sources discovered later are cataloged but not all semantically reviewed.",
+      "Code inventory is exhaustive by declared paths, while semantic inspection remains selective.",
+      "No source authorship is inferred from working-tree status.",
+      "No live runtime, external API, wallet, model call, or financial operation was qualified."
+    ]
+  }
+}

@@ -1,0 +1,635 @@
+{
+  "checkedAt": "2026-10-13T18:29:32.3193583Z",
+  "conversation": "01a135ff-362e-7cf0-ac4f-ef678d322188",
+  "manifestSha256": "e95cf6f907d9fad9184de72f396e5f605f9a7d2c0d1de8ec477a5ea76e300ecb",
+  "specificationSha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298",
+  "ownedFileCount": 37,
+  "checks": [
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/settings/runtime-key.ts",
+      "expected": "ef8e4951fa0b0d49ef8377a5d6b973f79ce3e4cdf733dd8b0f950a50b42199a9",
+      "actual": "ef8e4951fa0b0d49ef8377a5d6b973f79ce3e4cdf733dd8b0f950a50b42199a9",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/settings/runtime-key.ts",
+      "expected": "ef8e4951fa0b0d49ef8377a5d6b973f79ce3e4cdf733dd8b0f950a50b42199a9",
+      "actual": "ef8e4951fa0b0d49ef8377a5d6b973f79ce3e4cdf733dd8b0f950a50b42199a9",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/settings/runtime-key.test.ts",
+      "expected": "cfdca20ce34d797e1096ab6b912057d410d749969cfd932ed1fe4c1ef008ac42",
+      "actual": "cfdca20ce34d797e1096ab6b912057d410d749969cfd932ed1fe4c1ef008ac42",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/settings/runtime-key.test.ts",
+      "expected": "cfdca20ce34d797e1096ab6b912057d410d749969cfd932ed1fe4c1ef008ac42",
+      "actual": "cfdca20ce34d797e1096ab6b912057d410d749969cfd932ed1fe4c1ef008ac42",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/settings/store.ts",
+      "expected": "d3a680d6155774f2c34cc1f60a45d65842f4bab16003226981520ab16bd3a82c",
+      "actual": "d3a680d6155774f2c34cc1f60a45d65842f4bab16003226981520ab16bd3a82c",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/settings/store.ts",
+      "expected": "d3a680d6155774f2c34cc1f60a45d65842f4bab16003226981520ab16bd3a82c",
+      "actual": "d3a680d6155774f2c34cc1f60a45d65842f4bab16003226981520ab16bd3a82c",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/settings/store.test.ts",
+      "expected": "9e95fb57860e071474643ca1c1db56a4d701e4df2405bbe44854050e5c49d677",
+      "actual": "9e95fb57860e071474643ca1c1db56a4d701e4df2405bbe44854050e5c49d677",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/settings/store.test.ts",
+      "expected": "9e95fb57860e071474643ca1c1db56a4d701e4df2405bbe44854050e5c49d677",
+      "actual": "9e95fb57860e071474643ca1c1db56a4d701e4df2405bbe44854050e5c49d677",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/settings/http.test.ts",
+      "expected": "fc0c3e64a6336ad2bd1c08b8ce8150d147a42d8d232e1441f8a3306484baf267",
+      "actual": "fc0c3e64a6336ad2bd1c08b8ce8150d147a42d8d232e1441f8a3306484baf267",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/settings/http.test.ts",
+      "expected": "fc0c3e64a6336ad2bd1c08b8ce8150d147a42d8d232e1441f8a3306484baf267",
+      "actual": "fc0c3e64a6336ad2bd1c08b8ce8150d147a42d8d232e1441f8a3306484baf267",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/desktop/vault.ts",
+      "expected": "9c4cb6dc6445012c5198eab4458d24d210de5d6e6fc133334f5e54341a16dd9b",
+      "actual": "9c4cb6dc6445012c5198eab4458d24d210de5d6e6fc133334f5e54341a16dd9b",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/desktop/vault.ts",
+      "expected": "9c4cb6dc6445012c5198eab4458d24d210de5d6e6fc133334f5e54341a16dd9b",
+      "actual": "9c4cb6dc6445012c5198eab4458d24d210de5d6e6fc133334f5e54341a16dd9b",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/desktop/vault.test.ts",
+      "expected": "327b33ed37ba4143f331b9be378f834f6915e2e77843ca5c2b6890b40744e701",
+      "actual": "327b33ed37ba4143f331b9be378f834f6915e2e77843ca5c2b6890b40744e701",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/desktop/vault.test.ts",
+      "expected": "327b33ed37ba4143f331b9be378f834f6915e2e77843ca5c2b6890b40744e701",
+      "actual": "327b33ed37ba4143f331b9be378f834f6915e2e77843ca5c2b6890b40744e701",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/desktop/handlers.ts",
+      "expected": "0c34ced309f9ef4e45ba6a8714aab2b4893f2eeb6673772b01e14b0a71a748bc",
+      "actual": "0c34ced309f9ef4e45ba6a8714aab2b4893f2eeb6673772b01e14b0a71a748bc",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/desktop/handlers.ts",
+      "expected": "0c34ced309f9ef4e45ba6a8714aab2b4893f2eeb6673772b01e14b0a71a748bc",
+      "actual": "0c34ced309f9ef4e45ba6a8714aab2b4893f2eeb6673772b01e14b0a71a748bc",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/desktop/handlers.test.ts",
+      "expected": "537363e6d98b4c952af2c82f29d58df9a65b6ac063abd638684a492b62f87a58",
+      "actual": "537363e6d98b4c952af2c82f29d58df9a65b6ac063abd638684a492b62f87a58",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/desktop/handlers.test.ts",
+      "expected": "537363e6d98b4c952af2c82f29d58df9a65b6ac063abd638684a492b62f87a58",
+      "actual": "537363e6d98b4c952af2c82f29d58df9a65b6ac063abd638684a492b62f87a58",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/ask.ts",
+      "expected": "26d9e048b09963569c797bc56b4593aed15205d39fb5bf5d0d874f29ae19b2c3",
+      "actual": "26d9e048b09963569c797bc56b4593aed15205d39fb5bf5d0d874f29ae19b2c3",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/ask.ts",
+      "expected": "26d9e048b09963569c797bc56b4593aed15205d39fb5bf5d0d874f29ae19b2c3",
+      "actual": "26d9e048b09963569c797bc56b4593aed15205d39fb5bf5d0d874f29ae19b2c3",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/ask.test.ts",
+      "expected": "791dc6c779bf6e8ce0d55b156e22f4f1e24abdd843017b5bae16c880490e80cd",
+      "actual": "791dc6c779bf6e8ce0d55b156e22f4f1e24abdd843017b5bae16c880490e80cd",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/ask.test.ts",
+      "expected": "791dc6c779bf6e8ce0d55b156e22f4f1e24abdd843017b5bae16c880490e80cd",
+      "actual": "791dc6c779bf6e8ce0d55b156e22f4f1e24abdd843017b5bae16c880490e80cd",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/jev-model.ts",
+      "expected": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010",
+      "actual": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/jev-model.ts",
+      "expected": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010",
+      "actual": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/jev-model.test.ts",
+      "expected": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a",
+      "actual": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/jev-model.test.ts",
+      "expected": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a",
+      "actual": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/portfolio.ts",
+      "expected": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20",
+      "actual": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/portfolio.ts",
+      "expected": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20",
+      "actual": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/portfolio.test.ts",
+      "expected": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5",
+      "actual": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/portfolio.test.ts",
+      "expected": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5",
+      "actual": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/MesaView.tsx",
+      "expected": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+      "actual": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/MesaView.tsx",
+      "expected": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+      "actual": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/MesaView.module.css",
+      "expected": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+      "actual": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/MesaView.module.css",
+      "expected": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+      "actual": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/TopbarTools.tsx",
+      "expected": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31",
+      "actual": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/TopbarTools.tsx",
+      "expected": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31",
+      "actual": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/TopbarTools.module.css",
+      "expected": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763",
+      "actual": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/TopbarTools.module.css",
+      "expected": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763",
+      "actual": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/Dock/DockWalletTab.tsx",
+      "expected": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14",
+      "actual": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/Dock/DockWalletTab.tsx",
+      "expected": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14",
+      "actual": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/Dock/PortfolioConsultation.tsx",
+      "expected": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868",
+      "actual": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/Dock/PortfolioConsultation.tsx",
+      "expected": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868",
+      "actual": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/Dock/PortfolioConsultation.module.css",
+      "expected": "87b21117c1131e7c59266d9f04c806c41c5714fbae594fc0a08f78d715f599c5",
+      "actual": "87b21117c1131e7c59266d9f04c806c41c5714fbae594fc0a08f78d715f599c5",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/Dock/PortfolioConsultation.module.css",
+      "expected": "87b21117c1131e7c59266d9f04c806c41c5714fbae594fc0a08f78d715f599c5",
+      "actual": "87b21117c1131e7c59266d9f04c806c41c5714fbae594fc0a08f78d715f599c5",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Settings/SettingsView.tsx",
+      "expected": "1996d6f12af50e14e34e054899e8cc4aeaeeb00843e8e3f7ba9a19fe5e8bff8b",
+      "actual": "1996d6f12af50e14e34e054899e8cc4aeaeeb00843e8e3f7ba9a19fe5e8bff8b",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Settings/SettingsView.tsx",
+      "expected": "1996d6f12af50e14e34e054899e8cc4aeaeeb00843e8e3f7ba9a19fe5e8bff8b",
+      "actual": "1996d6f12af50e14e34e054899e8cc4aeaeeb00843e8e3f7ba9a19fe5e8bff8b",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/lib/settings/client.ts",
+      "expected": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381",
+      "actual": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/lib/settings/client.ts",
+      "expected": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381",
+      "actual": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/lib/settings/client.test.ts",
+      "expected": "644b3d5b103f84008cc416b8b2938a2257f038f35cda37c7bda45f7b2fcc5f08",
+      "actual": "644b3d5b103f84008cc416b8b2938a2257f038f35cda37c7bda45f7b2fcc5f08",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/lib/settings/client.test.ts",
+      "expected": "644b3d5b103f84008cc416b8b2938a2257f038f35cda37c7bda45f7b2fcc5f08",
+      "actual": "644b3d5b103f84008cc416b8b2938a2257f038f35cda37c7bda45f7b2fcc5f08",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/lib/settings/settings-view-render.test.tsx",
+      "expected": "f4884ce693c8a8c55d33b8f635e4aad82b202f4996936df382249aad61e0bf44",
+      "actual": "f4884ce693c8a8c55d33b8f635e4aad82b202f4996936df382249aad61e0bf44",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/lib/settings/settings-view-render.test.tsx",
+      "expected": "f4884ce693c8a8c55d33b8f635e4aad82b202f4996936df382249aad61e0bf44",
+      "actual": "f4884ce693c8a8c55d33b8f635e4aad82b202f4996936df382249aad61e0bf44",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/lib/inonu/client.ts",
+      "expected": "d28a97d64f9e895ba8974c5b6d24bca356e697b79fe6b51c6982b23f028d8fab",
+      "actual": "d28a97d64f9e895ba8974c5b6d24bca356e697b79fe6b51c6982b23f028d8fab",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/lib/inonu/client.ts",
+      "expected": "d28a97d64f9e895ba8974c5b6d24bca356e697b79fe6b51c6982b23f028d8fab",
+      "actual": "d28a97d64f9e895ba8974c5b6d24bca356e697b79fe6b51c6982b23f028d8fab",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/lib/inonu/portfolio.ts",
+      "expected": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af",
+      "actual": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/lib/inonu/portfolio.ts",
+      "expected": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af",
+      "actual": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/lib/inonu/portfolio.test.ts",
+      "expected": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad",
+      "actual": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/lib/inonu/portfolio.test.ts",
+      "expected": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad",
+      "actual": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/http.ts",
+      "expected": "9fceac251a0101ebaa1c5208fcdb3b86c7c7f04a8c26d3cfa4f0dae6aa344030",
+      "actual": "9fceac251a0101ebaa1c5208fcdb3b86c7c7f04a8c26d3cfa4f0dae6aa344030",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/http.ts",
+      "expected": "9fceac251a0101ebaa1c5208fcdb3b86c7c7f04a8c26d3cfa4f0dae6aa344030",
+      "actual": "9fceac251a0101ebaa1c5208fcdb3b86c7c7f04a8c26d3cfa4f0dae6aa344030",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/inonu/http.test.ts",
+      "expected": "22582c1d160f71e6a581822ebbb640a05367ae0ab537db814f816d3d33a8f64a",
+      "actual": "22582c1d160f71e6a581822ebbb640a05367ae0ab537db814f816d3d33a8f64a",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/inonu/http.test.ts",
+      "expected": "22582c1d160f71e6a581822ebbb640a05367ae0ab537db814f816d3d33a8f64a",
+      "actual": "22582c1d160f71e6a581822ebbb640a05367ae0ab537db814f816d3d33a8f64a",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/lib/inonu/client.test.ts",
+      "expected": "4f15fa0a010aac9d5427512da41f7aece1b7f3bedfef0c0d804389ed53fbaab7",
+      "actual": "4f15fa0a010aac9d5427512da41f7aece1b7f3bedfef0c0d804389ed53fbaab7",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/lib/inonu/client.test.ts",
+      "expected": "4f15fa0a010aac9d5427512da41f7aece1b7f3bedfef0c0d804389ed53fbaab7",
+      "actual": "4f15fa0a010aac9d5427512da41f7aece1b7f3bedfef0c0d804389ed53fbaab7",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/outcomes/decision-log.test.ts",
+      "expected": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+      "actual": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/outcomes/decision-log.test.ts",
+      "expected": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+      "actual": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/outcomes/live-costs.ts",
+      "expected": "fe1af000bde21925168fa01e19a2231bbcaaa3f69ae471b81fa7f0645d68f36b",
+      "actual": "fe1af000bde21925168fa01e19a2231bbcaaa3f69ae471b81fa7f0645d68f36b",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/outcomes/live-costs.ts",
+      "expected": "fe1af000bde21925168fa01e19a2231bbcaaa3f69ae471b81fa7f0645d68f36b",
+      "actual": "fe1af000bde21925168fa01e19a2231bbcaaa3f69ae471b81fa7f0645d68f36b",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/outcomes/live-costs.test.ts",
+      "expected": "51a69298b5d3b2661265078f9b69b2a7db9098cc27b3db0fbdc403fc5bce07ce",
+      "actual": "51a69298b5d3b2661265078f9b69b2a7db9098cc27b3db0fbdc403fc5bce07ce",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/outcomes/live-costs.test.ts",
+      "expected": "51a69298b5d3b2661265078f9b69b2a7db9098cc27b3db0fbdc403fc5bce07ce",
+      "actual": "51a69298b5d3b2661265078f9b69b2a7db9098cc27b3db0fbdc403fc5bce07ce",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "src/outcomes/wire.ts",
+      "expected": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+      "actual": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "src/outcomes/wire.ts",
+      "expected": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+      "actual": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/jev-trader",
+      "path": "web/src/components/Desk/panels/PriceChart.module.css",
+      "expected": "725b33a9db9f18cbd561f348dbb85372c29c72e3736efde919f85d2171f41035",
+      "actual": "725b33a9db9f18cbd561f348dbb85372c29c72e3736efde919f85d2171f41035",
+      "matches": true
+    },
+    {
+      "tree": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+      "path": "web/src/components/Desk/panels/PriceChart.module.css",
+      "expected": "725b33a9db9f18cbd561f348dbb85372c29c72e3736efde919f85d2171f41035",
+      "actual": "725b33a9db9f18cbd561f348dbb85372c29c72e3736efde919f85d2171f41035",
+      "matches": true
+    }
+  ],
+  "mismatchCount": 0,
+  "evidence": [
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/after-desktop-expanded.png",
+      "sha256": "be80459c805f4460472d32e715fc0f548928ece1f424a8f05168ab809437f71b",
+      "bytes": 197492
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/after-desktop.png",
+      "sha256": "d6e1e37f3a730447c7ea9120c70bdd83d6d888e91f58f75b14c67a25d6907930",
+      "bytes": 232718
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/after-mobile.png",
+      "sha256": "a6be7589dad4531606b788190d3b3122620133f90c13dab8418ba8a81343e7f5",
+      "bytes": 95267
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/chart-final-accessibility.log",
+      "sha256": "e4d32362b756b9d14a7429faa80e04c92074b955554905c046657994406308a7",
+      "bytes": 4683
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/chart-menu-diagnosis.json",
+      "sha256": "d6a59d112544556347d7c523c626c18e698b38def5d6970ddd98727a2710bf4d",
+      "bytes": 4054
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/chart-ui-results.json",
+      "sha256": "34dfacc7cb59063288afc757f7ec6a935d4e7159879fc19794c23820667b33c9",
+      "bytes": 8070
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/concurrent-sync.json",
+      "sha256": "5c05a0fcb48eeee935ddf034a6643458996eeefb551eb6b2d6d71319b5611349",
+      "bytes": 1632
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-backend-tests.log",
+      "sha256": "b5d54384daef3c1f19aba417010c98bbbbbcab3434b60ed500931b038e83a402",
+      "bytes": 62955
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-build-mobile.log",
+      "sha256": "c883d2a6995b0668499238535752df0120fb8a960a654a802a2c537178551c39",
+      "bytes": 766
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-concurrent-tests.log",
+      "sha256": "131dd5cbb8399aa4c8b73c6318d3072471d1193ff3bb5c5baab3315495825578",
+      "bytes": 5305
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-purity-tests.log",
+      "sha256": "bed6fb8a313a24e63e4b9bc5d6f2d0a4838c970e2519c907f5c13852eee2cda8",
+      "bytes": 2668
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-typecheck-concurrent.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-typecheck-mobile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-typecheck-root-qualified.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/final-web-mobile.log",
+      "sha256": "ef9251fbf47dacde56a9d99b3d0ecb7657b9e91b4d477f58b4873a5cfeb5f990",
+      "bytes": 289493
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/verify-chart-ui.mjs",
+      "sha256": "e8ca19f0b691c22a9b4fa5902e5886d967464271946d78667ac9de2e8b4a92c1",
+      "bytes": 6353
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/verify-wallet-ui.mjs",
+      "sha256": "cbdbd12ecc603a7f12fc76474ef994f5b41f01d5a5eff8e5e832ded6ddb2a7e2",
+      "bytes": 7002
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/visual-results.json",
+      "sha256": "b00414004fe3a0595cf2fbcb0cfafc8b297cbfd1e54428220b8e3b98eb9b6f12",
+      "bytes": 3620
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/wallet-desktop.png",
+      "sha256": "de4019b8d08936de499fae46a762fcb62d93019e106fd38aa3b20559fd462bde",
+      "bytes": 249799
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/wallet-mobile.png",
+      "sha256": "9cc00a78f82319d3708506437b07735c11fcd5c2ad7c9363d50ce8d5c1a0ea89",
+      "bytes": 119741
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/evidence/wallet-ui-results.json",
+      "sha256": "3e861a262c9f34e7313f34afd6de81a5dcdd8841e3557ee61c0ce98ed4732e57",
+      "bytes": 1200
+    }
+  ]
+}

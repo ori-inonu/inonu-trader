@@ -1,0 +1,80 @@
+{
+  "capturedAt": "2026-10-13T16:59:14.447Z",
+  "files": [
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-latest.json",
+      "sha256": "976bfd66151c30f8bace122ab3a0d344a75bfbc602d94508e25a23fa8b73a271",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-train30.json",
+      "sha256": "cf2aa9e57bba41c833ecf801fa6f80e3a2e0970af37cc63420c2f2b02a2e3d4b",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/dados-quant/REPORT.md",
+      "sha256": "096100a6f7a456e1c46bdfc699c919dfe47c84be968d94095b91fdaa2961932f",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-4.md",
+      "sha256": "54cc85e2ee05aa54cbde4bbca4b868aba1ec0ce22b04f56fa38690306b0f7747",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/evidence/baseline.md",
+      "sha256": "0949fd7d3f3e58922c9820d1ebfff9e5cd34c7399312a2d8d2bee667069bf37a",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/evidence/git-status-inicio.txt",
+      "sha256": "a4dd34c124934b7311466f5583fd41b371bac3a2947b1cb68441b2106cac9bff",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/README.md",
+      "sha256": "4bef1531b0469c2039c1ec8cec6e4fa27b634e91ffd484b386c513785d6e3e7e",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/SPEC.md",
+      "sha256": "23ec48e6c4a858f6844263e8995124823c2f817fb8ac020a184dbfb81c04c961",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/TASKS.md",
+      "sha256": "60af7e9acb41e46f8a78503e79e319449950a565cbf966f71be2fb0aec276a08",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/jev-receipt.json",
+      "sha256": "c30887efb1f8988f27a1db43ce1eef9919c2c9458c3d0f11ca14fddbe70ed5af",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/SPEC.md",
+      "sha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/ui-client-red.log",
+      "sha256": "85e30bbf3102441e9ca5359747f496c504390df7a6d118a572e99735cb114963",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/ui-red.log",
+      "sha256": "c253e2535c5192a571962e5a7e5eba845aa6c9271daacd6f3378fd569f7a76b2",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/web-targeted.log",
+      "sha256": "290e2704304cf2f350be06335012f118538ac4b4172100811b9369dcefa89265",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    },
+    {
+      "path": "web/AGENTS.md",
+      "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+      "observation": "Concurrent original captured for supplementary review; not the earlier fixed baseline"
+    }
+  ]
+}

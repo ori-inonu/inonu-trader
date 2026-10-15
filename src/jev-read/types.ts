@@ -6,6 +6,8 @@
  * the reasons and no model call is made, so a decision can never be built on a missing or invented number.
  */
 
+import type { TapeAnalysis } from "./analytics";
+
 export const JEV_READ_SCHEMA_VERSION = 1;
 
 export type TapeAction = "buy" | "sell" | "hold";
@@ -99,6 +101,11 @@ export interface TapeInput {
     readonly low24h: number | null;
     readonly receivedAtMs: number;
   } | null;
+  /**
+   * Optional digest of pre-computed analytics (written by the Python collector) when one exists and is fresh.
+   * Descriptive only: it can inform a decision but never creates one by itself.
+   */
+  readonly analysis?: TapeAnalysis | null;
 }
 
 /** What Jev sees: compact, relative, no addresses, no credentials, no free text from a provider. */
@@ -128,6 +135,11 @@ export interface TapeState {
   /** Where the last price sits inside the 24h range, 0 at the low and 1 at the high. */
   readonly rangePosition24h: number | null;
   readonly fundingRatePct: number | null;
+  /**
+   * The analytics digest when one was read this round. The key is absent when the pack is missing, stale or
+   * disabled; absent analysis means decide without it.
+   */
+  readonly analysis?: TapeAnalysis;
 }
 
 export type InsufficientReason =

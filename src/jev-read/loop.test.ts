@@ -254,6 +254,54 @@ describe("readRound", () => {
     expect(result.error).toBe("round_failed");
     expect(result.read).toBeNull();
   });
+
+  test("the analytics source is asked with the snapshot wall time and its result reaches the state", async () => {
+    const dir = tmp();
+    const store = new JevReadStore({ statePath: join(dir, "l.json"), journalPath: join(dir, "j.jsonl") });
+    const { feed, local } = feedStub();
+    const analysis = { ageSec: 7, cost: { assumedRoundTripFeeBps: 20, spreadBps: 0.4, moveToCost: 1.1 } };
+    const seen: Array<[string, number]> = [];
+    const result = await readRound({
+      feed,
+      keeper: await readyKeeper(),
+      model: null,
+      store,
+      instId: "BTC-USDT",
+      localNow: () => local,
+      analytics: { read(instId, nowMs) { seen.push([instId, nowMs]); return analysis; } },
+    });
+    expect(result.error).toBeNull();
+    expect(seen).toEqual([["BTC-USDT", local]]);
+    expect(result.read?.state?.analysis).toEqual(analysis);
+  });
+
+  test("a throwing analytics source and a null result both read like no pack at all", async () => {
+    const dir = tmp();
+    const store = new JevReadStore({ statePath: join(dir, "l.json"), journalPath: join(dir, "j.jsonl") });
+    const { feed, local } = feedStub();
+    const throwing = await readRound({
+      feed,
+      keeper: await readyKeeper(),
+      model: null,
+      store,
+      instId: "BTC-USDT",
+      localNow: () => local,
+      analytics: { read() { throw new Error("ENOENT"); } },
+    });
+    expect(throwing.error).toBeNull();
+    expect(throwing.read?.state).not.toBeNull();
+    expect("analysis" in (throwing.read?.state ?? {})).toBe(false);
+    const empty = await readRound({
+      feed,
+      keeper: await readyKeeper(),
+      model: null,
+      store,
+      instId: "BTC-USDT",
+      localNow: () => local,
+      analytics: { read: () => null },
+    });
+    expect("analysis" in (empty.read?.state ?? {})).toBe(false);
+  });
 });
 
 describe("countRecentModelReads", () => {

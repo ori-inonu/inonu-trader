@@ -48,6 +48,20 @@ const props = (over: Partial<HoldingsPanelViewProps> = {}): HoldingsPanelViewPro
 });
 const draw = (over: Partial<HoldingsPanelViewProps> = {}) => renderToStaticMarkup(<HoldingsPanelView {...props(over)} />);
 
+test("an absent provider risk flag remains unknown without removing its priced balance", () => {
+  const html = draw({ readout: readout({ balances: { ok: true, data: { rows: [brow({ flaggedRisk: null })], total: 1 }, meta: meta() } }), nowMs: 1_006_000 });
+  expect(html).toContain("Risco desconhecido");
+  expect(html).toContain("US$ 1.500,00");
+});
+
+test("token valuation reconciles the provider total and never prices unknown holdings at zero", () => {
+  const html = draw({ readout: readout(), nowMs: 1_006_000 });
+  expect(html).toContain("Valor verificavel dos tokens");
+  expect(html).toContain("US$ 1.500,00");
+  expect(html).toContain("1 ativo sem valor");
+  expect(html).toContain("Diferenca com o provedor");
+});
+
 describe("without a connected wallet", () => {
   test("it says what it needs and offers nothing to click", () => {
     const html = draw({ account: null });

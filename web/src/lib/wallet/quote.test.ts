@@ -9,13 +9,28 @@ const GOOD = {
   chainIndex: "8453", mode: "exactIn", fromAmount: 100_000_000, toAmount: 5e19, priceImpactPct: -0.4, estimateGasFee: 120_000, tradeFee: 0.12,
   fromToken: side({ address: "0xusdc", symbol: "USDC", decimals: 6, unitPriceUsd: 1 }), toToken: side(),
 };
-const META = { tier: "basic", cachedAtMs: 1, ageMs: 5, stale: false, budget: { tier: "basic", used: 1, cap: null } };
+const NORMALIZED_LEGACY = { ...GOOD, fromAmountRaw: null, toAmountRaw: null, outputUnit: "unverified" as const };
+const META = { tier: "basic", cachedAtMs: 1, ageMs: 5, stale: false, budget: { tier: "basic", used: 1, cap: null } } as const;
 const reply = (body: unknown, status = 200) => async () => new Response(JSON.stringify(body), { status });
 const PARAMS = { chainIndex: "8453", amount: "100000000", fromToken: "0xusdc", toToken: "0xaaa" };
 
 describe("the payload", () => {
+  test("new raw amounts survive exactly and unverified output metadata is checked", () => {
+    const data = { ...GOOD, fromAmount: 9007199254740992, fromAmountRaw: "9007199254740993", toAmount: 1.2345678901234568e29, toAmountRaw: "123456789012345678901234567890", outputUnit: "unverified" as const };
+    expect(parseQuote(data)).toEqual(data);
+    for (const bad of [
+      { ...data, fromAmountRaw: 9007199254740993 }, { ...data, toAmountRaw: "1e20" },
+      { ...data, toAmountRaw: "-1" }, { ...data, toAmountRaw: " 12" },
+      { ...data, toAmountRaw: "9".repeat(129) }, { ...data, outputUnit: "atomic" },
+    ]) expect(parseQuote(bad)).toBeNull();
+  });
+
+  test("old gateways remain readable with missing raw precision and output units explicitly unknown", () => {
+    expect(parseQuote(GOOD)).toMatchObject({ fromAmountRaw: null, toAmountRaw: null, outputUnit: "unverified", tradeFee: 0.12, estimateGasFee: 120000 });
+  });
+
   test("a good one comes back as it is, with a flag the provider left out kept as unknown", () => {
-    expect(parseQuote(GOOD)).toEqual(GOOD);
+    expect(parseQuote(GOOD)).toEqual(NORMALIZED_LEGACY);
     const silent = parseQuote({ ...GOOD, toToken: side({ isHoneyPot: null, taxRate: null, decimals: null }) })!;
     expect(silent.toToken.isHoneyPot).toBeNull();
     expect(silent.toToken.taxRate).toBeNull();
@@ -35,11 +50,21 @@ describe("the payload", () => {
 });
 
 describe("the request", () => {
+  test("raw input identity distinguishes a one-atom difference hidden by the numeric projection", async () => {
+    const params = { ...PARAMS, amount: "9007199254740993" };
+    const data = { ...GOOD, fromAmount: 9007199254740992, fromAmountRaw: "9007199254740992", toAmountRaw: null, outputUnit: "unverified" };
+    const ask = (quote: unknown) => createQuoteReader({ base: "", fetch: reply({ ok: true, data: quote, meta: META }) }).read(params);
+    expect(await ask(data)).toEqual({ ok: false, error: "schema" });
+    expect(await ask({ ...data, fromAmountRaw: "9007199254740993" })).toMatchObject({ ok: true });
+    // Numeric-only legacy gateways remain supported, with raw precision unknown.
+    expect(await ask({ ...GOOD, fromAmount: 9007199254740992 })).toMatchObject({ ok: true, data: { fromAmountRaw: null, outputUnit: "unverified" } });
+  });
+
   test("a GET with the chain, the amount and the two tokens, no credentials, and the header of a click", async () => {
     const seen: { url: string; init?: RequestInit }[] = [];
     const reader = createQuoteReader({ base: "http://local", fetch: async (url, init) => (seen.push({ url: String(url), ...(init ? { init } : {}) }), new Response(JSON.stringify({ ok: true, data: GOOD, meta: META }))) });
     const result = await reader.read(PARAMS);
-    expect(result).toEqual({ ok: true, data: GOOD, meta: META });
+    expect(result).toEqual({ ok: true, data: NORMALIZED_LEGACY, meta: META });
     const url = new URL(seen[0]!.url);
     expect(url.pathname).toBe("/onchain/quote");
     expect(Object.fromEntries(url.searchParams)).toEqual({ chainIndex: "8453", amount: "100000000", fromToken: "0xusdc", toToken: "0xaaa" });
@@ -49,7 +74,7 @@ describe("the request", () => {
   });
 
   test("a refusal of the gateway comes back as its code, and the ones the transport knows are told apart", async () => {
-    for (const code of ["provider_payment_required", "budget_exhausted", "no_credentials", "provider_error", "bad_request", "unsupported_chain"]) {
+    for (const code of ["provider_payment_required", "budget_exhausted", "no_credentials", "provider_error", "bad_request", "unsupported_chain"] as const) {
       expect(await createQuoteReader({ base: "", fetch: reply({ ok: false, error: code }) }).read(PARAMS)).toEqual({ ok: false, error: code });
     }
     // the gateway serializes the code as `code` in some answers

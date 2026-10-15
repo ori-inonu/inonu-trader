@@ -49,6 +49,9 @@ const FORBIDDEN_EVERYWHERE: [string, RegExp][] = [
   ["the rules of another market", /\b(WIN|WDO|BRL|MON|USDC|USDT)\b/],
   ["a WebSocket or event source", /\bWebSocket\b|\bEventSource\b|\bXMLHttpRequest\b/],
   ["an HTTP server", /Bun\.serve|createServer\(/],
+  ["a dynamic import", /\bimport\s*\(/],
+  ["spawning a process", /\bBun\.(spawn|spawnSync|\$)(?![A-Za-z0-9_])|\bBun\s*\??\.?\s*\[|import\s*\{[^}]*(?:\$|spawn)[^}]*\}\s*from\s*["']bun["']|\{[^}]*\b(?:spawn|spawnSync|serve|listen|connect)\b[^}]*\}\s*=\s*Bun\b/],
+  ["indexing the global object", /globalThis\s*\??\.?\s*\[/],
 ];
 
 const FORBIDDEN_OUTSIDE_BOUNDARY: [string, RegExp][] = [
@@ -135,8 +138,54 @@ describe("the module cannot sign, trade, schedule or hold a secret", () => {
 
   test("the endpoint registry holds reads only", () => {
     const text = FILES.find((file) => file.rel === "adapters/okx-endpoints.ts")!.text;
-    expect([...text.matchAll(/\{ id: "[^"]+", method: "(GET|POST)"/g)].map((match) => match[1]).sort()).toEqual(["GET", "GET", "GET", "GET", "GET", "POST"]);
+    expect([...text.matchAll(/\{ id: "[^"]+", method: "(GET|POST)"/g)].map((match) => match[1]).sort()).toEqual(["GET", "GET", "GET", "GET", "GET", "GET", "GET", "GET", "POST"]);
   });
+});
+
+describe("the scanner itself is sensitive (a rule that matches nothing proves nothing)", () => {
+  const SAMPLES: Record<string, string | string[]> = {
+    "ethers, viem or a Solana SDK": 'import { Wallet } from "ethers";',
+    "signing or sending a transaction": "await wallet.sendTransaction(tx);",
+    "a trade, bridge, approval or transfer path": 'const p = "/api/v6/dex/aggregator/swap";',
+    "a node network, process or vm module": 'import net from "node:net";',
+    "a dynamic require or eval": "const m = require('x');",
+    "a scheduler": "setInterval(poll, 1000);",
+    "the rules of another market": "const pair = 'MON/USDC';",
+    "a WebSocket or event source": "new WebSocket(url);",
+    "an HTTP server": "Bun.serve({});",
+    "a dynamic import": 'const m = await import("../operator/x.ts");',
+    "spawning a process": ['Bun.spawn(["x"]);', "const out = Bun.$`ls`;", 'Bun["spawn"](["x"]);', "Bun?.['spawnSync'](x);", 'import { $ } from "bun";', 'import { spawn } from "bun";', "const { spawn } = Bun;", "const { serve, file } = Bun;"],
+    "indexing the global object": ['globalThis["fetch"](url);', 'globalThis?.["fetch"](url);', "globalThis[name](url);"],
+  };
+  for (const [label, pattern] of FORBIDDEN_EVERYWHERE) {
+    test(`${label}: every sample that crosses the line is flagged`, () => {
+      const samples = SAMPLES[label];
+      expect(samples).toBeDefined();
+      for (const sample of Array.isArray(samples) ? samples : [samples!]) expect({ sample, flagged: pattern.test(code(sample)) }).toEqual({ sample, flagged: true });
+    });
+  }
+  test("and harmless code is not flagged", () => {
+    const harmless = ['const file = Bun.file("x");', "const { a, b } = obj;", 'import { test } from "bun:test";', "const t = globalThis.name;", "await import.meta.main;"];
+    for (const sample of harmless) for (const [, pattern] of FORBIDDEN_EVERYWHERE) expect({ sample, flagged: pattern.test(code(sample)) }).toEqual({ sample, flagged: false });
+  });
+  const OUTSIDE_SAMPLES: Record<string, string> = {
+    "process.env": "const k = process.env.KEY;",
+    "Bun.env": "Bun.env.X",
+    "import.meta.env": "import.meta.env.X",
+    dotenv: 'import "dotenv/config";',
+    "the global fetch": "await fetch(url);",
+    "globalThis.fetch or Bun.fetch": "globalThis.fetch(url);",
+    "a timer": "setTimeout(f, 1);",
+    "the console": "console.log(x);",
+    "the global clock": "const t = Date.now();",
+    "a file API": 'import { readFileSync } from "node:fs";',
+  };
+  for (const [label, pattern] of FORBIDDEN_OUTSIDE_BOUNDARY) {
+    test(`${label}: a sample that crosses the line is flagged`, () => {
+      expect(OUTSIDE_SAMPLES[label]).toBeDefined();
+      expect(pattern.test(code(OUTSIDE_SAMPLES[label]!))).toBe(true);
+    });
+  }
 });
 
 describe("fixtures are explicitly synthetic", () => {

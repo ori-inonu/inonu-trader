@@ -1,0 +1,1242 @@
+{
+  "owner": "interface-e-central",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T12:32:21-03:00",
+  "page": "docs/concepts/interface-e-central.md",
+  "documents": [
+    {
+      "path": "docs/CENTRAL-JEV-ACCEPTANCE.md",
+      "title": "Central Jev: aceite da integração",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-BLOCKED-AUDIT-20261011.md",
+      "title": "Auditoria do bloqueio — 2026-10-11",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-CHECKPOINT.md",
+      "title": "Checkpoint final da própria tarefa — 2026-10-11",
+      "catalog_role": "checkpoint",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como checkpoint; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-CLOSURE-REVIEW-32fbaf8.md",
+      "title": "CENTRAL-JEV-CLOSURE-REVIEW-32fbaf8",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-COMBINED-VERIFICATION-16eb1ed.md",
+      "title": "Verificação conjunta da central e ledger — 2026-10-11",
+      "catalog_role": "evidencia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como evidencia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-CONCLUSION-32fbaf8.md",
+      "title": "Conclusão local da central Jev — 32fbaf8",
+      "catalog_role": "guia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como guia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-CONCURRENT-UI-SPEC.md",
+      "title": "Reconciliação final da interface",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-COPY-REVIEW-714e276.md",
+      "title": "Acompanhamento independente EC1–EC4",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-EXECUTION-COPY-SPEC.md",
+      "title": "Veracidade das descrições da central Jev",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-FINAL-VERIFICATION-16eb1ed.md",
+      "title": "Central Jev — verificação final da integração local",
+      "catalog_role": "evidencia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como evidencia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-FINAL-VERIFICATION-32fbaf8.md",
+      "title": "Verificação final da central Jev — 32fbaf8",
+      "catalog_role": "evidencia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como evidencia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-FINANCIAL-REVIEW.md",
+      "title": "CENTRAL-JEV-FINANCIAL-REVIEW",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-INTEGRATION-78ae090.md",
+      "title": "Verificação da integração 78ae090 — 2026-10-11",
+      "catalog_role": "guia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como guia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-LEDGER-INTEGRATION-SPEC.md",
+      "title": "Integração concorrente do ledger — 2026-10-11",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-LEDGER-REVIEW-16eb1ed.md",
+      "title": "CENTRAL-JEV-LEDGER-REVIEW-16eb1ed",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-MOBILE-FIX-SPEC.md",
+      "title": "Correção mobile da central Jev",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-MOBILE-REVIEW-51cfa77.md",
+      "title": "CENTRAL-JEV-MOBILE-REVIEW-51cfa77",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-PREVIEW-PROVENANCE-20261011.md",
+      "title": "Proveniência da prévia observada — 2026-10-11",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-AUDIT-2ed0324.md",
+      "title": "Reconciliação de branches remotas — 2026-10-11",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-INTEGRATION-SPEC.md",
+      "title": "Integração dos remotos: Central Jev",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-REVIEW-2ed0324.md",
+      "title": "Revisão independente — reconciliação remota",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-VERIFICATION-2ed0324.md",
+      "title": "Verificação do candidato remoto 2ed0324",
+      "catalog_role": "evidencia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como evidencia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REVIEW-1c50fdf.md",
+      "title": "CENTRAL-JEV-REVIEW-1c50fdf",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REVIEW-32fbaf8.md",
+      "title": "CENTRAL-JEV-REVIEW-32fbaf8",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REVIEW-FIX-SPEC.md",
+      "title": "Correções da revisão independente da Central Jev",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REVIEW.md",
+      "title": "Parecer independente — GrowthDeck e ajuste de testes CLI",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-VERIFICATION-1c50fdf.md",
+      "title": "Verificação do candidato final da Central Jev",
+      "catalog_role": "evidencia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como evidencia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/CENTRAL-JEV-ZERO-CEILING-REGRESSION.md",
+      "title": "Regressão de leitura da fase de observação",
+      "catalog_role": "guia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como guia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/INONU-DESIGN-SPEC.md",
+      "title": "Inonu Trader: especificação visual e de interação",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo.",
+      "code_refs": [
+        "web/src/app/layout.tsx:22-39",
+        "web/src/app/page.tsx:9-11",
+        "web/src/components/Desk/MesaView.tsx:409-556"
+      ]
+    },
+    {
+      "path": "docs/INONU-PROPOSAL.md",
+      "title": "Inonu Trader: identidade e contribuição",
+      "catalog_role": "proposta",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Papel catalogado como proposta; não representa aceite nem estado implementado."
+    },
+    {
+      "path": "docs/MESA-DE-OPERACOES.md",
+      "title": "Mesa de operacoes do Jev",
+      "catalog_role": "guia",
+      "read_mode": "full",
+      "classification": "needs_review",
+      "reason": "O guia faz afirmações amplas sobre fixtures e o desk; o código atual mantém um exemplo DEX sintético apenas na rota legada /console, enquanto o teste de pureza define essa rota como fora do bundle instalado. Como o teste e o pacote não foram executados/inspecionados, o escopo precisa de revisão e não é certificado aqui.",
+      "code_refs": [
+        "web/src/components/Desk/MesaView.tsx:101-118,258-273,376-395",
+        "web/src/app/console/page.tsx:45-60,194-198",
+        "web/src/components/DexReportPanel/DexReportPanel.tsx:222-256,275-294",
+        "web/src/lib/purity-bundle.test.ts:125-147"
+      ]
+    },
+    {
+      "path": "docs/MESA-TOPBAR-SPEC.md",
+      "title": "Topbar da Mesa: especificação",
+      "catalog_role": "contrato",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo.",
+      "code_refs": [
+        "web/src/components/Desk/DeskRail.tsx:114-131,146-207",
+        "web/src/components/Desk/TopbarDiscovery.tsx:14-31"
+      ]
+    },
+    {
+      "path": "docs/research/spec-review-20261012/spec-review-central-ui.md",
+      "title": "central-ui: revisão das especificações da interface e do painel (somente leitura)",
+      "catalog_role": "revisao",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual.",
+      "code_refs": [
+        "web/src/app/page.tsx:9-11",
+        "web/src/app/console/page.tsx:45-60",
+        "web/src/components/Desk/DeskRail.tsx:114-131"
+      ]
+    },
+    {
+      "path": "docs/research/UI-EXECUTION-CLAIMS-20261011.md",
+      "title": "Execution claims versus observed runtime",
+      "catalog_role": "pesquisa",
+      "read_mode": "metadata_only",
+      "classification": "needs_review",
+      "reason": "Apenas metadados do catálogo foram usados nesta rodada; o conteúdo não sustenta afirmações da página e requer leitura antes de nova síntese."
+    },
+    {
+      "path": "docs/UI-EXECUTION-TRUTH-CHECKPOINT-20261011.md",
+      "title": "UI execution truth checkpoint — 2026-10-11",
+      "catalog_role": "checkpoint",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como checkpoint; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/UI-EXECUTION-TRUTH-SPEC.md",
+      "title": "Truthful execution claims",
+      "catalog_role": "contrato",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Papel catalogado como contrato. Mantido somente como requisito normativo, não como prova de implementação; o escopo desta tarefa proíbe alterá-lo."
+    },
+    {
+      "path": "docs/UI-EXECUTION-TRUTH-VERIFICATION-20261011.md",
+      "title": "UI truthfulness candidate verification",
+      "catalog_role": "evidencia",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como evidencia; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/UI-TRUTH-FINAL-AUDIT-FOLLOWUP-20261011.md",
+      "title": "UI-TRUTH-FINAL-AUDIT-FOLLOWUP-20261011",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/UI-TRUTH-INDEPENDENT-REVIEW-20261011.md",
+      "title": "UI truth — revisão independente do candidato",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/UI-TRUTH-INTEGRATION-CHECKPOINT-20261011.md",
+      "title": "UI truth integration checkpoint",
+      "catalog_role": "checkpoint",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como checkpoint; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/UI-TRUTH-INTEGRATION-INDEPENDENT-REVIEW-20261011.md",
+      "title": "UI-TRUTH-INTEGRATION-INDEPENDENT-REVIEW-20261011",
+      "catalog_role": "revisao",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como revisao; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    },
+    {
+      "path": "docs/UI-TRUTH-MAIN-CHECKPOINT-20261011.md",
+      "title": "Reviewed UI integration on local main",
+      "catalog_role": "checkpoint",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Papel catalogado como checkpoint; registro de revisão, checkpoint, evidência, pesquisa ou guia de um candidato/sessão. Preservado como histórico, sem tratá-lo como prova do runtime atual."
+    }
+  ],
+  "code_inspected": [
+    "web/src/app/page.tsx",
+    "web/src/app/layout.tsx",
+    "web/src/app/rastreador/page.tsx",
+    "web/src/app/console/page.tsx",
+    "web/src/app/console/page.module.css",
+    "web/src/app/configuracoes/page.tsx",
+    "web/src/app/doctor/page.tsx",
+    "web/src/components/Desk/MesaView.tsx",
+    "web/src/components/Desk/MesaView.module.css",
+    "web/src/components/Desk/DeskDock.tsx",
+    "web/src/components/Desk/DeskRail.tsx",
+    "web/src/components/Desk/Dock/DockInonu.tsx",
+    "web/src/components/Desk/Dock/DockPanel.tsx",
+    "web/src/components/Desk/Dock/DockComposite.tsx",
+    "web/src/components/Desk/Dock/DockTabs.tsx",
+    "web/src/components/Desk/Dock/OnchainDeskTabs.tsx",
+    "web/src/components/Desk/TopbarDiscovery.tsx",
+    "web/src/components/Desk/InonuAsk.tsx",
+    "web/src/components/Desk/Dock/InonuLedgerTail.tsx",
+    "web/src/components/Desk/Dock/DockWalletTab.tsx",
+    "web/src/components/Desk/Dock/WalletChainSwitch.tsx",
+    "web/src/components/Rastreador/RastreadorView.tsx",
+    "web/src/components/DexReportPanel/DexReportPanel.tsx",
+    "web/src/components/Disclosure/Disclosure.tsx",
+    "web/src/lib/dex-report-example.ts",
+    "web/src/lib/mesa/dock.ts",
+    "web/src/lib/mesa/dock-layout.ts",
+    "web/src/lib/mesa/dock-subviews.ts",
+    "web/src/lib/mesa/dock-subviews.test.ts",
+    "web/src/lib/mesa/panels-registry.ts",
+    "web/src/lib/mesa/panels-registry.test.ts",
+    "web/src/lib/mesa/preferences.ts",
+    "web/src/lib/mesa/layout.ts",
+    "web/src/lib/mesa/watch-pins.ts",
+    "web/src/lib/mesa/onchain-view.ts",
+    "web/src/lib/mesa/alerts.ts",
+    "web/src/lib/mesa/useAlerts.ts",
+    "web/src/lib/mesa/view-source.ts",
+    "web/src/lib/mesa/topbar-model.ts",
+    "web/src/lib/mesa/flow-tab-model.ts",
+    "web/src/lib/mesa/mesa-model.ts",
+    "web/src/lib/inonu/useEngineAlerts.ts",
+    "web/src/lib/mesa/engine-alerts-render.test.tsx",
+    "web/src/lib/mesa/desktop-nav-render.test.tsx",
+    "web/src/lib/animation-scan.test.ts",
+    "web/src/lib/no-send-scan.test.ts",
+    "web/src/lib/purity-bundle.test.ts",
+    "web/src/lib/desk/useDesk.ts",
+    "web/src/lib/desk/okx-rest.ts",
+    "web/src/lib/desk/okx-ws.ts",
+    "web/src/lib/desk/desk-controller.ts",
+    "web/src/lib/desk/desk-store.ts",
+    "web/src/lib/desk/runtime.ts",
+    "web/src/lib/desk/types.ts",
+    "web/src/lib/onchain/client.ts",
+    "web/src/lib/settings/client.ts",
+    "web/src/lib/rastreador/model.ts",
+    "web/src/lib/rastreador/screens.ts",
+    "web/src/lib/rastreador/open.ts",
+    "web/src/lib/rastreador/flow.ts",
+    "web/src/lib/rastreador/measures.ts",
+    "web/src/lib/rastreador/performance.ts",
+    "web/src/lib/rastreador/contracts.ts",
+    "web/src/lib/rastreador/ask.ts",
+    "web/src/lib/rastreador/choose.ts",
+    "web/src/lib/wallet/chains.ts",
+    "web/src/components/Rastreador/OnchainBody.tsx",
+    "web/src/lib/rastreador/onchain-state.ts",
+    "web/src/lib/rastreador/onchain-model.ts",
+    "web/src/lib/onchain/useOnchainResource.ts",
+    "web/src/lib/mesa/onchain-rows.ts"
+  ],
+  "repo_reference_files_inspected": [
+    "AGENTS.md",
+    "web/AGENTS.md",
+    "docs/_meta/delegation-contract.md",
+    "docs/_meta/organization-spec.md",
+    "docs/_meta/project-state-20261013.json",
+    "docs/_meta/concurrent-source-drift-20261013.json",
+    "docs/_meta/source-manifest-20261013.json",
+    "docs/_meta/catalog.json",
+    "docs/SCHEMA.md",
+    "docs/index.md",
+    "docs/log.md",
+    "docs/concepts/manutencao-da-documentacao.md",
+    "docs/concepts/relatorios-e-evidencias.md",
+    "docs/concepts/defi-e-oportunidades.md",
+    "docs/_meta/audits/manutencao-da-documentacao.json",
+    "docs/MESA-DE-OPERACOES.md",
+    "docs/MESA-TOPBAR-SPEC.md",
+    "docs/INONU-DESIGN-SPEC.md",
+    "docs/INONU-PROPOSAL.md",
+    "docs/research/spec-review-20261012/spec-review-central-ui.md",
+    "docs/sdd/inonu-desktop-v1/SPEC.md",
+    "docs/sdd/inonu-desktop-v1/info-diet.md",
+    "docs/sdd/inonu-desktop-v1/TASKS.md",
+    "docs/sdd/inonu-desktop-v1/CHECKPOINT.md"
+  ],
+  "outside_repo_guidance_inspected": [
+    "C:/Users/gabri/.agents/sdd-multiagent/PLAYBOOK.md",
+    "skill:llm-wiki",
+    "skill:codebase-inspection"
+  ],
+  "inspection_counts": {
+    "assigned_documents_classified": 42,
+    "document_classification_counts": {
+      "current_reference": 0,
+      "historical_evidence": 30,
+      "frozen_contract": 9,
+      "proposal": 1,
+      "stale_reference": 0,
+      "needs_review": 2
+    },
+    "document_read_mode_counts": {
+      "full": 4,
+      "sections": 37,
+      "metadata_only": 1
+    },
+    "assigned_source_paths_total": 281,
+    "assigned_source_paths_inspected": 58,
+    "supporting_unassigned_code_files_inspected": 13,
+    "code_files_directly_inspected": 71,
+    "search_only_paths_not_counted_as_direct_reads": 1,
+    "repo_reference_files_inspected": 24,
+    "drift_manifest_files_reread_and_hashed": 9,
+    "additional_support_files_hashed": 16,
+    "test_source_files_read_not_executed": 7,
+    "route_page_files": 5,
+    "mobile_section_nav_items": 5,
+    "bottom_dock_tab_items": 5,
+    "radar_subviews": 5,
+    "market_subviews": 3,
+    "rastreador_views": 5,
+    "panel_registry_entries": 20,
+    "onchain_rastreador_views": 3,
+    "rastreador_universe_choices": 2
+  },
+  "claims": [
+    {
+      "statement": "A rota raiz retorna MesaView; o layout raiz define pt-BR e aplica scripts de preferências antes da hidratação.",
+      "source_path": "web/src/app/page.tsx",
+      "symbol": "Page",
+      "lines": "9-11"
+    },
+    {
+      "statement": "A árvore atual de page.tsx tem cinco rotas: /, /configuracoes, /console, /doctor e /rastreador.",
+      "source_path": "web/src/lib/mesa/panels-registry.test.ts",
+      "symbol": "routes",
+      "lines": "17-27"
+    },
+    {
+      "statement": "DeskRail mostra Mesa e Rastreador e condiciona Central a NEXT_PUBLIC_INONU_DESKTOP diferente de 1; Configurações está no grupo de ferramentas.",
+      "source_path": "web/src/components/Desk/DeskRail.tsx",
+      "symbol": "showCentral e nav/tools",
+      "lines": "114-131,195-207"
+    },
+    {
+      "statement": "MesaView tem cinco botões de navegação de seção, distintos das cinco abas DOCK_TABS; o Rastreador abre ativo por ?ativo= com id simples.",
+      "source_path": "web/src/components/Desk/MesaView.tsx",
+      "symbol": "TABS",
+      "lines": "61-73,78-82,550-556"
+    },
+    {
+      "statement": "A doca tem cinco ids principais; o id diario mantém o rótulo Inonu, e ecossistema migra para radar/noticias.",
+      "source_path": "web/src/lib/mesa/dock.ts",
+      "symbol": "DOCK_TABS e LEGACY_PLACEMENT",
+      "lines": "35-63"
+    },
+    {
+      "statement": "Radar contém cinco subviews e Mercado bruto três, com seleção guardada em inonu.dock.subs.v1.",
+      "source_path": "web/src/lib/mesa/dock-subviews.ts",
+      "symbol": "DOCK_SUBVIEWS e DOCK_SUBS_KEY",
+      "lines": "10-36"
+    },
+    {
+      "statement": "DockPanel usa tablist/tab/tabpanel e os estados textuais Ao vivo, Dado velho e Sem dados.",
+      "source_path": "web/src/components/Desk/Dock/DockPanel.tsx",
+      "symbol": "STATE_LABEL e render",
+      "lines": "24-25,173-213"
+    },
+    {
+      "statement": "A Mesa compõe feed do desk, leitura do Jev e client on-chain; corpos de leitura são limitados à vista/cópia exibida.",
+      "source_path": "web/src/components/Desk/MesaView.tsx",
+      "symbol": "useDesk, onchainBody, ocShared, newsBody",
+      "lines": "101-118,297-323"
+    },
+    {
+      "statement": "Alertas de fluxo e zonas comparam leitura compartilhada; pedir ao Inonu depende do botão de alerta.",
+      "source_path": "web/src/components/Desk/MesaView.tsx",
+      "symbol": "askAboutAlert e wantsEngine",
+      "lines": "258-279"
+    },
+    {
+      "statement": "A aba Inonu usa DockInonu e InonuLedgerTail; leituras Jev antigas aparecem apenas como legacy quando existem.",
+      "source_path": "web/src/components/Desk/MesaView.tsx",
+      "symbol": "buildDockTabs",
+      "lines": "376-395"
+    },
+    {
+      "statement": "DeskDock mantém uma composição padrão de três módulos, enquanto a Mesa atual monta DockPanel e reaproveita módulos individualmente.",
+      "source_path": "web/src/components/Desk/DeskDock.tsx",
+      "symbol": "default export",
+      "lines": "131-138"
+    },
+    {
+      "statement": "PANEL_REGISTRY declara 5 rotas, 5 abas e 10 painéis; o teste compara rotas, DOCK_TABS, exports de panels/index.ts e ids de requisitos.",
+      "source_path": "web/src/lib/mesa/panels-registry.ts",
+      "symbol": "PANEL_REGISTRY",
+      "lines": "24-50"
+    },
+    {
+      "statement": "No universo Corretora, Rastreador usa pares spot/perp USDT, volume perp aproximado, valores ausentes nulos e cinco vistas, das quais Smart money e Risco ficam indisponíveis.",
+      "source_path": "web/src/lib/rastreador/model.ts",
+      "symbol": "RastreadorRow, VIEWS",
+      "lines": "159-204"
+    },
+    {
+      "statement": "Rastreador oferece universos Corretora e On-chain; tickers OKX atualizam a cada 60 segundos visíveis, recursos on-chain são carregados por chave e sinais ao abrir Smart money.",
+      "source_path": "web/src/components/Rastreador/RastreadorView.tsx",
+      "symbol": "REFRESH_MS, useTickers",
+      "lines": "206-212,479-519,611-674"
+    },
+    {
+      "statement": "A rota /console tem pipeline e mercado com rótulo Paper; o legado fica em details e o relatório DEX tem exemplo sintético explícito.",
+      "source_path": "web/src/app/console/page.tsx",
+      "symbol": "Page e LegacyConsole",
+      "lines": "45-60,194-198"
+    },
+    {
+      "statement": "O teste de bundle define páginas instaladas sem /console e espera encontrar SYNTHETIC_DEX_REPORT apenas no console legado; é intenção no teste, não execução nesta auditoria.",
+      "source_path": "web/src/lib/purity-bundle.test.ts",
+      "lines": "125-147"
+    },
+    {
+      "statement": "O manifesto inicial tem hashes diferentes para TASKS e CHECKPOINT atuais e hashes iguais para SPEC e info-diet.",
+      "source_path": "docs/_meta/source-manifest-20261013.json",
+      "symbol": "files[path].sha256"
+    },
+    {
+      "source_path": "web/src/lib/rastreador/onchain-model.ts",
+      "statement": "O universo on-chain tem três vistas separadas; Smart money exige sinais, Visao geral e Risco não.",
+      "symbol": "ONCHAIN_VIEW_ORDER e ONCHAIN_VIEWS",
+      "lines": "207-254"
+    },
+    {
+      "source_path": "web/src/lib/onchain/useOnchainResource.ts",
+      "statement": "O hook on-chain faz carga inicial por chave e só faz polling se receber refreshMs; chamadas do Rastreador não o fornecem.",
+      "symbol": "useOnchainResource",
+      "lines": "82-143"
+    },
+    {
+      "source_path": "web/src/lib/rastreador/onchain-state.ts",
+      "statement": "O estado on-chain de universo, rede, vista, filtros e ordenação fica em inonu.rastreador.universo.v1.",
+      "symbol": "UNIVERSE_KEY, loadUniverse, saveUniverse",
+      "lines": "13,57-85"
+    },
+    {
+      "source_path": "web/src/lib/rastreador/choose.ts",
+      "statement": "O ranking aceita de duas a cinco linhas; ids de linhas filtradas são mantidos, a escolha é efêmera e protegida durante a consulta.",
+      "symbol": "CHOOSE_MIN, CHOOSE_MAX, chosenIds",
+      "lines": "2-31"
+    },
+    {
+      "source_path": "web/src/components/Desk/Dock/InonuLedgerTail.tsx",
+      "statement": "A cauda mostra até cinco linhas recentes do ledger, inclui recusados, atualiza a cada 60 segundos enquanto visível e reage ao sinal compartilhado.",
+      "symbol": "InonuLedgerTailView, POLL_MS, sharedLedgerSignal",
+      "lines": "9-24,30-58"
+    },
+    {
+      "source_path": "web/src/lib/wallet/chains.ts",
+      "statement": "A troca de rede da carteira limita métodos permitidos, permite no máximo um pedido pendente por provedor e confirma eth_chainId antes de informar sucesso.",
+      "symbol": "ALLOWED_METHODS, switchChain",
+      "lines": "13,78-115"
+    },
+    {
+      "source_path": "web/src/components/Desk/Dock/WalletChainSwitch.tsx",
+      "statement": "A interface pede confirmação explícita na carteira; esta troca não assina nem envia transação, e os saldos da aba são lidos apenas em Monad e X Layer.",
+      "symbol": "WalletChainSwitchView e onSwitch",
+      "lines": "9-12,35-57,81-105"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "path": "docs/MESA-DE-OPERACOES.md",
+      "classification": "needs_review",
+      "lines": "18-22,34-35",
+      "reason": "O guia fala de fixtures apenas em teste/laboratório. A árvore contém um exemplo sintético explícito em /console, e o teste de pureza define esse console como fora do bundle instalado. Sem executar a guarda ou inspecionar o pacote, a frase precisa explicitar o escopo; não afirmo que o app instalado exponha o exemplo.",
+      "code_refs": [
+        "web/src/app/console/page.tsx:45-60,194-198",
+        "web/src/components/DexReportPanel/DexReportPanel.tsx:222-256,275-294",
+        "web/src/lib/dex-report-example.ts:1-18",
+        "web/src/lib/purity-bundle.test.ts:125-147"
+      ]
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+      "classification": "frozen_contract",
+      "lines": "184-187,367",
+      "reason": "DOC-3 pede Ecossistema lendo /onchain/status e DOC-4 fixa cinco abas. O código atual não tem Ecossistema como aba de topo: o id salvo ecossistema migra para Radar/Noticias. A tensão permanece documental; a SPEC congelada não foi alterada.",
+      "code_refs": [
+        "web/src/lib/mesa/dock.ts:35-60",
+        "web/src/lib/mesa/dock-subviews.ts:19-36",
+        "web/src/components/Desk/MesaView.tsx:347-395"
+      ]
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+      "classification": "frozen_contract",
+      "lines": "35-38,56-66",
+      "reason": "A revisão r3 manda remover Ecossistema como aba e colocar Notícias e sentimento em Radar. A forma do código coincide com essa destinação, sem provar o endpoint ou o aceite de DOC-3.",
+      "code_refs": [
+        "web/src/lib/mesa/dock.ts:48-60",
+        "web/src/lib/mesa/dock-subviews.ts:19-36",
+        "web/src/components/Desk/MesaView.tsx:347-395"
+      ]
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "classification": "historical_evidence",
+      "lines": "88-90",
+      "reason": "O hash atual difere do baseline inicial. T4.5/T4.6 registram resultados e desvios de outras sessões; a tensão DOC-3/AC-DOC-2 é estado documental, não execução reproduzida aqui.",
+      "code_refs": [
+        "web/src/lib/mesa/dock.ts:35-60",
+        "web/src/components/Desk/MesaView.tsx:376-395"
+      ]
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "classification": "historical_evidence",
+      "lines": "35-57,70-79",
+      "reason": "O hash atual difere do baseline inicial. O checkpoint reúne observações de sessões diferentes, incluindo /console 404 e uso on-chain do Rastreador; nenhuma dessas observações de runtime foi reexecutada nesta auditoria.",
+      "code_refs": [
+        "web/src/components/Desk/DeskRail.tsx:114-131",
+        "web/src/app/console/page.tsx:45-60",
+        "web/src/lib/mesa/dock.ts:35-60"
+      ]
+    },
+    {
+      "path": "docs/research/spec-review-20261012/spec-review-central-ui.md",
+      "classification": "historical_evidence",
+      "lines": "1-4,9,145-156",
+      "reason": "A própria revisão delimita outro candidato e diretório de integração. Suas conclusões não são transplante de estado para este working tree.",
+      "code_refs": [
+        "web/src/app/page.tsx:9-11",
+        "web/src/app/console/page.tsx:45-60",
+        "web/src/components/Desk/DeskRail.tsx:114-131"
+      ]
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "static_checks": {
+    "source_only": true,
+    "routes": {
+      "count": 5,
+      "paths": [
+        "/",
+        "/configuracoes",
+        "/console",
+        "/doctor",
+        "/rastreador"
+      ],
+      "source": "web/src/app/**/page.tsx filesystem inventory"
+    },
+    "mobile_section_nav": {
+      "count": 5,
+      "items": [
+        {
+          "id": "jev",
+          "label": "Inonu"
+        },
+        {
+          "id": "grafico",
+          "label": "Grafico"
+        },
+        {
+          "id": "livro",
+          "label": "Livro"
+        },
+        {
+          "id": "fluxo",
+          "label": "Fluxo"
+        },
+        {
+          "id": "fontes",
+          "label": "Fontes"
+        }
+      ]
+    },
+    "bottom_dock_tabs": {
+      "count": 5,
+      "items": [
+        {
+          "id": "diario",
+          "label": "Inonu"
+        },
+        {
+          "id": "radar",
+          "label": "Radar"
+        },
+        {
+          "id": "fluxo",
+          "label": "Fluxo"
+        },
+        {
+          "id": "carteira",
+          "label": "Carteira"
+        },
+        {
+          "id": "mercado",
+          "label": "Mercado bruto"
+        }
+      ]
+    },
+    "composite_subviews": {
+      "radar": [
+        {
+          "id": "zonas",
+          "label": "Zonas"
+        },
+        {
+          "id": "smart",
+          "label": "Smart money"
+        },
+        {
+          "id": "traders",
+          "label": "Traders"
+        },
+        {
+          "id": "holders",
+          "label": "Holders"
+        },
+        {
+          "id": "noticias",
+          "label": "Noticias"
+        }
+      ],
+      "radar_count": 5,
+      "mercado": [
+        {
+          "id": "fita",
+          "label": "Fita"
+        },
+        {
+          "id": "livro",
+          "label": "Livro"
+        },
+        {
+          "id": "liquidez",
+          "label": "Liquidez"
+        }
+      ],
+      "mercado_count": 3
+    },
+    "rastreador_views": {
+      "count": 5,
+      "available_count": 3,
+      "disabled_count": 2,
+      "items": [
+        {
+          "id": "geral",
+          "label": "Visao geral",
+          "available": true
+        },
+        {
+          "id": "desempenho",
+          "label": "Desempenho",
+          "available": true
+        },
+        {
+          "id": "fluxo",
+          "label": "Fluxo",
+          "available": true
+        },
+        {
+          "id": "smart",
+          "label": "Smart money",
+          "available": false
+        },
+        {
+          "id": "risco",
+          "label": "Risco",
+          "available": false
+        }
+      ],
+      "scope": "Corretora OKX universe only",
+      "onchain_views": {
+        "count": 3,
+        "items": [
+          {
+            "id": "geral",
+            "label": "Visao geral",
+            "needsSignals": false
+          },
+          {
+            "id": "smart",
+            "label": "Smart money",
+            "needsSignals": true
+          },
+          {
+            "id": "risco",
+            "label": "Risco",
+            "needsSignals": false
+          }
+        ]
+      },
+      "universe_choices": [
+        {
+          "id": "corretora",
+          "label": "Corretora OKX"
+        },
+        {
+          "id": "onchain",
+          "label": "On-chain"
+        }
+      ]
+    },
+    "panel_registry_counts": {
+      "rota": 5,
+      "aba": 5,
+      "painel": 10
+    },
+    "fixture_scope": {
+      "explicit_source_example": "web/src/lib/dex-report-example.ts:SYNTHETIC_DEX_REPORT",
+      "production_component_import": "web/src/components/DexReportPanel/DexReportPanel.tsx:4-5,290-294",
+      "route_guard_definition": "web/src/lib/purity-bundle.test.ts:125-147",
+      "guard_executed": false
+    },
+    "test_source_files_read_not_executed": [
+      "web/src/lib/animation-scan.test.ts",
+      "web/src/lib/no-send-scan.test.ts",
+      "web/src/lib/purity-bundle.test.ts",
+      "web/src/lib/mesa/dock-subviews.test.ts",
+      "web/src/lib/mesa/engine-alerts-render.test.tsx",
+      "web/src/lib/mesa/desktop-nav-render.test.tsx",
+      "web/src/lib/mesa/panels-registry.test.ts"
+    ],
+    "search_only_source_paths": [
+      "web/src/lib/mesa/mesa-render.test.tsx"
+    ],
+    "wallet_chain_switch": {
+      "methods": [
+        "wallet_switchEthereumChain",
+        "wallet_addEthereumChain",
+        "eth_chainId"
+      ],
+      "checks_chain_id_after_switch": true,
+      "single_pending_request_per_provider": true,
+      "balance_networks": [
+        "Monad",
+        "X Layer"
+      ],
+      "signing_or_sending": false,
+      "source_files": [
+        "web/src/components/Desk/Dock/WalletChainSwitch.tsx",
+        "web/src/lib/wallet/chains.ts"
+      ]
+    }
+  },
+  "source_drift": [
+    {
+      "scope": "Arquivos do tema no manifesto de drift concorrente",
+      "manifest_path": "docs/_meta/concurrent-source-drift-20261013.json",
+      "manifest_observed_at": "2026-10-13T11:15:58.521130-03:00",
+      "project_state_captured_at": "2026-10-13T10:53:03.109798-03:00",
+      "manifest_total_change_count": 44,
+      "owner_change_count": 9,
+      "hash_observed_at": "2026-10-13T12:32:21-03:00",
+      "files": [
+        {
+          "path": "web/src/components/Desk/Dock/DockInonu.tsx",
+          "sha256": "c63da6a99941de3c8140faf0a2be93c706e8078e835a8fa35bc94b8fa120923d",
+          "bytes": 1379,
+          "lines": 25,
+          "mtime_observed_at": "2026-10-13T11:38:06.944545-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Desk/Dock/DockPanel.tsx",
+          "sha256": "e5623744b90d0390185703ffe571a941b43b1652ad518eef180692909b5ae4c5",
+          "bytes": 8196,
+          "lines": 218,
+          "mtime_observed_at": "2026-10-13T11:00:23.881864-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Desk/MesaView.tsx",
+          "sha256": "a2c3e787d1df0ea3f15528d95fe67c004847c974091e7c8c3a89cfa19f7de599",
+          "bytes": 29915,
+          "lines": 560,
+          "mtime_observed_at": "2026-10-13T12:24:40.275807-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Desk/TopbarDiscovery.tsx",
+          "sha256": "38db5c1fc1db64c2df25cec86df80e7e584310c8e49ced6cef790d8648f22e4a",
+          "bytes": 1572,
+          "lines": 33,
+          "mtime_observed_at": "2026-10-13T10:55:40.884901-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/animation-scan.test.ts",
+          "sha256": "e41924d25465ef50d84f4a6a7ff561228552a44b35ef70a49899504355cf46cc",
+          "bytes": 6245,
+          "lines": 108,
+          "mtime_observed_at": "2026-10-13T11:43:06.890969-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/mesa/dock-subviews.test.ts",
+          "sha256": "4ff40aa3add7ea8058b9ec4ea28f2d0b9703d6f6ebb2e912f757b7088b7e32b9",
+          "bytes": 6690,
+          "lines": 117,
+          "mtime_observed_at": "2026-10-13T11:00:23.875854-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/mesa/dock-subviews.ts",
+          "sha256": "6c6cd63129455c4f032ab3cdc3ceb51a0e01d0c23e0fe5e3a655bace2c92a16e",
+          "bytes": 4617,
+          "lines": 109,
+          "mtime_observed_at": "2026-10-13T11:00:23.880518-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/mesa/engine-alerts-render.test.tsx",
+          "sha256": "cd5962147f471a347eb98fc4f9a8f074e8b46c418506e437cced6e272f6da66a",
+          "bytes": 4506,
+          "lines": 82,
+          "mtime_observed_at": "2026-10-13T11:05:33.992427-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/no-send-scan.test.ts",
+          "sha256": "1b8feeaa6cbfceea1f80366638084555becc0254bafb10a87d54ec1489136982",
+          "bytes": 5642,
+          "lines": 95,
+          "mtime_observed_at": "2026-10-13T11:43:06.975513-03:00",
+          "state_in_manifest": "changed",
+          "reread_after_latest_mtime": true
+        }
+      ],
+      "note": "Os nove arquivos foram reabertos após a observação de drift. MesaView voltou a mudar durante a auditoria; sua versão atual foi relida antes desta captura."
+    },
+    {
+      "scope": "Fontes complementares fora dos nove caminhos do manifesto",
+      "hash_observed_at": "2026-10-13T12:32:21-03:00",
+      "files": [
+        {
+          "path": "web/src/components/Desk/Dock/InonuLedgerTail.tsx",
+          "sha256": "e7e120ad82c0464b6dfddc810cd8fb56bdf9b00f57b9b45e1e144a7fcbc5e0ea",
+          "bytes": 1982,
+          "lines": 59,
+          "mtime_observed_at": "2026-10-13T12:22:25.752126-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Desk/Dock/DockWalletTab.tsx",
+          "sha256": "6d7029df08826672fd96288ed50ccd4714f8a86b2bd93fe3dae952dc8d46c96e",
+          "bytes": 838,
+          "lines": 19,
+          "mtime_observed_at": "2026-10-13T12:24:40.273135-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Desk/Dock/WalletChainSwitch.tsx",
+          "sha256": "6aa473ed5af74add4624ca5249e163273a21c068dcbe8fbbd2bcc8f6181d5c4f",
+          "bytes": 4560,
+          "lines": 106,
+          "mtime_observed_at": "2026-10-13T12:24:40.271144-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/inonu/useEngineAlerts.ts",
+          "sha256": "2aac81e252582837ce70cbe71caa82cb85d44cde5df3fe26605a76f6d59ac309",
+          "bytes": 1864,
+          "lines": 42,
+          "mtime_observed_at": "2026-10-13T10:14:02.350187-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/onchain/client.ts",
+          "sha256": "9d6afb3ef17eb5eba76b11965540b059d62c8543162b84138b457e8a19992846",
+          "bytes": 31324,
+          "lines": 625,
+          "mtime_observed_at": "2026-10-13T00:43:51.428676-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/settings/client.ts",
+          "sha256": "245c7a6f1a83fee191f48089f6c78375ce31d4423016c7dbc80f168cdd0556c3",
+          "bytes": 7569,
+          "lines": 179,
+          "mtime_observed_at": "2026-10-13T11:06:34.677827-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/rastreador/model.ts",
+          "sha256": "e9e60694075be66434b225dea5e5a1106666dd7b3cda2cea005988eec2e55de9",
+          "bytes": 13571,
+          "lines": 252,
+          "mtime_observed_at": "2026-10-13T08:58:27.401530-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/rastreador/choose.ts",
+          "sha256": "0d7e35bda556c864d092ebeb0d35f493adee65dafc6c4a80b8912a46072fe575",
+          "bytes": 2667,
+          "lines": 45,
+          "mtime_observed_at": "2026-10-13T12:22:49.664576-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/wallet/chains.ts",
+          "sha256": "47d3964af9ed8dfe3811f307be265d7e361a874efcfc8893d9dd9883158c73b7",
+          "bytes": 6304,
+          "lines": 117,
+          "mtime_observed_at": "2026-10-13T12:24:13.794241-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Rastreador/RastreadorView.tsx",
+          "sha256": "41319d6cb5ebc2c18be1b7e2d1dcd5e7d8f4adae07cf6f6830a2d145b7168a87",
+          "bytes": 39167,
+          "lines": 755,
+          "mtime_observed_at": "2026-10-13T12:23:36.315635-03:00",
+          "in_owner_source_paths": true,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Rastreador/OnchainBody.tsx",
+          "sha256": "d793533bf8976e39d66ee1ffaac48d3d12cb7d157571c95c063c9dd2cceb9758",
+          "bytes": 11937,
+          "lines": 217,
+          "mtime_observed_at": "2026-10-13T12:23:36.316638-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/rastreador/onchain-state.ts",
+          "sha256": "f2c7615edcb0a0c86834faa77dc5c86fceff7e072f2bbe6cd21fbd9229f8acd8",
+          "bytes": 3891,
+          "lines": 85,
+          "mtime_observed_at": "2026-10-13T12:03:59.428246-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/rastreador/onchain-model.ts",
+          "sha256": "99fc1d17d64200c67513710337d459abea3c9e0554b3eea5197081f1032ade65",
+          "bytes": 16849,
+          "lines": 299,
+          "mtime_observed_at": "2026-10-13T12:02:57.358628-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/onchain/useOnchainResource.ts",
+          "sha256": "2b2ad6ec6b2981000cb0bee964757da99c378c783580f600f40f1ec0fb2a6a15",
+          "bytes": 5928,
+          "lines": 144,
+          "mtime_observed_at": "2026-10-13T00:43:27.182486-03:00",
+          "in_owner_source_paths": false,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/lib/mesa/onchain-rows.ts",
+          "sha256": "74c285e5a4b9e161aa33243d8ccc87b74d9be0d2c5bbfc13b940eacb7b90ab89",
+          "bytes": 8187,
+          "lines": 192,
+          "mtime_observed_at": "2026-10-13T00:43:27.182486-03:00",
+          "in_owner_source_paths": true,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        },
+        {
+          "path": "web/src/components/Desk/InonuAsk.tsx",
+          "sha256": "cf376ec148e7779e7eb17fcaf81dd172c4912cd493684485b02ce83e426a9b88",
+          "bytes": 12003,
+          "lines": 258,
+          "mtime_observed_at": "2026-10-13T12:23:36.321677-03:00",
+          "in_owner_source_paths": true,
+          "in_concurrent_drift_manifest": false,
+          "reread_after_latest_mtime": true
+        }
+      ],
+      "note": "Inclui RastreadorView e InonuAsk, atribuídos mas fora dos nove caminhos do manifesto, e os apoios lidos para o universo on-chain. Houve alterações concorrentes após a captura inicial; estes são os hashes atuais observados após releitura, sem inferir conteúdo anterior dos apoios."
+    },
+    {
+      "scope": "Documentos relacionados comparados ao manifesto inicial",
+      "manifest_path": "docs/_meta/source-manifest-20261013.json",
+      "manifest_captured_at": "2026-10-13T10:28:33.924830-03:00",
+      "hash_observed_at": "2026-10-13T12:32:21-03:00",
+      "files": [
+        {
+          "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+          "sha256": "c0ac5aafee8a7f51a451fbc7b0e7be8b57e9d222583209f49354049af320d854",
+          "bytes": 54032,
+          "lines": 177,
+          "mtime_observed_at": "2026-10-13T12:14:28.356579-03:00",
+          "baseline_sha256": "b721e0c0792d54842e9f53407cedfde0899db9fa0e8c8837a87c6cb8552d1019",
+          "matches_baseline": false
+        },
+        {
+          "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+          "sha256": "967c0561806e764e6fd14d31dcf66cdc5e02835cf4e4a2d674c290c87278a727",
+          "bytes": 20143,
+          "lines": 87,
+          "mtime_observed_at": "2026-10-13T12:14:41.841334-03:00",
+          "baseline_sha256": "b23eacac0529cc9f15b7ca96716d3eba844a39710e456efaa12dadb57bc23766",
+          "matches_baseline": false
+        },
+        {
+          "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+          "sha256": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+          "bytes": 66101,
+          "lines": 402,
+          "mtime_observed_at": "2026-10-13T09:02:45.761232-03:00",
+          "baseline_sha256": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+          "matches_baseline": true
+        },
+        {
+          "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+          "sha256": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+          "bytes": 6572,
+          "lines": 70,
+          "mtime_observed_at": "2026-10-13T09:01:35.160478-03:00",
+          "baseline_sha256": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+          "matches_baseline": true
+        }
+      ],
+      "note": "TASKS e CHECKPOINT mudaram durante a auditoria e foram relidos nas seções pertinentes antes desta captura; seus hashes atuais seguem distintos do baseline. SPEC e info-diet coincidem com o baseline. Nenhum desses documentos foi alterado por esta auditoria."
+    }
+  ],
+  "unverified": [
+    "Nenhum teste, build, browser ou runtime foi executado; testes citados são definições lidas.",
+    "Nenhuma rede, API, provedor, carteira, modelo, credencial ou arquivo .env foi acessado; disponibilidade e frescor de dados permanecem desconhecidos.",
+    "O manifesto de drift foi observado às 11:15:58-03:00, mas arquivos do tema foram modificados depois; os hashes registram uma fotografia local às hash_observed_at e não uma árvore atômica.",
+    "O teste de bundle define /console como fora do aplicativo instalado, mas essa guarda e o pacote não foram reexecutados/inspecionados.",
+    "O teste no-send declara que os caminhos antigos okx-wallet e real ficam fora do escopo; não há certificação global de ausência de envio.",
+    "O resultado de suites integrais informado pelo integrador não foi reexecutado nem atribuído a esta auditoria.",
+    "docs/index.md e docs/log.md não foram atualizados porque o contrato reserva esses arquivos ao integrador.",
+    "Uma entrada atribuída, docs/research/UI-EXECUTION-CLAIMS-20261011.md, ficou somente em metadados do catálogo e requer leitura semântica antes de reutilização."
+  ],
+  "billed_cost": null
+}

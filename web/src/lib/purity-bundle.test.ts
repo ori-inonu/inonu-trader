@@ -123,10 +123,10 @@ describe("what the installed app can reach", () => {
   const CORE_SRC = resolve(import.meta.dir, "../../../src");
 
   test("the pages the core serves reach no fixture, no synthetic data and no mock (the old console is not served)", () => {
-    const entries = ["app/layout.tsx", "app/page.tsx", "app/configuracoes/page.tsx", "app/doctor/page.tsx", "app/rastreador/page.tsx"].map((p) => join(WEB_SRC, p));
+    const entries = ["app/layout.tsx", "app/page.tsx", "app/configuracoes/page.tsx"].map((p) => join(WEB_SRC, p));
     for (const entry of entries) expect(existsSync(entry)).toBe(true);
     const graph = reachable(entries, WEB_SRC);
-    expect(graph.size).toBeGreaterThan(100); // a scanner that finds a handful of modules is not looking at the app
+    expect(graph.size).toBeGreaterThan(30); // a scanner that finds a handful of modules is not looking at the app
     expect(leaks(graph, WEB_SRC)).toEqual([]);
   });
 
@@ -136,9 +136,8 @@ describe("what the installed app can reach", () => {
     expect(leaks(graph, CORE_SRC)).toEqual([]);
   });
 
-  test("the old console, which the installed app does not serve, is where the synthetic report still is (the guard would fire if it were served)", () => {
-    const graph = reachable([join(WEB_SRC, "app/console/page.tsx")], WEB_SRC);
-    expect(leaks(graph, WEB_SRC).some((hit) => hit.includes("SYNTHETIC_DEX_REPORT"))).toBe(true);
+  test("the app is the agent and its keys: no page of the desk, the tracker, the console or the diagnostic is left to serve", () => {
+    for (const gone of ["mesa", "rastreador", "console", "doctor", "agente"]) expect(existsSync(join(WEB_SRC, "app", gone, "page.tsx"))).toBe(false);
   });
 
   test("the core does answer 404 for the console, so that leak is unreachable at run time (T1.11)", () => {

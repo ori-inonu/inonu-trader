@@ -1,0 +1,49 @@
+{
+  "format": "docs-source-additions-v1",
+  "captured": "2026-10-13T12:57:48.349888-03:00",
+  "origin": "concurrent_sources_observed_during_integration_not_authored_by_this_task",
+  "files": [
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/capturas/ras6-ranking-375.jpg",
+      "bytes": 53841,
+      "sha256": "1739b8dc1093868d6005db6ee643d3440f8df334a4396498e944db34db20ff0c",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/capturas/T5.7-grafico-ao-vivo-com-motor-pronto-800x450.jpg",
+      "bytes": 48985,
+      "sha256": "9d4969e548dbad5f47d9cf8976995862b6866b9bfda7f0719ecf47bbffd1b129",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/capturas/T7.10-alertas-de-corrida-ao-vivo-800x450.jpg",
+      "bytes": 47031,
+      "sha256": "ff6f438f0636e352cdd2909a8f1527f3c7cf11d3a62c00ff6a2b7ae4b8ba7e82",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/RAS-6-T4.5-T9.2-ranking-cauda-e-troca-de-rede.md",
+      "bytes": 10151,
+      "sha256": "0c6661bb682e99dc3b5d8177aa0961630c4d6021bf9308c3faf07d896c947357",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-2.md",
+      "bytes": 9089,
+      "sha256": "eb59458cf8a2454103fa802923e4f354620216d4d5eb0c34c7a7a5a2be9ef6ea",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-3.md",
+      "bytes": 7556,
+      "sha256": "d2c0447d656a84573653a5b1f83471bade68238b3583f49bc13d253b1582fa25",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md",
+      "bytes": 6091,
+      "sha256": "07bb13a898a03f35325db4e5a64852abfcae765ab64108882e87d366147c0dc8",
+      "hidden": false
+    }
+  ]
+}

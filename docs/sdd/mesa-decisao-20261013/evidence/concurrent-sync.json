@@ -1,0 +1,30 @@
+[
+  {
+    "path": "src/outcomes/wire.ts",
+    "priorCandidateSha": "89b41c5ebd223dc1de8402485331de96d3168fdbdb1f49a00f2f06fe9d64b199",
+    "preservedMainSha": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+    "candidateSha": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+    "action": "copy concurrent main additions into isolated review candidate; no main edit"
+  },
+  {
+    "path": "src/outcomes/decision-log.test.ts",
+    "priorCandidateSha": "90944d9e3f7f86ff06a0ca83d26f76903ed243da4ee9dc86f71cb3417108463f",
+    "preservedMainSha": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+    "candidateSha": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+    "action": "copy concurrent main additions into isolated review candidate; no main edit"
+  },
+  {
+    "path": "src/outcomes/decision-log.ts",
+    "priorCandidateSha": "4b7fae225ce2d061ccf30bb2c235c18529d120869588df56317a548e0031ed4e",
+    "preservedMainSha": "316f923a065db751660d225d824e485c7b8e5a48b7063d11941b49dd501411b0",
+    "candidateSha": "316f923a065db751660d225d824e485c7b8e5a48b7063d11941b49dd501411b0",
+    "action": "copy concurrent main additions into isolated review candidate; no main edit"
+  },
+  {
+    "path": "src/verdict/judge.ts",
+    "priorCandidateSha": null,
+    "preservedMainSha": "5d5a9fb8e5b85143e463eac9d7998cbcecaeab28c59d84927d542f69770987c4",
+    "candidateSha": "5d5a9fb8e5b85143e463eac9d7998cbcecaeab28c59d84927d542f69770987c4",
+    "action": "copy concurrent main additions into isolated review candidate; no main edit"
+  }
+]

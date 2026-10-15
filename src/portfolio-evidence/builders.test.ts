@@ -145,7 +145,7 @@ describe("market evidence", () => {
   test("decimals and price hints only carry readable ok rows", () => {
     const section = market({
       tokenInfo: [{ identity: identityOf(FIXTURE_TOKEN_A), decimals: 6, state: OK }, { identity: identityOf(FIXTURE_TOKEN_B), decimals: null, state: state("unverified", "decimals_unreadable") }],
-      prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "4", currency: null, timeMs: NOW - 500, state: OK }, { identity: identityOf(FIXTURE_TOKEN_B), priceText: "0", currency: null, timeMs: null, state: state("unverified", "price_zero_unverified") }],
+      prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "4", currency: null, timeMs: NOW - 500, fetchedAtMs: NOW - 400, state: OK }, { identity: identityOf(FIXTURE_TOKEN_B), priceText: "0", currency: null, timeMs: null, fetchedAtMs: NOW - 400, state: state("unverified", "price_zero_unverified") }],
       missing: [{ key: "1:contract:0xabc", aspect: "price" }],
     });
     expect([...decimalsHintsOf(section).keys()]).toEqual([`1:contract:${FIXTURE_TOKEN_A}`]);
@@ -169,17 +169,17 @@ describe("market evidence", () => {
   });
 
   test("a market price that agrees supplies the price clock; one that disagrees makes the value divergent", () => {
-    const agree = priceHintsOf(market({ prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "4.01", currency: null, timeMs: NOW - 700, state: OK }] }));
+    const agree = priceHintsOf(market({ prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "4.01", currency: null, timeMs: NOW - 700, fetchedAtMs: NOW - 400, state: OK }] }));
     const ok = balances([balanceRow()], { priceHints: agree });
     expect(ok.positions[0]!.valuation).toMatchObject({ priceAsOfMs: NOW - 700, priceSource: "okx_balance_api+okx_market_price", state: OK });
-    const disagree = priceHintsOf(market({ prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "8", currency: null, timeMs: NOW - 700, state: OK }] }));
+    const disagree = priceHintsOf(market({ prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "8", currency: null, timeMs: NOW - 700, fetchedAtMs: NOW - 400, state: OK }] }));
     const bad = balances([balanceRow()], { priceHints: disagree });
     expect(bad.positions[0]!.valuation.state).toEqual({ kind: "divergent", code: "price_sources_disagree" });
     expect(bad.positions[0]!.included).toBe(false);
   });
 
   test("a market price does not rescue a zero balance price (its currency is undeclared)", () => {
-    const hints = priceHintsOf(market({ prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "4", currency: null, timeMs: NOW, state: OK }] }));
+    const hints = priceHintsOf(market({ prices: [{ identity: identityOf(FIXTURE_TOKEN_A), priceText: "4", currency: null, timeMs: NOW, fetchedAtMs: NOW - 400, state: OK }] }));
     const section = balances([balanceRow({ tokenPrice: "0" })], { priceHints: hints });
     expect(section.positions[0]!.valuation.valueText).toBeNull();
     expect(section.positions[0]!.caveats).toContain("market_price_available_currency_undeclared");

@@ -65,7 +65,9 @@ describe("what the Inonu work added", () => {
   const WEB_ROOTS = [
     "components/Rastreador", "components/Doctor", "components/Desk/InonuAsk.tsx", "components/Desk/InonuAsk.module.css", "components/Desk/InonuSignalStrip.tsx",
     "components/Desk/InonuSignalStrip.module.css", "components/Desk/AssetIcon.tsx", "components/Desk/AssetIcon.module.css", "components/Desk/Dock/DockInonu.tsx",
-    "lib/inonu", "lib/rastreador", "lib/doctor", "lib/desk/chart/inonu-layer.ts", "app/rastreador", "app/doctor", "app/configuracoes",
+    "lib/inonu", "lib/rastreador", "lib/doctor", "lib/desk/chart/inonu-layer.ts", "app/configuracoes",
+    // the autonomous agent: its screen, its library and its routes
+    "components/Agent", "lib/agent", "app/page.tsx",
     // the dock, the top bar and the desk shell, styles included (the independent review found them outside this scan)
     "components/Desk/Dock/DockComposite.module.css", "components/Desk/Dock/DockPanel.module.css", "components/Desk/Dock/DockInonu.module.css", "components/Desk/Dock/InonuLedgerTail.tsx", "components/Desk/Dock/WalletChainSwitch.tsx", "components/Desk/Dock/WalletChainSwitch.module.css", "components/Desk/Dock/TicketPanel.tsx", "components/Desk/Dock/TicketPanel.module.css", "lib/wallet", "components/Desk/Dock/DockWalletTab.tsx", "components/Desk/Dock/MarketCard.tsx", "components/Desk/Dock/MemepumpTab.tsx", "components/Desk/Dock/MemepumpTab.module.css", "lib/onchain/memepump.ts", "components/Desk/Dock/MarketCard.module.css", "components/Desk/Dock/InonuPreRead.tsx", "components/Desk/Dock/InonuPreRead.module.css", "lib/desk/market-read.ts", "lib/desk/thermometer.ts", "components/Desk/TopbarDiscovery.tsx", "components/Desk/TopbarAlerts.tsx", "components/Desk/TopbarAlerts.module.css",
     "components/Desk/DeskRail.tsx", "components/Desk/MesaView.tsx", "components/Desk/Dock/DockComposite.tsx", "components/Desk/Dock/DockPanel.tsx",
@@ -75,7 +77,7 @@ describe("what the Inonu work added", () => {
     "components/Desk/Dock/EngineRadar.tsx", "components/Desk/Dock/EngineRadar.module.css", "components/Desk/Dock/EcosystemTab.tsx", "components/Desk/Dock/EcosystemTab.module.css", "components/Desk/Dock/JevPicks.tsx", "components/Desk/Dock/JevPicks.module.css", "components/Desk/Dock/OrderPanel.tsx", "components/Desk/Dock/OrderPanel.module.css", "components/Settings/TradeSettings.tsx", "lib/opportunity", "lib/onchain/opportunities.ts", "lib/onchain/ecosystem-scan.ts",
     "lib/mesa/dock.ts", "lib/mesa/dock-subviews.ts", "lib/mesa/dock-layout.ts", "lib/mesa/flow-tab-model.ts", "lib/mesa/view-source.ts", "lib/mesa/clock.ts",
   ];
-  const CORE_ROOTS = ["src/intel", "src/inonu", "src/desktop", "src/opportunity"];
+  const CORE_ROOTS = ["src/intel", "src/inonu", "src/desktop", "src/opportunity", "src/agent"];
 
   test("no style or script of the new screens blinks, pulses or loops", () => {
     const hits: string[] = [];

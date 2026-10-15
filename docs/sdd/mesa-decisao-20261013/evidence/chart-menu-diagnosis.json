@@ -1,0 +1,212 @@
+[
+  {
+    "tag": "DIV",
+    "class": "PriceChart_indPopover__lhAWK",
+    "rect": {
+      "x": -107.890625,
+      "y": 240,
+      "width": 213.203125,
+      "height": 570
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "absolute",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "PriceChart_indicators__1d_HP",
+    "rect": {
+      "x": 24,
+      "y": 214,
+      "width": 81.3125,
+      "height": 20
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "relative",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "PriceChart_toolbarRight__Sff3p",
+    "rect": {
+      "x": 24,
+      "y": 214,
+      "width": 342,
+      "height": 22
+    },
+    "overflowX": "auto",
+    "overflowY": "hidden",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "PriceChart_toolbar__h2JkO",
+    "rect": {
+      "x": 12,
+      "y": 188,
+      "width": 366,
+      "height": 48
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "PriceChart_root__NE4Gb",
+    "rect": {
+      "x": 12,
+      "y": 188,
+      "width": 366,
+      "height": 588
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "absolute",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "PanelFrame_body__yqrpZ",
+    "rect": {
+      "x": 12,
+      "y": 188,
+      "width": 366,
+      "height": 588
+    },
+    "overflowX": "hidden",
+    "overflowY": "hidden",
+    "position": "relative",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "SECTION",
+    "class": "PanelFrame_frame__hwETW",
+    "rect": {
+      "x": 12,
+      "y": 162,
+      "width": 366,
+      "height": 614
+    },
+    "overflowX": "hidden",
+    "overflowY": "hidden",
+    "position": "relative",
+    "transform": "matrix(1, 0, 0, 1, 0, 0)",
+    "contain": "layout paint"
+  },
+  {
+    "tag": "DIV",
+    "class": "MesaView_cell__UQcJX",
+    "rect": {
+      "x": 12,
+      "y": 162,
+      "width": 366,
+      "height": 614
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "MesaView_graph__U2Ahz",
+    "rect": {
+      "x": 12,
+      "y": 60,
+      "width": 366,
+      "height": 716
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "MesaView_center__i6ioI",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "MAIN",
+    "class": "MesaView_deck__zwnAN",
+    "rect": {
+      "x": 12,
+      "y": 60,
+      "width": 366,
+      "height": 716
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "DIV",
+    "class": "MesaView_root__amV4X",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 844
+    },
+    "overflowX": "hidden",
+    "overflowY": "hidden",
+    "position": "fixed",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "BODY",
+    "class": "",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 0
+    },
+    "overflowX": "clip",
+    "overflowY": "visible",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  },
+  {
+    "tag": "HTML",
+    "class": "__variable_69d019 __variable_07d42c",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 0
+    },
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "position": "static",
+    "transform": "none",
+    "contain": "none"
+  }
+]

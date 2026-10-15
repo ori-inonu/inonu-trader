@@ -54,7 +54,7 @@ export function priceHintsOf(section: MarketSection | null): Map<string, PriceHi
   const hints = new Map<string, PriceHint>();
   if (section === null) return hints;
   for (const row of section.prices) {
-    if (row.state.kind === "ok" && row.priceText !== null && parseDec(row.priceText) !== null) hints.set(row.identity.key, { priceText: row.priceText, timeMs: row.timeMs });
+    if (row.state.kind === "ok" && row.priceText !== null && parseDec(row.priceText) !== null) hints.set(row.identity.key, { priceText: row.priceText, timeMs: row.timeMs, fetchedAtMs: row.fetchedAtMs });
   }
   return hints;
 }

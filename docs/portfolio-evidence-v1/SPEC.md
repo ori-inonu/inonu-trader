@@ -12,7 +12,9 @@ Natureza: **leitura**. Nenhum caminho deste módulo assina, envia, aprova, trans
 | market-portfolio-overview | `GET /api/v6/dex/market/portfolio/overview`, uma rede por chamada (`chainIndex`, `walletAddress`, `timeFrame` 1 a 5 = 1D, 3D, 7D, 1M, 3M). Sem paginação, sem janela de histórico declarada. `realizedPnlUsd` em USD. |
 | market-portfolio-recent-pnl | `GET /api/v6/dex/market/portfolio/recent-pnl`, limite de 1000 registros e 100 por chamada, cursor, ordem decrescente. `tokenBalanceAmount` sem unidade declarada, `unrealizedPnlUsd` pode valer `SELL_ALL`. Sem custo de aquisição nem método contábil. |
 | market-portfolio-latest-pnl | `GET .../portfolio/token/latest-pnl`: só PnL e `isPnlSupported`; o exemplo publicado não fecha (realizado + não realizado diferente do total). |
+| market-portfolio-supported-chain | `GET .../portfolio/supported/chain`: lista `chainIndex`; o exemplo mostra só 1 e 501 e a página não diz se é a lista inteira. |
 | market-portfolio-dex-history | `GET .../portfolio/dex-history`: `begin` e `end` obrigatórios, 1000 registros, 100 por chamada, tipos 1 a 4. |
+| market-price, basic-info, top-liquidity, advanced-info, error tables, autenticação | lidas em 2026-10-12; resumo e efeitos no código em REPORT.md, seção "Consulta à documentação oficial". |
 | balance (all-token-balances) | `GET /api/v6/dex/balance/all-token-balances-by-address`: até 50 redes, `excludeRiskToken` (padrão: filtra), filtro de honeypot só em ETH, BSC, SOL e BASE; `balance`, `rawBalance` (vazio em redes não suportadas), `tokenPrice` em USD; **sem decimais, sem relógio do preço, sem paginação**. |
 | balance (total-value) | `GET .../balance/total-value-by-address`, `assetType` 0 tudo, 1 tokens, 2 DeFi; `totalValue` em USD. |
 | balance (specific token) | `POST .../balance/token-balances-by-address`, até 20 tokens; o exemplo da página usa `/token-balances` (divergência não resolvida pela página). |
@@ -37,7 +39,8 @@ Nenhuma dessas páginas declara limite de taxa, tier de plano, códigos de erro 
 | PE-11 | Limites explícitos: timeout por chamada, teto de chamadas por atualização, teto de páginas, prazo total. Atualização sob demanda; sem agendador. | RQ-11 |
 | PE-12 | Acesso negado, restrição regional, pagamento exigido e credencial recusada **encerram** a atualização (sem nova tentativa, sem contorno). | RQ-11 |
 | PE-13 | Cache e persistência sobre a porta `CaptureFs` existente: gravação atômica, revisão que não regride, TTL, verificação de hash na leitura. | RQ-13 |
-| PE-14 | Cobertura de preço, decimais, liquidez e risco por token, com `missing` explícito quando o provedor não responde. Moeda do preço de mercado não declarada: não entra no valuation. | RQ-12 |
+| PE-15 | Address Analysis completa (overview, PnL recente, PnL do último token, negociações DEX, redes suportadas): tudo `provider_reported_unverified`; o total do provedor é conferido contra as partes; somas de negociações são observadas numa janela e nunca custo; nada entra no patrimônio. | RQ-06, RQ-12 |
+| PE-14 | Cobertura de preço, decimais, liquidez e risco por token. Preço e decimais que o provedor não devolve ficam em `market.missing`; uma leitura de liquidez ou de risco que falha vira erro em `collection.errors` (e encerra a atualização se for acesso negado). Moeda do preço de mercado não declarada: não entra no valuation. | RQ-12 |
 
 ## Aceitação (A1 a A7 do objetivo)
 

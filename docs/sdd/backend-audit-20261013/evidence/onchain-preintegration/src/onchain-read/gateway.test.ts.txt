@@ -1,0 +1,157 @@
+import { afterEach, describe, expect, test } from "bun:test";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createBudget } from "./budget";
+import { createOnchainCache } from "./cache";
+import type { ClientResult, OnchainClient } from "./client";
+import { createOnchainGateway } from "./gateway";
+
+const dirs: string[] = [];
+function tempDir(): string {
+  const dir = mkdtempSync(join(tmpdir(), "jev-onchain-gw-"));
+  dirs.push(dir);
+  return dir;
+}
+afterEach(() => {
+  while (dirs.length) rmSync(dirs.pop()!, { recursive: true, force: true });
+});
+
+const OK_DATA = [{ chainIndex: "1", chainName: "Ethereum", chainSymbol: "ETH" }];
+
+function setup(opts: { state?: "absent" | "incomplete" | "complete"; next?: () => ClientResult; cap?: number; now?: () => number } = {}) {
+  let t = opts.now ? opts.now() : 1_000_000;
+  const calls: string[] = [];
+  const client: OnchainClient = {
+    call: async (req) => {
+      calls.push(req.path);
+      return opts.next ? opts.next() : { ok: true, data: OK_DATA, sent: true };
+    },
+    status: () => ({ lastCallMs: t, lastCode: 0, cooldownUntilMs: null, clockOffsetMs: null }),
+  };
+  const gateway = createOnchainGateway({
+    client,
+    cache: createOnchainCache(() => t),
+    budget: createBudget({ dir: tempDir(), now: () => t, caps: () => ({ basic: opts.cap ?? 10, premium: opts.cap ?? 10 }) }),
+    credentialsState: () => opts.state ?? "complete",
+    now: () => t,
+  });
+  return { gateway, calls, tick: (ms: number) => (t += ms) };
+}
+
+describe("onchain gateway", () => {
+  test("happy path returns the single envelope with budget meta", async () => {
+    const { gateway } = setup();
+    const res = await gateway.call("/onchain/chains", {}, "user");
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      expect(res.data).toEqual([{ chainIndex: "1", name: "Ethereum", symbol: "ETH" }]);
+      expect(res.meta.tier).toBe("free");
+      expect(res.meta.stale).toBe(false);
+      expect(res.meta.ageMs).toBe(0);
+      expect(res.meta.budget.tier).toBe("free");
+      expect(res.meta.budget.cap).toBeNull();
+      expect(res.meta.budget.used).toBe(1); // the call just sent is already counted
+    }
+  });
+
+  test("records only calls actually sent", async () => {
+    const { gateway, calls } = setup();
+    await gateway.call("/onchain/chains", {}, "user");
+    await gateway.call("/onchain/chains", {}, "user"); // cache hit, not sent
+    expect(calls).toHaveLength(1);
+    const snap = gateway.budget();
+    expect(snap.tiers.free.used).toBe(1);
+  });
+
+  test("unknown route and bad params are refused before any call", async () => {
+    const { gateway, calls } = setup();
+    expect(await gateway.call("/onchain/not-real", {}, "user")).toEqual({ ok: false, error: "bad_request" });
+    expect(await gateway.call("/onchain/chains", { evil: "1" }, "user")).toEqual({ ok: false, error: "bad_request" });
+    expect(await gateway.call("/onchain/search", { chainIndex: "abc", q: "aa" }, "user")).toEqual({ ok: false, error: "bad_request" });
+    expect(calls).toHaveLength(0);
+  });
+
+  test("credential states short-circuit", async () => {
+    const { gateway: g1, calls: c1 } = setup({ state: "absent" });
+    expect(await g1.call("/onchain/chains", {}, "user")).toEqual({ ok: false, error: "no_credentials" });
+    const { gateway: g2, calls: c2 } = setup({ state: "incomplete" });
+    expect(await g2.call("/onchain/chains", {}, "user")).toEqual({ ok: false, error: "incomplete_credentials" });
+    expect(c1).toHaveLength(0);
+    expect(c2).toHaveLength(0);
+  });
+
+  test("provider failure serves stale cache marked stale:true", async () => {
+    let fail = false;
+    const { gateway, tick } = setup({
+      next: () =>
+        fail
+          ? { ok: false, error: "provider_error", sent: true }
+          : { ok: true, data: [{ chainIndex: "66", tokenContractAddress: "0xab", time: "1", price: "2.5" }], sent: true },
+    });
+    const p = await gateway.call("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
+    expect(p.ok).toBe(true);
+    fail = true;
+    tick(31_000); // past the 30s price TTL, inside the 6-minute stale window
+    const stale = await gateway.call("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
+    expect(stale.ok).toBe(true);
+    if (stale.ok) {
+      expect(stale.meta.stale).toBe(true);
+      expect(stale.meta.ageMs).toBeGreaterThanOrEqual(31_000);
+      expect(stale.meta.tier).toBe("basic");
+    }
+  });
+
+  test("budget exhausted blocks the call before the network", async () => {
+    const calls: string[] = [];
+    const dir = tempDir();
+    let t = 1_000_000;
+    const budget = createBudget({ dir, now: () => t, caps: () => ({ basic: 1, premium: 1 }) });
+    const gateway = createOnchainGateway({
+      client: {
+        call: async () => {
+          calls.push("x");
+          return { ok: false, error: "provider_error", sent: true } as ClientResult;
+        },
+        status: () => ({ lastCallMs: null, lastCode: null, cooldownUntilMs: null, clockOffsetMs: null }),
+      },
+      cache: createOnchainCache(() => t),
+      budget,
+      credentialsState: () => "complete",
+      now: () => t,
+    });
+    budget.record("basic"); // cap 1 spent -> budget_exhausted
+    const res = await gateway.call("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
+    expect(res).toEqual({ ok: false, error: "budget_exhausted" });
+    expect(calls).toHaveLength(0);
+  });
+
+  test("no cache + provider failure returns the error", async () => {
+    const { gateway } = setup({ next: () => ({ ok: false, error: "provider_error", sent: true }) });
+    const res = await gateway.call("/onchain/chains", {}, "user");
+    expect(res).toEqual({ ok: false, error: "provider_error" });
+  });
+
+  test("schema failure on a response serves stale too", async () => {
+    let bad = false;
+    const { gateway, tick } = setup({
+      next: () =>
+        bad
+          ? { ok: true, data: [["1", "10", "5", "9", "8", "1", "1", "1"]], sent: true } // high < low: impossible bar
+          : { ok: true, data: [["1", "10", "11", "9", "10.5", "1", "1", "1"]], sent: true },
+    });
+    await gateway.call("/onchain/candles", { chainIndex: "1", token: "0xab", bar: "1m" }, "user");
+    bad = true;
+    tick(61_000); // past the 60s 1m TTL
+    const res = await gateway.call("/onchain/candles", { chainIndex: "1", token: "0xab", bar: "1m" }, "user");
+    expect(res.ok).toBe(true);
+    if (res.ok) expect(res.meta.stale).toBe(true);
+  });
+
+  test("status exposes credential state without secrets", async () => {
+    const { gateway } = setup({ state: "incomplete" });
+    const st = gateway.status();
+    expect(st.credential).toBe("incomplete");
+    expect(st).not.toHaveProperty("apiKey");
+  });
+});

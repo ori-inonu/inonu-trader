@@ -7,8 +7,9 @@
  *  - a late or conflicting revision never replaces a newer one (RC5);
  *  - a file whose hash does not verify is ignored on read, never trusted.
  *
- * The file holds contracts and quantities but NOT the account address (only its hash). It lives under the ignored `data/`
- * directory by default of the CLI, and persistence is opt-in there.
+ * The file holds contracts and quantities but NOT the account address (only its hash). With a history it also holds
+ * transaction hashes, which tie the file to the address on chain. Persistence is opt-in (`--store-dir`) and the CLI has no
+ * default directory: choose one that is not versioned (the repository ignores `data/`).
  */
 
 import type { CaptureFs } from "../onchainos/capture-types.ts";
@@ -19,11 +20,21 @@ import type { Finding, WalletEvidence } from "./types.ts";
 export const DEFAULT_MAX_JOURNAL_BYTES = 1_048_576;
 export const MAX_EVIDENCE_BYTES = 8_388_608;
 
+/** Thrown when asked to store an evidence whose hash does not verify: a bug of the caller, never a disk problem. */
+export class EvidenceIntegrityError extends Error {
+  constructor() {
+    super("evidência com hash inválido não é gravada");
+    this.name = "EvidenceIntegrityError";
+  }
+}
+
 export interface PutResult {
   readonly written: boolean;
   /** Set when the write was refused (RC5). */
   readonly finding: Finding | null;
   readonly replacedCorrupt: boolean;
+  /** Set by the collector when the store itself failed (disk full, permission). The evidence is still returned. */
+  readonly error?: "store_write_failed";
 }
 
 export interface EvidenceStore {
@@ -50,12 +61,14 @@ export function createEvidenceStore(options: StoreOptions): EvidenceStore {
   const journalPath = `${dir}/journal.jsonl`;
   const rotatedPath = `${dir}/journal.1.jsonl`;
 
-  function read(path: string): { evidence: WalletEvidence | null; present: boolean } {
+  function read(path: string, accountSha256: string): { evidence: WalletEvidence | null; present: boolean } {
     if (!fs.exists(path)) return { evidence: null, present: false };
     try {
       if (fs.size(path) > MAX_EVIDENCE_BYTES) return { evidence: null, present: true };
       const parsed = JSON.parse(Buffer.from(fs.readBytes(path)).toString("utf8")) as WalletEvidence;
-      return { evidence: verifyEvidence(parsed) ? parsed : null, present: true };
+      // The name says whose file this is; a valid evidence of another account under this name is not served.
+      const ownedByAccount = typeof parsed?.accountRef?.sha256 === "string" && parsed.accountRef.sha256 === accountSha256;
+      return { evidence: ownedByAccount && verifyEvidence(parsed) ? parsed : null, present: true };
     } catch {
       return { evidence: null, present: true };
     }
@@ -75,12 +88,12 @@ export function createEvidenceStore(options: StoreOptions): EvidenceStore {
   }
 
   return {
-    latest: (accountSha256, fingerprint) => read(pathFor(accountSha256, fingerprint)).evidence,
+    latest: (accountSha256, fingerprint) => read(pathFor(accountSha256, fingerprint), accountSha256).evidence,
 
     put(evidence, fingerprint) {
-      if (!verifyEvidence(evidence)) throw new Error("evidência com hash inválido não é gravada");
+      if (!verifyEvidence(evidence)) throw new EvidenceIntegrityError();
       const path = pathFor(evidence.accountRef.sha256, fingerprint);
-      const previous = read(path);
+      const previous = read(path, evidence.accountRef.sha256);
       const finding = compareRevision(previous.evidence, evidence);
       if (finding !== null) return { written: false, finding, replacedCorrupt: false };
       fs.mkdirp(dir);

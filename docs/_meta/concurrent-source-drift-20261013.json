@@ -1,0 +1,229 @@
+{
+  "format": "docs-concurrent-source-drift-v1",
+  "observed_at": "2026-10-13T11:15:58.521130-03:00",
+  "baseline": "docs/_meta/project-state-20261013.json",
+  "change_count": 44,
+  "changes": [
+    {
+      "path": "src/desktop/cleanup.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/cleanup.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/doctor.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/doctor.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/handlers.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/handlers.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/launcher.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/vault.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/desktop/vault.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/ask.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/ask.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/collector.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/collector.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/flow-memory.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/flow-memory.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/ledger.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/ledger.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/okx-public.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/okx-public.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/overlay.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/overlay.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/source-discovery.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/source.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/inonu/source.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "src/intel/thresholds.ts",
+      "state": "changed",
+      "owner": "grafico-e-analytics"
+    },
+    {
+      "path": "src/settings/http.ts",
+      "state": "changed",
+      "owner": "onchainos-e-configuracoes"
+    },
+    {
+      "path": "src/settings/store.ts",
+      "state": "changed",
+      "owner": "onchainos-e-configuracoes"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/DockInonu.tsx",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/DockPanel.tsx",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/components/Desk/MesaView.tsx",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/components/Desk/TopbarDiscovery.tsx",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/components/Settings/SettingsView.tsx",
+      "state": "changed",
+      "owner": "onchainos-e-configuracoes"
+    },
+    {
+      "path": "web/src/lib/animation-scan.test.ts",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/lib/inonu/ask-trigger.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "web/src/lib/inonu/ask-trigger.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "web/src/lib/inonu/overlay-feed.test.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "web/src/lib/inonu/overlay-feed.ts",
+      "state": "changed",
+      "owner": "instalavel-e-inonu"
+    },
+    {
+      "path": "web/src/lib/mesa/dock-subviews.test.ts",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/lib/mesa/dock-subviews.ts",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/lib/mesa/engine-alerts-render.test.tsx",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/lib/no-send-scan.test.ts",
+      "state": "changed",
+      "owner": "interface-e-central"
+    },
+    {
+      "path": "web/src/lib/settings/client.test.ts",
+      "state": "changed",
+      "owner": "onchainos-e-configuracoes"
+    },
+    {
+      "path": "web/src/lib/settings/client.ts",
+      "state": "changed",
+      "owner": "onchainos-e-configuracoes"
+    },
+    {
+      "path": "web/src/lib/settings/settings-view-render.test.tsx",
+      "state": "changed",
+      "owner": "onchainos-e-configuracoes"
+    }
+  ],
+  "interpretation": "Concurrent working-tree drift observed after product tests; not attributed to documentation agents without evidence. Re-read affected files before certifying pages as current."
+}

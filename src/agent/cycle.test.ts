@@ -6,7 +6,8 @@ import { DEFAULT_CAPS, type LimitedFacts } from "./gate";
 import { createPlanStore, planKey, type PositionPlan } from "./plans";
 import { timingFacts, type TimingFacts } from "./timing";
 import type { Candle } from "../quant/types";
-import { createAgentLedger } from "./ledger";
+import { createAgentLedger, type OrderRecord } from "./ledger";
+import type { QuoteFacts } from "./quote-facts";
 import type { ClosingRecord } from "./closing";
 import type { AgentModel, ModelAnswer } from "./model";
 import { createScoreboard } from "./scoreboard";
@@ -1910,5 +1911,70 @@ describe("the quality of the entry", () => {
       `buy:token:1:0x${(56).toString(16).padStart(40, "0")}`,
       `buy:token:1:0x${(57).toString(16).padStart(40, "0")}`,
     ]);
+  });
+});
+
+describe("the entry cost is known before the Jev is asked, so it is offered only plans the executor can carry out", () => {
+  const BUY = `buy:token:1:${B}`;
+  const HOLD = `hold:token:1:${A}@agente`;
+  const quoteOf = (impactPct: number): QuoteFacts => ({ atMs: NOW - 60_000, action: "ok", impactPct, tradeFee: null, gasEstimate: null, slot: null, taxFromPct: null, taxToPct: null, fromAmountMinor: null, toAmountMinor: null, feeUnit: "usd", gasUnit: "native_minor", present: ["impact"] }) as QuoteFacts;
+  const refusal = (over: Partial<OrderRecord>): OrderRecord => ({ kind: "order", cycleId: "old", atMs: NOW - 60_000, orderKey: `old:${over.candidateId}`, stage: "falhou", candidateId: BUY, side: "buy", stance: "buy_tenth", chainIndex: "1", symbol: "BBB", address: B, wallet: "agente", usd: 10, amountMinor: null, ref: null, reason: "impacto_alto", profile: "alvo_10", source: "modelo", ...over });
+  /** What the model was shown at the call: the plans and the stances of each candidate. */
+  const spy = (r: ReturnType<typeof rig>) => {
+    const seen: Record<string, { profiles: readonly string[]; stances: readonly string[]; marks: readonly string[] }> = {};
+    const base = r.deps.model as AgentModel;
+    const model: AgentModel = { ...base, choose: async (input) => (Object.assign(seen, Object.fromEntries(input.candidates.map((c) => [c.id, { profiles: c.profiles, stances: c.stances, marks: c.marks }]))), base.choose(input)) };
+    return { seen, deps: { ...r.deps, model } };
+  };
+
+  test("a quote of 1 percent takes the 2 percent plan off the list the model is shown", async () => {
+    const r = rig({ mode: "limitado" });
+    const { seen, deps } = spy(r);
+    await createCycleRunner({ ...deps, entryCost: async () => -1 }).run();
+    expect(seen[BUY]!.profiles).toEqual(["alvo_5", "alvo_10", "alvo_20"]);
+  });
+
+  test("a quote above what any plan pays shows the purchase closed, with the mark that says why", async () => {
+    const r = rig({ mode: "limitado" });
+    const { seen, deps } = spy(r);
+    await createCycleRunner({ ...deps, entryCost: async () => 3.6 }).run();
+    expect([seen[BUY]!.stances, seen[BUY]!.marks.includes("custo_de_entrada_alto")]).toEqual([["skip"], true]);
+  });
+
+  test("a purchase the executor refused for price impact a minute ago narrows from the ledger and is not quoted again", async () => {
+    const r = rig({ mode: "limitado" });
+    r.deps.ledger.append(refusal({ candidateId: BUY, quote: quoteOf(-2.75) }));
+    const { seen, deps } = spy(r);
+    let quotes = 0;
+    await createCycleRunner({ ...deps, entryCost: async () => (quotes++, null) }).run();
+    expect([seen[BUY]!.profiles, quotes]).toEqual([["alvo_20"], 0]);
+  });
+
+  test("a quote that fails leaves the offer exactly as it was", async () => {
+    const r = rig({ mode: "limitado" });
+    const { seen, deps } = spy(r);
+    await createCycleRunner({ ...deps, entryCost: async () => { throw new Error("tool down"); } }).run();
+    expect(seen[BUY]!.profiles).toEqual(["alvo_2", "alvo_5", "alvo_10", "alvo_20"]);
+  });
+
+  test("in shadow no quote is taken", async () => {
+    const r = rig({ mode: "sombra" });
+    let quotes = 0;
+    await createCycleRunner({ ...r.deps, entryCost: async () => (quotes++, -1) }).run();
+    expect(quotes).toBe(0);
+  });
+
+  test("a sale the executor refused for price impact is offered again only in smaller slices, for half an hour", async () => {
+    const r = rig({ mode: "limitado", positions: [cash(1000), pos({ usd: 90 })] });
+    r.deps.ledger.append(refusal({ candidateId: HOLD, side: "sell", stance: "exit_all", address: A, symbol: "AAA", usd: 90, quote: quoteOf(-8) }));
+    await createCycleRunner(r.deps).run();
+    expect(r.offered[HOLD]).toEqual(["hold", "trim_third", "trim_half"]);
+  });
+
+  test("the same refusal half an hour later changes nothing", async () => {
+    const r = rig({ mode: "limitado", positions: [cash(1000), pos({ usd: 90 })] });
+    r.deps.ledger.append(refusal({ candidateId: HOLD, side: "sell", stance: "exit_all", address: A, symbol: "AAA", usd: 90, atMs: NOW - 31 * 60_000, quote: quoteOf(-8) }));
+    await createCycleRunner(r.deps).run();
+    expect(r.offered[HOLD]).toEqual(expect.arrayContaining(["exit_all"]));
   });
 });

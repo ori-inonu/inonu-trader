@@ -1,0 +1,112 @@
+# git status --short em 2026-10-13T00:26:25Z, HEAD 00a593b, branch main
+ M .env.example
+ M README.md
+ M docs/portfolio-evidence-v1/MANIFEST.sha256
+ M docs/portfolio-evidence-v1/REPORT.md
+ M docs/portfolio-evidence-v1/SPEC.md
+ M package.json
+ M scripts/jev-read.ts
+ M src/jev-read/decide.ts
+ M src/jev-read/loop.test.ts
+ M src/jev-read/loop.ts
+ M src/jev-read/public-view.ts
+ M src/jev-read/publish.test.ts
+ M src/jev-read/state.ts
+ M src/jev-read/types.ts
+ M src/portfolio-evidence/adapters/okx-endpoints.ts
+ M src/portfolio-evidence/adapters/okx-read.ts
+ M src/portfolio-evidence/address-analysis.ts
+ M src/portfolio-evidence/balances.ts
+ M src/portfolio-evidence/builders.test.ts
+ M src/portfolio-evidence/canonical.ts
+ M src/portfolio-evidence/cli.ts
+ M src/portfolio-evidence/collector.ts
+ M src/portfolio-evidence/evidence.ts
+ M src/portfolio-evidence/history.ts
+ M src/portfolio-evidence/identity.ts
+ M src/portfolio-evidence/market.ts
+ M src/portfolio-evidence/purity.test.ts
+ M src/portfolio-evidence/reconcile.ts
+ M src/portfolio-evidence/report.ts
+ M src/portfolio-evidence/state.ts
+ M src/portfolio-evidence/store.ts
+ M src/portfolio-evidence/types.ts
+ M src/server.ts
+ M web/src/components/Desk/DeskDock.module.css
+ M web/src/components/Desk/DeskDock.tsx
+ M web/src/components/Desk/DeskRail.tsx
+ M web/src/components/Desk/JevStage.module.css
+ M web/src/components/Desk/JevStage.tsx
+ M web/src/components/Desk/MesaView.module.css
+ M web/src/components/Desk/MesaView.tsx
+ M web/src/components/Desk/panels/OrderBookLadder.module.css
+ M web/src/components/Desk/panels/PanelFrame.module.css
+ M web/src/components/Desk/panels/PanelFrame.tsx
+ M web/src/components/Desk/panels/PriceChart.module.css
+ M web/src/components/Desk/panels/PriceChart.tsx
+ M web/src/components/Desk/panels/TimeAndSales.module.css
+ M web/src/components/Desk/panels/TimeAndSales.tsx
+ M web/src/components/Desk/panels/Watchlist.module.css
+ M web/src/components/Desk/panels/Watchlist.tsx
+ M web/src/components/Desk/panels/index.ts
+ M web/src/lib/desk/ui/canvas.ts
+ M web/src/lib/desk/ui/draw-candles.test.ts
+ M web/src/lib/desk/ui/draw-candles.ts
+ M web/src/lib/desk/ui/format.ts
+ M web/src/lib/desk/ui/models.test.ts
+ M web/src/lib/desk/ui/panels-render.test.tsx
+ M web/src/lib/desk/ui/recording-context.ts
+ M web/src/lib/desk/ui/right-wing-layout.ts
+ M web/src/lib/jev-read.test.ts
+ M web/src/lib/jev-read.ts
+?? .playwright-mcp/
+?? docs/sdd/config-onchain-smartmoney/
+?? docs/sdd/grafico-jev/
+?? docs/sdd/inonu-desktop-v1/
+?? python/
+?? scripts/jev-analytics.ts
+?? scripts/make-onchain-web-fixtures.ts
+?? src/jev-read/analytics-runner.test.ts
+?? src/jev-read/analytics-runner.ts
+?? src/jev-read/analytics.test.ts
+?? src/jev-read/analytics.ts
+?? src/jev-read/fixtures/
+?? src/onchain-read/
+?? src/portfolio-evidence/docs-conformance.test.ts
+?? src/portfolio-evidence/portfolio-family.test.ts
+?? src/portfolio-evidence/rereview-fixes.test.ts
+?? src/portfolio-evidence/review-fixes.test.ts
+?? src/settings/
+?? web/src/app/configuracoes/
+?? web/src/components/Desk/Dock/
+?? web/src/components/Desk/panels/AssetPicker.module.css
+?? web/src/components/Desk/panels/AssetPicker.tsx
+?? web/src/components/Desk/panels/DecisionCard.module.css
+?? web/src/components/Desk/panels/DecisionCard.tsx
+?? web/src/components/Desk/panels/JevIndicators.module.css
+?? web/src/components/Desk/panels/JevIndicators.tsx
+?? web/src/components/Settings/
+?? web/src/lib/desk/chart/
+?? web/src/lib/desk/ui/chart-decisions-fixture-serve.ts
+?? web/src/lib/desk/ui/chart-decisions-fixture.tsx
+?? web/src/lib/desk/ui/dock-render.test.tsx
+?? web/src/lib/desk/ui/draw-chart.test.ts
+?? web/src/lib/desk/ui/draw-chart.ts
+?? web/src/lib/desk/ui/jev-indicators-render.test.tsx
+?? web/src/lib/desk/ui/onchain-desk-render.test.tsx
+?? web/src/lib/desk/ui/onchain-render.test.tsx
+?? web/src/lib/desk/useAssetCatalog.test.ts
+?? web/src/lib/desk/useAssetCatalog.ts
+?? web/src/lib/mesa/dock.test.ts
+?? web/src/lib/mesa/dock.ts
+?? web/src/lib/mesa/onchain-desk-rows.test.ts
+?? web/src/lib/mesa/onchain-desk-rows.ts
+?? web/src/lib/mesa/onchain-rows.test.ts
+?? web/src/lib/mesa/onchain-rows.ts
+?? web/src/lib/mesa/onchain-view.test.ts
+?? web/src/lib/mesa/onchain-view.ts
+?? web/src/lib/mesa/watch-pins.test.ts
+?? web/src/lib/mesa/watch-pins.ts
+?? web/src/lib/onchain/
+?? web/src/lib/settings/
+?? web/src/lib/test-fixtures/

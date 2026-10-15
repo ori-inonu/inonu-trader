@@ -1,0 +1,56 @@
+{
+  "mode": "precheck",
+  "at": "2026-10-15T15:12:42.596Z",
+  "ok": false,
+  "note": "preconditions to look at, not a proof of drain; the proof is scripts/handover-quiesce.ts",
+  "gates": [
+    {
+      "id": "health_is_ours",
+      "ok": true,
+      "detail": "ok=true app=inonu-trader"
+    },
+    {
+      "id": "single_executor",
+      "ok": true,
+      "detail": "lockPid=35524 alive=true portPid=35524 lockOwnsPort=true coreProcesses=1 corePid=35524"
+    },
+    {
+      "id": "no_order_in_flight",
+      "ok": true,
+      "detail": "unsettled=0 statusInFlight=0"
+    },
+    {
+      "id": "ledger_readable",
+      "ok": true,
+      "detail": "rows=617 malformed=0"
+    },
+    {
+      "id": "no_open_plan",
+      "ok": false,
+      "detail": "plansOpen=1"
+    },
+    {
+      "id": "agent_healthy",
+      "ok": true,
+      "detail": "healthy=true scheduler=true modelConfigured=true paused=false"
+    },
+    {
+      "id": "idle_window",
+      "ok": false,
+      "detail": "sinceLastCycleMs=110041 untilNextMs=34983 (need >=5000 and >=45000; informational, see the note above)"
+    }
+  ],
+  "fingerprint": {
+    "config": "e986be9ad0c444b15f530fa1a891380fd5d50e37ccdabaad0f4b02becc1aad88",
+    "plans": "d383c55ba3e912bdfbf7ff70c53161b677738c2c399f575ccba0dd526f4a67a7",
+    "state": {
+      "version": 3,
+      "disclosure": "2026-10-14.1",
+      "connected": true,
+      "eventsCount": 9,
+      "eventsPrefix": "7916fbfa2a0128f9189e38ea7581de97d4006d68174ab2ac2fa93afbeff8d06f"
+    },
+    "ledgerRows": 617,
+    "ledgerPrefix": "3af71cd9f0e93eb70e1d7bc81a362a6f5b370c290267ed63e24c20966fad0254"
+  }
+}

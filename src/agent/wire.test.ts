@@ -9,6 +9,7 @@ import { candidateOf, type EcoFacts } from "../opportunity/ecosystem";
 import type { RawTokenAsset } from "../okx-wallet/portfolio";
 import type { SettingsStore } from "../settings/store";
 import type { CliResult, CliRunner } from "./cli";
+import { resetOkxClockForTests } from "../okx-clock";
 import { createAgentService, STOP_MARK } from "./wire";
 import type { AgentModel } from "./model";
 import { DISCLOSURE } from "./state";
@@ -92,6 +93,9 @@ const make = (over: Partial<Parameters<typeof createAgentService>[0]> = {}) =>
     clockSkewMs: () => 0,
     localSkewMs: () => 0,
     minBuyUsd: () => 10,
+    // offline by default: a public-chain lookup of a receipt or of a swap answers "nothing known" instead of reaching a real RPC; the tests that exercise the lookups replace these through `over`
+    solanaReceipts: (async () => null) as never,
+    solanaSwaps: (async () => null) as never,
     ...over,
   });
 
@@ -528,6 +532,37 @@ describe("the money mode, end to end", () => {
     expect(settled.at(-1).quote).toMatchObject({ action: "ok", impactPct: 0.3, tradeFee: null, feeUnit: "usd", gasUnit: "native_minor", present: ["impact", "taxFrom", "taxTo"] });
   });
 
+  test("a look leaves what the Jev answered and the prices the cycle read in journals of their own, apart from the ledger", async () => {
+    cliCalls.length = 0;
+    const svc = make();
+    await live(svc);
+    await svc.runNow();
+    const answers = readFileSync(join(dir, "agent", "answers.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l));
+    const item = answers[0].items.find((i: { id: string }) => i.id.startsWith("buy:"));
+    expect([answers.length, item.requested, item.applied]).toEqual([1, "buy_third", "buy_third"]);
+    await svc.close();
+  });
+
+  test("the price path holds the price of the candidate the look read, with the time of the read and no claim of when it was observed", async () => {
+    cliCalls.length = 0;
+    const svc = make();
+    await live(svc);
+    await svc.runNow();
+    const rows = readFileSync(join(dir, "agent", "prices.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l));
+    const eco = rows.find((r: { src: string }) => r.src === "eco");
+    expect([Object.values(eco.prices), eco.obsAtMs, typeof eco.atMs]).toEqual([[0.5], null, "number"]);
+    await svc.close();
+  });
+
+  test("with the recording off the agent writes neither journal", async () => {
+    cliCalls.length = 0;
+    const svc = make({ recording: false });
+    await live(svc);
+    await svc.runNow();
+    expect([existsSync(join(dir, "agent", "answers.jsonl")), existsSync(join(dir, "agent", "prices.jsonl"))]).toEqual([false, false]);
+    await svc.close();
+  });
+
   test("the closing of the purchase the model made leaves its record in closings.jsonl, coded when the quote of the tool cannot be bound to the request, and the order goes out as before", async () => {
     cliCalls.length = 0;
     const svc = make();
@@ -539,8 +574,8 @@ describe("the money mode, end to end", () => {
     // the quote this fake tool answers has no identity of the pair, so it does not bind: a code, no question to the model, nothing guessed
     expect(lines[0]).toMatchObject({ phase: "closing", mode: "shadow", criteria: "closing-v1", quote: null, brief: null, answer: null, would: null, applied: "buy_third" });
     expect(typeof lines[0].quoteFailure).toBe("string");
-    // two quotes of the tool were asked (the read-only one of the closing, then the executor's own), never an execute before the executor
-    expect(cliCalls.filter((c) => c[0] === "swap").map((c) => c[1])).toEqual(["quote", "quote", "execute"]);
+    // three quotes of the tool were asked (the read-only one before the model is asked, for the entry cost; the read-only one of the closing; then the executor's own), never an execute before the executor
+    expect(cliCalls.filter((c) => c[0] === "swap").map((c) => c[1])).toEqual(["quote", "quote", "quote", "execute"]);
     await svc.close();
   });
 
@@ -743,6 +778,20 @@ describe("the money mode, end to end", () => {
     const last = svc.status().last!;
     expect(last.view!.some((v) => v.kind === "buy" && v.closed === null)).toBe(true);
     expect(svc.status().scheduler.intervalMin).toBe(2);
+    await svc.close();
+  });
+
+  test("under the owner's bold profile the hot interval is the fastest the day's capacity pays, between one and two minutes on a day with nothing used, and the capacity is still 720", async () => {
+    const config = { auto: true, managed: { kind: "agentica" as const, evm: WALLET, solana: null }, cli: { path: "C:\\agent\\onchainos.exe", sha256: SHA } };
+    const svc = make();
+    expect(svc.updateConfig(config)).toMatchObject({ ok: true });
+    connect(svc);
+    mkdirSync(join(dir, "agent", "onchainos-home"), { recursive: true });
+    writeFileSync(join(dir, "agent", "onchainos-home", "session.json"), JSON.stringify({ sessionKeyExpireAt: Date.now() + 100 * 24 * HOUR }));
+    await svc.runNow();
+    const status = svc.status();
+    expect(status.last!.view!.some((v) => v.kind === "buy" && v.closed === null)).toBe(true);
+    expect([status.scheduler.intervalMin >= 1, status.scheduler.intervalMin <= 2, status.budget.limits.maxConsultsPerDay]).toEqual([true, true, 720]);
     await svc.close();
   });
 
@@ -1304,5 +1353,58 @@ describe("the money mode, end to end", () => {
     svc.disconnect();
     await svc.runNow();
     expect(cliCalls.filter((c) => c[1] === "execute")).toHaveLength(0);
+  });
+});
+
+describe("the default clock sync of a cycle goes through the fetch the service was given (Codex 155)", () => {
+  const TIME = "/api/v5/public/time";
+  // the global fetch is replaced by a spy for the length of the test, so that a default that reaches for it is SEEN and never reaches the network
+  const withGlobalSpy = async (run: (leaked: string[]) => Promise<void>) => {
+    const real = globalThis.fetch;
+    const leaked: string[] = [];
+    globalThis.fetch = (async (url: unknown) => {
+      leaked.push(String(url));
+      return new Response("{}", { status: 404 });
+    }) as unknown as typeof fetch;
+    try {
+      await run(leaked);
+    } finally {
+      globalThis.fetch = real;
+      resetOkxClockForTests();
+    }
+  };
+
+  test("with no syncClock given, the three samples of the clock use the injected fetch, with the signal, and the global fetch is never touched", async () => {
+    await withGlobalSpy(async (leaked) => {
+      const seen: { url: string; signal: boolean }[] = [];
+      const injected = (async (url: unknown, init?: RequestInit) => {
+        seen.push({ url: String(url), signal: init?.signal instanceof AbortSignal });
+        return new Response("{}", { status: 404 });
+      }) as unknown as typeof fetch;
+      const svc = make({ fetch: injected, syncClock: undefined });
+      await svc.runNow();
+      await svc.close();
+      const time = seen.filter((s) => s.url.includes(TIME));
+      expect(time.length).toBeGreaterThanOrEqual(1);
+      expect(time.every((s) => s.signal)).toBe(true);
+      expect(leaked.filter((u) => u.includes(TIME))).toEqual([]);
+    });
+  });
+
+  test("a syncClock given by the host still replaces the default: the clock is not measured through any fetch", async () => {
+    await withGlobalSpy(async (leaked) => {
+      const seen: string[] = [];
+      const injected = (async (url: unknown) => {
+        seen.push(String(url));
+        return new Response("{}", { status: 404 });
+      }) as unknown as typeof fetch;
+      let called = 0;
+      const svc = make({ fetch: injected, syncClock: async () => { called += 1; return null; } });
+      await svc.runNow();
+      await svc.close();
+      expect(called).toBeGreaterThanOrEqual(1);
+      expect(seen.filter((u) => u.includes(TIME))).toEqual([]);
+      expect(leaked.filter((u) => u.includes(TIME))).toEqual([]);
+    });
   });
 });

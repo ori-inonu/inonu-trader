@@ -125,7 +125,8 @@ export default function DeskRail({ chips, skewMs, nowMs, symbolPicker = null, di
       </div>
 
       <nav className={styles.nav} aria-label="Secoes do app">
-        <a className={styles.navLink} href="/" aria-current="page">Mesa</a>
+        <a className={styles.navLink} href="/">Agente</a>
+        <a className={styles.navLink} href="/mesa" aria-current="page">Mesa</a>
         <a className={styles.navLink} href="/rastreador">Rastreador</a>
         {showCentral ? <a className={styles.navLink} href="/console">Central</a> : null}
       </nav>

@@ -2,6 +2,14 @@ import { isAbsolute, resolve } from "node:path";
 import { createOperatorHandler, isOperatorPath } from "./operator/http";
 import { createSystemOneHandler, isSystemOnePath } from "./system-one/http";
 import { createJevReadHandler, isJevReadPath } from "./jev-read/http";
+import { createSettingsStore } from "./settings/store";
+import { createSettingsHandler, isSettingsPath } from "./settings/http";
+import { createBudget } from "./onchain-read/budget";
+import { createOnchainCache } from "./onchain-read/cache";
+import { createOnchainClient } from "./onchain-read/client";
+import { createOnchainGateway } from "./onchain-read/gateway";
+import { createOnchainHandler, isOnchainPath } from "./onchain-read/http";
+import { createProbeOnchainos } from "./onchain-read/probe";
 import type { Fill, Quote } from "./market";
 import type { BlockEvent } from "./trader";
 
@@ -36,6 +44,29 @@ export function startServer(meta: Meta, history: () => BlockEvent[], preview?: H
   // Jev reads the tape: the latest advisory buy, sell or hold per instrument, read only (scripts/jev-read.ts writes it).
   const jevReadHandler = createJevReadHandler(
     preview ? resolve(preview.stateDir, "jev-read/latest.json") : resolve(OPERATOR_ROOT, process.env.JEV_READ_STATE_PATH ?? "data/jev-read/latest.json"), origins, token);
+  // Settings writes are guarded by the handler itself; the read-only preview never exposes them.
+  const dataDir = resolve(OPERATOR_ROOT, "data");
+  const settingsStore = preview ? null : createSettingsStore(dataDir);
+  const onchainGateway = preview
+    ? null
+    : createOnchainGateway({
+        client: createOnchainClient({ credentials: () => settingsStore!.credentials().okx, fetch, now: Date.now }),
+        cache: createOnchainCache(Date.now),
+        budget: createBudget({
+          dir: dataDir,
+          now: Date.now,
+          caps: () => {
+            const o = settingsStore!.prefs().onchain;
+            return { basic: o.capBasic, premium: o.capPremium };
+          },
+        }),
+        credentialsState: () => settingsStore!.status().okx.state,
+        now: Date.now,
+      });
+  const settingsHandler = preview
+    ? null
+    : createSettingsHandler({ store: settingsStore!, origins, probeOnchainos: createProbeOnchainos({ fetch, now: Date.now }) });
+  const onchainHandler = preview ? null : createOnchainHandler({ gateway: onchainGateway!, origins });
   // The explicit read-only preview must not load financial environment configuration.
   // Keep the synchronous configuration contract for existing normal callers.
   const port = preview ? preview.port : (require("./config") as typeof import("./config")).config.port;
@@ -52,6 +83,8 @@ export function startServer(meta: Meta, history: () => BlockEvent[], preview?: H
         const { pathname } = new URL(req.url);
         const origin = req.headers.get("origin");
         const headers: Record<string, string> = preview ? { vary: "Origin", ...(origin && origins.includes(origin) ? { "access-control-allow-origin": origin, "access-control-allow-methods": "GET, OPTIONS", "access-control-allow-headers": "content-type" } : {}) } : CORS;
+        if (!preview && isSettingsPath(pathname)) return settingsHandler!(req, httpServer.requestIP(req)?.address ?? null);
+        if (!preview && isOnchainPath(pathname)) return onchainHandler!(req, httpServer.requestIP(req)?.address ?? null);
         if (preview && origin && !origins.includes(origin)) return json({ error: "origin not allowed" }, 403, headers);
         if (preview && req.method !== "GET" && req.method !== "OPTIONS") return json({ error: "method not allowed" }, 405, headers);
         if (isOperatorPath(pathname)) return operatorHandler(req, pathname);

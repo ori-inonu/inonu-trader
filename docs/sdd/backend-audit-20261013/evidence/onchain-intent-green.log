@@ -1,0 +1,19 @@
+bun test v1.3.14 (0d9b296a)
+
+src\onchain-read\gateway.test.ts:
+(pass) onchain gateway > a queued background pace refusal does not refuse its eligible user follower [28.57ms]
+(pass) onchain gateway > concurrent different keys cannot exceed the remaining cap [11.97ms]
+(pass) onchain gateway > happy path returns the single envelope with budget meta [12.55ms]
+(pass) onchain gateway > records only calls actually sent [7.51ms]
+(pass) onchain gateway > unknown route and bad params are refused before any call [3.86ms]
+(pass) onchain gateway > credential states short-circuit [7.00ms]
+(pass) onchain gateway > provider failure serves stale cache marked stale:true [14.71ms]
+(pass) onchain gateway > budget exhausted blocks the call before the network [6.97ms]
+(pass) onchain gateway > no cache + provider failure returns the error [9.46ms]
+(pass) onchain gateway > schema failure on a response serves stale too [13.46ms]
+(pass) onchain gateway > status exposes credential state without secrets [3.72ms]
+
+ 11 pass
+ 0 fail
+ 37 expect() calls
+Ran 11 tests across 1 file. [298.00ms]

@@ -127,3 +127,19 @@ Non-negotiables: Jev makes the buy/sell call (not code), from the price feed; re
 ## Canonical spec for the wallet evidence work
 
 Requirements, real-state inventory, the evidence contract and the task plan for verifiable manual portfolio management live in one folder: `docs/sdd/carteira-evidencia/` (`requirements.md`, `design.md`, `tasks.md`). Read `tasks.md` first for what to do next and which paths are reserved by concurrent sessions; do not copy its content elsewhere.
+
+## Agent skills
+
+Repo map, verification commands and the "stop and ask" list live in `AGENTS.md`. Read it first; this section only adds the Claude Code specifics. Global defaults in `~/.claude/CLAUDE.md` apply here too.
+
+### Issue tracker
+
+Issues live on GitHub (`origin` is `ori-inonu/inonu-trader`). Use the `gh` CLI for all operations. Do not use `.scratch/` for issues; it holds local evidence and is git-ignored.
+
+### Triage labels
+
+Default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`.
+
+### Domain docs
+
+Single-context repo. Read `GLOSSARY.md` and `docs/adr/` at the repo root when they exist. Neither exists yet; create them lazily when a term or decision is actually settled, not up front. `docs/` already holds specs and evidence (see `docs/index.md`); ADRs go in `docs/adr/`.

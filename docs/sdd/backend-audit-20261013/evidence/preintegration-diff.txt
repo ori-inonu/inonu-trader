@@ -1,0 +1,24 @@
+warning: in the working copy of 'C:/Users/gabri/.codex/tmp/backend-01a1361d-v2/baseline/scripts/quant-portfolio.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'C:/Users/gabri/jev-trader/scripts/quant-portfolio.ts', LF will be replaced by CRLF the next time Git touches it
+diff --git a/C:/Users/gabri/.codex/tmp/backend-01a1361d-v2/baseline/scripts/quant-portfolio.ts b/C:/Users/gabri/jev-trader/scripts/quant-portfolio.ts
+index bf22fca..34a7c60 100644
+--- a/C:/Users/gabri/.codex/tmp/backend-01a1361d-v2/baseline/scripts/quant-portfolio.ts
++++ b/C:/Users/gabri/jev-trader/scripts/quant-portfolio.ts
+@@ -61,12 +61,14 @@ for (const { key } of positions) {
+ 
+ // Common grid: the bars every captured asset has, which is contiguous because each usable series is.
+ const barMs = [...series.values()][0]?.barMs ?? 900_000;
+-let common: Set<number> | null = null;
++let grid: number[] = [];
++let first = true;
+ for (const { candles } of series.values()) {
+   const starts = new Set(candles.map((c) => c.startMs));
+-  common = common === null ? starts : new Set([...common].filter((t) => starts.has(t)));
++  grid = first ? [...starts] : grid.filter((t) => starts.has(t));
++  first = false;
+ }
+-const grid = common === null ? [] : [...common].sort((a, b) => a - b);
++grid.sort((a, b) => a - b);
+ const returns: AssetReturnsInput[] = [...series.entries()].map(([key, s]) => {
+   const byStart = new Map(s.candles.map((c) => [c.startMs, c.close]));
+   const closes = grid.map((t) => byStart.get(t) as number);

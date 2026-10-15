@@ -191,7 +191,8 @@ export function RastreadorScreen(p: RastreadorScreenProps) {
           <h1 className={styles.title}>Rastreador</h1>
         </div>
         <nav className={styles.nav} aria-label="Secoes do app">
-          <a className={styles.navLink} href="/">Mesa</a>
+          <a className={styles.navLink} href="/">Agente</a>
+          <a className={styles.navLink} href="/mesa">Mesa</a>
           <a className={styles.navLink} href="/rastreador" aria-current="page">Rastreador</a>
         </nav>
       </header>

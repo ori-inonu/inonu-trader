@@ -1,0 +1,87 @@
+bun test v1.3.14 (0d9b296a)
+
+src\lib\inonu\view.test.ts:
+(pass) describeCandidate > a short human name for each kind of candidate id [0.65ms]
+(pass) describeCandidate > the kind, for muting a kind of answer [0.50ms]
+(pass) decisionHeadline > says what the model decided, in the model's words (comprar, vender, manter) [0.35ms]
+(pass) stateLine > the request state replaces the old System One sentence [0.97ms]
+53 |     for (const reason of reasons) {
+54 |       const text = motivoText(reason);
+55 |       expect(text.length).toBeGreaterThan(8);
+56 |       expect(/^[\x20-\x7e]*$/.test(text)).toBe(true);
+57 |     }
+58 |     expect(motivoText("servidor_sem_rota")).toBe("Esta consulta nao esta disponivel no servidor conectado. Verifique a conexao em Diagnostico");
+                                                 ^
+error: expect(received).toBe(expected)
+
+Expected: "Esta consulta nao esta disponivel no servidor conectado. Verifique a conexao em Diagnostico"
+Received: "O servidor local desta janela e antigo e nao tem esta rota. Feche o Inonu Trader e abra de novo"
+
+      at <anonymous> (C:\Users\gabri\.codex\workspaces\ui-audit-01a13627\candidate\web\src\lib\inonu\view.test.ts:58:45)
+(fail) motivoText > every reason the pipeline can give has a sentence that says what to do [2.84ms]
+(pass) motivoText > the refusals of the on-chain and ranking sources have a sentence that says what happened and that nothing went to the model [0.56ms]
+(pass) motivoText > no text carries a dash, a middle dot, or the old word of the assistant as a model [1.07ms]
+(pass) costLine > measured tokens are shown, and what is not measured is said to be not measured [0.46ms]
+
+src\lib\inonu\signal-strip-render.test.tsx:
+(pass) status line > live flow with the warm-up told, and the zones counted [1.07ms]
+(pass) status line > a flow read by REST says so instead of pretending to be live [0.17ms]
+36 | 
+37 |   test("loading, and every failure with its own words", () => {
+38 |     expect(flowStatusText({ status: "loading", overlay: null, reason: null })).toBe("lendo o fluxo");
+39 |     const fail = (reason: string, o: ChartOverlay | null = null) => flowStatusText({ status: "erro", overlay: o, reason });
+40 |     expect(fail("sem_conexao")).toBe("sem conexao com o nucleo");
+41 |     expect(fail("servidor_sem_rota")).toBe("fluxo indisponivel no servidor conectado, verifique Diagnostico");
+                                           ^
+error: expect(received).toBe(expected)
+
+Expected: "fluxo indisponivel no servidor conectado, verifique Diagnostico"
+Received: "nucleo desatualizado, reinicie o app"
+
+      at <anonymous> (C:\Users\gabri\.codex\workspaces\ui-audit-01a13627\candidate\web\src\lib\inonu\signal-strip-render.test.tsx:41:39)
+(fail) status line > loading, and every failure with its own words [0.99ms]
+(pass) status line > no feed, no line [0.45ms]
+(pass) toggles are pure > a signal flips and nothing else moves [0.23ms]
+(pass) toggles are pure > a wallet type is added back in the canonical order and removed without touching the others [0.61ms]
+(pass) OKX instrument > three toggles for the Inonu layers, each pressed by default, and the status line [29.98ms]
+(pass) OKX instrument > an off signal is not pressed [4.81ms]
+(pass) OKX instrument > the name of the group is Inonu, Jev appears only as the model's provenance, and the strip describes instead of instructing [3.83ms]
+(pass) on-chain token > the wallet group: the switch, the three types and the two minimums [7.29ms]
+(pass) on-chain token > with the wallet switch off the types and minimums are not offered [1.73ms]
+(pass) on-chain token > the selected minimums are the selected options [2.85ms]
+(pass) rules of the interface > plain ASCII, no middle dot, em dash or en dash, nothing that blinks [8.90ms]
+
+src\lib\mesa\onchain-rows.test.ts:
+(pass) formatters > relative age in words [0.68ms]
+(pass) formatters > compact USD and signed USD [3.02ms]
+(pass) formatters > wallet kinds and tag filters [0.49ms]
+(pass) signalRows > sorted newest first with every column in words [1.38ms]
+(pass) signalRows > missing fields become Indisponivel, never zero [0.32ms]
+(pass) leaderboardRows > columns in words; missing values are Indisponivel [1.32ms]
+(pass) walletRows > columns in words; null PnL stays Indisponivel [0.92ms]
+(pass) onchainErrorText > exact copy per code [0.59ms]
+146 |     expect(onchainErrorText("bad_request").text).toBe("Pedido invalido");
+147 |   });
+148 | 
+149 |   test("an old local server and a refused origin say what to do, and are not \"fora do contrato\" (SRC-1)", () => {
+150 |     const stale = onchainErrorText("backend_stale");
+151 |     expect(stale.text).toBe("Esta consulta nao esta disponivel no servidor conectado. Verifique a conexao em Diagnostico");
+                             ^
+error: expect(received).toBe(expected)
+
+Expected: "Esta consulta nao esta disponivel no servidor conectado. Verifique a conexao em Diagnostico"
+Received: "O servidor local desta janela e antigo e nao tem esta rota. Feche o Inonu Trader e abra de novo"
+
+      at <anonymous> (C:\Users\gabri\.codex\workspaces\ui-audit-01a13627\candidate\web\src\lib\mesa\onchain-rows.test.ts:151:24)
+(fail) onchainErrorText > an old local server and a refused origin say what to do, and are not "fora do contrato" (SRC-1) [1.12ms]
+(pass) feedStateOfResource > live inside ttl, stale when flagged, empty on error or zero rows [0.34ms]
+
+3 tests failed:
+(fail) motivoText > every reason the pipeline can give has a sentence that says what to do [2.84ms]
+(fail) status line > loading, and every failure with its own words [0.99ms]
+(fail) onchainErrorText > an old local server and a refused origin say what to do, and are not "fora do contrato" (SRC-1) [1.12ms]
+
+ 28 pass
+ 3 fail
+ 208 expect() calls
+Ran 31 tests across 3 files. [330.00ms]

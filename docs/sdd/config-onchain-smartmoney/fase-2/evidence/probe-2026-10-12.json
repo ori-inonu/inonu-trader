@@ -1,0 +1,1248 @@
+{
+ "geradoEm": "2026-10-12",
+ "origem": "real_probe",
+ "plano": "Trial (Dev Portal)",
+ "nota": "Somente leitura, uma chamada por linha, parametros de exemplo com enderecos publicos conhecidos. Guarda forma e codigo, nunca valores de dados. Fonte original em .scratch/devportal (ignorada pelo git). O relogio local estava 76 s atrasado e a sonda assinou com o desvio medido; a primeira execucao (abortada por 3 recusas seguidas 50102 antes da correcao) nao foi guardada.",
+ "linhas": [
+  {
+   "id": "market.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/market/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[54]<{chainIndex,chainLogoUrl,chainName,chainSymbol}>"
+  },
+  {
+   "id": "aggregator.supported",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/aggregator/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[36]<{chainId,chainIndex,chainName,dexTokenApproveAddress}>"
+  },
+  {
+   "id": "pretx.supported",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/pre-transaction/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[63]<{name,logoUrl,shortName,chainIndex}>"
+  },
+  {
+   "id": "balance.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/balance/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[60]<{name,logoUrl,shortName,chainIndex}>"
+  },
+  {
+   "id": "signal.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/market/signal/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[7]<{chainIndex,chainLogo,chainName}>"
+  },
+  {
+   "id": "leaderboard.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/market/leaderboard/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[7]<{chainIndex,chainLogo,chainName}>"
+  },
+  {
+   "id": "portfolio.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/market/portfolio/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[9]<{chainIndex,chainLogo,chainName}>"
+  },
+  {
+   "id": "cluster.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/cluster/supported/chain",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{chainIndex,chainLogo,chainName}>"
+  },
+  {
+   "id": "memepump.chainsProtocol",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/market/memepump/supported/chainsProtocol",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[7]<{chainIndex,chainName,protocolList:arr[12]<{protocolId,protocolName}>}>"
+  },
+  {
+   "id": "explorer.address.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/explorer/address/supported-chains",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[88]<{apiName,chainIndex,chainName,symbol}>"
+  },
+  {
+   "id": "explorer.block.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/supported-chains",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[192]<{apiName,chainIndex,chainName,symbol}>"
+  },
+  {
+   "id": "explorer.info.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/supported-chains",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[352]<{apiName,chainIndex,chainName,symbol}>"
+  },
+  {
+   "id": "explorer.log.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/explorer/log/supported-chains",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[224]<{apiName,chainIndex,chainName,symbol}>"
+  },
+  {
+   "id": "explorer.transaction.supported",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/explorer/transaction/supported-chains",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[162]<{apiName,chainIndex,chainName,symbol}>"
+  },
+  {
+   "id": "market.price",
+   "tier": "basic",
+   "method": "POST",
+   "path": "/api/v6/dex/market/price",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainIndex,price,time,tokenContractAddress}>"
+  },
+  {
+   "id": "market.price-info",
+   "tier": "premium",
+   "method": "POST",
+   "path": "/api/v6/dex/market/price-info",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainIndex,circSupply,holders,liquidity,marketCap,maxPrice,minPrice,price,priceChange1H,priceChange24H,priceChange4H,priceChange5M,time,tokenContractAddress,tradeNum,txs1H,txs24H,txs4H,txs5M,volume1H,volume24H,volume4H,volume5M}>"
+  },
+  {
+   "id": "market.candles",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/candles",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<arr[8]<string>>"
+  },
+  {
+   "id": "market.historical-candles",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/historical-candles",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<arr[8]<string>>"
+  },
+  {
+   "id": "market.trades",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/trades",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{chainIndex,changedTokenInfo:arr[2]<{amount,tokenAddress,tokenSymbol}>,dexName,id,isFiltered,poolLogoUrl,price,time,tokenContractAddress,txHashUrl,type,userAddress,volume}>"
+  },
+  {
+   "id": "index.current-price",
+   "tier": "free",
+   "method": "POST",
+   "path": "/api/v6/dex/index/current-price",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{chainIndex,time,price,tokenContractAddress}>"
+  },
+  {
+   "id": "index.historical-price",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/index/historical-price",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{cursor,prices:arr[5]<{time,price}>}>"
+  },
+  {
+   "id": "token.search",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/search",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{chainIndex,change,cursor,decimal,explorerUrl,holders,liquidity,marketCap,price,tagList:{communityRecognized},tokenContractAddress,tokenLogoUrl,tokenName,tokenSymbol}>"
+  },
+  {
+   "id": "token.basic-info",
+   "tier": "basic",
+   "method": "POST",
+   "path": "/api/v6/dex/market/token/basic-info",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainIndex,decimal,tagList:{communityRecognized},tokenContractAddress,tokenLogoUrl,tokenName,tokenSymbol}>"
+  },
+  {
+   "id": "token.advanced-info",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/advanced-info",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{bundleHoldingPercent,chainIndex,createTime,creatorAddress,devCreateTokenCount,devHoldingPercent,devLaunchedTokenCount,devRugPullTokenCount,isInternal,lpBurnedPercent,progress,protocolId,riskControlLevel,sniperHoldingPercent,snipersClearAddressCount,snipersTot"
+  },
+  {
+   "id": "token.top-liquidity",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/top-liquidity",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{hookFeePercent,liquidityAmount:arr[2]<{tokenAmount,tokenContractAddress,tokenSymbol}>,liquidityProviderFeePercent,liquidityUsd,pool,poolAddress,poolBasicFeePercent,poolCreator,poolLogoUrl,protocolName,sniperTaxInfo}>"
+  },
+  {
+   "id": "token.hot-token",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/hot-token",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{bundleHoldPercent,chainIndex,change,cursor,devHoldPercent,firstTradeTime,holders,inflowUsd,insiderHoldPercent,liquidity,marketCap,mentionsCount,price,riskLevelControl,tokenContractAddress,tokenLogoUrl,tokenSymbol,top10HoldPercent,txs,txsBuy,txsSell,uni"
+  },
+  {
+   "id": "token.holder",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/holder",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "token.top-trader",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/top-trader",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "token.holder(sol-bonk)",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/holder",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{avgBuyPrice,avgSellPrice,boughtAmount,cursor,fundingSource,holdAmount,holdPercent,holderWalletAddress,nativeTokenBalance,realizedPnlUsd,totalPnlUsd,totalSellAmount,unrealizedPnlUsd}>"
+  },
+  {
+   "id": "token.top-trader(sol-bonk)",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/top-trader",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{avgBuyPrice,avgSellPrice,boughtAmount,cursor,fundingSource,holdAmount,holdPercent,holderWalletAddress,nativeTokenBalance,realizedPnlUsd,soldAmount,totalPnlUsd,unrealizedPnlUsd}>"
+  },
+  {
+   "id": "token.cluster.overview",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/cluster/overview",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{ClusterConcentration,holderNewAddressPercent,holderSameCreationTimePercent,holderSameFundSourcePercent,rugPullPercent,top100HoldingsPercent}"
+  },
+  {
+   "id": "token.cluster.list",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/cluster/list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{clusterList:arr[100]<{averageBuyPriceUsd,averageHoldingPeriod,averageSellPriceUsd,buyVolume,clusterAddressList,holdingAmount,holdingPercent,holdingValueUsd,lastActiveTimestamp,pnlPercent,pnlUsd,sellVolume,trendType}>}"
+  },
+  {
+   "id": "token.cluster.top-holders",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/cluster/top-holders",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{averageBuyPricePercent,averageBuyPriceUsd,averageHoldingPeriod,averagePnlUsd,averageSellPricePercent,averageSellPriceUsd,clusterTrendType:arr[1]<string>,holdingAmount,holdingPercent}"
+  },
+  {
+   "id": "token.toplist(undocumented)",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/toplist",
+   "http": 400,
+   "code": "50014",
+   "msg": "Required request parameter 'sortBy' is missing",
+   "shape": "{}"
+  },
+  {
+   "id": "rwa.tokens",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/rwa/tokens",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{cursor,list:arr[5]<{chainIndex,issuer,logoUrl,marketCap,peRatioTTM,price,priceChange24H,stockCode,stockMarketCap,stockPrice,stockPriceChange24H,stockVolume24h,tokenContractAddress,tokenName,tokenSymbol,tokenToAssetRatio,volume24h}>}"
+  },
+  {
+   "id": "signal.list(list-body)",
+   "tier": "premium",
+   "method": "POST",
+   "path": "/api/v6/dex/market/signal/list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{amountUsd,chainIndex,cursor,price,soldRatioPercent,timestamp,token:{holders,logo,marketCapUsd,name,symbol,tokenAddress,top10HolderPercent},triggerWalletAddress,triggerWalletCount,walletType}>"
+  },
+  {
+   "id": "signal.list(object-body,compare)",
+   "tier": "premium",
+   "method": "POST",
+   "path": "/api/v6/dex/market/signal/list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[5]<{amountUsd,chainIndex,cursor,price,soldRatioPercent,timestamp,token:{holders,logo,marketCapUsd,name,symbol,tokenAddress,top10HolderPercent},triggerWalletAddress,triggerWalletCount,walletType}>"
+  },
+  {
+   "id": "leaderboard.list",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/leaderboard/list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[50]<{avgBuyValueUsd,lastActiveTimestamp,realizedPnlPercent,realizedPnlUsd,topPnlTokenList:arr[3]<{tokenContractAddress,tokenPnLPercent,tokenPnLUsd,tokenSymbol}>,txVolume,txs,walletAddress,winRatePercent}>"
+  },
+  {
+   "id": "memepump.tokenList",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/memepump/tokenList",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[30]<{aped,bagsFeeClaimed,bondingPercent,chainIndex,createdTimestamp,creatorAddress,logoUrl,market:{buyTxCount1h,marketCapUsd,sellTxCount1h,txCount1h,volumeUsd1h},migratedBeginTimestamp,migratedEndTimestamp,name,protocolId,quoteTokenAddress,social:{communit"
+  },
+  {
+   "id": "memepump.tokenDetails",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/memepump/tokenDetails",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{aped,bagsFeeClaimed,bondingPercent,chainIndex,createdTimestamp,creatorAddress,logoUrl,market:{buyTxCount1h,marketCapUsd,sellTxCount1h,txCount1h,volumeUsd1h},migratedBeginTimestamp,migratedEndTimestamp,name,protocolId,quoteTokenAddress,social:{communityTakeove"
+  },
+  {
+   "id": "memepump.tokenDevInfo",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/memepump/tokenDevInfo",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{devHoldingInfo:{devAddress,devBalance,devHoldingPercent,fundingAddress,lastFundedTimestamp},devLaunchedInfo:{goldenGemCount,migratedCount,rugPullCount,totalTokens}}"
+  },
+  {
+   "id": "memepump.similarToken",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/memepump/similarToken",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[2]<{createdTimestamp,lastTxTimestamp,marketCapUsd,tokenAddress,tokenLogo,tokenSymbol}>"
+  },
+  {
+   "id": "memepump.tokenBundleInfo",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/memepump/tokenBundleInfo",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{bundledTokenAmount,bundledValueNative,bundlerAthPercent,totalBundlers}"
+  },
+  {
+   "id": "memepump.apedWallet",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/memepump/apedWallet",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "news.latest",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/news/latest",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{articles:arr[3]<{content,id,importance,source,sourceUrl,summary,timestamp,title,tokenSymbolSentiments,tokenSymbols}>,cursor}"
+  },
+  {
+   "id": "news.platforms",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/news/platforms",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{platforms:arr[15]<string>}"
+  },
+  {
+   "id": "news.search",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/news/search",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{articles:arr[3]<{content,id,importance,source,sourceUrl,summary,timestamp,title,tokenSymbolSentiments,tokenSymbols}>,cursor}"
+  },
+  {
+   "id": "news.by-symbol",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/news/by-symbol",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{articles:arr[3]<{content,id,importance,source,sourceUrl,summary,timestamp,title,tokenSymbolSentiments,tokenSymbols}>,cursor}"
+  },
+  {
+   "id": "news.detail",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/news/detail",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{articles:arr[1]<{content,id,importance,source,sourceUrl,summary,timestamp,title,tokenSymbolSentiments,tokenSymbols}>}"
+  },
+  {
+   "id": "sentiment.symbol",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/sentiment/symbol",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{details:arr[1]<{mentionCount,newsMentionCount,sentiment,tokenSymbol,trend,xMentionCount}>,period,ts}"
+  },
+  {
+   "id": "sentiment.ranking",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/sentiment/ranking",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{details:arr[3]<{mentionCount,newsMentionCount,sentiment,tokenSymbol,xMentionCount}>,period,ts}"
+  },
+  {
+   "id": "vibe.timeline",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/vibe/timeline",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{summary:{engagement,engagementChangeRate,impressions,impressionsChangeRate,mentionsCount,mentionsCountChangeRate,score,scoreChangeRate,scoreRange,scoreType,supportFirstMentioned},timeline:arr[24]<{kols,mentionCount,score,ts}>}"
+  },
+  {
+   "id": "vibe.top-kols",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/social/vibe/top-kols",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{kols:arr[5]<{avatar,engagement,firstMention,followers,handle,impressions,mentions,nickname}>}"
+  },
+  {
+   "id": "balance.total-value",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/balance/total-value-by-address",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{totalValue}>"
+  },
+  {
+   "id": "balance.all-token",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/balance/all-token-balances-by-address",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{tokenAssets:arr[2837]<{chainIndex,symbol,balance,tokenPrice,isRiskToken,rawBalance,address,tokenContractAddress}>}>"
+  },
+  {
+   "id": "balance.token",
+   "tier": "free",
+   "method": "POST",
+   "path": "/api/v6/dex/balance/token-balances-by-address",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{tokenAssets:arr[1]<{chainIndex,symbol,balance,tokenPrice,isRiskToken,rawBalance,address,tokenContractAddress}>}>"
+  },
+  {
+   "id": "history.by-address",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/post-transaction/transactions-by-address",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{cursor,transactions:arr[3]<{chainIndex,txHash,itype,methodId,nonce,txTime,from,to,tokenContractAddress,amount,symbol,txFee,txStatus,hitBlacklist}>}>"
+  },
+  {
+   "id": "history.detail",
+   "tier": "free",
+   "method": "GET",
+   "path": "/api/v6/dex/post-transaction/transaction-detail-by-txhash",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{chainIndex,height,txTime,txhash,gasLimit,gasUsed,gasPrice,nonce,symbol,amount,txStatus,methodId,l1OriginHash,txFee,fromDetails:arr[1]<{address,vinIndex,preVoutIndex,txHash,isContract,amount}>,toDetails:arr[1]<{address,voutIndex,isContract,amount}>,inte"
+  },
+  {
+   "id": "portfolio.overview",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/portfolio/overview",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{avgBuyValueUsd,buyTxCount,buyTxVolume,buysByMarketCap:arr[5]<{buyCount,marketCapRange}>,preferredMarketCap,realizedPnlUsd,sellTxCount,sellTxVolume,tokenCountByPnlPercent:{over500Percent,overMinus50Percent,zeroTo500Percent,zeroToMinus50Percent},top3PnlTokenPer"
+  },
+  {
+   "id": "portfolio.recent-pnl",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/dex/market/portfolio/recent-pnl",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{cursor,pnlList:arr[3]<{buyAvgPrice,buyTxCount,buyTxVolume,chainIndex,lastActiveTimestamp,realizedPnlPercent,realizedPnlUsd,sellAvgPrice,sellTxCount,sellTxVolume,tokenBalanceAmount,tokenBalanceUsd,tokenContractAddress,tokenPositionDuration,tokenPositionPercent"
+  },
+  {
+   "id": "portfolio.dex-history",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/portfolio/dex-history",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{cursor,transactionList:arr[3]<{amount,chainIndex,marketCap,pnlUsd,price,time,tokenContractAddress,tokenSymbol,type,valueUsd}>}"
+  },
+  {
+   "id": "portfolio.latest-pnl",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/dex/market/portfolio/token/latest-pnl",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "{isPnlSupported,realizedPnlPercent,realizedPnlUsd,totalPnlPercent,totalPnlUsd,unrealizedPnlPercent,unrealizedPnlUsd}"
+  },
+  {
+   "id": "aggregator.all-tokens",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/aggregator/all-tokens",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[2408]<{decimals,tokenContractAddress,tokenLogoUrl,tokenName,tokenSymbol}>"
+  },
+  {
+   "id": "aggregator.get-liquidity",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/aggregator/get-liquidity",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[124]<{id,logo,name}>"
+  },
+  {
+   "id": "aggregator.quote",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/aggregator/quote",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainIndex,contextSlot,dexRouterList:arr[1]<{dexProtocol,fromToken,fromTokenIndex,toToken,toTokenIndex}>,estimateGasFee,fromToken:{decimal,isHoneyPot,latestMultiplier,taxRate,tokenContractAddress,tokenSymbol,tokenUnitPrice},fromTokenAmount,mode,priceIm"
+  },
+  {
+   "id": "pretx.gas-price",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/pre-transaction/gas-price",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{normal,min,max,supportEip1559,eip1559Protocol:{baseFee,suggestBaseFee,proposePriorityFee,safePriorityFee,fastPriorityFee},priorityFee:{}}>"
+  },
+  {
+   "id": "pretx.gas-limit",
+   "tier": "unknown",
+   "method": "POST",
+   "path": "/api/v6/dex/pre-transaction/gas-limit",
+   "http": 200,
+   "code": "81411",
+   "msg": "origin error: Contract call fail, node result error when get estimateGas error chain= code=3 message=execution reverted",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "posttx.orders",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/post-transaction/orders",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{cursor,orders:arr[15]<{chainIndex,address,orderId,txStatus,failReason,txHash}>}>"
+  },
+  {
+   "id": "intent.auction-info",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/aggregator/intent/auction-info",
+   "http": 200,
+   "code": "51000",
+   "msg": "auctionId or txHash must be provided.",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "intent.order-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/aggregator/intent/order-list",
+   "http": 200,
+   "code": "51000",
+   "msg": "userWalletAddress or orderUid must be provided.",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "explorer.address.active-chain",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/address/address-active-chain",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[24]<{chainIndex,isContractAddress}>"
+  },
+  {
+   "id": "explorer.address.information-evm",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/address/information-evm",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{address,balance,balanceSymbol,contractAddress,contractCallingAddresses,contractCalls,contractCorrespondingToken,createContractAddress,createContractTransactionHash,firstTransactionTime,isValidator,lastTransactionTime,transactionCount}>"
+  },
+  {
+   "id": "explorer.block.block-list",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/block-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{blockList:arr[2]<{avgFee,blockSize,blockTime,burnt,feeSymbol,gasAvgPrice,gasLimit,gasUsed,hash,height,mineReward,ommerBlock,state,totalFee,txnCount,validator}>,chainIndex,cursor,limit}>"
+  },
+  {
+   "id": "explorer.block.block-stats",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/block-stats",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{blockHistoryList:arr[2]<{avgBlockInterval,blockCount,blockSize,mineReward,rewardSymbol,time}>,cursor,limit}>"
+  },
+  {
+   "id": "explorer.block.height-by-time",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/block-height-by-time",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{blockTime,height}>"
+  },
+  {
+   "id": "explorer.block.block-fills",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/block-fills",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "explorer.block.transaction-list",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainIndex,cursor,limit,transactionList:arr[3]<{amount,blockHash,from,height,isFromContract,isToContract,methodId,state,to,tokenContractAddress,tokenId,transactionSymbol,transactionTime,txfee,txid}>}>"
+  },
+  {
+   "id": "explorer.block.address-balance-history",
+   "tier": "premium",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/address-balance-history",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{address,balance,balanceRaw,balanceSymbol,blockTime,height,tokenContractAddress}>"
+  },
+  {
+   "id": "explorer.info.summary",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/summary",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainIndex,circulatingSupply,circulatingSupplyProportion,lastBlockTime,lastHeight,symbol,transactions}>"
+  },
+  {
+   "id": "explorer.info.detail",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/detail",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{algorithm,chainIndex,circulatingSupply,consensus,currentDiff,diffAdjustTime,diffEstimation,issueDate,lastBlockTime,lastHeight,mineable,rank,symbol,totalSupply,tps}>"
+  },
+  {
+   "id": "explorer.info.address",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/address",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{activeAddresses,chainIndex,contractAddresses,externalAddresses,newActiveAddresses,newAddressCount24h,newContractAddresses24h,newExternalAddresses24h,newTotalAddresses24h,symbol,totalAddresses,validAddressCount}>"
+  },
+  {
+   "id": "explorer.info.block",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/block",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{avgBlockInterval,avgBlockSize24h,avgBlockSize24hPercent,chainIndex,firstBlockHeight,firstBlockTime,firstExchangeHistoricalTime,halveTime,lastHeight,mediaBlockSize,symbol}>"
+  },
+  {
+   "id": "explorer.info.transaction",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/transaction",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{avgTransactionCount24h,avgTransactionCount24hPercent,chainIndex,pendingTransactionCount,pendingTransactionSize,symbol,totalTransactionCount,tranRate,transactionValue24h}>"
+  },
+  {
+   "id": "explorer.info.stats",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/stats",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,statsHistoryList:arr[2]<{networkUtilization,newAddressCount,time,totalContractCalls,totalTransactionCount,transactionFee}>}>"
+  },
+  {
+   "id": "explorer.info.hashes",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/info/hashes",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainIndex,hashRate,hashRateChange24h,symbol}>"
+  },
+  {
+   "id": "explorer.log.by-address",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/log/by-address",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,logList:arr[2]<{address,blockHash,data,height,logIndex,methodId,topics,transactionTime,txId}>}>"
+  },
+  {
+   "id": "explorer.log.by-address-and-topic",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/log/by-address-and-topic",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,logList:arr[2]<{address,blockHash,data,height,logIndex,methodId,topics,transactionTime,txId}>}>"
+  },
+  {
+   "id": "explorer.log.by-block-and-address",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/log/by-block-and-address",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,logList:arr[2]<{address,blockHash,data,height,logIndex,methodId,topics,transactionTime,txId}>}>"
+  },
+  {
+   "id": "explorer.log.by-transaction",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/log/by-transaction",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[9]<{address,blockHash,data,height,logIndex,methodId,topics:arr[3]<string>,transactionTime,txId}>"
+  },
+  {
+   "id": "explorer.tx.transaction-multi",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/transaction/transaction-multi",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{amount,blockHash,from,gasLimit,gasPrice,gasUsed,height,isFromContract,isToContract,methodId,nonce,state,symbol,to,transactionTime,transactionType,txFee,txId}>"
+  },
+  {
+   "id": "explorer.tx.internal-multi",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/transaction/internal-transaction-multi",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,transactionList:arr[20]<{amount,blockHash,from,height,isFromContract,isToContract,operation,to,transactionTime,txId}>}>"
+  },
+  {
+   "id": "explorer.tx.token-transfer-multi",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/transaction/token-transfer-multi",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,transactionList:arr[6]<{amount,blockHash,from,height,isFromContract,isToContract,symbol,to,tokenContractAddress,tokenId,transactionTime,txId}>}>"
+  },
+  {
+   "id": "explorer.tx.normal-list-multi",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/transaction/normal-transaction-list-multi",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,transactionList:arr[1]<{amount,blockHash,from,gasLimit,gasPrice,gasUsed,height,isFromContract,isToContract,methodId,nonce,symbol,to,transactionTime,transactionType,txFee,txId}>}>"
+  },
+  {
+   "id": "explorer.tx.token-list-multi",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/transaction/token-transaction-list-multi",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{cursor,limit,transactionList:arr[2]<{amount,blockHash,from,height,isFromContract,isToContract,symbol,to,tokenContractAddress,tokenId,transactionTime,txId}>}>"
+  },
+  {
+   "id": "xlayer.block.block-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/block/block-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,blockList:arr[2]<{hash,height,validator,blockTime,txnCount,blockSize,mineReward,totalFee,feeSymbol,avgFee,ommerBlock,gasUsed,gasLimit,gasAvgPrice,state,burnt}>}>"
+  },
+  {
+   "id": "xlayer.tx.large-transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/large-transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,transactionList:arr[3]<{txid,blockHash,height,transactionTime,input,output,isInputContract,isOutputContract,amount,transactionSymbol,txfee,methodId,transactionType,state}>}>"
+  },
+  {
+   "id": "xlayer.tx.transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,transactionList:arr[1]<{txid,blockHash,height,transactionTime,input,output,isInputContract,isOutputContract,amount,transactionSymbol,txfee,methodId,transactionType,state}>}>"
+  },
+  {
+   "id": "xlayer.tx.unconfirmed",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/unconfirmed-transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,transactionList:arr[0]}>"
+  },
+  {
+   "id": "xlayer.block.block-fills",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/block/block-fills",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainFullName,chainShortName,hash,height,validator,blockTime,txnCount,amount,blockSize,mineReward,totalFee,feeSymbol,ommerBlock,merkleRootHash,gasUsed,gasLimit,gasAvgPrice,state,burnt,txnInternal,miner,difficuity,nonce,tips,confirm,baseFeePerGas}>"
+  },
+  {
+   "id": "xlayer.tx.transaction-fills",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/transaction-fills",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{chainFullName,chainShortName,txid,height,transactionTime,amount,transactionSymbol,txfee,index,confirm,inputDetails:arr[1]<{inputHash,isContract,amount}>,outputDetails:arr[1]<{outputHash,isContract,amount}>,state,gasLimit,gasUsed,gasPrice,totalTransacti"
+  },
+  {
+   "id": "xlayer.token.token-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/token/token-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,tokenList:arr[3]<{tokenFullName,token,precision,tokenContractAddress,protocolType,addressCount,totalSupply,circulatingSupply,price,website,totalMarketCap,issueDate,transactionAmount24h,tvl,logoUrl}>}>"
+  },
+  {
+   "id": "xlayer.address.native-token-position-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/address/native-token-position-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,positionList:arr[3]<{rank,symbol,holderAddress,amount}>}>"
+  },
+  {
+   "id": "xlayer.tz.block-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/tz/block/block-list",
+   "http": 200,
+   "code": "50038",
+   "msg": "This chain does not currently support.",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "xlayer.tx.large-transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/large-transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,transactionList:arr[3]<{txid,blockHash,height,transactionTime,input,output,isInputContract,isOutputContract,amount,transactionSymbol,txfee,methodId,transactionType,state}>}>"
+  },
+  {
+   "id": "xlayer.token.token-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/token/token-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,tokenList:arr[3]<{tokenFullName,token,precision,tokenContractAddress,protocolType,addressCount,totalSupply,circulatingSupply,price,website,totalMarketCap,issueDate,transactionAmount24h,tvl,logoUrl}>}>"
+  },
+  {
+   "id": "xlayer.address.information-evm",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/address/information-evm",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{address,balance,balanceSymbol,transactionCount,firstTransactionTime,lastTransactionTime,contractAddress,createContractAddress,createContractTransactionHash,contractCorrespondingToken,contractCalls,contractCallingAddresses}>"
+  },
+  {
+   "id": "xlayer.address.transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/address/transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,transactionLists:arr[2]<{txId,methodId,blockHash,height,transactionTime,from,to,isFromContract,isToContract,amount,transactionSymbol,txFee,state,tokenId,tokenContractAddress,challengeStatus,l1OriginHash"
+  },
+  {
+   "id": "xlayer.address.normal-transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/address/normal-transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{limit,page,totalPage,transactionList:arr[2]<{txId,methodId,nonce,gasPrice,gasLimit,gasUsed,blockHash,height,transactionTime,from,to,isFromContract,isToContract,amount,symbol,txFee,state,transactionType}>}>"
+  },
+  {
+   "id": "xlayer.address.token-balance",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/address/token-balance",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{limit,page,totalPage,tokenList:arr[3]<{symbol,tokenContractAddress,tokenType,holdingAmount,priceUsd,valueUsd,tokenId}>}>"
+  },
+  {
+   "id": "xlayer.address.token-transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/address/token-transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{limit,page,totalPage,transactionList:arr[2]<{txId,blockHash,height,transactionTime,from,to,tokenContractAddress,tokenId,amount,symbol,isFromContract,isToContract}>}>"
+  },
+  {
+   "id": "xlayer.address.internal-transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/address/internal-transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{limit,page,totalPage,transactionList:arr[2]<{txId,operation,blockHash,height,transactionTime,from,to,isFromContract,isToContract,amount,symbol,state}>}>"
+  },
+  {
+   "id": "xlayer.log.by-address",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/log/by-address",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[0]"
+  },
+  {
+   "id": "xlayer.block.transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/block/transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,blockList:arr[2]<{txid,methodId,blockHash,height,transactionTime,from,isFromContract,isToContract,to,amount,transactionSymbol,txfee,state,tokenId,tokenContractAddress}>}>"
+  },
+  {
+   "id": "xlayer.block.transaction-list-multi",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/block/transaction-list-multi",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,transactionList:arr[2]<{height,txId,methodId,blockHash,transactionTime,from,isFromContract,isToContract,to,amount,transactionSymbol,txFee,state,tokenId,tokenContractAddress}>}>"
+  },
+  {
+   "id": "xlayer.log.by-transaction",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/log/by-transaction",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[58]<{height,address,topics:arr[1]<string>,data,methodId,blockHash,transactionTime,logIndex,txId}>"
+  },
+  {
+   "id": "xlayer.tx.token-transaction-detail",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/token-transaction-detail",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,tokenTransferDetails:arr[20]<{txId,from,to,height,transactionTime,isFromContract,isToContract,tokenContractAddress,symbol,amount}>}>"
+  },
+  {
+   "id": "xlayer.tx.internal-transaction-detail",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/internal-transaction-detail",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,internalTransactionDetails:arr[20]<{txId,from,to,height,transactionTime,isFromContract,isToContract,operation,amount,state}>}>"
+  },
+  {
+   "id": "xlayer.tx.transaction-multi",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/transaction/transaction-multi",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{txId,methodId,blockHash,height,transactionTime,from,to,isFromContract,isToContract,amount,symbol,nonce,txFee,gasPrice,gasLimit,gasUsed,state,transactionType}>"
+  },
+  {
+   "id": "xlayer.token.position-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/token/position-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,circulatingSupply,positionList:arr[0]}>"
+  },
+  {
+   "id": "xlayer.token.transaction-list",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v5/xlayer/token/transaction-list",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{page,limit,totalPage,chainFullName,chainShortName,totalTransfer,transactionList:arr[0]}>"
+  },
+  {
+   "id": "toplist(sortBy=1)",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/toplist",
+   "http": 400,
+   "code": "50014",
+   "msg": "Required request parameter 'timeFrame' is missing",
+   "shape": "{}"
+  },
+  {
+   "id": "toplist(sortBy=2,tf=4)",
+   "tier": "unknown",
+   "method": "GET",
+   "path": "/api/v6/dex/market/token/toplist",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[100]<{chainIndex,change,firstTradeTime,holders,liquidity,marketCap,price,tokenContractAddress,tokenLogoUrl,tokenSymbol,txs,txsBuy,txsSell,uniqueTraders,volume}>"
+  },
+  {
+   "id": "pretx.gas-limit(eth-transfer)",
+   "tier": "unknown",
+   "method": "POST",
+   "path": "/api/v6/dex/pre-transaction/gas-limit",
+   "http": 200,
+   "code": "0",
+   "msg": "success",
+   "shape": "arr[1]<{gasLimit}>"
+  },
+  {
+   "id": "explorer.block.block-fills(retry-height)",
+   "tier": "basic",
+   "method": "GET",
+   "path": "/api/v6/explorer/block/block-fills",
+   "http": 200,
+   "code": "0",
+   "msg": "",
+   "shape": "arr[1]<{amount,baseFeePerGas,blockSize,blockTime,burnt,chainIndex,confirm,difficulty,feeSymbol,gasAvgPrice,gasLimit,gasUsed,hash,height,merkleRootHash,mineReward,miner,nonce,ommerBlock,state,tips,totalFee,txnCount,txnInternal,validator}>"
+  }
+ ]
+}

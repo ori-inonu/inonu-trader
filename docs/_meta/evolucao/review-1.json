@@ -1,0 +1,25 @@
+{
+  "format": "jev-independent-documentation-review-v1",
+  "delegation_id": "deleg_7894268e",
+  "source": "independent_subagent",
+  "human_response": false,
+  "passed": false,
+  "security_concerns": [
+    {"id":"REV1-S1","finding":"validate() lê relation.evidence sem impor contenção na raiz nem política sensível.","reviewer_probe":"TemporaryDirectory, evidence=../outside.txt: leitura externa e ok=true.","current_curation_exploits_case":false},
+    {"id":"REV1-S2","finding":"Inventário da fonte sensível propaga tamanho, extensão, área e legacy_review.current_sha256, apesar de sha256=null. Requisito é apenas caminho.","sensitive_content_opened_by_reviewer":false}
+  ],
+  "logic_errors": [
+    {"id":"REV1-L1","finding":"Exclusão incondicional de docs/_meta/evolucao pode omitir fontes não registradas. Cobertura reutiliza inventory() e não detecta a própria exclusão. Curadoria citada aparece como referência fora de docs embora esteja dentro."}
+  ],
+  "suggestions": ["Guardar declaração de versão, commit, candidato e publicação em campos estruturados separados, além das explicações textuais já presentes."],
+  "baseline_hashes": {
+    "docs/_meta/evolucao/compiler.py":"41cedf5929d14d6755ef677afe7a1499b115d5c3fe6e512f084ab8b0e46c9389",
+    "docs/_meta/evolucao/test_compiler.py":"6f7cd20245b3b77efeae409358a328188ed99b6428ddf52fc3278e550d08076f",
+    "docs/_meta/evolucao/curation.json":"1b6a9e8f93ede6342e0c850f80557d8daeec4ac2c9835ca60d517d224f90a25c"
+  },
+  "baseline_unchanged_start_end":true,
+  "tests_reported":{"own_tests":19,"own_test_exit_code":0,"read_only_compile_ok":true,"two_compiles_identical":true,"sources_at_review":1358,"pages_at_review":452},
+  "parent_corroboration":"Os mesmos hashes e os 19 testes foram observados pelo integrador em acceptance.json às 15:37 -03:00, antes da entrega do revisor. Os probes de ataque acima são relato do revisor, a reproduzir em regressões de correção.",
+  "resolution_state":"blocked_pending_fix_and_reverification",
+  "cost":"unknown"
+}

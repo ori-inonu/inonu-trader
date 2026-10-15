@@ -1,0 +1,2126 @@
+{
+ "geradoEm": "2026-10-12",
+ "origem": "paginas publicas web3.okx.com/onchainos/dev-docs (variante .md), parser de tabelas de parametros",
+ "paginas": [
+  {
+   "caminho": "/api/v6/dex/balance/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "wallet/balance-api-chains",
+   "titulo": "Get Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/balance/total-value-by-address",
+   "metodo": "GET",
+   "paginaSlug": "wallet/balance-api-total-value",
+   "titulo": "Get Total Value",
+   "obrigatorios": [
+    "address:String",
+    "chains:String"
+   ],
+   "opcionais": [
+    "assetType:String",
+    "excludeRiskToken:Boolean"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/balance/token-balances-by-address",
+   "metodo": "POST",
+   "paginaSlug": "wallet/balance-api-token-balances",
+   "titulo": "Get Specific Token Balance",
+   "obrigatorios": [
+    "address:String",
+    "tokenContractAddresses:Array",
+    ">chainIndex:String",
+    ">tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "excludeRiskToken:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/balance/all-token-balances-by-address",
+   "metodo": "GET",
+   "paginaSlug": "wallet/balance-api-all-token-balances",
+   "titulo": "Get Total Token Balances",
+   "obrigatorios": [
+    "address:String",
+    "chains:Array"
+   ],
+   "opcionais": [
+    "excludeRiskToken:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/pre-transaction/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "wallet/onchain-gateway-api-chains",
+   "titulo": "Get Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/pre-transaction/gas-limit",
+   "metodo": "POST",
+   "paginaSlug": "wallet/onchain-gateway-api-gas-limit",
+   "titulo": "Get Gas Limit",
+   "obrigatorios": [
+    "chainIndex:String",
+    "fromAddress:String",
+    "toAddress:String"
+   ],
+   "opcionais": [
+    "txAmount:String",
+    "extJson:Object",
+    "inputData:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/pre-transaction/gas-price",
+   "metodo": "GET",
+   "paginaSlug": "wallet/onchain-gateway-api-gas-price",
+   "titulo": "Get Gas Price",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/pre-transaction/broadcast-transaction",
+   "metodo": "POST",
+   "paginaSlug": "wallet/onchain-gateway-api-broadcast-transaction",
+   "titulo": "Broadcast Transactions",
+   "obrigatorios": [
+    "signedTx:String",
+    "chainIndex:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "extraData:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/post-transaction/orders",
+   "metodo": "GET",
+   "paginaSlug": "wallet/onchain-gateway-api-orders",
+   "titulo": "Get Transaction Orders",
+   "obrigatorios": [
+    "address:String",
+    "chainIndex:String"
+   ],
+   "opcionais": [
+    "txStatus:String",
+    "orderId:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/pre-transaction/simulate",
+   "metodo": "GET",
+   "paginaSlug": "wallet/onchain-gateway-api-simulate-transaction",
+   "titulo": "Simulate Transactions",
+   "obrigatorios": [
+    "fromAddress:String",
+    "toAddress:String",
+    "chainIndex:String",
+    "extJson:Object"
+   ],
+   "opcionais": [
+    "txAmount:String",
+    "priorityFee:String",
+    "gasPrice:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/post-transaction/transactions-by-address",
+   "metodo": "GET",
+   "paginaSlug": "wallet/tx-history-api-history",
+   "titulo": "Get History by Address",
+   "obrigatorios": [
+    "address:String"
+   ],
+   "opcionais": [
+    "chains:String",
+    "tokenContractAddress:String",
+    "begin:String",
+    "end:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/post-transaction/transaction-detail-by-txhash",
+   "metodo": "GET",
+   "paginaSlug": "wallet/tx-history-api-detail",
+   "titulo": "Get Specific Transaction",
+   "obrigatorios": [
+    "chainIndex:String",
+    "txHash:String"
+   ],
+   "opcionais": [
+    "itype:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-get-aggregator-supported-chains",
+   "titulo": "Get Supported Chains",
+   "obrigatorios": [],
+   "opcionais": [
+    "chainIndex:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/all-tokens",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-get-tokens",
+   "titulo": "Get Tokens",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/get-liquidity",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-get-liquidity",
+   "titulo": "Get Liquidity Sources",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/approve-transaction",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-approve-transaction",
+   "titulo": "Approve Transactions",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String",
+    "approveAmount:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/quote",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-get-quote",
+   "titulo": "Get Quotes",
+   "obrigatorios": [
+    "chainIndex:String",
+    "amount:String",
+    "fromTokenAddress:String",
+    "toTokenAddress:String"
+   ],
+   "opcionais": [
+    "swapMode:String",
+    "dexIds:String",
+    "excludeDexIds:String",
+    "forJitoBundle:Boolean",
+    "excludePoolAddresses:String",
+    "directRoute:Boolean",
+    "singleRouteOnly:Boolean",
+    "singlePoolPerHop:Boolean",
+    "priceImpactProtectionPercent:String",
+    "feePercent:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/swap-instruction",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-solana-swap-instruction",
+   "titulo": "Get Solana Swap Instructions",
+   "obrigatorios": [
+    "chainIndex:String",
+    "amount:String",
+    "fromTokenAddress:String",
+    "toTokenAddress:String",
+    "userWalletAddress:String",
+    "slippagePercent:String",
+    "swapMode:String"
+   ],
+   "opcionais": [
+    "autoSlippage:Boolean",
+    "maxAutoSlippagePercent:String",
+    "maxCalldataSize:String",
+    "maxAccounts:String",
+    "swapReceiverAddress:String",
+    "closeAuthorityAddress:`String`",
+    "feePercent:String",
+    "fromTokenReferrerWalletAddress:String",
+    "toTokenReferrerWalletAddress:String",
+    "positiveSlippagePercent:String",
+    "positiveSlippageFeeAddress:String",
+    "dexIds:String",
+    "excludeDexIds:String",
+    "excludePoolAddresses:String",
+    "forJitoBundle:Boolean",
+    "disableRFQ:Boolean",
+    "directRoute:Boolean",
+    "singleRouteOnly:Boolean",
+    "singlePoolPerHop:Boolean",
+    "priceImpactProtectionPercent:String",
+    "useTokenLedger:Boolean",
+    "computeUnitPrice:String",
+    "computeUnitLimit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/swap",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-swap",
+   "titulo": "Swap",
+   "obrigatorios": [
+    "chainIndex:String",
+    "amount:String",
+    "fromTokenAddress:String",
+    "toTokenAddress:String",
+    "slippagePercent:String",
+    "userWalletAddress:String"
+   ],
+   "opcionais": [
+    "swapMode:String",
+    "approveTransaction:Boolean",
+    "approveAmount:String",
+    "swapReceiverAddress:String",
+    "feePercent:String",
+    "fromTokenReferrerWalletAddress:String",
+    "toTokenReferrerWalletAddress:String",
+    "positiveSlippagePercent:String",
+    "positiveSlippageFeeAddress:String",
+    "closeAuthorityAddress:`String`",
+    "gasLimit:String",
+    "gasLevel:String",
+    "computeUnitPrice:String",
+    "computeUnitLimit:String",
+    "tips:String",
+    "forJitoBundle:Boolean",
+    "dexIds:String",
+    "excludeDexIds:String",
+    "excludePoolAddresses:String",
+    "disableRFQ:Boolean",
+    "directRoute:Boolean",
+    "singleRouteOnly:Boolean",
+    "singlePoolPerHop:Boolean",
+    "priceImpactProtectionPercent:String",
+    "callDataMemo:String",
+    "autoSlippage:Boolean",
+    "maxAutoSlippagePercent:String",
+    "maxCalldataSize:String",
+    "maxAccounts:String",
+    "contextSlot:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/history",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-swap-history",
+   "titulo": "Get Transaction Status",
+   "obrigatorios": [
+    "chainIndex:String",
+    "txHash:String"
+   ],
+   "opcionais": [
+    "isFromMyProject:Boolean"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/intent/create-order",
+   "metodo": "POST",
+   "paginaSlug": "trade/dex-intent-create-order",
+   "titulo": "Create Intent Order",
+   "obrigatorios": [
+    "chainIndex:String",
+    "fromTokenAddress:String",
+    "toTokenAddress:String",
+    "fromTokenAmount:String",
+    "toTokenAmount:String",
+    "userWalletAddress:String",
+    "validTo:Integer",
+    "quoteId:String",
+    "appData:String",
+    "signature:String"
+   ],
+   "opcionais": [
+    "swapReceiverAddress:String",
+    "signingScheme:String",
+    "commissionInfos:Array"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/intent/order-list",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-intent-order-list",
+   "titulo": "Get Intent Order List",
+   "obrigatorios": [],
+   "opcionais": [
+    "cursor:String",
+    "limit:Integer"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/intent/order-status",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-intent-order-status",
+   "titulo": "Get Intent Order Status",
+   "obrigatorios": [
+    "orderUid:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/intent/cancel-signdata",
+   "metodo": "POST",
+   "paginaSlug": "trade/dex-intent-cancel-sign",
+   "titulo": "Get Cancel Order Sign Data",
+   "obrigatorios": [
+    "userWalletAddress:String",
+    "orderUid:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/intent/cancel-order",
+   "metodo": "POST",
+   "paginaSlug": "trade/dex-intent-cancel-order",
+   "titulo": "Cancel Intent Order",
+   "obrigatorios": [
+    "userWalletAddress:String",
+    "orderUid:String",
+    "signature:String"
+   ],
+   "opcionais": [
+    "signingScheme:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/aggregator/intent/auction-info",
+   "metodo": "GET",
+   "paginaSlug": "trade/dex-intent-auction-info",
+   "titulo": "Get Auction Info",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "market/market-price-chains",
+   "titulo": "Get supported chains",
+   "obrigatorios": [],
+   "opcionais": [
+    "chainIndex:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/price",
+   "metodo": "POST",
+   "paginaSlug": "market/market-price",
+   "titulo": "Get Price",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/candles",
+   "metodo": "GET",
+   "paginaSlug": "market/market-candlesticks",
+   "titulo": "Get Candlesticks",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "after:String",
+    "before:String",
+    "bar:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/historical-candles",
+   "metodo": "GET",
+   "paginaSlug": "market/market-candlesticks-history",
+   "titulo": "Get Candlesticks History",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "after:String",
+    "before:String",
+    "bar:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/index/current-price",
+   "metodo": "POST",
+   "paginaSlug": "market/index-price",
+   "titulo": "Get Token Index Price",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/index/historical-price",
+   "metodo": "GET",
+   "paginaSlug": "market/historical-index-price",
+   "titulo": "Get Historical Index Price",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": [
+    "tokenContractAddress:String",
+    "limit:String",
+    "cursor:String",
+    "begin:String",
+    "end:String",
+    "period:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/rwa/tokens",
+   "metodo": "GET",
+   "paginaSlug": "market/market-rwa-token",
+   "titulo": "Get RWA Token List",
+   "obrigatorios": [],
+   "opcionais": [
+    "issuer:String",
+    "category:String",
+    "chainIndex:String",
+    "limit:Integer",
+    "cursor:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/search",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-search",
+   "titulo": "Token Search",
+   "obrigatorios": [
+    "chains:String",
+    "search:String"
+   ],
+   "opcionais": [
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/basic-info",
+   "metodo": "POST",
+   "paginaSlug": "market/market-token-basic-info",
+   "titulo": "Token Basic Information",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/advanced-info",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-advanced-info",
+   "titulo": "Token Advanced Information",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/top-liquidity",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-top-liquidity",
+   "titulo": "Token Liquidity Pool Information",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/price-info",
+   "metodo": "POST",
+   "paginaSlug": "market/market-token-price-info",
+   "titulo": "Token Trading Information",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/trades",
+   "metodo": "GET",
+   "paginaSlug": "market/market-trades",
+   "titulo": "Get Tokens Trades Activity",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "after:String",
+    "limit:String",
+    "tagFilter:String",
+    "walletAddressFilter:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/hot-token",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-hot-token",
+   "titulo": "Hot Tokens",
+   "obrigatorios": [
+    "rankingType:String"
+   ],
+   "opcionais": [
+    "chainIndex:String",
+    "rankBy:String",
+    "rankingTimeFrame:String",
+    "riskFilter:Boolean",
+    "protocolId:String",
+    "priceChangePercentMin:String",
+    "priceChangePercentMax:String",
+    "tradeAmountMin:String",
+    "tradeAmountMax:String",
+    "volumeMin:String",
+    "volumeMax:String",
+    "txsMin:String",
+    "txsMax:String",
+    "uniqueTraderMin:String",
+    "uniqueTraderMax:String",
+    "marketCapMin:String",
+    "marketCapMax:String",
+    "liquidityMin:String",
+    "liquidityMax:String",
+    "stableTokenFilter:Boolean",
+    "holdersMin:String",
+    "holdersMax:String",
+    "top10HoldPercentMin:String",
+    "top10HoldPercentMax:String",
+    "devHoldPercentMin:String",
+    "devHoldPercentMax:String",
+    "suspiciousHoldPercentMin:String",
+    "suspiciousHoldPercentMax:String",
+    "bundleHoldPercentMin:String",
+    "bundleHoldPercentMax:String",
+    "mentionedCountMin:String",
+    "mentionedCountMax:String",
+    "socialScoreMin:String",
+    "socialScoreMax:String",
+    "isLpBurnt:Boolean",
+    "isMint:Boolean",
+    "isFreeze:Boolean",
+    "inflowUsdMin:String",
+    "inflowUsdMax:String",
+    "fdvMin:String",
+    "fdvMax:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/holder",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-holder",
+   "titulo": "Token Holder Information",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "tagFilter:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/cluster/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-cluster-supported-chain",
+   "titulo": "Get Cluster Supported Chain",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/cluster/overview",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-cluster-overview",
+   "titulo": "Get Token Holding Cluster Overview",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/cluster/top-holders",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-cluster-top-holders",
+   "titulo": "Get Token Top Holders Cluster Overview",
+   "obrigatorios": [
+    "chainIndex:string",
+    "tokenContractAddress:string",
+    "rangeFilter:string"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/top-trader",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-top-trader",
+   "titulo": "Token Profit Address Information",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "tagFilter:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/token/cluster/list",
+   "metodo": "GET",
+   "paginaSlug": "market/market-token-cluster-list",
+   "titulo": "Get Token Cluster List",
+   "obrigatorios": [
+    "chainIndex:string",
+    "tokenContractAddress:string"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/signal/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "market/market-signal-chains",
+   "titulo": "Get Signal Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/signal/list",
+   "metodo": "POST",
+   "paginaSlug": "market/market-signal-list",
+   "titulo": "Get Latest Signal List",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": [
+    "walletType:String",
+    "minAmountUsd:String",
+    "maxAmountUsd:String",
+    "minAddressCount:String",
+    "maxAddressCount:String",
+    "tokenAddress:String",
+    "minMarketCapUsd:String",
+    "maxMarketCapUsd:String",
+    "minLiquidityUsd:String",
+    "maxLiquidityUsd:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/leaderboard/list",
+   "metodo": "GET",
+   "paginaSlug": "market/market-signal-leaderboard-list",
+   "titulo": "Get Smart Money Leaderboard List",
+   "obrigatorios": [
+    "chainIndex:string",
+    "timeFrame:string",
+    "sortBy:string"
+   ],
+   "opcionais": [
+    "walletType:string",
+    "minRealizedPnlUsd:string",
+    "maxRealizedPnlUsd:string",
+    "minWinRatePercent:string",
+    "maxWinRatePercent:string",
+    "minTxs:string",
+    "maxTxs:string",
+    "minTxVolume:string",
+    "maxTxVolume:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/leaderboard/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "market/market-signal-leaderboard-supported-chain",
+   "titulo": "Get Leaderboard Supported Chain List",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/memepump/supported/chainsProtocol",
+   "metodo": "GET",
+   "paginaSlug": "market/market-memepump-get-supported-chains-and-protocols",
+   "titulo": "Get Supported Chains and Protocols",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/memepump/tokenList",
+   "metodo": "GET",
+   "paginaSlug": "market/market-memepump-get-token-list",
+   "titulo": "Get Token List",
+   "obrigatorios": [
+    "chainIndex:String",
+    "stage:String"
+   ],
+   "opcionais": [
+    "walletAddress:String",
+    "protocolIdList:String",
+    "quoteTokenAddressList:String",
+    "minTop10HoldingsPercent:String",
+    "maxTop10HoldingsPercent:String",
+    "minDevHoldingsPercent:String",
+    "maxDevHoldingsPercent:String",
+    "minInsidersPercent:String",
+    "maxInsidersPercent:String",
+    "minBundlersPercent:String",
+    "maxBundlersPercent:String",
+    "minSnipersPercent:String",
+    "maxSnipersPercent:String",
+    "minFreshWalletsPercent:String",
+    "maxFreshWalletsPercent:String",
+    "minSuspectedPhishingWalletPercent:String",
+    "maxSuspectedPhishingWalletPercent:String",
+    "minBotTraders:String",
+    "maxBotTraders:String",
+    "minDevMigrated:String",
+    "maxDevMigrated:String",
+    "communityTakeover:Boolean",
+    "minFeesNative:String",
+    "maxFeesNative:String",
+    "minTxCount:String",
+    "maxTxCount:String",
+    "minBondingPercent:String",
+    "maxBondingPercent:String",
+    "minMarketCapUsd:String",
+    "maxMarketCapUsd:String",
+    "minVolumeUsd:String",
+    "maxVolumeUsd:String",
+    "minHolders:String",
+    "maxHolders:String",
+    "minTokenAge:String",
+    "maxTokenAge:String",
+    "minBuyTxCount:String",
+    "maxBuyTxCount:String",
+    "minSellTxCount:String",
+    "maxSellTxCount:String",
+    "minTokenSymbolLength:String",
+    "maxTokenSymbolLength:String",
+    "hasAtLeastOneSocialLink:Boolean",
+    "hasX:Boolean",
+    "hasTelegram:Boolean",
+    "hasWebsite:Boolean",
+    "websiteTypeList:String",
+    "dexScreenerPaid:Boolean",
+    "liveOnPumpFun:Boolean",
+    "bagsFeeClaimed:Boolean",
+    "devSellAll:Boolean",
+    "devStillHolding:Boolean",
+    "keywordsInclude:String",
+    "keywordsExclude:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/memepump/tokenDetails",
+   "metodo": "GET",
+   "paginaSlug": "market/market-memepump-get-token-details",
+   "titulo": "Get Token Details",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String",
+    "walletAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/memepump/tokenDevInfo",
+   "metodo": "GET",
+   "paginaSlug": "market/market-memepump-get-token-developer-info",
+   "titulo": "Get Token Developer Info",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/memepump/similarToken",
+   "metodo": "GET",
+   "paginaSlug": "market/market-memepump-get-similar-tokens",
+   "titulo": "Get Similar Tokens",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/memepump/tokenBundleInfo",
+   "metodo": "GET",
+   "paginaSlug": "market/market-memepump-get-token-bundle-details",
+   "titulo": "Get Token Bundle Details",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/memepump/apedWallet",
+   "metodo": "GET",
+   "paginaSlug": "market/market-memepump-get-token-aped-wallet-details",
+   "titulo": "Get Token Aped Wallet Details",
+   "obrigatorios": [
+    "chainIndex:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "walletAddress:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/info/detail",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-detail",
+   "titulo": "Get Public Chain Details",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/info/supported-chains",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-supported-chains",
+   "titulo": "Get Public Chain Info API Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/info/summary",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-summary",
+   "titulo": "Get Public Chain Summary",
+   "obrigatorios": [],
+   "opcionais": [
+    "chainIndex:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/info/transaction",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-transaction",
+   "titulo": "Get Public Chain Transaction Statistics",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/info/block",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-block",
+   "titulo": "Get Basic Block Statistics",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/info/address",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-address",
+   "titulo": "Get Holder Address Statistics",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/info/stats",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-stats",
+   "titulo": "Get Historical Public Chain Statistics",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": [
+    "startTime:String",
+    "endTime:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/block/supported-chains",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-block-supported-chains",
+   "titulo": "Get Block API Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/info/hashes",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-info-hashes",
+   "titulo": "Get Basic Hash Rate Information",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/block/block-list",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-block-block-list",
+   "titulo": "Get Block List",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": [
+    "height:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/block/block-fills",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-block-block-fills",
+   "titulo": "Get Block Details",
+   "obrigatorios": [
+    "chainIndex:String",
+    "height:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/block/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-block-transaction-list",
+   "titulo": "Get Transactions in a Block",
+   "obrigatorios": [
+    "chainIndex:String",
+    "height:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/block/block-height-by-time",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-block-block-height-by-time",
+   "titulo": "Get Block Height by Time",
+   "obrigatorios": [
+    "chainIndex:String",
+    "time:String"
+   ],
+   "opcionais": [
+    "closest:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/block/block-stats",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-block-block-stats",
+   "titulo": "Get Block Statistics",
+   "obrigatorios": [
+    "chainIndex:String"
+   ],
+   "opcionais": [
+    "startTime:String",
+    "endTime:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/block/address-balance-history",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-block-address-balance-history",
+   "titulo": "Get Address Historical Balance",
+   "obrigatorios": [
+    "chainIndex:String",
+    "height:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "tokenContractAddress:String",
+    "project:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/transaction/transaction-multi",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-transaction-transaction-multi",
+   "titulo": "Batch Get Transaction Details",
+   "obrigatorios": [
+    "chainIndex:String",
+    "txId:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/transaction/supported-chains",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-transaction-supported-chains",
+   "titulo": "Get Transaction API Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/transaction/token-transfer-multi",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-transaction-token-transfer-multi",
+   "titulo": "Batch Get Token Transfer Details",
+   "obrigatorios": [
+    "chainIndex:String",
+    "txId:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "limit:String",
+    "cursor:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/transaction/internal-transaction-multi",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-transaction-internal-transaction-multi",
+   "titulo": "Batch Get Internal Transaction Details",
+   "obrigatorios": [
+    "chainIndex:String",
+    "txId:String"
+   ],
+   "opcionais": [
+    "limit:String",
+    "cursor:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/transaction/normal-transaction-list-multi",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-transaction-normal-transaction-list-multi",
+   "titulo": "Batch Get Normal Transaction List by Address",
+   "obrigatorios": [
+    "chainIndex:String",
+    "address:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String"
+   ],
+   "opcionais": [
+    "isFromOrTo:String",
+    "limit:String",
+    "cursor:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/transaction/token-transaction-list-multi",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-transaction-token-transaction-list-multi",
+   "titulo": "Batch Get Token Transaction List by Address",
+   "obrigatorios": [
+    "chainIndex:String",
+    "address:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "tokenContractAddress:String",
+    "isFromOrTo:String",
+    "limit:String",
+    "cursor:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/log/supported-chains",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-log-supported-chains",
+   "titulo": "Get Event Log API Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/log/by-block-and-address",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-log-by-block-and-address",
+   "titulo": "Get Event Logs by Block Range and Address",
+   "obrigatorios": [
+    "chainIndex:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/log/by-address-and-topic",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-log-by-address-and-topic",
+   "titulo": "Get Event Logs by Address and Topic",
+   "obrigatorios": [
+    "chainIndex:String",
+    "address:String",
+    "topic0:String"
+   ],
+   "opcionais": [
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/log/by-address",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-log-by-address",
+   "titulo": "Get Event Logs by Address",
+   "obrigatorios": [
+    "chainIndex:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/explorer/log/by-transaction",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-log-by-transaction",
+   "titulo": "Get Event Logs by Transaction Hash",
+   "obrigatorios": [
+    "chainIndex:String",
+    "txId:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/address/supported-chains",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-address-supported-chains",
+   "titulo": "Get Address API Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/address/address-active-chain",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-address-address-active-chain",
+   "titulo": "Get Active Chains for an Address",
+   "obrigatorios": [
+    "address:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/explorer/address/information-evm",
+   "metodo": "GET",
+   "paginaSlug": "market/onchaindata-address-information-evm",
+   "titulo": "Get EVM Address Information",
+   "obrigatorios": [
+    "chainIndex:String",
+    "address:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/news/latest",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-news-latest",
+   "titulo": "Get Latest News Feed",
+   "obrigatorios": [],
+   "opcionais": [
+    "tokenSymbols:string",
+    "begin:string",
+    "end:string",
+    "importance:string",
+    "platform:string",
+    "limit:string",
+    "cursor:string",
+    "detailLevel:string",
+    "language:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/news/by-symbol",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-news-by-symbol",
+   "titulo": "Get News by Token Symbol",
+   "obrigatorios": [
+    "tokenSymbols:string"
+   ],
+   "opcionais": [
+    "sortBy:string",
+    "sentiment:string",
+    "importance:string",
+    "platform:string",
+    "limit:string",
+    "cursor:string",
+    "detailLevel:string",
+    "begin:string",
+    "end:string",
+    "language:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/news/search",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-news-search",
+   "titulo": "Search News",
+   "obrigatorios": [
+    "keyword:string"
+   ],
+   "opcionais": [
+    "sortBy:string",
+    "sentiment:string",
+    "importance:string",
+    "platform:string",
+    "tokenSymbols:string",
+    "begin:string",
+    "end:string",
+    "detailLevel:string",
+    "limit:string",
+    "cursor:string",
+    "language:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/news/detail",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-news-detail",
+   "titulo": "Get News Article Detail",
+   "obrigatorios": [
+    "articleId:string"
+   ],
+   "opcionais": [
+    "language:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/news/platforms",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-news-platforms",
+   "titulo": "Get Available News Platforms",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/sentiment/symbol",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-sentiment-symbol",
+   "titulo": "Get Token Sentiment Metrics",
+   "obrigatorios": [
+    "tokenSymbols:string"
+   ],
+   "opcionais": [
+    "timeFrame:string",
+    "trendPoints:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/sentiment/ranking",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-sentiment-ranking",
+   "titulo": "Get Sentiment Ranking",
+   "obrigatorios": [],
+   "opcionais": [
+    "timeFrame:string",
+    "sortBy:string",
+    "limit:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/vibe/timeline",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-vibe-timeline",
+   "titulo": "Get Token Vibe Timeline",
+   "obrigatorios": [
+    "chainIndex:string",
+    "tokenAddress:string"
+   ],
+   "opcionais": [
+    "timeFrame:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/social/vibe/top-kols",
+   "metodo": "GET",
+   "paginaSlug": "market/market-social-vibe-top-kols",
+   "titulo": "Get Top KOLs for Token",
+   "obrigatorios": [
+    "chainIndex:string",
+    "tokenAddress:string"
+   ],
+   "opcionais": [
+    "sortBy:string",
+    "timeFrame:string",
+    "limit:string"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/portfolio/supported/chain",
+   "metodo": "GET",
+   "paginaSlug": "market/market-portfolio-supported-chain",
+   "titulo": "Get Supported Chains",
+   "obrigatorios": [],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/portfolio/overview",
+   "metodo": "GET",
+   "paginaSlug": "market/market-portfolio-overview",
+   "titulo": "Get Address Portfolio Overview",
+   "obrigatorios": [
+    "chainIndex:String",
+    "walletAddress:String",
+    "timeFrame:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/portfolio/recent-pnl",
+   "metodo": "GET",
+   "paginaSlug": "market/market-portfolio-recent-pnl",
+   "titulo": "Get Address Recent PnL List",
+   "obrigatorios": [
+    "chainIndex:String",
+    "walletAddress:String"
+   ],
+   "opcionais": [
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v6/dex/market/portfolio/token/latest-pnl",
+   "metodo": "GET",
+   "paginaSlug": "market/market-portfolio-latest-pnl",
+   "titulo": "Get Address Latest PnL for Specific Token",
+   "obrigatorios": [
+    "chainIndex:String",
+    "walletAddress:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v6/dex/market/portfolio/dex-history",
+   "metodo": "GET",
+   "paginaSlug": "market/market-portfolio-dex-history",
+   "titulo": "Get Address DEX Transaction List",
+   "obrigatorios": [
+    "chainIndex:String",
+    "walletAddress:String",
+    "begin:String",
+    "end:String"
+   ],
+   "opcionais": [
+    "tokenContractAddress:String",
+    "type:String",
+    "cursor:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/block/block-fills",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/block-details",
+   "titulo": "Get Block Details",
+   "obrigatorios": [
+    "chainShortName:String",
+    "height:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/block/block-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/block-list",
+   "titulo": "Get Block List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "height:String",
+    "limit:String",
+    "page:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/block/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/block-transaction-list",
+   "titulo": "Get Block Transaction List",
+   "obrigatorios": [
+    "chainShortName:String",
+    "height:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "limit:String",
+    "page:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/block/transaction-list-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/batch-get-block-transactions",
+   "titulo": "Batch Get Block Transactions",
+   "obrigatorios": [
+    "chainShortName:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "limit:String",
+    "page:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/information-evm",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/address-information",
+   "titulo": "Get Address Information",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/token-balance",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/token-balance-details-by-address",
+   "titulo": "Get Token Balance Details By Address",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String",
+    "protocolType:String"
+   ],
+   "opcionais": [
+    "tokenContractAddress:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/address-transaction-list",
+   "titulo": "Get Address Transaction List",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "tokenContractAddress:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String",
+    "isFromOrTo:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/normal-transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/normal-transactions-by-address",
+   "titulo": "Get Normal Transaction List By Address",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "startBlockHeight:String",
+    "endBlockHeight:String",
+    "isFromOrTo:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/internal-transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/internal-transactions-by-address",
+   "titulo": "Get Internal Transaction List By Address",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "startBlockHeight:String",
+    "endBlockHeight:String",
+    "isFromOrTo:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/token-transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/token-transactions-by-address",
+   "titulo": "Get Token Transaction List By Address",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String",
+    "protocolType:String"
+   ],
+   "opcionais": [
+    "tokenContractAddress:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String",
+    "isFromOrTo:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/normal-transaction-list-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/normal-transactions-by-address-and-block",
+   "titulo": "Get Normal Transactions By Address And Block",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String"
+   ],
+   "opcionais": [
+    "isFromOrTo:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/internal-transaction-list-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/internal-transactions-by-address-and-block",
+   "titulo": "Get Internal Transactions By Address And Block",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String"
+   ],
+   "opcionais": [
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/transaction-list",
+   "titulo": "Get Transaction List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "blockHash:String",
+    "height:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/address/native-token-position-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/native-token-holder-addresses",
+   "titulo": "Get Native Token Holder Addresses",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/large-transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/large-transaction-list",
+   "titulo": "Get Large Transaction List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "type:String",
+    "height:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/unconfirmed-transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/unconfirmed-ransaction-list",
+   "titulo": "Get Unconfirmed Transaction List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/internal-transaction-detail",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/internal-transaction-by-hash",
+   "titulo": "Get Internal Transactions By Hash",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:String"
+   ],
+   "opcionais": [
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/token-transaction-detail",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/token-transaction-by-hash",
+   "titulo": "Get Token Transactions By Hash",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/transaction-fills",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/transaction-details-by-hash",
+   "titulo": "Get Transaction Details By Hash",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txid:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/internal-transaction-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/batch-get-internal-transactions-by-hash",
+   "titulo": "Batch Get Internal Transactions By Hash",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:String"
+   ],
+   "opcionais": [
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/transaction-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/batch-get-transactions-by-hash",
+   "titulo": "Batch Get Transactions By Hash",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:Array"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/transaction/token-transfer-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/batch-get-token-transactions-by-hash",
+   "titulo": "Batch Get Token Transactions By Hash",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/token/token-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/token-list",
+   "titulo": "Get Token List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "protocolType:String",
+    "tokenContractAddress:String",
+    "startTime:String",
+    "endTime:String",
+    "orderBy:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/token/position-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/token-holder-list",
+   "titulo": "Get Token Holder List",
+   "obrigatorios": [
+    "chainShortName:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "holderAddress:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/token/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/token-transfer-details",
+   "titulo": "Get Token Transfer Details",
+   "obrigatorios": [
+    "chainShortName:String",
+    "tokenContractAddress:String"
+   ],
+   "opcionais": [
+    "maxAmount:String",
+    "minAmount:String",
+    "page:String",
+    "limit:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/log/by-address",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/logs-by-address",
+   "titulo": "Get Logs By Address",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/log/by-block-and-address",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/logs-by-block-and-address",
+   "titulo": "Get Logs By Block And Address",
+   "obrigatorios": [
+    "chainShortName:String",
+    "startBlockHeight:String",
+    "endBlockHeight:String",
+    "address:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/log/by-address-and-topic",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/logs-by-address-and-topic",
+   "titulo": "Get Logs By Address And Topic",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String",
+    "topic0:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/log/by-transaction",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/logs-by-hash",
+   "titulo": "Get Logs By Hash",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/contract/verify-source-code",
+   "metodo": "POST",
+   "paginaSlug": "xlayer/developer/data/verify-contract-source-code",
+   "titulo": "Verify Contract Source Code",
+   "obrigatorios": [
+    "chainShortName:String",
+    "contractAddress:String",
+    "contractName:String",
+    "sourceCode:String",
+    "codeFormat:String"
+   ],
+   "opcionais": [
+    "compilerVersion:String",
+    "optimization:String",
+    "optimizationRuns:String",
+    "contractAbi:String",
+    "evmVersion:String",
+    "licenseType:String",
+    "viaIr:Bol",
+    "libraryInfo:Array"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/contract/check-verify-result",
+   "metodo": "POST",
+   "paginaSlug": "xlayer/developer/data/contract-verification-results",
+   "titulo": "Get Contract Verification Results",
+   "obrigatorios": [
+    "chainShortName:String",
+    "guid:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/contract/verify-proxy-contract",
+   "metodo": "POST",
+   "paginaSlug": "xlayer/developer/data/verify-proxy-contract",
+   "titulo": "Verify Proxy Contract",
+   "obrigatorios": [
+    "chainShortName:String",
+    "proxyContractAddress:String"
+   ],
+   "opcionais": [
+    "expectedImplementation:String"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/contract/check-proxy-verify-result",
+   "metodo": "POST",
+   "paginaSlug": "xlayer/developer/data/proxy-contract-verification-results",
+   "titulo": "Get Proxy Contract Verification Results",
+   "obrigatorios": [
+    "chainShortName:String",
+    "guid:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/contract/verify-contract-info",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/verified-contract-abi-and-source-code",
+   "titulo": "Get Verified Contract ABI and Source Code",
+   "obrigatorios": [
+    "chainShortName:String",
+    "contractAddress:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/block/block-fills",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-block-details",
+   "titulo": "Get Block Details",
+   "obrigatorios": [
+    "chainShortName:String",
+    "height:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/block/block-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-block-list",
+   "titulo": "Get Block List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "height:String",
+    "limit:Integer",
+    "page:Integer"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/block/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-block-transaction-list",
+   "titulo": "Get Block Transaction List",
+   "obrigatorios": [
+    "chainShortName:String",
+    "height:String"
+   ],
+   "opcionais": [
+    "limit:Integer",
+    "page:Integer"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/transaction/transaction-fills",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-transaction-details",
+   "titulo": "Get Transaction Details",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txid:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/block/transaction-list-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-batch-get-block-transactions",
+   "titulo": "Batch Get Block Transactions",
+   "obrigatorios": [
+    "chainShortName:String",
+    "startBlockHeight:Long",
+    "endBlockHeight:Long"
+   ],
+   "opcionais": [
+    "limit:Integer",
+    "page:Integer"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/transaction/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-transaction-list",
+   "titulo": "Get Transaction List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "blockHash:String",
+    "height:Integer",
+    "limit:Integer",
+    "page:Integer"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/transaction/transaction-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-batch-get-transactions",
+   "titulo": "Batch Get Transactions",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/address/information-evm",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-address-information",
+   "titulo": "Get Address Information",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/address/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-address-transaction-list",
+   "titulo": "Get Address Transaction List",
+   "obrigatorios": [
+    "chainShortName:String",
+    "address:String"
+   ],
+   "opcionais": [
+    "startBlockHeight:Long",
+    "endBlockHeight:Long",
+    "limit:Integer",
+    "page:Integer"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/cross/transaction-fills",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-cross-chain-transaction-details",
+   "titulo": "Get Cross-chain Transaction Details",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txid:String"
+   ],
+   "opcionais": []
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/cross/transaction-list",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-cross-chain-transaction-list",
+   "titulo": "Get Cross-chain Transaction List",
+   "obrigatorios": [
+    "chainShortName:String"
+   ],
+   "opcionais": [
+    "txid:String",
+    "height:Integer",
+    "startBlockHeight:Long",
+    "endBlockHeight:Long",
+    "address:String",
+    "from:String",
+    "to:String",
+    "tokenContractAddress:String",
+    "limit:Integer",
+    "page:Integer"
+   ]
+  },
+  {
+   "caminho": "/api/v5/xlayer/tz/cross/transaction-multi",
+   "metodo": "GET",
+   "paginaSlug": "xlayer/developer/data/tz-batch-get-cross-chain-transactions",
+   "titulo": "Batch Get Cross-chain Transactions",
+   "obrigatorios": [
+    "chainShortName:String",
+    "txId:String"
+   ],
+   "opcionais": []
+  }
+ ],
+ "semPaginaNoIndice": [
+  "/api/v6/dex/pre-transaction/check-approvals",
+  "/api/v6/dex/pre-transaction/nonce",
+  "/api/v6/dex/market/token/toplist",
+  "/api/v6/pay/a2a/payment/create",
+  "/api/v6/pay/mpp/charge/settle",
+  "/api/v6/pay/mpp/charge/verifyHash",
+  "/api/v6/pay/mpp/session/close",
+  "/api/v6/pay/mpp/session/open",
+  "/api/v6/pay/mpp/session/settle",
+  "/api/v6/pay/mpp/session/status",
+  "/api/v6/pay/mpp/session/topUp",
+  "/api/v6/pay/x402/settle",
+  "/api/v6/pay/x402/settle/status",
+  "/api/v6/pay/x402/subscriptions",
+  "/api/v6/pay/x402/subscriptions/cancel",
+  "/api/v6/pay/x402/subscriptions/cancel-pending-change",
+  "/api/v6/pay/x402/subscriptions/change",
+  "/api/v6/pay/x402/subscriptions/charge",
+  "/api/v6/pay/x402/subscriptions/charges",
+  "/api/v6/pay/x402/subscriptions/detail",
+  "/api/v6/pay/x402/subscriptions/finalize-expired",
+  "/api/v6/pay/x402/subscriptions/pending",
+  "/api/v6/pay/x402/supported",
+  "/api/v6/pay/x402/verify",
+  "/api/v6/pay/x402/verify-signature",
+  "/api/v6/x402/settle",
+  "/api/v6/x402/supported",
+  "/api/v6/x402/verify"
+ ]
+}

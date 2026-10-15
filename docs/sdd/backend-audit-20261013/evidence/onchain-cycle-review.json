@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "kind": "sdd_cycle_review",
+  "proposal_id": "backend-read-reliability-20261013",
+  "proposal_sha256": "206014185dd5d16aa5381444ec86ee574a3ced035dd8c58e8b9c2f6b980cfb3a",
+  "objective_sha256": "2b0c2eba0d33cccf45951d19ad59dbdd8b0a727cd3f2b952004865db6dde5ecb",
+  "constraints_sha256": "1c8ec5b801879aff19aa0ac6a5aa579899c828cc238a2f60afa45629dfb0e684",
+  "implementer_id": "root-01a1361d-backend",
+  "reviewer_id": "audit_intelligence",
+  "decision": "approve",
+  "scope_assessment": "within_authorized_objective",
+  "scope_reason": "A proposta exata permanece no objetivo observado de auditar e corrigir o backend OKX Web3/Onchain OS: trata admissão concorrente no teto local, revalidação de cooldown/bloqueio na fila e prazo durante fetch e corpo. NEXT-CYCLE delimita mudanças a client.ts, client.test.ts, gateway.ts e gateway.test.ts em src/onchain-read, com regressões offline, preservação dos contratos existentes e garantia somente por instância de gateway. Exclui pedidos reais, credenciais reais, negociação, publicação, novos gastos, alteração do histórico mensal e áreas concorrentes reservadas, incluindo coletor, configuração, operador, web, aprendizado e outcomes. Conferi o SHA256 da proposta compactada e o da referência NEXT-CYCLE; os hashes vinculados de objetivo e restrições foram preservados exatamente, sem inventar autorização humana. O preflight de ownership e hashes, ajuste e congelamento da SPEC, verificação e revisão independente da implementação ainda são necessários. Esta decisão aprova somente o escopo desta proposta; não aprova implementação futura, ações externas, operação live ou ML, nem atribui conformidade integral ao evento histórico de integração da carteira."
+}

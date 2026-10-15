@@ -28,8 +28,8 @@ export interface BalanceRow {
   /** Null when the provider has no price: a balance with no price is not worth zero. */
   readonly priceUsd: number | null;
   readonly valueUsd: number | null;
-  /** The provider's own mark for a token it considers risky (usually an airdrop). */
-  readonly flaggedRisk: boolean;
+  /** Provider risk mark. False means unflagged, not safe; null means unknown. */
+  readonly flaggedRisk: boolean | null;
 }
 
 export interface BalancesData {
@@ -163,7 +163,7 @@ export function parseBalances(raw: unknown, asked: readonly string[]): BalancesD
     const valueUsd = numOrNull(item.valueUsd);
     if (typeof item.chainIndex !== "string" || !asked.includes(item.chainIndex)) return null;
     if (symbol === undefined || symbol === null || tokenAddress === undefined || priceUsd === undefined || valueUsd === undefined) return null;
-    if (!isNum(item.balance) || item.balance < 0 || typeof item.flaggedRisk !== "boolean") return null;
+    if (!isNum(item.balance) || item.balance < 0 || (item.flaggedRisk !== null && typeof item.flaggedRisk !== "boolean")) return null;
     if ((priceUsd !== null && priceUsd < 0) || (valueUsd !== null && valueUsd < 0)) return null;
     rows.push({ chainIndex: item.chainIndex, symbol, tokenAddress, balance: item.balance, priceUsd, valueUsd, flaggedRisk: item.flaggedRisk });
   }
@@ -350,7 +350,7 @@ export function createHoldingsReader(options: { readonly base?: string; readonly
     value(params, signal) {
       const p = checkedParams(params);
       if (p === null) return refuse();
-      return call("/onchain/wallet-value", new URLSearchParams({ address: p.address, chains: p.chains.join(",") }), p.chains, (raw) => parseValue(raw), signal);
+      return call("/onchain/wallet-value", new URLSearchParams({ address: p.address, chains: p.chains.join(","), assetType: "1" }), p.chains, (raw) => parseValue(raw), signal);
     },
     balances(params, signal) {
       const p = checkedParams(params);

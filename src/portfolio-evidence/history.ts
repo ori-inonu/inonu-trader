@@ -4,8 +4,8 @@
  */
 
 import { decAdd, decSub, parseDec, type Dec } from "./decimal.ts";
-import { hashOf } from "./canonical.ts";
-import { buildIdentity, canonicalAccount, sanitizeDisplay } from "./identity.ts";
+import { hashOf, safeScalar } from "./canonical.ts";
+import { boundedChainIndex, buildIdentity, canonicalAccount, sanitizeDisplay } from "./identity.ts";
 import { OK, freshnessReport, state, statusOfFreshness, statusOfState, worstStatus, FUTURE_TOLERANCE_MS } from "./state.ts";
 import type { Coverage, CostBasisStatement, HistoryEntry, HistorySection, HistoryWindow, Issue, RejectedRow, SourceInfo, Status } from "./types.ts";
 
@@ -90,7 +90,7 @@ export function buildHistorySection(input: HistoryBuildInput): HistorySection {
   let outOfOrder = false;
 
   for (const row of input.rows) {
-    const chainIndex = typeof row.chainIndex === "string" ? row.chainIndex : null;
+    const chainIndex = boundedChainIndex(row.chainIndex);
     const built = buildIdentity(row.chainIndex, row.tokenContractAddress);
     if (!built.ok) {
       rejected.push({ locator: row.locator, code: built.code === "unknown_network" ? "network_mismatch" : "contract_invalid_for_network", chainIndex });
@@ -115,7 +115,7 @@ export function buildHistorySection(input: HistoryBuildInput): HistorySection {
       lastTime = txTimeMs;
     }
     const direction = directionOf(built.identity.chainIndex, input.account, row);
-    const entryId = hashOf([built.identity.key, hash, itype, row.methodId ?? null, row.nonce ?? null, row.amount ?? null, addressesOf(row.from), addressesOf(row.to)]).slice(0, 16);
+    const entryId = hashOf([built.identity.key, hash, itype, safeScalar(row.methodId), safeScalar(row.nonce), safeScalar(row.amount), addressesOf(row.from), addressesOf(row.to)]).slice(0, 16);
 
     let entryState = OK;
     if (amount === null) entryState = state("unverified", "amount_unreadable");
@@ -190,12 +190,15 @@ export function buildHistorySection(input: HistoryBuildInput): HistorySection {
 
 /**
  * Net inflow per asset within the window: received minus sent, over successful, readable entries. The unit of the provider
- * amount is not declared, so the result is a SIGNAL (positive or not), never a balance.
+ * amount is not declared, so the result is a SIGNAL (positive or not), never a balance. With `cutoffMs`, only movements up to
+ * that instant count (the moment the active balances were read).
  */
-export function netInflowByAsset(section: HistorySection): Map<string, Dec> {
+export function netInflowByAsset(section: HistorySection, cutoffMs?: number): Map<string, Dec> {
   const result = new Map<string, Dec>();
   for (const entry of section.entries) {
     if (entry.txStatus !== "success" || entry.amountText === null || (entry.direction !== "in" && entry.direction !== "out")) continue;
+    // Movements after the balances were read cannot explain what the balances showed.
+    if (cutoffMs !== undefined && (entry.txTimeMs === null || entry.txTimeMs > cutoffMs)) continue;
     const amount = parseDec(entry.amountText);
     if (amount === null) continue;
     const current = result.get(entry.identity.key) ?? { units: 0n, scale: 0 };

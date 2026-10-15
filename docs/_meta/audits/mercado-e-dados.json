@@ -1,0 +1,507 @@
+{
+  "owner": "mercado-e-dados",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T12:12:06-03:00",
+  "page": "docs/concepts/mercado-e-dados.md",
+  "page_lines": 120,
+  "programmatic_counts": {
+    "documents_classified": 27,
+    "classification_counts": {
+      "needs_review": 2,
+      "historical_evidence": 18,
+      "current_reference": 3,
+      "proposal": 2,
+      "frozen_contract": 1,
+      "stale_reference": 1
+    },
+    "files_inspected": 26,
+    "assigned_code_paths_inspected": 23,
+    "assigned_code_paths_total": 48,
+    "assigned_code_paths_not_inspected": 25
+  },
+  "documents": [
+    {
+      "path": "docs/OKX-DERIVATIVES-SPEC.md",
+      "read_mode": "sections",
+      "classification": "needs_review",
+      "reason": "Lido como referência, mas o código de derivativos e a integração não foram inspecionados; fora do foco Exchange pública, DEX, captura e histórico."
+    },
+    {
+      "path": "docs/okx-derivatives-v1/GUIA.md",
+      "read_mode": "sections",
+      "classification": "needs_review",
+      "reason": "Guia de avaliador offline; não inspecionei o código correspondente nesta auditoria de mercado e dados."
+    },
+    {
+      "path": "docs/okx-dex-sdk-units-v1/RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa versionada de unidades; reporta outputUnit desconhecida e não qualifica acesso live.",
+      "code_refs": [
+        "src/okx-market/round-trip.ts:94-110"
+      ]
+    },
+    {
+      "path": "docs/okx-dex-units-v3/RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa datada e requisitos propostos, não especificação congelada nem execução de quote.",
+      "code_refs": [
+        "src/okx-market/round-trip.ts:94-110"
+      ]
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-QUOTE-CONTRACT-20261009.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Captura contratual datada; separa unidade documentada de inferência, mas não comprova acesso ou arquivo DEX live.",
+      "code_refs": [
+        "src/okx-market/okx-dex.ts:317-339",
+        "src/okx-market/round-trip.ts:94-110"
+      ]
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-GUIDE.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "Guia de 10 de outubro descreve a correção de uma quote, outputUnit desconhecida e custos nulos, em acordo com a implementação local.",
+      "code_refs": [
+        "scripts/okx-dex-quote.ts:54-68",
+        "src/okx-market/round-trip.ts:112-171"
+      ]
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-PLAN.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Plano com gates e critérios; é plano, não recibo de conclusão, teste atual ou autorização para alterar a SPEC.",
+      "code_refs": [
+        "src/okx-market/round-trip.ts:112-171"
+      ]
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Checkpoint registra D1-D8 congelada com o SHA local conferido. A SPEC exige A→B→A, mas o código atual para após uma quote; o registro de freeze referenciado não está no checkout.",
+      "code_refs": [
+        "src/okx-market/round-trip.ts:156-162"
+      ]
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V4-INDEPENDENT-REVIEW.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Revisão independente de candidato/snapshot; não constitui verificação do working tree ou acesso live desta rodada."
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-47-VERIFICATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Relato de verificação de snapshot anterior; testes e comandos não foram repetidos nesta auditoria."
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-INTEGRATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro de integração com escopo e snapshot próprios; não prova execução presente."
+    },
+    {
+      "path": "docs/okx-dex-v2/SCHEMA-REGRESSION-COMPARISON.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Comparação de schema de revisão anterior; não é contrato atual de output para o cliente live.",
+      "code_refs": [
+        "src/okx-market/round-trip.ts:94-110"
+      ]
+    },
+    {
+      "path": "docs/OKX-HISTORICAL-ARCHIVES.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Fronteira metadata-only, dry-run e política de datas coincidem com o parser e CLI atuais; não afirma cobertura de arquivo.",
+      "code_refs": [
+        "scripts/okx-archive-discovery.ts:13-52",
+        "src/onchainos/archive-discovery.ts:84-121,176-239,259-271"
+      ]
+    },
+    {
+      "path": "docs/OKX-HISTORICAL-DATA-QUALIFICATION.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registra resposta de metadados de 2026-10-11 e dependências; o arquivo nunca foi baixado e direitos/cobertura atuais não foram requalificados.",
+      "code_refs": [
+        "src/onchainos/archive-discovery.ts:238-239"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-IDENTITY-FIX.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Evidência datada de uma correção de identidade; o código atual foi lido, mas os testes do recibo não foram executados novamente.",
+      "code_refs": [
+        "src/okx-market/okx-api.ts:145-162",
+        "src/okx-market/token-identity.ts:6-13"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-TDD-EVIDENCE.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Ciclo TDD anterior é histórico e não foi reexecutado; não qualifica chamada autenticada atual.",
+      "code_refs": [
+        "src/okx-market/okx-api.ts:165-222"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-DEX-V2-CONTRACT-AMENDMENT-DRAFT-20261009.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "O próprio arquivo diz rascunho, não congelado/não implementado; o bloqueio de uma quote existe no código, mas o rascunho não altera a SPEC congelada.",
+      "code_refs": [
+        "src/okx-market/round-trip.ts:94-110,156-162"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Afirma output em unidades mínimas e diz que scanner não foi implementado; ambos estão desatualizados frente à unidade unknown e ao CLI/código presentes.",
+      "code_refs": [
+        "src/okx-market/round-trip.ts:94-110",
+        "scripts/okx-market-scan.ts:9-41"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-LONG-GOAL-CHECKPOINT.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint registra estado e hash de congelamento em workspace isolado; é evidência datada, não execução ou autorização financeira atual.",
+      "code_refs": [
+        "docs/okx-dex-v2/OKX-DEX-V2-SPEC.md:3"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-INTEGRATION-VERIFICATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Verificação antiga e predominantemente sintética; nenhum resultado foi reexecutado nesta rodada.",
+      "code_refs": [
+        "src/okx-market/okx-scan.ts:17-72"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-LAYOUT-ADDENDUM.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Decisão histórica de layout/namespacing; não demonstra aprovação humana nem estado live.",
+      "code_refs": [
+        "src/okx-market/okx-api.ts:4-10"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-TDD-EVIDENCE.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Testes e resultados registrados pertencem a snapshots anteriores; não reexecutados.",
+      "code_refs": [
+        "src/okx-market/okx-scan.ts:17-72"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-WEB3-INTEGRATION.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Mapa de integração datado, sem prova de conta, permissão ou acesso live; os relógios e APIs atuais foram confrontados diretamente.",
+      "code_refs": [
+        "src/okx-market/okx-api.ts:4-10,165-189",
+        "scripts/okx-dex-quote.ts:54-68"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/REVIEW-V3.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Parecer sobre candidato/snapshot delimitado; não substitui inspeção ou revisão do código atual."
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-REVIEW-CORRECTED.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Revisão corrigida de integração, útil para proveniência histórica, sem repetição dos testes ou prova de acesso nesta rodada.",
+      "code_refs": [
+        "scripts/okx-market-scan.ts:26-44"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-REVIEW.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Revisão predecessora preservada; evidência histórica, não conclusão atual nem substituta da revisão corrigida."
+    },
+    {
+      "path": "docs/PUBLIC-MARKET-CAPTURE.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Guia dos limites, gate de runtime, timestamps e persistência coincide com a implementação atual; nenhuma captura foi executada.",
+      "code_refs": [
+        "src/public-market-capture/plan.ts:16-29",
+        "src/public-market-capture/node-adapter.ts:11-15",
+        "src/public-market-capture/runner.ts:18-29,229-247"
+      ]
+    }
+  ],
+  "code_inspected": [
+    "src/okx-api.ts",
+    "src/okx-clock.ts",
+    "src/system-one/clock.ts",
+    "src/okx-market/okx-api.ts",
+    "src/okx-market/okx-dex.ts",
+    "src/okx-market/round-trip.ts",
+    "src/okx-market/synthetic-round-trip.ts",
+    "src/okx-market/okx-scan.ts",
+    "src/okx-market/okx-opportunities.ts",
+    "src/okx-market/token-identity.ts",
+    "scripts/okx-market-scan.ts",
+    "scripts/okx-dex-quote.ts",
+    "scripts/okx-scan.ts",
+    "scripts/okx-archive-discovery.ts",
+    "src/onchainos/archive-discovery.ts",
+    "src/public-market-capture/plan.ts",
+    "src/public-market-capture/ingress.ts",
+    "src/public-market-capture/node-adapter.ts",
+    "src/public-market-capture/observations.ts",
+    "src/public-market-capture/runner.ts",
+    "src/public-market-capture/store.ts",
+    "src/public-market-capture/index.ts",
+    "scripts/public-market-capture.ts",
+    "scripts/capture.ts",
+    "web/src/lib/mesa/capture.ts",
+    "package.json"
+  ],
+  "code_not_inspected": [
+    "src/okx-api.test.ts",
+    "src/okx-clock.test.ts",
+    "src/okx-market/dex-cli.test.ts",
+    "src/okx-market/dex-fixture.ts",
+    "src/okx-market/okx-api.test.ts",
+    "src/okx-market/okx-cli.test.ts",
+    "src/okx-market/okx-dex.test.ts",
+    "src/okx-market/okx-fixture.ts",
+    "src/okx-market/okx-opportunities.test.ts",
+    "src/okx-market/okx-scan.test.ts",
+    "src/okx-market/round-trip.test.ts",
+    "src/public-market-capture/capture.test.ts",
+    "src/public-market-capture/cli.test.ts",
+    "src/public-market-capture/ingress.test.ts",
+    "src/public-market-capture/lifecycle.test.ts",
+    "src/public-market-capture/limits.test.ts",
+    "src/public-market-capture/metadata.test.ts",
+    "src/public-market-capture/node-adapter.test.ts",
+    "src/public-market-capture/recovery.test.ts",
+    "src/public-market-capture/reporting.test.ts",
+    "src/public-market-capture/sequence.test.ts",
+    "scripts/fixtures/okx-scan-synthetic.json",
+    "scripts/okx-archive-discovery.test.ts",
+    "scripts/okx-archive-observed.test.ts",
+    "scripts/okx-scan.test.ts"
+  ],
+  "artifacts_reviewed": [
+    "docs/okx-dex-sdk-units-v1/SOURCES.json",
+    "docs/okx-dex-units-v3/SOURCES.json",
+    "docs/okx-dex-v2/ROOT-47-TEST-MANIFEST.json",
+    "docs/okx-dex-v2/ROOT-COMPLETE-MANIFEST.json",
+    "docs/okx-dex-v2/ROOT-INTEGRATED-MANIFEST.json",
+    "docs/okx-dex-v2/SYNTHETIC-REPORT.json",
+    "docs/okx-market-v1/OKX-API-FIX-DECISION.json",
+    "docs/okx-market-v1/OKX-IDENTITY-REPAIR-DECISION.json",
+    "docs/okx-market-v1/OKX-SCANNER-INTEGRATION-DECISION.json",
+    "docs/okx-market-v1/OKX-SCANNER-NAMESPACE-DECISION.json",
+    "docs/okx-market-v1/OKX-SCANNER-REVIEW-DECISION.json",
+    "docs/okx-market-v1/REVIEW-MANIFEST.json",
+    "docs/okx-market-v1/ROOT-INTEGRATION-PRESERVED-MANIFEST.json"
+  ],
+  "claims": [
+    {
+      "statement": "Cliente Market Web3 fixa cinco rotas, exige credenciais HMAC e não estabelece origem/autenticação remota apenas pela identidade do factory.",
+      "source_path": "src/okx-market/okx-api.ts",
+      "lines": "4-16,165-189",
+      "status": "confirmed_static"
+    },
+    {
+      "statement": "Scanner limita a 30 tokens, chama protocolos e listagem, preços se houver identidades e duas rotas de enriquecimento por token; no limite, teto 63 chamadas de método.",
+      "source_path": "src/okx-market/okx-scan.ts",
+      "lines": "17-72",
+      "status": "confirmed_static",
+      "derived_value": "2 + 1 + 2*30 = 63"
+    },
+    {
+      "statement": "Scanner compara priceTimeMs com now local, bloqueia preço futuro/velho, converte riskControlLevel zero em null e nunca qualifica execução.",
+      "source_path": "src/okx-market/okx-opportunities.ts",
+      "lines": "45-83",
+      "status": "confirmed_static"
+    },
+    {
+      "statement": "DEX autenticado preserva outputRaw com outputUnit unknown, consulta cobertura e no máximo uma quote, depois retorna sem outputAtomic/delta/net.",
+      "source_path": "src/okx-market/round-trip.ts",
+      "lines": "94-110,144-162",
+      "status": "confirmed_static",
+      "supporting_refs": [
+        "src/okx-market/okx-dex.ts:317-344",
+        "scripts/okx-dex-quote.ts:54-68"
+      ]
+    },
+    {
+      "statement": "A implementação atual diverge do D2 congelado: a SPEC exige A→B→A, mas o código termina depois da primeira quote por unidade não verificada.",
+      "source_path": "src/okx-market/round-trip.ts",
+      "lines": "156-162",
+      "status": "mismatch_found",
+      "reference_path": "docs/okx-dex-v2/OKX-DEX-V2-SPEC.md",
+      "reference_lines": "21"
+    },
+    {
+      "statement": "syncOkxClock aplica offset a partir de 10.000 ms; o medidor usa até três amostras e descarta RTT acima de 2.500 ms; os CLIs não bloqueiam quando o retorno é null.",
+      "source_path": "src/okx-clock.ts",
+      "lines": "16-72",
+      "status": "confirmed_static",
+      "supporting_refs": [
+        "src/system-one/clock.ts:15-21,66-90",
+        "scripts/okx-market-scan.ts:35-41",
+        "scripts/okx-dex-quote.ts:54-67"
+      ]
+    },
+    {
+      "statement": "Public market capture exige recibo e runtime, mas o adaptador atual declara capacidades necessárias desconhecidas/falsas e recusa antes de request/connect e criação do store.",
+      "source_path": "src/public-market-capture/node-adapter.ts",
+      "lines": "11-15,38-65",
+      "status": "confirmed_static",
+      "supporting_refs": [
+        "src/public-market-capture/runner.ts:18-29",
+        "src/public-market-capture/plan.ts:16-29"
+      ]
+    },
+    {
+      "statement": "Archive discovery é offline por padrão e, com --public, faz somente GET de metadados sem retry/download; qualificação permanece unknown.",
+      "source_path": "src/onchainos/archive-discovery.ts",
+      "lines": "238-271",
+      "status": "confirmed_static",
+      "supporting_refs": [
+        "scripts/okx-archive-discovery.ts:13-52",
+        "src/onchainos/archive-discovery.ts:84-121,176-239"
+      ]
+    },
+    {
+      "statement": "O alias capture do pacote aponta para um loop paper separado com RPC e createModel; o helper web captureChart exporta PNG local.",
+      "source_path": "scripts/capture.ts",
+      "lines": "3-30",
+      "status": "confirmed_static",
+      "supporting_refs": [
+        "package.json:20-44",
+        "web/src/lib/mesa/capture.ts:37-55"
+      ]
+    },
+    {
+      "statement": "Research de 2026-10-09 atribui unidade atômica à saída DEX e declara scanner ausente; pesquisas posteriores e código atual não sustentam essas afirmações como estado presente.",
+      "source_path": "docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+      "lines": "69,202",
+      "status": "stale_reference",
+      "supporting_refs": [
+        "docs/okx-dex-sdk-units-v1/RESEARCH.md:7-18",
+        "docs/okx-dex-units-v3/RESEARCH.md:3-6",
+        "src/okx-market/round-trip.ts:94-110",
+        "scripts/okx-market-scan.ts:9-41"
+      ]
+    }
+  ],
+  "documentation_findings": [
+    {
+      "status": "mismatch_found",
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-SPEC.md",
+      "classification": "frozen_contract",
+      "reference_lines": "3,9,21",
+      "current_code": "src/okx-market/round-trip.ts:156-162",
+      "finding": "Checkpoint registra o hash local da SPEC como congelado; D2 requer round-trip A→B→A. O código atual faz uma quote e para com outputUnit unknown. A divergência é um bloqueio conservador, mas continua divergência do contrato congelado. O guia posterior descreve o bloqueio e a emenda permanece rascunho; não alterei a SPEC. O registry OKX-DEX-V2-FREEZE.json citado não está no checkout."
+    },
+    {
+      "status": "stale_reference",
+      "path": "docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+      "classification": "stale_reference",
+      "reference_lines": "69,202",
+      "current_code": "src/okx-market/round-trip.ts:94-110; scripts/okx-market-scan.ts:9-41",
+      "finding": "A pesquisa generaliza indevidamente unidade mínima para saída DEX e diz que o scanner não foi implementado. Código atual preserva saída raw unknown e disponibiliza scanner/alias."
+    },
+    {
+      "status": "proposal_not_authority",
+      "path": "docs/okx-market-v1/OKX-DEX-V2-CONTRACT-AMENDMENT-DRAFT-20261009.md",
+      "classification": "proposal",
+      "reference_lines": "3,15-17",
+      "current_code": "src/okx-market/round-trip.ts:156-162",
+      "finding": "O bloqueio proposto está no código e no guia posterior, mas o draft declara não congelado/não implementado e não substitui a SPEC. É necessária reconciliação documental formal, sem edição nesta delegação."
+    },
+    {
+      "status": "current_reference_matches_static_code",
+      "path": "docs/PUBLIC-MARKET-CAPTURE.md",
+      "classification": "current_reference",
+      "reference_lines": "7,24-30,64-89,103-124",
+      "current_code": "src/public-market-capture/plan.ts:16-29; node-adapter.ts:11-15; runner.ts:18-29",
+      "finding": "Os limites e a recusa de runtime descritos no guia correspondem ao código. Nenhum acesso, captura ou permissão foi observado."
+    },
+    {
+      "status": "current_reference_metadata_only",
+      "path": "docs/OKX-HISTORICAL-ARCHIVES.md",
+      "classification": "current_reference",
+      "reference_lines": "13,27-29,38-47,59-65",
+      "current_code": "src/onchainos/archive-discovery.ts:84-121,176-239,259-271",
+      "finding": "O guia e o código limitam-se à descoberta/validação de metadados; direitos, disponibilidade, schema do arquivo e cobertura permanecem unknown."
+    },
+    {
+      "status": "scope_clarification",
+      "path": "package.json",
+      "classification": "current_code",
+      "reference_lines": "31-45",
+      "current_code": "scripts/capture.ts:3-30; scripts/public-market-capture.ts:5-35; web/src/lib/mesa/capture.ts:37-55",
+      "finding": "Há três significados de capture: alias paper com RPC/model, gravador WebSocket recusado e exportação PNG local. Não os trate como o mesmo fluxo."
+    },
+    {
+      "status": "needs_review",
+      "path": "docs/OKX-DERIVATIVES-SPEC.md; docs/okx-derivatives-v1/GUIA.md",
+      "classification": "needs_review",
+      "reference_lines": "1-30",
+      "current_code": null,
+      "finding": "Os documentos foram lidos, mas o código de derivativos não pertence ao escopo inspecionado; nenhuma conclusão sobre sua implementação."
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "unverified": [
+    "Nenhuma chamada de API, WebSocket, RPC, quote, sincronização de clock, download de arquivo, captura, teste ou script de produto foi executado.",
+    "Nenhum .env, credencial, saldo/carteira privada ou modelo foi consultado; OKX-WEB3-ENV.example e ROOT-47-TEST-STDOUT.txt não foram abertos.",
+    "Credenciais, permissões/entitlements, disponibilidade por região, limites/quota, custos faturados e direitos de uso atuais permanecem não comprovados.",
+    "O hash local da SPEC DEX coincide com o hash de freeze registrado no checkpoint, mas o arquivo OKX-DEX-V2-FREEZE.json citado não existe neste checkout; a proveniência primária do freeze não foi inspecionada.",
+    "Nenhum arquivo histórico foi baixado; acesso, formato interno, unidades, continuidade, cobertura por dia/instrumento e disponibilidade histórica continuam desconhecidos.",
+    "Código de derivativos e caminhos de teste/fixture restantes do owner não foram inspecionados; veja code_not_inspected e classifications needs_review.",
+    "A árvore global tinha 842 entradas em git status; o log registra deriva concorrente em 44 caminhos de código/teste. Somente os caminhos atribuídos e os arquivos desta auditoria foram comparados; alterações alheias não foram inspecionadas."
+  ],
+  "source_drift": {
+    "snapshot_captured_at": "2026-10-13T10:53:03.109798-03:00",
+    "current_head_matches_snapshot": true,
+    "owner_code_paths_checked": 48,
+    "owner_code_paths_changed_or_missing": [],
+    "owner_document_paths_checked": 27,
+    "owner_document_paths_changed_or_missing": [],
+    "owner_artifact_paths_total": 15,
+    "json_artifacts_checked": 13,
+    "json_artifact_paths_changed_or_missing": [],
+    "artifacts_not_opened": [
+      "docs/okx-dex-v2/ROOT-47-TEST-STDOUT.txt",
+      "docs/okx-market-v1/OKX-WEB3-ENV.example"
+    ],
+    "global_git_status_entries": 842,
+    "global_concurrent_drift_report": {
+      "path": "docs/log.md",
+      "line": 89,
+      "reported_code_or_test_paths": 44
+    }
+  },
+  "billed_cost": null
+}

@@ -1,0 +1,26 @@
+{
+  "candidate": "C:/Users/gabri/.codex/workspaces/ui-audit-01a13627/connected-candidate",
+  "head": "c56a3e78102d85a46826a4b5601921970dee432f",
+  "files": [
+    {
+      "path": "web/src/lib/inonu/portfolio.ts",
+      "sha256": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af"
+    },
+    {
+      "path": "web/src/lib/inonu/portfolio.test.ts",
+      "sha256": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad"
+    },
+    {
+      "path": "web/src/lib/wallet/holdings.ts",
+      "sha256": "1e8e42e7bef7d1219e9cca32e40d2bbbf04fb8ec1a9043ce7db3ea5307ad09b6"
+    },
+    {
+      "path": "web/src/lib/wallet/holdings.test.ts",
+      "sha256": "1ce67cd369e75248fd2b9706fee91689ff924f14fc3eeba005ebd15e4b756121"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/PortfolioConsultation.tsx",
+      "sha256": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868"
+    }
+  ]
+}

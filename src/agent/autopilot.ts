@@ -38,7 +38,25 @@ export const AGGRESSIVE_MANDATE: Mandate = { risk: "agressivo", reserve: "baixa"
 export const HOT_INTERVAL_MIN = 2;
 
 /** The interval between looks: the rhythm, or the hot interval when it is shorter and the market is hot. A rhythm that is not a number is left as it is. */
-export const effectiveIntervalMin = (rhythmMin: number, hot: boolean): number => (hot && Number.isFinite(rhythmMin) ? Math.min(rhythmMin, HOT_INTERVAL_MIN) : rhythmMin);
+export const effectiveIntervalMin = (rhythmMin: number, hot: boolean, hotMin: number = HOT_INTERVAL_MIN): number => (hot && Number.isFinite(rhythmMin) ? Math.min(rhythmMin, hotMin) : rhythmMin);
+
+/**
+ * The fastest hot interval the owner's bold profile may keep, in minutes (the owner's request of 2026-10-15: decide faster, the clock of two minutes is too slow). It is a FLOOR, not a rhythm: the interval is
+ * what the day's capacity of consultations can pay (`boldHotIntervalMin`), so a day with capacity left over looks faster and a day without it does not. The other profiles keep `HOT_INTERVAL_MIN`.
+ */
+export const BOLD_HOT_FLOOR_MIN = 1;
+
+/**
+ * The hot interval under the bold profile: what is left of the day's capacity of consultations spread evenly over what is left of the UTC day (the day of the budget), never under `BOLD_HOT_FLOOR_MIN`. With the whole
+ * capacity of 720 and the whole day that is the two minutes of before; with capacity left over (an earlier part of the day looked less than it could) it is shorter, down to one minute. The capacity itself is NOT raised:
+ * it stays sized for a look every `HOT_INTERVAL_MIN` minutes (`wire.ts`), so the cap is the limit and the budget's own pace of the day still guards it. With no capacity left the interval is unbounded: the rhythm
+ * of the mandate rules and the budget refuses the look. Rounded to two places so the screen and the timers read the same number. Pure.
+ */
+export function boldHotIntervalMin(input: { readonly remainingConsults: number; readonly remainingMs: number }): number {
+  if (!Number.isFinite(input.remainingConsults) || input.remainingConsults <= 0) return Number.POSITIVE_INFINITY;
+  if (!Number.isFinite(input.remainingMs) || input.remainingMs <= 0) return BOLD_HOT_FLOOR_MIN;
+  return Math.max(BOLD_HOT_FLOOR_MIN, Math.round((input.remainingMs / 60_000 / input.remainingConsults) * 100) / 100);
+}
 
 /** The quota of a tier of the data provider as the gateway counts it: what was used today (UTC day), the monthly cap, and optionally the month's total used so far; null when the cap is not known. */
 export interface QuotaTier {

@@ -14,12 +14,12 @@ import { mergeMeta } from "../../onchainos/read.ts";
 import { endpoint as marketEndpoint } from "../../onchainos/endpoints.ts";
 import { asArray, asRecord, field } from "../../onchainos/values.ts";
 import { isAddressForChain, validateChainList } from "../../okx-wallet/chains.ts";
-import { buildIdentity } from "../identity.ts";
+import { boundedChainIndex, buildIdentity } from "../identity.ts";
 import { decSum, decToText, parseDec } from "../decimal.ts";
 import { OK, state } from "../state.ts";
 import type { RawBalanceRow } from "../balances.ts";
 import type { RawHistoryRow } from "../history.ts";
-import type { RawOverview, RawPnlRow } from "../address-analysis.ts";
+import type { RawDexTrade, RawLatestPnl, RawOverview, RawPnlRow } from "../address-analysis.ts";
 import type { LiquidityEvidence, PriceEvidence, RiskEvidence, TokenInfoEvidence } from "../types.ts";
 import { walletEndpoint } from "./okx-endpoints.ts";
 
@@ -33,11 +33,27 @@ export interface Read<T> {
   readonly meta: ReadMeta;
 }
 
+/** The provider keeps at most this many records for the PnL list and the DEX trade history. */
+export const PROVIDER_RECORD_CEILING = 1000;
+
+/** A cursor is a string, or nothing. Any other type is not understood, and guessing "no more pages" would read a cut walk as complete. */
+function cursorOf(value: unknown): string | null {
+  if (value === undefined || value === null || value === "") return null;
+  if (typeof value === "string") return value;
+  throw new OnchainosError("schema", "cursor ilegível");
+}
+
+/** A walk that reached the provider's own ceiling may have more behind it, even when the last cursor is empty. */
+function atCeiling<R>(collected: { rows: R[]; truncated: boolean; stopReason: PagingStop }): { truncated: boolean; stopReason: PagingStop | "provider_record_ceiling" } {
+  if (collected.truncated || collected.rows.length < PROVIDER_RECORD_CEILING) return { truncated: collected.truncated, stopReason: collected.stopReason };
+  return { truncated: true, stopReason: "provider_record_ceiling" };
+}
+
 export interface PagedRead<R> {
   readonly rows: R[];
   readonly pages: number;
   readonly truncated: boolean;
-  readonly stopReason: PagingStop;
+  readonly stopReason: PagingStop | "provider_record_ceiling";
   readonly meta: ReadMeta;
 }
 
@@ -184,8 +200,7 @@ export function parseHistoryPage(data: unknown, page: number): { rows: RawHistor
   if (list !== undefined && table !== undefined) throw new OnchainosError("schema", "histórico: transactionList e transactions presentes ao mesmo tempo (contrato ambíguo)");
   const shape: HistoryShape = table !== undefined ? "transactions" : "transactionList";
   const items = asArray(list ?? table, shape, 200);
-  const cursorValue = field(group, "cursor");
-  const cursor = typeof cursorValue === "string" && cursorValue !== "" ? cursorValue : null;
+  const cursor = cursorOf(field(group, "cursor"));
   const rows = items.map((raw, index): RawHistoryRow => {
     const row = asRecord(raw, "transação", index);
     return {
@@ -255,7 +270,7 @@ export async function readPortfolioOverview(port: GetPort, args: { chainIndex: s
 export function parsePnlPage(data: unknown, page: number): { rows: RawPnlRow[]; cursor: string | null } {
   const group = singleGroup(data, "pnl");
   const list = asArray(field(group, "pnlList"), "pnlList", 1000);
-  const cursorValue = field(group, "cursor");
+  const cursor = cursorOf(field(group, "cursor"));
   const rows = list.map((raw, index): RawPnlRow => {
     const row = asRecord(raw, "linha", index);
     return {
@@ -272,7 +287,7 @@ export function parsePnlPage(data: unknown, page: number): { rows: RawPnlRow[]; 
       tokenPositionDuration: field(row, "tokenPositionDuration"),
     };
   });
-  return { rows, cursor: typeof cursorValue === "string" && cursorValue !== "" ? cursorValue : null };
+  return { rows, cursor };
 }
 
 export async function readRecentPnl(port: GetPort, args: { chainIndex: string; address: string; maxPages: number }): Promise<PagedRead<RawPnlRow>> {
@@ -289,7 +304,7 @@ export async function readRecentPnl(port: GetPort, args: { chainIndex: string; a
     },
     { maxPages: args.maxPages, maxRows: 100 * args.maxPages },
   );
-  return { rows: collected.rows, pages: collected.pages, truncated: collected.truncated, stopReason: collected.stopReason, meta: mergeMeta(metas) };
+  return { rows: collected.rows, pages: collected.pages, ...atCeiling(collected), meta: mergeMeta(metas) };
 }
 
 // ---------------------------------------------------------------------------
@@ -302,6 +317,15 @@ function identityOf(token: TokenQuery) {
   return built.identity;
 }
 
+/**
+ * The contract the market pages want on the wire: the market-price page says "for EVM chains use all-lowercase addresses", and
+ * the canonical form of an EVM contract IS lowercase (other families keep their case). The identity decides, not the caller.
+ */
+function wireContract(token: TokenQuery): string {
+  const identity = identityOf(token);
+  return identity.asset.kind === "contract" ? identity.asset.address : token.tokenContractAddress;
+}
+
 function checkTokens(tokens: readonly TokenQuery[]): TokenQuery[] {
   if (tokens.length < 1 || tokens.length > MAX_TOKENS_PER_MARKET_CALL) invalid(`de 1 a ${MAX_TOKENS_PER_MARKET_CALL} tokens`);
   const seen = new Set<string>();
@@ -309,7 +333,7 @@ function checkTokens(tokens: readonly TokenQuery[]): TokenQuery[] {
     const identity = identityOf(token);
     if (seen.has(identity.key)) invalid("token repetido");
     seen.add(identity.key);
-    return { chainIndex: identity.chainIndex, tokenContractAddress: token.tokenContractAddress };
+    return { chainIndex: identity.chainIndex, tokenContractAddress: wireContract(token) };
   });
 }
 
@@ -328,10 +352,16 @@ function rowsByIdentity(data: unknown, requested: readonly TokenQuery[]) {
   return { rows, missing: requested.map((token) => identityOf(token)).filter((identity) => !seen.has(identity.key)) };
 }
 
-const EPOCH = /^\d{10,16}$/;
+/**
+ * Milliseconds as 13 plain digits without a leading zero, which is 2001-09-09 or later, and not after 2100-01-01. Seconds (10
+ * digits) and microseconds (16 digits) are NOT milliseconds, and neither is anything with an exponent, sign, space or fraction.
+ */
+const MAX_EPOCH_MS = 4_102_444_800_000;
 function epoch(value: unknown): number | null {
   const text = typeof value === "number" && Number.isSafeInteger(value) ? String(value) : value;
-  return typeof text === "string" && EPOCH.test(text) ? Number(text) : null;
+  if (typeof text !== "string" || !/^[1-9]\d{12}$/.test(text)) return null;
+  const parsed = Number(text);
+  return parsed <= MAX_EPOCH_MS ? parsed : null;
 }
 
 export async function readPrices(port: PostPort, tokens: readonly TokenQuery[]): Promise<Read<{ prices: PriceEvidence[]; missing: string[] }>> {
@@ -342,7 +372,7 @@ export async function readPrices(port: PostPort, tokens: readonly TokenQuery[]):
     const price = field(record, "price");
     const parsed = parseDec(price);
     const evidenceState = parsed === null ? state("unverified", "price_unreadable") : parsed.units === 0n ? state("unverified", "price_zero_unverified") : OK;
-    return { identity, priceText: parsed === null ? null : (price as string), currency: null, timeMs: epoch(field(record, "time")), state: evidenceState };
+    return { identity, priceText: parsed === null ? null : (price as string), currency: null, timeMs: epoch(field(record, "time")), fetchedAtMs: result.meta.receivedAtMs, state: evidenceState };
   });
   return { value: { prices, missing: missing.map((identity) => identity.key) }, meta: result.meta };
 }
@@ -363,7 +393,7 @@ export async function readTokenDecimals(port: PostPort, tokens: readonly TokenQu
 /** Top pools of a token (at most five). The sum is a LOWER BOUND of the liquidity, never the total. */
 export async function readLiquidity(port: GetPort, token: TokenQuery): Promise<Read<LiquidityEvidence>> {
   const identity = identityOf(token);
-  const result = await port.get(marketEndpoint("market.token.top-liquidity"), { chainIndex: identity.chainIndex, tokenContractAddress: token.tokenContractAddress });
+  const result = await port.get(marketEndpoint("market.token.top-liquidity"), { chainIndex: identity.chainIndex, tokenContractAddress: wireContract(token) });
   const pools = asArray(result.data, "data", 5);
   const values = pools.map((raw, index) => parseDec(field(asRecord(raw, "pool", index), "liquidityUsd")));
   const readable = values.filter((value): value is NonNullable<typeof value> => value !== null);
@@ -374,7 +404,7 @@ export async function readLiquidity(port: GetPort, token: TokenQuery): Promise<R
 
 export async function readRisk(port: GetPort, token: TokenQuery): Promise<Read<RiskEvidence>> {
   const identity = identityOf(token);
-  const result = await port.get(marketEndpoint("market.token.advanced-info"), { chainIndex: identity.chainIndex, tokenContractAddress: token.tokenContractAddress });
+  const result = await port.get(marketEndpoint("market.token.advanced-info"), { chainIndex: identity.chainIndex, tokenContractAddress: wireContract(token) });
   const record = singleGroup(result.data, "advanced-info");
   const rawLevel = field(record, "riskControlLevel");
   const text = typeof rawLevel === "number" && Number.isSafeInteger(rawLevel) ? String(rawLevel) : rawLevel;
@@ -382,4 +412,108 @@ export async function readRisk(port: GetPort, token: TokenQuery): Promise<Read<R
   const rawTags = field(record, "tokenTags");
   const tags = Array.isArray(rawTags) ? rawTags.filter((tag): tag is string => typeof tag === "string" && /^[A-Za-z0-9]{1,48}$/.test(tag)).slice(0, 32) : [];
   return { value: { identity, riskControlLevel: level, tags, state: level === null ? state("unverified", "risk_level_unreadable") : OK }, meta: result.meta };
+}
+
+// ---------------------------------------------------------------------------
+// Address Analysis, the rest of the family: latest PnL of a token, DEX trade history, supported chains
+// ---------------------------------------------------------------------------
+
+/** Latest PnL of ONE token of one chain. The answer carries no identity: the caller keeps the token it asked for. */
+export async function readLatestPnl(port: GetPort, args: { chainIndex: string; address: string; tokenContractAddress: string }): Promise<Read<RawLatestPnl>> {
+  const chains = validChains([args.chainIndex]);
+  checkAddress(args.address, chains);
+  const identity = identityOf({ chainIndex: args.chainIndex, tokenContractAddress: args.tokenContractAddress });
+  const result = await port.get(walletEndpoint("portfolio.latestPnl"), { chainIndex: identity.chainIndex, walletAddress: args.address, tokenContractAddress: args.tokenContractAddress });
+  const group = singleGroup(result.data, "latest-pnl");
+  return {
+    value: { totalPnlUsd: field(group, "totalPnlUsd"), unrealizedPnlUsd: field(group, "unrealizedPnlUsd"), realizedPnlUsd: field(group, "realizedPnlUsd"), isPnlSupported: field(group, "isPnlSupported") },
+    meta: result.meta,
+  };
+}
+
+const MIN_WINDOW_MS = 946_684_800_000;
+const MAX_WINDOW_MS = 4_102_444_800_000;
+
+export interface DexHistoryArgs {
+  readonly chainIndex: string;
+  readonly address: string;
+  readonly beginMs: number;
+  readonly endMs: number;
+  /** Comma separated trade types: 1 buy, 2 sell, 3 transfer in, 4 transfer out. Omitted: all. */
+  readonly types?: string;
+  readonly tokenContractAddress?: string;
+  readonly maxPages: number;
+}
+
+export function parseDexHistoryPage(data: unknown, page: number): { rows: RawDexTrade[]; cursor: string | null } {
+  const group = singleGroup(data, "dex-history");
+  const list = asArray(field(group, "transactionList"), "transactionList", 200);
+  const cursor = cursorOf(field(group, "cursor"));
+  const rows = list.map((raw, index): RawDexTrade => {
+    const row = asRecord(raw, "negociação", index);
+    return {
+      locator: `/page/${page}/transactionList/${index}`,
+      type: field(row, "type"),
+      chainIndex: field(row, "chainIndex"),
+      tokenContractAddress: field(row, "tokenContractAddress"),
+      tokenSymbol: field(row, "tokenSymbol"),
+      valueUsd: field(row, "valueUsd"),
+      amount: field(row, "amount"),
+      price: field(row, "price"),
+      marketCap: field(row, "marketCap"),
+      pnlUsd: field(row, "pnlUsd"),
+      time: field(row, "time"),
+    };
+  });
+  return { rows, cursor };
+}
+
+/**
+ * DEX trade history of one chain in a REQUIRED window. The provider keeps at most 1000 records (100 per call) and declares no
+ * completeness, so a walk that ends is complete only for the window it was asked, never for the wallet's history.
+ */
+export async function readDexHistory(port: GetPort, args: DexHistoryArgs): Promise<PagedRead<RawDexTrade>> {
+  const chains = validChains([args.chainIndex]);
+  checkAddress(args.address, chains);
+  if (!Number.isSafeInteger(args.beginMs) || !Number.isSafeInteger(args.endMs) || args.beginMs < MIN_WINDOW_MS || args.endMs > MAX_WINDOW_MS || args.beginMs >= args.endMs) invalid("janela begin e end inválida");
+  if (args.types !== undefined) {
+    const parts = args.types.split(",");
+    if (!/^[1-4](,[1-4])*$/.test(args.types) || new Set(parts).size !== parts.length) invalid("tipos de negociação inválidos (1 a 4, sem repetição)");
+  }
+  if (args.tokenContractAddress !== undefined) identityOf({ chainIndex: args.chainIndex, tokenContractAddress: args.tokenContractAddress });
+  if (!Number.isInteger(args.maxPages) || args.maxPages < 1 || args.maxPages > 10) invalid("maxPages de 1 a 10 (o provedor guarda no máximo 1000 registros)");
+  const spec = walletEndpoint("portfolio.dexHistory");
+  const metas: ReadMeta[] = [];
+  const collected = await collectPages<RawDexTrade>(
+    async (cursor, page) => {
+      const result = await port.get(spec, {
+        chainIndex: args.chainIndex,
+        walletAddress: args.address,
+        begin: String(args.beginMs),
+        end: String(args.endMs),
+        tokenContractAddress: args.tokenContractAddress,
+        type: args.types,
+        limit: "100",
+        cursor: cursor ?? undefined,
+      });
+      metas.push(result.meta);
+      const parsed = parseDexHistoryPage(result.data, page);
+      return { rows: parsed.rows, nextCursor: parsed.cursor };
+    },
+    { maxPages: args.maxPages, maxRows: 100 * args.maxPages },
+  );
+  return { rows: collected.rows, pages: collected.pages, ...atCeiling(collected), meta: mergeMeta(metas) };
+}
+
+/** Chains the provider lists for the portfolio family. The page example shows two; whether that is the whole list is not stated. */
+export async function readPortfolioSupportedChains(port: GetPort): Promise<Read<string[]>> {
+  const result = await port.get(walletEndpoint("portfolio.supportedChain"));
+  const rows = asArray(result.data, "data", 500);
+  const chains: string[] = [];
+  rows.forEach((raw, index) => {
+    const chainIndex = boundedChainIndex(field(asRecord(raw, "cadeia", index), "chainIndex"));
+    if (chainIndex === null) throw new OnchainosError("schema", "chainIndex ilegível", { rowIndex: index });
+    if (!chains.includes(chainIndex)) chains.push(chainIndex);
+  });
+  return { value: chains, meta: result.meta };
 }

@@ -1,0 +1,772 @@
+{
+  "owner": "fita-e-decisao-jev",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "branch": "main",
+  "snapshot_scope": "working-tree-with-uncommitted-and-untracked-files",
+  "snapshot_captured": "2026-10-13T10:53:03.109798-03:00",
+  "observed_at": "2026-10-13T11:21:06-03:00",
+  "page": "C:/Users/gabri/jev-trader/docs/concepts/fita-e-decisao-jev.md",
+  "page_lines": 70,
+  "documents": [
+    {
+      "path": "docs/INONU-F5-F6-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-F5-F6-INDEPENDENT-REVIEW-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-F5-F6-MAIN-INTEGRATION-AUDIT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-F5-F6-RELEASE-AUDIT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-F5-F6-TDD-EVIDENCE-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-INDEPENDENT-SPEC-REVIEW-4a1d9e9.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Defeitos de clock, funding, cancelamento e normalização foram reproduzidos no candidato 4a1d9e9; seus hashes não são os do código atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-INDEPENDENT-STANDARDS-REVIEW-4a1d9e9.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Revisão ligada ao candidato/hash antigo. Claims sobre idade de candles e ordenação foram comparados com state/feed atuais; execução histórica não foi repetida.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-MODEL-SAFETY-SCOPE-REVIEW-V2-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-MODEL-SAFETY-SPEC-20261011.md",
+      "read_mode": "sections",
+      "classification": "needs_review",
+      "reason": "Cabeçalho declara proposed e freeze pending; os comportamentos M1-M4 são observáveis no código, sem transformar proposta em contrato formalmente congelado.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-MODEL-SAFETY-SPEC-V2-20261011.md",
+      "read_mode": "sections",
+      "classification": "needs_review",
+      "reason": "Cabeçalho declara proposed e freeze pending; os comportamentos M1-M4 são observáveis no código, sem transformar proposta em contrato formalmente congelado.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-SAFETY-SEPARATION-PROPOSAL-20261011.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Plano/proposta, não resultado executado nem autorização desta tarefa.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-READ-SAFETY-SEPARATION-REVIEW-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-AGES-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-BOOK-PROOF-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-COVERAGE-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-EPOCH-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-F1-F4-INDEPENDENT-SPEC-V2-REVIEW-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-F1-F4-PLAN-20261011.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Plano/proposta, não resultado executado nem autorização desta tarefa.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-F1-F4-SPEC-V2-20261011.md",
+      "read_mode": "sections",
+      "classification": "needs_review",
+      "reason": "O cabeçalho declara DRAFT REVISADO, NÃO ACEITO / NÃO CONGELADO; requisitos continuam úteis como critérios, mas não se presume freeze.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-IDENTITY-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-P1-P2-PUBLIC-CHECKPOINT-20261012.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-RECOVERY-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-REVIEW-CHECKPOINT-20261012.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-DATA-TICKER-ORDER-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-FUTURE-PROMOTION-CHECKPOINT-20261012.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "O checkpoint ainda pede reparar overflow após 257 observações; checkpoint posterior e feed atual descrevem e implementam recuperação limitada.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/JEV-TAPE-LOSS-RECOVERY-CHECKPOINT-20261012.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "SHA do feed indicado no checkpoint coincide com o arquivo atual; o próprio texto mantém revisão independente da composição pendente e não conclui o objetivo total.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/MAIN-F5-F6-INTEGRATION-CHECKPOINT-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/concurrent-jev-read-standards-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Revisão ligada ao candidato/hash antigo. Claims sobre idade de candles e ordenação foram comparados com state/feed atuais; execução histórica não foi repetida.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-book-proof-spec-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-f1-f4-independent-spec-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-f1-f4-independent-spec-v2-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-identity-spec-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-lifecycle-spec-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-partial-f1-f3-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/ticker-order-spec-review-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de hash, candidato ou execução anterior; preservado como evidência histórica e não usado sozinho para afirmar o HEAD atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-tape-review-20261012/REPORT-SPEC-P1-P2.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "O relatório atribui bloqueio permanente após 257 itens e rejeição após receipt inválido ao candidato anterior; feed atual contém envelope de perda e validação antes de confirmar ordering.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-tape-review-20261012/REPORT-SPEC.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Reproduções A/B e status de F1-F4 são vinculados ao snapshot e aos probes de 2026-10-12, não reexecutados contra o hash atual.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-tape-review-20261012/REPORT-STANDARDS-P1-P2.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Achados de promoção futura e overflow referem-se a bytes anteriores; o código atual reconcilia observações futuras e mantém recuperação limitada.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/codex-tape-review-20261012/REPORT-STANDARDS.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Findings e contagens pertencem ao baseline descrito no relatório; bytes atuais de feed/state/read/decide foram inspecionados separadamente.",
+      "code_refs": [
+        "src/jev-read/feed.ts:235-292",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/state.ts:32-126",
+        "src/jev-read/loop.ts:100-135"
+      ]
+    },
+    {
+      "path": "docs/research/JEV-READ-BOUNDARY-FINDINGS-20261011.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Findings de overflow e timestamp futuro descrevem um candidato anterior; decide/state atuais contêm validação finita e frescor por relógio corrigido.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "path": "docs/research/spec-review-20261012/spec-review-jev-read.md",
+      "read_mode": "sections",
+      "classification": "needs_review",
+      "reason": "Revisão de snapshot anterior contém status/código e próximos passos que exigem reconciliação com HEAD atual; citações sobre processos/segredos foram ignoradas e não reexecutadas.",
+      "code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    }
+  ],
+  "document_classification_counts": {
+    "historical_evidence": 26,
+    "stale_reference": 9,
+    "needs_review": 4,
+    "proposal": 2,
+    "current_reference": 1
+  },
+  "artifacts": [
+    {
+      "path": "docs/JEV-DATA-CONTRACT-DECISION-20261011.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Recibo de escolha consultiva; authority advisory_only, billedCost null e não constitui revisão de código, aceite ou autorização de execução.",
+      "sha256": "a77a32535b2f29881694e8753d36ae744a5ae1408b47d44f74bf49a849d8e337",
+      "catalog_sha256_match": true
+    }
+  ],
+  "code_assigned_count": 22,
+  "code_inspected": [
+    {
+      "path": "src/jev-read/types.ts",
+      "read_mode": "full",
+      "lines": 200,
+      "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/decide.ts",
+      "read_mode": "full",
+      "lines": 160,
+      "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/read.ts",
+      "read_mode": "full",
+      "lines": 80,
+      "sha256": "0422288919d60e969f76b21acee97802cda8ab9028fb73044c9817233b247b52",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/state.ts",
+      "read_mode": "full",
+      "lines": 240,
+      "sha256": "8a273372bc89f80b3e0acf05ba86df732787f755b5e24e50792b1b9ceabd8a93",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/loop.ts",
+      "read_mode": "full",
+      "lines": 162,
+      "sha256": "520d1eab48dcc4485ab8ae2998817cbdd0bdf006872bc509ccc079e7fb4e0b4f",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/public-view.ts",
+      "read_mode": "full",
+      "lines": 130,
+      "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/feed.ts",
+      "read_mode": "full",
+      "lines": 736,
+      "sha256": "346577cc54c9e40d46876129d6ae5541f656d91242f71c4bf894db7c93550f8c",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/analytics.ts",
+      "read_mode": "full",
+      "lines": 406,
+      "sha256": "b28be35f399c9e54438906dab29827603c497c6471b466ff42bee7a6aef21a91",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/analytics-runner.ts",
+      "read_mode": "full",
+      "lines": 40,
+      "sha256": "a1b2b1bc771e2ad7fd638664875e22d1150392015221002108801a972c1ce839",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/http.ts",
+      "read_mode": "full",
+      "lines": 78,
+      "sha256": "b93d1ed7020e59c4cf848730993ac2efd8792126a5f06eabbb2816917349af3c",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "src/jev-read/store.ts",
+      "read_mode": "full",
+      "lines": 70,
+      "sha256": "c70e0d0d505a18ea3afd180d3610329b8a2bbefaad68e5156ba148973c7047a6",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "scripts/jev-read.ts",
+      "read_mode": "full",
+      "lines": 195,
+      "sha256": "dde7b39b5f708fe7889900baa93717ac949a802abf18db8673cce689a3a2018d",
+      "snapshot_sha256_match": true
+    },
+    {
+      "path": "web/src/lib/jev-read.ts",
+      "read_mode": "full",
+      "lines": 520,
+      "sha256": "9b13e02181ad4ae17a6c2d3b707950df1f8943732732c65988a9e600274a1d98",
+      "snapshot_sha256_match": true
+    }
+  ],
+  "uninspected_assigned_source_paths": [
+    "src/jev-read/analytics-runner.test.ts",
+    "src/jev-read/analytics.test.ts",
+    "src/jev-read/feed.test.ts",
+    "src/jev-read/fixtures/analytics-pack.sample.json",
+    "src/jev-read/loop.test.ts",
+    "src/jev-read/publish.test.ts",
+    "src/jev-read/read.test.ts",
+    "src/jev-read/state.test.ts",
+    "web/src/lib/jev-read.test.ts"
+  ],
+  "claims": [
+    {
+      "statement": "Livro e ticker exigem prova compatível e idade de fonte mais cache; candles exigem tail contíguo de 31 barras e relógio corrigido, e cobertura de trades exige ACK, socket aberto, janela contínua e ausência de perda recente.",
+      "source_path": "src/jev-read/state.ts",
+      "lines": "32-126,177-203"
+    },
+    {
+      "statement": "Abort prévio, cancelamento em voo e deadline terminam em erro/timeout com hold; respostas malformadas ou pesos não finitos também viram hold.",
+      "source_path": "src/jev-read/read.ts",
+      "symbol": "runJevRead",
+      "lines": "29-79",
+      "additional_refs": [
+        "src/jev-read/decide.ts:27-64",
+        "src/jev-read/decide.ts:127-159"
+      ]
+    },
+    {
+      "statement": "Cada leitura produz marcadores advisory=true e execution=never; projeção backend recusa contradizer esses marcadores e limita a saída a campos allowlisted.",
+      "source_path": "src/jev-read/types.ts",
+      "lines": "168-182",
+      "additional_refs": [
+        "src/jev-read/read.ts:29-44",
+        "src/jev-read/public-view.ts:88-116"
+      ]
+    },
+    {
+      "statement": "Analytics é opcional, validado por allowlist e descartado quando ausente, inválido ou mais velho que 120 s; sections não criam decisão por si.",
+      "source_path": "src/jev-read/analytics.ts",
+      "lines": "323-368",
+      "additional_refs": [
+        "src/jev-read/loop.ts:112-119"
+      ]
+    },
+    {
+      "statement": "O produtor separa observe e Jev real, round-robin, journal e limite de leituras; API serve GET /jev-read e a UI valida o schema antes de exibir.",
+      "source_path": "scripts/jev-read.ts",
+      "lines": "57-83,173-194",
+      "additional_refs": [
+        "src/jev-read/http.ts:34-62",
+        "web/src/lib/jev-read.ts:418-447"
+      ]
+    }
+  ],
+  "documentation_findings": [
+    {
+      "id": "DF-1",
+      "classification": "stale_reference",
+      "statement": "Findings de futuro, cancelamento, funding e overflow nos relatórios antigos são vinculados a hashes candidatos anteriores; o source atual contém relógio corrigido, identidade/provas, abort/deadline e validação finita. Não foi feito replay para atribuir aceite.",
+      "source_refs": [
+        "docs/JEV-READ-INDEPENDENT-SPEC-REVIEW-4a1d9e9.md:11-16",
+        "docs/research/codex-tape-review-20261012/REPORT-SPEC.md:42-50",
+        "docs/research/codex-tape-review-20261012/REPORT-SPEC-P1-P2.md:5-6"
+      ],
+      "current_code_refs": [
+        "src/jev-read/state.ts:32-70",
+        "src/jev-read/feed.ts:643-716",
+        "src/jev-read/read.ts:45-79",
+        "src/jev-read/decide.ts:31-63"
+      ]
+    },
+    {
+      "id": "DF-2",
+      "classification": "stale_reference",
+      "statement": "O relato de bloqueio permanente após 257 observações e watermark futuro não descreve o feed atual, que mantém envelope de perda, adia amostra futura e recupera com evidência que supera a história perdida; a alteração é estática e permanece sem revisão independente nesta auditoria.",
+      "source_refs": [
+        "docs/research/codex-tape-review-20261012/REPORT-STANDARDS-P1-P2.md:5-7",
+        "docs/JEV-TAPE-FUTURE-PROMOTION-CHECKPOINT-20261012.md:17,38-39"
+      ],
+      "current_code_refs": [
+        "src/jev-read/feed.ts:643-716"
+      ]
+    },
+    {
+      "id": "DF-3",
+      "classification": "needs_review",
+      "statement": "As SPECs de modelo continuam marcadas proposed/freeze pending e a SPEC F1-F4 como draft não aceita/não congelada. O código atual não muda esse status nem concede aprovação.",
+      "source_refs": [
+        "docs/JEV-READ-MODEL-SAFETY-SPEC-V2-20261011.md:1-3",
+        "docs/JEV-TAPE-DATA-F1-F4-SPEC-V2-20261011.md:1-3"
+      ],
+      "current_code_refs": [
+        "src/jev-read/read.ts:29-79",
+        "src/jev-read/state.ts:177-203"
+      ]
+    },
+    {
+      "id": "DF-4",
+      "classification": "current_reference",
+      "statement": "O checkpoint de recuperação está alinhado ao SHA atual de feed.ts, mas declara revisão independente pendente, possibilidade de bloqueio conservador em envelopes mistos e objetivo amplo incompleto.",
+      "source_refs": [
+        "docs/JEV-TAPE-LOSS-RECOVERY-CHECKPOINT-20261012.md:15-17,26-36"
+      ],
+      "current_code_refs": [
+        "src/jev-read/feed.ts:643-716"
+      ]
+    }
+  ],
+  "code_findings": [
+    {
+      "id": "CF-1",
+      "severity": "review",
+      "statement": "O comentário de feed.ts:8-10 diz que falhas REST preservam observação e reportam código fixo, mas refreshFunding limpa funding e não atualiza lastError no catch.",
+      "source_path": "src/jev-read/feed.ts",
+      "lines": "375-420",
+      "status": "static discrepancy; not exercised"
+    },
+    {
+      "id": "CF-2",
+      "severity": "review",
+      "statement": "refreshCandles cria captureId mas não compara captura após await antes de substituir candles; duas respostas concorrentes no mesmo feedEpoch podem ser aplicadas fora de ordem.",
+      "source_path": "src/jev-read/feed.ts",
+      "lines": "344-373",
+      "status": "static risk; no reproduction or test run"
+    },
+    {
+      "id": "CF-3",
+      "severity": "review",
+      "statement": "Se persistência de journal falhar após inferência, readRound retorna store_failed; o contador em memória pode avançar, mas countRecentModelReads após reinício depende do journal e de um backup.",
+      "source_path": "src/jev-read/loop.ts",
+      "lines": "130-161",
+      "additional_refs": [
+        "src/jev-read/store.ts:42-69"
+      ],
+      "status": "static risk; not exercised"
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "unverified": [
+    "Nenhum teste foi executado; hashes de testes atribuídos não foram inspecionados.",
+    "Não verificado runtime, provider, relógio live, modelo, API/rede, processo ativo, interface em browser, ordem, custo faturado ou rentabilidade.",
+    "O produtor Python de analytics e o fixture analytics não foram inspecionados.",
+    "Não houve revisão independente do snapshot atual nem execução dos probes históricos contra este hash.",
+    "Documentos históricos descrevem outros HEADs, ambientes e execuções, não repetidos nesta tarefa."
+  ],
+  "source_drift": {
+    "assigned_markdown_checked": 42,
+    "assigned_markdown_catalog_hash_matches": 42,
+    "markdown_mismatches": [],
+    "assigned_artifacts_checked": 1,
+    "artifact_catalog_hash_matches": 1,
+    "inspected_code_checked_against_snapshot": 13,
+    "inspected_code_snapshot_hash_matches": 13
+  },
+  "billed_cost": null,
+  "write_scope": [
+    "C:/Users/gabri/jev-trader/docs/concepts/fita-e-decisao-jev.md",
+    "C:/Users/gabri/jev-trader/docs/_meta/audits/fita-e-decisao-jev.json"
+  ]
+}

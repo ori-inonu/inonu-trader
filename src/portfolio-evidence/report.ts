@@ -42,7 +42,13 @@ export function summarizeEvidence(evidence: WalletEvidence): string[] {
   for (const item of evidence.reconciliation.findings.filter((finding) => finding.state.kind !== "ok")) lines.push(`Achado ${item.rule} ${item.code} (${item.state.kind})${item.identityKey === null ? "" : ` em ${item.identityKey}`}`);
   if (evidence.history !== null) lines.push(`Historico: ${evidence.history.entries.length} movimentos, janela ${evidence.history.window.completeness}, limite do provedor ${evidence.history.window.providerLimitMonths} meses`);
   for (const basis of evidence.costBasis) lines.push(`Custo de aquisicao ${basis.identity.key}: ${basis.basisText ?? "nao calculado"} (${basis.coverage}, ${basis.state.code})`);
-  if (evidence.addressAnalysis !== null) lines.push(`Address Analysis: ${evidence.addressAnalysis.statements.length} declaracoes de PnL, todas ${evidence.addressAnalysis.statements[0]?.basis ?? "sem dados"}, fora do patrimonio`);
+  const analysis = evidence.addressAnalysis;
+  if (analysis !== null) {
+    lines.push(`Address Analysis: ${analysis.statements.length} declaracoes de PnL, todas ${analysis.statements[0]?.basis ?? "sem dados"}, fora do patrimonio`);
+    for (const check of analysis.tokenPnlChecks.filter((item) => item.state.kind !== "ok")) lines.push(`PnL do provedor em ${check.identity.key}: ${check.state.code}${check.deltaText === null ? "" : ` (diferenca ${check.deltaText} USD)`}`);
+    if (analysis.trades.length > 0 || analysis.acquisitions.length > 0) lines.push(`Negociacoes DEX observadas na janela: ${analysis.trades.length}; somas por ativo (nao e custo de aquisicao): ${analysis.acquisitions.length}, cobertura ${analysis.acquisitions[0]?.coverage ?? "parcial"}`);
+    if (analysis.portfolioSupport.requestedChainListed === false) lines.push("Rede nao listada pelo provedor para Address Analysis (a lista pode ser parcial)");
+  }
   const collection = evidence.collection;
   if (collection !== null) {
     lines.push(`Coleta sob demanda: ${collection.callsMade} chamadas de ${collection.callBudget}${collection.stoppedBy === null ? "" : `, encerrada por ${collection.stoppedBy}`}`);

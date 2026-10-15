@@ -1,0 +1,40 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": [
+    {
+      "chainIndex": "1",
+      "contextSlot": 26179649,
+      "dexRouterList": [],
+      "estimateGasFee": "162000",
+      "fromToken": {
+        "decimal": "6",
+        "isHoneyPot": false,
+        "latestMultiplier": "1",
+        "taxRate": "0",
+        "tokenContractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "tokenSymbol": "USDC",
+        "tokenUnitPrice": "1"
+      },
+      "fromTokenAmount": "1000000",
+      "mode": "dex",
+      "priceImpactPercent": "-0.01",
+      "quoteId": "3130718473027710001",
+      "router": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48--0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "signData": null,
+      "swapMode": "exactIn",
+      "toToken": {
+        "decimal": "18",
+        "isHoneyPot": false,
+        "latestMultiplier": "1",
+        "taxRate": "0",
+        "tokenContractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "tokenSymbol": "WETH",
+        "tokenUnitPrice": "2463.57"
+      },
+      "toTokenAmount": "405887539576246",
+      "tradeFee": "0.1122036367559022"
+    }
+  ],
+  "msg": ""
+}

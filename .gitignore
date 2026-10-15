@@ -14,3 +14,6 @@ NUL
 # Throwaway browser profiles left by headless render proofs and smoke runs
 web/.keyframe-proof/
 web/.smoke-profile/
+
+# desktop build output (scripts/build-desktop.ts)
+/dist/

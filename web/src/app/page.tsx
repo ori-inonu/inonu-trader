@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import MesaView from "@/components/Desk/MesaView";
+import AgentView from "@/components/Agent/AgentView";
 
 export const metadata: Metadata = {
-  title: "INONU TRADER, mesa de decisao",
-  description: "Mesa de decisao do Inonu: mercado real da OKX, carteira OKX Wallet e ecossistema OnchainOS em uma tela.",
+  title: "INONU TRADER, agente autonomo",
+  description: "O agente autonomo do Inonu: o que ele ve, o que decide, o que fez e a prova de que rende.",
 };
 
 export default function Page() {
-  return <MesaView />;
+  return <AgentView />;
 }

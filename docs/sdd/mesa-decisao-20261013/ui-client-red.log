@@ -1,0 +1,27 @@
+bun test v1.3.14 (0d9b296a)
+
+src\lib\inonu\portfolio.test.ts:
+(pass) manual portfolio preparation sends observed asset identities without wallet identifiers or raw RPC [46.54ms]
+(pass) expired, future and mismatched observations cannot be consulted [0.27ms]
+(pass) only the explicitly focused candidate from the same network joins the partial list [2.01ms]
+(pass) portfolio parser rejects invented identities, absent-position sales and invented total value [6.24ms]
+67 |     expect(JSON.parse(init!.body!).modo).toBe("carteira");
+68 |     return Response.json({ ok: true, id: "manual", status: "respondido", carteira: answer(), custo: { chamadasOnchainos: 0, tokens: null, usd: null }, briefHash: "test", advisory: true, execution: "never" });
+69 |   });
+70 |   expect(called).toBe(0);
+71 |   const result = await client.ask(prepared.request);
+72 |   expect(result).toHaveProperty("carteira");
+                      ^
+error: expect(received).toHaveProperty(path)
+
+Expected path: "carteira"
+
+Unable to find property
+
+      at <anonymous> (C:\Users\gabri\jev-trader\web\src\lib\inonu\portfolio.test.ts:72:18)
+(fail) manual client preserves the validated portfolio and uses the existing intent endpoint [81.67ms]
+
+ 4 pass
+ 1 fail
+ 25 expect() calls
+Ran 5 tests across 1 file. [404.00ms]

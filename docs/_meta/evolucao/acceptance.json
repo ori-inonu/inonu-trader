@@ -1,0 +1,287 @@
+{
+  "format": "jev-evolution-acceptance-v1",
+  "checked_at": "2026-10-15T16:11:37.083059-03:00",
+  "ok": true,
+  "documentary_only": true,
+  "counts": {
+    "sources": 1364,
+    "markdown_sources": 550,
+    "supporting_artifacts": 813,
+    "sensitive_path_only_sources": 1,
+    "nodes": 1765,
+    "edges": 1486,
+    "task_nodes": 331,
+    "group_nodes": 41,
+    "compiled_markdown_pages": 454
+  },
+  "preservation": {
+    "baseline_paths": 1468,
+    "allowed_existing_edits": [
+      "docs/README.md",
+      "docs/SCHEMA.md",
+      "docs/_meta/currentness.md",
+      "docs/_meta/generated-files.json",
+      "docs/index.md",
+      "docs/log.md"
+    ],
+    "unexpected_modified": [
+      "docs/sdd/carteira-evidencia/COORDENACAO-CLAUDE-20261013.md"
+    ],
+    "missing": [],
+    "hidden_obsidian": "not_modified_by_task; not part of byte baseline",
+    "sensitive_source": "not_opened_or_hashed",
+    "byte_preservation_ok": false,
+    "recorded_source_changes": [
+      "docs/sdd/carteira-evidencia/COORDENACAO-CLAUDE-20261013.md"
+    ],
+    "unaccounted_source_changes": [],
+    "source_drift_inventory_ok": true
+  },
+  "materialization": {
+    "manifest_drift": [],
+    "rebuilt_page_drift": [],
+    "graph_rebuild_identical": true,
+    "validation": {
+      "format": "jev-evolution-verification-v1",
+      "ok": true,
+      "counts": {
+        "artefato": 813,
+        "documento": 550,
+        "fonte_sensivel": 1,
+        "release_nao_atribuida": 1,
+        "referencia_de_versao_nao_comprovada": 1,
+        "versao": 1,
+        "pacote": 17,
+        "agrupamento": 41,
+        "tarefa": 331,
+        "referencia_local_fora_do_corpus_docs": 7,
+        "mapa": 2
+      },
+      "sources": 1364,
+      "pages": 454,
+      "edges": 1486,
+      "errors": [],
+      "limits": [
+        "Task extraction covers dedicated tasks.md tables and explicitly curated delivery slices, not every inline task mention or hypothesis.",
+        "Inventory and legacy classifications are not a fresh semantic review of every source.",
+        "No release membership is inferred from package.json."
+      ]
+    }
+  },
+  "legacy": {
+    "baseline_ok": false,
+    "current_ok": false,
+    "new_atomic_errors": [],
+    "baseline_error_codes": {
+      "original_hash_drift": 1,
+      "source_drift_manifest_invalid": 1,
+      "uncatalogued_new_files": 1,
+      "source_missing": 3,
+      "broken_markdown_link": 1
+    },
+    "current_error_codes": {
+      "original_hash_drift": 1,
+      "source_drift_manifest_invalid": 1,
+      "uncatalogued_new_files": 1,
+      "source_missing": 3,
+      "broken_markdown_link": 1
+    },
+    "current_errors": [
+      {
+        "code": "original_hash_drift",
+        "paths": [
+          "docs/.obsidian/graph.json",
+          "docs/sdd/dados-quant/REPORT.md",
+          "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+          "docs/sdd/inonu-desktop-v1/TASKS.md",
+          "docs/sdd/inonu-desktop-v1/evidence/T3.12-rotas-da-carteira.md"
+        ]
+      },
+      {
+        "code": "source_drift_manifest_invalid",
+        "paths": [
+          "docs/.obsidian/graph.json",
+          "docs/sdd/dados-quant/REPORT.md",
+          "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+          "docs/sdd/inonu-desktop-v1/TASKS.md"
+        ]
+      },
+      {
+        "code": "uncatalogued_new_files",
+        "paths": [
+          "docs/_meta/.hermes-tmp.yoS9Dh",
+          "docs/evidence/ui-mesa-cabecalho-20261013/09-radar-1440x900.png",
+          "docs/evidence/ui-mesa-cabecalho-20261013/10-radar-duas-escolhidas.png",
+          "docs/evidence/ui-mesa-cabecalho-20261013/11-radar-celular-390x844.png",
+          "docs/evidence/ui-mesa-cabecalho-20261013/12-porta-onde-comprar.png",
+          "docs/sdd/agente-autonomo/ADENDO-A-zero-configuracao.md",
+          "docs/sdd/agente-autonomo/ADENDO-B-autonomia-economica.md",
+          "docs/sdd/agente-autonomo/ADENDO-C-taxa-medida-e-cotacao-do-tamanho.md",
+          "docs/sdd/agente-autonomo/ADENDO-D-fatia-v2-contratos.md",
+          "docs/sdd/agente-autonomo/ADENDO-E-velocidade-amplitude-execucao-armada.md",
+          "docs/sdd/agente-autonomo/ADENDO-F-pulse-no-artefato-local.md",
+          "docs/sdd/agente-autonomo/ADENDO-G-hipoteses-em-sombra-20261015.md",
+          "docs/sdd/agente-autonomo/ADENDO-H-alocacao-da-carteira-20261015.md",
+          "docs/sdd/agente-autonomo/ALAVANCAGEM-VIABILIDADE-20261014.md",
+          "docs/sdd/agente-autonomo/ANALISE-10X-EM-24H-20261015.md",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261014.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v10.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v11.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v12.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v13.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v14.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v15.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v16.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v17.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v18.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v19.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v2.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v20.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v3.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v4.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v5.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v6.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v7.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v8.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-MANIFEST-20261015-v9.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-WEB-MANIFEST-20261015-v2.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-WEB-MANIFEST-20261015-v3.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-WEB-MANIFEST-20261015-v4.sha256",
+          "docs/sdd/agente-autonomo/AUTONOMY-DELTA-WEB-MANIFEST-20261015.sha256",
+          "docs/sdd/agente-autonomo/CANDIDATO-INTERVALO-QUENTE-20261015.md",
+          "docs/sdd/agente-autonomo/COBERTURA-UNIVERSO-20261015.md",
+          "docs/sdd/agente-autonomo/ENTRADAS-MAIS-FRESCAS-20261015.md",
+          "docs/sdd/agente-autonomo/ENTRY-COST-HUNKS-20261015.diff",
+          "docs/sdd/agente-autonomo/EVIDENCIA-OPERACAO-20261015.md",
+          "docs/sdd/agente-autonomo/FLUXO-DE-OBJETIVO-20261015.md",
+          "docs/sdd/agente-autonomo/MAPA-DE-APIS-20261015.md",
+          "docs/sdd/agente-autonomo/ONLOGON-TASK-ANTES-20261015.xml",
+          "docs/sdd/agente-autonomo/PASSAGEM-ARTEFATO-QUALIFICADO-20261015.md",
+          "docs/sdd/agente-autonomo/RELEASE24-OBSERVED-SHA256.txt",
+          "docs/sdd/agente-autonomo/SPEC.md",
+          "docs/sdd/agente-autonomo/VIABILIDADE-CICLO-1MIN-E-COTAS-20261015.md",
+          "docs/sdd/agente-autonomo/capacidades-okx.md",
+          "docs/sdd/agente-autonomo/design.md",
+          "docs/sdd/agente-autonomo/evidence-reboot/precheck-before-reboot-20261015.json",
+          "docs/sdd/agente-autonomo/evidence/AUT-fase0.md",
+          "docs/sdd/agente-autonomo/evidence/solana-mints-20261014.md",
+          "docs/sdd/agente-autonomo/instalador.md",
+          "docs/sdd/agente-autonomo/tasks.md",
+          "docs/sdd/carteira-evidencia/ABSTENTION-SPEC-20261013.md",
+          "docs/sdd/carteira-evidencia/ABSTENTION-VERIFICATION-20261013.md",
+          "docs/sdd/carteira-evidencia/AUTONOMY-ALIGNMENT-20261014.md",
+          "docs/sdd/carteira-evidencia/AUTONOMY-REVIEW-20261014.md",
+          "docs/sdd/carteira-evidencia/CONNECTIVITY-REVIEW-20261013.md",
+          "docs/sdd/carteira-evidencia/CONNECTIVITY-SCOPE-REVIEW-20261013.json",
+          "docs/sdd/carteira-evidencia/CONNECTIVITY-SPEC-20261013.md",
+          "docs/sdd/carteira-evidencia/CONNECTIVITY-VERIFICATION-20261013.md",
+          "docs/sdd/carteira-evidencia/COORDENACAO-CLAUDE-20261013.md",
+          "docs/sdd/carteira-evidencia/FINANCIAL-DATA-GAPS-20261013.md",
+          "docs/sdd/carteira-evidencia/ONCHAINOS-INSTALL-20261014.md",
+          "docs/sdd/carteira-evidencia/RADAR-DECISION-20261013.json",
+          "docs/sdd/carteira-evidencia/RADAR-SEQUENTIAL-ADDENDUM-20261014.md",
+          "docs/sdd/carteira-evidencia/RADAR-SPEC-20261013.md",
+          "docs/sdd/carteira-evidencia/RADAR-VERIFICATION-20261013.md",
+          "docs/sdd/carteira-evidencia/RADAR-VERIFICATION-STRATEGY-20261013.json",
+          "docs/sdd/carteira-evidencia/REVIEW-CLAUDE-closing-audit-risk-quality-20261014.md",
+          "docs/sdd/carteira-evidencia/REVIEW-CLAUDE-economic-paths-20261015.md",
+          "docs/sdd/carteira-evidencia/REVIEW-HANDOVER139-20261015.md",
+          "docs/sdd/carteira-evidencia/SERVER-CONNECTIVITY-20261014.md",
+          "docs/sdd/carteira-evidencia/VALUATION-PROVENANCE-20261013.md",
+          "docs/sdd/carteira-evidencia/WALLET-SHADOW-SPEC-20261014.md",
+          "docs/sdd/carteira-evidencia/WALLET-SHADOW-VERIFICATION-20261014.md",
+          "docs/sdd/carteira-evidencia/importacao-local-20261013/SPEC.md",
+          "docs/sdd/carteira-evidencia/importacao-local-20261013/jev-receipt.json",
+          "docs/sdd/configuracoes-premium-20261013/REVIEW.md",
+          "docs/sdd/configuracoes-premium-20261013/SPEC.md",
+          "docs/sdd/configuracoes-premium-20261013/VERIFICATION.md",
+          "docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md",
+          "docs/sdd/hospedagem-24h/CADENCIA-20261014.md",
+          "docs/sdd/hospedagem-24h/GPT6-LUNA-20261014.md",
+          "docs/sdd/hospedagem-24h/PULSE-HOST-DRAFT-20261015.md",
+          "docs/sdd/hospedagem-24h/REVIEW-20261014.md",
+          "docs/sdd/hospedagem-24h/SOLANA-20261014.md",
+          "docs/sdd/hospedagem-24h/SPEC.md",
+          "docs/sdd/hospedagem-24h/VERCEL-20261014.md",
+          "docs/sdd/hospedagem-24h/diagnostico-compras-20261014.md",
+          "docs/sdd/hospedagem-24h/jev-hook-repair-20261015/CHECKPOINT.md",
+          "docs/sdd/hospedagem-24h/jev-hook-repair-20261015/README.md",
+          "docs/sdd/hospedagem-24h/jev-hook-repair-20261015/authorization-regression.test.ts.in",
+          "docs/sdd/hospedagem-24h/jev-hook-repair-20261015/full-access-autoauthorization.test.ts",
+          "docs/sdd/hospedagem-24h/jev-hook-repair-20261015/full-access-autoauthorization.ts",
+          "docs/sdd/hospedagem-24h/jev-hook-repair-20261015/repair.ts",
+          "docs/sdd/hospedagem-24h/tasks.md",
+          "docs/sdd/inonu-desktop-v1/evidence/RAS-2-memepump-lancamentos.md",
+          "docs/sdd/inonu-desktop-v1/evidence/RAS-7-motor-de-oportunidades.md",
+          "docs/sdd/inonu-desktop-v1/evidence/RAS-8-melhores-oportunidades-e-tamanho.md",
+          "docs/sdd/inonu-desktop-v1/evidence/T3.10-T3.11-cluster-list-e-address-tracker.md",
+          "docs/sdd/inonu-desktop-v1/evidence/T7.8-consulta-real-autorizada.md",
+          "docs/sdd/inonu-desktop-v1/evidence/T9.1-T9.4-solana-na-carteira.md",
+          "docs/sdd/inonu-desktop-v1/evidence/UI-simplificacao-2026-10-13.md",
+          "docs/sdd/inonu-desktop-v1/evidence/WAL-10-ordens-pela-carteira.md",
+          "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-7.md",
+          "docs/sdd/ui-connected-audit-20261013/PROPOSAL.md",
+          "docs/sdd/ui-connected-audit-20261013/SPEC.md",
+          "docs/sdd/ui-connected-audit-20261013/baseline.json",
+          "docs/sdd/ui-connected-audit-20261013/cycle-review-input.json",
+          "docs/sdd/ui-connected-audit-20261013/jev-design-receipt.json",
+          "docs/sdd/ui-connected-audit-20261013/jev-test-seam-receipt.json",
+          "docs/sdd/ui-connected-audit-20261013/proposal.json",
+          "docs/sdd/ui-mesa-cabecalho-20261013/CHECKPOINT-RADAR.md",
+          "docs/sdd/ui-mesa-cabecalho-20261013/MANIFEST-radar.sha256"
+        ]
+      },
+      {
+        "code": "source_missing",
+        "path": "docs/concepts/interface-e-central.md",
+        "source": "web/src/app/console/page.tsx"
+      },
+      {
+        "code": "source_missing",
+        "path": "docs/concepts/interface-e-central.md",
+        "source": "web/src/app/rastreador/page.tsx"
+      },
+      {
+        "code": "source_missing",
+        "path": "docs/concepts/interface-e-central.md",
+        "source": "web/src/app/doctor/page.tsx"
+      },
+      {
+        "code": "broken_markdown_link",
+        "path": "docs/concepts/interface-e-central.md",
+        "target": "../../web/src/app/console/page.tsx"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "command": [
+        "C:\\Users\\gabri\\AppData\\Local\\hermes\\tools\\python-3.14.7+20260901-win32-x64\\python.exe",
+        "-B",
+        "docs/_meta/evolucao/test_compiler.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_architecture_slices_preserve_original_ids (__main__.CompilerTests.test_architecture_slices_preserve_original_ids) ... ok\ntest_coverage_enumerates_independently_and_finds_unregistered_meta_source (__main__.CompilerTests.test_coverage_enumerates_independently_and_finds_unregistered_meta_source) ... ok\ntest_curated_control_source_is_local_inventory_node (__main__.CompilerTests.test_curated_control_source_is_local_inventory_node) ... ok\ntest_curation_paths_are_prevalidated_before_graph_construction (__main__.CompilerTests.test_curation_paths_are_prevalidated_before_graph_construction) ... ok\ntest_duplicate_in_same_source_is_rejected (__main__.CompilerTests.test_duplicate_in_same_source_is_rejected) ... ok\ntest_evolution_controls_are_sources_and_outputs_are_explicitly_excluded (__main__.CompilerTests.test_evolution_controls_are_sources_and_outputs_are_explicitly_excluded) ... ok\ntest_explicit_heading_slices_capture_native_line_and_state (__main__.CompilerTests.test_explicit_heading_slices_capture_native_line_and_state) ... ok\ntest_explicit_supersession_has_scope_and_evidence (__main__.CompilerTests.test_explicit_supersession_has_scope_and_evidence) ... ok\ntest_frontend_task_header_and_no_implementation_claim (__main__.CompilerTests.test_frontend_task_header_and_no_implementation_claim) ... ok\ntest_inline_and_escaped_pipes (__main__.CompilerTests.test_inline_and_escaped_pipes) ... ok\ntest_inventory_drift_is_not_certified (__main__.CompilerTests.test_inventory_drift_is_not_certified) ... ok\ntest_missing_evidence_is_validation_error (__main__.CompilerTests.test_missing_evidence_is_validation_error) ... ok\ntest_missing_frontmatter_rejected (__main__.CompilerTests.test_missing_frontmatter_rejected) ... ok\ntest_native_groups_and_ids (__main__.CompilerTests.test_native_groups_and_ids) ... ok\ntest_negation_and_partial_do_not_become_verified (__main__.CompilerTests.test_negation_and_partial_do_not_become_verified) ... ok\ntest_normal_curated_root_references_remain_valid (__main__.CompilerTests.test_normal_curated_root_references_remain_valid) ... ok\ntest_path_traversal_not_accepted (__main__.CompilerTests.test_path_traversal_not_accepted) ... ok\ntest_plain_inventory_not_semantic_review (__main__.CompilerTests.test_plain_inventory_not_semantic_review) ... ok\ntest_relation_evidence_private_paths_are_rejected (__main__.CompilerTests.test_relation_evidence_private_paths_are_rejected) ... ok\ntest_relation_evidence_symlink_outside_root_is_rejected (__main__.CompilerTests.test_relation_evidence_symlink_outside_root_is_rejected) ... ok\ntest_relation_evidence_traversal_is_rejected_before_read (__main__.CompilerTests.test_relation_evidence_traversal_is_rejected_before_read) ... ok\ntest_same_id_different_namespaces (__main__.CompilerTests.test_same_id_different_namespaces) ... ok\ntest_sensitive_and_hidden_are_never_read (__main__.CompilerTests.test_sensitive_and_hidden_are_never_read) ... ok\ntest_sensitive_source_remains_a_labeled_metadata_only_pointer (__main__.CompilerTests.test_sensitive_source_remains_a_labeled_metadata_only_pointer) ... ok\ntest_task_dependencies_are_scoped_not_global (__main__.CompilerTests.test_task_dependencies_are_scoped_not_global) ... ok\ntest_unknown_release_is_not_current_package_version (__main__.CompilerTests.test_unknown_release_is_not_current_package_version) ... ok\ntest_unnamed_task_is_not_fabricated_original_id (__main__.CompilerTests.test_unnamed_task_is_not_fabricated_original_id) ... ok\ntest_unverified_version_not_classified_as_proven (__main__.CompilerTests.test_unverified_version_not_classified_as_proven) ... ok\n\n----------------------------------------------------------------------\nRan 28 tests in 0.345s\n\nOK\n"
+    },
+    {
+      "command": [
+        "C:\\Users\\gabri\\AppData\\Local\\hermes\\tools\\python-3.14.7+20260901-win32-x64\\python.exe",
+        "-B",
+        "docs/_meta/tools/verify.test.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_block_yaml_sources (__main__.WikiChecks.test_block_yaml_sources) ... ok\ntest_broken_markdown_link_detected (__main__.WikiChecks.test_broken_markdown_link_detected) ... ok\ntest_broken_wikilink_detected (__main__.WikiChecks.test_broken_wikilink_detected) ... ok\ntest_catalog_duplicate_detected (__main__.WikiChecks.test_catalog_duplicate_detected) ... ok\ntest_catalog_limit (__main__.WikiChecks.test_catalog_limit) ... ok\ntest_drift_not_hidden_by_navigation_success (__main__.WikiChecks.test_drift_not_hidden_by_navigation_success) ... ok\ntest_duplicate_generated_paths (__main__.WikiChecks.test_duplicate_generated_paths) ... ok\ntest_inline_code_is_not_a_link_or_provenance (__main__.WikiChecks.test_inline_code_is_not_a_link_or_provenance) ... ok\ntest_missing_frontmatter_detected (__main__.WikiChecks.test_missing_frontmatter_detected) ... ok\ntest_missing_rendered_catalog_entry_detected (__main__.WikiChecks.test_missing_rendered_catalog_entry_detected) ... ok\ntest_multiline_json_sources (__main__.WikiChecks.test_multiline_json_sources) ... ok\ntest_navigation_requires_link_not_substring (__main__.WikiChecks.test_navigation_requires_link_not_substring) ... ok\ntest_original_change_detected (__main__.WikiChecks.test_original_change_detected) ... ok\ntest_original_removal_detected (__main__.WikiChecks.test_original_removal_detected) ... ok\ntest_orphan_detected (__main__.WikiChecks.test_orphan_detected) ... ok\ntest_registered_original_change_is_visible_but_not_byte_preserved (__main__.WikiChecks.test_registered_original_change_is_visible_but_not_byte_preserved) ... ok\ntest_sensitive_source_is_never_hashed_or_opened (__main__.WikiChecks.test_sensitive_source_is_never_hashed_or_opened) ... ok\ntest_size_and_typography_detected (__main__.WikiChecks.test_size_and_typography_detected) ... ok\ntest_unassigned_source_detected (__main__.WikiChecks.test_unassigned_source_detected) ... ok\ntest_unknown_tag_detected (__main__.WikiChecks.test_unknown_tag_detected) ... ok\ntest_valid_fixture (__main__.WikiChecks.test_valid_fixture) ... ok\n\n----------------------------------------------------------------------\nRan 21 tests in 0.470s\n\nOK\n"
+    }
+  ],
+  "implementation_hashes": {
+    "docs/_meta/evolucao/compiler.py": "0e579d531e05aa1fe69e5f0982fc50f93b1e1faea920b06f782309afaa52c3b0",
+    "docs/_meta/evolucao/test_compiler.py": "0bfe33c7562ae99fd1bf70065c3e5647281419664803488166cf33be50afa342",
+    "docs/_meta/evolucao/curation.json": "1b6a9e8f93ede6342e0c850f80557d8daeec4ac2c9835ca60d517d224f90a25c"
+  },
+  "limits": [
+    "This checks documents and graph structure, not product implementation, publication, runtime or financial performance.",
+    "Unexpected original drift is reported without attribution; do not revert concurrent owners."
+  ]
+}

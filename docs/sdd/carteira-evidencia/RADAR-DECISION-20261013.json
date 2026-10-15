@@ -1,0 +1,92 @@
+{
+  "status": "assessed",
+  "receiptId": "0e7f1ca2-f345-436e-9908-e2541db0396b",
+  "questionIds": [
+    "design",
+    "checks"
+  ],
+  "inputDigest": "26a8c4e04c4306abbad061dfd31fc216d5156e948d6b9f975878beccbd2911b6",
+  "rubricVersion": "batch-2026-09-26.2",
+  "policies": {
+    "design": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "checks": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    }
+  },
+  "authority": "advisory_only",
+  "model": "jev-1.13.0",
+  "answers": {
+    "design": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "rank_watch",
+      "bestCandidate": "rank_watch",
+      "probabilities": {
+        "rank_watch": 1,
+        "count_watch": 0,
+        "defer": 0,
+        "insufficient_evidence": 0
+      },
+      "confidence": 1,
+      "disposition": "recommendation",
+      "recommendation": "rank_watch",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "checks": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "contracts_render",
+      "bestCandidate": "contracts_render",
+      "probabilities": {
+        "contracts_render": 0.91,
+        "browser_only": 0,
+        "defer": 0.01,
+        "insufficient_evidence": 0.08
+      },
+      "confidence": 0.88,
+      "disposition": "recommendation",
+      "recommendation": "contracts_render",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 653,
+    "output_tokens": 107
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-14T01:51:12.471Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-14T01:51:12.786Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a1381b4ab37772a31e59ee53bb7f93",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null
+  },
+  "latencyMs": 356,
+  "receiptPersisted": true,
+  "billedCostUsd": null,
+  "approved_by": "jev_delegated"
+}

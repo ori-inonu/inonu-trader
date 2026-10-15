@@ -1,0 +1,47 @@
+{
+  "model": "jev-1.13.0",
+  "answers": {
+    "navigation_structure": {
+      "type": "choice",
+      "choice": "in_place_wiki",
+      "confidence": 0.94,
+      "probabilities": {
+        "in_place_wiki": 0.96,
+        "nested_wiki": 0.01,
+        "abstain": 0.03
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 612,
+    "output_tokens": 49
+  },
+  "backend": "typesafe",
+  "latency_ms": 348.5520000103861,
+  "review": {
+    "advisory_only": true,
+    "execution_authorized": false,
+    "review_policy_enabled": false,
+    "threshold": null,
+    "threshold_calibrated": false,
+    "review_questions": [],
+    "signals": {
+      "navigation_structure": {
+        "confidence": 0.94,
+        "basis": "provider_confidence",
+        "needs_review": null
+      }
+    },
+    "note": "Review heuristic only. Preserve human approval and deterministic safety checks regardless of these scores."
+  },
+  "ok": true,
+  "advisory_only": true,
+  "execution_authorized": false,
+  "approved_by": "jev_delegated",
+  "decision_source": "jev",
+  "human_response": false,
+  "billed_cost": null,
+  "scope": "documentary_navigation_only",
+  "route": "cli_fallback_tool_schema_unavailable",
+  "request_sha256": "b57d44d961e87c2d61617a79ce546348d05ca116bef7315b932db7891129bf23"
+}

@@ -176,3 +176,6 @@
   font-size: 12px;
 }
 .field input[type="text"]:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 1px; }
+.field input[type="number"] { width: 130px; padding: 3px var(--s3); border: 1px solid var(--edge-focus); border-radius: var(--r-xs); background: var(--bg-deck-2); color: var(--ink); font: inherit; }
+.field input[type="number"]:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 1px; }
+.shadow { grid-template-columns: minmax(140px, 1.2fr) repeat(3, minmax(110px, 1fr)) minmax(190px, 1.6fr); min-width: 700px; }

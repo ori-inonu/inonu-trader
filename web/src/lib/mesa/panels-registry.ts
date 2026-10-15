@@ -22,12 +22,9 @@ export interface RegistryEntry {
 export const MAX_ROWS_PER_TAB = 12;
 
 export const PANEL_REGISTRY: readonly RegistryEntry[] = [
-  // routes the installed app serves, and the old console that it does not
-  { kind: "rota", id: "/", requisito: "INF-1" },
+  // the routes of the app: the agent, and the keys it works with. The desk, the tracker, the diagnostic and the old console are not served any more.
+  { kind: "rota", id: "/", requisito: "AUT-12" },
   { kind: "rota", id: "/configuracoes", requisito: "CFG-5" },
-  { kind: "rota", id: "/doctor", requisito: "WIN-8" },
-  { kind: "rota", id: "/rastreador", requisito: "RAS-1" },
-  { kind: "rota", id: "/console", requisito: "WIN-13" },
 
   // tabs of the bottom dock
   { kind: "aba", id: "diario", requisito: "DOC-3", maxLinhas: 12 },

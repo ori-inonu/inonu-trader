@@ -4,6 +4,7 @@
  * anything else that ends up in the file never reach the API. A record that contradicts itself is dropped entirely.
  */
 
+import { projectAnalysis } from "./analytics";
 import { JEV_READ_SCHEMA_VERSION, TAPE_ACTIONS, type TapeAction } from "./types";
 
 const REASONS = new Set(["book_missing", "book_stale", "book_crossed", "ticker_missing", "ticker_stale", "candles_short", "candles_stale", "clock_unknown", "trades_unavailable"]);
@@ -36,6 +37,7 @@ function projectState(raw: unknown): Record<string, unknown> | null {
   const flowNumbers = numbersOf(raw.flow60s, ["count", "buyBase", "sellBase", "cvdBase"]);
   if (top === null || depth === null || returns === null || flowNumbers === null || !isRecord(raw.flow60s)) return null;
   const flow = raw.flow60s;
+  const analysis = projectAnalysis(raw.analysis);
   return {
     instId: raw.instId,
     ...top,
@@ -51,6 +53,8 @@ function projectState(raw: unknown): Record<string, unknown> | null {
     change24hPct: finiteOrNull(raw.change24hPct),
     rangePosition24h: finiteOrNull(raw.rangePosition24h),
     fundingRatePct: finiteOrNull(raw.fundingRatePct),
+    // The same allowlist as the internal parser: malformed or absent analysis is omitted, never repaired.
+    ...(analysis === null ? {} : { analysis }),
   };
 }
 

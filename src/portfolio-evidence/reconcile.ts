@@ -11,6 +11,7 @@
 import { decAbs, decCmp, decIsZero, decSub, decToText, parseDec, ratioBps } from "./decimal.ts";
 import { sumIncluded } from "./balances.ts";
 import { netInflowByAsset } from "./history.ts";
+import { netPositionFromTrades } from "./address-analysis.ts";
 import { OK, state, statusOfState, worstStatus } from "./state.ts";
 import type { AddressAnalysisSection, BalancePosition, BalanceSection, Finding, HistorySection, MarketSection, ReconciliationReport, Status, TotalVsSum } from "./types.ts";
 
@@ -67,13 +68,17 @@ function totalVsSum(balances: BalanceSection, options: ReconcileOptions): TotalV
   const delta = decSub(reportedDec, sum);
   const within = decCmp(decAbs(delta), tolerance) <= 0;
   if (within) return { ...base, deltaText: decToText(delta), withinTolerance: true, candidateCauses: [], state: OK };
+  // A reported total SMALLER than the sum cannot be explained by causes that only make the total larger (DeFi scope,
+  // unvalued or omitted assets, rejected rows). Only causes that can lower a total against the sum remain.
+  const lowersTotal = new Set(["chains_differ_between_calls", "risk_filter_differs_between_calls", "calls_far_apart_in_time"]);
+  const relevant = delta.units < 0n ? causes.filter((cause) => lowersTotal.has(cause)) : causes;
   return {
     ...base,
     deltaText: decToText(delta),
     withinTolerance: false,
-    candidateCauses: causes,
+    candidateCauses: relevant,
     // With candidate causes the gap is flagged and explained qualitatively; without any it is unexplained and divergent.
-    state: causes.length > 0 ? state("unreconciled", "total_differs_candidate_causes") : state("divergent", "total_differs_unexplained"),
+    state: relevant.length > 0 ? state("unreconciled", "total_differs_candidate_causes") : state("divergent", "total_differs_unexplained"),
   };
 }
 
@@ -139,7 +144,10 @@ export function reconcile(input: ReconcileInput, options: ReconcileOptions = {})
       }
     }
     if (history !== null) {
-      for (const [key, inflow] of netInflowByAsset(history)) if (inflow.units > 0n && !signals.has(key)) signals.set(key, "history_window_net_inflow");
+      for (const [key, inflow] of netInflowByAsset(history, balances.timing.fetchedAtMs ?? undefined)) if (inflow.units > 0n && !signals.has(key)) signals.set(key, "history_window_net_inflow");
+    }
+    if (addressAnalysis !== null) {
+      for (const [key, net] of netPositionFromTrades(addressAnalysis, balances.timing.fetchedAtMs ?? undefined)) if (net.units > 0n && !signals.has(key)) signals.set(key, "dex_history_window_net_buy");
     }
     for (const [key, signal] of [...signals].sort(([a], [b]) => (a < b ? -1 : 1))) {
       const position = byKey.get(key);
@@ -151,6 +159,12 @@ export function reconcile(input: ReconcileInput, options: ReconcileOptions = {})
         findings.push(finding("RC2", "historical_quantity_active_zero", "unreconciled", key, { signal, activeState: "zero" }));
       }
     }
+  }
+
+  // PN: the provider's own PnL consistency (its total against realized plus unrealized).
+  for (const check of addressAnalysis?.tokenPnlChecks ?? []) {
+    if (check.state.kind === "ok") continue;
+    findings.push(finding("PN", check.state.code, check.state.kind as Exclude<Finding["state"]["kind"], "ok">, check.identity.key, { totalText: check.totalText, partsSumText: check.partsSumText, deltaText: check.deltaText }));
   }
 
   // RK: risk and liquidity observations. They reconcile nothing; they keep an exposed position from looking safe.
@@ -180,8 +194,10 @@ export function reconcile(input: ReconcileInput, options: ReconcileOptions = {})
     }
   }
 
-  const status: Status = worstStatus(findings.map((item) => statusOfState(item.state.kind)).concat(findings.length === 0 ? ["valid"] : []));
-  return { findings, totalVsSum: total, status };
+  const statusOf = (list: readonly Finding[]): Status => worstStatus(list.map((item) => statusOfState(item.state.kind)).concat(list.length === 0 ? ["valid"] : []));
+  // Only findings about the active balances bear on the net worth; provider PnL, family rows and risk notes do not.
+  const bearsOnBalances = (item: Finding): boolean => item.rule === "RC1" || item.rule === "RC2" || item.rule === "RC3" || item.rule === "RC5" || item.rule === "RC6" || (item.rule === "RC4" && item.detail.section === "balances");
+  return { findings, totalVsSum: total, status: statusOf(findings), balanceStatus: statusOf(findings.filter(bearsOnBalances)) };
 }
 
 /** RC5: a late or conflicting revision never replaces a newer one. */

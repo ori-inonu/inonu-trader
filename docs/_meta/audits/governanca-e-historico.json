@@ -1,0 +1,565 @@
+{
+  "owner": "governanca-e-historico",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T11:41:28-03:00",
+  "page": {
+    "path": "docs/concepts/governanca-e-historico.md",
+    "absolute_path": "C:/Users/gabri/jev-trader/docs/concepts/governanca-e-historico.md",
+    "sha256": "d8982e137bed13fc2a9f33467ad6ef8498b5afe5614ac0fa12508b314de7f2d9",
+    "line_count": 68
+  },
+  "documents_classified": 30,
+  "classification_counts": {
+    "current_reference": 2,
+    "historical_evidence": 20,
+    "frozen_contract": 1,
+    "proposal": 5,
+    "needs_review": 2
+  },
+  "documents": [
+    {
+      "path": "docs/ARQUITETURA-CENTRAL-DE-OPERACOES.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de decisões de arquitetura e estados em 2026-10-10; não certifica estado atual ou autorização.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/AUDITORIA-OBJETIVOS.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Auditoria de objetivos sobre branch e código declarados no próprio registro; capacidades precisam ser revalidadas no alvo atual.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/BRANCH-INVENTORY-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Inventário Git datado; contagem de commits e branches não prova qualidade, prontidão ou estado de hoje.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/BRANCH-WORKTREE-INVENTORY-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Snapshot de branches, worktrees e mudanças concorrentes em 2026-10-11, explicitamente não é lock nem estado atual.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/CONSOLIDACAO-ESPECIFICACOES-20261012.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro de revisão e consolidação em 2026-10-12; testes e status são daquele baseline.",
+      "code_refs": [
+        "src/portfolio-evidence/cli.ts:1-10,149-160,186-245",
+        "src/portfolio-evidence/collector.ts:1-10,88-90,225-246"
+      ]
+    },
+    {
+      "path": "docs/CONSOLIDACAO-MAIN-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint de integração em 2026-10-11; o próprio documento registra portfolio-evidence como aguardando outra sessão naquele momento.",
+      "code_refs": [
+        "src/portfolio-evidence/cli.ts:1-10,149-160,186-245",
+        "src/portfolio-evidence/collector.ts:1-10,88-90,225-246"
+      ]
+    },
+    {
+      "path": "docs/CONTRIBUICAO.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Guia de contribuição útil como referência; esta auditoria não certifica enforcement de cada orientação.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/ENCERRAMENTO-BRANCHES-WORKTREES-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Relato de branches, worktrees e status em um recorte de 2026-10-11; não executar os comandos nele por inferência.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/GOAL-CONTINUATION-CHECKPOINT-20261011-2135.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint de uma meta de planejamento anterior, com baseline e pendências próprios.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/GOAL-INONU-TRADER.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Documento marcado como meta de engenharia vigente; orienta contexto do projeto, não concede autorização financeira nem reativa planos antigos.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/GOAL-RECOVERY-CHECKPOINT-20261011-2058.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint de recuperação de uma meta anterior; seus próximos passos não são instruções atuais desta auditoria.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/JEV-FUNDING-POLICY-DECISION-20261011.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "O próprio título e conteúdo identificam uma proposta delegada; não tratada como política aprovada ou atual.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/JEV-WINDOWS.md",
+      "read_mode": "full",
+      "classification": "needs_review",
+      "reason": "Guia de configuração de máquina; não foi validado contra ambiente, credenciais ou execução atuais.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/OPERACAO-BRASIL.md",
+      "read_mode": "full",
+      "classification": "needs_review",
+      "reason": "Guia operacional sujeito a disponibilidade, requisitos e condições externas; tais condições não foram consultadas nesta tarefa.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-CHECKPOINT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint registra conclusão e revisão condicionais de uma meta de planejamento datada; não prova execução de E0-E6.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Parecer independente cobre candidato, baseline e critérios próprios, com limitações explícitas; não é revisão deste código ou desta página.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Congela os critérios PC1-PC6 da meta de planejamento de 2026-10-11; sua imutabilidade não transforma essa meta em instrução atual.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Plano e sequência propostos para uma meta de planejamento anterior; o próprio documento diz que as etapas são futuras àquela entrega.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/RELEASE-v0.0.2.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Release candidate e verificações locais registradas para aquele candidato; não houve reexecução nesta auditoria.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/REMOTE-BRANCH-INTEGRATION-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Reconciliação de referências remotas e conteúdos em 2026-10-11; não é prova de estado remoto atual.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/c4-research.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Pesquisa independente identificada como proposta não aprovada; não é contrato de execução.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/full-suite-failure-research.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Investigação offline de falha de suíte em 2026-10-11; não foi repetida nem generalizada para o estado atual.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/runtime-qualification-research.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Pesquisa de qualificação independente e consultiva; não substitui critérios congelados nem qualificação executada.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/OKX-MULTIPLY-LOOP-ADDENDUM-20261011.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Addendum de pesquisa e matriz de recursos, não autorização ou integração presente.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/R7-okx-agentic-wallet.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Pesquisa de fornecedor e plano de integração com perguntas abertas; esta auditoria não refez consulta externa ou qualificação live.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/spec-review-20261012/METODO.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Método aplicado a uma campanha datada de revisão de SPECs; referência de processo, sem substituir instruções atuais.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/spec-review-20261012/spec-review-feed-bounded-recovery.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Parecer sobre candidato e baseline identificados no relatório; achados e verificações não foram reexecutados aqui.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/spec-review-20261012/spec-review-operador.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Revisão de SPECs do cluster operador em escopo declarado; não certifica execução financeira atual.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/spec-review-20261012/spec-review-portfolio-evidence.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Revisão de `src/portfolio-evidence` em baseline anterior; achados continuam sendo evidência daquela rodada até nova verificação.",
+      "code_refs": [
+        "src/portfolio-evidence/cli.ts:1-10,149-160,186-245",
+        "src/portfolio-evidence/collector.ts:1-10,88-90,225-246"
+      ]
+    },
+    {
+      "path": "docs/VERIFICACAO.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Resultados de testes, revisão e captura associados ao baseline descrito no documento; nenhum comando foi repetido nesta tarefa.",
+      "code_refs": []
+    }
+  ],
+  "artifacts_classified": 9,
+  "artifacts": [
+    {
+      "path": "docs/BRANCH-WORKTREE-INVENTORY-20261011-1818.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Inventário estruturado de branches, worktrees e status em horário datado de 2026-10-11."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-ACCEPTANCE.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Resultado de aceitação da meta de planejamento indicada no próprio JSON; não é aceite desta entrega."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Manifesto de fontes e hashes do baseline de planejamento passado."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-FRESHNESS.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Comparação de frescor em horário e commit específicos; não prova ausência de deriva posterior."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-JEV.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Recibo local registra recomendação consultiva, sem resposta humana e com custo faturado nulo/desconhecido; não concede permissão."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW-COORDINATION.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro de coordenação de revisor e decisão de aguardar ou limitar uma revisão passada."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW-RECOVERY.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Recibo de decisão consultiva para recuperar revisão anterior; não é execução desta tarefa."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Parecer estruturado limitado aos critérios PC1-PC6 e à cópia declarada no artefato."
+    },
+    {
+      "path": "docs/PROXIMAS-ETAPAS-JEV-20261011-VERIFICATION.json",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Recibo mecânico de verificação de planejamento anterior; não contém execução de produto desta auditoria."
+    }
+  ],
+  "context_sources": [
+    {
+      "path": "docs/_meta/delegation-contract.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "docs/_meta/organization-spec.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "docs/SCHEMA.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "docs/index.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "docs/log.md",
+      "read_mode": "full",
+      "classification": "historical_evidence"
+    },
+    {
+      "path": "docs/README.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "docs/_meta/project-state-20261013.json",
+      "read_mode": "sections",
+      "classification": "historical_evidence"
+    },
+    {
+      "path": "docs/_meta/source-manifest-20261013.json",
+      "read_mode": "sections",
+      "classification": "historical_evidence"
+    },
+    {
+      "path": "C:/Users/gabri/.agents/sdd-multiagent/PLAYBOOK.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "README.md",
+      "read_mode": "full",
+      "classification": "stale_reference",
+      "reason": "A linha 56 afirma que nada do módulo portfolio-evidence foi implementado, em conflito com os arquivos-fonte atuais inspecionados.",
+      "code_refs": [
+        "src/portfolio-evidence/main.ts:1-10,18-28",
+        "src/portfolio-evidence/cli.ts:1-10,149-160,186-245",
+        "src/portfolio-evidence/collector.ts:1-10,88-90,225-246"
+      ]
+    },
+    {
+      "path": "SPEC.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Narrativa original por bloco tratada pelo README atual como contexto histórico; os critérios de release citados são outros."
+    },
+    {
+      "path": "docs/concepts/manutencao-da-documentacao.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "docs/_meta/catalogs/governanca-e-historico-documentos-01.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    },
+    {
+      "path": "docs/_meta/catalogs/governanca-e-historico-artefatos-01.md",
+      "read_mode": "full",
+      "classification": "current_reference"
+    }
+  ],
+  "observed_structure": {
+    "observed_at": "2026-10-13T11:32:06-03:00",
+    "source_roots_present": ["src", "web", "scripts", "python", "installer", "docs"],
+    "notes": "Estrutura de diretórios observada; presença não implica inspeção funcional completa."
+  },
+  "code_inspected": [
+    "src/server.ts",
+    "src/verification-commands.test.ts",
+    "scripts/github.ps1",
+    "scripts/okx-derivatives.test.ts",
+    "scripts/okx-derivatives.ts",
+    "scripts/test-timeout-preload.ts",
+    "AGENTS.md",
+    "bunfig.toml",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "Dockerfile",
+    "IDEA.md",
+    "index.ts",
+    "package.json",
+    "README.md",
+    "SPEC.md",
+    "tsconfig.json",
+    "tsconfig.verification.json",
+    "src/portfolio-evidence/cli.ts",
+    "src/portfolio-evidence/collector.ts",
+    "src/portfolio-evidence/report.ts",
+    "src/portfolio-evidence/types.ts",
+    "src/portfolio-evidence/main.ts"
+  ],
+  "claims": [
+    {
+      "statement": "O snapshot capturado em 2026-10-13 às 10:53:03 -03 declara branch main, HEAD 00a593bcabe25dbb6d83795268533551098f645b, e escopo com modificações e arquivos não rastreados.",
+      "source_path": "docs/_meta/project-state-20261013.json",
+      "lines": "2-8"
+    },
+    {
+      "statement": "O inventário do snapshot contém 1048 caminhos de código/configuração/teste/fixture e 984 fontes documentais, incluindo 408 Markdown, conforme o escopo descrito pela especificação organizacional.",
+      "source_path": "docs/_meta/organization-spec.md",
+      "lines": "15-17"
+    },
+    {
+      "statement": "O servidor atual compõe handlers de operador, system-one, jev-read, settings e onchain, além de rotas para estado, histórico e eventos.",
+      "source_path": "src/server.ts",
+      "lines": "2-14,23-27,38-70,90-105"
+    },
+    {
+      "statement": "A CLI de carteira com evidência oferece demo sintética offline, plano sem rede e refresh somente de leitura condicionado a três switches explícitos.",
+      "source_path": "src/portfolio-evidence/cli.ts",
+      "lines": "1-10,37-47,186-245"
+    },
+    {
+      "statement": "A coleta é acionada sob demanda, sem loop ou polling, e limita chamadas, páginas, deadline e tokens por parâmetros com tetos explícitos.",
+      "source_path": "src/portfolio-evidence/collector.ts",
+      "lines": "1-10,73-90,225-232"
+    },
+    {
+      "statement": "Os tipos registram wallet_evidence_v2 e estados explícitos; desconhecido não representa saldo zero e patrimônio exclui PnL, custo de aquisição, histórico e posições DeFi.",
+      "source_path": "src/portfolio-evidence/types.ts",
+      "lines": "4-11,19-30,450-463"
+    },
+    {
+      "statement": "README.md:56 diz que carteira com evidência é somente especificação e nada está implementado, mas os arquivos atuais incluem CLI, entrada de processo, coletor, tipos e relatório.",
+      "source_path": "README.md",
+      "lines": "56"
+    },
+    {
+      "statement": "Na comparação de SHA-256 com o snapshot, 45 de 1048 entradas de código e 4 de 984 fontes documentais mudaram; não houve caminho ausente, e os caminhos divergentes estão registrados em source_drift.",
+      "source_path": "docs/_meta/project-state-20261013.json",
+      "symbol": "code_files, documentation_sources; comparação local detalhada neste recibo"
+    },
+    {
+      "statement": "O manifesto inicial de documentação e os inventários posteriores usam horários e conjuntos diferentes; o log registra uma fonte concorrente e o snapshot posterior conta fontes visíveis.",
+      "source_path": "docs/log.md",
+      "lines": "15-19,70-76"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "id": "README-portfolio-evidence-status",
+      "classification": "stale_reference",
+      "status": "confirmed_static_conflict",
+      "summary": "README.md:56 diz que o módulo portfolio-evidence é apenas especificação e não implementado. A inspeção estática verificou entrypoint, CLI, coletor, tipos e relatório presentes. O README não foi editado por limite de escopo.",
+      "paths": ["README.md:56", "src/portfolio-evidence/main.ts:1-10,18-28", "src/portfolio-evidence/cli.ts:1-10,149-160,186-245", "src/portfolio-evidence/collector.ts:1-10,88-90,225-246"]
+    },
+    {
+      "id": "portfolio-evidence-date-scopes",
+      "classification": "historical_evidence",
+      "status": "resolved_by_explicit_dates_and_scope",
+      "summary": "A consolidação de 2026-10-11 registra o trabalho como aguardando outra sessão; a consolidação de 2026-10-12 registra implementação parcial e testes daquele baseline. Não é conflito sobre a mesma observação nem prova de teste atual.",
+      "paths": ["docs/CONSOLIDACAO-MAIN-20261011.md:46-50,79-85", "docs/CONSOLIDACAO-ESPECIFICACOES-20261012.md:40-55"]
+    },
+    {
+      "id": "documentation-inventory-counts",
+      "classification": "historical_evidence",
+      "status": "scope_difference_not_unresolved_drift",
+      "summary": "O manifesto inicial conta 988 arquivos e exclui cinco configurações .obsidian da navegação; o log registra uma fonte concorrente, e o snapshot posterior lista 984 fontes visíveis com 408 Markdown. Horários e escopos diferem; a contagem não indica quatro arquivos perdidos.",
+      "paths": ["docs/_meta/source-manifest-20261013.json:2-9", "docs/log.md:15-19,70-76", "docs/_meta/organization-spec.md:15-17"]
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "unverified": [
+    "Nenhum teste, build, typecheck ou verificador documental foi executado nesta delegação.",
+    "Não foram verificados runtime ativo, configuração carregada em sessão nova, acesso ou resposta externa, credenciais, custo faturado, inferência do produto, ordens, lucro ou qualificação financeira.",
+    "Os 45 arquivos de código e 4 fontes documentais que divergiam do snapshot não foram auditados por conteúdo; os quatro documentos ficam fora da atribuição.",
+    "A auditoria documental detalhada cobre os 30 Markdown atribuídos e fontes de contexto enumeradas; não é leitura semântica integral das 984 fontes documentais do snapshot.",
+    "Os status de revisões, verificações e resultados históricos não foram reexecutados nem tratados como aprovação atual."
+  ],
+  "source_drift": {
+    "checked_at": "2026-10-13T11:27:32-03:00",
+    "baseline_path": "docs/_meta/project-state-20261013.json",
+    "baseline_head": "00a593bcabe25dbb6d83795268533551098f645b",
+    "scope": "SHA-256 of snapshot-listed paths versus working tree; concurrent changes may occur after this observation.",
+    "code_files": {
+      "baseline_count": 1048,
+      "matched": 1003,
+      "changed_count": 45,
+      "missing_count": 0,
+      "changed_paths": [
+        "src/desktop/cleanup.test.ts",
+        "src/desktop/cleanup.ts",
+        "src/desktop/doctor.test.ts",
+        "src/desktop/doctor.ts",
+        "src/desktop/handlers.test.ts",
+        "src/desktop/handlers.ts",
+        "src/desktop/launcher.ts",
+        "src/desktop/vault.test.ts",
+        "src/desktop/vault.ts",
+        "src/inonu/ask.test.ts",
+        "src/inonu/ask.ts",
+        "src/inonu/collector.test.ts",
+        "src/inonu/collector.ts",
+        "src/inonu/flow-memory.test.ts",
+        "src/inonu/flow-memory.ts",
+        "src/inonu/ledger.test.ts",
+        "src/inonu/ledger.ts",
+        "src/inonu/okx-public.test.ts",
+        "src/inonu/okx-public.ts",
+        "src/inonu/overlay.test.ts",
+        "src/inonu/overlay.ts",
+        "src/inonu/source-discovery.test.ts",
+        "src/inonu/source.test.ts",
+        "src/inonu/source.ts",
+        "src/intel/brief.ts",
+        "src/intel/thresholds.ts",
+        "src/settings/http.ts",
+        "src/settings/store.ts",
+        "web/src/components/Desk/Dock/DockInonu.tsx",
+        "web/src/components/Desk/Dock/DockPanel.tsx",
+        "web/src/components/Desk/MesaView.tsx",
+        "web/src/components/Desk/TopbarDiscovery.tsx",
+        "web/src/components/Settings/SettingsView.tsx",
+        "web/src/lib/animation-scan.test.ts",
+        "web/src/lib/inonu/ask-trigger.test.ts",
+        "web/src/lib/inonu/ask-trigger.ts",
+        "web/src/lib/inonu/overlay-feed.test.ts",
+        "web/src/lib/inonu/overlay-feed.ts",
+        "web/src/lib/mesa/dock-subviews.test.ts",
+        "web/src/lib/mesa/dock-subviews.ts",
+        "web/src/lib/mesa/engine-alerts-render.test.tsx",
+        "web/src/lib/no-send-scan.test.ts",
+        "web/src/lib/settings/client.test.ts",
+        "web/src/lib/settings/client.ts",
+        "web/src/lib/settings/settings-view-render.test.tsx"
+      ]
+    },
+    "documentation_sources": {
+      "baseline_count": 984,
+      "matched": 980,
+      "changed_count": 4,
+      "missing_count": 0,
+      "assigned_markdown_count": 30,
+      "assigned_markdown_matched": 30,
+      "changed_paths": [
+        "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+        "docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md",
+        "docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md",
+        "docs/sdd/inonu-desktop-v1/TASKS.md"
+      ]
+    },
+    "assigned_code_sources": {
+      "count": 18,
+      "matched": 18,
+      "changed_count": 0,
+      "missing_count": 0
+    }
+  },
+  "billed_cost": null
+}

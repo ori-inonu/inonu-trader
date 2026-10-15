@@ -1,0 +1,44 @@
+bun test v1.3.14 (0d9b296a)
+
+src\outcomes\decision-log.test.ts:
+36 |   };
+37 |   const wrapper = withDecisionLog(inner, { recorder: { snapshotNow: async () => null }, store: createOutcomeStore({ dir: tmp() }), now: () => 1, enabled: () => false });
+38 |   await wrapper.ask({ modo: "carteira" }, { requestId });
+39 |   expect(received).toEqual({ requestId });
+40 |   expect(wrapper.cancelRequest?.(requestId)).toBe(true);
+41 |   expect(cancelled).toBe(requestId);
+                        ^
+error: expect(received).toEqual(expected)
+
+- {
+-   "requestId": "b9eb24df-248c-440c-b3fd-287a5507fedf",
+- }
++ undefined
+
+- Expected  - 3
++ Received  + 1
+
+      at <anonymous> (C:\Users\gabri\jev-trader\src\outcomes\decision-log.test.ts:41:20)
+(fail) the recorder wrapper preserves the caller's request and cancellation ownership [8.37ms]
+(pass) instrumentOf > only a click about one OKX instrument has an instrument [0.73ms]
+(pass) the log > the snapshot is taken at the click, before the model answers, and the answer is recorded with it [29.76ms]
+(pass) the log > a hold is recorded too (the Placar counts it and never scores it) [13.13ms]
+(pass) the log > a reused answer is marked as reused [7.83ms]
+(pass) the log > a refusal, a cooldown or an error is not a decision [27.83ms]
+(pass) the log > a ranking or a token has no snapshot and no Veredito, but its answer is still recorded [7.49ms]
+(pass) the log > two clicks on the same instrument within a minute share one snapshot; a minute later it is read again [16.04ms]
+(pass) the log > when the recorder is off nothing is read and nothing is written, and the answer is the same, with no Veredito [7.89ms]
+(pass) the log > a recorder that fails never changes the answer: the Veredito comes with no plan and says why [6.44ms]
+(pass) the log > a Veredito that fails to compose never stops the record, nor changes the answer [11.95ms]
+(pass) the log > a snapshot that never comes does not hold the answer: after the wait the Veredito is given without it [38.01ms]
+(pass) the log > cancel and running pass through [5.50ms]
+(pass) the Veredito that goes with the answer > a buy over a zone the engine offered: the plan is anchored on that zone's limits and invalidation [23.14ms]
+(pass) the Veredito that goes with the answer > the profile of the moment gives the size, and the Placar flag drops the warning [6.50ms]
+(pass) the Veredito that goes with the answer > a hold becomes esperar, and a sell is anchored on the supply zone [15.86ms]
+(pass) the Veredito that goes with the answer > a zone the snapshot does not know has no zone score, and an instrument level candidate falls back to the ATR [15.28ms]
+(pass) the Veredito that goes with the answer > a warming engine turns a buy into esperar, the model's answer stays what it said, and the record keeps which gate did it [12.24ms]
+
+ 17 pass
+ 1 fail
+ 61 expect() calls
+Ran 18 tests across 1 file. [494.00ms]

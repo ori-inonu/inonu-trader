@@ -1,0 +1,14 @@
+{
+  "receiptId": "3d4dc984-4ef4-4223-a055-c18dfc7d13c4",
+  "status": "abstained",
+  "model": "jev-1.13.0",
+  "inputDigest": "ad2218147cc02b576af1b83ca297ce23851ef7eb115889c2bf99dcd8e3f16a12",
+  "confidence": 0.52,
+  "probabilities": { "wrap_actions": 0.62, "grid_two_rows": 0.35, "hide_price": 0, "defer": 0.01, "insufficient_evidence": 0.02 },
+  "usage": { "input_tokens": 549, "output_tokens": 65 },
+  "latencyMs": 413,
+  "cost": null,
+  "human_response": false,
+  "applied_by": "coordinator_reversible_fallback",
+  "grounding": "UI-3 and UI-5 require visible price and actions. Independent screenshot review confirms overlap at 1024x768. A limited CSS wrap at 821 to 1200px preserves all controls and data. No automatic API retry; acceptance remains unchanged."
+}

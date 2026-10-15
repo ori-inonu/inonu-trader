@@ -1,0 +1,192 @@
+[
+  {
+    "path": "web/src/app/console/page.module.css",
+    "sha256": "2c1a24fd73bfd5c719704b8be5a021b024e6806c764e96d880100773614a8c0a",
+    "excerpt": ".primary {"
+  },
+  {
+    "path": "web/src/app/console/page.tsx",
+    "sha256": "cb7ee121a4bab505dcb07a44149bd3966d47f4baa6d0304b376b7efe5567f829",
+    "excerpt": "\"use client\";"
+  },
+  {
+    "path": "web/src/components/Desk/DeskRail.module.css",
+    "sha256": "6caef09f05fb82e26d7607af3971ea15f3b253a06ed23b0d17d314043a0632ce",
+    "excerpt": "/* The topbar of the desk. One row of 48 px (44 px when narrow). Left: brand, sections and the symbol search. Right: sources,"
+  },
+  {
+    "path": "web/src/components/Desk/MesaView.module.css",
+    "sha256": "962a1bb36ed741ff629e916611ac1cc7aa262eb6695590bc2463c12996f34e65",
+    "excerpt": "/* The desk uses a flat viewport grid, with the chart occupying the remaining space. */"
+  },
+  {
+    "path": "web/src/components/Desk/MesaView.tsx",
+    "sha256": "ed98169289afd9523b5755d0f63347d411ee66eaf395b99584970d1fce296b1f",
+    "excerpt": "\"use client\";"
+  },
+  {
+    "path": "web/src/components/Desk/Dock/DockInonu.module.css",
+    "sha256": "e61a70bb52455436e4e53c3181d1b3ee3b68ad581d017615e73fdc11e3aa8faa",
+    "excerpt": ".root {"
+  },
+  {
+    "path": "web/src/components/Desk/Dock/DockPanel.module.css",
+    "sha256": "47e55ce36cf3f3ea9d4ae2fc75b887254dae301159209681057359684fb7ec42",
+    "excerpt": "/* The bottom dock, in the style of the trading platforms: a 34px tab strip that is always visible,"
+  },
+  {
+    "path": "web/src/components/Desk/Dock/DockPanel.tsx",
+    "sha256": "69db56d23c1e1fcab28f1b24b5af9f6db2e4a82d5f14deef6a7424689f83155e",
+    "excerpt": "\"use client\";"
+  },
+  {
+    "path": "web/src/components/Desk/Dock/DockTabs.module.css",
+    "sha256": "edf6c4bc2ccf2a2af66ebe706dd3b8e8ad7909a7593b733f50d41aba92e62d00",
+    "excerpt": "/* Bodies of the dock tabs: wide tables with a fixed header and an internal scroll, in the same"
+  },
+  {
+    "path": "web/src/components/Desk/panels/Watchlist.tsx",
+    "sha256": "dec37a260f4afbb18030263b204ff748a058c006da1983cbdbf22a9d35859a32",
+    "excerpt": "\"use client\";"
+  },
+  {
+    "path": "web/src/lib/desk/ui/dock-render.test.tsx",
+    "sha256": "0a14fd48368a458c7cc8e388833e5a09eefd73ef2522a90fce869a38bc4e13dd",
+    "excerpt": "import { describe, expect, test } from \"bun:test\";"
+  },
+  {
+    "path": "web/src/lib/desk/ui/panels-render.test.tsx",
+    "sha256": "12ddbc8fa2a5dba865cfad7c8c153e5787affaeb0d64e2b91464b701ee099751",
+    "excerpt": "import { describe, expect, test } from \"bun:test\";"
+  },
+  {
+    "path": "web/src/lib/inonu/feed-text.ts",
+    "sha256": "64968ee9d471a54d29af68be1b8d2295b3968f634f841e1289db6ba755c7f81a",
+    "excerpt": "/**"
+  },
+  {
+    "path": "web/src/lib/inonu/signal-strip-render.test.tsx",
+    "sha256": "5de45e93d53ffd2a2fea2ff55bda111767f31e355823a3562f163d3289f0aea8",
+    "excerpt": "// ASK-8, AC-ASK-4: the strip under the chart toolbar where the person chooses which signals the chart shows. On an OKX"
+  },
+  {
+    "path": "web/src/lib/inonu/view.test.ts",
+    "sha256": "b1591b01c8b55cae4312156ef0a46c93a90230cabb0c83013fb5840d0dfe1b13",
+    "excerpt": "// ASK-7, ASK-9, ASK-10: what the desk SAYS about a request to Inonu. Plain ASCII, no dash or middle dot, \"Inonu\" is the"
+  },
+  {
+    "path": "web/src/lib/inonu/view.ts",
+    "sha256": "be80d3452513a9bea3376b85ce337ea5a518f7a8d73b2abbc07ac6d45fdd0183",
+    "excerpt": "/**"
+  },
+  {
+    "path": "web/src/lib/mesa/dock.test.ts",
+    "sha256": "7134d74f5e8ffd22041bad5541e2dc8a8010a93df511231610a8873c477c4195",
+    "excerpt": "import { describe, expect, test } from \"bun:test\";"
+  },
+  {
+    "path": "web/src/lib/mesa/dock.ts",
+    "sha256": "1fb15dc10fe19ec1fbdc78e81f664db639995dd4c16aecda1ad39ad63c80dd99",
+    "excerpt": "/**"
+  },
+  {
+    "path": "web/src/lib/mesa/flow-tab-model.test.ts",
+    "sha256": "07ed9ffa9122b629ee4624911be46aa2b9777a90b5f4f23a65b6ffca5b0dda79",
+    "excerpt": "// DOC-1, DOC-4, INF-1, FLX-10: what the Fluxo tab and the Zonas view of the Radar tab tell, built only from the reading of the flow"
+  },
+  {
+    "path": "web/src/lib/mesa/onchain-rows.test.ts",
+    "sha256": "bb1e09f4bc76e832cd0b22e4c77ab77810edef46e6bd99a94077770ce3405ad5",
+    "excerpt": "import { describe, expect, test } from \"bun:test\";"
+  },
+  {
+    "path": "web/src/lib/mesa/onchain-rows.ts",
+    "sha256": "2ab8c4a4ae42c243bc0617cfa048eb64612e7f38117e1fc0186ace46c671c2bd",
+    "excerpt": "/**"
+  },
+  {
+    "path": "web/src/components/Desk/InstrumentHeader.tsx",
+    "sha256": "b7d45ea9f1bab9aa65a45c6ba415baf5104b75646800075af3f2ce8eeb13fb4d",
+    "excerpt": "\"use client\";"
+  },
+  {
+    "path": "web/src/lib/mesa/market-inputs.ts",
+    "sha256": "a9d34c5615e0774c1e5b2720cdfe2cf1327be87e096cb7d9d56a6b7527b517a1",
+    "excerpt": "import type { DeskState } from \"../desk/types\";"
+  },
+  {
+    "path": "web/src/lib/mesa/market-inputs.test.tsx",
+    "sha256": "224c16f000df4b0a1c7f6ac4e65d260ad4f502028723852162d816912e2cae12",
+    "excerpt": "import { describe, expect, test } from \"bun:test\";"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/SPEC.md",
+    "sha256": "e5cc175407637b903721cb8415bfe4ea89004d94c7c28f1978d40ed887706d55",
+    "excerpt": "## Critérios congelados"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/REPORT.md",
+    "sha256": "c09383acbd9a513292b382516e3f95cbbcc29fe8ba884773b3d4225a763fa97d",
+    "excerpt": "171 testes pertinentes passaram"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/browser-matrix.md",
+    "sha256": "575fb464bf71fd4537fccbb3187c2c405f777a20df2b7053bd71ecb8202684ee",
+    "excerpt": "| Configurações | 1440x900, 1024x768, 390x844, 320x700 |"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/integration-audit-independent.md",
+    "sha256": "1df8d44a60348418377fb57ab83a6cc32c0c45442c609ab81246a89a5d77d071",
+    "excerpt": "Sem novos achados."
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/standards-review-responsive.md",
+    "sha256": "e7accb0bb37317dc03577ee880f7e0b679b9c1d9eaf633b181ccc3188c835141",
+    "excerpt": "**Resultado: nenhuma violação documentada ou smell novo identificado.**"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/tests-integrated-original.log",
+    "sha256": "f55eead088dcb2ce42e39443c20b3d9239db2af81ca3b31cafae63da9f729ecf",
+    "excerpt": "171 pass"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/typecheck-integrated-original.log",
+    "sha256": "5a3973f79ed9becd5f23c4feff467513814de7ea381d75a4d2e339aa8b8edca9",
+    "excerpt": "tsc --noEmit"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/build-responsive.log",
+    "sha256": "1d231b3f281d8d09cb467d5b0be718d8511d2082937f6da9f294162eefa6a592",
+    "excerpt": "Compiled successfully in 10.6s"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/integration-manifest.json",
+    "sha256": "c8981a94580f366089535609bf117be1d694cbc9e214935a80b3bf7d5269323e",
+    "excerpt": "00a593bcabe25dbb6d83795268533551098f645b"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/final-manifest.json",
+    "sha256": "97af97aa3b99fff34a2ebaa6c23322d8ae009e6d5f56fd286703bce13aac254e",
+    "excerpt": "src/app/console/page.module.css"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/reconciliation-manifest.json",
+    "sha256": "471a304a1576ba7585363aa9f1c7e7b119142c84a55e1427e84b0303662470ac",
+    "excerpt": "separable_three_way_merge"
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/jev-responsive-receipt.json",
+    "sha256": "96c8cd421e6cd2d0cd4bb7af9885f8b70f4a550c352254d595ed91861563ab6f",
+    "excerpt": "\"status\": \"abstained\""
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/jev-source-repair-receipt.json",
+    "sha256": "2a11182008137d61164ae7f444d93f05d6992a98271a767d39b2259064f2893b",
+    "excerpt": "\"recommendation\": \"shared_source_selection\""
+  },
+  {
+    "path": "docs/sdd/ui-audit-20261013/screenshot-manifest.json",
+    "sha256": "a6bd6ad7be3d93150f40d1cef307d96aae32064d8cb88d421cbd99cc5695075c",
+    "excerpt": "integrated-wallet-1024.png"
+  }
+]

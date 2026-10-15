@@ -1,0 +1,8 @@
+{
+  "url": "https://jev-trader.vercel.app/",
+  "observedAt": "2026-10-13T16:19:23.068Z",
+  "httpStatus": 200,
+  "desktopText": "‖ Jev Trader\nblock 113,086,789\ndry run\nmock\nlast 80 ms\navg 81ms\n139,012 calls\n383 fills\nuptime 11:55:25\n0.024486\n0.024474\n0.024461\n0.024470\n0.024470\nMON/USDC\nKuru\nshort 765.342 MON\np&l -1.446 MON (-0.07%)\nBuying\n80 ms\nconf 0.94\nSTANDING ORDER\n> post a bid or an ask on Kuru's MON/USDC book. every block. no abstaining.\nWHICH SIDE THIS BLOCK?\nBUY\n6%\nbuy\n6%\nsell\n94%\nFEED\n113,086,789\nBUY\nconf 0.94\n80ms\nbid 200 @ 0.024459 cap\nsim\n113,086,788\nBUY\nconf 0.75\n81ms\nbid 200 @ 0.024459\nsim\n113,086,787\nBUY\nconf 0.54\n81ms\nbid 200 @ 0.024459 cap\nsim\n113,086,786\nBUY\nconf 0.96\n82ms\nbid 200 @ 0.024459 cap\nsim\n113,086,785\nBUY\nconf 0.87\n80ms\nbid 200 @ 0.024459 cap\nsim\n113,086,784\nBUY\nconf 0.87\n81ms\nbid 200 @ 0.024459 cap\nsim\n113,086,783\nBUY\nconf 0.94\n81ms\nbid 200 @ 0.024459 cap\nsim\n113,086,782\nBUY\nconf 0.65\n82ms\nbid 200 @ 0.024459\nsim\n113,086,781\nBUY\nconf 0.98\n80ms\nbid 200 @ 0.024459 cap\nsim\n113,086,780\nBUY\nconf 0.58\n80ms\nbid 200 @ 0.024459\nsim\n113,086,779\nBUY\nconf 0.94\n80ms\nbid 200 @ 0.024459 cap\nsim\n113,086,777\nBUY\nconf 0.91\n80ms\nbid 200 @ 0.024459 cap\nsim\n113,086,778\nLATE\n113,086,776\nBUY\nconf 0.58\n81ms\nbid 200 @ 0.024459\nsim\n113,086,775\nBUY\nconf 0.88\n80ms\nbid 200 @ 0.024459 cap\nsim\n113,086,774\nBUY\nconf 0.56\n81ms\nbid 200 @ 0.024454 cap\nsim\n113,086,773\nBUY\nconf 0.74\n82ms\nbid 200 @ 0.024454\nsim\n113,086,771\nBUY\nconf 0.85\n80ms\nbid 200 @ 0.024454\nsim",
+  "errors": [],
+  "scope": "read-only navigation and screenshots; no buttons clicked; backend execution not verified"
+}

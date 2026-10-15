@@ -1,0 +1,56 @@
+{
+  "format": "docs-task-product-verification-v1",
+  "recorded_at": "2026-10-13T11:15:17.777558-03:00",
+  "scope": "manual tests, build and static checks; not application runtime boot or live trading qualification",
+  "checks": [
+    {
+      "command": "python -B docs/_meta/tools/verify.test.py",
+      "passed": 12,
+      "failed": 0,
+      "exit_code": 0,
+      "evidence": "Ran 12 tests; OK in the first tool output log"
+    },
+    {
+      "command": "bun --no-env-file run test",
+      "passed": 4420,
+      "skipped": 2,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "bun --no-env-file run build",
+      "exit_code": 0,
+      "compiled_successfully": true
+    },
+    {
+      "command": "bun --no-env-file run typecheck:all",
+      "exit_code": 0,
+      "scope": "root and web TypeScript"
+    },
+    {
+      "command": "bun --no-env-file run --cwd web test",
+      "passed": 2260,
+      "skipped": 0,
+      "failed": 0,
+      "exit_code": 0
+    }
+  ],
+  "logs": [
+    {
+      "path": "C:\\Users\\gabri\\AppData\\Local\\hermes\\cache\\terminal-output\\out-1791900561-17928-e190.log",
+      "sha256": "bce44e8aa85d0f108633daf0c2fe01bb81a49100f1e74c828036ca0df41fb1fd",
+      "bytes": 601493
+    },
+    {
+      "path": "C:\\Users\\gabri\\AppData\\Local\\hermes\\cache\\terminal-output\\out-1791900854-17928-50f0.log",
+      "sha256": "f92f2466375341709e285e0fba453dcc292ed852f2eb7822840eaca000cdc239",
+      "bytes": 245672
+    }
+  ],
+  "runtime_boot": "not_run_to_avoid_starting_trader_or_loading_keys",
+  "wiki_full_lint": "pending_parallel_documentation_integration",
+  "warnings": [
+    "Next build emitted localStorage experimental warning.",
+    "Web tests emitted a React className prop warning. Both commands returned 0."
+  ]
+}

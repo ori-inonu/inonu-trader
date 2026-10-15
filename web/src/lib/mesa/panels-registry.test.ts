@@ -10,7 +10,9 @@ import { FLOW_ROWS_MAX, ZONE_ROWS_MAX } from "./flow-tab-model";
 import { MAX_ROWS_PER_TAB, PANEL_REGISTRY, type RegistryEntry } from "./panels-registry";
 
 const WEB_SRC = resolve(import.meta.dir, "../..");
-const SPEC = join(resolve(import.meta.dir, "../../../.."), "docs/sdd/inonu-desktop-v1/SPEC.md");
+const ROOT = resolve(import.meta.dir, "../../../..");
+/** The requirements of the desk and those of the autonomous agent (its screen is the home of the app). */
+const SPECS = [join(ROOT, "docs/sdd/inonu-desktop-v1/SPEC.md"), join(ROOT, "docs/sdd/agente-autonomo/SPEC.md")];
 
 const idsOf = (kind: RegistryEntry["kind"]) => PANEL_REGISTRY.filter((e) => e.kind === kind).map((e) => e.id).sort();
 
@@ -54,7 +56,7 @@ describe("every route, tab and panel has a requirement", () => {
   });
 
   test("every entry names a requirement that is in the SPEC", () => {
-    const spec = readFileSync(SPEC, "utf8");
+    const spec = SPECS.map((file) => readFileSync(file, "utf8")).join("\n");
     const known = new Set([...spec.matchAll(/^\| ([A-Z]{3}-\d+) \|/gm)].map((m) => m[1]!));
     expect(known.size).toBeGreaterThan(100);
     for (const entry of PANEL_REGISTRY) expect(known.has(entry.requisito)).toBe(true);

@@ -1,0 +1,539 @@
+{
+  "scope": "Semantic coverage is described precisely in the two research reports and audit.md. These rows identify their observed hashes, not an assertion that every file was fully read.",
+  "reports": [
+    "docs-research.md",
+    "frontend-research.md"
+  ],
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+      "sha256": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "sha256": "b870402acdb6841b95f173e0f96d5af250b3ccf71a105d31bbdad854be12f9d6",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+      "sha256": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/OWNERSHIP.md",
+      "sha256": "5c34646e0f7c5812582b5d3483c8dbfa539b1935537d609d49ee63c4e9a81e6b",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/rastreador.md",
+      "sha256": "22aff83b9975ea5fbae73a75be2b2f90480c651990f387cb6ed496cce9ddf0ec",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/wallet.md",
+      "sha256": "a22dcdfbbcd247ff9a4c5faf0b022862b1ff3cc7ba604af44742bf4a71910ca8",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/grafico-jev/SPEC.md",
+      "sha256": "a222c2d468573a2b8cf236afc7d3bdb096339bb0fc396288ba81a0ae5198b94a",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/SPEC.md",
+      "sha256": "b4660c1d16ee297ac4c4d964b5336fd52a0d8606ac71411bd81e7d6ca4890b2b",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/carteira-evidencia/tasks.md",
+      "sha256": "3da5a970b7c85549c02ea33e2787bac978afa72732a55cdc0aa4c6d9e6bef0c6",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/carteira-evidencia/requirements.md",
+      "sha256": "2274abdb91408fd24715780dde2d20b97997cee913d2168793d274d71314908c",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/sdd/carteira-evidencia/design.md",
+      "sha256": "bebd9c954d0c3b260655c919125ee12c1034bda6b48ebcfeed5715806d5aa8dc",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/MESA-DE-OPERACOES.md",
+      "sha256": "a44f3416b2964c6eac422465e5761d89865b8c41d70b9527edfea049169e97e1",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/MESA-TOPBAR-SPEC.md",
+      "sha256": "8deacbea18bd3deb6568181d85bc54a3a7c58bf80b8c3beee5962c689064e4ab",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/UI-EXECUTION-TRUTH-SPEC.md",
+      "sha256": "ee461b36576c6c4647fe19c5ce69bba1c20c6e06a3996b7aa55110a7f1fc75e8",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/INONU-DESIGN-SPEC.md",
+      "sha256": "184d31ac33e0b83734047d9d73f8cf2b7b4c46dafc9cabf9379ba8b8af6016a7",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-ACCEPTANCE.md",
+      "sha256": "20e1558da58ceae78332020f1e4f84277eacdb694748d28b9ea599dc30808054",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-CONCURRENT-UI-SPEC.md",
+      "sha256": "7e2a1e8e8908851364c685c9c934c6b0c910b7b7607c7dfda39cc53790ccb2fb",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-EXECUTION-COPY-SPEC.md",
+      "sha256": "46d65b711a79b89403d6b8267f28a001906b9b0b147ce719c210db936e80e246",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-MOBILE-FIX-SPEC.md",
+      "sha256": "ff6db590c4f6c73fd7b4309014014424e1c1a1ac6eb9a4a1863110c5ce6120fe",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-LEDGER-INTEGRATION-SPEC.md",
+      "sha256": "1f3cacc81e808dba148baf50eae418ee49de7b954efb54b8f254dc31d493664e",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/REPORTS-SERVER.md",
+      "sha256": "b987c10859b8fa102980abb75102cef5fd33c09c659b7a516126f8d4e3f48760",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/mobile-decision-report/SPEC.md",
+      "sha256": "385adc07bf8fcd66f5ded0e66826a5ae260a7cf7ae9ee79d650c45729d0557a3",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/_meta/currentness.md",
+      "sha256": "65ddebba876ece217de7810ccd9ff66a35e4fdb1a2e182717571ab88936b25a4",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/_meta/topic-map.md",
+      "sha256": "a90f29ed88dbfcc9a0fcdb5de1e12b633829543141764bc28abea710feb3ad6d",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/_meta/catalog.json",
+      "sha256": "ac72bfa23413505b415d5c34530e3a2f772c2b09e5c96782b24f6358c839ba80",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/_meta/document-status.json",
+      "sha256": "e446c47f57df4f5ef5c1eeacefddfc0f20b22d3199f3324bf7bcb08e0c7c3205",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/concepts/interface-e-central.md",
+      "sha256": "4522241cbb13cce544d4f2d4d21128b510b658ffe5367b2c67ba40a1cc5a80bb",
+      "report": "docs-research.md"
+    },
+    {
+      "path": "docs/concepts/relatorios-e-evidencias.md",
+      "sha256": "b927c809b3b09943cf6462048c2f1704d36f064710d846485ba9641cf9074ac0",
+      "report": "docs-research.md"
+    },
+    {
+      "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+      "path": "AGENTS.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+      "path": "web/AGENTS.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+      "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+      "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "a222c2d468573a2b8cf236afc7d3bdb096339bb0fc396288ba81a0ae5198b94a",
+      "path": "docs/sdd/grafico-jev/spec.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "3da5a970b7c85549c02ea33e2787bac978afa72732a55cdc0aa4c6d9e6bef0c6",
+      "path": "docs/sdd/carteira-evidencia/tasks.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "2274abdb91408fd24715780dde2d20b97997cee913d2168793d274d71314908c",
+      "path": "docs/sdd/carteira-evidencia/requirements.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "bebd9c954d0c3b260655c919125ee12c1034bda6b48ebcfeed5715806d5aa8dc",
+      "path": "docs/sdd/carteira-evidencia/design.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "947d9a16e9b95b9f094bf97d09c834e68e988011bad0bdbf9e76c3e1bb7cec40",
+      "path": "web/package.json",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "cf37e8f808f725293998991e352becdae9253daf176c0e0f580ac99fd96d5a48",
+      "path": "web/src/app/page.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "a6405bf91a9d9313a4c2e7565ae198fb8f0db9ba3d08f60b3a261ce2396815b4",
+      "path": "web/src/app/console/page.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "a2c3e787d1df0ea3f15528d95fe67c004847c974091e7c8c3a89cfa19f7de599",
+      "path": "web/src/components/Desk/MesaView.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "d96183534961a5e6cfdf879e6c9d3425f36a7fef689b15a46bdd31a1783ceb7a",
+      "path": "web/src/components/Desk/MesaView.module.css",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "6711c5ccc816d70d7a024ce03a70f39c6091dca58f0e5ce6ca74283b72fd06b8",
+      "path": "web/src/components/Desk/panels/PriceChart.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "ac5cb46c44944ead041a26c579c626e13b6201d23e93eab70dccb105237cbe2d",
+      "path": "web/src/components/Desk/panels/AssetPicker.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "e5623744b90d0390185703ffe571a941b43b1652ad518eef180692909b5ae4c5",
+      "path": "web/src/components/Desk/Dock/DockPanel.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "41319d6cb5ebc2c18be1b7e2d1dcd5e7d8f4adae07cf6f6830a2d145b7168a87",
+      "path": "web/src/components/Rastreador/RastreadorView.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "d793533bf8976e39d66ee1ffaac48d3d12cb7d157571c95c063c9dd2cceb9758",
+      "path": "web/src/components/Rastreador/OnchainBody.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "a33445995716fa5d8fb8c6a5ab7136ef6713cefd018bf90ba656cf4147725276",
+      "path": "web/src/components/Settings/SettingsView.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "bd4ebe8a12b6155b8219d2186fa5978093a8b98e9d6ba9b2a71bb6ab0494c6a5",
+      "path": "web/src/components/Doctor/DoctorView.tsx",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "f46d4c33f96b92241af084b8fa3322b67b2d1f7d8874cada110eebfaa844ec32",
+      "path": "web/src/lib/desk/useDesk.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "2d7d5662025588246eeed4dffc2b27f40155126bd2daf9f31e2561e0e80668dc",
+      "path": "web/src/lib/desk/desk-store.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "65fb5eb96ab4e397da5453df9bf27ca04d90d25924dc2c223ddcc0b478accb97",
+      "path": "web/src/lib/desk/desk-controller.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "ca1972332f811afc38805fe37632095f29e7c5558c5b8f2a1b7e95eb29990f9e",
+      "path": "web/src/lib/desk/ui/useElementSize.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "f2f940c9cf629a0091541db2770ad4928dca0683bfe847e548cd744176c09f31",
+      "path": "web/src/lib/desk/ui/draw-chart.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "e84b1d476dc526ea2007e4864b5b43517ddb05d03cb0cbfab27fe94d30b5048c",
+      "path": "web/src/lib/operator-center.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "2b2ad6ec6b2981000cb0bee964757da99c378c783580f600f40f1ec0fb2a6a15",
+      "path": "web/src/lib/onchain/useOnchainResource.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "69b5a229c2ac26d9d125ef19de4f6b60af2e6772f3678f220419ae1f03f42fba",
+      "path": "web/src/lib/onchain/useOnchainCandles.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "9d6afb3ef17eb5eba76b11965540b059d62c8543162b84138b457e8a19992846",
+      "path": "web/src/lib/onchain/client.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "79532d5816f3b60446a75400268aff7d5dc786e583ccb7bd6550967dce5a218e",
+      "path": "web/src/lib/settings/useSettings.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "16cbe4ace451032075b36933b3b16600c9fed3141a603215ed26c6b0f8ccc7f1",
+      "path": "web/src/lib/inonu/useInonuLayer.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "950d825eff9b95dd7eddd364ca653dd4e84e0940652ffc27bdeea16a897e6b3f",
+      "path": "web/src/lib/inonu/useOverlayReading.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "fb5b94be26b648daf8801ce53f8d2367075569454b8faa1a2ec8b88befa01188",
+      "path": "web/src/lib/inonu/overlay-feed.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "4d438885fe9c0646725bc82652cec4309baed5a1a570be73c0ed2b7141399b11",
+      "path": "C:/Users/gabri/.codex/skills/codex-desktop-harness/SKILL.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "86f7b8f22e4eb2aa352ff8d021d5d8dfad1b4ba6a56156252807bce528d5c258",
+      "path": "C:/Users/gabri/.agents/sdd-multiagent/PLAYBOOK.md",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "387c01ba447457853d7d2d68e99412abc698f4d393332a9e352a57e05bc078bc",
+      "path": "web/src/lib/mesa/panels-registry.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "sha256": "9b13e02181ad4ae17a6c2d3b707950df1f8943732732c65988a9e600274a1d98",
+      "path": "web/src/lib/jev-read.ts",
+      "report": "frontend-research.md"
+    },
+    {
+      "path": "web/src/components/Desk/MesaView.tsx",
+      "sha256": "4c3a867546df4897c4fdb3120e578abee98e1cbf85caeeb922a51813758d9972",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Desk/MesaView.module.css",
+      "sha256": "55412fc9c7fd6bc555564fb24e51ff717b37f7028142f693ac59d00546ee27ef",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Desk/panels/AssetPicker.tsx",
+      "sha256": "ac5cb46c44944ead041a26c579c626e13b6201d23e93eab70dccb105237cbe2d",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/DockPanel.tsx",
+      "sha256": "e5623744b90d0390185703ffe571a941b43b1652ad518eef180692909b5ae4c5",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Rastreador/RastreadorView.tsx",
+      "sha256": "71dde57bff4081ad67f594507be83bc6a171ea7a6b9452823d9ffff2a52d80bf",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Rastreador/OnchainBody.tsx",
+      "sha256": "486142e2501f5922cfd20c01c52837036ebf1ef63feda72a07d4887051f3f0ee",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Settings/SettingsView.tsx",
+      "sha256": "d5135a8fe5074022456ad9c59cf9c6537b2bd1a7ad8f68e47c600b1b76d1b2b5",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/settings/useSettings.ts",
+      "sha256": "79532d5816f3b60446a75400268aff7d5dc786e583ccb7bd6550967dce5a218e",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/onchain/useOnchainResource.ts",
+      "sha256": "2b2ad6ec6b2981000cb0bee964757da99c378c783580f600f40f1ec0fb2a6a15",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/onchain/useOnchainCandles.ts",
+      "sha256": "69b5a229c2ac26d9d125ef19de4f6b60af2e6772f3678f220419ae1f03f42fba",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/onchain/client.ts",
+      "sha256": "9d6afb3ef17eb5eba76b11965540b059d62c8543162b84138b457e8a19992846",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/operator-center.ts",
+      "sha256": "e84b1d476dc526ea2007e4864b5b43517ddb05d03cb0cbfab27fe94d30b5048c",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Desk/panels/PriceChart.tsx",
+      "sha256": "6711c5ccc816d70d7a024ce03a70f39c6091dca58f0e5ce6ca74283b72fd06b8",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/desk/useDesk.ts",
+      "sha256": "f46d4c33f96b92241af084b8fa3322b67b2d1f7d8874cada110eebfaa844ec32",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/desk/desk-store.ts",
+      "sha256": "2d7d5662025588246eeed4dffc2b27f40155126bd2daf9f31e2561e0e80668dc",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/desk/desk-controller.ts",
+      "sha256": "65fb5eb96ab4e397da5453df9bf27ca04d90d25924dc2c223ddcc0b478accb97",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/desk/ui/draw-chart.ts",
+      "sha256": "f2f940c9cf629a0091541db2770ad4928dca0683bfe847e548cd744176c09f31",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/inonu/useInonuLayer.ts",
+      "sha256": "16cbe4ace451032075b36933b3b16600c9fed3141a603215ed26c6b0f8ccc7f1",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/jev-read.ts",
+      "sha256": "9b13e02181ad4ae17a6c2d3b707950df1f8943732732c65988a9e600274a1d98",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/mesa/panels-registry.ts",
+      "sha256": "387c01ba447457853d7d2d68e99412abc698f4d393332a9e352a57e05bc078bc",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+      "sha256": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/app/page.tsx",
+      "sha256": "cf37e8f808f725293998991e352becdae9253daf176c0e0f580ac99fd96d5a48",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/app/console/page.tsx",
+      "sha256": "a6405bf91a9d9313a4c2e7565ae198fb8f0db9ba3d08f60b3a261ce2396815b4",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Desk/InonuAsk.tsx",
+      "sha256": "9eafb1ffd6abd2dec002a1af8b59f96f5d301fee06801d087a3a32a041f65bae",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/components/Desk/InonuAsk.module.css",
+      "sha256": "a0f742dd3c71e0e16c0d29522aad753e297f156c63a14ec53fd5aa287720d18e",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/no-send-scan.test.ts",
+      "sha256": "d50caa0b3cf983550f261efcb96705f00bcb32ed6d5dc0259d5134423ff0b8c6",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/inonu/accept.ts",
+      "sha256": "b334dcb1a00b467c108b396d8dbf7fca8631b488a3f7da7c0e878e69615503ae",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/wallet/ticket.ts",
+      "sha256": "1f613266ba478e4d076dde7620f9b0a1c87226964d6633862feadd3ad7e6944e",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "web/src/lib/inonu/client.ts",
+      "sha256": "0a6ac0798eb84cf5f06854c608e54165e721ca6cb20bf0ca7d431f4fa50ad90b",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+      "sha256": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+      "report": "frontend-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "sha256": "8ee22c468131a5d9ea264e768b3bcb910e61dfa162587e4dadf8beed048f68a1",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "sha256": "61bf77270e24cb72751d6347c48da994877c867e4b1f6fdfd17ea1107dc62bb2",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/SYSTEM-ONE.md",
+      "sha256": "866ce0a12ad26ba6d200171c640bca4cdf7b02e94e976303e7eea3f0b5255efd",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md",
+      "sha256": "f63da6b815fa748dd09fb1ceb05e234945bd6c3e673bc1fefc89d2bf51600daf",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T9.5-T9.7-escada-e-ticket.md",
+      "sha256": "0662898417d96f57274029c8309d05ac0b77a67057a9a61055918910cae21c09",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/SPEC.md",
+      "sha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/README.md",
+      "sha256": "4bef1531b0469c2039c1ec8cec6e4fa27b634e91ffd484b386c513785d6e3e7e",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/SPEC.md",
+      "sha256": "23ec48e6c4a858f6844263e8995124823c2f817fb8ac020a184dbfb81c04c961",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/TASKS.md",
+      "sha256": "60af7e9acb41e46f8a78503e79e319449950a565cbf966f71be2fb0aec276a08",
+      "report": "docs-revalidation.md"
+    },
+    {
+      "path": "docs/sdd/dados-quant/REPORT.md",
+      "sha256": "096100a6f7a456e1c46bdfc699c919dfe47c84be968d94095b91fdaa2961932f",
+      "report": "docs-revalidation.md"
+    }
+  ]
+}

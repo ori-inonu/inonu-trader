@@ -35,7 +35,8 @@ describe("the page", () => {
   test("is the Rastreador, with the way back to the desk and the count of what is shown", () => {
     const html = draw();
     expect(html).toContain("Rastreador");
-    expect(html).toMatch(/<a[^>]*href="\/"[^>]*>Mesa<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/mesa"[^>]*>Mesa<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/"[^>]*>Agente<\/a>/);
     expect(html).toContain("4 de 4 ativos");
     expect(html).toContain("Atualizado ha 12 s");
   });

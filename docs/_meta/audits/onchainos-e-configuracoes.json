@@ -1,0 +1,802 @@
+{
+  "owner": "onchainos-e-configuracoes",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "snapshot_captured_at": "2026-10-13T10:53:03.109798-03:00",
+  "current_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "current_branch": "main",
+  "observed_at": "2026-10-13T12:09:55-03:00",
+  "hash_window": {
+    "start": "2026-10-13T12:09:54-03:00",
+    "end": "2026-10-13T12:09:55-03:00",
+    "note": "SHA-256 das fontes e documentos atribuídos e comparação do manifesto r3; a página foi hasheada separadamente após sua gravação."
+  },
+  "page": {
+    "path": "docs/concepts/onchainos-e-configuracoes.md",
+    "absolute_path": "C:/Users/gabri/jev-trader/docs/concepts/onchainos-e-configuracoes.md",
+    "sha256": "c678402ed2c08d86775a9bf5b3991f4be8215bf9ed3395c76b0731199bded6c2",
+    "line_count": 57,
+    "sha256_observed_at": "2026-10-13T12:12:21-03:00"
+  },
+  "documents_classified": 27,
+  "classification_counts": {
+    "historical_evidence": 17,
+    "current_reference": 3,
+    "proposal": 3,
+    "frozen_contract": 1,
+    "stale_reference": 3
+  },
+  "documents": [
+    {
+      "path": "docs/JEV-DECISAO-ONCHAIN-OS.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Decisão e arquitetura registradas; motivação não comprova roteamento atual.",
+      "code_refs": [],
+      "sha256": "46c9a77493ebe53c24e7f82fc02c6abe9ca9e823559fa1505a95c3cfb10635c4",
+      "snapshot_sha256": "46c9a77493ebe53c24e7f82fc02c6abe9ca9e823559fa1505a95c3cfb10635c4",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/OKX-INVESTIGACAO.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa exploratória com datas e escopo próprios; validar estado pelo código corrente.",
+      "code_refs": [],
+      "sha256": "7fc01773dbc3553f8312132d92e6c87370406897e3835d11e9bdf8b7d9979286",
+      "snapshot_sha256": "7fc01773dbc3553f8312132d92e6c87370406897e3835d11e9bdf8b7d9979286",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/OKX-ONCHAINOS-DADOS-SPEC.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "Referência da família de clientes HTTP diretos OnchainOS, distinta do gateway do desktop.",
+      "code_refs": [
+        "src/onchainos/http.ts:2-12,39-40,515-556",
+        "src/onchainos/gateway.ts:128-142"
+      ],
+      "sha256": "8a0755607de629b2e927413dbe7b61537c3d534ce7693c9f0c29aba3f184ef81",
+      "snapshot_sha256": "8a0755607de629b2e927413dbe7b61537c3d534ce7693c9f0c29aba3f184ef81",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/OKX-PAYMENTS-MATRIX-DELTA-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Matriz de cobrança datada de 2026-10-11; não prova medição ou cobrança atual.",
+      "code_refs": [],
+      "sha256": "5ec70280e088b6b43d9054af58aa4ee3965c5643aa1001563c2ade10761b5209",
+      "snapshot_sha256": "5ec70280e088b6b43d9054af58aa4ee3965c5643aa1001563c2ade10761b5209",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/OKX-PROPOSAL.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Proposta; não é aprovação nem evidência de implementação.",
+      "code_refs": [],
+      "sha256": "00a4da44b59584d3b3d1e6b35ce1cb21286e4dc6f26a054933a54cc75a2f5e41",
+      "snapshot_sha256": "00a4da44b59584d3b3d1e6b35ce1cb21286e4dc6f26a054933a54cc75a2f5e41",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/OKX-SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Critérios imutáveis O1-O8 no escopo de carteira/browser; não são o contrato do gateway HTTP local.",
+      "code_refs": [],
+      "sha256": "09b01feac2e94cf7b7461ef0295155ce41cebb07b368caefdad44592777edabd",
+      "snapshot_sha256": "09b01feac2e94cf7b7461ef0295155ce41cebb07b368caefdad44592777edabd",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/ONCHAIN-INTEGRATION-GAP-RESEARCH-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa de lacunas de 2026-10-11, anterior aos registros de implementação da Fase 2.",
+      "code_refs": [],
+      "sha256": "82e18c2b4aafc4276b80f177bb4053b04cf21c2d9e732334e9444606f7b4a4e6",
+      "snapshot_sha256": "82e18c2b4aafc4276b80f177bb4053b04cf21c2d9e732334e9444606f7b4a4e6",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/PAYMENTS-MATRIX-DELTA-INDEPENDENT-REVIEW-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Parecer independente arquivado e datado; não substitui leitura corrente do código.",
+      "code_refs": [],
+      "sha256": "c5b0715bec684cf4095da9518e139a9deee37ba6faeab570d875f3124209f35d",
+      "snapshot_sha256": "c5b0715bec684cf4095da9518e139a9deee37ba6faeab570d875f3124209f35d",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/research/OKX-RESOURCE-MATRIX-REFRESH-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Atualização de matriz com corte em 2026-10-11; inventário de pesquisa, não catálogo do servidor atual.",
+      "code_refs": [],
+      "sha256": "e3081102c67bcfa2e3345f7f432c4f6819f256760d30907b7e140bd7b464d671",
+      "snapshot_sha256": "e3081102c67bcfa2e3345f7f432c4f6819f256760d30907b7e140bd7b464d671",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/research/ONCHAIN-CAPTURE-DECISION-GAP-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Decisão de lacunas de captura; não comprova execução ou ligação no desktop.",
+      "code_refs": [],
+      "sha256": "90869340f4be3045378df6a6810ec35b47f4049d550503eb4e0cdfea318c6f51",
+      "snapshot_sha256": "90869340f4be3045378df6a6810ec35b47f4049d550503eb4e0cdfea318c6f51",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/research/ONCHAIN-OS-RECHECK-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Rechecagem de portal em 2026-10-11; leitura externa registrada naquele recorte.",
+      "code_refs": [],
+      "sha256": "ad632a85972ca61ad9b7d3ebbc9356c76833cdf4b8d86beb54210846755e7324",
+      "snapshot_sha256": "ad632a85972ca61ad9b7d3ebbc9356c76833cdf4b8d86beb54210846755e7324",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/research/ONCHAIN-PRICE-TIME-QUALIFICATION-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Qualificação de tempo/preço como referência; não certifica idade em runtime.",
+      "code_refs": [],
+      "sha256": "41920db542040b1bd55a87f7060cc04758eab6da064ce260a1c0f39f0554f46a",
+      "snapshot_sha256": "41920db542040b1bd55a87f7060cc04758eab6da064ce260a1c0f39f0554f46a",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/research/R1-onchain-os-capacidades.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Inventário R1 de capacidades; pesquisa não equivale a cobertura implementada.",
+      "code_refs": [],
+      "sha256": "f850eb44f9413842da01b3c67b2c9832c6de8adf1973fad9f53f8d4de8e6bba6",
+      "snapshot_sha256": "f850eb44f9413842da01b3c67b2c9832c6de8adf1973fad9f53f8d4de8e6bba6",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/research/R6-onchain-os-inventario.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Inventário R6 de rotas e recursos com escopo de pesquisa.",
+      "code_refs": [],
+      "sha256": "8051cdf62d67c827bed4efdddb22ac436b998545a74eb88f244e54095a22c1c6",
+      "snapshot_sha256": "8051cdf62d67c827bed4efdddb22ac436b998545a74eb88f244e54095a22c1c6",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/evidence/INDEX.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Índice de evidências arquivadas; aponta escopos e sessões, não reexecutados aqui.",
+      "code_refs": [],
+      "sha256": "e40cb7a72ea235f53e887ce098be8f8ad6092dcbc5c151b0f95e3775e5369f99",
+      "snapshot_sha256": "e40cb7a72ea235f53e887ce098be8f8ad6092dcbc5c151b0f95e3775e5369f99",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/evidence/live-onchainos-20261012.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Captura ao vivo de 2026-10-12; relato preservado, não reproduzido nesta auditoria.",
+      "code_refs": [],
+      "sha256": "d9cf46c73a862ffdf3d3885a3b2152e676624424f631a621c3f549eb9b31f424",
+      "snapshot_sha256": "d9cf46c73a862ffdf3d3885a3b2152e676624424f631a621c3f549eb9b31f424",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/fase-2/ACHADOS.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Achados da sessão da Fase 2, com seus estados e evidências datadas.",
+      "code_refs": [],
+      "sha256": "7a708032ca2b9f5e57a84b47c89abcb9a768dea7963d3943703848440e2ddca9",
+      "snapshot_sha256": "7a708032ca2b9f5e57a84b47c89abcb9a768dea7963d3943703848440e2ddca9",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/fase-2/ADENDO-REV3.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Adendo D3-01 a D3-13 é texto proposto para revisão; o checkpoint desktop registra sua aplicação em r3.",
+      "code_refs": [
+        "docs/sdd/inonu-desktop-v1/CHECKPOINT.md:6",
+        "docs/sdd/config-onchain-smartmoney/fase-2/ADENDO-REV3.md:111-120"
+      ],
+      "sha256": "c40d7e94adf79c88bd7ceee88e280e2867c653a01c64724b6a96122a8e6ff87a",
+      "snapshot_sha256": "c40d7e94adf79c88bd7ceee88e280e2867c653a01c64724b6a96122a8e6ff87a",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/fase-2/evidence/revisao-independente-1.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Revisão independente arquivada da rodada Fase 2; não é revisão desta auditoria.",
+      "code_refs": [],
+      "sha256": "ac416b7db3de4eea816eef2c818ba31a0b9318fb82cdfe313423849a0c11eae1",
+      "snapshot_sha256": "ac416b7db3de4eea816eef2c818ba31a0b9318fb82cdfe313423849a0c11eae1",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/fase-2/README.md",
+      "read_mode": "full",
+      "classification": "stale_reference",
+      "reason": "Registra baseline r2 e T-F2-D13 pendente em 2026-10-13; preservar como estado da sessão Fase 2, sem tratar como manifesto global atual.",
+      "code_refs": [
+        "docs/sdd/inonu-desktop-v1/CHECKPOINT.md:6-7",
+        "docs/sdd/inonu-desktop-v1/FREEZE.json:45-61"
+      ],
+      "sha256": "7889a78241de763c41ca1b554740c74d3fbd2ed8724e97660ce9531132f58aed",
+      "snapshot_sha256": "7889a78241de763c41ca1b554740c74d3fbd2ed8724e97660ce9531132f58aed",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/fase-2/RECONCILIACAO.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "A própria reconciliação data a leitura do TASKS/OWNERSHIP desktop em 2026-10-13 às 07:31 e diz que não é o estado oficial da sessão dona.",
+      "code_refs": [
+        "docs/sdd/config-onchain-smartmoney/fase-2/RECONCILIACAO.md:1-5"
+      ],
+      "sha256": "d0ba25a31b491fffce1b92ebf68485ea3b39a9ad1fa2e7233513c41475e8e4c2",
+      "snapshot_sha256": "d0ba25a31b491fffce1b92ebf68485ea3b39a9ad1fa2e7233513c41475e8e4c2",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/fase-2/SPEC.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "Requisitos aprovados da Fase 2; descreve aceitação, não demonstra sozinho o comportamento presente.",
+      "code_refs": [
+        "src/inonu/source-onchain.ts:29-39,60-76",
+        "src/inonu/onchain-plan.ts"
+      ],
+      "sha256": "9120f40dde7988d5950d4ac6e5e8d236405b6bef1ec2ab32f10d179226a31048",
+      "snapshot_sha256": "9120f40dde7988d5950d4ac6e5e8d236405b6bef1ec2ab32f10d179226a31048",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md",
+      "read_mode": "full",
+      "classification": "stale_reference",
+      "reason": "D13 e G10 permanecem marcados aguardando; a árvore atual contém r3 e ligação de código, enquanto G11 continua uma tarefa distinta elegível.",
+      "code_refs": [
+        "src/desktop/handlers.ts:150-159",
+        "src/inonu/source-onchain.ts:29-39,99-105"
+      ],
+      "sha256": "8a6ae8753fa293ee60ab4b3d8b54b372e2479ef8f1ea07308e7f0697cc255c3e",
+      "snapshot_sha256": "8a6ae8753fa293ee60ab4b3d8b54b372e2479ef8f1ea07308e7f0697cc255c3e",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/okx-portal-coverage.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Cobertura da lista de endpoints do portal, registrada em recorte próprio; não é o allowlist de runtime.",
+      "code_refs": [
+        "src/onchain-read/catalog.ts:1005-1034"
+      ],
+      "sha256": "e48b6d7cc57cf7e0c4a50068cde06ccb0f6daee84f4cce233c78c8cc12233b92",
+      "snapshot_sha256": "e48b6d7cc57cf7e0c4a50068cde06ccb0f6daee84f4cce233c78c8cc12233b92",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/onchainos-gateway.md",
+      "read_mode": "sections",
+      "classification": "stale_reference",
+      "reason": "Guia de gateway e rotas com evidência de 2026-10-12; após a Fase 2 não deve ser tratado como catálogo completo sem releitura.",
+      "code_refs": [
+        "src/onchain-read/catalog.ts:1005-1034",
+        "src/onchain-read/gateway.ts:2-5,41-57"
+      ],
+      "sha256": "b346c0f959df4e7536aa8eefeef852a446e67de892ad52f0e2e2653e894e90a1",
+      "snapshot_sha256": "b346c0f959df4e7536aa8eefeef852a446e67de892ad52f0e2e2653e894e90a1",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/sdd/config-onchain-smartmoney/spec.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "Documento pai conecta a E10 da Fase 2; mantém a trilha de requisitos, sem confirmar execução.",
+      "code_refs": [],
+      "sha256": "b4660c1d16ee297ac4c4d964b5336fd52a0d8606ac71411bd81e7d6ca4890b2b",
+      "snapshot_sha256": "b4660c1d16ee297ac4c4d964b5336fd52a0d8606ac71411bd81e7d6ca4890b2b",
+      "unchanged_vs_snapshot": true
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-09-okx-readonly.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Plano de leitura somente leitura datado de 2026-10-09; proposta não é estado atual.",
+      "code_refs": [],
+      "sha256": "872e88aa914939d26405f7f8c6010e4327a6a03e58750c2cbee4bd6641e3710a",
+      "snapshot_sha256": "872e88aa914939d26405f7f8c6010e4327a6a03e58750c2cbee4bd6641e3710a",
+      "unchanged_vs_snapshot": true
+    }
+  ],
+  "code_inspected": [
+    "src/onchain-read/gateway.ts",
+    "src/onchain-read/budget.ts",
+    "src/onchain-read/cache.ts",
+    "src/onchain-read/client.ts",
+    "src/onchain-read/http.ts",
+    "src/onchain-read/catalog.ts",
+    "src/onchain-read/probe.ts",
+    "src/onchainos/http.ts",
+    "src/onchainos/gateway.ts",
+    "src/onchainos/capture-sources.ts",
+    "src/settings/store.ts",
+    "src/settings/http.ts",
+    "src/settings/providers.ts",
+    "src/settings/guards.ts",
+    "src/desktop/vault.ts",
+    "src/desktop/handlers.ts",
+    "src/desktop/core.ts",
+    "src/desktop/main.ts",
+    "src/inonu/source-onchain.ts",
+    "src/inonu/source-discovery.ts",
+    "src/inonu/onchain-plan.ts",
+    "src/inonu/ask.ts",
+    "src/inonu/http.ts",
+    "src/inonu/source-count.ts",
+    "src/intel/onchain-adapt.ts",
+    "src/intel/onchain-components.ts",
+    "src/intel/onchain-digest.ts",
+    "src/intel/onchain-nulos.ts",
+    "src/intel/onchain-quality.ts",
+    "src/intel/onchain-risk.ts",
+    "web/src/lib/onchain/useOnchainResource.ts",
+    "web/src/lib/onchain/client.ts",
+    "web/src/lib/settings/client.ts",
+    "web/src/lib/settings/useSettings.ts",
+    "web/src/lib/settings/client.test.ts",
+    "web/src/lib/settings/settings-view-render.test.tsx",
+    "web/src/lib/mesa/onchain-view.ts",
+    "web/src/components/Settings/SettingsView.tsx",
+    "web/src/components/Settings/InonuUsage.tsx",
+    "web/src/components/Desk/Dock/OnchainDeskTabs.tsx",
+    "web/src/components/Desk/Dock/OnchainTabs.tsx",
+    "web/src/components/Desk/panels/AssetPicker.tsx",
+    "web/src/components/Desk/MesaView.tsx",
+    "scripts/onchainos-capture.ts",
+    "scripts/real-start.ts",
+    "src/portfolio-evidence/cli.ts",
+    "src/server.ts"
+  ],
+  "code_inspected_count": 47,
+  "code_inspected_sha256": {
+    "src/onchain-read/gateway.ts": "0b4ce61c93037d9319913ddbaaa92d5d5892ffe33bfe7317177cd16f7ea95d0d",
+    "src/onchain-read/budget.ts": "1dc6100a2bed1f0d8f5a5b5f5eece8ead23118dcd0f7bba23c1c4f408871879d",
+    "src/onchain-read/cache.ts": "cb08989f26ff4f1ee9d4eb8cd29c556bc8e680af3ed205775f95823a5fd0b6d0",
+    "src/onchain-read/client.ts": "118b8e32651986e57a83876cf84f75da533b8a6425b7f5f05f3b69379adbd1ea",
+    "src/onchain-read/http.ts": "c21f3973d52803db84c7d60a244a2f630ab3fca76e6dfd387e0313a65710ebaf",
+    "src/onchain-read/catalog.ts": "49819c3cedd833948ab409fb6ecf83dfc83ccd2165e275ad046b7417a7298a18",
+    "src/onchain-read/probe.ts": "3db8c4d82239137e73fcabc3e9f25646b04618d2144510b824b26b3bd978bb05",
+    "src/onchainos/http.ts": "24ceb40932010edaf189a228313feca214afac3faae13ffd2d435a3b0e23b3f4",
+    "src/onchainos/gateway.ts": "5a0a40b26430db03973ab458be61b240b2e59d6ce811db1cbdff7e6147dc2751",
+    "src/onchainos/capture-sources.ts": "208038e8616efda3ef1cd4a72665822e6af128885d44d63662d9b664d56b97f1",
+    "src/settings/store.ts": "2d956b645bdce3559bd55f4c463ff841fbdd879a1b958f805f7ef14c8d403b77",
+    "src/settings/http.ts": "07546c7396f8f28983ec8cb07d63839375c1ea06c4946f3219cb84504719d62d",
+    "src/settings/providers.ts": "6b18fa5f6084344d312025b5bbdbe41c49a55b54f691c1c44db4833f9318bc3d",
+    "src/settings/guards.ts": "62dc64facdbe309f97e36d9062c4f905d35bb0b6a599a92dc2913fa94c007fae",
+    "src/desktop/vault.ts": "c02b06d5f56caa95dda790f706acfb2131d1e7e1d3e3519bf44b86d7bfae79cd",
+    "src/desktop/handlers.ts": "b1141640a7e30035d721390d0584252294b73cb5d5972cf4e0722697e703a593",
+    "src/desktop/core.ts": "bc4e5a2a1bb09d69f0b7d5eb41d3f9338f7346211624b331f66aa26453d87c6c",
+    "src/desktop/main.ts": "23f8a81c6528f27d73ece8dd32bb683b39416a08a0cd60d7e1376483c89a678d",
+    "src/inonu/source-onchain.ts": "20ac76e28ee462c0ae8f8852cde31b2a658ed496f617d371bf40689396635b87",
+    "src/inonu/source-discovery.ts": "46f726619be1f1cfeb6381cc211c1a0fe1ff16f22ac3c83168d53377ac4024d6",
+    "src/inonu/onchain-plan.ts": "125e2f926b8fedb973ca7c28bff313d7649e377711a3459b1c860321700e743d",
+    "src/inonu/ask.ts": "3bc13fdf954c865ab1c7f23134bd88427344a876e71fa56a1d32be64225b77d7",
+    "src/inonu/http.ts": "412b487933cd941924e6321f164322be3299fd6be36415d34aa99fd86ff8ad23",
+    "src/inonu/source-count.ts": "3224281a6e47b9e319e6f564214d133740a63a588b36aead548add546f183264",
+    "src/intel/onchain-adapt.ts": "f8619e506ff014f29650433f0fb70cf71f0a3bfcc586840d08933fce8cec8110",
+    "src/intel/onchain-components.ts": "2f481dbf6b1e13c7d2e70c7194811e7426bf69ce7f6e2341f9f89a179f222b3a",
+    "src/intel/onchain-digest.ts": "f7274db86ec6a1f5018e2df112a94e0f121adf4d6545a2fe72d93545f5ae64e5",
+    "src/intel/onchain-nulos.ts": "926a14ebbb8551e1a291d3f473bbf4eccd82cafcba53abf966f6fd8ddd268de8",
+    "src/intel/onchain-quality.ts": "87773e35ec07d3b8bca0c2a19c7d3be90bf35be6e769e733ae6889c7083d0877",
+    "src/intel/onchain-risk.ts": "d3ad67acf916fd39d4711ae242cd5fcc41d471333d998b8ddb60783fb98f519f",
+    "web/src/lib/onchain/useOnchainResource.ts": "2b2ad6ec6b2981000cb0bee964757da99c378c783580f600f40f1ec0fb2a6a15",
+    "web/src/lib/onchain/client.ts": "9d6afb3ef17eb5eba76b11965540b059d62c8543162b84138b457e8a19992846",
+    "web/src/lib/settings/client.ts": "245c7a6f1a83fee191f48089f6c78375ce31d4423016c7dbc80f168cdd0556c3",
+    "web/src/lib/settings/useSettings.ts": "79532d5816f3b60446a75400268aff7d5dc786e583ccb7bd6550967dce5a218e",
+    "web/src/lib/settings/client.test.ts": "c3453ba230e8a58edec4c5662d1148fca3f0336b14db329dc7d131081264e8f3",
+    "web/src/lib/settings/settings-view-render.test.tsx": "7b73da66c23fdc4d1bf297424d89fb0b77bdf60729f5b4422e365509d22f2d66",
+    "web/src/lib/mesa/onchain-view.ts": "30fcd938f0d5d3b5d76b6ec26f011af9945bc4a198db376f6d4af5cfef6dc01f",
+    "web/src/components/Settings/SettingsView.tsx": "a33445995716fa5d8fb8c6a5ab7136ef6713cefd018bf90ba656cf4147725276",
+    "web/src/components/Settings/InonuUsage.tsx": "e0ebfda4e75c5c255cff1ab20e5245d0fce5031670d82ba06ec5473f8bff3508",
+    "web/src/components/Desk/Dock/OnchainDeskTabs.tsx": "b0c8ab3067a41338142ce9ef18fda95da79c4ddffa5916cd5a8be925bddf54a7",
+    "web/src/components/Desk/Dock/OnchainTabs.tsx": "9ee4310b7f8112b8e56253831f0ee40b9176468966f4e79e1cfe972282d1d701",
+    "web/src/components/Desk/panels/AssetPicker.tsx": "ac5cb46c44944ead041a26c579c626e13b6201d23e93eab70dccb105237cbe2d",
+    "web/src/components/Desk/MesaView.tsx": "37bba6cf2c875b4f582d10b3a8deb1037057a84de5b6a10bd8b95c6dfe5d565d",
+    "scripts/onchainos-capture.ts": "4119b76bf8d86b26516a919ceb6461a00441cdbaca3c6118fc48b366d08491bf",
+    "scripts/real-start.ts": "2a6f3eb39a79aabaadd2b3b12ca009c247a56d9d6613a342e5cdb62de3a16346",
+    "src/portfolio-evidence/cli.ts": "9724559f68ccf09414a9a68600d42fd39901ce6359e80a9f32a7270d66eaaa9a",
+    "src/server.ts": "83025cbd897f5fc54842ab055f9e7ae1d60e93268c6cac51a0031a517d66bcf4"
+  },
+  "context_documents": [
+    {
+      "path": "docs/_meta/delegation-contract.md",
+      "sha256": "c7800136ac779d8b41c4ca8fb3d96ef2296fd10ede4ef14ee2de730bfb603a49"
+    },
+    {
+      "path": "docs/_meta/organization-spec.md",
+      "sha256": "bcfd077de60309bed2fdae121b0e40a70545f63daf008807ab34b9d627d19295"
+    },
+    {
+      "path": "docs/SCHEMA.md",
+      "sha256": "faa5a835d446ac119e335dd7f1da035a27902f62d9054fab4b0e5bc8425726f8"
+    },
+    {
+      "path": "docs/index.md",
+      "sha256": "377de1b76821561bef5e0eaa13ec31f0ff6965cc1a5fb285e8606e4c352f3bcd"
+    },
+    {
+      "path": "docs/log.md",
+      "sha256": "8dc9bb7e7b778c1e6b09a7960f60fb682aef6cc325ca23145836e21b4c967a35"
+    },
+    {
+      "path": "docs/_meta/project-state-20261013.json",
+      "sha256": "97fd730a9189c270d5f7f46455c43689dbeab145bfe33c2a2b5f0ab8384f72f0"
+    },
+    {
+      "path": "docs/_meta/concurrent-source-drift-20261013.json",
+      "sha256": "d3a9d3fbad49a31574b09be852ea3c7579f2dba3da86780e8bc770b504cc2eb2"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "sha256": "3ce90754b665bea2925e0da1a0f1291bad5f43e51bbb2ea1853e483411587d36"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "sha256": "3ff756226a69e769329fe42c8f1c8c1e0bbd444f9ac06c9b45aa260521327805"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/FREEZE.json",
+      "sha256": "ddd1a2cbe6c74d541fe061920dfd1e4ccd5b406ece871af0c39290ba4d5e8985"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/OWNERSHIP.md",
+      "sha256": "5c34646e0f7c5812582b5d3483c8dbfa539b1935537d609d49ee63c4e9a81e6b"
+    }
+  ],
+  "claims": [
+    {
+      "statement": "O desktop compõe o gateway do namespace src/onchain-read com cliente, cache, orçamento e estado de credenciais do SettingsStore; o core despacha /onchain/ e /inonu/ a handlers distintos.",
+      "source_path": "src/desktop/handlers.ts",
+      "lines": "82-102",
+      "corroborating_refs": [
+        "src/desktop/core.ts:140-147",
+        "src/onchain-read/gateway.ts:41-57"
+      ]
+    },
+    {
+      "statement": "A família src/onchainos mantém transporte e GatewayClient diretos, com fetch injetado e envio condicionado por allowNetwork; há entradas próprias em scripts de captura/execução.",
+      "source_path": "src/onchainos/http.ts",
+      "lines": "2-12,39-40,515-556",
+      "corroborating_refs": [
+        "src/onchainos/gateway.ts:128-142",
+        "scripts/real-start.ts:21-24",
+        "scripts/onchainos-capture.ts:154-157"
+      ]
+    },
+    {
+      "statement": "O desktop injeta store de settings respaldado pelo cofre; limites capBasic/capPremium alimentam o orçamento e defaultChainIndex chega à resolução da rede na mesa.",
+      "source_path": "src/desktop/main.ts",
+      "lines": "88-94",
+      "corroborating_refs": [
+        "src/desktop/handlers.ts:89-102",
+        "src/settings/store.ts:32-60",
+        "web/src/components/Desk/MesaView.tsx:109-135,211-214"
+      ]
+    },
+    {
+      "statement": "O hook usa intenção de usuário na carga inicial/manual e intenção background somente no refresh opcional visível; a preferência background é exibida e salva, mas não é lida por esse hook.",
+      "source_path": "web/src/lib/onchain/useOnchainResource.ts",
+      "lines": "82-85,110-140",
+      "corroborating_refs": [
+        "web/src/components/Settings/SettingsView.tsx:308-315",
+        "web/src/components/Desk/Dock/OnchainDeskTabs.tsx:88-92"
+      ]
+    },
+    {
+      "statement": "O handler atual registra os modos token e descoberta em routeByMode; a fábrica não injeta callbacks opcionais sets/leaderboard, e T-F2-G11 continua separada.",
+      "source_path": "src/desktop/handlers.ts",
+      "lines": "150-159",
+      "corroborating_refs": [
+        "src/inonu/source-onchain.ts:29-39,99-105,119-127",
+        "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md:72-75"
+      ]
+    },
+    {
+      "statement": "O checkpoint desktop declara r3 com D3-01 a D3-13 mais D3-14; a comparação local confirmou os 13 hashes do manifesto r3 contra os arquivos presentes.",
+      "source_path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "lines": "3-7",
+      "corroborating_refs": [
+        "docs/sdd/inonu-desktop-v1/FREEZE.json:45-61",
+        "verificação SHA-256 detalhada em desktop_r3_freeze_check"
+      ]
+    },
+    {
+      "statement": "A comparação do working tree com o snapshot encontrou seis alterações nos 127 source_paths atribuídos e nenhuma alteração nos 27 document_paths atribuídos.",
+      "source_path": "docs/_meta/project-state-20261013.json",
+      "symbol": "owners.onchainos-e-configuracoes.source_paths/document_paths; hashes detalhados em source_drift"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "id": "fase2-r2-vs-desktop-r3",
+      "classification": "stale_reference",
+      "status": "reconciled_by_scope_and_hashes",
+      "summary": "README/TASKS da Fase 2 registram baseline r2 e D13 pendente; o checkpoint desktop registra r3 e a captura SHA-256 confirma 13/13 arquivos. A TASKS desktop identifica seu registro r2 como artefato de progresso fora do congelamento. RECONCILIACAO preserva o snapshot das 07:31 e diz que não é o estado oficial. Diferença documental e temporal, sem inferência de defeito de produto.",
+      "paths": [
+        "docs/sdd/config-onchain-smartmoney/fase-2/README.md:3,20-26,61-67",
+        "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md:22-24",
+        "docs/sdd/config-onchain-smartmoney/fase-2/RECONCILIACAO.md:1-5",
+        "docs/sdd/inonu-desktop-v1/CHECKPOINT.md:3-7",
+        "docs/sdd/inonu-desktop-v1/TASKS.md:1-3,22",
+        "docs/sdd/inonu-desktop-v1/FREEZE.json:45-61"
+      ],
+      "product_defect": false
+    },
+    {
+      "id": "fase2-g10-source-link",
+      "classification": "stale_reference",
+      "status": "source_link_verified_runtime_unverified",
+      "summary": "Fase 2 README/TASKS dizem que G10 aguarda ligação; o checkpoint atual diz que token/descoberta foram ligados e o handler/core atuais mostram essa composição. Isto comprova apenas ligação estática. O checkpoint separa as rotas da Fase 2 vistas no harness das que não foram vistas dentro do exe; esta auditoria não reproduziu runtime.",
+      "paths": [
+        "docs/sdd/config-onchain-smartmoney/fase-2/README.md:24,26",
+        "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md:73-75",
+        "docs/sdd/inonu-desktop-v1/CHECKPOINT.md:47-50,78",
+        "src/desktop/handlers.ts:150-159",
+        "src/desktop/core.ts:140-147"
+      ],
+      "product_defect": false
+    },
+    {
+      "id": "fase2-g11-reference-cache",
+      "classification": "needs_review",
+      "status": "separate_open_scope",
+      "summary": "G11 é tarefa distinta elegível no quadro Fase 2. A fonte token permite callbacks sets/leaderboard, mas a composição desktop passa apenas gateway e now. Registro de limite de wiring estático; não afirmar digest integral nem classificar como falha de runtime.",
+      "paths": [
+        "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md:72-75",
+        "src/inonu/source-onchain.ts:29-39,99-105",
+        "src/desktop/handlers.ts:153-156"
+      ],
+      "product_defect": false
+    },
+    {
+      "id": "gateway-route-reference",
+      "classification": "stale_reference",
+      "status": "dated_route_snapshot",
+      "summary": "O guia onchainos-gateway registra um retrato de rotas/evidências de 2026-10-12. O catálogo corrente contém também quote, token-info e cluster-top-holders; não tratar o guia como inventário exaustivo pós-Fase 2.",
+      "paths": [
+        "docs/sdd/config-onchain-smartmoney/onchainos-gateway.md",
+        "docs/sdd/config-onchain-smartmoney/fase-2/README.md:22",
+        "src/onchain-read/catalog.ts:1005-1034"
+      ],
+      "product_defect": false
+    },
+    {
+      "id": "background-setting-hook-connection",
+      "classification": "needs_review",
+      "status": "preference-not-threaded-through-hook",
+      "summary": "SettingsView salva a preferência background; useOnchainResource escolhe intenção via carga/reload ou poll visível, sem ler essa preferência. Descrever como ligação não encontrada nesta trilha, não como defeito de produto.",
+      "paths": [
+        "src/settings/store.ts:32-50",
+        "web/src/components/Settings/SettingsView.tsx:308-315",
+        "web/src/lib/onchain/useOnchainResource.ts:82-85,110-140",
+        "web/src/components/Desk/Dock/OnchainDeskTabs.tsx:88-92"
+      ],
+      "product_defect": false
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "artifact_validation": {
+    "line_count": 57,
+    "line_limit": 200,
+    "wikilinks": [
+      "governanca-e-historico",
+      "instalavel-e-inonu",
+      "manutencao-da-documentacao"
+    ],
+    "wikilink_count": 3,
+    "markdown_link_count": 35,
+    "broken_markdown_links": [],
+    "broken_wikilinks": [],
+    "frontmatter_source_count": 47,
+    "missing_frontmatter_sources": [],
+    "forbidden_typography_counts": {
+      "·": 0,
+      "—": 0,
+      "–": 0
+    },
+    "passed": true,
+    "note": "Validação estrutural local da página e do recibo; não é teste de produto nem execução do verificador do repositório."
+  },
+  "write_scope": {
+    "written_paths": [
+      "docs/concepts/onchainos-e-configuracoes.md",
+      "docs/_meta/audits/onchainos-e-configuracoes.json"
+    ],
+    "other_project_files_modified_by_this_delegation": false,
+    "shared_index_and_log_updated": false
+  },
+  "unverified": [
+    "Nenhum teste, build, typecheck, verificador documental ou smoke foi executado nesta delegação.",
+    "A integração e os hashes demonstram leitura estática; não foram chamados runtime, rede, provedor, modelo ou app instalado nesta auditoria.",
+    "Nenhum arquivo .env, credencial ou valor do cofre foi lido; custo faturado permanece desconhecido.",
+    "A evidência de harness/exe e os contadores citados em registros anteriores não foram reproduzidos.",
+    "As seis mudanças de source_path foram comparadas por hash; não inferir causa ou aprovação além das leituras dos arquivos registrados.",
+    "A preferência background não tem ligação demonstrada nesta trilha do hook; requer decisão/releitura do owner antes de qualquer conclusão de produto.",
+    "Índice e log compartilhados não foram escritos por serem de responsabilidade exclusiva do integrador."
+  ],
+  "source_drift": {
+    "checked_at": "2026-10-13T12:09:55-03:00",
+    "baseline_path": "docs/_meta/project-state-20261013.json",
+    "baseline_head": "00a593bcabe25dbb6d83795268533551098f645b",
+    "scope": "Comparação SHA-256 do snapshot contra bytes locais para os 127 source_paths e 27 document_paths atribuídos; observação pontual.",
+    "code_files": {
+      "baseline_count": 127,
+      "matched": 121,
+      "changed_count": 6,
+      "missing_count": 0,
+      "changed_paths": [
+        "src/settings/http.ts",
+        "src/settings/store.ts",
+        "web/src/components/Settings/SettingsView.tsx",
+        "web/src/lib/settings/client.test.ts",
+        "web/src/lib/settings/client.ts",
+        "web/src/lib/settings/settings-view-render.test.tsx"
+      ],
+      "changed_sha256": [
+        {
+          "path": "src/settings/http.ts",
+          "snapshot_sha256": "2358329763d8c4b3ffab6743c0ab21de3a7492a7efadbd6d339bb05c2e56c600",
+          "current_sha256": "07546c7396f8f28983ec8cb07d63839375c1ea06c4946f3219cb84504719d62d"
+        },
+        {
+          "path": "src/settings/store.ts",
+          "snapshot_sha256": "efb666b2eb79a16b0493cb1033c61fbbd27cf8f1a9d333c9ce1c5fb6c02523bc",
+          "current_sha256": "2d956b645bdce3559bd55f4c463ff841fbdd879a1b958f805f7ef14c8d403b77"
+        },
+        {
+          "path": "web/src/components/Settings/SettingsView.tsx",
+          "snapshot_sha256": "5c756794873cc960198f04f181a32c107cd98488ba1b0406501a08fd2e8f02f8",
+          "current_sha256": "a33445995716fa5d8fb8c6a5ab7136ef6713cefd018bf90ba656cf4147725276"
+        },
+        {
+          "path": "web/src/lib/settings/client.test.ts",
+          "snapshot_sha256": "0b4d10efaec897d11a506422f5a094f95bde1b0d36b6ead6dc1083e30f014d67",
+          "current_sha256": "c3453ba230e8a58edec4c5662d1148fca3f0336b14db329dc7d131081264e8f3"
+        },
+        {
+          "path": "web/src/lib/settings/client.ts",
+          "snapshot_sha256": "e60dcb9fac8631463991822fe98b7a934ca3f60cc9c450bf71473a2ad17cffb9",
+          "current_sha256": "245c7a6f1a83fee191f48089f6c78375ce31d4423016c7dbc80f168cdd0556c3"
+        },
+        {
+          "path": "web/src/lib/settings/settings-view-render.test.tsx",
+          "snapshot_sha256": "e7a34e60df456963f9f8621c6663df5cafeb7f82227a190e3c0f9fcbb593c2a8",
+          "current_sha256": "7b73da66c23fdc4d1bf297424d89fb0b77bdf60729f5b4422e365509d22f2d66"
+        }
+      ]
+    },
+    "documentation_sources": {
+      "baseline_count": 27,
+      "matched": 27,
+      "changed_count": 0,
+      "missing_count": 0,
+      "changed_paths": []
+    },
+    "context_document_sha256": {
+      "docs/_meta/delegation-contract.md": "c7800136ac779d8b41c4ca8fb3d96ef2296fd10ede4ef14ee2de730bfb603a49",
+      "docs/_meta/organization-spec.md": "bcfd077de60309bed2fdae121b0e40a70545f63daf008807ab34b9d627d19295",
+      "docs/SCHEMA.md": "faa5a835d446ac119e335dd7f1da035a27902f62d9054fab4b0e5bc8425726f8",
+      "docs/index.md": "377de1b76821561bef5e0eaa13ec31f0ff6965cc1a5fb285e8606e4c352f3bcd",
+      "docs/log.md": "8dc9bb7e7b778c1e6b09a7960f60fb682aef6cc325ca23145836e21b4c967a35",
+      "docs/_meta/project-state-20261013.json": "97fd730a9189c270d5f7f46455c43689dbeab145bfe33c2a2b5f0ab8384f72f0",
+      "docs/_meta/concurrent-source-drift-20261013.json": "d3a9d3fbad49a31574b09be852ea3c7579f2dba3da86780e8bc770b504cc2eb2",
+      "docs/sdd/inonu-desktop-v1/CHECKPOINT.md": "3ce90754b665bea2925e0da1a0f1291bad5f43e51bbb2ea1853e483411587d36",
+      "docs/sdd/inonu-desktop-v1/TASKS.md": "3ff756226a69e769329fe42c8f1c8c1e0bbd444f9ac06c9b45aa260521327805",
+      "docs/sdd/inonu-desktop-v1/FREEZE.json": "ddd1a2cbe6c74d541fe061920dfd1e4ccd5b406ece871af0c39290ba4d5e8985",
+      "docs/sdd/inonu-desktop-v1/OWNERSHIP.md": "5c34646e0f7c5812582b5d3483c8dbfa539b1935537d609d49ee63c4e9a81e6b"
+    }
+  },
+  "desktop_r3_freeze_check": {
+    "manifest_path": "docs/sdd/inonu-desktop-v1/FREEZE.json",
+    "revision": "r3",
+    "frozen_on": "2026-10-13",
+    "checked_at": "2026-10-13T12:09:55-03:00",
+    "check_method": "SHA-256 local de cada entrada do manifesto contra arquivo atual; sem executar freeze.ts.",
+    "manifest_count": 13,
+    "matched": 13,
+    "mismatches": [],
+    "hashes": [
+      {
+        "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+        "manifest_sha256": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+        "current_sha256": "4bb65a88c573dae423dd165a30500c671216d0e0415e0d8dd1ca940f84604a75",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/flow-engine.md",
+        "manifest_sha256": "8ad8e3fc9c84d70eaea9a18fd1ea6aeaa33f0f2a18f4dfd28f76084810334b31",
+        "current_sha256": "8ad8e3fc9c84d70eaea9a18fd1ea6aeaa33f0f2a18f4dfd28f76084810334b31",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/rastreador.md",
+        "manifest_sha256": "22aff83b9975ea5fbae73a75be2b2f90480c651990f387cb6ed496cce9ddf0ec",
+        "current_sha256": "22aff83b9975ea5fbae73a75be2b2f90480c651990f387cb6ed496cce9ddf0ec",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+        "manifest_sha256": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+        "current_sha256": "698cc07d663c593eb5b161f85b0e62b3166a5282bf2cd99d10e4748c4d2dcb91",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/wallet.md",
+        "manifest_sha256": "a22dcdfbbcd247ff9a4c5faf0b022862b1ff3cc7ba604af44742bf4a71910ca8",
+        "current_sha256": "a22dcdfbbcd247ff9a4c5faf0b022862b1ff3cc7ba604af44742bf4a71910ca8",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/onchainos-coverage.json",
+        "manifest_sha256": "4633bea4d4061b30bee39dae398e4107e3342973e9e95ef8edbdeb7020b84ae3",
+        "current_sha256": "4633bea4d4061b30bee39dae398e4107e3342973e9e95ef8edbdeb7020b84ae3",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/onchainos-coverage.md",
+        "manifest_sha256": "23c396d1c17d032690085f1c583031745436bfecae083603f44d25eb9f2b9707",
+        "current_sha256": "23c396d1c17d032690085f1c583031745436bfecae083603f44d25eb9f2b9707",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/adr/ADR-1-instalavel.md",
+        "manifest_sha256": "92ba20f5da1df1d66d3591d8bd276b828c3dbb403acd865a4223d100df4e55b6",
+        "current_sha256": "92ba20f5da1df1d66d3591d8bd276b828c3dbb403acd865a4223d100df4e55b6",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/adr/ADR-2-segredos.md",
+        "manifest_sha256": "b4c33e9537d82ba4de8f755781a6c01bf9ee46c24f3bede4be8673b78204aa7e",
+        "current_sha256": "b4c33e9537d82ba4de8f755781a6c01bf9ee46c24f3bede4be8673b78204aa7e",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/adr/ADR-3-camadas-e-nomenclatura.md",
+        "manifest_sha256": "14624483ca9f065ffdf207a3a79d317076d1f39fe7fa0e25f4f74bd8d0ce9e4e",
+        "current_sha256": "14624483ca9f065ffdf207a3a79d317076d1f39fe7fa0e25f4f74bd8d0ce9e4e",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/adr/ADR-4-sem-simulado.md",
+        "manifest_sha256": "8856c56580aff47455e0d062672e7c158ca4cf1c87edfd0851b9d3ab716f5550",
+        "current_sha256": "8856c56580aff47455e0d062672e7c158ca4cf1c87edfd0851b9d3ab716f5550",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/adr/ADR-5-carteira.md",
+        "manifest_sha256": "9bade3faaa8e525a0e235410dee805ffa98648023816339fa22f2ea2b49c3190",
+        "current_sha256": "9bade3faaa8e525a0e235410dee805ffa98648023816339fa22f2ea2b49c3190",
+        "match": true
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/adr/ADR-6-custo-e-formas-de-uso.md",
+        "manifest_sha256": "ac4b1dcf68c729bc1f164b3b6b11c97c1127e977b8a4acd3a1197b6e406e516f",
+        "current_sha256": "ac4b1dcf68c729bc1f164b3b6b11c97c1127e977b8a4acd3a1197b6e406e516f",
+        "match": true
+      }
+    ]
+  },
+  "billed_cost": null
+}

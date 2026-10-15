@@ -6,11 +6,11 @@ Pedidos do Codex nas secoes 98 a 101 da coordenacao, aceitos pelo dono por deleg
 
 | ID | Contrato | Caminhos | Estado |
 | --- | --- | --- | --- |
-| V2-1 | Memoria de taxa de rede por rede (ADENDO-C, FEE-1) | `fees.ts` | feito, 8 testes |
-| V2-2 | Projecao de recursos (cota do provedor) calculada no nucleo e entregue em `GET /agent/status` como `resources` | `resources.ts` (feito, 5 testes), `wire.ts` | falta ligar |
-| V2-3 | Guardas de custo da execucao como FATO no status: `autopilot.guards` | `cli.ts`, `swap-args.ts`, `exit.ts`, `autopilot.ts`, `wire.ts` | a fazer |
-| V2-4 | Produtor dos metadados de decisao (envelope prospectivo, secao 98 e 101 do Codex) em jornal proprio | `decision-metadata.ts`, `cycle.ts`, `wire.ts` | a fazer |
-| V2-5 | Reserva do coin nativo por taxa medida, fatos de taxa no Brief e recusa antes de assinar (ADENDO-C, FEE-2 a FEE-4) | `exit.ts`, `cli.ts`, `cycle.ts`, `model.ts`, `candidates.ts` | a fazer |
+| V2-1 | Memoria de taxa de rede por rede (ADENDO-C, FEE-1) | `fees.ts`, `wire.ts` | feito: 8 testes, grava `fees.json` a cada cotacao (compra ou venda) |
+| V2-2 | Projecao de recursos (cota do provedor) calculada no nucleo e entregue em `GET /agent/status` como `resources` | `resources.ts`, `wire.ts`, `service.ts` | feito, a HUD desenha |
+| V2-3 | Guardas de custo da execucao como FATO no status: `autopilot.guards` | `guards.ts`, `cli.ts`, `swap-args.ts`, `wire.ts` | feito, a HUD desenha |
+| V2-4 | Produtor dos metadados de decisao (envelope prospectivo, secao 98 e 101 do Codex) em jornal proprio | `decision-metadata.ts`, `cycle.ts`, `wire.ts` | feito: `decisions-meta.jsonl` |
+| V2-5 | Reserva do coin nativo por taxa medida, fatos de taxa no Brief e recusa antes de assinar (ADENDO-C, FEE-2 a FEE-4) | `exit.ts`, `cli.ts`, `cycle.ts`, `model.ts`, `candidates.ts` | PARCIAL: FEE-3 feito (chave `k` por compra no Brief, so onde ha taxa medida); FEE-2 (reserva por taxa medida) e FEE-4 (recusa antes de assinar) a fazer |
 
 ## 2. V2-2: recursos no status
 

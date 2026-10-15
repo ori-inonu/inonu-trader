@@ -1,0 +1,18 @@
+{
+  "format":"jev-independent-documentation-review-v1",
+  "delegation_id":"deleg_e6a1a10c",
+  "source":"independent_subagent",
+  "human_response":false,
+  "passed":true,
+  "resolved_finding_ids":["REV1-S1","REV1-S2","REV1-L1"],
+  "security_concerns":[],
+  "logic_errors":[],
+  "tests_observed":{"command":"python -B docs/_meta/evolucao/test_compiler.py","passed":28,"external_symlink_test_available_and_passed":true,"checks":["evidence traversal e caminhos privados recusados antes da leitura","registro sensível só com path, sem hash legado","fonte não registrada detectada e seis inputs estáticos incluídos","enumeração de cobertura independente de inventory()"]},
+  "baseline_hashes":{
+    "docs/_meta/evolucao/compiler.py":{"start":"0e579d531e05aa1fe69e5f0982fc50f93b1e1faea920b06f782309afaa52c3b0","end":"0e579d531e05aa1fe69e5f0982fc50f93b1e1faea920b06f782309afaa52c3b0"},
+    "docs/_meta/evolucao/test_compiler.py":{"start":"0bfe33c7562ae99fd1bf70065c3e5647281419664803488166cf33be50afa342","end":"0bfe33c7562ae99fd1bf70065c3e5647281419664803488166cf33be50afa342"},
+    "docs/_meta/evolucao/curation.json":{"start":"1b6a9e8f93ede6342e0c850f80557d8daeec4ac2c9835ca60d517d224f90a25c","end":"1b6a9e8f93ede6342e0c850f80557d8daeec4ac2c9835ca60d517d224f90a25c"}
+  },
+  "remaining_limits":["Revisão delimitada aos três achados da revisão anterior, não auditoria universal de segurança.","Revisor não executou compilação CLI nem --write e não modificou o projeto; integração e aceitação foram executadas pelo integrador.","Nenhuma certificação de produto, publicação, runtime, autorização financeira ou lucro."],
+  "cost":"unknown"
+}

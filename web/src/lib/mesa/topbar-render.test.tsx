@@ -30,7 +30,8 @@ describe("the topbar keeps the identity and gains sections", () => {
   test("two sections, the current one marked, and the Central reachable twice (bar and popover)", () => {
     const html = render();
     expect(html).toContain('aria-label="Secoes do app"');
-    expect(html).toMatch(/<a[^>]*href="\/"[^>]*aria-current="page"[^>]*>Mesa<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/mesa"[^>]*aria-current="page"[^>]*>Mesa<\/a>/);
+    expect(html).toMatch(/<a[^>]*href="\/"[^>]*>Agente<\/a>/);
     expect(html).toMatch(/<a[^>]*href="\/console"[^>]*>Central<\/a>/);
     expect(html.match(/aria-current="page"/g)?.length).toBe(1);
     expect(html.match(/href="\/console"/g)?.length).toBe(2);

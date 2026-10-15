@@ -76,11 +76,12 @@ describe("before asking", () => {
     expect(draw({ prepared: prepareConsult(rows, "8453", OBSERVED, OBSERVED + 90_000) })).toContain("nova leitura");
   });
 
-  test("an expired reading offers a direct refresh and hides its previous decision", () => {
+  test("an expired reading offers a direct refresh and preserves the completed decision as historical", () => {
     const html = draw({ ageSeconds: 90, onRefresh: noop, prepared: prepareConsult(rows, "8453", OBSERVED, OBSERVED + 90_000), answer: answer([{ symbol: "ETH", action: "sell", balance: "0.5" }]) });
     expect(html).toContain(">Atualizar para analisar</button>");
     expect(html).not.toMatch(/<button[^>]*disabled=""[^>]*>Atualizar para analisar/);
-    expect(html).not.toContain('aria-label="Plano por ativo"');
+    expect(html).toContain('aria-label="Plano por ativo"');
+    expect(html).toContain("Resultado da leitura anterior. Atualize antes de uma nova analise.");
   });
 
   test("the radar candidate is visibly connected to the prepared request", () => {

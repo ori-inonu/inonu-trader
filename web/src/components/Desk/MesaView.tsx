@@ -94,7 +94,7 @@ const TABS: readonly { id: Tab; label: string }[] = [
 export default function MesaView() {
   const reducedMotion = useReducedMotion();
   const [focus, setFocus] = useState("BTC-USDT");
-  // The Rastreador opens an asset here through /?ativo=SYMBOL: read once, and only a plain OKX instrument id is accepted.
+  // The Rastreador opens an asset here through /mesa?ativo=SYMBOL: read once, and only a plain OKX instrument id is accepted.
   useEffect(() => {
     const id = focusFromSearch(window.location.search);
     if (id !== null) setFocus(id);

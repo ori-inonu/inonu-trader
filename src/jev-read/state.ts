@@ -233,6 +233,8 @@ export function buildTapeState(input: TapeInput): TapeStateResult {
       change24hPct,
       rangePosition24h,
       fundingRatePct: fundingPercent(input),
+      // The key only exists when a validated analysis reached this round; absent means decide without it.
+      ...(input.analysis != null ? { analysis: input.analysis } : {}),
     },
   };
 }

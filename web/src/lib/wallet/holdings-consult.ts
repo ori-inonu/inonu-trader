@@ -33,6 +33,11 @@ export function observedAt(receivedAtMs: number, ageMs: number): number {
   return Math.min(receivedAtMs, Math.max(0, receivedAtMs - Math.max(0, ageMs)));
 }
 
+/** Local subject identity, never sent to the model. Clock ticks affect eligibility, not an already requested analysis. */
+export function consultReadingKey(rows: readonly BalanceRow[], chainIndex: string, receivedAtMs: number, ageMs: number, candidate: OnchainFocus | null): string {
+  return JSON.stringify([chainIndex, receivedAtMs, ageMs, rows, candidate]);
+}
+
 const asHoldings = (rows: readonly BalanceRow[], chainIndex: string): SolanaHolding[] =>
   rows.filter((r) => r.chainIndex === chainIndex).map((r) => ({ symbol: r.symbol, tokenAddress: r.tokenAddress, balance: r.balance, valueUsd: r.valueUsd, flaggedRisk: r.flaggedRisk }));
 

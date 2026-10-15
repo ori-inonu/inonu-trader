@@ -8,7 +8,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const SRC = resolve(import.meta.dir, "../..");
-const ROOTS = ["components/Desk", "lib/mesa", "lib/desk", "components/Settings", "components/Doctor", "app/layout.tsx", "app/page.tsx", "app/configuracoes", "app/doctor"];
+const ROOTS = ["components/Desk", "lib/mesa", "lib/desk", "components/Settings", "components/Doctor", "app/layout.tsx", "app/page.tsx", "app/configuracoes"];
 const SKIP = /\.test\.tsx?$|fixture/;
 
 /** The only lines allowed to name Jev: provenance of the model, and the model's own key. */

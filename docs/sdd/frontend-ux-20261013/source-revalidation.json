@@ -1,0 +1,200 @@
+{
+  "observedAt": "2026-10-13T16:44:20.368Z",
+  "inventorySha256": "e48c7a2e27373ec36a237c09810706cae47d1a43e1ab49756cd9feccb75c8f5a",
+  "checked": 1533,
+  "changed": [
+    {
+      "path": "docs/SYSTEM-ONE.md",
+      "inventorySha256": "12d18034ca3d6c7d97746bc459a5bc54600b490c2c9bc9ac2c951e0869e0b3e1",
+      "currentSha256": "866ce0a12ad26ba6d200171c640bca4cdf7b02e94e976303e7eea3f0b5255efd"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "inventorySha256": "29036b74ee3433879dced599349072856a40d4e700614bc27e734bbc5e78e933",
+      "currentSha256": "61bf77270e24cb72751d6347c48da994877c867e4b1f6fdfd17ea1107dc62bb2"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "inventorySha256": "b870402acdb6841b95f173e0f96d5af250b3ccf71a105d31bbdad854be12f9d6",
+      "currentSha256": "8ee22c468131a5d9ea264e768b3bcb910e61dfa162587e4dadf8beed048f68a1"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md",
+      "inventorySha256": "07bb13a898a03f35325db4e5a64852abfcae765ab64108882e87d366147c0dc8",
+      "currentSha256": "f63da6b815fa748dd09fb1ceb05e234945bd6c3e673bc1fefc89d2bf51600daf"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T9.5-T9.7-escada-e-ticket.md",
+      "inventorySha256": "99e014be12212129e5e57b3e271f038c860d2b80c5c14a752233fc9dab6abf42",
+      "currentSha256": "0662898417d96f57274029c8309d05ac0b77a67057a9a61055918910cae21c09"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/DockWalletTab.tsx",
+      "inventorySha256": "e29b1cecfe0bb54fb438e14566931295f6ede3cc5d5776b168c931992c73a994",
+      "currentSha256": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/TicketPanel.module.css",
+      "inventorySha256": "9516eec9526eb7d6dd4aa9fa58471ee19577154bbe5a7829fd11bedec9868aa9",
+      "currentSha256": "26b51975a2a2128d0ca88de9436eb90a09ef875279545d5bb035e6ade2a79228"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/TicketPanel.tsx",
+      "inventorySha256": "9fced3e9f12aa77f0a03efe43a101f24643174ab8a91172833d292a4edaddf9a",
+      "currentSha256": "14add1ffd07b50a741f7f7d4ea3b8fcff00823af1008677335b3d124416a7a80"
+    },
+    {
+      "path": "web/src/components/Desk/InonuAsk.tsx",
+      "inventorySha256": "36c7bbd9866fbf7b5fff136b678516ee9be7fa5b7c0e98d8a43deb1fbc844b96",
+      "currentSha256": "9eafb1ffd6abd2dec002a1af8b59f96f5d301fee06801d087a3a32a041f65bae"
+    },
+    {
+      "path": "web/src/components/Desk/MesaView.module.css",
+      "inventorySha256": "d96183534961a5e6cfdf879e6c9d3425f36a7fef689b15a46bdd31a1783ceb7a",
+      "currentSha256": "55412fc9c7fd6bc555564fb24e51ff717b37f7028142f693ac59d00546ee27ef"
+    },
+    {
+      "path": "web/src/components/Desk/MesaView.tsx",
+      "inventorySha256": "a2c3e787d1df0ea3f15528d95fe67c004847c974091e7c8c3a89cfa19f7de599",
+      "currentSha256": "4c3a867546df4897c4fdb3120e578abee98e1cbf85caeeb922a51813758d9972"
+    },
+    {
+      "path": "web/src/components/Desk/TopbarTools.module.css",
+      "inventorySha256": "8a7a4cafc5909b854195cebce639b980d9568b567051027f316b7029fbc7207c",
+      "currentSha256": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763"
+    },
+    {
+      "path": "web/src/components/Desk/TopbarTools.tsx",
+      "inventorySha256": "25a097143ac80e759498baedf2bf2824f8e906bcc4e4bdec4af8017e1977b0fe",
+      "currentSha256": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31"
+    },
+    {
+      "path": "web/src/components/Rastreador/OnchainBody.tsx",
+      "inventorySha256": "d793533bf8976e39d66ee1ffaac48d3d12cb7d157571c95c063c9dd2cceb9758",
+      "currentSha256": "486142e2501f5922cfd20c01c52837036ebf1ef63feda72a07d4887051f3f0ee"
+    },
+    {
+      "path": "web/src/components/Rastreador/RastreadorView.tsx",
+      "inventorySha256": "41319d6cb5ebc2c18be1b7e2d1dcd5e7d8f4adae07cf6f6830a2d145b7168a87",
+      "currentSha256": "71dde57bff4081ad67f594507be83bc6a171ea7a6b9452823d9ffff2a52d80bf"
+    },
+    {
+      "path": "web/src/components/Settings/SettingsView.tsx",
+      "inventorySha256": "a33445995716fa5d8fb8c6a5ab7136ef6713cefd018bf90ba656cf4147725276",
+      "currentSha256": "d5135a8fe5074022456ad9c59cf9c6537b2bd1a7ad8f68e47c600b1b76d1b2b5"
+    },
+    {
+      "path": "web/src/lib/inonu/accept.test.ts",
+      "inventorySha256": "1da1b9d214df949bc5621325691daaf92e2a3fad4a4c7d30baf5f8bb00980500",
+      "currentSha256": "c061cbc2a24c71ded60b277db41148ad3c0891048f80b2e1e5ab3eac10ca03cb"
+    },
+    {
+      "path": "web/src/lib/inonu/accept.ts",
+      "inventorySha256": "560992e79778cebc1052b162b64d7a034777bd35247d0e30395ebbc87b044a99",
+      "currentSha256": "b334dcb1a00b467c108b396d8dbf7fca8631b488a3f7da7c0e878e69615503ae"
+    },
+    {
+      "path": "web/src/lib/inonu/client.ts",
+      "inventorySha256": "6b2790583de08e25aa7f6ac3134ae8b5eb08d7013610f03f6f97d51f81beb7a1",
+      "currentSha256": "0a6ac0798eb84cf5f06854c608e54165e721ca6cb20bf0ca7d431f4fa50ad90b"
+    },
+    {
+      "path": "web/src/lib/no-send-scan.test.ts",
+      "inventorySha256": "48ae84f9b2dc62ed99ab1367b1f658b690eefb6dff926d67fd5a375d99056fa6",
+      "currentSha256": "d50caa0b3cf983550f261efcb96705f00bcb32ed6d5dc0259d5134423ff0b8c6"
+    },
+    {
+      "path": "web/src/lib/rastreador/onchain-body-render.test.tsx",
+      "inventorySha256": "4c50be43b16a41cac034280715b2df74e6d7791dce8b6175e391da125260ff10",
+      "currentSha256": "f3142371e1a440e30cf1376224f0c44a431e8a74c6955e6f8fa683b602914112"
+    },
+    {
+      "path": "web/src/lib/rastreador/onchain-model.test.ts",
+      "inventorySha256": "9c73e07b551d04a4926c7da9c08cc46970e03eb044e5658d8a8fca62b05bb96b",
+      "currentSha256": "6db10abd1d894f3373265b94c362f9efe4ca85c368bc954d9d3c96a25133eabe"
+    },
+    {
+      "path": "web/src/lib/rastreador/onchain-model.ts",
+      "inventorySha256": "99fc1d17d64200c67513710337d459abea3c9e0554b3eea5197081f1032ade65",
+      "currentSha256": "5223d0128e1ccea5b4297c494e1964f6781f5526a854b80f0c95b2b03ae08e3c"
+    },
+    {
+      "path": "web/src/lib/rastreador/onchain-state.test.ts",
+      "inventorySha256": "b8785a6cbb359305d6c4359718b2a64b24d468b3b14eccaf6d1e7c9e663dacfa",
+      "currentSha256": "a2fe1938f1527fbad76c7c48511b29cf6c01ccc96bfd0e82f0cf50fd9f11564d"
+    },
+    {
+      "path": "web/src/lib/rastreador/onchain-state.ts",
+      "inventorySha256": "f2c7615edcb0a0c86834faa77dc5c86fceff7e072f2bbe6cd21fbd9229f8acd8",
+      "currentSha256": "e6f5d4fa30796c59c8a6d6379f7d4244173d1d5c559653b9c447ffdc9ebe9f95"
+    },
+    {
+      "path": "web/src/lib/rastreador/screen-render.test.tsx",
+      "inventorySha256": "a19d7ebf3ad20242680d28e9ed2208193d94c71716648431ccd5aa6691ade2e3",
+      "currentSha256": "826b5dac4ad519cce0f18f0b038e9374f34356419e9ffc29e45ed9f030130ded"
+    },
+    {
+      "path": "web/src/lib/settings/client.test.ts",
+      "inventorySha256": "c3453ba230e8a58edec4c5662d1148fca3f0336b14db329dc7d131081264e8f3",
+      "currentSha256": "b3c3b68b4c0ed0ded9be8c3d82721eaafd14e52a3070edc24c14e07845e1cf68"
+    },
+    {
+      "path": "web/src/lib/settings/client.ts",
+      "inventorySha256": "245c7a6f1a83fee191f48089f6c78375ce31d4423016c7dbc80f168cdd0556c3",
+      "currentSha256": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381"
+    },
+    {
+      "path": "web/src/lib/wallet/ladder.test.ts",
+      "inventorySha256": "165080160cef9ec80a3559b7535f0d9a6bee234ffe4d7adacbfd55d9c3b3dd00",
+      "currentSha256": "2ea00fcd7b59d4b66d4726af0055e6bee863ec21eef0cf1179b66677922901e0"
+    },
+    {
+      "path": "web/src/lib/wallet/ladder.ts",
+      "inventorySha256": "8bea0d2981a674e18b7aae76ea07b2b16d2a59e9c925392c93e568826de124c1",
+      "currentSha256": "d0c2dd4f71231d0ed3c7f8603f610f7435652d6462d496f9d1c755df9c620b5b"
+    },
+    {
+      "path": "web/src/lib/wallet/quote.test.ts",
+      "inventorySha256": "5f85af1d8c8e347b43f85b5dc0c84530c8e511b91ed040c07024559e508e4b82",
+      "currentSha256": "ec0bb22e915529793debaedace40a69a9c73358705cea47d43ee430a94851ebb"
+    },
+    {
+      "path": "web/src/lib/wallet/quote.ts",
+      "inventorySha256": "bfdc2c8a14467a0a758a39ec29c371ef2839d0f61ae8dff889885814594f86f4",
+      "currentSha256": "fb211cf305d098334e3c7841c310f62b4087b58fc3fc8d51cfea27ad260cf576"
+    },
+    {
+      "path": "web/src/lib/wallet/ticket-render.test.tsx",
+      "inventorySha256": "b23dedfed09d82b5c6294cb8a6c9367e1d4d683f5a00110f42674b52691558ae",
+      "currentSha256": "b10c55bdee9445ae6da11415c6840bd0e158c3a809d552f8c67a31e80eaf23e4"
+    },
+    {
+      "path": "web/src/lib/wallet/ticket.test.ts",
+      "inventorySha256": "b2dea034177979f81aafee4eb6e017c6b553fc33ad597cb61d2fefa72aad09a1",
+      "currentSha256": "3f7cca4eadbf27a67a3ed28513f395f4bbd50c5626d2e8885a082f670332fbae"
+    },
+    {
+      "path": "web/src/lib/wallet/ticket.ts",
+      "inventorySha256": "b59f5560882530fbc219ff24c9e162144053a8da4fc80794af0a67bb544430c4",
+      "currentSha256": "1f613266ba478e4d076dde7620f9b0a1c87226964d6633862feadd3ad7e6944e"
+    }
+  ],
+  "missing": [],
+  "added": [
+    "docs/sdd/dados-quant/evidence/calibration-latest.json",
+    "docs/sdd/dados-quant/evidence/calibration-train30.json",
+    "docs/sdd/dados-quant/REPORT.md",
+    "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-4.md",
+    "docs/sdd/inteligencia-decisao/evidence/baseline.md",
+    "docs/sdd/inteligencia-decisao/evidence/git-status-inicio.txt",
+    "docs/sdd/inteligencia-decisao/README.md",
+    "docs/sdd/inteligencia-decisao/SPEC.md",
+    "docs/sdd/inteligencia-decisao/TASKS.md",
+    "docs/sdd/mesa-decisao-20261013/jev-receipt.json",
+    "docs/sdd/mesa-decisao-20261013/SPEC.md",
+    "docs/sdd/mesa-decisao-20261013/ui-client-red.log",
+    "docs/sdd/mesa-decisao-20261013/ui-red.log",
+    "docs/sdd/mesa-decisao-20261013/web-targeted.log"
+  ],
+  "note": "Concurrent changes are preserved. Changed documentary evidence is an explicit dependency; no source or original inventory was rewritten."
+}

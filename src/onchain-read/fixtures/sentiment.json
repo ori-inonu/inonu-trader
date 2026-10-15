@@ -1,0 +1,19 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": {
+    "details": [
+      {
+        "mentionCount": "94",
+        "newsMentionCount": "15",
+        "sentiment": { "bearishCnt": "20", "bearishRatio": "0.21", "bullishCnt": "38", "bullishRatio": "0.40", "label": "neutral", "neutralCnt": "36" },
+        "tokenSymbol": "BTC",
+        "trend": [],
+        "xMentionCount": "79"
+      }
+    ],
+    "period": "1h",
+    "ts": "1791842400000"
+  },
+  "msg": ""
+}

@@ -1,0 +1,87 @@
+{
+  "format": "jev-evolution-curation-v1",
+  "captured_at": "2026-10-15T15:23:43-03:00",
+  "head": "619f348d207659ec67517e0596a7ebf7979fa224",
+  "scope": "local_documentation_and_static_source_review_not_runtime_or_authorization",
+  "method": "Compilação aditiva inspirada no padrão LLM Wiki, preservando o schema de docs/ e as fontes in-place.",
+  "versions": [
+    {
+      "id": "v0.0.1",
+      "title": "referência solicitada, não comprovada localmente",
+      "verified": false,
+      "sources": ["docs/_meta/evolucao/curation.json", "package.json"],
+      "facts": [
+        "A referência v0.0.1 foi citada como exemplo no pedido de organização. Não foi comprovada uma release do projeto com esse número nas refs ou nos manifests locais consultados.",
+        "git log --all -S'\"version\": \"0.0.1\"' -- package.json web/package.json retornou vazio; git tag --list também retornou vazio em 2026-10-15.",
+        "O manifesto anterior ao commit c352f82 não declarava versão. Isso não prova que v0.0.1 nunca existiu fora deste Git local.",
+        "Não foram inventados cutoff, fases, tarefas, publicação ou conteúdo para essa referência."
+      ]
+    },
+    {
+      "id": "v0.0.2",
+      "title": "versão declarada e release candidate local",
+      "verified": true,
+      "sources": ["package.json", "web/package.json", "docs/RELEASE-v0.0.2.md", "docs/_meta/evolucao/curation.json"],
+      "facts": [
+        "0.0.2 está declarada nos manifests raiz e web. git show c352f82:package.json confirma a declaração no commit de integração de 2026-10-10 às 17:35:53 -03:00.",
+        "O documento RELEASE-v0.0.2.md identifica um release candidate local, com base b587759 e correção documental/testes em 826292a, de 2026-10-10 às 18:47:25 -03:00.",
+        "O registro de release diz local merge only: não pushed, não tagged, não deployed. Isso é o relato desse candidato, não uma auditoria remota atual.",
+        "Não há tag local nem fronteira imutável de release. O HEAD atual e a árvore de trabalho incluem mudanças posteriores; manter 0.0.2 em package.json não demonstra que elas pertencem ao candidato original.",
+        "O nome de um instalador InonuTrader-Setup-0.0.2.exe, relatado em evidência de 2026-10-12, não basta para ligar os pacotes desktop/agente ao candidato c352f82."
+      ]
+    }
+  ],
+  "additional_task_sources": [
+    {"source":"docs/sdd/agente-autonomo/ADENDO-E-velocidade-amplitude-execucao-armada.md","mode":"headings","ids":["E0","E1","E2","E3","E4","E5"]},
+    {"source":"docs/sdd/agente-autonomo/ALAVANCAGEM-VIABILIDADE-20261014.md","mode":"table"}
+  ],
+  "current_claims": [
+    {
+      "text": "Direção atual declarada: o agente autônomo de carteira substitui o demo Monad/Kuru, o tweet e a ordem a cada 300 ms como objetivos de produto. A prioridade declarada é operação local Windows; hospedagem paga e Vercel não foram iniciadas por esta organização. Evidência: AGENTS.md:113-121.",
+      "sources": ["AGENTS.md", "docs/sdd/agente-autonomo/SPEC.md"]
+    },
+    {
+      "text": "Código-fonte observado: web/src/app/page.tsx:2,9-10 retorna AgentView. O README ainda descreve a Mesa/command center como raiz; esse trecho não descreve a composição atual da rota. Leitura estática não confirma qual processo/build está rodando.",
+      "sources": ["web/src/app/page.tsx", "README.md", "docs/sdd/agente-autonomo/tasks.md"]
+    },
+    {
+      "text": "As fases e tarefas do agente, desktop, carteira, inteligência e demais pacotes conservam os IDs originais e o estado declarado pela própria fonte. As tarefas recentes ficam sem release atribuída; nomes como v1, rev-3 ou release24 são identificadores diferentes de uma versão semântica comprovada do produto.",
+      "sources": ["docs/sdd/agente-autonomo/tasks.md", "docs/sdd/inonu-desktop-v1/TASKS.md", "docs/sdd/carteira-evidencia/tasks.md", "docs/sdd/inteligencia-decisao/TASKS.md"]
+    },
+    {
+      "text": "O plano da carteira diz que nada foi implementado no seu retrato original, mas já existem fontes de portfolio-evidence. A existência desses módulos não fecha automaticamente os critérios daquele plano. Não reescrever o status antigo nem tratar o inventário como aceite atual.",
+      "sources": ["docs/sdd/carteira-evidencia/tasks.md", "docs/portfolio-evidence-v1/REPORT.md", "docs/_meta/currentness.md"]
+    },
+    {
+      "text": "Pulse: o adendo F é um contrato preparado e declara nada implementado para a ligação no artefato local. Não converter a existência do módulo descrito em E em evidência de pulse ligado no processo, 50 streams ativos ou ganho medido.",
+      "sources": ["docs/sdd/agente-autonomo/ADENDO-E-velocidade-amplitude-execucao-armada.md", "docs/sdd/agente-autonomo/ADENDO-F-pulse-no-artefato-local.md", "docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md"]
+    },
+    {
+      "text": "Pendência de reconciliação: SPEC do agente:164 relata autorização de alavancagem, enquanto AUTOEVOLUCAO:348 relata uma escolha posterior por Solana spot sem alavancagem/empréstimos/chave de exchange. São relatos documentais incompatíveis nesse ponto, não autorização financeira concedida por esta organização. A divergência foi sinalizada, não resolvida por inferência.",
+      "sources": ["docs/sdd/agente-autonomo/SPEC.md", "docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md"]
+    },
+    {
+      "text": "Memória, hipóteses em sombra e alocação: G/H apresentam limites e trabalho posterior. Um laboratório ou plano de integração não demonstra avaliador financeiro ativo, promoção produtiva nem benefício. Os estados relatados em 2026-10-14 e 2026-10-15 continuam vinculados às suas próprias capturas.",
+      "sources": ["docs/sdd/agente-autonomo/ADENDO-G-hipoteses-em-sombra-20261015.md", "docs/sdd/agente-autonomo/ADENDO-H-alocacao-da-carteira-20261015.md", "docs/sdd/hospedagem-24h/tasks.md"]
+    }
+  ],
+  "relations": [
+    {"new":"AGENTS.md","old":"CLAUDE.md","kind":"substitui_parcialmente","scope":"Direção de produto: demo, tweet e cadência de 300 ms deixam de ser requisitos; demais regras gerais não são descartadas","evidence":"AGENTS.md","line":115},
+    {"new":"docs/sdd/agente-autonomo/SPEC.md","old":"docs/sdd/inonu-desktop-v1/adr/ADR-5-carteira.md","kind":"substitui_parcialmente","scope":"Exclusão do Agentic Wallet e modelo só por clique; preserva limites declarados de chave, entradas e gates","evidence":"docs/sdd/agente-autonomo/SPEC.md","line":9},
+    {"new":"docs/sdd/agente-autonomo/SPEC.md","old":"docs/sdd/inonu-desktop-v1/SPEC.md","kind":"substitui_parcialmente","scope":"Fluxo e interface do produto: agente e configurações substituem Mesa/Rastreador e aprovação por ordem, sem descartar dados úteis do motor","evidence":"docs/sdd/agente-autonomo/SPEC.md","line":5},
+    {"new":"docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md","old":"docs/sdd/agente-autonomo/ADENDO-E-velocidade-amplitude-execucao-armada.md","kind":"precisa_escopo_de","scope":"Interpretação do relato, qualificação de vantagem e autorização já recebida; E0-E5 não são prova de operação","evidence":"docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md","line":298},
+    {"new":"docs/sdd/agente-autonomo/ADENDO-F-pulse-no-artefato-local.md","old":"docs/sdd/agente-autonomo/ADENDO-E-velocidade-amplitude-execucao-armada.md","kind":"restringe_alegacao_de_integracao","scope":"Variável de ambiente não basta para ativar pulse no artefato local; F é contrato preparado, não implementação","evidence":"docs/sdd/agente-autonomo/ADENDO-F-pulse-no-artefato-local.md","line":7},
+    {"new":"docs/sdd/agente-autonomo/ADENDO-H-alocacao-da-carteira-20261015.md","old":"docs/sdd/agente-autonomo/ADENDO-G-hipoteses-em-sombra-20261015.md","kind":"complementa_com_limites","scope":"Hipóteses de alocação em sombra não são regra financeira produtiva nem segundo executor","evidence":"docs/sdd/agente-autonomo/ADENDO-H-alocacao-da-carteira-20261015.md","line":3},
+    {"new":"docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md","old":"docs/sdd/agente-autonomo/SPEC.md","kind":"contradiz_relato_de_autorizacao","scope":"Relato de Solana spot sem alavancagem diverge da atualização sobre autorização de alavancagem em SPEC:164; não resolvido","evidence":"docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md","line":348}
+  ],
+  "document_overrides": {
+    "docs/sdd/agente-autonomo/tasks.md": {"classification":"plano_datado_nao_reconciliado_com_adendos","reason":"Retrato de 2026-10-14; adendos de 2026-10-15 precisam de leitura própria, sem atualizar seus estados por inferência."},
+    "docs/sdd/hospedagem-24h/tasks.md": {"classification":"plano_e_evidencia_datados","reason":"Não certifica estado presente nem operação por 24h."},
+    "docs/sdd/agente-autonomo/SPEC.md": {"classification":"contrato_canonico_com_divergencia_explicita","reason":"Direção atual declarada, com conflito de relato sobre alavancagem em seção 8 versus AUTOEVOLUCAO:348."},
+    "docs/sdd/carteira-evidencia/tasks.md": {"classification":"plano_historico_status_nao_reconciliado","reason":"Declara nada implementado no retrato original; não equivale ao inventário presente nem a aceite dos critérios."},
+    "docs/sdd/agente-autonomo/ADENDO-F-pulse-no-artefato-local.md": {"classification":"contrato_preparado_nao_implementacao","reason":"Título e texto declaram nada implementado; não certifica ativação no artefato local."}
+  },
+  "unresolved_contradictions": ["docs/sdd/agente-autonomo/SPEC.md", "docs/sdd/hospedagem-24h/AUTOEVOLUCAO-20261014.md"],
+  "review_receipt": {"delegation_id":"deleg_93eb7540","reviewers":2,"mode":"read_only","parent_verified":["git HEAD e tags locais","histórico local de versão 0.0.1","manifesto c352f82","datas c352f82/826292a","AgentView na rota raiz","SPEC agente:152-191","AUTOEVOLUCAO:296-369","ADENDO-F completo"],"cost":"unknown","human_response":false},
+  "limits": ["Não houve auditoria remota de publicação.","Não houve teste ou execução do produto nesta tarefa.","A cobertura por caminho não é revisão semântica integral de todos os documentos.","Decisões e autorizações relatadas por outras sessões não são novas autorizações concedidas aqui."]
+}

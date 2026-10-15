@@ -14,7 +14,7 @@ const SNAPSHOT: SettingsSnapshot = {
 
 function fakeFetch(handler: (url: string, init?: { method?: string; headers?: Record<string, string>; body?: string; credentials?: string }) => Response | Promise<Response>) {
   const calls: { url: string; init?: { method?: string; headers?: Record<string, string>; body?: string; credentials?: string } }[] = [];
-  const impl = async (url: string, init?: { method?: string; headers?: Record<string, string>; body?: string; credentials?: "omit" }) => {
+  const impl = async (url: string, init?: { method?: string; headers?: Record<string, string>; body?: string; credentials?: "omit" | "same-origin" }) => {
     calls.push({ url, init });
     return handler(url, init);
   };
@@ -24,6 +24,22 @@ function fakeFetch(handler: (url: string, init?: { method?: string; headers?: Re
 const BASE = "http://127.0.0.1:3042";
 
 describe("settings client", () => {
+  test("same-origin hosted settings preserve login cookies and the read-only capability", async () => {
+    const { impl, calls } = fakeFetch(() => new Response(JSON.stringify({ ...SNAPSHOT, readOnly: true })));
+    expect((await createSettingsClient("", impl).get()).readOnly).toBe(true);
+    expect(calls[0]!.init?.credentials).toBe("same-origin");
+    const malformed = fakeFetch(() => new Response(JSON.stringify({ ...SNAPSHOT, readOnly: "true" })));
+    await expect(createSettingsClient("", malformed.impl).get()).rejects.toMatchObject({ code: "bad_response" });
+  });
+  test("hosted test actions carry intent while external desktop settings keep their existing preflight contract", async () => {
+    const same = fakeFetch(() => new Response(JSON.stringify({ ok: true, code: "format_ok" })));
+    await createSettingsClient("", same.impl).testJev();
+    expect(same.calls[0]!.init?.headers?.["x-inonu-intent"]).toBe("user");
+    const external = fakeFetch(() => new Response(JSON.stringify({ ok: true, code: "format_ok" })));
+    await createSettingsClient(BASE, external.impl).testJev();
+    expect(external.calls[0]!.init?.credentials).toBe("omit");
+    expect(external.calls[0]!.init?.headers?.["x-inonu-intent"]).toBeUndefined();
+  });
   test("preserves verified key origins while dropping secret fragments and unknown fields", async () => {
     const fake = fakeFetch(() => new Response(JSON.stringify({ ...SNAPSHOT, secrets: {
       ...SNAPSHOT.secrets, typesafeAiApiKey: { configured: true, last4: "leak", updatedAtMs: null, origin: "windows_user", value: "never-display" },

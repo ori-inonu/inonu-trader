@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "providers": [
+    {
+      "id": "okx-rest",
+      "label": "OKX mercado, REST publico",
+      "url": "https://www.okx.com",
+      "uso": "precos, velas, negocios, livro, instrumentos, funding e open interest",
+      "custo": "gratuito, sem chave",
+      "quemFala": "o nucleo e o navegador"
+    },
+    {
+      "id": "okx-ws",
+      "label": "OKX tempo real, WebSocket publico",
+      "url": "wss://ws.okx.com:8443/ws/v5/public",
+      "uso": "negocios com o lado agressor, para o motor de fluxo",
+      "custo": "gratuito, sem chave",
+      "quemFala": "o nucleo e o navegador"
+    },
+    {
+      "id": "onchainos",
+      "label": "OnchainOS, REST assinado",
+      "url": "https://web3.okx.com",
+      "uso": "tokens, carteiras rastreadas, historico, cotacao",
+      "custo": "plano Trial: 100 mil chamadas Basic e 100 mil Premium por mes; a chave fica no cofre do Windows",
+      "quemFala": "so o nucleo"
+    },
+    {
+      "id": "okx-icons",
+      "label": "OKX icones de moedas",
+      "url": "https://static.okx.com",
+      "uso": "o desenho de cada moeda",
+      "custo": "gratuito, sem chave",
+      "quemFala": "so o nucleo, que guarda e entrega pela propria origem"
+    },
+    {
+      "id": "modelo",
+      "label": "Modelo Jev, pela TypeSafe AI",
+      "url": "https://api.typesafe.ai/v1",
+      "uso": "responder quando a pessoa clica em Pedir ao Inonu ou Perguntar ao Inonu",
+      "custo": "por token, no preco que a pessoa informar; nada e enviado sem um clique",
+      "quemFala": "so o nucleo, so depois de um clique"
+    }
+  ],
+  "rpcs": {
+    "196": ["https://rpc.xlayer.tech"]
+  }
+}

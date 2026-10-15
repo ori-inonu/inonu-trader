@@ -1,0 +1,10 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": [
+    { "chainIndex": "501", "chainName": "Solana" },
+    { "chainIndex": "1", "chainName": "Ethereum" },
+    { "chainIndex": "196", "chainName": "X Layer" }
+  ],
+  "msg": ""
+}

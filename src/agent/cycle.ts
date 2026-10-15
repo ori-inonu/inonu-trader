@@ -25,9 +25,13 @@ import type { ExecBrief, TokenTripBrief } from "./fills";
 import { agentBrief, physicalRequestsOf, type AgentBrief, type AgentModel, type BriefInput, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
 import { offeredProfiles, planKey, PROFILES, type PlanStore, type ProfileId } from "./plans";
 import { pendingBuys } from "./pending-buys";
+import { ENTRY_COST_CLOSED, narrowBuysByEntryCost, recentSaleRefusals, withoutRefusedSales, type EntryImpactReader } from "./entry-cost";
 import { holdingId, protect } from "./protection";
 import type { Scoreboard } from "./scoreboard";
 import type { RunState } from "./state";
+import { captureEventReviewBrief } from "../decision-review/event-evidence";
+import type { MacroPrepared, MacroReview } from "./macro-context";
+import { materialContext } from "./macro-keys";
 import type { MemoryHookOutcome, MemoryHookRecord } from "./memory-hook";
 import type { TimingFacts } from "./timing";
 import { AGENT_BUY_SIZES } from "./sizing-agent";
@@ -68,6 +72,17 @@ export interface ConsultRecord {
   readonly candidates: readonly { readonly id: string; readonly kind: "holding" | "buy"; readonly stances: readonly string[]; readonly marks: readonly string[]; readonly families: readonly string[]; readonly triggers: readonly string[]; readonly cap?: { readonly maxUsd: number; readonly binding: string; readonly sharePct: number | null; readonly riskPct?: number | null; readonly tightest?: string; readonly tightestUsd?: number } }[];
   /** The Brief entries the model read, whole (holdings, purchases and the split of the portfolio): percentages and codes only, so a decision can be rebuilt and its facts joined to what the price did later. */
   readonly brief: { readonly carteira: AgentBrief["carteira"]; readonly chaves: AgentBrief["chaves"]; readonly posicoes: AgentBrief["posicoes"]; readonly compras: AgentBrief["compras"]; readonly execucoes?: AgentBrief["execucoes"]; readonly memoria?: AgentBrief["memoria"]; readonly mandato: AgentBrief["mandato"] };
+  /** The macro context of this look, for replay: the registry and the snapshots it was derived from, the SHA-256 of the exact frozen Brief that was sent, and the proof of what that Brief carried. Absent when the macro context is off. */
+  readonly macro?: {
+    /** The instance of the host that captured the snapshots: availability is the first capture BY THAT instance. */
+    readonly hostEpoch: string;
+    readonly contextAtMs: number;
+    readonly registry: MacroPrepared["registry"];
+    readonly registryHash: string;
+    readonly snapshots: MacroPrepared["snapshots"];
+    readonly briefSha64: string | null;
+    readonly proof: MacroReview["proof"] | null;
+  };
   /** What the memory hook cost and found, when it was asked (counts, quality, bytes, hash, version, duration; tokens and cost unknown). Absent when the hook is off. */
   readonly memoryHook?: MemoryHookRecord;
   /** The version of the Brief's own layout: 1. The optional key `execucoes` (the real fills) is kept in `brief` when the model read it, in the place the hash saw it (after `historico`, before `mandato`). */
@@ -153,6 +168,14 @@ export interface CycleDeps {
   readonly execFacts?: () => ExecBrief | null;
   /** The memory hook (memory-hook.ts): OFF unless the host binds it. Asked once per consultation, AFTER the "nothing changed" check and BEFORE the model, with the as-of time read here; what it returns goes into the Brief as `memoria` and into the consultation record. It never throws into the cycle and never closes anything. */
   readonly memoryHook?: (ask: { readonly asOfMs: number; readonly cycleId: string; readonly itemIds: readonly string[] }) => MemoryHookOutcome;
+  /**
+   * The macro market context (macro-context.ts): OFF unless the host binds it. `prepare` projects the context at the moment the Brief is made (ten fields per reference market, explicit nulls for a market that is missing
+   * or too old); `review` is called AFTER the real answer with the exact frozen Brief that was sent and returns the proof of which events it carried. Neither decides anything or touches an order.
+   */
+  readonly macro?: {
+    prepare(asOfMs: number): MacroPrepared | null;
+    review(input: { readonly cycleId: string; readonly prepared: MacroPrepared; readonly askedAtMs: number; readonly answeredAtMs: number; readonly brief: unknown; readonly briefHash: string }): MacroReview | null;
+  };
   /** The closed round trips per token address (`tokenTripsBrief`), for the Brief items; absent or null when there are none. */
   readonly tokenTrips?: () => Readonly<Record<string, TokenTripBrief>> | null;
   /** The share of the portfolio the person accepts to lose in one operation; null for the default. */
@@ -163,6 +186,8 @@ export interface CycleDeps {
   readonly reserveShare?: () => number | null;
   /** The agent's own circuit breaker is open: no new purchase is offered to the model, and the exits, the stops and the management of what is held go on. */
   readonly buyingPaused?: () => boolean;
+  /** Reads the price impact of the quote of the smallest size of a purchase (read only, it never signs): what lets the code stop offering the plans the executor is certain to refuse for entry cost (entry-cost.ts). Absent: no quote is taken. */
+  readonly entryCost?: EntryImpactReader;
   /** Called once per consultation with what the model was shown (the candidates, with what was on offer and the marks of care) and what it answered: for whoever studies how the decisions can be improved. Never given a balance or an address. */
   /** Called with the record of each primary consultation and, apart from it, the real clocks and the full hash of the Brief (ADENDO-D, V2-4): what lets the study of the agent bind a decision to the moment it was asked and answered. */
   readonly onConsult?: (entry: ConsultRecord, meta?: ConsultMeta) => void;
@@ -806,8 +831,12 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       const stances = c.stances.filter((s) => s === "hold" || s === "exit_all");
       return { ...c, stances, usdByStance: Object.fromEntries(Object.entries(c.usdByStance).filter(([s]) => (stances as readonly string[]).includes(s))) };
     };
-    const holdings = holdingsPlain.map((c) => cooled(momentum.has(c.id) ? withMomentum(c, momentum.get(c.id) ?? null) : c));
-    const buys = paused ? [] : buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, (f) => momentum.get(`buy:${f.candidateId}`) ?? null, limited?.policy?.perTxUsd ?? null, (chainIndex, address) => (heldKeys.has(planKey(chainIndex, address)) ? (deps.plans.get(planKey(chainIndex, address))?.profile ?? null) : null)).filter((c) => !exiting.has(planKey(c.chainIndex, c.address)) && !inflightTokens.has(planKey(c.chainIndex, c.address)) && !pending.tokens.has(planKey(c.chainIndex, c.address)));
+    // a sale the executor refused for price impact is not asked again at that size or larger for half an hour (a stop the plan demands never waits)
+    const saleRefusals = recentSaleRefusals(deps.ledger.orderRecords(), deps.now());
+    const holdings = holdingsPlain.map((c) => withoutRefusedSales(cooled(momentum.has(c.id) ? withMomentum(c, momentum.get(c.id) ?? null) : c), saleRefusals.get(planKey(c.chainIndex, c.address))));
+    const buysFound = paused ? [] : buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, (f) => momentum.get(`buy:${f.candidateId}`) ?? null, limited?.policy?.perTxUsd ?? null, (chainIndex, address) => (heldKeys.has(planKey(chainIndex, address)) ? (deps.plans.get(planKey(chainIndex, address))?.profile ?? null) : null)).filter((c) => !exiting.has(planKey(c.chainIndex, c.address)) && !inflightTokens.has(planKey(c.chainIndex, c.address)) && !pending.tokens.has(planKey(c.chainIndex, c.address)));
+    // what a purchase costs to get in is known before the model is asked (entry-cost.ts): the plans the executor is certain to refuse for price impact are not offered, and a purchase left with none is shown closed with the mark that says why
+    const buys = await narrowBuysByEntryCost({ buys: buysFound, quality: (c) => buyQuality(c, ecoFactsByBuyId.get(c.id)), records: deps.ledger.orderRecords(), nowMs: deps.now(), probe: runMode === "limitado" && !deps.stopFilePresent() ? (deps.entryCost ?? null) : null, clock: deps.now });
     // the model is shown the purchases the code left OPEN first (up to MAX_OPEN_BUYS when closed ones exist, or up to MAX_BUYS_SHOWN when fewer are closed), ranked with clean/early setups and smart-money discounts ahead of parabolic ones
     const openAll = [...buys.filter((c) => c.stances.length > 1)].sort((a, b) => buyQuality(b, ecoFactsByBuyId.get(b.id)) - buyQuality(a, ecoFactsByBuyId.get(a.id)));
     const closedAll = buys.filter((c) => c.stances.length <= 1);
@@ -823,7 +852,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     considered = { holdings: holdings.length, buys: buys.length, protected: protection.handled.size };
     ecoById = new Map(eco.candidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
     byCandidate = new Map(candidates.map((c) => [c.id, c]));
-    looked = candidates.slice(0, 16).map((c): CandidateView => ({ id: c.id, kind: c.kind, symbol: c.symbol, chainIndex: c.chainIndex, stance: null, families: c.families.slice(0, 4), marks: c.marks.slice(0, 4), closed: c.kind === "buy" && c.stances.length <= 1 ? (c.cap !== undefined && c.cap.maxUsd > 0 ? "abaixo_do_minimo" : "sem_tamanho") : null, probs: null, facets: null }));
+    looked = candidates.slice(0, 16).map((c): CandidateView => ({ id: c.id, kind: c.kind, symbol: c.symbol, chainIndex: c.chainIndex, stance: null, families: c.families.slice(0, 4), marks: c.marks.slice(0, 4), closed: c.kind === "buy" && c.stances.length <= 1 ? (c.marks.includes(ENTRY_COST_CLOSED) ? "custo_de_entrada" : c.cap !== undefined && c.cap.maxUsd > 0 ? "abaixo_do_minimo" : "sem_tamanho") : null, probs: null, facets: null }));
 
     /** The closing phase of this cycle (shadow). Never throws: a failure here costs the measurement, never the cycle. */
     const closingPhase = async (from: { readonly first: ModelAnswer["raw"]; readonly gated: Readonly<Record<string, string>>; readonly brief: AgentBrief } | null, saldoNow: Saldo | null, book: Book, placed: "antes" | "depois"): Promise<void> => {
@@ -884,10 +913,21 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       if (candidates.every((c) => c.stances.length <= 1) && !mandateWouldOpenMore(openedNow, mandateNow)) return no("nada_a_decidir");
       const model = typeof deps.model === "function" ? deps.model() : deps.model;
       if (model === null) return no("sem_modelo");
-      const briefInput: BriefInput = { book: view, holdings, buys: shownBuys, eco, context: deps.context(), history: deps.history(), exec: deps.execFacts?.() ?? null, ...(deps.tokenTrips === undefined ? {} : { tokenTrips: deps.tokenTrips() }), mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) };
+      // the macro context (OFF unless the host binds it) is made at THIS instant, before the Brief; the time the model is really asked is a different, later one
+      let macroPrepared: MacroPrepared | null = null;
+      if (deps.macro !== undefined) {
+        try {
+          macroPrepared = deps.macro.prepare(deps.now());
+        } catch {
+          notes.push("macro_falhou");
+        }
+      }
+      const marketContext = deps.context();
+      const briefInput: BriefInput = { book: view, holdings, buys: shownBuys, eco, context: macroPrepared === null ? marketContext : { ...(marketContext ?? {}), ...macroPrepared.context }, history: deps.history(), exec: deps.execFacts?.() ?? null, ...(deps.tokenTrips === undefined ? {} : { tokenTrips: deps.tokenTrips() }), mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) };
       const baseBrief = agentBrief(briefInput);
       // the "nothing changed" key is the Brief WITHOUT the memory: the memory carries the as-of time of the cycle and would make every Brief look new and ask the model again
-      const baseHash = hashOf(baseBrief);
+      // and, with the macro context, without the keys that change with the clock alone (the age of the observation and the time the context was made): the full Brief, with everything, is hashed below
+      const baseHash = hashOf(macroPrepared === null ? baseBrief : { ...baseBrief, contexto: materialContext(baseBrief.contexto) });
       if (lastConsult !== null && lastConsult.hash === baseHash && deps.now() - lastConsult.atMs < deps.refreshMs) return no("sem_mudanca");
       // the memory hook (OFF unless the host binds it): the as-of time is read here, before the model, and a hook that fails costs the cycle nothing
       let brief = baseBrief;
@@ -904,6 +944,16 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
         }
       }
       const hash = hashOf(brief);
+      // with the macro context the model is sent the FROZEN clone, so what the proof recomputes is exactly what was read; without it nothing changes
+      let sentBrief: AgentBrief = brief;
+      let sentSha: string | null = null;
+      if (macroPrepared !== null) {
+        const captured = captureEventReviewBrief(brief);
+        if (captured.ok) {
+          sentBrief = captured.brief as unknown as AgentBrief;
+          sentSha = captured.hash;
+        }
+      }
       // the Brief is ready: no fact in it is later than this instant
       const briefReadyAtMs = deps.now();
       const estimate = model.estimateTokens(brief, candidates);
@@ -920,7 +970,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       let answeredAtMs = 0;
       try {
         askedAtMs = deps.now();
-        answer = await withDeadline(deps.timeouts.modelMs, (signal) => model.choose({ brief, candidates, signal }));
+        answer = await withDeadline(deps.timeouts.modelMs, (signal) => model.choose({ brief: sentBrief, candidates, signal }));
         answeredAtMs = deps.now();
       } catch (error) {
         deps.budget.finish(ticket, null);
@@ -929,6 +979,19 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
         return no("modelo_erro", { consulted: true, modelo: model.name });
       }
       deps.budget.finish(ticket, answer.usage);
+      // the proof of what the exact Brief that was sent carried: only after the REAL answer, never for a timer or for `consulted`
+      let macroRecord: NonNullable<ConsultRecord["macro"]> | undefined;
+      if (macroPrepared !== null) {
+        let review: MacroReview | null = null;
+        if (sentSha !== null) {
+          try {
+            review = deps.macro!.review({ cycleId, prepared: macroPrepared, askedAtMs, answeredAtMs, brief: sentBrief, briefHash: sentSha });
+          } catch {
+            notes.push("macro_prova_falhou");
+          }
+        }
+        macroRecord = { hostEpoch: macroPrepared.hostEpoch, contextAtMs: macroPrepared.contextAtMs, registry: macroPrepared.registry, registryHash: macroPrepared.registryHash, snapshots: macroPrepared.snapshots, briefSha64: sentSha, proof: review === null ? null : review.proof };
+      }
       // two physical requests for one choice: the refused one has no usage to report, so it counts as a consultation of unknown usage
       for (let i = 1; i < (answer.physicalRequests ?? 1); i++) deps.budget.countExtra(estimate);
       lastConsult = { hash: baseHash, atMs: deps.now() };
@@ -952,6 +1015,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
           candidates: candidates.map((c) => ({ id: c.id, kind: c.kind, stances: c.stances, marks: c.marks.slice(0, 8), families: c.families, triggers: c.triggers.slice(0, 8), ...(c.cap === undefined ? {} : { cap: c.cap }) })),
           brief: { carteira: brief.carteira, chaves: brief.chaves, posicoes: brief.posicoes, compras: brief.compras, ...(brief.execucoes === undefined ? {} : { execucoes: brief.execucoes }), ...(brief.memoria === undefined ? {} : { memoria: brief.memoria }), mandato: brief.mandato },
           ...(memoryRecord === undefined ? {} : { memoryHook: memoryRecord }),
+          ...(macroRecord === undefined ? {} : { macro: macroRecord }),
           briefHash: hash.slice(0, 16),
           briefVersion: brief.v,
           physicalRequests: answer.physicalRequests ?? 1,

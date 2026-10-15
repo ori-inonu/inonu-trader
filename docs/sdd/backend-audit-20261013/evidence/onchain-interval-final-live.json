@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "capturedAt": "2026-10-13T18:59:53.222Z",
+  "sourceHashes": {
+    "client.ts": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+    "client.test.ts": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+    "gateway.ts": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+    "gateway.test.ts": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648"
+  },
+  "testInventory": {
+    "budget.test.ts": "46a399b09db9a6da67b21bd913b5b1b3c2262bc3a8c22b09eaa0780b885241a0",
+    "cache.test.ts": "421c52ddf814abc6120f6d90767df7ef15b21509be55fa1675a38aaac42148ac",
+    "catalog.test.ts": "76032f8c254e8633f8afc806bf557940b239a4d8621a961149222b2eb487abb5",
+    "client.test.ts": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+    "f2-routes.test.ts": "3342c0b7aa613ffab0d14cf5546085c5d80b6895d40d877fd66c19e565fb9197",
+    "gateway.test.ts": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+    "http.test.ts": "8dcd04686494095f59f3c348b0c4e01f7179dc702f73204e6f0134e96c31bfa4",
+    "leak.test.ts": "27c51ee02ba12f7a7e2c4ef25318e3e48862e7b9edaf5809930b569e840f37b0",
+    "probe.test.ts": "3f6d95ba318d3650f915fa02e2a45a63217020a228aa42d07af8a4805784e4b2",
+    "routes/wallet.test.ts": "6a69d7aa74d2c6d3b13f371a8563766d89c4d8197272de9927e434a8e2d20a19",
+    "sign.test.ts": "48f4604f5f57cbdd3f7bb06d382888b40a7460652589ec6b28d874fc4a29c59f",
+    "web-fixture-drift.test.ts": "6fce25288fff9fa245c67f49c75c386b892263cc06638e00d9772aba434c39d3"
+  },
+  "integrationManifestSha256": "d2dcf7c6283def98ec9019f1a6314d5524f06ceb7afc72f27fc58aa6306732f7",
+  "logs": [
+    {
+      "name": "onchain-interval-final-live-tests",
+      "logSha256": "1a3ce4de6c96c21dd4bdbc4827b12720fd0c7c2c1bfaf9f5d6552476b4951e10",
+      "metricsSha256": "dde62ad39af83e8a078463c9c8dc39f4e21dfb99ae9b059b629e36be2d494fab"
+    },
+    {
+      "name": "onchain-interval-final-live-types",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metricsSha256": "28a75af4e899c310daaf6f4195ab0a0bcb7f43fae042161ea68acf885f35d512"
+    },
+    {
+      "name": "onchain-interval-final-live-global-types",
+      "logSha256": "27c1f71f1597c81ed3a1974cc8ece11a676a1665e53368561f671be9728bc324",
+      "metricsSha256": "a528d9ea3746769e15d08e7b0926e6f5b1292f4eb224973e6e0e753c965475ef"
+    }
+  ],
+  "results": {
+    "tests": 232,
+    "failed": 0,
+    "assertions": 941,
+    "files": 12,
+    "focusedTypesExit": 0,
+    "globalTypesExit": 0
+  },
+  "limits": "Concurrent suite includes an additional test file. Four integrated hashes match fixed reviewed candidate. Offline verification only; no real provider, trading, ML or timing hard guarantees."
+}

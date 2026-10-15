@@ -14,6 +14,7 @@ import { facetQuestions, facetTexts, readFacets } from "./facets";
 import { canonicalJson, sha256Hex } from "./decision-metadata";
 import type { ExecBrief, TokenTripBrief } from "./fills";
 import { CONCENTRATIONS, LOOKS, RESERVES, RISKS, parseMandate, type Mandate } from "./mandate";
+import { MACRO_LEGEND, hasMacroKeys } from "./macro-keys";
 import { BRIEF_MEMORY_LEGEND, type BriefMemory } from "./memory-hook";
 import { POSTURES, type Book, type Candidate } from "./types";
 
@@ -113,15 +114,19 @@ const thousands = (v: number | null): number | null => (v === null || !Number.is
 export const safeSymbol = (s: string): string => (/^[A-Za-z0-9$._-]{1,12}$/.test(s) ? s : "?");
 
 const CODE = /^[a-z_]{1,20}$/;
+const HEX64 = /^[a-f0-9]{64}$/;
 /** The key of a measurement: a short plain code that may carry digits (btc_24h, oi_btc_1h, s1_regime). Only the VALUES that are text stay letters and underscores. */
 const KEY = /^[a-z][a-z0-9_]{0,23}$/;
 function boundedContext(raw: MarketContext | null): MarketContext | null {
   if (raw === null) return null;
   const entries = Object.entries(raw);
-  if (entries.length > 12) return null;
+  // the bound grew from 12 to 32 with the macro context (ADENDO-E, E1): the hourly reads and the System One reading are eleven keys and the minute regime is ten per reference market, two markets: thirty-one
+  if (entries.length > 32) return null;
   for (const [k, v] of entries) {
     if (!KEY.test(k)) return null;
-    if (v !== null && !(typeof v === "number" && Number.isFinite(v)) && !(typeof v === "string" && CODE.test(v))) return null;
+    // a text value is a plain code; the only other text allowed is the SHA-256 of an observation, and only under a key that ends in _fh
+    const text = typeof v === "string" && (CODE.test(v) || (k.endsWith("_fh") && HEX64.test(v)));
+    if (v !== null && !(typeof v === "number" && Number.isFinite(v)) && !text) return null;
   }
   return Object.fromEntries(entries);
 }
@@ -249,6 +254,7 @@ export function agentBrief(input: BriefInput): AgentBrief {
       if (Object.hasOwn(item, k)) extraCompraKeys[`compras.${k}`] = EXTRA_COMPRA_LEGEND[`compras.${k}`]!;
     }
   }
+  const contexto = boundedContext(input.context);
   return {
     v: 1,
     carteira: {
@@ -257,10 +263,10 @@ export function agentBrief(input: BriefInput): AgentBrief {
       principal: total === null || book.agentUsd === null ? null : r1(((total - book.agentUsd) / total) * 100),
       posicoes: book.positions.filter((p) => !p.isCash && p.usd !== null && p.usd > 0).length,
     },
-    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(input.memory == null ? {} : { memoria: BRIEF_MEMORY_LEGEND }), ...(hasUlt ? { ult: ULT_LEGEND } : {}), ...extraCompraKeys },
+    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(input.memory == null ? {} : { memoria: BRIEF_MEMORY_LEGEND }), ...(hasMacroKeys(contexto) ? { contexto_macro: MACRO_LEGEND } : {}), ...(hasUlt ? { ult: ULT_LEGEND } : {}), ...extraCompraKeys },
     posicoes,
     compras,
-    contexto: boundedContext(input.context),
+    contexto,
     historico: boundedHistory(input.history),
     // the key exists only when there is something real to say: a Brief without fills is exactly the one it always was
     ...(input.exec == null ? {} : { execucoes: input.exec }),

@@ -1,0 +1,27 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": [
+    {
+      "amountUsd": "2956.016576535940000000",
+      "chainIndex": "501",
+      "cursor": "1791846927026!@#229373",
+      "price": "0.00004866109685450767908249202046059243",
+      "soldRatioPercent": "52.37",
+      "timestamp": "1791846927026",
+      "token": {
+        "holders": "222",
+        "logo": "https://static.oklink.com/cdn/web3/currency/token/placeholder.png",
+        "marketCapUsd": "23036.677868172496434576",
+        "name": "Dead Internet Theory",
+        "symbol": "DIT",
+        "tokenAddress": "TokenPlaceholderAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "top10HolderPercent": "18.5402"
+      },
+      "triggerWalletAddress": "WalletPlaceholder1111111111111111111111111111,WalletPlaceholder2222222222222222222222222222",
+      "triggerWalletCount": "6",
+      "walletType": "2"
+    }
+  ],
+  "msg": ""
+}

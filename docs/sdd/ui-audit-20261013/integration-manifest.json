@@ -1,0 +1,150 @@
+{
+  "head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "integrated_at": "2026-10-13T18:45:20.381Z",
+  "rows": [
+    {
+      "path": "src/app/console/page.module.css",
+      "baseline_sha256": "4bcc1d32e341d29e85f5ba7c4fd9e4f2ea38b5441f926813475675c750b13ec8",
+      "final_sha256": "2c1a24fd73bfd5c719704b8be5a021b024e6806c764e96d880100773614a8c0a",
+      "integration_before_sha256": "4bcc1d32e341d29e85f5ba7c4fd9e4f2ea38b5441f926813475675c750b13ec8"
+    },
+    {
+      "path": "src/app/console/page.tsx",
+      "baseline_sha256": "a6405bf91a9d9313a4c2e7565ae198fb8f0db9ba3d08f60b3a261ce2396815b4",
+      "final_sha256": "cb7ee121a4bab505dcb07a44149bd3966d47f4baa6d0304b376b7efe5567f829",
+      "integration_before_sha256": "a6405bf91a9d9313a4c2e7565ae198fb8f0db9ba3d08f60b3a261ce2396815b4"
+    },
+    {
+      "path": "src/components/Desk/DeskRail.module.css",
+      "baseline_sha256": "caaed8e997b11bd3077016172fdf38687836c6e9a9c3c2ce9c30f026fef0b922",
+      "final_sha256": "6caef09f05fb82e26d7607af3971ea15f3b253a06ed23b0d17d314043a0632ce",
+      "integration_before_sha256": "caaed8e997b11bd3077016172fdf38687836c6e9a9c3c2ce9c30f026fef0b922"
+    },
+    {
+      "path": "src/components/Desk/MesaView.module.css",
+      "baseline_sha256": "5fe2271bd7606027ed40f957f9d3ce4dd47a225dfc487e44ba66cacd93f516ad",
+      "final_sha256": "962a1bb36ed741ff629e916611ac1cc7aa262eb6695590bc2463c12996f34e65",
+      "integration_before_sha256": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098"
+    },
+    {
+      "path": "src/components/Desk/MesaView.tsx",
+      "baseline_sha256": "c5564d6e984f33104e77b34a0d880a83d9d35d54bf84bbbee85a3a590e987ea4",
+      "final_sha256": "ed98169289afd9523b5755d0f63347d411ee66eaf395b99584970d1fce296b1f",
+      "integration_before_sha256": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748"
+    },
+    {
+      "path": "src/components/Desk/Dock/DockInonu.module.css",
+      "baseline_sha256": "cd8a08f64c9cf206461c337be81d0a945f7d936462191adae1afb250ec019ca2",
+      "final_sha256": "e61a70bb52455436e4e53c3181d1b3ee3b68ad581d017615e73fdc11e3aa8faa",
+      "integration_before_sha256": "cd8a08f64c9cf206461c337be81d0a945f7d936462191adae1afb250ec019ca2"
+    },
+    {
+      "path": "src/components/Desk/Dock/DockPanel.module.css",
+      "baseline_sha256": "186829ac8630a7b471a0958be5417f452e052d278f8e6b3ba6470b355e73c397",
+      "final_sha256": "47e55ce36cf3f3ea9d4ae2fc75b887254dae301159209681057359684fb7ec42",
+      "integration_before_sha256": "fd7b04297a8914bb9cfd8e2d19651f67f4056e9fb8f926fb81dbc91d80fed24a"
+    },
+    {
+      "path": "src/components/Desk/Dock/DockPanel.tsx",
+      "baseline_sha256": "e5623744b90d0390185703ffe571a941b43b1652ad518eef180692909b5ae4c5",
+      "final_sha256": "69db56d23c1e1fcab28f1b24b5af9f6db2e4a82d5f14deef6a7424689f83155e",
+      "integration_before_sha256": "e5623744b90d0390185703ffe571a941b43b1652ad518eef180692909b5ae4c5"
+    },
+    {
+      "path": "src/components/Desk/Dock/DockTabs.module.css",
+      "baseline_sha256": "6e790468c57c59b65ed68939092813fcb9f9e1a6712472acef6746efaf838883",
+      "final_sha256": "edf6c4bc2ccf2a2af66ebe706dd3b8e8ad7909a7593b733f50d41aba92e62d00",
+      "integration_before_sha256": "6e790468c57c59b65ed68939092813fcb9f9e1a6712472acef6746efaf838883"
+    },
+    {
+      "path": "src/components/Desk/panels/Watchlist.tsx",
+      "baseline_sha256": "7166807e37d37e1c06cfee0d04af057c0a2e38103971f96058efc7235abe5f7e",
+      "final_sha256": "dec37a260f4afbb18030263b204ff748a058c006da1983cbdbf22a9d35859a32",
+      "integration_before_sha256": "7166807e37d37e1c06cfee0d04af057c0a2e38103971f96058efc7235abe5f7e"
+    },
+    {
+      "path": "src/lib/desk/ui/dock-render.test.tsx",
+      "baseline_sha256": "8d06ff706fbfa045c81a4293441a6cd7ee83afd3ea3fd3299e2bc54dff08d187",
+      "final_sha256": "0a14fd48368a458c7cc8e388833e5a09eefd73ef2522a90fce869a38bc4e13dd",
+      "integration_before_sha256": "8d06ff706fbfa045c81a4293441a6cd7ee83afd3ea3fd3299e2bc54dff08d187"
+    },
+    {
+      "path": "src/lib/desk/ui/panels-render.test.tsx",
+      "baseline_sha256": "276fb16daf5ca9a99c29de7bc296a59ac5a68fbd939898c5ca2871591bc40ab5",
+      "final_sha256": "12ddbc8fa2a5dba865cfad7c8c153e5787affaeb0d64e2b91464b701ee099751",
+      "integration_before_sha256": "276fb16daf5ca9a99c29de7bc296a59ac5a68fbd939898c5ca2871591bc40ab5"
+    },
+    {
+      "path": "src/lib/inonu/feed-text.ts",
+      "baseline_sha256": "4f35aa8ca97d3af15ffbcf0837c42d393f9276f026031202faa719f223515380",
+      "final_sha256": "64968ee9d471a54d29af68be1b8d2295b3968f634f841e1289db6ba755c7f81a",
+      "integration_before_sha256": "4f35aa8ca97d3af15ffbcf0837c42d393f9276f026031202faa719f223515380"
+    },
+    {
+      "path": "src/lib/inonu/signal-strip-render.test.tsx",
+      "baseline_sha256": "85a812148b1d79a6538d2da1b88a723a8306faa18615666f88ca19fe156ace7a",
+      "final_sha256": "5de45e93d53ffd2a2fea2ff55bda111767f31e355823a3562f163d3289f0aea8",
+      "integration_before_sha256": "85a812148b1d79a6538d2da1b88a723a8306faa18615666f88ca19fe156ace7a"
+    },
+    {
+      "path": "src/lib/inonu/view.test.ts",
+      "baseline_sha256": "e4694707f3b7846e3e5af38a780647246ed254a8cfac565c95ab0573d86fbb6e",
+      "final_sha256": "b1591b01c8b55cae4312156ef0a46c93a90230cabb0c83013fb5840d0dfe1b13",
+      "integration_before_sha256": "e4694707f3b7846e3e5af38a780647246ed254a8cfac565c95ab0573d86fbb6e"
+    },
+    {
+      "path": "src/lib/inonu/view.ts",
+      "baseline_sha256": "791000fceb67bc51a155fd34a4db5dce3145cfad0685b5f6f4729680152063cb",
+      "final_sha256": "be80d3452513a9bea3376b85ce337ea5a518f7a8d73b2abbc07ac6d45fdd0183",
+      "integration_before_sha256": "791000fceb67bc51a155fd34a4db5dce3145cfad0685b5f6f4729680152063cb"
+    },
+    {
+      "path": "src/lib/mesa/dock.test.ts",
+      "baseline_sha256": "de4d504d691f54063f4e820e0680a920316b6c981fcee0dfdc350e5cb0458d99",
+      "final_sha256": "7134d74f5e8ffd22041bad5541e2dc8a8010a93df511231610a8873c477c4195",
+      "integration_before_sha256": "de4d504d691f54063f4e820e0680a920316b6c981fcee0dfdc350e5cb0458d99"
+    },
+    {
+      "path": "src/lib/mesa/dock.ts",
+      "baseline_sha256": "656ca03b6aa0f72fb830bfbf32937597854d2d97590331687d9a383de8d72554",
+      "final_sha256": "1fb15dc10fe19ec1fbdc78e81f664db639995dd4c16aecda1ad39ad63c80dd99",
+      "integration_before_sha256": "656ca03b6aa0f72fb830bfbf32937597854d2d97590331687d9a383de8d72554"
+    },
+    {
+      "path": "src/lib/mesa/flow-tab-model.test.ts",
+      "baseline_sha256": "693b1b4a8e36eaf02f7649560686561d866ce3c4425e784490bbf633a5adf9c5",
+      "final_sha256": "07ed9ffa9122b629ee4624911be46aa2b9777a90b5f4f23a65b6ffca5b0dda79",
+      "integration_before_sha256": "693b1b4a8e36eaf02f7649560686561d866ce3c4425e784490bbf633a5adf9c5"
+    },
+    {
+      "path": "src/lib/mesa/onchain-rows.test.ts",
+      "baseline_sha256": "a511569c731414522e575da93200d6c99e551877fed25a0abbcfdbbe4c6998d4",
+      "final_sha256": "bb1e09f4bc76e832cd0b22e4c77ab77810edef46e6bd99a94077770ce3405ad5",
+      "integration_before_sha256": "a511569c731414522e575da93200d6c99e551877fed25a0abbcfdbbe4c6998d4"
+    },
+    {
+      "path": "src/lib/mesa/onchain-rows.ts",
+      "baseline_sha256": "74c285e5a4b9e161aa33243d8ccc87b74d9be0d2c5bbfc13b940eacb7b90ab89",
+      "final_sha256": "2ab8c4a4ae42c243bc0617cfa048eb64612e7f38117e1fc0186ace46c671c2bd",
+      "integration_before_sha256": "74c285e5a4b9e161aa33243d8ccc87b74d9be0d2c5bbfc13b940eacb7b90ab89"
+    },
+    {
+      "path": "src/components/Desk/InstrumentHeader.tsx",
+      "baseline_sha256": null,
+      "final_sha256": "b7d45ea9f1bab9aa65a45c6ba415baf5104b75646800075af3f2ce8eeb13fb4d",
+      "integration_before_sha256": "476ad3ea55a6f2e44ab5a9695f84f5ea5198af0596569bf6a4201cb6a9b8abbd"
+    },
+    {
+      "path": "src/lib/mesa/market-inputs.ts",
+      "baseline_sha256": null,
+      "final_sha256": "a9d34c5615e0774c1e5b2720cdfe2cf1327be87e096cb7d9d56a6b7527b517a1",
+      "integration_before_sha256": null
+    },
+    {
+      "path": "src/lib/mesa/market-inputs.test.tsx",
+      "baseline_sha256": null,
+      "final_sha256": "224c16f000df4b0a1c7f6ac4e65d260ad4f502028723852162d816912e2cae12",
+      "integration_before_sha256": null
+    }
+  ]
+}

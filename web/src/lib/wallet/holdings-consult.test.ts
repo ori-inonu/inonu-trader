@@ -1,6 +1,6 @@
 // WAL-4, ASK: the decision about the wallet, on any network the reading holds something on. origin: synthetic_fixture, tests only.
 import { describe, expect, test } from "bun:test";
-import { CONSULT_COST_TEXT, consultNetworks, observedAt, PLAN_WORD, prepareConsult } from "./holdings-consult";
+import { CONSULT_COST_TEXT, consultNetworks, consultReadingKey, observedAt, PLAN_WORD, prepareConsult } from "./holdings-consult";
 import type { BalanceRow } from "./holdings";
 
 const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
@@ -78,6 +78,23 @@ describe("prepareConsult", () => {
       expect(p.ok).toBe(true);
       if (p.ok) expect(JSON.stringify(p.request)).not.toMatch(/address|account|valueUsd|priceUsd|price/i);
     }
+  });
+});
+
+describe("consultation identity", () => {
+  test("expiring the same reading closes new requests without changing an in-flight subject", () => {
+    const key = consultReadingKey(rows, "8453", 100_000, 0, null);
+    expect(prepareConsult(rows, "8453", 100_000, 140_000).ok).toBe(true);
+    expect(prepareConsult(rows, "8453", 100_000, 162_000).ok).toBe(false);
+    expect(consultReadingKey(rows, "8453", 100_000, 0, null)).toBe(key);
+  });
+  test("another reading, network, holding or radar candidate invalidates the old subject", () => {
+    const key = consultReadingKey(rows, "8453", 100_000, 0, null);
+    expect(consultReadingKey(rows, "8453", 101_000, 0, null)).not.toBe(key);
+    expect(consultReadingKey(rows, "8453", 100_000, 1000, null)).not.toBe(key);
+    expect(consultReadingKey(rows, "501", 100_000, 0, null)).not.toBe(key);
+    expect(consultReadingKey([row({ balance: 1 }), ...rows.slice(1)], "8453", 100_000, 0, null)).not.toBe(key);
+    expect(consultReadingKey(rows, "8453", 100_000, 0, { chainIndex: "8453", address: "0x1111111111111111111111111111111111111111", symbol: "RADAR", name: null })).not.toBe(key);
   });
 });
 

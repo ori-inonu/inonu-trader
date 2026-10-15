@@ -13,6 +13,14 @@ export type IdentityResult = { readonly ok: true; readonly identity: AssetIdenti
 /** Control characters, zero width characters and line or paragraph separators. Written as escapes on purpose. */
 const UNSAFE_TEXT = new RegExp("[\u0000-\u001f\u007f-\u009f\u200b-\u200f\u2028-\u202e]+", "g");
 
+/** The address several providers use for the native coin of an EVM network. It is the native coin, not a contract. */
+const EVM_NATIVE_ALIAS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
+/** A chain index worth keeping in a record: short digits only. Provider text of any other shape is dropped. */
+export function boundedChainIndex(value: unknown): string | null {
+  return typeof value === "string" && /^\d{1,12}$/.test(value) ? value : null;
+}
+
 const MOVE_TYPE = /^0x[0-9a-fA-F]{1,64}::[A-Za-z_][A-Za-z0-9_]{0,63}::[A-Za-z_][A-Za-z0-9_]{0,63}$/;
 
 /** EVM style and Sui addresses are case-insensitive hex; Solana, Tron, TON and Bitcoin are case sensitive. */
@@ -40,7 +48,7 @@ export function buildIdentity(chainIndex: unknown, tokenContractAddress: unknown
   const chain = chainByIndex(chainIndex);
   if (chain === undefined) return { ok: false, code: "unknown_network" };
   if (typeof tokenContractAddress !== "string") return { ok: false, code: "invalid_contract_type" };
-  if (tokenContractAddress === "") {
+  if (tokenContractAddress === "" || (chain.kind === "evm" && tokenContractAddress.startsWith("0x") && tokenContractAddress.toLowerCase() === EVM_NATIVE_ALIAS)) {
     return { ok: true, identity: { chainIndex, family: chain.kind, asset: { kind: "native_marker" }, key: `${chainIndex}:native` } };
   }
   if (!validContract(chainIndex, chain.kind, tokenContractAddress)) return { ok: false, code: "invalid_contract_for_network" };

@@ -28,8 +28,8 @@ import {
   ratioBps,
   type Dec,
 } from "./decimal.ts";
-import { buildIdentity, canonicalAccount, sanitizeDisplay } from "./identity.ts";
-import { OK, freshnessReport, state, statusOfFreshness, statusOfState, worstStatus } from "./state.ts";
+import { boundedChainIndex, buildIdentity, canonicalAccount, sanitizeDisplay } from "./identity.ts";
+import { OK, freshnessOf, freshnessReport, state, statusOfFreshness, statusOfState, worstStatus } from "./state.ts";
 import type {
   AssetIdentity,
   BalancePosition,
@@ -73,6 +73,8 @@ export interface DecimalsHint {
 export interface PriceHint {
   readonly priceText: string;
   readonly timeMs: number | null;
+  /** When the market price was read. Absent: the balances read time is the reference (a weaker comparison). */
+  readonly fetchedAtMs?: number | null;
 }
 
 export interface ReportedTotalInput {
@@ -111,6 +113,8 @@ export interface BalanceBuildInput {
 interface Candidate {
   readonly identity: AssetIdentity;
   readonly row: RawBalanceRow;
+  /** True only when the row carried an address and it is the requested account. */
+  readonly accountVerified: boolean;
 }
 
 function isRecordOfText(value: unknown): value is string {
@@ -119,14 +123,15 @@ function isRecordOfText(value: unknown): value is string {
 
 function quantityOf(identity: AssetIdentity, row: RawBalanceRow, hint: DecimalsHint | undefined): Quantity {
   const rawBalance = row.rawBalance;
-  const rawText = isRecordOfText(rawBalance) && rawBalance !== "" ? rawBalance : null;
+  // Provider text is kept only in the shape it must have; anything else could be an echoed secret or a huge string.
+  const rawText = isRecordOfText(rawBalance) && /^\d{1,80}$/.test(rawBalance) ? rawBalance : null;
   const base = { rawText, atoms: null, decimals: null, decimalsSource: "unknown" as DecimalsSource, unit: "unknown" as const };
 
   if (row.balance === undefined || row.balance === null || row.balance === "") {
     return { ...base, displayText: null, state: state("missing", "balance_missing") };
   }
   const display = parseDec(row.balance);
-  if (display === null) return { ...base, displayText: typeof row.balance === "string" ? row.balance.slice(0, 80) : null, state: state("unverified", "balance_unreadable") };
+  if (display === null) return { ...base, displayText: null, state: state("unverified", "balance_unreadable") };
   const displayText = row.balance as string;
 
   let raw: bigint | null = null;
@@ -171,11 +176,23 @@ function riskOf(identity: AssetIdentity, flag: unknown): RiskFlag {
   return { providerFlag, honeypotFilterSupported, assessment };
 }
 
-function valuationOf(identity: AssetIdentity, row: RawBalanceRow, quantity: Quantity, risk: RiskFlag, hint: PriceHint | undefined, toleranceBps: number): { valuation: Valuation; caveats: string[] } {
+interface ValuationContext {
+  readonly hint: PriceHint | undefined;
+  readonly toleranceBps: number;
+  readonly accountVerified: boolean;
+  readonly fetchedAtMs: number;
+  readonly maxAgeMs: number;
+}
+
+function valuationOf(row: RawBalanceRow, quantity: Quantity, risk: RiskFlag, context: ValuationContext): { valuation: Valuation; caveats: string[] } {
+  const { hint, toleranceBps } = context;
   const caveats: string[] = [];
   const empty = { currency: null, priceText: null, priceSource: null, priceAsOfMs: null, valueText: null } as const;
 
   if (quantity.state.kind !== "ok") return { valuation: { ...empty, state: state("missing", "quantity_unavailable") }, caveats };
+  // Safety fields that cannot be read fail CLOSED: the position is not counted until they can be.
+  if (typeof row.isRiskToken !== "boolean") return { valuation: { ...empty, state: state("unverified", "risk_flag_unreadable") }, caveats: ["risk_flag_unreadable"] };
+  if (!context.accountVerified) return { valuation: { ...empty, state: state("unverified", "account_unverified") }, caveats: ["account_unverified_in_row"] };
 
   const quantityZero = quantity.atoms === "0";
   const rawPrice = row.tokenPrice;
@@ -204,14 +221,22 @@ function valuationOf(identity: AssetIdentity, row: RawBalanceRow, quantity: Quan
       }
       priceAsOfMs = hint.timeMs;
       priceSource = "okx_balance_api+okx_market_price";
+      // The market price is the only price clock there is: if it is not current, nothing vouches for the value.
+      if (priceAsOfMs !== null) {
+        const clock = freshnessOf(priceAsOfMs, hint.fetchedAtMs ?? context.fetchedAtMs, context.maxAgeMs);
+        if (clock === "stale") return { valuation: { currency: "USD", priceText: priceTextRaw, priceSource, priceAsOfMs, valueText: null, state: state("stale", "price_time_stale") }, caveats };
+        if (clock === "future") return { valuation: { currency: "USD", priceText: priceTextRaw, priceSource, priceAsOfMs, valueText: null, state: state("future", "price_time_in_future") }, caveats };
+      }
     }
   }
   if (priceAsOfMs === null) caveats.push("price_time_unknown");
   if (risk.assessment === "flagged") {
     return { valuation: { currency: "USD", priceText: priceTextRaw, priceSource, priceAsOfMs, valueText: null, state: state("unverified", "risk_flagged_value_not_counted") }, caveats };
   }
-  const value = decMul(atomsToDec(BigInt(quantity.atoms), quantity.decimals), priceDec);
-  return { valuation: { currency: "USD", priceText: priceTextRaw, priceSource, priceAsOfMs, valueText: decToText(value), state: OK }, caveats };
+  const valueText = decToText(decMul(atomsToDec(BigInt(quantity.atoms), quantity.decimals), priceDec));
+  // A value this layer cannot read back is never summed; counting it as valued would let the sum silently drop it.
+  if (parseDec(valueText) === null) return { valuation: { currency: "USD", priceText: priceTextRaw, priceSource, priceAsOfMs, valueText: null, state: state("unverified", "value_exceeds_precision_limits") }, caveats };
+  return { valuation: { currency: "USD", priceText: priceTextRaw, priceSource, priceAsOfMs, valueText, state: OK }, caveats };
 }
 
 /** The more severe of two states; on a tie the first wins. */
@@ -223,7 +248,7 @@ function signatureOf(candidate: Candidate): string {
   const display = parseDec(candidate.row.balance);
   const raw = parseAtoms(candidate.row.rawBalance);
   const price = parseDec(candidate.row.tokenPrice);
-  return JSON.stringify([display === null ? String(candidate.row.balance) : decToText(display), raw === null ? String(candidate.row.rawBalance ?? "") : raw.toString(), price === null ? String(candidate.row.tokenPrice ?? "") : decToText(price), candidate.row.isRiskToken === true]);
+  return JSON.stringify([display === null ? String(candidate.row.balance) : decToText(display), raw === null ? String(candidate.row.rawBalance ?? "") : raw.toString(), price === null ? String(candidate.row.tokenPrice ?? "") : decToText(price), JSON.stringify(candidate.row.isRiskToken ?? null)]);
 }
 
 function emptyPosition(identity: AssetIdentity, symbol: unknown, origin: BalancePosition["origin"], quantityState: EvidenceState, locators: readonly string[]): BalancePosition {
@@ -252,7 +277,7 @@ export function buildBalanceSection(input: BalanceBuildInput): BalanceSection {
 
   // 1. Identity, network and account checks. A row that fails any of them is rejected, not summed.
   for (const row of input.rows) {
-    const chainIndex = typeof row.chainIndex === "string" ? row.chainIndex : null;
+    const chainIndex = boundedChainIndex(row.chainIndex);
     const built = buildIdentity(row.chainIndex, row.tokenContractAddress);
     if (!built.ok) {
       rejected.push({ locator: row.locator, code: built.code === "unknown_network" ? "network_mismatch" : "contract_invalid_for_network", chainIndex });
@@ -262,15 +287,19 @@ export function buildBalanceSection(input: BalanceBuildInput): BalanceSection {
       rejected.push({ locator: row.locator, code: "network_mismatch", chainIndex });
       continue;
     }
-    if (row.address !== undefined && row.address !== null && row.address !== "") {
+    let accountVerified = false;
+    // An address that is absent or not text is unreadable (the row cannot be tied to the account, so it is not counted);
+    // text that is not the requested account is a different account and the row is rejected.
+    if (typeof row.address === "string" && row.address !== "") {
       const expected = canonicalAccount(built.identity.chainIndex, input.account);
       const returned = canonicalAccount(built.identity.chainIndex, row.address);
       if (expected === null || returned === null || expected !== returned) {
         rejected.push({ locator: row.locator, code: "account_mismatch", chainIndex });
         continue;
       }
+      accountVerified = true;
     }
-    candidates.push({ identity: built.identity, row });
+    candidates.push({ identity: built.identity, row, accountVerified });
   }
 
   // 2. Group by identity. Identical repeats collapse; conflicting repeats are divergent and never summed.
@@ -305,7 +334,13 @@ export function buildBalanceSection(input: BalanceBuildInput): BalanceSection {
     const hint = input.decimalsHints?.get(key);
     const quantity = quantityOf(first.identity, first.row, hint);
     const risk = riskOf(first.identity, first.row.isRiskToken);
-    const { valuation, caveats } = valuationOf(first.identity, first.row, quantity, risk, input.priceHints?.get(key), toleranceBps);
+    const { valuation, caveats } = valuationOf(first.row, quantity, risk, {
+      hint: input.priceHints?.get(key),
+      toleranceBps,
+      accountVerified: group.every((member) => member.accountVerified),
+      fetchedAtMs: input.fetchedAtMs,
+      maxAgeMs: input.maxAgeMs,
+    });
     if (group.length > 1) caveats.push(`duplicate_collapsed:${group.length - 1}`);
     if (risk.assessment === "flagged") caveats.push("risk_flagged");
     const counted = quantity.state.kind === "ok" && valuation.state.kind === "ok" && valuation.valueText !== null;
@@ -340,7 +375,8 @@ export function buildBalanceSection(input: BalanceBuildInput): BalanceSection {
   for (const expected of input.expectedAssets ?? []) {
     const built = buildIdentity(expected.chainIndex, expected.tokenContractAddress);
     if (!built.ok) {
-      rejected.push({ locator: `expected/${expected.chainIndex}`, code: built.code === "unknown_network" ? "network_mismatch" : "contract_invalid_for_network", chainIndex: expected.chainIndex });
+      const safeChain = boundedChainIndex(expected.chainIndex);
+      rejected.push({ locator: `expected/${safeChain ?? "invalid"}`, code: built.code === "unknown_network" ? "network_mismatch" : "contract_invalid_for_network", chainIndex: safeChain });
       continue;
     }
     if (!requested.includes(built.identity.chainIndex)) continue;
@@ -379,12 +415,15 @@ export function buildBalanceSection(input: BalanceBuildInput): BalanceSection {
   if (freshness.capture === "stale") issues.push({ code: "capture_stale", severity: "warning", locator: null });
   if (freshness.capture === "future") issues.push({ code: "capture_time_in_future", severity: "warning", locator: null });
   if (truncated) issues.push({ code: "answer_truncated", severity: "warning", locator: null });
+  // An answer with no rows says nothing about the wallet: it may be empty, or the network may be unsupported.
+  const emptyAnswer = input.rows.length === 0;
+  if (emptyAnswer) issues.push({ code: "no_rows_returned", severity: "warning", locator: null });
 
   const status: Status = worstStatus([
     statusOfFreshness(freshness),
     ...positions.map((position) => statusOfState(position.state.kind)),
     ...(rejected.length > 0 ? (["divergent"] as const) : []),
-    ...(truncated ? (["incomplete"] as const) : []),
+    ...(truncated || emptyAnswer ? (["incomplete"] as const) : []),
   ]);
 
   return {

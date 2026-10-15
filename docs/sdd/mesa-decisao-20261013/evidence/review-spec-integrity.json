@@ -1,0 +1,687 @@
+{
+  "reviewerConversation": "01a13638-0d16-7093-a1bb-99c7b07aa8a3",
+  "candidate": "review-candidate",
+  "copy": "review-spec-workspace/final-candidate",
+  "files": [
+    {
+      "path": "src/settings/runtime-key.ts",
+      "expected": "ef8e4951fa0b0d49ef8377a5d6b973f79ce3e4cdf733dd8b0f950a50b42199a9",
+      "candidate": "ef8e4951fa0b0d49ef8377a5d6b973f79ce3e4cdf733dd8b0f950a50b42199a9",
+      "copy": "ef8e4951fa0b0d49ef8377a5d6b973f79ce3e4cdf733dd8b0f950a50b42199a9",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/settings/runtime-key.test.ts",
+      "expected": "cfdca20ce34d797e1096ab6b912057d410d749969cfd932ed1fe4c1ef008ac42",
+      "candidate": "cfdca20ce34d797e1096ab6b912057d410d749969cfd932ed1fe4c1ef008ac42",
+      "copy": "cfdca20ce34d797e1096ab6b912057d410d749969cfd932ed1fe4c1ef008ac42",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/settings/store.ts",
+      "expected": "d3a680d6155774f2c34cc1f60a45d65842f4bab16003226981520ab16bd3a82c",
+      "candidate": "d3a680d6155774f2c34cc1f60a45d65842f4bab16003226981520ab16bd3a82c",
+      "copy": "d3a680d6155774f2c34cc1f60a45d65842f4bab16003226981520ab16bd3a82c",
+      "baseline": "2d956b645bdce3559bd55f4c463ff841fbdd879a1b958f805f7ef14c8d403b77",
+      "expectedBaseline": "2d956b645bdce3559bd55f4c463ff841fbdd879a1b958f805f7ef14c8d403b77",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/settings/store.test.ts",
+      "expected": "9e95fb57860e071474643ca1c1db56a4d701e4df2405bbe44854050e5c49d677",
+      "candidate": "9e95fb57860e071474643ca1c1db56a4d701e4df2405bbe44854050e5c49d677",
+      "copy": "9e95fb57860e071474643ca1c1db56a4d701e4df2405bbe44854050e5c49d677",
+      "baseline": "0202e0fec5e85ea4e669a71a5aefd93cffaf16cb7b75bb95907f9eb8eb1677d2",
+      "expectedBaseline": "0202e0fec5e85ea4e669a71a5aefd93cffaf16cb7b75bb95907f9eb8eb1677d2",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/settings/http.test.ts",
+      "expected": "fc0c3e64a6336ad2bd1c08b8ce8150d147a42d8d232e1441f8a3306484baf267",
+      "candidate": "fc0c3e64a6336ad2bd1c08b8ce8150d147a42d8d232e1441f8a3306484baf267",
+      "copy": "fc0c3e64a6336ad2bd1c08b8ce8150d147a42d8d232e1441f8a3306484baf267",
+      "baseline": "95646c1514496dbef042c7882fa014f648a4562a6a169baba8d8f231c1096969",
+      "expectedBaseline": "95646c1514496dbef042c7882fa014f648a4562a6a169baba8d8f231c1096969",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/desktop/vault.ts",
+      "expected": "9c4cb6dc6445012c5198eab4458d24d210de5d6e6fc133334f5e54341a16dd9b",
+      "candidate": "9c4cb6dc6445012c5198eab4458d24d210de5d6e6fc133334f5e54341a16dd9b",
+      "copy": "9c4cb6dc6445012c5198eab4458d24d210de5d6e6fc133334f5e54341a16dd9b",
+      "baseline": "c02b06d5f56caa95dda790f706acfb2131d1e7e1d3e3519bf44b86d7bfae79cd",
+      "expectedBaseline": "c02b06d5f56caa95dda790f706acfb2131d1e7e1d3e3519bf44b86d7bfae79cd",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/desktop/vault.test.ts",
+      "expected": "327b33ed37ba4143f331b9be378f834f6915e2e77843ca5c2b6890b40744e701",
+      "candidate": "327b33ed37ba4143f331b9be378f834f6915e2e77843ca5c2b6890b40744e701",
+      "copy": "327b33ed37ba4143f331b9be378f834f6915e2e77843ca5c2b6890b40744e701",
+      "baseline": "6fe6603f53cc298e3b119d588602ac8a5cdcb6e538bb000a34c1f9c79facf192",
+      "expectedBaseline": "6fe6603f53cc298e3b119d588602ac8a5cdcb6e538bb000a34c1f9c79facf192",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/desktop/handlers.ts",
+      "expected": "0c34ced309f9ef4e45ba6a8714aab2b4893f2eeb6673772b01e14b0a71a748bc",
+      "candidate": "0c34ced309f9ef4e45ba6a8714aab2b4893f2eeb6673772b01e14b0a71a748bc",
+      "copy": "0c34ced309f9ef4e45ba6a8714aab2b4893f2eeb6673772b01e14b0a71a748bc",
+      "baseline": "b1141640a7e30035d721390d0584252294b73cb5d5972cf4e0722697e703a593",
+      "expectedBaseline": "b1141640a7e30035d721390d0584252294b73cb5d5972cf4e0722697e703a593",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/desktop/handlers.test.ts",
+      "expected": "537363e6d98b4c952af2c82f29d58df9a65b6ac063abd638684a492b62f87a58",
+      "candidate": "537363e6d98b4c952af2c82f29d58df9a65b6ac063abd638684a492b62f87a58",
+      "copy": "537363e6d98b4c952af2c82f29d58df9a65b6ac063abd638684a492b62f87a58",
+      "baseline": "4b26d74ff99be27bb63729e54bfb3078c2a68338c81f09d2057069b3168bf2ad",
+      "expectedBaseline": "4b26d74ff99be27bb63729e54bfb3078c2a68338c81f09d2057069b3168bf2ad",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/ask.ts",
+      "expected": "26d9e048b09963569c797bc56b4593aed15205d39fb5bf5d0d874f29ae19b2c3",
+      "candidate": "26d9e048b09963569c797bc56b4593aed15205d39fb5bf5d0d874f29ae19b2c3",
+      "copy": "26d9e048b09963569c797bc56b4593aed15205d39fb5bf5d0d874f29ae19b2c3",
+      "baseline": "4375c56f71c8fe26969aeb6e5c3358fcca912262000dfa3f0b4a1f0369e63193",
+      "expectedBaseline": "4375c56f71c8fe26969aeb6e5c3358fcca912262000dfa3f0b4a1f0369e63193",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/ask.test.ts",
+      "expected": "791dc6c779bf6e8ce0d55b156e22f4f1e24abdd843017b5bae16c880490e80cd",
+      "candidate": "791dc6c779bf6e8ce0d55b156e22f4f1e24abdd843017b5bae16c880490e80cd",
+      "copy": "791dc6c779bf6e8ce0d55b156e22f4f1e24abdd843017b5bae16c880490e80cd",
+      "baseline": "e2bca42704031b7dee5b7c274828a14693d8b87556844b63dede593cbd313b53",
+      "expectedBaseline": "e2bca42704031b7dee5b7c274828a14693d8b87556844b63dede593cbd313b53",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/jev-model.ts",
+      "expected": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010",
+      "candidate": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010",
+      "copy": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010",
+      "baseline": "571925a5dbfc44d2cde11693f056408eed52376395fbb176a075754df68d2953",
+      "expectedBaseline": "571925a5dbfc44d2cde11693f056408eed52376395fbb176a075754df68d2953",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/jev-model.test.ts",
+      "expected": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a",
+      "candidate": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a",
+      "copy": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a",
+      "baseline": "f19f3a0d1023b0f59a68db486309fc2ff56a621cc6c2ec5b00e16927346ed849",
+      "expectedBaseline": "f19f3a0d1023b0f59a68db486309fc2ff56a621cc6c2ec5b00e16927346ed849",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/portfolio.ts",
+      "expected": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20",
+      "candidate": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20",
+      "copy": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/portfolio.test.ts",
+      "expected": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5",
+      "candidate": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5",
+      "copy": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Desk/MesaView.tsx",
+      "expected": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+      "candidate": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+      "copy": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+      "baseline": "a2c3e787d1df0ea3f15528d95fe67c004847c974091e7c8c3a89cfa19f7de599",
+      "expectedBaseline": "a2c3e787d1df0ea3f15528d95fe67c004847c974091e7c8c3a89cfa19f7de599",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Desk/MesaView.module.css",
+      "expected": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+      "candidate": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+      "copy": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+      "baseline": "d96183534961a5e6cfdf879e6c9d3425f36a7fef689b15a46bdd31a1783ceb7a",
+      "expectedBaseline": "d96183534961a5e6cfdf879e6c9d3425f36a7fef689b15a46bdd31a1783ceb7a",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Desk/TopbarTools.tsx",
+      "expected": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31",
+      "candidate": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31",
+      "copy": "a2efda21a4f57222f11f0d8a00d91b0266ab9b91bab406ce2def3e674e08ae31",
+      "baseline": "25a097143ac80e759498baedf2bf2824f8e906bcc4e4bdec4af8017e1977b0fe",
+      "expectedBaseline": "25a097143ac80e759498baedf2bf2824f8e906bcc4e4bdec4af8017e1977b0fe",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Desk/TopbarTools.module.css",
+      "expected": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763",
+      "candidate": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763",
+      "copy": "0d432033487fa14cf77d074e15ca8af43feb0cdf484d6986d3d4cd379b285763",
+      "baseline": "8a7a4cafc5909b854195cebce639b980d9568b567051027f316b7029fbc7207c",
+      "expectedBaseline": "8a7a4cafc5909b854195cebce639b980d9568b567051027f316b7029fbc7207c",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/DockWalletTab.tsx",
+      "expected": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14",
+      "candidate": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14",
+      "copy": "0e22d31dc1c556206505e5251e6d2f6a4117bc691ffa8248ec75d0064cea2f14",
+      "baseline": "e29b1cecfe0bb54fb438e14566931295f6ede3cc5d5776b168c931992c73a994",
+      "expectedBaseline": "e29b1cecfe0bb54fb438e14566931295f6ede3cc5d5776b168c931992c73a994",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/PortfolioConsultation.tsx",
+      "expected": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868",
+      "candidate": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868",
+      "copy": "335c71f7e500fec9e701bb97aae7fcbd952acd9b640dd5f52dff49a4139c5868",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Desk/Dock/PortfolioConsultation.module.css",
+      "expected": "87b21117c1131e7c59266d9f04c806c41c5714fbae594fc0a08f78d715f599c5",
+      "candidate": "87b21117c1131e7c59266d9f04c806c41c5714fbae594fc0a08f78d715f599c5",
+      "copy": "87b21117c1131e7c59266d9f04c806c41c5714fbae594fc0a08f78d715f599c5",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/components/Settings/SettingsView.tsx",
+      "expected": "1996d6f12af50e14e34e054899e8cc4aeaeeb00843e8e3f7ba9a19fe5e8bff8b",
+      "candidate": "1996d6f12af50e14e34e054899e8cc4aeaeeb00843e8e3f7ba9a19fe5e8bff8b",
+      "copy": "1996d6f12af50e14e34e054899e8cc4aeaeeb00843e8e3f7ba9a19fe5e8bff8b",
+      "baseline": "a33445995716fa5d8fb8c6a5ab7136ef6713cefd018bf90ba656cf4147725276",
+      "expectedBaseline": "a33445995716fa5d8fb8c6a5ab7136ef6713cefd018bf90ba656cf4147725276",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/lib/settings/client.ts",
+      "expected": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381",
+      "candidate": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381",
+      "copy": "7fe5d3528dd2b31bb1915c4481e1acb480f6daa727c4d1d46607c45ad7807381",
+      "baseline": "245c7a6f1a83fee191f48089f6c78375ce31d4423016c7dbc80f168cdd0556c3",
+      "expectedBaseline": "245c7a6f1a83fee191f48089f6c78375ce31d4423016c7dbc80f168cdd0556c3",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/lib/settings/client.test.ts",
+      "expected": "644b3d5b103f84008cc416b8b2938a2257f038f35cda37c7bda45f7b2fcc5f08",
+      "candidate": "644b3d5b103f84008cc416b8b2938a2257f038f35cda37c7bda45f7b2fcc5f08",
+      "copy": "644b3d5b103f84008cc416b8b2938a2257f038f35cda37c7bda45f7b2fcc5f08",
+      "baseline": "c3453ba230e8a58edec4c5662d1148fca3f0336b14db329dc7d131081264e8f3",
+      "expectedBaseline": "c3453ba230e8a58edec4c5662d1148fca3f0336b14db329dc7d131081264e8f3",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/lib/settings/settings-view-render.test.tsx",
+      "expected": "f4884ce693c8a8c55d33b8f635e4aad82b202f4996936df382249aad61e0bf44",
+      "candidate": "f4884ce693c8a8c55d33b8f635e4aad82b202f4996936df382249aad61e0bf44",
+      "copy": "f4884ce693c8a8c55d33b8f635e4aad82b202f4996936df382249aad61e0bf44",
+      "baseline": "7b73da66c23fdc4d1bf297424d89fb0b77bdf60729f5b4422e365509d22f2d66",
+      "expectedBaseline": "7b73da66c23fdc4d1bf297424d89fb0b77bdf60729f5b4422e365509d22f2d66",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/lib/inonu/client.ts",
+      "expected": "d28a97d64f9e895ba8974c5b6d24bca356e697b79fe6b51c6982b23f028d8fab",
+      "candidate": "d28a97d64f9e895ba8974c5b6d24bca356e697b79fe6b51c6982b23f028d8fab",
+      "copy": "d28a97d64f9e895ba8974c5b6d24bca356e697b79fe6b51c6982b23f028d8fab",
+      "baseline": "6b2790583de08e25aa7f6ac3134ae8b5eb08d7013610f03f6f97d51f81beb7a1",
+      "expectedBaseline": "6b2790583de08e25aa7f6ac3134ae8b5eb08d7013610f03f6f97d51f81beb7a1",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/lib/inonu/portfolio.ts",
+      "expected": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af",
+      "candidate": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af",
+      "copy": "a20d43560f5f11d7e4d645708ce3e59419eb7be6e5386f1f96cc597473d2d1af",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/lib/inonu/portfolio.test.ts",
+      "expected": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad",
+      "candidate": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad",
+      "copy": "6a89a4318f41e56b58e00256a6ee3fb8b6c3f2044d9f67b4d772a6f44a0f0bad",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/http.ts",
+      "expected": "9fceac251a0101ebaa1c5208fcdb3b86c7c7f04a8c26d3cfa4f0dae6aa344030",
+      "candidate": "9fceac251a0101ebaa1c5208fcdb3b86c7c7f04a8c26d3cfa4f0dae6aa344030",
+      "copy": "9fceac251a0101ebaa1c5208fcdb3b86c7c7f04a8c26d3cfa4f0dae6aa344030",
+      "baseline": "412b487933cd941924e6321f164322be3299fd6be36415d34aa99fd86ff8ad23",
+      "expectedBaseline": "412b487933cd941924e6321f164322be3299fd6be36415d34aa99fd86ff8ad23",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/inonu/http.test.ts",
+      "expected": "22582c1d160f71e6a581822ebbb640a05367ae0ab537db814f816d3d33a8f64a",
+      "candidate": "22582c1d160f71e6a581822ebbb640a05367ae0ab537db814f816d3d33a8f64a",
+      "copy": "22582c1d160f71e6a581822ebbb640a05367ae0ab537db814f816d3d33a8f64a",
+      "baseline": "32e7965ac116fd4bed1b38408eb6d6ec0ca173894d830e2c6fa6ecb7a3a90495",
+      "expectedBaseline": "32e7965ac116fd4bed1b38408eb6d6ec0ca173894d830e2c6fa6ecb7a3a90495",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "web/src/lib/inonu/client.test.ts",
+      "expected": "4f15fa0a010aac9d5427512da41f7aece1b7f3bedfef0c0d804389ed53fbaab7",
+      "candidate": "4f15fa0a010aac9d5427512da41f7aece1b7f3bedfef0c0d804389ed53fbaab7",
+      "copy": "4f15fa0a010aac9d5427512da41f7aece1b7f3bedfef0c0d804389ed53fbaab7",
+      "baseline": "9c5967a7b67b6de54e02a8f62e33ffe259ded5392f3c6c9cecc14d4edbe6671f",
+      "expectedBaseline": "9c5967a7b67b6de54e02a8f62e33ffe259ded5392f3c6c9cecc14d4edbe6671f",
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "task implementation with preexisting changes preserved"
+    },
+    {
+      "path": "src/outcomes/decision-log.test.ts",
+      "expected": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+      "candidate": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+      "copy": "9aa8f87a72f9a2b772ec0c543c5555465d07c7f9b59466fe4ffa2608fab3b013",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "root regression test; preexisting concurrent implementation preserved"
+    },
+    {
+      "path": "src/outcomes/live-costs.ts",
+      "expected": "fe1af000bde21925168fa01e19a2231bbcaaa3f69ae471b81fa7f0645d68f36b",
+      "candidate": "fe1af000bde21925168fa01e19a2231bbcaaa3f69ae471b81fa7f0645d68f36b",
+      "copy": "fe1af000bde21925168fa01e19a2231bbcaaa3f69ae471b81fa7f0645d68f36b",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "additive live cost seam; preexisting wire behavior preserved"
+    },
+    {
+      "path": "src/outcomes/live-costs.test.ts",
+      "expected": "51a69298b5d3b2661265078f9b69b2a7db9098cc27b3db0fbdc403fc5bce07ce",
+      "candidate": "51a69298b5d3b2661265078f9b69b2a7db9098cc27b3db0fbdc403fc5bce07ce",
+      "copy": "51a69298b5d3b2661265078f9b69b2a7db9098cc27b3db0fbdc403fc5bce07ce",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "additive live cost seam; preexisting wire behavior preserved"
+    },
+    {
+      "path": "src/outcomes/wire.ts",
+      "expected": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+      "candidate": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+      "copy": "0bb481ad06a93d60486bb6d2d5321413fb08442649b87b36fa56f1b71a866459",
+      "baseline": null,
+      "expectedBaseline": null,
+      "preintegration": null,
+      "expectedPreintegration": null,
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "additive live cost seam; preexisting wire behavior preserved"
+    },
+    {
+      "path": "web/src/components/Desk/panels/PriceChart.module.css",
+      "expected": "725b33a9db9f18cbd561f348dbb85372c29c72e3736efde919f85d2171f41035",
+      "candidate": "725b33a9db9f18cbd561f348dbb85372c29c72e3736efde919f85d2171f41035",
+      "copy": "725b33a9db9f18cbd561f348dbb85372c29c72e3736efde919f85d2171f41035",
+      "baseline": "c3c90dd70f71717181a2530aa657949516263bfca87678db736becb9d95f2262",
+      "expectedBaseline": "c3c90dd70f71717181a2530aa657949516263bfca87678db736becb9d95f2262",
+      "preintegration": "916670a862909d12061b0199eb3b57807fda821a04d95ff15b01d8ba9b07976b",
+      "expectedPreintegration": "916670a862909d12061b0199eb3b57807fda821a04d95ff15b01d8ba9b07976b",
+      "candidateMatches": true,
+      "copyMatches": true,
+      "baselineMatches": true,
+      "preintegrationMatches": true,
+      "ownership": "root only mobile popover block; preexisting concurrent toolbar CSS preserved"
+    }
+  ],
+  "support": [
+    {
+      "path": "src/outcomes/decision-log.ts",
+      "candidate": "316f923a065db751660d225d824e485c7b8e5a48b7063d11941b49dd501411b0",
+      "copy": "316f923a065db751660d225d824e485c7b8e5a48b7063d11941b49dd501411b0"
+    },
+    {
+      "path": "src/verdict/judge.ts",
+      "candidate": "5d5a9fb8e5b85143e463eac9d7998cbcecaeab28c59d84927d542f69770987c4",
+      "copy": "5d5a9fb8e5b85143e463eac9d7998cbcecaeab28c59d84927d542f69770987c4"
+    },
+    {
+      "path": "src/outcomes/wire.test.ts",
+      "candidate": "0113ff744cd34044245dfa0e8269e52231f9e6354ffbcaab96e5598b308aebd1",
+      "copy": "0113ff744cd34044245dfa0e8269e52231f9e6354ffbcaab96e5598b308aebd1"
+    },
+    {
+      "path": "web/src/lib/purity-bundle.test.ts",
+      "candidate": "88e2f2f1a71037adb3811dca8cd6e74c6b2f4fb1038593e987baa590d59de337",
+      "copy": "88e2f2f1a71037adb3811dca8cd6e74c6b2f4fb1038593e987baa590d59de337"
+    },
+    {
+      "path": "web/src/lib/mesa/layout.test.ts",
+      "candidate": "436613c226bc410aeb5ca1a3cdd0ca5a7da5386631f2880b889def464380ab44",
+      "copy": "436613c226bc410aeb5ca1a3cdd0ca5a7da5386631f2880b889def464380ab44"
+    },
+    {
+      "path": "web/src/lib/mesa/mesa-render.test.tsx",
+      "candidate": "778de7b10825f34be30816e8caaff740debdcff2b056d85ebd55e37c0f76e98a",
+      "copy": "778de7b10825f34be30816e8caaff740debdcff2b056d85ebd55e37c0f76e98a"
+    },
+    {
+      "path": "web/src/lib/desk/ui/panels-render.test.tsx",
+      "candidate": "276fb16daf5ca9a99c29de7bc296a59ac5a68fbd939898c5ca2871591bc40ab5",
+      "copy": "276fb16daf5ca9a99c29de7bc296a59ac5a68fbd939898c5ca2871591bc40ab5"
+    }
+  ],
+  "extraEvidence": [
+    {
+      "path": "review-candidate/change-manifest.json",
+      "sha256": "e95cf6f907d9fad9184de72f396e5f605f9a7d2c0d1de8ec477a5ea76e300ecb"
+    },
+    {
+      "path": "review-candidate/docs/sdd/mesa-decisao-20261013/SPEC.md",
+      "sha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298"
+    },
+    {
+      "path": "review-candidate/docs/sdd/mesa-decisao-20261013/REPORT.md",
+      "sha256": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779"
+    },
+    {
+      "path": "visual-results.json",
+      "sha256": "b00414004fe3a0595cf2fbcb0cfafc8b297cbfd1e54428220b8e3b98eb9b6f12"
+    },
+    {
+      "path": "chart-ui-results.json",
+      "sha256": "34dfacc7cb59063288afc757f7ec6a935d4e7159879fc19794c23820667b33c9"
+    },
+    {
+      "path": "wallet-ui-results.json",
+      "sha256": "3e861a262c9f34e7313f34afd6de81a5dcdd8841e3557ee61c0ce98ed4732e57"
+    },
+    {
+      "path": "final-web-mobile.log",
+      "sha256": "ef9251fbf47dacde56a9d99b3d0ecb7657b9e91b4d477f58b4873a5cfeb5f990"
+    },
+    {
+      "path": "final-build-mobile.log",
+      "sha256": "c883d2a6995b0668499238535752df0120fb8a960a654a802a2c537178551c39"
+    },
+    {
+      "path": "final-concurrent-tests.log",
+      "sha256": "131dd5cbb8399aa4c8b73c6318d3072471d1193ff3bb5c5baab3315495825578"
+    }
+  ],
+  "inspectedFinalDocuments": [
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\sdd\\mesa-decisao-20261013\\REPORT.md",
+      "sha256": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\sdd\\mesa-decisao-20261013\\verification.md",
+      "sha256": "77ed3bb1bd2e11b97001362d07a5e3851d8c8d31af217b8713a07c0935791b02"
+    },
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\docs\\sdd\\mesa-decisao-20261013\\evidence\\concurrent-sync.json",
+      "sha256": "5c05a0fcb48eeee935ddf034a6643458996eeefb551eb6b2d6d71319b5611349"
+    }
+  ],
+  "independentFinalEvidence": [
+    {
+      "path": "evidence/mobile-regression.log",
+      "sha256": "dba486f8c66283a4b54664d5cdb2ba823a51c06acd784655a1ae2fc4ad2b381f"
+    },
+    {
+      "path": "evidence/concurrent-sync-qualified.log",
+      "sha256": "2a45ed4f17ddb71be0c2e8ac778ffef89562385115fdc2846645ac59021a9dc5"
+    },
+    {
+      "path": "evidence/final-report.md",
+      "sha256": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779"
+    },
+    {
+      "path": "evidence/final-verification.md",
+      "sha256": "77ed3bb1bd2e11b97001362d07a5e3851d8c8d31af217b8713a07c0935791b02"
+    },
+    {
+      "path": "evidence/final-concurrent-sync.json",
+      "sha256": "5c05a0fcb48eeee935ddf034a6643458996eeefb551eb6b2d6d71319b5611349"
+    }
+  ],
+  "finalCandidateDocuments": [
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/REPORT.md",
+      "candidate": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779",
+      "snapshot": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779",
+      "snapshotPath": "evidence/final-report.md"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/verification.md",
+      "candidate": "77ed3bb1bd2e11b97001362d07a5e3851d8c8d31af217b8713a07c0935791b02",
+      "snapshot": "77ed3bb1bd2e11b97001362d07a5e3851d8c8d31af217b8713a07c0935791b02",
+      "snapshotPath": "evidence/final-verification.md"
+    }
+  ]
+}

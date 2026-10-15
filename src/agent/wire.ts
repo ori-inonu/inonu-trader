@@ -23,6 +23,8 @@ import { binaryMatches, resolveCliPath, createCliExecutor, createEntryQuoter, cr
 import { configFile, createConfigStore, type ConfigPatch } from "./config";
 import { capRaised, type PolicyMirror } from "./gate";
 import { createCycleRunner, type CycleReport, type Executor } from "./cycle";
+import { cachedImpactReader, impactOfQuote } from "./entry-cost";
+import { createRecorders } from "./recording";
 import { createFileAgentLedger } from "./ledger";
 import { createBookReader, createEcosystemReader, createHoldingFactsReader, createMarketContext, createMomentumReader, createPriceLookup, createTimingReader, okxPublicCandles, okxPublicDerivatives, type BalanceSource, type PublicCandles, type PublicDerivatives } from "./live";
 import { createJevAgentModel, questionsDigest, type AgentModel } from "./model";
@@ -35,6 +37,9 @@ import { executionGuards } from "./guards";
 import { createFeeMemory } from "./fees";
 import { decisionMetadata, decisionVersionOf, placarEvaluatorHash } from "./decision-metadata";
 import { buildMemoryBrief, effectiveLegend, type MemoryHookDeps } from "./memory-hook";
+import { createContextOpportunityDispatcher } from "../decision-review/context-events";
+import type { PulseReading } from "../pulse/pulse";
+import { createMacroBridge, createMacroContext, type MacroBridge, type MacroContext } from "./macro-context";
 import { buildAnalysis, type AnalysisView } from "./analysis";
 import { eventsAllowed, priceMoveEvents, pricesOf } from "./event-source";
 import type { QuoteFacts } from "./quote-facts";
@@ -44,7 +49,7 @@ import { agentStateFile, createAgentState, DISCLOSURE, isPaused, type RunState }
 /** The first line of the stop file THIS APP writes when it disconnects and cannot be sure the disconnection was saved. A stop file without it was placed by a person, and connecting does not remove it. */
 export const STOP_MARK = "inonu-agent: stop file written by the app when it disconnected";
 import { DISCIPLINE, lapsedPause } from "./autonomy";
-import { deriveSettings, effectiveIntervalMin, HOT_INTERVAL_MIN, hotWithinQuota, OWNER_AUTHORIZATIONS, OWNER_PROFILE, type EffectiveSettings, type OwnerProfile } from "./autopilot";
+import { boldHotIntervalMin, deriveSettings, effectiveIntervalMin, HOT_INTERVAL_MIN, hotWithinQuota, OWNER_AUTHORIZATIONS, OWNER_PROFILE, type EffectiveSettings, type OwnerProfile } from "./autopilot";
 import { createMandateStore, mandateFileStore } from "./mandate";
 import type { AgentService, AgentStatus, AuthorityView, BookStatus, ConfigChange, ConnectChange, PositionRow, Readiness, ResolveResult, WalletAction, WalletSetupResult, WalletSetupView } from "./service";
 import type { Book, Mode } from "./types";
@@ -70,6 +75,9 @@ const LIMITED_FACTS_TTL_MS = 60_000;
 
 /** How many ledger records the cohort of the memory hook is searched in (the ledger keeps this many in memory). */
 const MEMORY_TAIL_FOR_COHORT = 500;
+/** How often the pulse is read for material facts between the looks, in ms, and how old an observation may be when it is told to the queue (the macro context's own bound: three minutes). */
+const MACRO_POLL_MS = 5_000;
+const MACRO_EVENT_MAX_AGE_MS = 180_000;
 
 export interface AgentServiceOptions {
   /** How often the guard looks over the positions between the cycles, in ms; 0 turns it off. Default 45 s. */
@@ -95,6 +103,8 @@ export interface AgentServiceOptions {
   readonly eventMinGapMs?: number;
   /** The closing of the purchases the model leaned to (closing.ts), in shadow: on by default, `false` turns it off. */
   readonly closing?: boolean;
+  /** The durable record of what the Jev answered and of the prices the cycle already reads, for the laboratory of the autoevolution (recording.ts): on by default, `false` turns it off. */
+  readonly recording?: boolean;
   /** Starts the scheduler. The launcher turns it on; tests leave it off. */
   readonly start?: boolean;
   readonly schedule?: (ms: number, fn: () => void) => () => void;
@@ -116,6 +126,8 @@ export interface AgentServiceOptions {
   readonly minBuyUsd?: (chainIndex: string) => number;
   /** Where the latest reading of System One is kept. */
   readonly systemOneFile?: string;
+  /** The pulse of the market (src/pulse, ADENDO-E E1): the minute-level regime of BTC and SOL from one live feed. With it the Brief carries the macro context (ten fields per market, from snapshots captured once by hash) and a material move can ask for a look through the SAME flight of the scheduler; the proof of what the Brief carried is the only acknowledgement. OFF unless the host builds one. */
+  readonly pulse?: { read(): PulseReading };
   /**
    * The memory hook of the Brief (memory-hook.ts), OFF by default: it exists only when this is given AND `enabled` is true. `read` is the batch reader of the captured experiences, bound by the host to a read-only store (the agent
    * never opens a writer on it); `cohortSize` is how many of the latest cycles of the ledger make the explicit cohort (default 24); `maxBytes` is the room the Brief leaves for the block (a block that does not fit is left out, never cut).
@@ -252,7 +264,15 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       return false;
     }
   };
-  const intervalNow = (): number => (configStore.get().auto ? effectiveIntervalMin(settings().intervalMin, marketHot() && withinQuota()) : settings().intervalMin);
+  // under the owner's bold profile the hot interval is the fastest the day's capacity of consultations can pay (autopilot.ts `boldHotIntervalMin`): what is left of the capacity over what is left of the UTC day, never under one minute.
+  // The capacity itself still covers one look every `HOT_INTERVAL_MIN` minutes (`rhythmMin` below), so the cap is the limit; every other profile keeps the two minutes.
+  const hotIntervalNow = (): number => {
+    if (ownerProfile !== "arrojado") return HOT_INTERVAL_MIN;
+    const s = budget.status();
+    const now = localNow();
+    return boldHotIntervalMin({ remainingConsults: s.limits.maxConsultsPerDay - s.consults, remainingMs: 86_400_000 - (((now % 86_400_000) + 86_400_000) % 86_400_000) });
+  };
+  const intervalNow = (): number => (configStore.get().auto ? effectiveIntervalMin(settings().intervalMin, marketHot() && withinQuota(), hotIntervalNow()) : settings().intervalMin);
   const settings = (): EffectiveSettings => {
     const now = localNow();
     if (settingsCache !== null && now - settingsCache.atMs < 10_000) return settingsCache.value;
@@ -334,6 +354,8 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   // the allowlisted facts of the quote of each order (quote-facts.ts), handed over by the executor as it reads the quote and written on the order record by the cycle; the newest few hundred are kept, in memory only
   const quotes = new Map<string, QuoteFacts>();
   // the read-only quote of an entry, for the closing: the same tool and the same guard as the executor, asked for the quote only
+  // the durable record of the answers and of the price path, for the laboratory (recording.ts): append only, derived, no new request, best effort
+  const recorders = options.recording === false ? null : createRecorders({ dir, now: localNow });
   const entryQuoter = createEntryQuoter({ runner, config: () => configStore.get(), book: () => lastBook ?? guardBook, timeoutMs: 30_000, now: localNow });
   const executor: Executor = createCliExecutor({
     runner,
@@ -567,22 +589,31 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   let lookedAt: ReadonlyMap<string, number> = new Map();
   let lookingAt: ReadonlyMap<string, number> = new Map();
   const eventMinGapMs = options.eventMinGapMs ?? EVENT_MIN_GAP_MS;
+  // readiness only (event-source.ts `eventsAllowed`): a day whose budget is already spent does not pay a sweep of the wallet and the market for a look the model cannot take
+  const eventAdmission = (): boolean =>
+    eventsAllowed({
+      connected: state.get().connected,
+      lockHeld: lock.held(),
+      closing,
+      auto: configStore.get().auto,
+      lastCycleAtMs: scheduler.status().lastAtMs,
+      nowMs: localNow(),
+      minGapMs: eventMinGapMs,
+      budgetOk: budget.check(EVENT_TOKEN_ESTIMATE).ok,
+    });
   const events = createOpportunityDispatcher({
     now: localNow,
-    // readiness only (event-source.ts `eventsAllowed`): a day whose budget is already spent does not pay a sweep of the wallet and the market for a look the model cannot take
-    allowed: () =>
-      eventsAllowed({
-        connected: state.get().connected,
-        lockHeld: lock.held(),
-        closing,
-        auto: configStore.get().auto,
-        lastCycleAtMs: scheduler.status().lastAtMs,
-        nowMs: localNow(),
-        minGapMs: eventMinGapMs,
-        budgetOk: budget.check(EVENT_TOKEN_ESTIMATE).ok,
-      }),
+    allowed: eventAdmission,
     request: () => scheduler.requestCycle(),
   });
+  // the macro market context (OFF unless the host gives a pulse): the SAME admission, the SAME flight of the scheduler, and an acknowledgement that is only ever the proof of the look that was made
+  let macroEvents: ReturnType<typeof createContextOpportunityDispatcher> | null = null;
+  const macro: MacroContext | null =
+    options.pulse === undefined
+      ? null
+      : createMacroContext({ pulse: options.pulse, now: localNow, maxAgeMs: MACRO_EVENT_MAX_AGE_MS, notify: (event) => macroEvents?.notify(event) });
+  const macroBridge: MacroBridge | null = macro === null ? null : createMacroBridge({ macro, requestCycle: () => scheduler.requestCycle() });
+  if (macroBridge !== null) macroEvents = createContextOpportunityDispatcher({ now: localNow, maxAgeMs: MACRO_EVENT_MAX_AGE_MS, allowed: eventAdmission, request: (batch) => macroBridge.request(batch) });
 
   const cycles = createCycleRunner({
     state: runState,
@@ -602,6 +633,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     requireOwnerPolicy: policyRequired,
     onGuardBook: (b) => {
       guardBook = b;
+      recorders?.recordBook(b, "guard");
       for (const e of priceMoveEvents({ looked: lookedAt, book: b, plans, nowMs: localNow() })) events.notify(e);
     },
 
@@ -609,14 +641,20 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     // only the verified view is shown and used to pick a settlement coin: a claimed value nobody could pay is never displayed as capital
     onBook: (book) => {
       lastBook = book;
+      recorders?.recordBook(book, "look");
       lookingAt = pricesOf(book);
       recordEquity(book);
     },
     holdingFacts: (book, signal) => factsReader.read(book, signal),
-    ecosystem: (saldo, signal) => ecosystemReader.read(saldo, signal),
+    ecosystem: async (saldo, signal) => {
+      const eco = await ecosystemReader.read(saldo, signal);
+      recorders?.recordEco(eco);
+      return eco;
+    },
     timingOf: (facts, signal) => timingReader.read(facts, signal),
     momentumOf: (facts, signal) => momentumReader.read(facts, signal),
     context: () => marketContext.get(),
+    ...(macroBridge === null ? {} : { macro: macroBridge.port }),
     // the model reads its own measured record: how often each kind of decision beat the alternative one hour later, from the last two weeks
     execFacts: () => execBrief(fills.all()),
     ...(options.memory === undefined || !options.memory.enabled
@@ -656,6 +694,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       return Object.keys(record).length === 0 ? null : record;
     },
     onConsult: (entry, meta) => {
+      recorders?.recordConsult(entry, meta);
       let line = "";
       try {
         const path = join(dir, "briefs.jsonl");
@@ -717,6 +756,15 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
           },
         }),
     riskPct: () => settings().riskPct,
+    // the price impact of the entry quote, read before the model is asked so that it is not offered plans the executor will refuse (entry-cost.ts): the same read-only quote of the closing, never signed, never sent
+    ...(options.closing === false
+      ? {}
+      : {
+          entryCost: cachedImpactReader(async (order, signal) => {
+            const read = await entryQuoter.read(order, { cycleId: "sonda", requestId: `sonda-${localNow()}`, signal });
+            return read.ok ? impactOfQuote(read.raw) : null;
+          }, localNow),
+        }),
     boldConviction: () => ownerProfile === "arrojado",
     reserveShare: () => settings().reserveShare,
     mandate: () => ({ mandate: settings().mandate, aggressiveOpen: settingsCache?.open ?? aggressiveOpen() }),
@@ -744,6 +792,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       // a fact held back (the gap since the last cycle was not gone, the budget not ready) is looked at again after each pass of the guard, which is when the same fact is seen again; no await: this pass never waits for the
       // cycle it may start (that cycle waits for THIS pass instead, in the scheduler)
       events.wake();
+      macroEvents?.wake();
       return out;
     },
   };
@@ -767,7 +816,8 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     }),
     before: async () => {
       await reconcileReceipts(AbortSignal.timeout(30_000));
-      await (options.syncClock ?? (() => syncOkxClock()))().catch(() => null);
+      // the default measurement goes through the fetch this service was given (never the global one); a host `syncClock` still replaces it whole
+      await (options.syncClock ?? (() => syncOkxClock({ fetch: (url, init) => fetchImpl(url, init) })))().catch(() => null);
       await marketContext.refresh(AbortSignal.timeout(20_000));
     },
     after: async () => {
@@ -777,9 +827,26 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       disciplineStep();
       // a fact that could not be reviewed for want of readiness is looked at again now that a cycle has ended
       events.wake();
+      macroEvents?.wake();
     },
   });
   if (options.start === true) scheduler.start();
+  // the pulse is read every few seconds for material facts, with the scheduler's own timer; a closed service reads nothing more
+  let cancelMacroPoll: (() => void) | null = null;
+  const armMacroPoll = (): void => {
+    const timerOf =
+      options.schedule ??
+      ((ms: number, fn: () => void) => {
+        const timer = setTimeout(fn, ms);
+        return () => clearTimeout(timer);
+      });
+    cancelMacroPoll = timerOf(MACRO_POLL_MS, () => {
+      if (closing) return;
+      macro?.poll();
+      armMacroPoll();
+    });
+  };
+  if (options.start === true && macro !== null) armMacroPoll();
 
   /**
    * The agent's own discipline (AUT-31), after each cycle and its measurements: a pause that has run its time is lifted, and a loss or a measurement that turned against the trading opens the circuit breaker, which
@@ -1048,6 +1115,9 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       if (closed !== null) return closed;
       closing = true;
       events.stop();
+      macroEvents?.stop();
+      cancelMacroPoll?.();
+      cancelMacroPoll = null;
       scheduler.stop();
       // eslint-disable-next-line prefer-const
       let attempt: Promise<void> | null = null;

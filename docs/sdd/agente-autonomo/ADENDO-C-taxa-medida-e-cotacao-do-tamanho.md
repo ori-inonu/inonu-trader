@@ -48,3 +48,13 @@ Ate la os tres tetos de custo do executor continuam e a lacuna esta dita na tela
 - A taxa estimada na cotacao e uma previsao: a taxa real pode ser maior (Solana com prioridade, EVM em congestionamento). FEE-4 valida contra a cotacao da propria ordem, e a reserva por posicao tem uma taxa de folga so em numero de posicoes, nao em multiplicador.
 - Sem taxa medida o nativo fica preso: com a carteira atual (cerca de US$ 1 de SOL) isso nao muda nada na pratica, e e mais seguro que vender nativo sem saber.
 - Mudar `exit.ts`, `cli.ts`, `cycle.ts`, `model.ts` e `wire.ts` quebra o freeze de 2026-10-14: novo manifesto e nova qualificacao do Codex.
+
+## 6. Estado em 2026-10-15 (manha)
+
+| ID | Estado |
+| --- | --- |
+| FEE-1 | feito: `fees.ts`, `fees.json` gravado a cada cotacao de compra ou venda (`wire.ts`, `onQuote` recebe rede e lado) |
+| FEE-2 | NAO feito, de proposito, e FECHADO por decisao do dono em 2026-10-15 ("manter US$ 5 fixo por enquanto"): o piso fixo continua e nenhuma margem em numero de transacoes foi escolhida. Motivo tecnico original: uma reserva por taxa medida SEM margem e menos segura que o piso fixo (a taxa cotada e previsao; sem gas o agente perde a saida de todas as posicoes da rede). O piso de US$ 5 continua como salvaguarda fisica declarada (`autopilot.guards.nativeReserve.kind: "fixa"`). Trocar exige escolher uma margem em numero de transacoes (decisao do dono ou do Codex) e dar ao Jev a taxa por rede, que ja chega (FEE-3) |
+| FEE-3 | feito: chave `k` em cada compra do Brief, so onde ha taxa medida; legenda `compras.k` |
+| FEE-4 | feito: antes de assinar, se o saldo do coin nativo da rede esta listado, exato e menor que o `estimateGasFee` da cotacao (uma venda do proprio nativo desconta o que vende), a ordem falha limpa com `taxa_sem_saldo`; sem estimativa, sem saldo listado ou com saldo inexato nada e recusado (`cli.ts`, `cli.test.ts`) |
+| FEE-5 | HUD: a reserva fixa aparece em LIMITES; a taxa medida por rede ainda nao tem linha propria (precisa expor `fees` no status) |

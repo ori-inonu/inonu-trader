@@ -3,6 +3,7 @@ import { DEFAULT_RESEARCH_POLICY } from '../src/okx-market/okx-opportunities';
 import { createSyntheticOkxClient, SYNTHETIC_SCAN_TIME_MS, SYNTHETIC_PROTOCOL_ID } from '../src/okx-market/okx-fixture';
 import { createOkxReadOnlyClient } from '../src/okx-market/okx-api';
 import type { MemeStage } from '../src/okx-market/okx-api';
+import { okxNow, syncOkxClock } from '../src/okx-clock';
 
 class UsageError extends Error {}
 function options(args: string[]) {
@@ -34,8 +35,9 @@ async function main() {
   } : (() => {
     const apiKey = process.env.OKX_WEB3_API_KEY, secret = process.env.OKX_WEB3_API_SECRET, passphrase = process.env.OKX_WEB3_API_PASSPHRASE;
     if (![apiKey, secret, passphrase].every(x => typeof x === 'string' && x.trim().length > 0 && !/[\r\n]/.test(x))) throw new UsageError('Modo live exige credenciais OKX Web3 completas no ambiente local.');
-    return { client: createOkxReadOnlyClient({ credentials: { apiKey: apiKey!, secret: secret!, passphrase: passphrase! } }), ...selected, now: Date.now, source: 'okx_authenticated' as const };
+    return { client: createOkxReadOnlyClient({ credentials: { apiKey: apiKey!, secret: secret!, passphrase: passphrase! }, now: okxNow }), ...selected, now: Date.now, source: 'okx_authenticated' as const };
   })();
+  if (selected.mode === 'live') await syncOkxClock(); // after the scope and credentials are validated; OKX refuses a signature more than 30 s off its clock
   const result = await scanOpportunities({ ...input, policy: DEFAULT_RESEARCH_POLICY });
   console.log(JSON.stringify(result, null, 2));
 }

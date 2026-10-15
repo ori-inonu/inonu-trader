@@ -43,6 +43,17 @@ export function sha256Hex(text: string): string {
   return createHash("sha256").update(text, "utf8").digest("hex");
 }
 
+/**
+ * A provider value reduced to something that is always safe to hash: strings, booleans and finite numbers stay as they are;
+ * anything else (an object, an array, NaN, Infinity from a raw 1e999) becomes null. Use it for provider fields that only feed
+ * an identifier, so hostile input can never make a builder throw after the answer was paid for.
+ */
+export function safeScalar(value: unknown): string | number | boolean | null {
+  if (typeof value === "string" || typeof value === "boolean") return value;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  return null;
+}
+
 export function hashOf(value: unknown): string {
   return sha256Hex(canonicalJson(value));
 }

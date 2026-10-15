@@ -1,0 +1,28 @@
+{
+  "status": "assessed",
+  "receiptId": "3f836341-1da8-49df-ad81-a4988eee9383",
+  "inputDigest": "1e8aba83b5f3444dd065c8b5c6893136aa477015c393cec6cfd27459531dbce5",
+  "model": "jev-1.13.0",
+  "recommendation": "shared_source_selection",
+  "confidence": 0.97,
+  "probability": 0.98,
+  "usage": {
+    "input_tokens": 537,
+    "output_tokens": 57
+  },
+  "latencyMs": 348,
+  "cost": null,
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "earlierReceipt": {
+    "receiptId": "91405681-6f04-4f7a-a92b-6463cbac7398",
+    "recommendation": "explicit_source",
+    "inputDigest": "306d88ce5bbbfb1184738f7d7813cabd2f9ec85846cfec78c05e8606c19dbc69",
+    "usage": {
+      "input_tokens": 588,
+      "output_tokens": 56
+    },
+    "latencyMs": 349,
+    "cost": null
+  }
+}

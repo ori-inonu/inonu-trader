@@ -3,6 +3,7 @@ import { createSyntheticRoundTripReport } from '../src/okx-market/synthetic-roun
 import { createOkxDexReadOnlyClient } from '../src/okx-market/okx-dex';
 import { tokenAddressesEqual } from '../src/okx-market/token-identity';
 import type { RoundTripInput } from '../src/okx-market/round-trip';
+import { okxNow, syncOkxClock } from '../src/okx-clock';
 
 class UsageError extends Error {}
 const scopeFlags = ['--chain', '--token-a', '--token-b', '--decimals-a', '--decimals-b',
@@ -47,7 +48,7 @@ function liveInput(args: string[]): RoundTripInput {
   }
   return { source: 'okx_authenticated', chainIndex, tokenA, tokenB, amountAtomic,
     policy: { maxElapsedMs: 5000, maxImpactMagnitudePercent: 1 },
-    client: createOkxDexReadOnlyClient({ credentials: { apiKey: credentials.apiKey, secret: credentials.secret, passphrase: credentials.passphrase } }) };
+    client: createOkxDexReadOnlyClient({ credentials: { apiKey: credentials.apiKey, secret: credentials.secret, passphrase: credentials.passphrase }, now: okxNow }) };
 }
 
 async function main() {
@@ -61,9 +62,9 @@ async function main() {
       'Sem retry. Cotações não comprovam execução nem lucro líquido.');
     return;
   }
-  const report = args.length === 0
-    ? createSyntheticRoundTripReport()
-    : await quoteRoundTrip(liveInput(args));
+  const live = args.length > 0 ? liveInput(args) : null; // validates the scope and the credentials before any network
+  if (live) await syncOkxClock(); // OKX refuses a signature more than 30 s off its clock
+  const report = live ? await quoteRoundTrip(live) : createSyntheticRoundTripReport();
   console.log(JSON.stringify(report, null, 2));
 }
 if (import.meta.main) main().catch(error => { console.error(error instanceof UsageError ? error.message : 'Falha na consulta DEX.'); process.exitCode = 1; });

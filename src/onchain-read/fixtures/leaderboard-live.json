@@ -1,0 +1,31 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": [
+    {
+      "avgBuyValueUsd": "316.889635930535123457",
+      "lastActiveTimestamp": "1791742545000",
+      "realizedPnlPercent": "159.216943332096611400",
+      "realizedPnlUsd": "236199.109911479380000000",
+      "topPnlTokenList": [
+        {
+          "tokenContractAddress": "TokenPlaceholderAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+          "tokenPnLPercent": "166.09289160636814",
+          "tokenPnLUsd": "236137.0653646411",
+          "tokenSymbol": "STONK"
+        },
+        {
+          "tokenContractAddress": "TokenPlaceholderBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+          "tokenPnLPercent": "5.902380698562765",
+          "tokenPnLUsd": "292.9162865682502",
+          "tokenSymbol": "OTC"
+        }
+      ],
+      "txVolume": "435885.717361809390000000",
+      "txs": "206",
+      "walletAddress": "WalletPlaceholder1111111111111111111111111111",
+      "winRatePercent": "37.5"
+    }
+  ],
+  "msg": ""
+}

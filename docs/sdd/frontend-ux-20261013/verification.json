@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "observedAt": "2026-10-13T17:00:00.971Z",
+  "scope": "Document integrity only; no product tests, build, wallet operations or performance measurement",
+  "requirements": 20,
+  "tasks": 12,
+  "mappedRequirements": 20,
+  "checkedLinks": 31,
+  "inventoryFiles": 1091,
+  "sourceFiles": 442,
+  "acceptanceSha256": "96df61f77df70ada8b47f7c4cdeaabe8cb3b03709a15299f923e7aeec6e4a88f",
+  "errors": []
+}

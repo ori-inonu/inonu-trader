@@ -11,7 +11,7 @@
 import type { EndpointRef } from "../../onchainos/http.ts";
 
 export interface WalletEndpoint extends EndpointRef {
-  readonly id: "balance.all" | "balance.total" | "balance.specific" | "history.byAddress" | "portfolio.overview" | "portfolio.recentPnl";
+  readonly id: "balance.all" | "balance.total" | "balance.specific" | "history.byAddress" | "portfolio.overview" | "portfolio.recentPnl" | "portfolio.latestPnl" | "portfolio.dexHistory" | "portfolio.supportedChain";
   readonly method: "GET" | "POST";
   readonly docUrl: string;
   /** Rows per call that the documentation states, or null. */
@@ -27,6 +27,9 @@ export const WALLET_ENDPOINTS: readonly WalletEndpoint[] = Object.freeze([
   { id: "balance.specific", method: "POST", path: "/api/v6/dex/balance/token-balances-by-address", tier: "unknown", docUrl: `${DOCS}/balance-specific-token-balance`, pageLimit: 20, note: "the page example calls /token-balances; the page does not reconcile the two paths; excludeRiskToken placement is unspecified" },
   { id: "history.byAddress", method: "GET", path: "/api/v6/dex/post-transaction/transactions-by-address", tier: "unknown", docUrl: `${DOCS}/tx-history-transactions-by-address`, pageLimit: 100, note: "six months, descending, limit 20 for one chain and 100 for several; table says transactions, example says transactionList; amount and txFee have no unit" },
   { id: "portfolio.overview", method: "GET", path: "/api/v6/dex/market/portfolio/overview", tier: "unknown", docUrl: `${DOCS}/market-portfolio-overview`, pageLimit: null, note: "one chain per call; timeFrame 1 to 5 (1D, 3D, 7D, 1M, 3M); no pagination; no completeness statement" },
+  { id: "portfolio.latestPnl", method: "GET", path: "/api/v6/dex/market/portfolio/token/latest-pnl", tier: "unknown", docUrl: `${DOCS}/market-portfolio-latest-pnl`, pageLimit: null, note: "one token of one chain; only PnL figures and isPnlSupported (no balance, no cost); the page example does not add up (total 1371.68 against realized -685.4 and unrealized 685.4)" },
+  { id: "portfolio.dexHistory", method: "GET", path: "/api/v6/dex/market/portfolio/dex-history", tier: "unknown", docUrl: `${DOCS}/market-portfolio-dex-history`, pageLimit: 100, note: "begin and end required; 1000 records at most, 100 per call; descending; type 1 buy, 2 sell, 3 transfer in, 4 transfer out; amount and price have no declared unit; no completeness statement" },
+  { id: "portfolio.supportedChain", method: "GET", path: "/api/v6/dex/market/portfolio/supported/chain", tier: "unknown", docUrl: `${DOCS}/market-portfolio-supported-chain`, pageLimit: null, note: "the page example lists only 1 and 501; whether that is the whole list is not stated" },
   { id: "portfolio.recentPnl", method: "GET", path: "/api/v6/dex/market/portfolio/recent-pnl", tier: "unknown", docUrl: `${DOCS}/market-portfolio-recent-pnl`, pageLimit: 100, note: "1000 records at most, 100 per call; descending; no cost basis and no accounting method" },
 ] as const satisfies readonly WalletEndpoint[]);
 

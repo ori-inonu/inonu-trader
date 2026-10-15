@@ -105,6 +105,60 @@ describe("publicReadView", () => {
     expect(publicReadView(read({ state: null, decision: null, insufficient: [] }))).toBeNull();
     expect(publicReadView(read({ state: null }))).toBeNull();
   });
+
+  describe("analysis projection", () => {
+    const analysis = {
+      ageSec: 12,
+      trend: { regime: "up", adx15m: 38.2, efficiency15m: 0.4, emaStack15m: 1, emaStack1h: 0, emaStack4h: 1, extensionAtr15m: 4.2 },
+      structure: {
+        donchianPos1h: 0.9,
+        supportBps: 9.2,
+        supportTouches: 2,
+        resistanceBps: 32.6,
+        resistanceTouches: 1,
+        renkoRun15m: 5,
+        levels: [{ px: 83950, kind: "support", touches: 3, tf: "15m" }],
+      },
+      cost: { assumedRoundTripFeeBps: 20, spreadBps: 0.4, moveToCost: 1.1 },
+    };
+    const viewOf = (a: unknown) => publicReadView(read({ state: { ...state, analysis: a as TapeState["analysis"] } })) as { state: Record<string, unknown> };
+
+    test("a full analysis survives the projection verbatim", () => {
+      const view = viewOf(analysis);
+      expect(view.state.analysis).toEqual(analysis);
+    });
+
+    test("extra keys inside the analysis are dropped, never copied", () => {
+      const dirty = { ...analysis, note: "free text", trend: { ...analysis.trend, provider: "okx" } };
+      const view = viewOf(dirty);
+      expect(view.state.analysis).toEqual(analysis);
+    });
+
+    test("a forbidden key anywhere inside the analysis omits the whole block but keeps the read", () => {
+      const dirty = { ...analysis, structure: { ...analysis.structure, signal: 0.7 } };
+      const view = viewOf(dirty);
+      expect(view.state).not.toBeNull();
+      expect("analysis" in view.state).toBe(false);
+    });
+
+    test("a constraint violation drops only the offending section", () => {
+      const dirty = { ...analysis, trend: { ...analysis.trend, adx15m: 120 } };
+      const view = viewOf(dirty);
+      const projected = view.state.analysis as Record<string, unknown>;
+      expect("trend" in projected).toBe(false);
+      expect(projected.structure).toEqual(analysis.structure);
+      expect(projected.cost).toEqual(analysis.cost);
+    });
+
+    test("an analysis with no surviving section, a malformed one, or a missing one leaves no key", () => {
+      for (const a of [{ ageSec: 3 }, { ageSec: 3, trend: "up" }, "x", 5, null]) {
+        const view = viewOf(a);
+        expect("analysis" in view.state, JSON.stringify(a)).toBe(false);
+      }
+      const plain = publicReadView(read()) as { state: Record<string, unknown> };
+      expect("analysis" in plain.state).toBe(false);
+    });
+  });
 });
 
 describe("publicBoardView", () => {

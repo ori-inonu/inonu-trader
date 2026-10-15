@@ -1,20 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import { LAYOUT_BOOT_SCRIPT } from "@/lib/mesa/layout";
 import { PALETTE_BOOT_SCRIPT } from "@/lib/mesa/preferences";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const inter = localFont({
+  src: "../fonts/inter-latin.woff2",
+  weight: "400 600",
   variable: "--font-inter",
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const geistMono = localFont({
+  src: "../fonts/geist-mono-latin.woff2",
+  weight: "400 600",
   variable: "--font-geist-mono",
   display: "swap",
 });

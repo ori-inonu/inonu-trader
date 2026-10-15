@@ -1,0 +1,106 @@
+
+src\onchain-read\client.test.ts:
+46 |     const { calls, f } = fakeFetch(() => calls.length === 1 ? response : okBody());
+47 |     const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: Date.now, minIntervalMs: 0, timeoutMs: 20 });
+48 |     const first = client.call(REQ, "free");
+49 |     const second = client.call(REQ, "basic");
+50 |     try {
+51 |       expect(await within(first)).toEqual({ ok: false, error: "provider_error", sent: true });
+                                       ^
+error: expect(received).toEqual(expected)
+
+- {
+-   "error": "provider_error",
+-   "ok": false,
+-   "sent": true,
+- }
++ "still_pending"
+
+- Expected  - 5
++ Received  + 1
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:51:35)
+(fail) onchain client > deadline covers stalled HTTP %s body and releases queued calls [206.80ms]
+46 |     const { calls, f } = fakeFetch(() => calls.length === 1 ? response : okBody());
+47 |     const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: Date.now, minIntervalMs: 0, timeoutMs: 20 });
+48 |     const first = client.call(REQ, "free");
+49 |     const second = client.call(REQ, "basic");
+50 |     try {
+51 |       expect(await within(first)).toEqual({ ok: false, error: "provider_error", sent: true });
+                                       ^
+error: expect(received).toEqual(expected)
+
+- {
+-   "error": "provider_error",
+bun test v1.3.14 (0d9b296a)
+-   "ok": false,
+-   "sent": true,
+- }
++ "still_pending"
+
+- Expected  - 5
++ Received  + 1
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:51:35)
+(fail) onchain client > deadline covers stalled HTTP %s body and releases queued calls [218.95ms]
+46 |     const { calls, f } = fakeFetch(() => calls.length === 1 ? response : okBody());
+47 |     const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: Date.now, minIntervalMs: 0, timeoutMs: 20 });
+48 |     const first = client.call(REQ, "free");
+49 |     const second = client.call(REQ, "basic");
+50 |     try {
+51 |       expect(await within(first)).toEqual({ ok: false, error: "provider_error", sent: true });
+                                       ^
+error: expect(received).toEqual(expected)
+
+- {
+-   "error": "provider_error",
+-   "ok": false,
+-   "sent": true,
+- }
++ "still_pending"
+
+- Expected  - 5
++ Received  + 1
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:51:35)
+(fail) onchain client > deadline covers stalled HTTP %s body and releases queued calls [216.04ms]
+(pass) onchain client > queued calls observe newly opened cooldown %s [1.41ms]
+(pass) onchain client > queued calls observe newly opened cooldown %s [1.23ms]
+(pass) onchain client > sends OK-ACCESS headers with a signature computed over the exact request [0.80ms]
+(pass) onchain client > global queue: at most one request per interval [104.98ms]
+(pass) onchain client > no credentials -> no_credentials, never touches fetch [0.48ms]
+(pass) onchain client > maps 401 to %s [0.55ms]
+(pass) onchain client > maps 403 to %s [0.10ms]
+(pass) onchain client > maps 429 to %s [0.07ms]
+(pass) onchain client > maps 500 to %s [0.04ms]
+(pass) onchain client > maps code 50111 to %s [0.28ms]
+(pass) onchain client > maps code 50114 to %s [0.14ms]
+(pass) onchain client > maps code 50011 to %s [0.12ms]
+(pass) onchain client > maps code 99999 to %s [0.10ms]
+(pass) onchain client > network throw, timeout and invalid JSON are provider_error [43.60ms]
+(pass) onchain client > envelope without data -> schema; oversized body refused [0.96ms]
+(pass) onchain client > 402 blocks the tier for an hour; 429 cools down for 30s; status exposes codes [0.61ms]
+(pass) onchain client > 429 opens a 30s cooldown that short-circuits later calls [0.94ms]
+(pass) onchain client > provider msg never propagates and credentials never appear in results [0.50ms]
+(pass) clock skew handling > learns the offset from the Date header and retries 50102 once in the same slot [1.63ms]
+(pass) clock skew handling > a second 50102 inside the same call reports clock_skew, not unauthorized [0.59ms]
+(pass) clock skew handling > 50102 with a Date near the used offset reports clock_skew without retrying [0.36ms]
+(pass) clock skew handling > 401 with an auth code stays provider_unauthorized [0.26ms]
+(pass) clock skew handling > 401 with a non-JSON body stays provider_unauthorized [0.27ms]
+(pass) clock skew handling > body code 50103 maps to provider_unauthorized [0.26ms]
+(pass) clock skew handling > body code 50104 maps to provider_unauthorized [0.05ms]
+(pass) clock skew handling > body code 50105 maps to provider_unauthorized [0.05ms]
+(pass) clock skew handling > body code 50112 maps to provider_unauthorized [0.04ms]
+(pass) clock skew handling > body code 50113 maps to provider_unauthorized [0.04ms]
+(pass) clock skew handling > body code 50038 maps to unsupported_chain [0.32ms]
+(pass) clock skew handling > a small measured skew is not applied and clockOffsetMs is still reported [0.33ms]
+
+3 tests failed:
+(fail) onchain client > deadline covers stalled HTTP %s body and releases queued calls [206.80ms]
+(fail) onchain client > deadline covers stalled HTTP %s body and releases queued calls [218.95ms]
+(fail) onchain client > deadline covers stalled HTTP %s body and releases queued calls [216.04ms]
+
+ 30 pass
+ 3 fail
+ 96 expect() calls
+Ran 33 tests across 1 file. [901.00ms]

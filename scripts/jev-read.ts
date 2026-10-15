@@ -14,6 +14,7 @@
  */
 
 import { resolve } from "node:path";
+import { FileAnalyticsSource } from "../src/jev-read/analytics";
 import { JevTapeModel } from "../src/jev-read/decide";
 import { OkxTapeFeed } from "../src/jev-read/feed";
 import { createHealthHandler, createJevReadHandler, DEFAULT_DASHBOARD_ORIGINS, isJevReadPath } from "../src/jev-read/http";
@@ -24,7 +25,7 @@ import { measureServerClockOffset } from "../src/system-one/clock";
 const ROOT = resolve(import.meta.dir, "..");
 const DAY_MS = 86_400_000;
 const args = process.argv.slice(2);
-const switches = new Set(["--jev", "--observe", "--help", "-h"]);
+const switches = new Set(["--jev", "--observe", "--no-analytics", "--help", "-h"]);
 const values = new Set(["--insts", "--interval", "--max-reads", "--serve", "--warmup", "--model"]);
 
 const seen = new Set<string>();
@@ -47,7 +48,7 @@ if (hasFlag("--help") || hasFlag("-h")) {
   console.log([
     "jev-read: o Jev le a fita da OKX e diz comprar, vender ou manter. Consultivo: nunca assina nem envia.",
     "Modo (obrigatorio): --jev (Jev real) ou --observe (so o estado, sem consultar modelo).",
-    "Flags: --insts <BTC-USDT,...> --interval <ms entre leituras, min 5000> --max-reads <teto de consultas ao modelo em 24 h, contado no diario> --serve <porta> --warmup <ms> --model <id>.",
+    "Flags: --insts <BTC-USDT,...> --interval <ms entre leituras, min 5000> --max-reads <teto de consultas ao modelo em 24 h, contado no diario> --serve <porta> --warmup <ms> --model <id> --no-analytics (ignora o digest Python).",
     "Saida: data/jev-read/latest.json e data/jev-read/reads.jsonl; o backend serve em GET /jev-read.",
   ].join("\n"));
   process.exit(0);
@@ -72,6 +73,8 @@ const servePort = flagValue("--serve") === null ? null : intFlag("--serve", 3100
 
 const statePath = resolve(ROOT, process.env.JEV_READ_STATE_PATH ?? "data/jev-read/latest.json");
 const journalPath = resolve(ROOT, process.env.JEV_READ_JOURNAL_PATH ?? "data/jev-read/reads.jsonl");
+const analyticsPath = resolve(ROOT, process.env.JEV_ANALYTICS_PATH ?? "data/jev-analytics/latest.json");
+const analytics = hasFlag("--no-analytics") ? null : new FileAnalyticsSource(analyticsPath);
 
 if (useJev && !process.env.TYPESAFE_AI_API_KEY) {
   throw new Error("--jev needs TYPESAFE_AI_API_KEY in the environment, for example: bun --env-file=.env scripts/jev-read.ts --jev");
@@ -145,6 +148,16 @@ process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
 await measureClock();
+if (analytics === null) {
+  console.error("jev-read: analises em Python desligadas (--no-analytics)");
+} else {
+  const status = analytics.status(Date.now());
+  console.error(
+    status.present
+      ? `jev-read: analises em Python: presente, ${status.ageSec} s (${analyticsPath})`
+      : `jev-read: analises em Python: ausente (${analyticsPath})`,
+  );
+}
 feed.start();
 every(5_000, () => feed.tick());
 every(600_000, measureClock);
@@ -161,7 +174,7 @@ let cursor = 0;
 while (running && (!useJev || modelReads < maxReads)) {
   const instId = insts[cursor % insts.length]!;
   cursor += 1;
-  const { read, error } = await readRound({ feed, keeper, model, store, instId });
+  const { read, error } = await readRound({ feed, keeper, model, store, instId, analytics: analytics ?? undefined });
   if (error !== null) console.error(`jev-read: ${instId} ${error}`);
   if (read !== null) {
     totalReads += 1;

@@ -1,0 +1,914 @@
+/* The command center of the autonomous agent. Same ramp as the rest of the desk: void < hull < deck < deck-2. State is shown by colour and by words; the result deck and the decision center (Deck.module.css) add motion that is only ever one transition from a value to the next. */
+
+.page {
+  min-height: 100vh;
+  background: var(--bg-void);
+  color: var(--ink);
+  font: var(--fs-base);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+  padding: var(--s3) var(--s6);
+  border-bottom: 1px solid var(--edge);
+  background: var(--bg-hull);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  font: var(--fs-md);
+  letter-spacing: 0.04em;
+}
+
+.nav {
+  display: flex;
+  gap: var(--s1);
+}
+
+.navLink {
+  padding: var(--s2) var(--s4);
+  border-radius: var(--r-pill);
+  color: var(--ink-3);
+  text-decoration: none;
+  font: var(--fs-sm);
+  transition: color var(--dur-fast) var(--ease-snap), background var(--dur-fast) var(--ease-snap);
+}
+
+.navLink:hover {
+  color: var(--ink);
+  background: var(--bg-deck-2);
+}
+
+.navLink[aria-current="page"] {
+  color: var(--ink);
+  background: var(--bg-deck-3);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.anchorLink {
+  color: var(--signal);
+  text-decoration: none;
+}
+
+.connection {
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.content {
+  width: 100%;
+  max-width: var(--card-max);
+  margin: 0 auto;
+  padding: var(--s6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s6);
+}
+
+/* ---- hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--s6);
+  padding: var(--s7);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-lg);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-2);
+}
+
+.eyebrow {
+  margin: 0 0 var(--s2);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.headline {
+  margin: 0;
+  font: var(--fs-lg);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  max-width: 62ch;
+}
+
+.lead {
+  margin: var(--s3) 0 var(--s5);
+  color: var(--ink-2);
+  max-width: 72ch;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  border-left: 1px solid var(--edge);
+  padding-left: var(--s6);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statLabel {
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.statValue {
+  font: var(--fs-readout);
+}
+
+.statNote {
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.actions {
+  display: flex;
+  gap: var(--s3);
+  flex-wrap: wrap;
+}
+
+/* ---- buttons */
+
+.button {
+  appearance: none;
+  border: 1px solid var(--edge-strong);
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s4);
+  font: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-snap), border-color var(--dur-fast) var(--ease-snap);
+}
+
+.button:hover:not(:disabled) {
+  background: var(--bg-deck-3);
+  border-color: var(--edge-focus);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  color: var(--ink-4);
+  cursor: not-allowed;
+}
+
+.primary {
+  background: var(--signal-deep);
+  border-color: var(--signal);
+}
+
+.primary:disabled {
+  background: var(--bg-deck-2);
+  border-color: var(--edge-strong);
+  color: var(--ink-3);
+}
+
+.danger {
+  border-color: var(--sell);
+  color: var(--sell);
+  background: transparent;
+}
+
+.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--sell) 14%, transparent);
+  border-color: var(--sell);
+}
+
+/* ---- the ladder of modes */
+
+.ladder {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s2);
+}
+
+.step {
+  appearance: none;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: var(--bg-hull);
+  color: var(--ink-2);
+  cursor: pointer;
+  font: var(--fs-sm);
+  transition: border-color var(--dur-fast) var(--ease-snap), background var(--dur-fast) var(--ease-snap);
+}
+
+.step:hover:not(:disabled) {
+  border-color: var(--edge-focus);
+  background: var(--bg-deck-2);
+}
+
+.step:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.step:disabled {
+  cursor: not-allowed;
+  color: var(--ink-4);
+}
+
+.stepNow {
+  border-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 10%, var(--bg-hull));
+  color: var(--ink);
+}
+
+.stepTitle {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.stepNote {
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.missing {
+  margin: var(--s3) 0 0;
+  padding: 0;
+  list-style: none;
+  font: var(--fs-xs);
+  color: var(--hold);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ---- the grid under the hero */
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--s6);
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s6);
+  min-width: 0;
+}
+
+.card {
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.cardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.cardTitle {
+  margin: 0;
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cardNote {
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.empty {
+  margin: 0;
+  color: var(--ink-3);
+}
+
+.chip {
+  display: inline-block;
+  padding: 2px var(--s2);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--edge-strong);
+  font: var(--fs-xs);
+  color: var(--ink-2);
+}
+
+.chipBuy {
+  border-color: var(--buy);
+  color: var(--buy);
+}
+
+.chipSell {
+  border-color: var(--sell);
+  color: var(--sell);
+}
+
+.chipHold {
+  border-color: var(--hold);
+  color: var(--hold);
+}
+
+/* ---- orders and the feed */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--s3);
+  align-items: center;
+  padding: var(--s3) 0;
+  border-top: 1px solid var(--edge);
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-weight: 600;
+}
+
+.rowNote {
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.right {
+  text-align: right;
+}
+
+.notes {
+  margin: 0;
+  padding-left: var(--s5);
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+/* ---- the plan of a position: a track from the stop to the target */
+
+.track {
+  position: relative;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+  margin-top: var(--s1);
+}
+
+.trackFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--buy);
+}
+
+.trackLoss {
+  background: var(--sell);
+}
+
+.share {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+  margin-top: var(--s1);
+}
+
+.shareFill {
+  height: 100%;
+  background: var(--signal-deep);
+}
+
+/* ---- the Placar */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--fs-sm);
+}
+
+.table th {
+  text-align: left;
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: var(--s2) var(--s2) var(--s2) 0;
+}
+
+.table td {
+  padding: var(--s2) var(--s2) var(--s2) 0;
+  border-top: 1px solid var(--edge);
+  vertical-align: top;
+}
+
+.verdict {
+  margin: 0;
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--edge-strong);
+  background: var(--bg-hull);
+  color: var(--ink-2);
+}
+
+.verdictGood {
+  border-color: var(--buy);
+}
+
+.verdictWait {
+  border-color: var(--hold);
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s2) var(--s4);
+  margin: 0;
+}
+
+.kv dt {
+  color: var(--ink-3);
+}
+
+.kv dd {
+  margin: 0;
+  text-align: right;
+  font-family: var(--font-mono);
+}
+
+/* ---- configuration form */
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s3) var(--s4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.input {
+  background: var(--bg-well);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-xs);
+  color: var(--ink);
+  padding: var(--s2) var(--s3);
+  font: var(--fs-sm);
+  font-family: var(--font-mono);
+  min-width: 0;
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+
+.hint {
+  font: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.notice {
+  margin: 0;
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--edge-strong);
+  background: var(--bg-deck-2);
+}
+
+.noticeBad {
+  border-color: var(--sell);
+  color: var(--sell);
+}
+
+.noticeOk {
+  border-color: var(--buy);
+}
+
+/* ---- the typed confirmation */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 4, 8, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s6);
+  z-index: 50;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 520px;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-lg);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-3);
+  padding: var(--s6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.dialogTitle {
+  margin: 0;
+  font: var(--fs-lg);
+}
+
+.phrase {
+  font-family: var(--font-mono);
+  padding: var(--s2) var(--s3);
+  border-radius: var(--r-xs);
+  background: var(--bg-well);
+  border: 1px dashed var(--edge-strong);
+  user-select: all;
+}
+
+.warn {
+  margin: 0;
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--hold);
+  color: var(--hold);
+}
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .side {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--edge);
+    padding-top: var(--s5);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: var(--s4);
+  }
+
+  .hero {
+    padding: var(--s5);
+  }
+
+  .ladder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    flex-wrap: wrap;
+    gap: var(--s3);
+    padding: var(--s3) var(--s4);
+  }
+}
+
+/* ---- connecting: the one action of the page, the steps of the agent's own wallet, and the way out */
+
+.connectHero {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.bigButton {
+  padding: var(--s4) var(--s7);
+  font-size: 16px;
+}
+
+.buttonLink {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.walletSteps {
+  list-style: none;
+  margin: 0 0 var(--s4);
+  padding: 0;
+  display: grid;
+  gap: var(--s2);
+}
+
+.walletStep {
+  display: flex;
+  gap: var(--s3);
+  align-items: baseline;
+  color: var(--ink-3);
+  font: var(--fs-sm);
+}
+
+.walletStepNow {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.walletStepDone {
+  color: var(--ink-2);
+}
+
+.walletStepMark {
+  min-width: 52px;
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.addressBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  margin: var(--s4) 0 0;
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-deck-2);
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--edge);
+}
+
+/* ---- the premium layer: depth, hierarchy and the number the person came for. Static, nothing moves. */
+
+.page {
+  background:
+    radial-gradient(1200px 520px at 8% -8%, color-mix(in srgb, var(--signal) 9%, transparent), transparent 62%),
+    radial-gradient(900px 480px at 100% 0%, color-mix(in srgb, var(--buy) 5%, transparent), transparent 60%),
+    var(--bg-void);
+}
+
+.hero {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--signal) 6%, var(--bg-deck)) 0%, var(--bg-deck) 46%, var(--bg-hull) 100%);
+  box-shadow: var(--elev-2), inset 0 1px 0 color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.headline {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.012em;
+}
+
+.card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 2.5%, var(--bg-deck)) 0%, var(--bg-deck) 60%);
+  box-shadow: var(--elev-1), inset 0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.cardTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.cardTitle::before {
+  content: "";
+  width: 3px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--signal);
+  opacity: 0.8;
+}
+
+.statValue,
+.mono,
+.table td,
+.kv dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.statValueBig {
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.modeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 3px var(--s3);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--edge-strong);
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.modeDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-4);
+}
+
+.modeBadge[data-mode="limitado"] {
+  border-color: var(--buy);
+  color: var(--buy);
+}
+
+.modeBadge[data-mode="limitado"] .modeDot {
+  background: var(--buy);
+}
+
+.modeBadge[data-mode="sombra"] {
+  border-color: var(--hold);
+  color: var(--hold);
+}
+
+.modeBadge[data-mode="sombra"] .modeDot {
+  background: var(--hold);
+}
+
+.pausedTag {
+  margin-left: var(--s3);
+  font: var(--fs-xs);
+  color: var(--sell);
+  letter-spacing: 0.04em;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ---- what the wallet is made of */
+
+.alloc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.allocBar {
+  display: flex;
+  height: 10px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  background: var(--track);
+  box-shadow: inset 0 0 0 1px var(--edge);
+}
+
+.allocSeg {
+  height: 100%;
+  min-width: 2px;
+  border-right: 1px solid var(--bg-deck);
+}
+
+.allocSeg:last-child {
+  border-right: 0;
+}
+
+.allocCash {
+  background: var(--buy);
+}
+
+.allocRest {
+  background: var(--ink-4);
+}
+
+.tone0 {
+  background: var(--signal);
+}
+
+.tone1 {
+  background: color-mix(in srgb, var(--signal) 78%, var(--bg-deck));
+}
+
+.tone2 {
+  background: color-mix(in srgb, var(--signal) 60%, var(--bg-deck));
+}
+
+.tone3 {
+  background: color-mix(in srgb, var(--signal) 46%, var(--bg-deck));
+}
+
+.tone4 {
+  background: color-mix(in srgb, var(--signal) 34%, var(--bg-deck));
+}
+
+.tone5 {
+  background: color-mix(in srgb, var(--signal) 24%, var(--bg-deck));
+}
+
+.allocLegend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s5);
+  font: var(--fs-xs);
+  color: var(--ink-2);
+}
+
+.allocItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+@media (max-width: 760px) {
+  .headline {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .statValueBig {
+    font-size: 34px;
+    line-height: 38px;
+  }
+}
+
+.subTitle {
+  margin: var(--s4) 0 0;
+  font: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}

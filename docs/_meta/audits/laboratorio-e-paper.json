@@ -1,0 +1,212 @@
+{
+  "owner": "laboratorio-e-paper",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T11:51:47-03:00",
+  "page": "docs/concepts/laboratorio-e-paper.md",
+  "documents": [
+    {
+      "path": "docs/BACKTEST-EVIDENCE.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Guia atual do replay contábil; as limitações coincidem com a análise presente. Não reexecuta nem autentica os resultados descritos.",
+      "code_refs": ["src/backtest.ts:1-25", "src/backtest-evidence.ts:360-436", "scripts/backtest.ts"],
+      "sha256": "97bea3ec9bb7bd6d1b8b41f4147205065f9da2a0ee6533422cd8d0f0d1e70b57"
+    },
+    {
+      "path": "docs/JEV-LAB-JEV-REAL.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Guia datado de 2026-10-11 confrontado com o script e o chooser atuais; especifica consulta em sombra, tetos e subtração do custo de inferência quando todo custo é conhecido.",
+      "code_refs": ["scripts/jev-lab-real.ts:333-399", "src/lab-jev/jev-chooser.ts:17-21,375-430,449-455"],
+      "sha256": "694b7d51dc1d74ddbdfbd2e32a94f86f4b380606e6063aba099bb83b0176c242"
+    },
+    {
+      "path": "docs/JEV-LABORATORIO-DE-DECISAO.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Guia técnico atual confrontado com fontes, custos e estatísticas; valores de simulações históricas permanecem não reexecutados. A formulação sobre custo por época conflita com o guia do Jev real e a implementação.",
+      "code_refs": ["src/lab/source.ts:5-16,59-70,220-238", "src/lab/candidates.ts:183-235", "src/lab/run.ts:395-420", "src/lab/stats.ts:1-13,43-57,565-629"],
+      "sha256": "9e6130ad84f18f6ef0bb2b910ef047ed1627f636ee07be027e3625b836cd0cf2"
+    },
+    {
+      "path": "docs/PAPER-CAPITAL.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Contrato de ledger paper sintético confrontado com PaperCapital; valores em átomos, custo completo, recuperação e ausência de autorização permanecem coerentes.",
+      "code_refs": ["src/paper-capital.ts:45-81,281-392"],
+      "sha256": "8563f986b5fff078b00350fdbea08c9eca066b0e4584cd347b0dfaaee15dae31"
+    },
+    {
+      "path": "docs/PAPER-SUPERVISOR.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Guia do supervisor local e sintético confrontado com runner, store SQLite e transições persistidas; não descreve conector live.",
+      "code_refs": ["src/paper-supervisor.ts:686-767,778-855", "src/paper-supervisor-store.ts:1-4,322-340", "src/paper-supervisor-runner.ts:20-63"],
+      "sha256": "d8e3cf4c3c628b1b89657f59b017e068702e1e50090e326baf84154053f0120b"
+    },
+    {
+      "path": "docs/sdd/book-replay/PLAN.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Plano declara perfil futuro proposto e não congelado, com implementação e evidência econômica ainda pendentes.",
+      "code_refs": ["docs/sdd/book-replay/README.md:1-7", "docs/sdd/book-replay/ACCEPTANCE.json:1-16,84-95"],
+      "sha256": "37398745f28f15bf0546eeadc36748f643d023fecf9bda5598c7ddb1003cfc9f"
+    },
+    {
+      "path": "docs/sdd/book-replay/README.md",
+      "read_mode": "full",
+      "classification": "needs_review",
+      "reason": "A linha 3 diz que SPEC, PLAN e ACCEPTANCE nunca foram versionados; os quatro caminhos atuais são rastreados e o commit b7b4c6b de 2026-10-12 os adicionou nessa pasta. A frase pode se referir ao caminho antigo undefined, portanto o referente histórico precisa de esclarecimento. O status proposed/unfrozen continua coerente.",
+      "code_refs": ["docs/sdd/book-replay/README.md:3,5", "docs/sdd/book-replay/ACCEPTANCE.json:6-9"],
+      "sha256": "16102a3e24ddf2e11fbd9553d1f15baa1c84751cd6144a2eb71e8e124e4a1bc3"
+    },
+    {
+      "path": "docs/sdd/book-replay/SPEC.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Especificação define um perfil futuro v4 proposto e não congelado, com dependências explícitas de decisão e revisão; não é requisito de implementação presente.",
+      "code_refs": ["docs/sdd/book-replay/SPEC.md:1-9,27-61", "docs/sdd/book-replay/ACCEPTANCE.json:6-9,10-95"],
+      "sha256": "20c8cf3b35b91b09f231e9c4d02e93bbb92fea322b62e3541a7489a08c984c6e"
+    }
+  ],
+  "artifacts_inspected": [
+    {
+      "path": "docs/sdd/book-replay/ACCEPTANCE.json",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "JSON declara status proposed_unfrozen, approved_by null, human_response false e 14 critérios com implementationVerified false.",
+      "sha256": "c17ab9822c7112598eefa2366cbd7d74efb2b206da1bc91321b18800c378461c",
+      "observed": {"criteria": 14, "implementation_verified": 0, "approved_by": null, "human_response": false}
+    }
+  ],
+  "code_inspected": [
+    "src/backtest.ts",
+    "src/backtest-evidence.ts",
+    "scripts/backtest.ts",
+    "src/lab/source.ts",
+    "src/lab/candidates.ts",
+    "src/lab/outcomes.ts",
+    "src/lab/types.ts",
+    "src/lab/policies.ts",
+    "src/lab/journal.ts",
+    "src/lab/stats.ts",
+    "src/lab/run.ts",
+    "scripts/jev-lab.ts",
+    "scripts/jev-lab-real.ts",
+    "src/lab-jev/jev-chooser.ts",
+    "src/lab-jev/plan-chooser.ts",
+    "src/paper-capital.ts",
+    "src/paper-supervisor.ts",
+    "src/paper-supervisor-store.ts",
+    "src/paper-supervisor-runner.ts",
+    "src/lab/run.test.ts",
+    "src/lab/stats.test.ts"
+  ],
+  "code_inspection_note": "Os dois arquivos de teste foram consultados por trechos de busca para entender asserções existentes. Nenhum teste foi executado.",
+  "code_hashes": {
+    "src/backtest.ts": "729da4933af88447be594cd940190cb8522f5f57c2b72c0798c642155b779c91",
+    "src/backtest-evidence.ts": "4a21f47a26ec57eee68ab721a17de1c702f9c32474a43a859d99048280d7153e",
+    "scripts/backtest.ts": "f5d928a623d9995e95aeeb5132fa479e90ca4216636af13867794a73191441e8",
+    "src/lab/source.ts": "163fab4fd825d5b2d849ac02a4549486654c692de290623daf916b3cec5fad92",
+    "src/lab/candidates.ts": "dd68db9da46e7d60a7231c593d8a1e1c86b6bd82ddaea60becbe90b141e2a0ed",
+    "src/lab/outcomes.ts": "db845a899566ea98947972339f4f9268569d56e123093576cac03228145a46b6",
+    "src/lab/types.ts": "f7ee3eb8de696a6ba0e5c560a0799a32d2fa53dbb4f86cb15541e8d59095e4cc",
+    "src/lab/policies.ts": "cc791f075169100a289d7adc0764d26bacdb91bb719f7625e6e45f59aa715b0d",
+    "src/lab/journal.ts": "2d630a2478fb077a70138efafbc2436c834e039d456612d9a59bc0c12fa8e9a6",
+    "src/lab/stats.ts": "d52f0a2838a33e3a6d11dad38aecda2c02b12734a588a44b9fbcc7cb4a09c61b",
+    "src/lab/run.ts": "2d13ee4ad57980807a50686a3fc3989f277c180f461b02a947e403fc0023a5cc",
+    "scripts/jev-lab.ts": "f1f7544a52b5bfaba382ccad4cb474ca1a7a90df0e7b3c8f81c77aff2cd638da",
+    "scripts/jev-lab-real.ts": "29ed93a7954b834c1de0f87f4193df9a2a32eca5b33488e256eee5cade093fc7",
+    "src/lab-jev/jev-chooser.ts": "39c62ae45b2a7ba89c0c65eca977812c0d621fb34b8647dd451fd1ed8e74c70f",
+    "src/lab-jev/plan-chooser.ts": "9b5a2f8413a863301df87e2a154bc36b56374de589ef9f8f1024816e54a8f3c0",
+    "src/paper-capital.ts": "428b72a38b4d6ad176e7034c403deb3f2b2279c71d0ceb571ad5eacc830fcdee",
+    "src/paper-supervisor.ts": "3461087a2d4a2a264e98d40a86eea1d1895fcacd9b75613150d3df38e8397eab",
+    "src/paper-supervisor-store.ts": "cbab51fd6eb7a6a91754df4c2d84ca3644b7fc58889a1e1d787e8bb64e3ae3bc",
+    "src/paper-supervisor-runner.ts": "90ab7e81d5bade67d12ee829aaac9e471a146ffe5b423608fc3c05b6c6852537",
+    "src/lab/run.test.ts": "77fc02633ed354f531b011ca388bc1068d051c21c4fe19e9d10f4ca303c310fe",
+    "src/lab/stats.test.ts": "4000eb513cf1422522910ee9b03c110da2912b0ea7a75458c003506910452858"
+  },
+  "claims": [
+    {
+      "statement": "ReplaySource e SyntheticSource implement input point-in-time/replay versus seeded synthetic data; the source interface itself does not establish capture origin.",
+      "source_path": "src/lab/source.ts",
+      "lines": "5-16,59-70,220-238,259-307",
+      "source_sha256": "163fab4fd825d5b2d849ac02a4549486654c692de290623daf916b3cec5fad92"
+    },
+    {
+      "statement": "Statistical implementation documents Newey-West for inference, Holm for multiplicity, and block bootstrap for equity paths; promotion gate only recommends the existing phase.",
+      "source_path": "src/lab/stats.ts",
+      "lines": "1-13,43-57,565-629",
+      "source_sha256": "d52f0a2838a33e3a6d11dad38aecda2c02b12734a588a44b9fbcc7cb4a09c61b"
+    },
+    {
+      "statement": "Inference return adjustment uses one all-calls-known boolean, so one null cost disables subtraction for every consulted epoch; report cost gate remains unknown.",
+      "source_path": "src/lab/run.ts",
+      "lines": "395-420",
+      "related_refs": ["src/lab/stats.ts:598-629"],
+      "source_sha256": "2d13ee4ad57980807a50686a3fc3989f277c180f461b02a947e403fc0023a5cc"
+    },
+    {
+      "statement": "Real Jev run requires explicit paid-inference flag, call and USD caps, key and input-token price, then performs a preflight before shadow run.",
+      "source_path": "scripts/jev-lab-real.ts",
+      "lines": "333-399",
+      "source_sha256": "29ed93a7954b834c1de0f87f4193df9a2a32eca5b33488e256eee5cade093fc7"
+    },
+    {
+      "statement": "Replay evidence always labels itself accounting-replay-only and keeps strategy qualification and financial authorization false.",
+      "source_path": "src/backtest-evidence.ts",
+      "lines": "360-436",
+      "source_sha256": "4a21f47a26ec57eee68ab721a17de1c702f9c32474a43a859d99048280d7153e"
+    },
+    {
+      "statement": "Paper capital uses synthetic-paper mode and fixed false qualification/authorization fields; receipt settlement rejects unknown or incomplete cost.",
+      "source_path": "src/paper-capital.ts",
+      "lines": "45-81,328-392,402-410",
+      "source_sha256": "428b72a38b4d6ad176e7034c403deb3f2b2279c71d0ceb571ad5eacc830fcdee"
+    },
+    {
+      "statement": "Book-replay v4 acceptance remains proposed and unapproved, with fourteen implementation criteria not verified.",
+      "source_path": "docs/sdd/book-replay/ACCEPTANCE.json",
+      "lines": "1-16,84-95",
+      "source_sha256": "c17ab9822c7112598eefa2366cbd7d74efb2b206da1bc91321b18800c378461c"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "id": "DOC-01",
+      "classification": "needs_review",
+      "severity": "medium",
+      "statement": "README.md:3 says SPEC, PLAN, and ACCEPTANCE were never versioned. The current paths are tracked and commit b7b4c6b (2026-10-12) added them in this folder. This does not disprove that the files at the former undefined path were untracked; clarify the intended referent rather than asserting a definite contradiction.",
+      "references": ["docs/sdd/book-replay/README.md:3", "docs/sdd/book-replay/README.md:5", "docs/sdd/book-replay/ACCEPTANCE.json:6-9"],
+      "action": "Ask the integrator/owner to clarify the former path and chronology; leave proposal/unfrozen status intact."
+    },
+    {
+      "id": "DOC-02",
+      "classification": "needs_review",
+      "severity": "medium",
+      "statement": "The general lab guide implies per-epoch inference costs are subtracted when known; the real-Jev guide specifies subtraction only when every consultation cost is known. src/lab/run.ts matches the all-known rule, omitting known costs from all epochs if any cost is null.",
+      "references": ["docs/JEV-LABORATORIO-DE-DECISAO.md:262-266", "docs/JEV-LAB-JEV-REAL.md:115-117", "src/lab/run.ts:395-420", "src/lab/stats.ts:598-629"],
+      "impact": "The inference-cost gate remains unknown, so this cannot qualify the run; descriptive net returns may nevertheless be overstated for partial-cost runs.",
+      "action": "Decide desired accounting semantics, align both guides, and add a mixed-known/unknown cost regression before changing code."
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "unverified": [
+    "No tests, simulations, replay runs, builds, typechecks, or product commands were executed.",
+    "No network, model, paid inference, .env file, credential, or private wallet data was accessed.",
+    "Capture origin/authenticity, provider billing beyond input-token estimates, live supervisor operation, fills, profitability, and market advantage remain unknown.",
+    "No independent runtime or finance authorization was verified."
+  ],
+  "source_drift": [],
+  "source_drift_check": {"assigned_inputs_checked": 53, "changed": 0, "missing": 0, "basis": "SHA-256 compared with docs/_meta/project-state-20261013.json"},
+  "billed_cost": null,
+  "repository_checks": [
+    {"command": "git rev-parse HEAD", "result": "00a593bcabe25dbb6d83795268533551098f645b"},
+    {"command": "git ls-files docs/sdd/book-replay/README.md docs/sdd/book-replay/PLAN.md docs/sdd/book-replay/SPEC.md docs/sdd/book-replay/ACCEPTANCE.json", "result": ["docs/sdd/book-replay/ACCEPTANCE.json", "docs/sdd/book-replay/PLAN.md", "docs/sdd/book-replay/README.md", "docs/sdd/book-replay/SPEC.md"]},
+    {"command": "git status --short -- docs/sdd/book-replay/README.md docs/sdd/book-replay/PLAN.md docs/sdd/book-replay/SPEC.md docs/sdd/book-replay/ACCEPTANCE.json", "result": "empty"},
+    {"command": "git log --diff-filter=A --format=%h %cs %s -1 -- docs/sdd/book-replay/SPEC.md", "result": "b7b4c6b 2026-10-12 docs: preserve the proposed offline book replay (profile 4) specification"}
+  ],
+  "counts": {"documents_classified": 8, "code_files_inspected": 21, "artifacts_inspected": 1},
+  "integration_notes": ["The integrator owns index.md, log.md, shared metadata, and catalog updates; this delegated writer only created the assigned page and receipt."]
+}

@@ -1,0 +1,751 @@
+{
+  "owner": "defi-e-oportunidades",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "snapshot_captured": "2026-10-13T10:53:03.109798-03:00",
+  "observed_at": "2026-10-13T11:36:07-03:00",
+  "page": "docs/concepts/defi-e-oportunidades.md",
+  "documents": [
+    {
+      "path": "docs/DEFI-DISCOVERY-INTEGRATION-SPEC-DRAFT-20261011.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "DeFi discovery: integração de evidências na central JEV: rascunho, proposta ou plano com comportamento/dependências futuras; não é aceitação congelada.",
+      "catalog_role": "proposta",
+      "snapshot_sha256": "77220b934d009a46a6d3c6a9de9f195384e58876f138be2d548e0d5d30ec3e9a",
+      "code_refs": []
+    },
+    {
+      "path": "docs/DEFI-DISCOVERY-SCOPE-REVIEW-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "DEFI-DISCOVERY-SCOPE-REVIEW-20261011: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "revisao",
+      "snapshot_sha256": "8d1d0d3980778e80c98fc2787723eb4fd8d91ee2d45ca7ae42810272fceb6eec",
+      "code_refs": []
+    },
+    {
+      "path": "docs/GOAL-RECOVERY-DEFI-CHECKPOINT-20261011-2015.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Checkpoint — recuperação, revisão F5/F6 e integração DeFi: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "checkpoint",
+      "snapshot_sha256": "9e836c1486d75d6b8ab67a984c68d0e767a7a730061d82f861b62bac6dbbc03a",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-alpha-radar-v1/RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Alpha Radar — contrato público delimitado: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "e37a405dbccd914ccf620911d1c51376eba14c0c513afc80003d92ddc412b38d",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-defi-v1/AUDITORIA.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Escopo da auditoria DeFi offline: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "revisao",
+      "snapshot_sha256": "de358c483f5999c4a2c4f8282f4f0dccffe91b25b3838cf73998d0b2f95e71fa",
+      "code_refs": [
+        "src/okx-defi/report.ts",
+        "scripts/okx-defi.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-defi-v1/GUIA.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "Produtos DeFi da OKX no GEV: guia descritivo cotejado com a superfície local correspondente; comandos, acesso live e resultados não foram reexecutados.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "987b7003b5e8438815db8444f7cce4ef8ac544dcdac59054962ae8dcd71fe7fd",
+      "code_refs": [
+        "src/okx-defi/report.ts",
+        "scripts/okx-defi.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-defi-v1/PROPOSTA.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Proposta observacional DeFi: rascunho, proposta ou plano com comportamento/dependências futuras; não é aceitação congelada.",
+      "catalog_role": "proposta",
+      "snapshot_sha256": "bc3d243e4a0a760ceedf0cedf0ed280d4a259770c49dc8301cda73f71ec6aa19",
+      "code_refs": [
+        "src/okx-defi/report.ts",
+        "scripts/okx-defi.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-defi-v1/RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "RESEARCH: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "a1b3d9834417f55a862e2b03093b3dc0550b7724ffd2aadac0e5b31de1bdc4be",
+      "code_refs": [
+        "src/okx-defi/report.ts",
+        "scripts/okx-defi.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-defi-v1/SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Observações DeFi offline V1: critério de aceitação/contrato preservado; a classificação normativa não prova implementação nem conclusão.",
+      "catalog_role": "contrato",
+      "snapshot_sha256": "6b0ccced23bd76e39586a402b762c3301b21f9ae054a967745171955f761ea99",
+      "code_refs": [
+        "src/okx-defi/report.ts",
+        "src/okx-defi/report.test.ts",
+        "scripts/okx-defi.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-defi-v1/VERIFICACAO.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Verificação do módulo DeFi offline: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "evidencia",
+      "snapshot_sha256": "43dc376cbc75104a3f644363ae1e56511a8ceba9744ea94370f1fc683cdbdb27",
+      "code_refs": [
+        "src/okx-defi/report.ts",
+        "src/okx-defi/report.test.ts",
+        "scripts/okx-defi.ts"
+      ]
+    },
+    {
+      "path": "docs/OKX-EARN-RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "OKX Earn, On-chain Earn e DeFi Earn — pesquisa para SDD: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "7aa6c1229724dff806307cbaf0b77648cc0f02cdd5c0ffe70079faa75e621e53",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-ecosystem/GUIA.md",
+      "read_mode": "sections",
+      "classification": "needs_review",
+      "reason": "Guia amplo com estado datado em 2026-10-10 e cobertura de módulos fora deste recorte; revalidar contra o HEAD atual antes de usá-lo como status presente.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "b66fcc92f90dba1ae3bb6e5f6da602ae8711395d0fde25a711d719b1631263dc",
+      "code_refs": [
+        "src/okx-signals/report.ts",
+        "src/okx-evidence/report.ts",
+        "src/okx-opportunities.ts"
+      ]
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-PLAN.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Plano da entrega E1–E8: rascunho, proposta ou plano com comportamento/dependências futuras; não é aceitação congelada.",
+      "catalog_role": "plano",
+      "snapshot_sha256": "6d9e3edbad5ae26edcfc414763786b76d93b798bec500af2a2530cf0d310e409",
+      "code_refs": []
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "OKX Web3: descoberta e triagem de oportunidades: critério de aceitação/contrato preservado; a classificação normativa não prova implementação nem conclusão.",
+      "catalog_role": "contrato",
+      "snapshot_sha256": "c0c0ca088fed47c7e37d495134d53ebd1e63e7360bdaddbc2ce2f08235525946",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-ecosystem-v1/DATA-INTEGRATION-AUDIT.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Auditoria da integração de dados OKX/Web3: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "revisao",
+      "snapshot_sha256": "a8aa6abf9c09172ce25e93361ffa4691abd79c66324389534ad6ca0b6c99f22d",
+      "code_refs": [
+        "src/okx-defi/report.ts",
+        "src/okx-signals/report.ts",
+        "src/okx-evidence/report.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-ecosystem-v1/GUIA.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Consulta unificada de pesquisa OKX: guia descritivo cotejado com a superfície local correspondente; comandos, acesso live e resultados não foram reexecutados.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "97216f1ace83beb579bca1814554d977dde721a35094600b100b313674f093cb",
+      "code_refs": [
+        "src/okx-evidence/report.ts",
+        "src/okx-defi/report.ts",
+        "scripts/okx-evidence.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-ecosystem-v1/SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Consulta local do ecossistema OKX — v1: critério de aceitação/contrato preservado; a classificação normativa não prova implementação nem conclusão.",
+      "catalog_role": "contrato",
+      "snapshot_sha256": "e6350bee8ed89cc78e2b4bbd5ee256e66be5fc9b9605e7984bf6027e0d2323fd",
+      "code_refs": [
+        "src/okx-evidence/report.ts",
+        "src/okx-defi/report.ts",
+        "scripts/okx-evidence.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-evidence-v1/AUDITORIA.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Auditoria da comparação offline OKX: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "revisao",
+      "snapshot_sha256": "c97447110140ea145cc019204f7d910b46c4aefe7c23dec3a025b2a1fe8ad9f1",
+      "code_refs": [
+        "src/okx-evidence/report.ts",
+        "scripts/okx-evidence.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-evidence-v1/CYCLE-REVIEW.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "CYCLE-REVIEW: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "revisao",
+      "snapshot_sha256": "6fff2a8c3832b1dee73a6c9d8cdec5c6555727528ff39c25bc1d22549c26daab",
+      "code_refs": [
+        "src/okx-evidence/report.ts",
+        "src/okx-signals/report.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-evidence-v1/GUIA.md",
+      "read_mode": "sections",
+      "classification": "current_reference",
+      "reason": "Comparar evidências OKX: guia descritivo cotejado com a superfície local correspondente; comandos, acesso live e resultados não foram reexecutados.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "ef140832bbc76d033e0fd621d8cea833c4592592cfb4f54b144b104f72246d88",
+      "code_refs": [
+        "src/okx-evidence/report.ts",
+        "src/okx-evidence/fixture.ts",
+        "scripts/okx-evidence.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-evidence-v1/PROPOSTA.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Reunir evidências de sinais e Meme Pump: rascunho, proposta ou plano com comportamento/dependências futuras; não é aceitação congelada.",
+      "catalog_role": "proposta",
+      "snapshot_sha256": "121eaa5632154b4f2ce57f261316a9005d9e402dd86bcafd12469e973525da95",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-evidence-v1/SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Evidências OKX reunidas para pesquisa offline: critério de aceitação/contrato preservado; a classificação normativa não prova implementação nem conclusão.",
+      "catalog_role": "contrato",
+      "snapshot_sha256": "7b33b878cfeccb543b1ae01e7fa06aa92dc6994d24086cfe29a05e6a6e5200d8",
+      "code_refs": [
+        "src/okx-evidence/report.ts",
+        "src/okx-evidence/report.test.ts",
+        "scripts/okx-evidence.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-evidence-v1/VERIFICACAO.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Verificação da comparação offline OKX: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "evidencia",
+      "snapshot_sha256": "2b5ef0a251f048fb2194e861c3246316858c9650d894598b0a56a7597e2efb3b",
+      "code_refs": [
+        "src/okx-evidence/report.ts",
+        "scripts/okx-evidence.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-exit-security-v1/RESEARCH.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Segurança e possibilidade de saída no ecossistema OKX: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "3c4da0b6a6ed6d00bba9dc0cacba4382b5602916406e3e740e8991318e74606b",
+      "code_refs": [
+        "src/okx-market/okx-dex.ts",
+        "src/okx-market/round-trip.ts",
+        "src/okx-market/round-trip.test.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-leaderboard-v1/RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Leaderboard de carteiras OKX — pesquisa de integração: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "9a8dffb9fa63adb85147889d112d3148016fa04428a3ee9f2df688fa8bb3a59a",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-15-WORKSTREAMS-20261009.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Síntese dos 15 workstreams OKX e JEV: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "526839556c01b6523cab6669292f0067564d75b237198c2e85aa08af5e30c27e",
+      "code_refs": [
+        "src/okx-market/okx-dex.ts",
+        "src/okx-market/round-trip.ts",
+        "src/okx-market/round-trip.test.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-BASELINE.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Baseline da primeira entrega: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "e7db0940523893e7ec8510fc590fccda3e8a03a3e2cbed7214058dff82018aa7",
+      "code_refs": [
+        "src/okx-market/round-trip.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-CONTRACT-ERRATA.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Correção factual do contrato de transporte: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "ccb28dfc2935a03034edc60780d0cfc6f7567d0e189f4138f0f1eedfff1b9da9",
+      "code_refs": [
+        "src/okx-market/okx-api.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Inonu Trader — primeira integração OKX Web3 verificável: critério de aceitação/contrato preservado; a classificação normativa não prova implementação nem conclusão.",
+      "catalog_role": "contrato",
+      "snapshot_sha256": "13ba216cca87b8fd139d95895cd84a30df536788602fa4679201b8307aa856cb",
+      "code_refs": [
+        "src/okx-market/okx-dex.ts",
+        "src/okx-market/round-trip.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-rewards-v1/RESEARCH.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Rewards OKX Wallet: superfície documentada — 10/10/2026: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "20a3f05d0e7dd2cd3c6f776d3c1c892f16841035c30883fdd7a4e33d19d2cdf9",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-signals-v1/AUDITORIA.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "AUDITORIA: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "revisao",
+      "snapshot_sha256": "b1d9d777fe0f1f353eb4af585b9c986b27335adeb229a2bb2610d91f1d100f2f",
+      "code_refs": [
+        "src/okx-signals/report.ts",
+        "src/okx-signals/client.ts",
+        "scripts/okx-signals.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-signals-v1/GUIA.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Sinais OKX no GEV: guia descritivo cotejado com a superfície local correspondente; comandos, acesso live e resultados não foram reexecutados.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "a586f8282536dfd4abe96a2d12b73c68444ab31984477ac7df7528d38b56c25c",
+      "code_refs": [
+        "src/okx-signals/report.ts",
+        "src/okx-signals/client.ts",
+        "scripts/okx-signals.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-signals-v1/SPEC.md",
+      "read_mode": "sections",
+      "classification": "frozen_contract",
+      "reason": "Sinais OKX: observações históricas para pesquisa: critério de aceitação/contrato preservado; a classificação normativa não prova implementação nem conclusão.",
+      "catalog_role": "contrato",
+      "snapshot_sha256": "b24bbe99a962220fe3fffd93d705fc441576d9100478bea001836594e287f70f",
+      "code_refs": [
+        "src/okx-signals/report.ts",
+        "src/okx-signals/client.ts",
+        "scripts/okx-signals.ts"
+      ]
+    },
+    {
+      "path": "docs/okx-signals-v1/VERIFICACAO.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Verificação dos sinais OKX: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "evidencia",
+      "snapshot_sha256": "a352662bc9d8b79fd014892aa5a6dbe52a22da8522a1d3cebfa17e9f62f215a6",
+      "code_refs": [
+        "src/okx-signals/report.ts",
+        "src/okx-signals/report.test.ts",
+        "scripts/okx-signals.ts"
+      ]
+    },
+    {
+      "path": "docs/OPPORTUNITY-ARCHITECTURE.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "Evolução do INONU TRADER: inventário e oportunidades: rascunho, proposta ou plano com comportamento/dependências futuras; não é aceitação congelada.",
+      "catalog_role": "guia",
+      "snapshot_sha256": "0846a394b945d7006a87393b099a50d0a31e34c722ec29b1c23c2bfb72a112c7",
+      "code_refs": [
+        "src/okx-opportunities.ts",
+        "src/okx-market/round-trip.ts"
+      ]
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/defi-discovery-concrete-seams-20261011.md",
+      "read_mode": "sections",
+      "classification": "proposal",
+      "reason": "DeFi discovery — contratos concretos antes de G1–G8: rascunho, proposta ou plano com comportamento/dependências futuras; não é aceitação congelada.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "ade3d2677f85e2fd17a03b2f934c7b90af30acf4f63286b76dd95f145101ef1f",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/codex-operator-c4-research-20261011/docs-research-defi-endpoint-coverage-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa independente: cobertura dos endpoints DeFi OKX: pesquisa independente datada, com proposta explicitamente não aprovada; mantém método e baseline próprios.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "9d3affd64bc188893f5a5d10604d4764255368da455aa4af17c97fb80e83c1d0",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/DEFI-CANDIDATE-BOUNDARY-FINDINGS-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Relato de achados vinculado ao HEAD/tree de 2026-10-11 e a src/operator/candidates.ts; evidência histórica, não falha automaticamente reproduzida nos módulos atuais desta auditoria.",
+      "catalog_role": "contrato",
+      "snapshot_sha256": "e6f5b851b2d8ad00d375b2ee3b1952f102f7428f1c4690b7b5ec2663890e34ff",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/OKX-DEFI-ENDPOINT-COVERAGE-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa independente: cobertura dos endpoints DeFi OKX: pesquisa independente datada, com proposta explicitamente não aprovada; mantém método e baseline próprios.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "9d3affd64bc188893f5a5d10604d4764255368da455aa4af17c97fb80e83c1d0",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/OKX-DEFI-WIRING-ADDENDUM-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "DeFi: capacidade implementada versus integração operacional: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "pesquisa",
+      "snapshot_sha256": "af7e31b5dce5022b5d85149151d731938b59ac476cebca159ed06c0a1550f728",
+      "code_refs": []
+    },
+    {
+      "path": "docs/research/OKX-DEFI-WIRING-INDEPENDENT-REVIEW-20261011.md",
+      "read_mode": "sections",
+      "classification": "historical_evidence",
+      "reason": "Revisão independente — precisão da pesquisa DeFi: pesquisa, revisão, verificação, checkpoint ou baseline datado; registra evidência do escopo/HEAD indicado no próprio documento, não execução desta auditoria.",
+      "catalog_role": "revisao",
+      "snapshot_sha256": "ead2c3f7ae4540e61bf5164aa6b5b6ae2ab1eb983a99834e4cd5a8bb9728d2ac",
+      "code_refs": []
+    }
+  ],
+  "classification_counts": {
+    "proposal": 6,
+    "frozen_contract": 6,
+    "current_reference": 4,
+    "needs_review": 1,
+    "historical_evidence": 24
+  },
+  "code_inspected": [
+    {
+      "path": "src/okx-defi/fixture.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-defi/report.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-defi/report.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-evidence/fixture.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-evidence/report.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-evidence/report.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-opportunities.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-opportunities.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-signals/client.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-signals/client.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-signals/fixture.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-signals/report.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-signals/report.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "scripts/okx-defi.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "scripts/okx-defi.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "scripts/okx-evidence.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "scripts/okx-evidence.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "scripts/okx-signals.test.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "scripts/okx-signals.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-market/okx-api.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-market/okx-dex.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-market/round-trip.ts",
+      "read_mode": "full"
+    },
+    {
+      "path": "src/okx-market/round-trip.test.ts",
+      "read_mode": "sections"
+    }
+  ],
+  "manifest_refs": [
+    {
+      "path": "package.json",
+      "lines": "44-48",
+      "purpose": "confirma as rotas okx:defi, okx:signals, okx:evidence e okx:dex-quote; não há rota okx:ecosystem nesse mapa."
+    }
+  ],
+  "claims": [
+    {
+      "statement": "O relatório DeFi preserva busca e detalhe separadamente; unidade/base de fee é desconhecida, completeCost é null, e execução, retorno, saída executável e custo total não se qualificam.",
+      "source_path": "src/okx-defi/report.ts",
+      "symbol": "DefiObservation, DefiReport, buildDefiReport",
+      "lines": "18-54, 87-135, 137-168"
+    },
+    {
+      "statement": "A CLI DeFi aceita demo sintética ou capturas JSON locais explícitas; o caminho inspecionado não executa quote ou resgate.",
+      "source_path": "scripts/okx-defi.ts",
+      "symbol": "HELP, argumentsForImport, readCapture, main",
+      "lines": "5-20, 34-76, 78-97"
+    },
+    {
+      "statement": "Signals tem cliente autenticado de API e modo live explícito no CLI, mas o relatório mantém acesso/quota/custo observados como desconhecidos; nenhuma request foi feita nesta rodada.",
+      "source_path": "src/okx-signals/report.ts",
+      "symbol": "collectSignals",
+      "lines": "86-120"
+    },
+    {
+      "statement": "O join offline aceita relatórios Signals e scanner, marca proveniência unverified e mantém execução, retorno, saída executável e custo de API sem qualificação; não inclui relatório DeFi.",
+      "source_path": "src/okx-evidence/report.ts",
+      "symbol": "joinEvidence",
+      "lines": "65-101"
+    },
+    {
+      "statement": "A triagem de oportunidade pode marcar research_candidate sem qualificar execução; o cálculo econômico deriva de entradas hipotéticas fornecidas pelo chamador.",
+      "source_path": "src/okx-opportunities.ts",
+      "symbol": "screenOpportunity, calculateOpportunityScenario",
+      "lines": "193-255, 258-296"
+    },
+    {
+      "statement": "O adapter DEX envia entrada amount em inteiro atômico positivo em exactIn/singleRouteOnly; isso não valida a unidade de saída.",
+      "source_path": "src/okx-market/okx-dex.ts",
+      "symbol": "OkxDexQuoteInput, validateAmount, quote",
+      "lines": "32-43, 90-102, 323-340"
+    },
+    {
+      "statement": "O wrapper round-trip mantém a saída bruta com unidade unknown e bloqueia delta/perna/líquido dependente; custo permanece unknown e execução not_qualified.",
+      "source_path": "src/okx-market/round-trip.ts",
+      "symbol": "RoundTripReport, unverifiedQuote, quoteRoundTrip",
+      "lines": "33-43, 94-111, 129-171"
+    },
+    {
+      "statement": "Os testes de quote codificam outputUnit unknown, legs vazias, net/cost desconhecidos e not_qualified, mas foram apenas lidos.",
+      "source_path": "src/okx-market/round-trip.test.ts",
+      "symbol": "assertions de quoteRoundTrip",
+      "lines": "49-57, 63-72, 254-257, 279-296"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "primary_document": "docs/okx-ecosystem-v1/SPEC.md",
+      "classification": "frozen_contract",
+      "related_documents": [
+        "docs/okx-ecosystem-v1/GUIA.md"
+      ],
+      "finding": "A SPEC define composição de Signals/scanner e DeFi sob okx_ecosystem_research_v1. O código atual examinado mantém joinEvidence(okx_evidence_offline_v1) para Signals/scanner e buildDefiReport separado; package.json:44-48 lista rotas individuais sem okx:ecosystem. A GUIA já registra estado não implementado. Tratar contrato como pendente de implementação nesta superfície, sem alterar critérios.",
+      "current_reference": [
+        "src/okx-evidence/report.ts:65-101",
+        "src/okx-defi/report.ts:41-54",
+        "package.json:44-48",
+        "docs/okx-ecosystem-v1/GUIA.md:3-5"
+      ]
+    },
+    {
+      "primary_document": "docs/research/OKX-DEFI-ENDPOINT-COVERAGE-20261011.md",
+      "classification": "historical_evidence",
+      "related_documents": [
+        "docs/research/codex-operator-c4-research-20261011/docs-research-defi-endpoint-coverage-20261011.md"
+      ],
+      "finding": "Os dois caminhos têm SHA-256 idêntico no catálogo/snapshot (9d3affd64bc188893f5a5d10604d4764255368da455aa4af17c97fb80e83c1d0). É duplicação de conteúdo histórico; não removida nem reclassificada como conteúdo atual.",
+      "current_reference": [
+        "docs/_meta/catalog.json",
+        "docs/_meta/project-state-20261013.json"
+      ]
+    },
+    {
+      "primary_document": "docs/research/DEFI-CANDIDATE-BOUNDARY-FINDINGS-20261011.md",
+      "classification": "historical_evidence",
+      "related_documents": [
+        "docs/DEFI-DISCOVERY-SCOPE-REVIEW-20261011.md"
+      ],
+      "finding": "Os achados citam baseline/HEAD 1f08e6edd589449a82eeb70638987a09572a3bd2 e src/operator/candidates.ts. São evidência daquela árvore e não defeitos automaticamente reproduzidos em src/okx-defi, src/okx-evidence ou src/okx-opportunities atuais.",
+      "current_reference": [
+        "docs/research/DEFI-CANDIDATE-BOUNDARY-FINDINGS-20261011.md:5,13-15",
+        "docs/DEFI-DISCOVERY-SCOPE-REVIEW-20261011.md:5-16",
+        "src/okx-defi/report.ts:137-168",
+        "src/okx-evidence/report.ts:65-101",
+        "src/okx-opportunities.ts:193-296"
+      ]
+    },
+    {
+      "primary_document": "docs/okx-ecosystem/GUIA.md",
+      "classification": "needs_review",
+      "related_documents": [],
+      "finding": "Guia de estado amplo datado em 2026-10-10, incluindo portfólio e outras superfícies além da delegação. Suas cifras e estados históricos não foram revalidados contra cada módulo atual; não usar como status integral em 2026-10-13 sem revisão do owner correspondente.",
+      "current_reference": [
+        "docs/okx-ecosystem/GUIA.md:3, 44",
+        "docs/_meta/project-state-20261013.json: owners"
+      ]
+    }
+  ],
+  "tests_run": [
+    {
+      "command": "bun --no-env-file test --parallel=1 --timeout 15000 src/okx-defi src/okx-evidence src/okx-opportunities.test.ts src/okx-signals scripts/okx-defi.test.ts scripts/okx-evidence.test.ts scripts/okx-signals.test.ts",
+      "status": "passed",
+      "passed": 58,
+      "failed": 0,
+      "expect_calls": 967,
+      "files": 8
+    },
+    {
+      "command": "bun --no-env-file run test",
+      "status": "failed",
+      "passed": 4432,
+      "skipped": 2,
+      "failed": 1,
+      "tests": 4435,
+      "files": 253,
+      "failure": {
+        "test": "a mode nobody serves yet is refused with a constant code, never silently routed to the exchange",
+        "path": "src/desktop/handlers.test.ts",
+        "line": 323,
+        "expected": "modo_nao_disponivel",
+        "actual": "pedido_invalido"
+      }
+    }
+  ],
+  "verification_runs": [
+    {
+      "command": "python -B -m json.tool docs/_meta/audits/defi-e-oportunidades.json",
+      "status": "passed"
+    },
+    {
+      "command": "bun --no-env-file run typecheck",
+      "status": "passed"
+    },
+    {
+      "command": "receipt/page owner, path, classification and size assertions",
+      "status": "passed",
+      "assigned_docs": 41,
+      "code_inspected": 23,
+      "page_lines": 159,
+      "wikilinks": 2
+    },
+    {
+      "command": "python -B docs/_meta/tools/verify.py",
+      "status": "blocked",
+      "reason": "FileNotFoundError: docs/_meta/generated-files.json is missing"
+    }
+  ],
+  "verification_scope": "static_source_and_document_inspection_plus_typecheck_and_focused_and_workspace_tests",
+  "unverified": [
+    "Nenhum CLI do produto foi iniciado; nenhum acesso live ou resultado financeiro foi avaliado.",
+    "Nenhuma chamada de rede, consulta autenticada, credencial, carteira, modelo ou transação foi usada.",
+    "Acesso/entitlement e quota da conta, custo real ou faturado de API, fonte real de capturas e elegibilidade pessoal.",
+    "Unidade semântica da saída DEX, custo total de entrada/saída, quote executável, resgate/venda, retorno líquido e lucro.",
+    "Resultados de teste/log citados nos documentos atribuídos continuam evidência histórica dos respectivos snapshots, não reexecução desta rodada."
+  ],
+  "source_drift": {
+    "baseline": "docs/_meta/project-state-20261013.json",
+    "scope": "snapshot inclui working tree com alterações não commitadas e arquivos não rastreados",
+    "documents_checked": 41,
+    "assigned_code_paths_checked": 19,
+    "supplemental_code_paths_checked": 4,
+    "changed_paths": [],
+    "out_of_scope_drift_observed": [
+      "src/desktop/handlers.ts",
+      "src/desktop/handlers.test.ts"
+    ]
+  },
+  "billed_cost": null,
+  "navigation_updates": {
+    "docs/index.md": "not modified; exclusive write scope is limited to the assigned page and receipt",
+    "docs/log.md": "not modified; exclusive write scope is limited to the assigned page and receipt"
+  }
+}

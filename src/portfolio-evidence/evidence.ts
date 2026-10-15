@@ -95,7 +95,7 @@ export function buildWalletEvidence(input: WalletEvidenceInput): WalletEvidence 
     (input.collection?.errors.length ?? 0) > 0 ||
     (input.collection?.stoppedBy ?? null) !== null ||
     (input.collection?.skipped.length ?? 0) > 0;
-  const netWorth = netWorthOf(input.balances, reconciliation.status);
+  const netWorth = netWorthOf(input.balances, reconciliation.balanceStatus);
   const status = worstStatus([...collected, reconciliation.status, netWorth.status, ...(anyFailed ? (["incomplete"] as const) : [])]);
 
   const body = {
@@ -120,6 +120,18 @@ export function buildWalletEvidence(input: WalletEvidenceInput): WalletEvidence 
   };
   const contentSha256 = hashOf(body);
   return { ...body, evidenceId: contentSha256.slice(0, 16), contentSha256 };
+}
+
+/** The oldest local capture time found in any section: a cached evidence is as old as its oldest read, not as its build time. */
+export function oldestCaptureMs(evidence: WalletEvidence): number | null {
+  const times = [evidence.balances?.timing.fetchedAtMs, evidence.balances?.reportedTotal?.timing.fetchedAtMs, evidence.history?.timing.fetchedAtMs, evidence.market?.timing.fetchedAtMs, evidence.addressAnalysis?.timing.fetchedAtMs].filter((value): value is number => typeof value === "number");
+  return times.length === 0 ? null : Math.min(...times);
+}
+
+/** True only for an evidence whose refresh read everything it set out to read: no error, no stop, nothing skipped, balances present. */
+export function isCleanCollection(evidence: WalletEvidence): boolean {
+  const collection = evidence.collection;
+  return collection !== null && collection.errors.length === 0 && collection.stoppedBy === null && collection.skipped.length === 0 && evidence.balances !== null;
 }
 
 /** Recomputes the hash. False means the object was altered after it was built, or is not a v1 evidence. */

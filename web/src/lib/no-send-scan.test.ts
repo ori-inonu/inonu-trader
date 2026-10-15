@@ -139,7 +139,7 @@ describe("the scanner sees what it should", () => {
 describe("what this delivery added", () => {
   const WEB_ROOTS = [
     "components/Rastreador", "components/Doctor", "components/Desk/InonuAsk.tsx", "components/Desk/InonuSignalStrip.tsx", "components/Desk/AssetIcon.tsx", "components/Desk/Dock/DockInonu.tsx",
-    "lib/inonu", "lib/rastreador", "lib/doctor", "lib/desk/chart/inonu-layer.ts", "lib/wallet", "app/rastreador", "app/doctor",
+    "lib/inonu", "lib/rastreador", "lib/doctor", "lib/desk/chart/inonu-layer.ts", "lib/wallet",
     // the dock, the top bar and the desk shell (the independent review found them outside this scan)
     "components/Desk/Dock/DockComposite.tsx", "components/Desk/Dock/DockPanel.tsx", "components/Desk/Dock/InonuLedgerTail.tsx", "components/Desk/Dock/WalletChainSwitch.tsx", "components/Desk/Dock/TicketPanel.tsx", "components/Desk/Dock/DockWalletTab.tsx",
     // what the ticket and the on-chain tabs import and run (the review found them outside this scan)

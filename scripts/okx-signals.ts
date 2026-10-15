@@ -1,6 +1,7 @@
 import { collectSignals, SignalsError, validateSignalQuery } from '../src/okx-signals/report';
 import { createSignalsClient } from '../src/okx-signals/client';
 import { createSyntheticSignalsClient, SYNTHETIC_SIGNALS_QUERY, SYNTHETIC_SIGNALS_TIME_MS } from '../src/okx-signals/fixture';
+import { okxNowMs, syncOkxClock } from '../src/okx-clock';
 
 function options(args: string[]) {
   if (!args.length) return { mode: 'synthetic' as const };
@@ -30,8 +31,9 @@ async function main() {
   } : {
     client: createSignalsClient({ credentials: {
       apiKey: process.env.OKX_WEB3_API_KEY ?? '', secret: process.env.OKX_WEB3_API_SECRET ?? '', passphrase: process.env.OKX_WEB3_API_PASSPHRASE ?? '',
-    } }), query: selected.query, now: Date.now, source: 'okx_authenticated' as const,
+    }, now: okxNowMs }), query: selected.query, now: Date.now, source: 'okx_authenticated' as const,
   };
+  if (selected.mode === 'live') await syncOkxClock(); // OKX refuses a signature more than 30 s off its clock
   const report = await collectSignals(input);
   console.log(JSON.stringify(report, null, 2));
 }

@@ -1,0 +1,37 @@
+{
+  "origin": "synthetic_fixture",
+  "code": "0",
+  "data": [
+    {
+      "avgBuyPrice": "0",
+      "avgSellPrice": "0",
+      "boughtAmount": "0",
+      "fundingSource": "9k8jWWqfmTTXrc8gmZqYVxSFJhygURvyVRztivJXFTYP",
+      "holdAmount": "767501192.534284",
+      "holdPercent": "76.750184380179418200",
+      "holderWalletAddress": "2RH6rUTPBJ9rUDPpuV9b8z1YL56k1tYU6Uk5ZoaEFFSK",
+      "nativeTokenBalance": "6.091849989",
+      "realizedPnlUsd": "0",
+      "totalPnlUsd": "0.000000000000000000",
+      "totalSellAmount": "0",
+      "unrealizedPnlUsd": "0.000000000000000000",
+      "cursor": "0"
+    },
+    {
+      "avgBuyPrice": "0.000061961311739113",
+      "avgSellPrice": "0.000122073405687202",
+      "boughtAmount": "48443482.085545000000000000",
+      "cursor": "1",
+      "fundingSource": "AC5RDfQFmDS1deWZos921JfqscXdByf8BKHs5ACWjtW2",
+      "holdAmount": "0",
+      "holdPercent": "0.000000000000000000",
+      "holderWalletAddress": "GHPyCYecXh398J72qi8nx9Sdaq8PiUJmLoL2q2yLwTY9",
+      "nativeTokenBalance": "0.024254276",
+      "realizedPnlUsd": "2912.039146298874538842343358",
+      "soldAmount": "41626711.761828000000000000",
+      "totalPnlUsd": "2912.039146298874538842343358",
+      "unrealizedPnlUsd": "0.000000000000000000"
+    }
+  ],
+  "msg": ""
+}

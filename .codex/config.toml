@@ -1,0 +1,9 @@
+# Configuração do projeto para o Codex CLI. Ver AGENTS.md.
+# Padrão conservador: aprovação sob pedido e escrita só no workspace.
+# Não use approval_policy = "never" nem danger-full-access sem pedido explícito do dono.
+
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# Hooks deste projeto: .codex/hooks.json.
+# Na primeira execução o Codex pede para confiar nos hooks do projeto.

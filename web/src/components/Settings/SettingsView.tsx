@@ -7,9 +7,6 @@
  * state without a server.
  */
 import { useEffect, useState, type ReactNode } from "react";
-import { applyPalette, PALETTES, readStoredPalette, type PaletteId } from "@/lib/mesa/preferences";
-import { applyLayout, readStoredLayout, type LayoutId } from "@/lib/mesa/layout";
-import { SHORTCUTS } from "@/lib/mesa/topbar-model";
 import { SECRET_IDS, type OnchainPrefs, type SecretId, type SettingsSnapshot } from "@/lib/settings/client";
 import { useSettings, type SettingsState } from "@/lib/settings/useSettings";
 import { createOnchainClient, type BudgetSnapshot, type OnchainStatus } from "@/lib/onchain/client";
@@ -56,10 +53,11 @@ export const TEST_TEXT: Record<string, string> = {
  * every answer; below 20 s the masking is routine and stays silent, above it the user should sync
  * the Windows clock. Positive offset means the local clock is behind.
  */
-export function clockSkewLine(clockOffsetMs: number | null | undefined): string | null {
+export function clockSkewLine(clockOffsetMs: number | null | undefined, hosted = false): string | null {
   if (typeof clockOffsetMs !== "number" || !Number.isFinite(clockOffsetMs) || Math.abs(clockOffsetMs) < 20_000) return null;
   const secs = Math.round(Math.abs(clockOffsetMs) / 1000);
   const dir = clockOffsetMs > 0 ? "atrasado" : "adiantado";
+  if (hosted) return `Relogio do servidor cerca de ${secs} s ${dir} em relacao a OKX. O sistema compensa nas chamadas, mas sincronize o horario do servidor.`;
   return `Relogio do computador cerca de ${secs} s ${dir} em relacao a OKX. O sistema compensa nas chamadas, mas sincronize o horario do Windows.`;
 }
 
@@ -91,7 +89,7 @@ export interface SettingsScreenProps {
   readonly onTestOnchainos?: () => Promise<{ ok: boolean; code: string }>;
   readonly onTestJev?: () => Promise<{ ok: boolean; code: string; tested?: boolean }>;
   /** Where the four secrets live: `arquivo` (data/*.env, the dev setup) or `cofre` (the Windows vault of the installed app). */
-  readonly storage?: "arquivo" | "cofre";
+  readonly storage?: "arquivo" | "cofre" | "servidor";
 }
 
 /** Build-time switch: the static export of the installed app is built with NEXT_PUBLIC_INONU_APP=1 (scripts/build-desktop.ts). */
@@ -104,14 +102,16 @@ function statusText(configured: boolean, last4: string | null): string {
 
 const KEY_ORIGINS = { local: "arquivo local", vault: "cofre do Windows", process_environment: "ambiente do servidor", windows_user: "Windows, usuario", windows_machine: "Windows, sistema" };
 
-function SecretRow({ id, snapshot, storage, onSave, onClear }: {
+function SecretRow({ id, snapshot, storage, readOnly = false, onSave, onClear }: {
   readonly id: SecretId;
-  readonly storage: "arquivo" | "cofre";
+  readonly storage: "arquivo" | "cofre" | "servidor";
+  readonly readOnly?: boolean;
   readonly snapshot: SettingsSnapshot | null;
   readonly onSave?: SettingsScreenProps["onSave"];
   readonly onClear?: SettingsScreenProps["onClear"];
 }) {
   const [draft, setDraft] = useState("");
+  useEffect(() => { if (readOnly) setDraft(""); }, [readOnly]);
   const meta = FIELD_META[id];
   const status = snapshot?.secrets[id];
   const ambient = status?.origin === "process_environment" || status?.origin === "windows_user" || status?.origin === "windows_machine";
@@ -133,39 +133,40 @@ function SecretRow({ id, snapshot, storage, onSave, onClear }: {
           type="password"
           autoComplete="off"
           spellCheck={false}
-          value={draft}
-          placeholder={!status ? "Aguardando leitura" : status.configured ? "detectada nesta maquina" : "colar a chave aqui"}
+          value={readOnly ? "" : draft}
+          disabled={readOnly}
+          placeholder={readOnly ? status?.configured ? "provisionada no servidor" : "configurar no servidor" : !status ? "Aguardando leitura" : status.configured ? "detectada nesta maquina" : "colar a chave aqui"}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <button type="button" className={styles.button} disabled={!draft || !onSave} onClick={() => void save()}>
+        {!readOnly ? <button type="button" className={styles.button} disabled={!draft || !onSave} onClick={() => void save()}>
           Salvar
-        </button>
-        <button type="button" className={styles.buttonGhost} disabled={!status?.configured || !onClear || ambient} onClick={() => void onClear?.(id)}>
+        </button> : null}
+        {!readOnly ? <button type="button" className={styles.buttonGhost} disabled={!status?.configured || !onClear || ambient} onClick={() => void onClear?.(id)}>
           Limpar
-        </button>
+        </button> : null}
       </div>
       <p className={styles.fieldNote} data-configured={status?.configured ?? false}>
-        {status ? statusText(status.configured, status.last4) : "Aguardando leitura"} <span className={styles.fileTag}>{status?.origin ? KEY_ORIGINS[status.origin] : storage === "cofre" ? "cofre do Windows" : meta.file}</span>
+        {status ? statusText(status.configured, status.last4) : "Aguardando leitura"} <span className={styles.fileTag}>{readOnly ? "servidor" : status?.origin ? KEY_ORIGINS[status.origin] : storage === "cofre" ? "cofre do Windows" : meta.file}</span>
         {id === "typesafeAiApiKey" && status?.configured ? " Presenca detectada no servidor; autenticacao ainda nao testada." : null}
-        {ambient ? " Limpar aqui nao altera a variavel do Windows." : null}
+        {ambient && !readOnly ? " Limpar aqui nao altera a variavel do Windows." : null}
       </p>
     </div>
   );
 }
 
-export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, errorNote = null, budget = null, onchainStatus = null, usageError = false, onRefreshUsage, onRetry, onSave, onClear, onSavePrefs, onTestOnchainos, onTestJev, storage = "arquivo", extra = null }: SettingsScreenProps) {
-  const [palette, setPalette] = useState<PaletteId>("padrao");
-  const [layout, setLayout] = useState<LayoutId>("completo");
+export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, errorNote = null, budget = null, onchainStatus = null, usageError = false, onRefreshUsage, onRetry, onSave: saveFromProps, onClear: clearFromProps, onSavePrefs: savePrefsFromProps, onTestOnchainos, onTestJev, storage: storageFromProps = "arquivo", extra: extraFromProps = null }: SettingsScreenProps) {
+  const hosted = snapshot?.readOnly === true || process.env.NEXT_PUBLIC_INONU_CLOUD === "1";
+  const storage = hosted ? "servidor" : storageFromProps;
+  const onSave = hosted ? undefined : saveFromProps;
+  const onClear = hosted ? undefined : clearFromProps;
+  const onSavePrefs = hosted ? undefined : savePrefsFromProps;
+  const extra = hosted ? null : extraFromProps;
   const [capBasic, setCapBasic] = useState("");
   const [capPremium, setCapPremium] = useState("");
   const [prefsNote, setPrefsNote] = useState("");
   const [jevTest, setJevTest] = useState("");
   const [okxTest, setOkxTest] = useState("");
 
-  useEffect(() => {
-    setPalette(readStoredPalette());
-    setLayout(readStoredLayout());
-  }, []);
   useEffect(() => {
     if (snapshot) {
       setCapBasic(String(snapshot.prefs.onchain.capBasic));
@@ -182,15 +183,15 @@ export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, 
     <main className={styles.page}>
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>INONU TRADER / AMBIENTE LOCAL</p>
+          <p className={styles.eyebrow}>INONU TRADER / {hosted ? "AMBIENTE ONLINE" : "AMBIENTE LOCAL"}</p>
           <h1 className={styles.title}>Configuracoes</h1>
-          <p className={styles.subtitle}>Conexoes, consumo e preferencias do seu ambiente.</p>
+          <p className={styles.subtitle}>As chaves de API do agente. Nada mais precisa ser configurado.</p>
         </div>
-        <a className={styles.backLink} href="/">Voltar a mesa</a>
+        <a className={styles.backLink} href="/">Voltar ao agente</a>
       </header>
 
       <div className={styles.overview} aria-label="Resumo do ambiente">
-        <div><span>Nucleo local</span><strong>{phase === "ready" && snapshot ? "Respondendo" : phase === "error" ? "Sem resposta" : "Aguardando leitura"}</strong></div>
+        <div><span>{hosted ? "Servidor do agente" : "Nucleo local"}</span><strong>{phase === "ready" && snapshot ? "Respondendo" : phase === "error" ? "Sem resposta" : "Aguardando leitura"}</strong></div>
         <div><span>Modelo (Jev)</span><strong>{jevStatus}</strong></div>
         <div><span>Credenciais OnchainOS</span><strong>{okxStatus}</strong></div>
       </div>
@@ -201,14 +202,13 @@ export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, 
           <a href="#conexoes"><span>01</span> Conexoes</a>
           <a href="#consumo"><span>02</span> Consumo da API</a>
           {extra ? <a href="#modelo"><span>03</span> Modelo e provedores</a> : null}
-          <a href="#aparencia"><span>04</span> Aparencia</a>
-          <a href="#atalhos"><span>05</span> Atalhos</a>
           <a href="#privacidade"><span>06</span> Privacidade</a>
-          <div className={styles.localNote}><span className={styles.localDot} /> Preferencias locais<br />Chaves protegidas nesta maquina</div>
+          <div className={styles.localNote}><span className={styles.localDot} /> {hosted ? "Configurado no servidor" : "Preferencias locais"}<br />{hosted ? "Credenciais somente leitura" : "Chaves protegidas nesta maquina"}</div>
         </nav>
         <div className={styles.content}>
 
       {phase === "loading" ? <p className={styles.notice}>Carregando configuracoes</p> : null}
+      {hosted ? <p className={styles.notice}>As credenciais sao provisionadas no servidor. Esta pagina mostra o status; as chaves e os limites da API sao alterados no ambiente de hospedagem.</p> : null}
       {phase === "error" ? (
         <div className={styles.notice} role="alert">
           <p>Servidor local nao respondeu em {apiUrl}</p>
@@ -223,28 +223,28 @@ export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, 
       {errorNote ? <p className={styles.notice} role="alert">{errorNote}</p> : null}
 
       <section id="conexoes" className={styles.section} aria-label="Conexoes">
-        <div className={styles.sectionHeader}><div><p className={styles.eyebrow}>01 / INTEGRACOES</p><h2 className={styles.heading}>Conexoes</h2></div><span className={styles.sectionTag}>ACESSO LOCAL</span></div>
+        <div className={styles.sectionHeader}><div><p className={styles.eyebrow}>01 / INTEGRACOES</p><h2 className={styles.heading}>Conexoes</h2></div><span className={styles.sectionTag}>{hosted ? "SOMENTE LEITURA" : "ACESSO LOCAL"}</span></div>
         {snapshot?.vault === "indisponivel" ? (
           <p className={styles.result} role="alert">
             O cofre do Windows nao respondeu: as chaves nao puderam ser lidas. Elas nao foram apagadas. Desbloqueie o Windows e reinicie o Inonu.
           </p>
         ) : null}
-        <p className={styles.sectionNote}>{storage === "cofre" ? "As chaves ficam so nesta maquina, no cofre do Windows. Nao vao ao navegador depois de salvas, nem ao modelo, nem ao diario." : "As chaves ficam so nesta maquina, em data/. Nao vao ao navegador depois de salvas, nem ao modelo, nem ao diario."}</p>
+        <p className={styles.sectionNote}>{hosted ? "As chaves ficam nos segredos do servidor. Seus valores nao sao enviados a esta pagina, ao modelo ou ao diario." : storage === "cofre" ? "As chaves ficam so nesta maquina, no cofre do Windows. Nao vao ao navegador depois de salvas, nem ao modelo, nem ao diario." : "As chaves ficam so nesta maquina, em data/. Nao vao ao navegador depois de salvas, nem ao modelo, nem ao diario."}</p>
         <div className={styles.connectionGrid}>
           <div className={styles.connectionCard}>
             <div className={styles.connectionHead}><span className={styles.providerMark} aria-hidden="true">J</span><div><h3>Modelo (Jev)</h3><p>Inteligencia System One</p></div><span className={styles.badge}>{jevStatus}</span></div>
             <p className={styles.cardDescription}>Credencial do modelo que avalia os dados enviados pelo Inonu.</p>
-            <SecretRow id="typesafeAiApiKey" snapshot={credentials} storage={storage} onSave={onSave} onClear={onClear} />
+            <SecretRow id="typesafeAiApiKey" snapshot={credentials} storage={storage} readOnly={hosted} onSave={onSave} onClear={onClear} />
             <div className={styles.connectionFooter}>
               {onTestJev ? <button type="button" className={styles.buttonGhost} onClick={() => void onTestJev().then((r) => setJevTest(TEST_TEXT[r.code] ?? r.code)).catch(() => setJevTest("falhou"))}>Verificar formato</button> : null}
               {jevTest ? <p className={styles.result}>Modelo (Jev): {jevTest}</p> : null}
-              <details className={styles.details}><summary>Detalhes da deteccao</summary><p>A chave do modelo vale no proximo pedido ao Inonu (Jev). O servidor local usa primeiro a chave salva, depois TYPESAFE_AI_API_KEY ou TYPESAFE_API_KEY no ambiente e no Windows. A deteccao do Windows tem cache de ate 60 s.</p></details>
+              {!hosted ? <details className={styles.details}><summary>Detalhes da deteccao</summary><p>A chave do modelo vale no proximo pedido ao Inonu (Jev). O servidor local usa primeiro a chave salva, depois TYPESAFE_AI_API_KEY ou TYPESAFE_API_KEY no ambiente e no Windows. A deteccao do Windows tem cache de ate 60 s.</p></details> : null}
             </div>
           </div>
           <div className={styles.connectionCard}>
             <div className={styles.connectionHead}><span className={styles.okxMark} aria-hidden="true"><i /><i /><i /><i /><i /></span><div><h3>OnchainOS</h3><p>Ecossistema OKX</p></div><span className={styles.badge}>{okxStatus}</span></div>
             <p className={styles.cardDescription}>Estas credenciais autorizam APIs OnchainOS. A conexao da OKX Wallet ao app e independente.</p>
-            {SECRET_IDS.filter((id) => id !== "typesafeAiApiKey").map((id) => <SecretRow key={id} id={id} snapshot={credentials} storage={storage} onSave={onSave} onClear={onClear} />)}
+            {SECRET_IDS.filter((id) => id !== "typesafeAiApiKey").map((id) => <SecretRow key={id} id={id} snapshot={credentials} storage={storage} readOnly={hosted} onSave={onSave} onClear={onClear} />)}
             <div className={styles.stateLine}>
               <span>Credencial OnchainOS:</span>{" "}<strong data-state={credentials?.okx.state ?? "unknown"}>{okxStatus}</strong>
               {onTestOnchainos ? (
@@ -302,9 +302,9 @@ export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, 
                 {onchainStatus.cooldownUntilMs !== null ? "; em espera de limite" : ""}
               </span>
             ) : null}
-            {clockSkewLine(onchainStatus?.clockOffsetMs) !== null ? (
+            {clockSkewLine(onchainStatus?.clockOffsetMs, hosted) !== null ? (
               <p className={styles.fieldNote} role="status">
-                {clockSkewLine(onchainStatus?.clockOffsetMs)}
+                {clockSkewLine(onchainStatus?.clockOffsetMs, hosted)}
               </p>
             ) : null}
           </div>
@@ -312,11 +312,11 @@ export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, 
         <div className={styles.preferencesGrid}>
           <label className={styles.inlineField}>
             Teto Basic por mes
-            <input className={styles.inputSmall} inputMode="numeric" value={capBasic} onChange={(e) => setCapBasic(e.target.value)} />
+            <input className={styles.inputSmall} inputMode="numeric" value={capBasic} disabled={hosted} onChange={(e) => setCapBasic(e.target.value)} />
           </label>
           <label className={styles.inlineField}>
             Teto Premium por mes
-            <input className={styles.inputSmall} inputMode="numeric" value={capPremium} onChange={(e) => setCapPremium(e.target.value)} />
+            <input className={styles.inputSmall} inputMode="numeric" value={capPremium} disabled={hosted} onChange={(e) => setCapPremium(e.target.value)} />
           </label>
           <label className={styles.inlineField}>
             Rede padrao
@@ -365,76 +365,11 @@ export function SettingsScreen({ phase, snapshot, apiUrl, networkError = false, 
 
       {extra ? <div id="modelo" className={styles.modelSections}>{extra}</div> : null}
 
-      <section id="aparencia" className={styles.section} aria-label="Aparencia e mesa">
-        <p className={styles.eyebrow}>04 / PERSONALIZACAO</p><h2 className={styles.heading}>Aparencia e mesa</h2>
-        <div className={styles.options} role="group" aria-label="Cores de alta e baixa">
-          {PALETTES.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              className={styles.option}
-              aria-pressed={palette === option.id}
-              onClick={() => {
-                applyPalette(option.id);
-                setPalette(option.id);
-              }}
-            >
-              <span className={styles.swatch} aria-hidden="true">
-                <span style={{ background: option.up }} />
-                <span style={{ background: option.down }} />
-              </span>
-              <span>
-                <span className={styles.optionLabel}>{option.label}</span>
-                <span className={styles.optionHint}>{option.hint}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className={styles.options} role="group" aria-label="Distribuicao da mesa">
-          <button
-            type="button"
-            className={styles.option}
-            aria-pressed={layout === "completo"}
-            onClick={() => {
-              applyLayout("completo");
-              setLayout("completo");
-            }}
-          >
-            Mesa completa
-          </button>
-          <button
-            type="button"
-            className={styles.option}
-            aria-pressed={layout === "grafico"}
-            onClick={() => {
-              applyLayout("grafico");
-              setLayout("grafico");
-            }}
-          >
-            Modo grafico
-          </button>
-        </div>
-        <p className={styles.sectionNote}>Fica salvo neste navegador.</p>
-      </section>
-
-      <section id="atalhos" className={styles.section} aria-label="Atalhos">
-        <p className={styles.eyebrow}>05 / NAVEGACAO</p><h2 className={styles.heading}>Atalhos</h2>
-        <ul className={styles.keys}>
-          {SHORTCUTS.map((shortcut) => (
-            <li key={shortcut.keys}>
-              <kbd className={styles.kbd}>{shortcut.keys}</kbd>
-              <span>{shortcut.action}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
       <section id="privacidade" className={styles.section} aria-label="Privacidade">
-        <p className={styles.eyebrow}>06 / DADOS E ACESSO</p><h2 className={styles.heading}>Privacidade</h2>
+        <p className={styles.eyebrow}>04 / DADOS E ACESSO</p><h2 className={styles.heading}>Privacidade</h2>
         <ul className={styles.privacyList}>
           <li>O navegador le dados publicos da OKX (precos, livro, negocios).</li>
-          <li>{storage === "cofre" ? "As chaves ficam no cofre do Windows e nunca voltam ao navegador depois de salvas." : "As chaves ficam em arquivos locais em data/ e nunca voltam ao navegador depois de salvas."}</li>
-          <li>Preferencias visuais ficam neste navegador.</li>
+          <li>{hosted ? "As chaves sao provisionadas no servidor e seus valores nunca sao enviados a esta pagina." : storage === "cofre" ? "As chaves ficam no cofre do Windows e nunca voltam ao navegador depois de salvas." : "As chaves ficam em arquivos locais em data/ e nunca voltam ao navegador depois de salvas."}</li>
           <li>O diario do Inonu nao recebe segredos.</li>
         </ul>
       </section>
@@ -483,11 +418,11 @@ export default function SettingsView() {
       onTestOnchainos={settings.testOnchainos}
       onTestJev={settings.testJev}
       storage={APP_STORAGE}
-      extra={
+      extra={settings.phase === "ready" && settings.snapshot?.readOnly !== true && process.env.NEXT_PUBLIC_INONU_CLOUD !== "1" ?
         <>
           <InonuUsage />
           <TradeSettingsSection />
-        </>
+        </> : null
       }
     />
   );

@@ -1,0 +1,21 @@
+{
+ "geradoEm": "2026-10-12",
+ "origem": "real_probe",
+ "nota": "Valores publicos de metricas de token lidos ao vivo na sonda; nenhum dado pessoal. Servem so para decidir a escala (percentual 0 a 100, fracao 0 a 1 ou ambigua) de cada campo. A leitura da escala e inferencia marcada na coluna leitura; so a coluna valor e medida.",
+ "campos": [
+  { "endpoint": "market/token/advanced-info", "token": "WETH, chainIndex 1", "campo": "top10HoldPercent", "valor": "74.0083", "leitura": "percentual 0 a 100" },
+  { "endpoint": "market/token/advanced-info", "token": "WETH, chainIndex 1", "campo": "devHoldingPercent", "valor": "0", "leitura": "zero em qualquer escala" },
+  { "endpoint": "market/token/advanced-info", "token": "WETH, chainIndex 1", "campo": "riskControlLevel", "valor": "1", "leitura": "escala documentada 0 a 5 (0 indefinido, 1 baixo, 2 medio, 3 medio-alto, 4 alto, 5 alto por configuracao manual)" },
+  { "endpoint": "market/token/cluster/overview", "token": "USDC, chainIndex 1", "campo": "top100HoldingsPercent", "valor": "0.44320", "leitura": "ambigua: a pagina diz (%), o valor parece fracao 0 a 1" },
+  { "endpoint": "market/token/cluster/overview", "token": "USDC, chainIndex 1", "campo": "holderSameCreationTimePercent", "valor": "1.00000", "leitura": "ambigua: 1 por cento ou 100 por cento" },
+  { "endpoint": "market/token/cluster/overview", "token": "USDC, chainIndex 1", "campo": "ClusterConcentration", "valor": "Low", "leitura": "chave com C maiusculo na resposta real; o exemplo da pagina usa clusterConcentration minusculo" },
+  { "endpoint": "market/memepump/tokenDetails", "token": "token novo, chainIndex 501", "campo": "tags.top10HoldingsPercent", "valor": "50.1985", "leitura": "percentual 0 a 100 (o exemplo da pagina mostra 0.12)" },
+  { "endpoint": "market/memepump/tokenDetails", "token": "token novo, chainIndex 501", "campo": "bondingPercent", "valor": "0.5", "leitura": "ambigua: 0,5 por cento ou metade da curva" },
+  { "endpoint": "market/memepump/tokenDevInfo", "token": "token novo, chainIndex 501", "campo": "devHoldingInfo.devHoldingPercent", "valor": "0.4465", "leitura": "ambigua" },
+  { "endpoint": "market/token/hot-token", "token": "token em alta, chainIndex 1", "campo": "riskLevelControl", "valor": "2", "leitura": "mesma escala documentada de riskControlLevel" },
+  { "endpoint": "market/token/hot-token", "token": "token em alta, chainIndex 1", "campo": "top10HoldPercent", "valor": "20.053", "leitura": "percentual 0 a 100" },
+  { "endpoint": "market/token/hot-token", "token": "token em alta, chainIndex 1", "campo": "devHoldPercent", "valor": "0.005083", "leitura": "ambigua: 0,005 por cento ou fracao" },
+  { "endpoint": "market/signal/list", "token": "token novo, chainIndex 501", "campo": "soldRatioPercent", "valor": "52.37", "leitura": "percentual 0 a 100" },
+  { "endpoint": "market/signal/list", "token": "token novo, chainIndex 501", "campo": "token.top10HolderPercent", "valor": "18.5402", "leitura": "percentual 0 a 100" }
+ ]
+}

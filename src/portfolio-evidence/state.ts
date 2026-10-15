@@ -4,6 +4,7 @@
  * Freshness has TWO clocks and they never substitute for each other:
  *  - capture: how old OUR reading is (fetchedAtMs against nowMs);
  *  - source: how old the PROVIDER datum is (sourceTimeMs against fetchedAtMs). Without a provider clock it is `unknown`.
+ * A measured provider clock offset is APPLIED when the caller supplies it; nothing in this module measures it.
  */
 
 import type { EvidenceState, Freshness, FreshnessReport, StateKind, Status, Timing } from "./types.ts";

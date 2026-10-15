@@ -54,7 +54,7 @@ describe("the Solana request", () => {
     await reader.history({ address: SOL, chains: ["501"] });
     expect(f.seen.length).toBe(3);
     expect(f.seen[0]).toBe(`http://x/onchain/wallet-balances?address=${SOL}&chains=501`);
-    expect(f.seen[1]).toBe(`http://x/onchain/wallet-value?address=${SOL}&chains=501`);
+    expect(f.seen[1]).toBe(`http://x/onchain/wallet-value?address=${SOL}&chains=501&assetType=1`);
     expect(f.seen[2]).toBe(`http://x/onchain/wallet-history?address=${SOL}&chains=501&limit=20`);
   });
 

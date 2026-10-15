@@ -30,6 +30,18 @@ const ok = (data: unknown, m = meta()) => ({ body: { ok: true, data, meta: m } }
 const params = { address: ADDRESS, chains: ["1", "8453"] };
 
 describe("the request", () => {
+  test("valuation explicitly asks for tokens on the same selected networks as balances", async () => {
+    const f = fakeFetch(() => ok(null));
+    const reader = createHoldingsReader({ base: "http://x", fetch: f.fetch });
+    await reader.value(params);
+    await reader.balances(params);
+    const value = new URL(f.seen[0]!.url);
+    const balances = new URL(f.seen[1]!.url);
+    expect(value.searchParams.get("assetType")).toBe("1");
+    expect(value.searchParams.get("chains")).toBe(balances.searchParams.get("chains"));
+    expect(value.searchParams.get("address")).toBe(balances.searchParams.get("address"));
+  });
+
   test("the address leaves in lower case, the networks once each, with the intent of a click and no credentials", async () => {
     const f = fakeFetch(() => ok({ rows: [], total: 0 }));
     await createHoldingsReader({ base: "http://x", fetch: f.fetch }).balances({ address: ADDRESS, chains: ["1", "8453", "1"] });
@@ -76,6 +88,17 @@ describe("what comes back", () => {
       expect(r.data.rows[1]).toMatchObject({ symbol: "USDC", priceUsd: null, valueUsd: null, flaggedRisk: true });
       expect(r.meta.ageMs).toBe(4000);
     }
+  });
+
+  test("balances preserve an unknown provider risk mark alongside explicit true and false", async () => {
+    const f = fakeFetch(() => ok({ rows: [
+      balanceRow({ symbol: "UNKNOWN", flaggedRisk: null }),
+      balanceRow({ symbol: "FLAGGED", flaggedRisk: true }),
+      balanceRow({ symbol: "UNFLAGGED", flaggedRisk: false }),
+    ], total: 3 }));
+    const r = await createHoldingsReader({ base: "http://x", fetch: f.fetch }).balances(params);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data.rows.map((row) => row.flaggedRisk)).toEqual([null, true, false]);
   });
 
   test("a row about a network that was not asked is a contract error, whole", async () => {

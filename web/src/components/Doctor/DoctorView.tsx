@@ -34,7 +34,7 @@ export function DoctorScreen({ state, busy, onRetry }: { state: DoctorViewState;
           <h1 className={styles.title}>Diagnostico</h1>
           <p className={styles.subtitle}>O que esta funcionando nesta maquina</p>
         </div>
-        <a className={styles.backLink} href="/">Voltar a mesa</a>
+        <a className={styles.backLink} href="/mesa">Voltar a mesa</a>
       </header>
 
       {state.phase === "loading" ? <p className={styles.notice}>Verificando</p> : null}

@@ -1,8 +1,9 @@
 /**
  * Browser client for the local /settings routes. Every call carries the x-inonu-settings header that forces
- * preflight on the backend, never sends credentials, and parses answers defensively. A stored secret value is
+ * preflight on the backend, carries login cookies only for relative app APIs, and parses answers defensively. A stored secret value is
  * never returned by the API, so nothing here ever holds one after the field that sent it is cleared.
  */
+import { backendSession } from "../backend-session";
 
 export type SecretId = "typesafeAiApiKey" | "okxWeb3ApiKey" | "okxWeb3ApiSecret" | "okxWeb3ApiPassphrase";
 
@@ -28,6 +29,8 @@ export interface UserPrefs {
 }
 
 export interface SettingsSnapshot {
+  /** Hosted provisioning is immutable through the page; only presence is exposed. */
+  readonly readOnly?: boolean;
   readonly secrets: Record<SecretId, SecretStatus>;
   readonly okx: { readonly state: OkxCredentialState };
   /** Present only when the vault of the Windows did not answer: the keys could not be read, which is not the same as absent. */
@@ -60,7 +63,7 @@ export class SettingsRequestError extends Error {
   }
 }
 
-type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string>; body?: string; credentials?: "omit" }) => Promise<Response>;
+type FetchLike = (input: string, init?: { method?: string; headers?: Record<string, string>; body?: string; credentials?: "omit" | "same-origin" }) => Promise<Response>;
 
 function isStatus(v: unknown): v is SecretStatus {
   const s = v as SecretStatus;
@@ -91,11 +94,12 @@ function parsePrefs(v: unknown): UserPrefs | null {
 function parseSnapshot(v: unknown): SettingsSnapshot | null {
   const s = v as SettingsSnapshot;
   if (typeof v !== "object" || v === null) return null;
+  if (s.readOnly !== undefined && typeof s.readOnly !== "boolean") return null;
   const secrets = parseSecrets(s.secrets);
   const state = s.okx?.state;
   const prefs = parsePrefs(s.prefs);
   if (!secrets || !prefs || (state !== "absent" && state !== "incomplete" && state !== "complete")) return null;
-  return { secrets, okx: { state }, ...((v as { vault?: unknown }).vault === "indisponivel" ? { vault: "indisponivel" as const } : {}), prefs };
+  return { secrets, okx: { state }, ...(s.readOnly === undefined ? {} : { readOnly: s.readOnly }), ...((v as { vault?: unknown }).vault === "indisponivel" ? { vault: "indisponivel" as const } : {}), prefs };
 }
 
 function parseStatusPart(v: unknown): SecretsStatus | null {
@@ -111,8 +115,8 @@ async function request(fetchImpl: FetchLike, base: string, path: string, init: {
   try {
     res = await fetchImpl(`${base}${path}`, {
       method: init.method ?? "GET",
-      credentials: "omit",
-      headers: { "x-inonu-settings": "1", ...(init.body !== undefined ? { "content-type": "application/json" } : {}) },
+      credentials: backendSession(base),
+      headers: { "x-inonu-settings": "1", ...(init.body !== undefined ? { "content-type": "application/json" } : {}), ...(init.method !== undefined && init.method !== "GET" && backendSession(base) === "same-origin" ? { "x-inonu-intent": "user" } : {}) },
       ...(init.body !== undefined ? { body: JSON.stringify(init.body) } : {}),
     });
   } catch {

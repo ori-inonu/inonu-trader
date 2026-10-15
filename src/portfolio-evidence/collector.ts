@@ -14,17 +14,20 @@ import { OnchainosError } from "../onchainos/errors.ts";
 import type { GetPort, OnchainosHttp, PostPort, QuotaSnapshot } from "../onchainos/http.ts";
 import { hashOf } from "./canonical.ts";
 import { DEFAULT_PRICE_TOLERANCE_BPS, buildBalanceSection, type RawBalanceRow } from "./balances.ts";
-import { buildAddressAnalysisSection, type TimeFrameCode } from "./address-analysis.ts";
-import { accountRefOf, buildWalletEvidence } from "./evidence.ts";
+import { buildAddressAnalysisSection, netPositionFromTrades, type RawLatestPnl, type TimeFrameCode } from "./address-analysis.ts";
+import { accountRefOf, buildWalletEvidence, isCleanCollection, oldestCaptureMs } from "./evidence.ts";
 import { buildHistorySection, netInflowByAsset } from "./history.ts";
 import { buildIdentity } from "./identity.ts";
 import { assembleMarketSection, decimalsHintsOf, priceHintsOf } from "./market.ts";
 import { parseDec } from "./decimal.ts";
-import type { EvidenceStore, PutResult } from "./store.ts";
+import { EvidenceIntegrityError, type EvidenceStore, type PutResult } from "./store.ts";
 import {
   readAllTokenBalances,
+  readDexHistory,
+  readLatestPnl,
   readLiquidity,
   readPortfolioOverview,
+  readPortfolioSupportedChains,
   readPrices,
   readRecentPnl,
   readRisk,
@@ -36,6 +39,7 @@ import {
   type TokenQuery,
 } from "./adapters/okx-read.ts";
 import { walletEndpoint, type WalletEndpoint } from "./adapters/okx-endpoints.ts";
+import { endpoint as marketEndpoint } from "../onchainos/endpoints.ts";
 import { ADAPTER_VERSION } from "./types.ts";
 import type { LiquidityEvidence, Origin, PriceEvidence, RiskEvidence, SectionError, SourceInfo, StopReason, TokenInfoEvidence, WalletEvidence } from "./types.ts";
 import type { HistorySection } from "./types.ts";
@@ -49,7 +53,16 @@ export interface CollectRequest {
   /** Which scope of the total to ask for; `tokens` is the one comparable with token positions. */
   readonly totalAssetType?: AssetType;
   readonly history?: false | { readonly beginMs?: number; readonly endMs?: number };
-  readonly addressAnalysis?: false | { readonly chains: readonly string[]; readonly timeFrame?: TimeFrameCode };
+  readonly addressAnalysis?: false | {
+    readonly chains: readonly string[];
+    readonly timeFrame?: TimeFrameCode;
+    /** Latest PnL, one call per token (capped by `perTokenCap`). */
+    readonly tokens?: readonly TokenQuery[];
+    /** DEX trade history of a window ending now (`days`) or an explicit one. Bounded: 1000 records at most. */
+    readonly dexHistory?: false | { readonly days: number } | { readonly beginMs: number; readonly endMs: number };
+    /** Ask the provider's supported-chain list first and skip chains it does not list. Opt-in: the list may be partial. */
+    readonly supportCheck?: boolean;
+  };
   /** Default: prices and decimals. Liquidity and risk are one call per token, so they are opt-in and capped. */
   readonly market?: false | { readonly price?: boolean; readonly decimals?: boolean; readonly liquidity?: boolean; readonly risk?: boolean };
   /** Query the named tokens with the risk filter off when the filtered answer omitted them. */
@@ -63,7 +76,7 @@ export interface CollectConfig {
   readonly maxCalls?: number;
   readonly maxPagesPerEndpoint?: number;
   readonly deadlineMs?: number;
-  /** Tokens for which liquidity and risk are read one by one. */
+  /** Tokens read one by one for each of: liquidity, risk and the latest PnL of a token. */
   readonly perTokenCap?: number;
   readonly maxAgeMs?: number;
   /** 0 disables the cache. */
@@ -111,6 +124,10 @@ function boundedInt(value: number | undefined, fallback: number, ceiling: number
 export function classify(error: unknown): { code: string; stop: StopReason | null; httpStatus: number | null; apiCode: string | null } {
   if (!(error instanceof OnchainosError)) return { code: "unexpected", stop: null, httpStatus: null, apiCode: null };
   const base = { httpStatus: error.httpStatus, apiCode: error.apiCode };
+  // Codes of the official error tables (onchaindata-error-code, market-price-error-code), whichever HTTP status carried them.
+  if (error.apiCode === "50125") return { ...base, code: "access_denied_or_region_restricted", stop: "access_denied" };
+  if (error.apiCode !== null && /^501(0[3-9]|1[0-4])$/.test(error.apiCode)) return { ...base, code: "credentials_rejected", stop: "credentials_rejected" };
+  if (error.apiCode === "50038") return { ...base, code: "chain_unsupported", stop: null };
   switch (error.kind) {
     case "offline":
       return { ...base, code: "offline", stop: "offline" };
@@ -140,23 +157,39 @@ function contractQuery(identity: { chainIndex: string; asset: { kind: string; ad
   return identity.asset.kind === "contract" && identity.asset.address !== undefined ? { chainIndex: identity.chainIndex, tokenContractAddress: identity.asset.address } : null;
 }
 
+/** Plan tiers of the market endpoints actually used, as the endpoint registry documents them (e.g. `basic+premium`). */
+function marketTiers(ids: ("market.price.price" | "market.token.basic-info" | "market.token.top-liquidity" | "market.token.advanced-info")[]): string {
+  const tiers = [...new Set(ids.map((id) => marketEndpoint(id).tier))].sort();
+  return tiers.length === 0 ? "unknown" : tiers.join("+");
+}
+
 function sourceOf(id: WalletEndpoint["id"]): SourceInfo {
   const spec = walletEndpoint(id);
   return { id: `okx_${id}`, endpoint: spec.path, method: spec.method, apiVersion: "v6", adapterVersion: ADAPTER_VERSION, tier: spec.tier };
 }
 
-export function requestFingerprint(request: CollectRequest, config: Pick<CollectConfig, "origin">): string {
+/** A request part as plain JSON: an option set to `undefined` is the same as an omitted one, and must not break the hash. */
+function plain<T>(value: T): unknown {
+  return JSON.parse(JSON.stringify(value)) as unknown;
+}
+
+export function requestFingerprint(request: CollectRequest, config: Pick<CollectConfig, "origin" | "maxAgeMs" | "valueToleranceUsd" | "maxCalls" | "maxPagesPerEndpoint" | "deadlineMs" | "perTokenCap">): string {
   const account = accountRefOf(request.address).sha256;
   return hashOf({
     account,
     origin: config.origin,
+    // Two requests that judge freshness or gaps differently never share a cached evidence.
+    maxAgeMs: config.maxAgeMs ?? DEFAULTS.maxAgeMs,
+    valueToleranceUsd: config.valueToleranceUsd ?? null,
+    // The budgets shape what an evidence contains, so a request with another budget never reuses it.
+    budget: [config.maxCalls ?? DEFAULTS.maxCalls, config.maxPagesPerEndpoint ?? DEFAULTS.maxPagesPerEndpoint, config.deadlineMs ?? DEFAULTS.deadlineMs, config.perTokenCap ?? DEFAULTS.perTokenCap],
     chains: [...new Set(request.chains)].sort(),
     excludeRiskToken: request.excludeRiskToken ?? null,
     totalValue: request.totalValue ?? true,
     totalAssetType: request.totalAssetType ?? "tokens",
-    history: request.history ?? false,
-    addressAnalysis: request.addressAnalysis ?? false,
-    market: request.market ?? "default",
+    history: plain(request.history ?? false),
+    addressAnalysis: plain(request.addressAnalysis ?? false),
+    market: plain(request.market ?? "default"),
     riskProbe: request.riskProbe ?? false,
     expected: (request.expectedAssets ?? []).map((item) => `${item.chainIndex}:${item.tokenContractAddress.toLowerCase()}`).sort(),
   });
@@ -170,8 +203,13 @@ export function planCalls(request: CollectRequest, config: Pick<CollectConfig, "
   if (request.totalValue ?? true) plan.push({ what: "balance.total", max: 1 });
   if (request.history !== undefined && request.history !== false) plan.push({ what: "history.byAddress", max: pages });
   if (request.addressAnalysis !== undefined && request.addressAnalysis !== false) {
-    plan.push({ what: "portfolio.overview", max: request.addressAnalysis.chains.length });
-    plan.push({ what: "portfolio.recentPnl", max: pages * request.addressAnalysis.chains.length });
+    const chainCount = request.addressAnalysis.chains.length;
+    if (request.addressAnalysis.supportCheck === true) plan.push({ what: "portfolio.supportedChain", max: 1 });
+    plan.push({ what: "portfolio.overview", max: chainCount });
+    plan.push({ what: "portfolio.recentPnl", max: pages * chainCount });
+    const tokens = request.addressAnalysis.tokens ?? [];
+    if (tokens.length > 0) plan.push({ what: "portfolio.latestPnl", max: Math.min(tokens.length, cap) * chainCount });
+    if (request.addressAnalysis.dexHistory !== undefined && request.addressAnalysis.dexHistory !== false) plan.push({ what: "portfolio.dexHistory", max: pages * chainCount });
   }
   const market = request.market === undefined ? { price: true, decimals: true } : request.market;
   if (market !== false) {
@@ -197,11 +235,15 @@ export async function collectWalletEvidence(ports: CollectPorts, request: Collec
   const accountSha = accountRefOf(request.address).sha256;
   const fingerprint = requestFingerprint(request, config);
 
-  if (ports.store !== undefined && cacheTtlMs > 0 && config.forceRefresh !== true) {
+  // A cached evidence keeps the freshness it was built with, so it is never served past its own freshness limit.
+  const effectiveTtlMs = Math.min(cacheTtlMs, maxAgeMs);
+  if (ports.store !== undefined && effectiveTtlMs > 0 && config.forceRefresh !== true) {
     const cached = ports.store.latest(accountSha, fingerprint);
-    if (cached !== null) {
-      const ageMs = startedAt - cached.generatedAtMs;
-      if (ageMs >= 0 && ageMs <= cacheTtlMs) return { evidence: cached, cache: { hit: true, ageMs }, persisted: null, quota: null };
+    // Only a clean evidence is served, and its age counts from its OLDEST read: a slow collection must not stretch it.
+    const oldest = cached === null ? null : oldestCaptureMs(cached);
+    if (cached !== null && isCleanCollection(cached) && oldest !== null) {
+      const ageMs = startedAt - oldest;
+      if (ageMs >= 0 && ageMs <= effectiveTtlMs) return { evidence: cached, cache: { hit: true, ageMs }, persisted: null, quota: null };
     }
   }
 
@@ -268,13 +310,56 @@ export async function collectWalletEvidence(ports: CollectPorts, request: Collec
       ? null
       : await attempt("history", "history.byAddress", () => readTransactions(port, { address: request.address, chains, maxPages, ...(request.history === false ? {} : request.history) }));
 
-  const pnlReads: { chainIndex: string; timeFrame: TimeFrameCode | null; overview: Awaited<ReturnType<typeof readPortfolioOverview>> | null; recent: Awaited<ReturnType<typeof readRecentPnl>> | null }[] = [];
+  interface PnlRead {
+    chainIndex: string;
+    timeFrame: TimeFrameCode | null;
+    overview: Awaited<ReturnType<typeof readPortfolioOverview>> | null;
+    recent: Awaited<ReturnType<typeof readRecentPnl>> | null;
+    latest: { token: TokenQuery; raw: RawLatestPnl; receivedAtMs: number }[];
+    dex: { read: Awaited<ReturnType<typeof readDexHistory>>; beginMs: number; endMs: number } | null;
+    supported: string[] | null;
+  }
+  const pnlReads: PnlRead[] = [];
   if (request.addressAnalysis !== undefined && request.addressAnalysis !== false) {
-    const timeFrame = request.addressAnalysis.timeFrame ?? "4";
-    for (const chainIndex of [...new Set(request.addressAnalysis.chains)]) {
+    const analysis = request.addressAnalysis;
+    const timeFrame = analysis.timeFrame ?? "4";
+    // The support list is opt-in: the provider's page shows only two chains, so a missing chain is skipped, said so, and never
+    // read as proof that the chain has no data.
+    let supported: string[] | null = null;
+    if (analysis.supportCheck === true) {
+      const listed = await attempt("addressAnalysis", "portfolio.supportedChain", () => readPortfolioSupportedChains(port));
+      if (listed !== null) supported = listed.value;
+    }
+    const pnlChains = [...new Set(analysis.chains)];
+    // Tokens are normalized and deduplicated here: a repeated token is a typo of the request, not a provider fault.
+    const requestedTokens = new Map<string, TokenQuery>();
+    for (const token of analysis.tokens ?? []) {
+      const built = buildIdentity(token.chainIndex, token.tokenContractAddress);
+      requestedTokens.set(built.ok ? built.identity.key : `invalid:${requestedTokens.size}`, token);
+    }
+    if ([...requestedTokens.values()].some((token) => !pnlChains.includes(token.chainIndex))) skipped.push({ what: "portfolio.latestPnl", reason: "token_chain_not_in_pnl_chains" });
+    for (const chainIndex of pnlChains) {
+      if (supported !== null && !supported.includes(chainIndex)) {
+        skipped.push({ what: `portfolio.${chainIndex}`, reason: "chain_not_listed_as_supported" });
+        continue;
+      }
       const overview = await attempt("addressAnalysis", "portfolio.overview", () => readPortfolioOverview(port, { chainIndex, address: request.address, timeFrame }));
       const recent = await attempt("addressAnalysis", "portfolio.recentPnl", () => readRecentPnl(port, { chainIndex, address: request.address, maxPages }));
-      pnlReads.push({ chainIndex, timeFrame, overview, recent });
+      const latest: PnlRead["latest"] = [];
+      const wanted = [...requestedTokens.values()].filter((token) => token.chainIndex === chainIndex);
+      if (wanted.length > perTokenCap) skipped.push({ what: "portfolio.latestPnl", reason: `only_first_${perTokenCap}_tokens_read` });
+      for (const token of wanted.slice(0, perTokenCap)) {
+        const read = await attempt("addressAnalysis", "portfolio.latestPnl", () => readLatestPnl(port, { chainIndex, address: request.address, tokenContractAddress: token.tokenContractAddress }));
+        if (read !== null) latest.push({ token, raw: read.value, receivedAtMs: read.meta.receivedAtMs });
+      }
+      let dex: PnlRead["dex"] = null;
+      if (analysis.dexHistory !== undefined && analysis.dexHistory !== false) {
+        const endMs = "days" in analysis.dexHistory ? ports.now() : analysis.dexHistory.endMs;
+        const beginMs = "days" in analysis.dexHistory ? endMs - analysis.dexHistory.days * 86_400_000 : analysis.dexHistory.beginMs;
+        const read = await attempt("addressAnalysis", "portfolio.dexHistory", () => readDexHistory(port, { chainIndex, address: request.address, beginMs, endMs, maxPages }));
+        if (read !== null) dex = { read, beginMs, endMs };
+      }
+      pnlReads.push({ chainIndex, timeFrame, overview, recent, latest, dex, supported });
     }
   }
 
@@ -337,7 +422,7 @@ export async function collectWalletEvidence(ports: CollectPorts, request: Collec
   const marketSection =
     marketOptions === false || marketFetchedAt === null
       ? null
-      : assembleMarketSection({ source: { id: "okx_market", endpoint: null, method: null, apiVersion: "v6", adapterVersion: ADAPTER_VERSION, tier: "unknown" }, fetchedAtMs: marketFetchedAt, nowMs: nowMs(), maxAgeMs, prices, tokenInfo, liquidity, risk, missing: marketMissing });
+      : assembleMarketSection({ source: { id: "okx_market", endpoint: null, method: null, apiVersion: "v6", adapterVersion: ADAPTER_VERSION, tier: marketTiers([...(marketOptions.price ?? true ? ["market.price.price" as const] : []), ...(marketOptions.decimals ?? true ? ["market.token.basic-info" as const] : []), ...(marketOptions.liquidity === true ? ["market.token.top-liquidity" as const] : []), ...(marketOptions.risk === true ? ["market.token.advanced-info" as const] : [])]) }, fetchedAtMs: marketFetchedAt, nowMs: nowMs(), maxAgeMs, prices, tokenInfo, liquidity, risk, missing: marketMissing });
 
   // ---- sections that feed the expected-asset signals ----
   const historySection: HistorySection | null =
@@ -360,8 +445,9 @@ export async function collectWalletEvidence(ports: CollectPorts, request: Collec
 
   // One address analysis section per requested chain would multiply sections; the evidence carries the first chain's and
   // lists the rest in `skipped`, so a multi-chain request is never silently reduced.
-  const firstPnl = pnlReads.find((item) => item.overview !== null || item.recent !== null) ?? null;
-  for (const extra of pnlReads.filter((item) => item !== firstPnl && (item.overview !== null || item.recent !== null))) skipped.push({ what: `portfolio.${extra.chainIndex}`, reason: "only_first_chain_with_data_is_in_the_section" });
+  const hasData = (item: PnlRead): boolean => item.overview !== null || item.recent !== null || item.latest.length > 0 || item.dex !== null;
+  const firstPnl = pnlReads.find(hasData) ?? null;
+  for (const extra of pnlReads.filter((item) => item !== firstPnl && hasData(item))) skipped.push({ what: `portfolio.${extra.chainIndex}`, reason: "only_first_chain_with_data_is_in_the_section" });
   const pnlSection =
     firstPnl === null
       ? null
@@ -371,12 +457,16 @@ export async function collectWalletEvidence(ports: CollectPorts, request: Collec
           overview: firstPnl.overview?.value ?? null,
           rows: firstPnl.recent?.rows ?? [],
           source: sourceOf("portfolio.recentPnl"),
-          fetchedAtMs: (firstPnl.recent ?? firstPnl.overview)!.meta.receivedAtMs,
+          // The oldest read of the section: the section is as old as its first answer.
+          fetchedAtMs: Math.min(...[firstPnl.recent?.meta.receivedAtMs, firstPnl.overview?.meta.receivedAtMs, firstPnl.dex?.read.meta.receivedAtMs, ...firstPnl.latest.map((item) => item.receivedAtMs)].filter((value): value is number => typeof value === "number")),
           nowMs: nowMs(),
           maxAgeMs,
           pagesRead: firstPnl.recent?.pages ?? 1,
           truncated: firstPnl.recent?.truncated ?? false,
           stopReason: firstPnl.recent?.stopReason ?? "single_answer",
+          tokenPnl: firstPnl.latest.map((item) => ({ token: item.token, raw: item.raw })),
+          ...(firstPnl.dex === null ? {} : { trades: { rows: firstPnl.dex.read.rows, beginMs: firstPnl.dex.beginMs, endMs: firstPnl.dex.endMs, pagesRead: firstPnl.dex.read.pages, truncated: firstPnl.dex.read.truncated, stopReason: firstPnl.dex.read.stopReason } }),
+          supportedChains: firstPnl.supported,
         });
 
   const expected = new Map<string, { chainIndex: string; tokenContractAddress: string }>();
@@ -393,6 +483,10 @@ export async function collectWalletEvidence(ports: CollectPorts, request: Collec
     }
   }
   if (pnlSection !== null) {
+    for (const [key, net] of netPositionFromTrades(pnlSection)) {
+      const trade = pnlSection.trades.find((item) => item.identity.key === key);
+      if (trade !== undefined && net.units > 0n) addExpected(trade.identity.chainIndex, trade.identity.asset.kind === "contract" ? trade.identity.asset.address : "");
+    }
     for (const position of pnlSection.positions) {
       const amount = parseDec(position.tokenBalanceAmountText);
       if (amount !== null && amount.units > 0n && position.soldOutAtMs === null) addExpected(position.identity.chainIndex, position.identity.asset.kind === "contract" ? position.identity.asset.address : "");
@@ -448,6 +542,16 @@ export async function collectWalletEvidence(ports: CollectPorts, request: Collec
     options: config.valueToleranceUsd === undefined ? {} : { valueToleranceUsd: config.valueToleranceUsd },
     collection: { trigger: "on_demand", callsMade, callBudget: maxCalls, stoppedBy, errors, skipped },
   });
-  const persisted = ports.store === undefined ? null : ports.store.put(evidence, fingerprint);
+  let persisted: PutResult | null = null;
+  if (ports.store !== undefined) {
+    try {
+      persisted = ports.store.put(evidence, fingerprint);
+    } catch (error) {
+      // An evidence that does not verify is a bug, not a disk problem: never disguise it.
+      if (error instanceof EvidenceIntegrityError) throw error;
+      // The reads are done and paid for: a failing disk must not throw the evidence away.
+      persisted = { written: false, finding: null, replacedCorrupt: false, error: "store_write_failed" };
+    }
+  }
   return { evidence, cache: { hit: false, ageMs: null }, persisted, quota: ports.http.quota.snapshot() };
 }

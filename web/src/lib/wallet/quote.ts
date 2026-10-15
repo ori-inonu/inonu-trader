@@ -25,9 +25,14 @@ export interface QuoteSide {
 export interface Quote {
   readonly chainIndex: string | null;
   readonly mode: string | null;
-  /** In the smallest unit of each coin, as numbers (an 18 decimals amount above 2^53 is approximate). */
+  /** Legacy numeric projections, approximate above 2^53. The output unit is not qualified. */
   readonly fromAmount: number;
   readonly toAmount: number;
+  /** Exact provider integer text when available; optional for legacy callers. */
+  readonly fromAmountRaw?: string | null;
+  readonly toAmountRaw?: string | null;
+  /** Token decimals alone do not qualify the provider's output amount unit. */
+  readonly outputUnit?: "unverified";
   /** (received - paid) / paid, in percent: a loss is negative. */
   readonly priceImpactPct: number | null;
   /** Estimated gas consumption, in the smallest unit of the chain. */
@@ -58,6 +63,8 @@ const TIERS: ReadonlySet<string> = new Set<OnchainTier>(["free", "basic", "premi
 const isRec = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
 const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 const numOrNull = (v: unknown): number | null | undefined => (v === null ? null : isNum(v) ? v : undefined);
+const amountRaw = (v: unknown): string | null | undefined =>
+  v === undefined || v === null ? null : typeof v === "string" && v.length <= 128 && /^\d+$/.test(v) ? v : undefined;
 // eslint-disable-next-line no-control-regex
 const CONTROL = /[\u0000-\u001f\u007f]/;
 const textOrNull = (v: unknown, max: number): string | null | undefined => (v === null ? null : typeof v === "string" && !CONTROL.test(v) ? v.slice(0, max) : undefined);
@@ -83,10 +90,13 @@ export function parseQuote(raw: unknown): Quote | null {
   const priceImpactPct = numOrNull(raw.priceImpactPct);
   const estimateGasFee = numOrNull(raw.estimateGasFee);
   const tradeFee = numOrNull(raw.tradeFee);
+  const fromAmountRaw = amountRaw(raw.fromAmountRaw);
+  const toAmountRaw = amountRaw(raw.toAmountRaw);
   if (fromToken === null || toToken === null) return null;
   if (!isNum(raw.fromAmount) || raw.fromAmount < 0 || !isNum(raw.toAmount) || raw.toAmount < 0) return null;
   if (chainIndex === undefined || mode === undefined || priceImpactPct === undefined || estimateGasFee === undefined || tradeFee === undefined) return null;
-  return { chainIndex, mode, fromAmount: raw.fromAmount, toAmount: raw.toAmount, priceImpactPct, estimateGasFee, tradeFee, fromToken, toToken };
+  if (fromAmountRaw === undefined || toAmountRaw === undefined || (raw.outputUnit !== undefined && raw.outputUnit !== "unverified")) return null;
+  return { chainIndex, mode, fromAmount: raw.fromAmount, toAmount: raw.toAmount, fromAmountRaw, toAmountRaw, outputUnit: "unverified", priceImpactPct, estimateGasFee, tradeFee, fromToken, toToken };
 }
 
 function parseMeta(v: unknown): OnchainMeta | null {
@@ -99,9 +109,10 @@ function parseMeta(v: unknown): OnchainMeta | null {
 /** An EVM address has no case: the same address in another case is the same token. Anything else is compared as it is. */
 const sameToken = (echoed: string | null, asked: string): boolean => echoed === null || (/^0x[0-9a-fA-F]+$/.test(asked) ? echoed.toLowerCase() === asked.toLowerCase() : echoed === asked);
 
-/** The quote must be about what was asked: the network, the amount (the numbers are floats, so a relative difference) and both tokens. */
+/** Match exact raw input when available; legacy numeric-only quotes retain the approximate comparison. */
 function isAbout(quote: Quote, params: QuoteParams): boolean {
   if (quote.chainIndex !== null && quote.chainIndex !== params.chainIndex) return false;
+  if (quote.fromAmountRaw != null && BigInt(quote.fromAmountRaw) !== BigInt(params.amount)) return false;
   const asked = Number(params.amount);
   if (!Number.isFinite(asked) || Math.abs(quote.fromAmount - asked) > asked * 1e-9) return false;
   return sameToken(quote.fromToken.address, params.fromToken) && sameToken(quote.toToken.address, params.toToken);

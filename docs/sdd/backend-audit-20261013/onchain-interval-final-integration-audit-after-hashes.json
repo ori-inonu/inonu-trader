@@ -1,0 +1,67 @@
+{
+  "reviewer_id": "audit_intelligence",
+  "phase": "after independent final integration audit",
+  "observed_utc": "2026-10-13T19:07:25.1863427Z",
+  "files": [
+    {
+      "path": "src/onchain-read/client.ts",
+      "live_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "isolated_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "equal": true,
+      "preserved": true
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "live_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "isolated_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "equal": true,
+      "preserved": true
+    },
+    {
+      "path": "src/onchain-read/gateway.ts",
+      "live_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "isolated_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "equal": true,
+      "preserved": true
+    },
+    {
+      "path": "src/onchain-read/gateway.test.ts",
+      "live_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "isolated_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "equal": true,
+      "preserved": true
+    }
+  ],
+  "documents": [
+    {
+      "path": "ONCHAIN-SPEC.md",
+      "live_sha256": "4ef3aadfbb0baec1c9fdd4fb262312fd425864d53718abad9d9ba6fe94735ec3",
+      "isolated_sha256": "4ef3aadfbb0baec1c9fdd4fb262312fd425864d53718abad9d9ba6fe94735ec3"
+    },
+    {
+      "path": "ONCHAIN-INTERVAL-FINAL-LIVE-VERIFICATION.md",
+      "live_sha256": "4039245af4c7067e71bd2c72dff0fbbf606374be60ec62df99654a8e03eca380",
+      "isolated_sha256": "4039245af4c7067e71bd2c72dff0fbbf606374be60ec62df99654a8e03eca380"
+    },
+    {
+      "path": "ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+      "live_sha256": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "isolated_sha256": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9"
+    },
+    {
+      "path": "ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+      "live_sha256": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "isolated_sha256": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db"
+    },
+    {
+      "path": "evidence/onchain-interval-integration-manifest.json",
+      "live_sha256": "d2dcf7c6283def98ec9019f1a6314d5524f06ceb7afc72f27fc58aa6306732f7",
+      "isolated_sha256": "d2dcf7c6283def98ec9019f1a6314d5524f06ceb7afc72f27fc58aa6306732f7"
+    },
+    {
+      "path": "evidence/onchain-interval-final-live.json",
+      "live_sha256": "e5e25048babcd8455576851eef10efbe52f9d32b46502e2d8f4377abefb224e4",
+      "isolated_sha256": "e5e25048babcd8455576851eef10efbe52f9d32b46502e2d8f4377abefb224e4"
+    }
+  ]
+}

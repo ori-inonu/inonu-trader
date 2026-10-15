@@ -1,18 +1,18 @@
-// RAS-1: the Rastreador opens an asset on the desk through /?ativo=SYMBOL. The desk reads that once and accepts only a plain OKX
+// RAS-1: the Rastreador opens an asset on the desk through /mesa?ativo=SYMBOL. The desk reads that once and accepts only a plain OKX
 // instrument id: anything else in the address is ignored, never trusted. origin: synthetic_fixture, tests only.
 import { describe, expect, test } from "bun:test";
 import { focusFromSearch, openUrl } from "./open";
 
 describe("openUrl", () => {
   test("is the desk with the instrument in the query", () => {
-    expect(openUrl("SOL-USDT")).toBe("/?ativo=SOL-USDT");
-    expect(openUrl("BTC-USDT-SWAP")).toBe("/?ativo=BTC-USDT-SWAP");
+    expect(openUrl("SOL-USDT")).toBe("/mesa?ativo=SOL-USDT");
+    expect(openUrl("BTC-USDT-SWAP")).toBe("/mesa?ativo=BTC-USDT-SWAP");
   });
 
   test("an id that is not an instrument opens the desk with nothing in the query", () => {
-    expect(openUrl("a b")).toBe("/");
-    expect(openUrl("<script>")).toBe("/");
-    expect(openUrl("")).toBe("/");
+    expect(openUrl("a b")).toBe("/mesa");
+    expect(openUrl("<script>")).toBe("/mesa");
+    expect(openUrl("")).toBe("/mesa");
   });
 });
 
