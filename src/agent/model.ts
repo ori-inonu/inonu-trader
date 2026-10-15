@@ -46,6 +46,13 @@ const EXEC_LEGEND =
 const ULT_LEGEND =
   "your own closed round trips on THIS token: n how many, m minutes held in the last one, p its cash return percent in the same stablecoin before the network fee, ag minutes since that exit. Re-entering a token you just exited minutes ago without a material change in the facts repeats the round-trip spread and fee";
 
+const EXTRA_COMPRA_LEGEND: Readonly<Record<string, string>> = {
+  "compras.wu": "tracked wallets' total purchases of this token, thousands of dollars",
+  "compras.sp": "current price against the USD-weighted average entry price paid by tracked wallets, percent (positive: price is above what smart money paid; negative: below)",
+  "compras.inf": "net capital inflow into this token, thousands of dollars",
+  "compras.ut": "number of unique traders in the hot-token window (compare with trades to judge real breadth vs wash trading)",
+};
+
 const LEGEND: Readonly<Record<string, string>> = {
   caixa: "share of the agent wallet in dollar coins, percent",
   agente: "share of the whole portfolio in the agent wallet, percent",
@@ -203,6 +210,14 @@ export function agentBrief(input: BriefInput): AgentBrief {
     const e = ecoById.get(c.id);
     if (e === undefined) continue;
     const t = c.timing;
+    const hasRichEco = e.facts.smartPriceUsd !== undefined || e.facts.inflowUsd !== undefined || e.facts.uniqueTraders !== undefined;
+    const sp =
+      e.facts.smartPriceUsd != null && e.facts.smartPriceUsd > 0 && e.facts.priceUsd !== null && e.facts.priceUsd > 0
+        ? r1((e.facts.priceUsd / e.facts.smartPriceUsd - 1) * 100)
+        : null;
+    const wu = hasRichEco && e.facts.walletsUsd !== null && e.facts.walletsUsd > 0 ? thousands(e.facts.walletsUsd) : null;
+    const inf = e.facts.inflowUsd !== undefined && e.facts.inflowUsd !== null ? thousands(e.facts.inflowUsd) : null;
+    const ut = e.facts.uniqueTraders !== undefined && e.facts.uniqueTraders !== null ? r0(e.facts.uniqueTraders) : null;
     compras[c.id] = {
       ...briefItem(e, book.agentUsd),
       // the ceiling the model can use is the biggest by profile (sized by each stop), not the plain one of the ecosystem screen
@@ -214,11 +229,17 @@ export function agentBrief(input: BriefInput): AgentBrief {
       f: c.families,
       o: c.stances,
       pf: c.profiles,
-      ...present({ mo: momentumBrief(c.momentum), k: feeUsd(input.feeOf?.(c.chainIndex) ?? null), ult: input.tokenTrips?.[c.address] ?? null }),
+      ...present({ mo: momentumBrief(c.momentum), k: feeUsd(input.feeOf?.(c.chainIndex) ?? null), ult: input.tokenTrips?.[c.address] ?? null, wu, sp, inf, ut }),
       tm: timingBrief(t),
     };
   }
   const hasUlt = [...input.holdings, ...input.buys].some((c) => input.tokenTrips?.[c.address] !== undefined);
+  const extraCompraKeys: Record<string, string> = {};
+  for (const item of Object.values(compras)) {
+    for (const k of ["wu", "sp", "inf", "ut"] as const) {
+      if (Object.hasOwn(item, k)) extraCompraKeys[`compras.${k}`] = EXTRA_COMPRA_LEGEND[`compras.${k}`]!;
+    }
+  }
   return {
     v: 1,
     carteira: {
@@ -227,7 +248,7 @@ export function agentBrief(input: BriefInput): AgentBrief {
       principal: total === null || book.agentUsd === null ? null : r1(((total - book.agentUsd) / total) * 100),
       posicoes: book.positions.filter((p) => !p.isCash && p.usd !== null && p.usd > 0).length,
     },
-    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(hasUlt ? { ult: ULT_LEGEND } : {}) },
+    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(hasUlt ? { ult: ULT_LEGEND } : {}), ...extraCompraKeys },
     posicoes,
     compras,
     contexto: boundedContext(input.context),
@@ -306,7 +327,7 @@ const MANDATE_QUESTIONS = {
 
 /** Every constant text the model reads in a consultation (the goal, the entries, the rules of each question, the legend of the Brief and the facet questions): the digest of these is part of the version of the decider. */
 export function questionTexts(): Readonly<Record<string, unknown>> {
-  return { goal: GOAL, goalShort: GOAL_SHORT, inputs: INPUTS, inputsShort: INPUTS_SHORT, posture: POSTURE_CRITERIA, stance: STANCE_CRITERIA, mandate: MANDATE_CRITERIA, mandateQuestions: MANDATE_QUESTIONS, profile: PROFILE_CRITERIA, legend: { ...LEGEND, ult: ULT_LEGEND }, execLegend: EXEC_LEGEND, facets: facetTexts() };
+  return { goal: GOAL, goalShort: GOAL_SHORT, inputs: INPUTS, inputsShort: INPUTS_SHORT, posture: POSTURE_CRITERIA, stance: STANCE_CRITERIA, mandate: MANDATE_CRITERIA, mandateQuestions: MANDATE_QUESTIONS, profile: PROFILE_CRITERIA, legend: { ...LEGEND, ult: ULT_LEGEND, ...EXTRA_COMPRA_LEGEND }, execLegend: EXEC_LEGEND, facets: facetTexts() };
 }
 export const questionsDigestOf = (texts: Readonly<Record<string, unknown>>): string => sha256Hex(canonicalJson(texts));
 export const questionsDigest = (): string => questionsDigestOf(questionTexts());

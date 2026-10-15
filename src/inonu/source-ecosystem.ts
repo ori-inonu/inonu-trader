@@ -110,20 +110,25 @@ function readChain(chainIndex: string, hot: InternalGatewayResult | undefined, s
   const signalRows = signals !== undefined && signals.ok ? rowsOf(signals.data) : [];
   const read = signals !== undefined && signals.ok;
 
-  const groups = new Map<string, { rows: SignalLike[]; usd: number; weightedSold: number; soldUsd: number }>();
+  const groups = new Map<string, { rows: SignalLike[]; usd: number; weightedSold: number; soldUsd: number; priceWeightedUsd: number; pricedUsd: number }>();
   for (const row of signalRows) {
     const address = text(rec(row.token)?.address);
     if (address === null) continue;
     const key = /^0x/i.test(address) ? address.toLowerCase() : address;
-    const group = groups.get(key) ?? { rows: [], usd: 0, weightedSold: 0, soldUsd: 0 };
+    const group = groups.get(key) ?? { rows: [], usd: 0, weightedSold: 0, soldUsd: 0, priceWeightedUsd: 0, pricedUsd: 0 };
     const amountUsd = num(row.amountUsd);
     const sold = num(row.soldRatioPct);
+    const sigPrice = num(row.priceUsd);
     group.rows.push({ amountUsd: amountUsd ?? Number.NaN, soldRatioPct: sold, walletCount: num(row.walletCount) ?? Number.NaN });
     if (amountUsd !== null && amountUsd > 0) {
       group.usd += amountUsd;
       if (sold !== null && sold >= 0 && sold <= 100) {
         group.weightedSold += amountUsd * sold;
         group.soldUsd += amountUsd;
+      }
+      if (sigPrice !== null && sigPrice > 0) {
+        group.priceWeightedUsd += amountUsd * sigPrice;
+        group.pricedUsd += amountUsd;
       }
     }
     groups.set(key, group);
@@ -186,6 +191,9 @@ function readChain(chainIndex: string, hot: InternalGatewayResult | undefined, s
       wallets: group === undefined ? (read ? 0 : null) : input?.walletCount ?? null,
       walletsUsd: group === undefined ? (read ? 0 : null) : group.usd,
       soldPct: group === undefined || group.soldUsd <= 0 ? null : group.weightedSold / group.soldUsd,
+      smartPriceUsd: group === undefined || group.pricedUsd <= 0 ? null : group.priceWeightedUsd / group.pricedUsd,
+      inflowUsd: num(row.inflowUsd),
+      uniqueTraders: num(row.uniqueTraders),
     });
   }
   return { chainIndex, facts, hotRows: hotRows.length, signalRows: signalRows.length };

@@ -97,6 +97,20 @@ describe("the Brief the agent's model reads", () => {
     expect(brief.chaves.ult).toMatch(/closed round trips on THIS token/);
   });
 
+  test("when ecosystem facts carry smart-money entry price, inflow and unique traders, compras exposes wu, sp, inf and ut with scoped legend entries", () => {
+    const { book, holdings, saldo } = build(0, 0);
+    const rich: EcoFacts = { ...eco(205), priceUsd: 1.25, walletsUsd: 35_000, smartPriceUsd: 1.0, inflowUsd: 48_000, uniqueTraders: 920 };
+    const ecoCtx = { observedAtMs: 1, saldo, candidates: [candidateOf(rich, saldo)], excluded: {} };
+    const buys = buyCandidates(ecoCtx, () => calm, () => 10);
+    const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
+    const item = brief.compras[buys[0]!.id] as Record<string, unknown>;
+    expect(item).toMatchObject({ wu: 35, sp: 25, inf: 48, ut: 920 });
+    expect(brief.chaves["compras.wu"]).toMatch(/thousands of dollars/i);
+    expect(brief.chaves["compras.sp"]).toMatch(/entry price paid by tracked wallets/i);
+    expect(brief.chaves["compras.inf"]).toMatch(/inflow/i);
+    expect(brief.chaves["compras.ut"]).toMatch(/unique traders/i);
+  });
+
   describe("a short key means what its SCOPE says: the same letter is a different fact for a holding and for a purchase candidate", () => {
     const { book, holdings, buys, ecoCtx } = build(2, 2);
     const full = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null, mandate: { mandate: { risk: "agressivo", reserve: "baixa", concentration: "grande", look: "rapido" }, aggressiveOpen: true } });
