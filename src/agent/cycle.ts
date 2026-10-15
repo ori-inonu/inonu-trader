@@ -22,7 +22,7 @@ import { halfDone, halfProgress } from "./exit";
 import { orderKey, type AgentLedger, type OrderRecord, type OrderStage } from "./ledger";
 import type { Mandate } from "./mandate";
 import type { ExecBrief, TokenTripBrief } from "./fills";
-import { agentBrief, physicalRequestsOf, type AgentBrief, type AgentModel, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
+import { agentBrief, physicalRequestsOf, type AgentBrief, type AgentModel, type BriefInput, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
 import { offeredProfiles, planKey, PROFILES, type PlanStore, type ProfileId } from "./plans";
 import { pendingBuys } from "./pending-buys";
 import { holdingId, protect } from "./protection";
@@ -279,12 +279,18 @@ const MAX_BUYS_SHOWN = 7;
 /** After the model sold part of a token, its partial sales are not offered again for this long. */
 const TRIM_COOLDOWN_MS = 60 * 60_000;
 
-/** Structural quality of an open purchase candidate after hourly timing is attached: clean pullback/continuation setups ahead of already-parabolic or heavily marked tokens. */
-function buyQuality(c: Candidate): number {
+/** Structural and price-distortion quality of an open purchase candidate: rewards pullback/continuation setups and discounts against smart-money entry price (`sp <= 10%`), and penalizes already-parabolic or exit-liquidity (`sp >= 80%`) tokens. */
+function buyQuality(c: Candidate, ef?: EcoFacts): number {
   let score = c.families.length * 2 - c.marks.length * 2;
   if (c.families.includes("retracao") || c.families.includes("alta_com_folego")) score += 4;
   if (c.marks.includes("parabolico") || c.marks.includes("esticado")) score -= 5;
   if (c.marks.includes("caindo") || c.marks.includes("caindo_agora")) score -= 3;
+  if (ef !== undefined && ef.smartPriceUsd != null && ef.smartPriceUsd > 0 && ef.priceUsd !== null && ef.priceUsd > 0) {
+    const sp = (ef.priceUsd / ef.smartPriceUsd - 1) * 100;
+    if (sp <= 10 && (ef.soldPct === null || ef.soldPct <= 30)) score += 4;
+    else if (sp >= 80) score -= 4;
+  }
+  if (ef?.inflowUsd != null && ef.inflowUsd > 0) score += 1;
   return score;
 }
 
@@ -761,13 +767,14 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     // what the plan is selling this very cycle is not bought back by the model in the same cycle; a token with an order in flight is not touched by the model at all
     const paused = deps.buyingPaused?.() ?? false;
     if (paused) notes.push("compras_pausadas");
-    // what the few tokens that matter are doing in the last hour (five-minute bars): at most three purchases that are still open (cleanest structure first) and three holdings, so the quota goes where the decisions are
+    const ecoFactsByBuyId = new Map(eco.candidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
+    // what the few tokens that matter are doing in the last hour (five-minute bars): at most three purchases that are still open (cleanest structure and best smart-money price distortion first) and three holdings, so the quota goes where the decisions are
     const momentum = new Map<string, MomentumFacts | null>();
     if (deps.momentumOf !== undefined) {
       const open = paused
         ? []
         : [...buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, undefined, limited?.policy?.perTxUsd ?? null).filter((c) => c.stances.length > 1)]
-            .sort((a, b) => buyQuality(b) - buyQuality(a))
+            .sort((a, b) => buyQuality(b, ecoFactsByBuyId.get(b.id)) - buyQuality(a, ecoFactsByBuyId.get(a.id)))
             .slice(0, MOMENTUM_READS);
       await Promise.all(
         [...open, ...holdingsPlain.slice(0, MOMENTUM_READS)].map(async (c) => {
@@ -801,8 +808,8 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     };
     const holdings = holdingsPlain.map((c) => cooled(momentum.has(c.id) ? withMomentum(c, momentum.get(c.id) ?? null) : c));
     const buys = paused ? [] : buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, (f) => momentum.get(`buy:${f.candidateId}`) ?? null, limited?.policy?.perTxUsd ?? null, (chainIndex, address) => (heldKeys.has(planKey(chainIndex, address)) ? (deps.plans.get(planKey(chainIndex, address))?.profile ?? null) : null)).filter((c) => !exiting.has(planKey(c.chainIndex, c.address)) && !inflightTokens.has(planKey(c.chainIndex, c.address)) && !pending.tokens.has(planKey(c.chainIndex, c.address)));
-    // the model is shown the purchases the code left OPEN first (up to MAX_OPEN_BUYS when closed ones exist, or up to MAX_BUYS_SHOWN when fewer are closed), ranked with clean/early setups ahead of parabolic ones
-    const openAll = [...buys.filter((c) => c.stances.length > 1)].sort((a, b) => buyQuality(b) - buyQuality(a));
+    // the model is shown the purchases the code left OPEN first (up to MAX_OPEN_BUYS when closed ones exist, or up to MAX_BUYS_SHOWN when fewer are closed), ranked with clean/early setups and smart-money discounts ahead of parabolic ones
+    const openAll = [...buys.filter((c) => c.stances.length > 1)].sort((a, b) => buyQuality(b, ecoFactsByBuyId.get(b.id)) - buyQuality(a, ecoFactsByBuyId.get(a.id)));
     const closedAll = buys.filter((c) => c.stances.length <= 1);
     const openCap = Math.min(MAX_BUYS_SHOWN, Math.max(MAX_OPEN_BUYS, MAX_BUYS_SHOWN - closedAll.length));
     const openBuys = openAll.slice(0, openCap);
