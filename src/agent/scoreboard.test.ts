@@ -415,8 +415,9 @@ describe("the track record the model reads: how often each kind of decision beat
     }
     await settle(board, (d) => (Number(d.candidateId.split(":")[1]) <= 4 ? 2.4 : 1.6));
     const r = board.record("1h", T0 + 2 * H);
-    // 4 of 5 rose (+20%), 1 fell (-20%): comprar and f_accumulating hit 80%, while f_late_entry (bearish facet) hit 20%
+    // 4 of 5 rose (+20%), 1 fell (-20%): comprar, alvo_5 and f_accumulating hit 80%, while f_late_entry (bearish facet) hit 20%
     expect(r.comprar).toEqual({ n: 5, acerto: 80, medio: 12, melhor: 20, pior: -20 });
+    expect(r.alvo_5).toEqual({ n: 5, acerto: 80, medio: 12, melhor: 20, pior: -20 });
     expect(r.f_accumulating).toEqual({ n: 5, acerto: 80, medio: 12, melhor: 20, pior: -20 });
     expect(r.f_late_entry).toEqual({ n: 5, acerto: 20, medio: 12, melhor: 20, pior: -20 });
   });

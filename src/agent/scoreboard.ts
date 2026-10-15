@@ -339,6 +339,7 @@ export function createScoreboard(deps: ScoreboardDeps): Scoreboard {
         } else if (d.side === "sell") add("vender", d);
         else {
           add("comprar", d);
+          if (d.profile !== null && /^alvo_\d+$/.test(d.profile)) add(d.profile, d);
           for (const f of d.families) add(f, d);
         }
         const fMap = d.facets ?? facetsOf?.(d.cycleId, d.candidateId);
