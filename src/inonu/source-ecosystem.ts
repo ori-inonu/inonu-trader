@@ -299,7 +299,16 @@ export function createEcosystemSource(deps: EcosystemDeps): BriefSource {
         const validFlags = (digest.risco?.flags ?? []).filter((flag) => FLAG.test(flag));
         const warnFlags = bearishFlags(validFlags);
         const flags = [...warnFlags, ...validFlags.filter((flag) => !warnFlags.includes(flag))].slice(0, 3);
-        riskFacts.set(entry.facts.candidateId, { ...entry.facts, riskFlags: flags });
+        const rObj = result.ok ? rec(result.data) : null;
+        riskFacts.set(entry.facts.candidateId, {
+          ...entry.facts,
+          riskLevel: entry.facts.riskLevel ?? num(rObj?.riskLevel),
+          top10Pct: entry.facts.top10Pct ?? num(rObj?.top10HoldPct),
+          devPct: entry.facts.devPct ?? num(rObj?.devHoldPct),
+          bundlePct: entry.facts.bundlePct ?? num(rObj?.bundleHoldPct),
+          lpBurnedPct: num(rObj?.lpBurnedPct),
+          riskFlags: flags,
+        });
       }
       riskUnchecked += Math.max(0, Math.min(pool.length, take + 1) - Math.min(pool.length, riskReads));
 

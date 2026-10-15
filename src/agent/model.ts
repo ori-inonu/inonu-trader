@@ -51,6 +51,7 @@ const EXTRA_COMPRA_LEGEND: Readonly<Record<string, string>> = {
   "compras.sp": "current price against the USD-weighted average entry price paid by tracked wallets, percent (positive: price is above what smart money paid; negative: below)",
   "compras.inf": "net capital inflow into this token, thousands of dollars",
   "compras.ut": "number of unique traders in the hot-token window (compare with trades to judge real breadth vs wash trading)",
+  "compras.lp": "burned share of the liquidity pool from token-risk, percent 0-100",
 };
 
 const LEGEND: Readonly<Record<string, string>> = {
@@ -218,6 +219,7 @@ export function agentBrief(input: BriefInput): AgentBrief {
     const wu = hasRichEco && e.facts.walletsUsd !== null && e.facts.walletsUsd > 0 ? thousands(e.facts.walletsUsd) : null;
     const inf = e.facts.inflowUsd !== undefined && e.facts.inflowUsd !== null ? thousands(e.facts.inflowUsd) : null;
     const ut = e.facts.uniqueTraders !== undefined && e.facts.uniqueTraders !== null ? r0(e.facts.uniqueTraders) : null;
+    const lp = e.facts.lpBurnedPct !== undefined && e.facts.lpBurnedPct !== null ? r0(e.facts.lpBurnedPct) : null;
     compras[c.id] = {
       ...briefItem(e, book.agentUsd),
       // the ceiling the model can use is the biggest by profile (sized by each stop), not the plain one of the ecosystem screen
@@ -229,14 +231,14 @@ export function agentBrief(input: BriefInput): AgentBrief {
       f: c.families,
       o: c.stances,
       pf: c.profiles,
-      ...present({ mo: momentumBrief(c.momentum), k: feeUsd(input.feeOf?.(c.chainIndex) ?? null), ult: input.tokenTrips?.[c.address] ?? null, wu, sp, inf, ut }),
+      ...present({ mo: momentumBrief(c.momentum), k: feeUsd(input.feeOf?.(c.chainIndex) ?? null), ult: input.tokenTrips?.[c.address] ?? null, wu, sp, inf, ut, lp }),
       tm: timingBrief(t),
     };
   }
   const hasUlt = [...input.holdings, ...input.buys].some((c) => input.tokenTrips?.[c.address] !== undefined);
   const extraCompraKeys: Record<string, string> = {};
   for (const item of Object.values(compras)) {
-    for (const k of ["wu", "sp", "inf", "ut"] as const) {
+    for (const k of ["wu", "sp", "inf", "ut", "lp"] as const) {
       if (Object.hasOwn(item, k)) extraCompraKeys[`compras.${k}`] = EXTRA_COMPRA_LEGEND[`compras.${k}`]!;
     }
   }

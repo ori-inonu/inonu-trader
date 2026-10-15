@@ -86,6 +86,8 @@ export interface EcoFacts {
   readonly inflowUsd?: number | null;
   /** Unique traders count from `/onchain/hot-tokens`; null when unknown. */
   readonly uniqueTraders?: number | null;
+  /** Burned share of the liquidity pool (0 to 100) from `/onchain/token-risk`; null when unknown. */
+  readonly lpBurnedPct?: number | null;
 }
 
 const num = (v: number | null): v is number => v !== null && Number.isFinite(v);
