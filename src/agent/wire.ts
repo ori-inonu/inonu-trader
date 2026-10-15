@@ -617,7 +617,20 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     },
     quoteOf: (key) => quotes.get(key) ?? null,
     history: () => {
-      const record = scoreboard.record("1h", localNow(), localNow() - 14 * 24 * 3_600_000);
+      const briefsPath = join(dir, "briefs.jsonl");
+      const facetsByCycle = new Map<string, Record<string, Record<string, number>>>();
+      for (const l of linesOf(briefsPath)) {
+        if (l.trim() === "") continue;
+        try {
+          const parsed = JSON.parse(l) as { cycleId?: unknown; facets?: unknown };
+          if (typeof parsed.cycleId === "string" && parsed.facets !== null && typeof parsed.facets === "object" && !Array.isArray(parsed.facets)) {
+            facetsByCycle.set(parsed.cycleId, parsed.facets as Record<string, Record<string, number>>);
+          }
+        } catch {
+          // ignore malformed line
+        }
+      }
+      const record = scoreboard.record("1h", localNow(), localNow() - 14 * 24 * 3_600_000, (cId, candId) => facetsByCycle.get(cId)?.[candId]);
       return Object.keys(record).length === 0 ? null : record;
     },
     onConsult: (entry, meta) => {

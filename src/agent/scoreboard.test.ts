@@ -405,6 +405,20 @@ describe("the track record the model reads: how often each kind of decision beat
     const r = board.record("1h", T0 + 2 * H);
     expect(r.fluxo).toEqual({ n: 6, acerto: 67, medio: 6.7, melhor: 20, pior: -20 });
     expect(r.liquidez).toEqual({ n: 5, acerto: 0, medio: -20, melhor: -20, pior: -20 });
+    expect(r.pular).toEqual({ n: 11, acerto: 64, medio: -5.5, melhor: 20, pior: -20 });
+  });
+
+  test("actual purchases (`comprar`) and high-conviction facet judgments (`f_*`) are calibrated separately in the record", async () => {
+    const board = createScoreboard(memory().deps);
+    for (let i = 1; i <= 5; i++) {
+      board.mark(mark({ key: `b${i}:buy:x`, cycleId: `b${i}`, candidateId: `buy:${i}`, address: token(i), side: "buy", stance: "buy_third", usd: 20, facets: { accumulating: 0.75, late_entry: 0.7 } }));
+    }
+    await settle(board, (d) => (Number(d.candidateId.split(":")[1]) <= 4 ? 2.4 : 1.6));
+    const r = board.record("1h", T0 + 2 * H);
+    // 4 of 5 rose (+20%), 1 fell (-20%): comprar and f_accumulating hit 80%, while f_late_entry (bearish facet) hit 20%
+    expect(r.comprar).toEqual({ n: 5, acerto: 80, medio: 12, melhor: 20, pior: -20 });
+    expect(r.f_accumulating).toEqual({ n: 5, acerto: 80, medio: 12, melhor: 20, pior: -20 });
+    expect(r.f_late_entry).toEqual({ n: 5, acerto: 20, medio: 12, melhor: 20, pior: -20 });
   });
 
   test("keeping a holding and selling are their own records, and a purchase the code closed (not the model's choice) never counts toward a family", async () => {

@@ -591,6 +591,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
           families: c?.families ?? [],
           triggers: c?.triggers ?? [],
           wallet: o.order.wallet,
+          ...(shown.facets[o.order.candidateId] !== undefined && Object.keys(shown.facets[o.order.candidateId]!).length > 0 ? { facets: shown.facets[o.order.candidateId] } : {}),
         });
       } catch {
         if (!notes.includes("placar_nao_gravou")) notes.push("placar_nao_gravou");
@@ -992,6 +993,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
           triggers: passed && c.stances.length <= 1 ? [...c.triggers, "fechada_pelo_codigo"] : c.triggers,
           wallet: c.wallet,
           inaction: true,
+          ...(shown.facets[c.id] !== undefined && Object.keys(shown.facets[c.id]!).length > 0 ? { facets: shown.facets[c.id] } : {}),
         });
       } catch {
         if (!notes.includes("placar_nao_gravou")) notes.push("placar_nao_gravou");

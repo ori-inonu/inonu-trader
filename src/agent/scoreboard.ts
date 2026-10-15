@@ -56,6 +56,8 @@ export interface DecisionMark {
   readonly families: readonly string[];
   readonly triggers: readonly string[];
   readonly wallet: WalletKind;
+  /** Atomic facet probabilities judged by the model on this candidate at decision time (facets.ts). */
+  readonly facets?: Readonly<Record<string, number>>;
   /**
    * The decision was NOT to act (keep a holding, skip a purchase). It is measured against the alternative the model turned down, written as the side whose effect that is: keeping a holding is worth what holding
    * did (the sale it passed over would have lost that), so it is `buy`; not buying is worth what the purchase it passed over would have lost, so it is `sell`. These live in their own windows and never move
@@ -124,7 +126,12 @@ export interface Scoreboard {
    * the price rose after), and `manter` and `vender` for how often keeping a holding and selling one beat the alternative. Only the model's own decisions, one sample per bet per window, only what the window
    * has already closed; a hit rate is null under RECORD_MIN_N samples. Nothing here moves money.
    */
-  record(window: WindowId, nowMs: number, sinceMs?: number): Readonly<Record<string, { readonly n: number; readonly acerto: number | null; readonly medio?: number; readonly melhor?: number; readonly pior?: number }>>;
+  record(
+    window: WindowId,
+    nowMs: number,
+    sinceMs?: number,
+    facetsOf?: (cycleId: string, candidateId: string) => Readonly<Record<string, number>> | undefined,
+  ): Readonly<Record<string, { readonly n: number; readonly acerto: number | null; readonly medio?: number; readonly melhor?: number; readonly pior?: number }>>;
   /** The board; given `sinceMs`, only the decisions taken from then on (the autonomy of the agent reads the last days, not all of history). */
   summary(nowMs: number, sinceMs?: number): ScoreboardSummary;
 }
@@ -310,7 +317,7 @@ export function createScoreboard(deps: ScoreboardDeps): Scoreboard {
         }
       }
     },
-    record(windowId, nowMs, sinceMs) {
+    record(windowId, nowMs, sinceMs, facetsOf) {
       const window = WINDOWS.find((w) => w.id === windowId)!;
       const groups = new Map<string, DecisionMark[]>();
       const add = (key: string, d: DecisionMark) => {
@@ -318,15 +325,28 @@ export function createScoreboard(deps: ScoreboardDeps): Scoreboard {
         if (list === undefined) groups.set(key, [d]);
         else list.push(d);
       };
+      const BEARISH_FACET = new Set(["f_late_entry", "f_still_falling", "f_distribution", "f_fading", "f_late_in_run", "f_risk_rising"]);
       for (const d of decisions.values()) {
         if (d.source !== "modelo" || (sinceMs !== undefined && d.atMs < sinceMs)) continue;
         // a purchase the code closed (the model could only skip) is not the model's choice: it never counts toward a family
         if (d.triggers.includes("fechada_pelo_codigo")) continue;
         if (d.inaction === true) {
           if (d.stance === "hold") add("manter", d);
-          else for (const f of d.families) add(f, d);
+          else {
+            add("pular", d);
+            for (const f of d.families) add(f, d);
+          }
         } else if (d.side === "sell") add("vender", d);
-        else for (const f of d.families) add(f, d);
+        else {
+          add("comprar", d);
+          for (const f of d.families) add(f, d);
+        }
+        const fMap = d.facets ?? facetsOf?.(d.cycleId, d.candidateId);
+        if (fMap !== undefined) {
+          for (const [fname, prob] of Object.entries(fMap)) {
+            if (typeof prob === "number" && Number.isFinite(prob) && prob >= 0.6 && /^[a-z_]{1,18}$/.test(fname)) add(`f_${fname}`, d);
+          }
+        }
       }
       const out: Record<string, { n: number; acerto: number | null; medio?: number; melhor?: number; pior?: number }> = {};
       for (const [key, list] of groups) {
@@ -341,11 +361,18 @@ export function createScoreboard(deps: ScoreboardDeps): Scoreboard {
           const effect = s === undefined ? null : effectUsd(d, s.priceUsd);
           if (effect === null) continue;
           n++;
-          // a family is about BUYING: a skipped purchase is a hit for the family when the price rose (the skip's effect is negative); a real purchase when it earned. Keeping and selling are hits when they earned.
-          const hit = d.inaction === true && d.stance === "skip" ? effect < 0 : effect > 0;
-          if (hit) hits++;
           const p0 = d.entryPriceUsd;
-          if (s !== undefined && s.priceUsd !== null && p0 !== null && Number.isFinite(p0) && p0 > 0 && Number.isFinite(s.priceUsd)) moves.push((s.priceUsd / p0 - 1) * 100);
+          const move = s !== undefined && s.priceUsd !== null && p0 !== null && Number.isFinite(p0) && p0 > 0 && Number.isFinite(s.priceUsd) ? (s.priceUsd / p0 - 1) * 100 : null;
+          if (move !== null) moves.push(move);
+          // a family is about BUYING: a skipped purchase is a hit for the family when the price rose (the skip's effect is negative); a real purchase when it earned. `pular` is a hit when skipping earned (effect > 0).
+          const hit = key.startsWith("f_")
+            ? move !== null && (BEARISH_FACET.has(key) ? move < 0 : move > 0)
+            : key === "pular"
+              ? effect > 0
+              : d.inaction === true && d.stance === "skip"
+                ? effect < 0
+                : effect > 0;
+          if (hit) hits++;
         }
         if (n > 0) {
           const measured = n >= RECORD_MIN_N && moves.length > 0;

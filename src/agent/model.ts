@@ -96,7 +96,7 @@ const LEGEND: Readonly<Record<string, string>> = {
   mo: "the last hour in 5-minute bars: r5 r15 r1 percent change over 5 min, 15 min, 1 h; rg percent range of the hour (under 0.5 nothing moved); vr volume of the last 15 min over the 45 before; ag minutes since the last bar",
   tm: "moment of a purchase: rsi 0-100; rp position in the 2-day range 0-100; r4 r24 percent in 4 and 24 h; up percent from the 2-day low; dd percent below the 2-day high; sg normal hourly move percent",
   pf: "target and stop profiles offered for the purchase (pick one with the stance)",
-  historico: "your own measured record one hour after each decision (n samples, acerto hit rate percent, null when n is under 5; medio, melhor and pior are the average, best and worst percent move of the TOKEN in that hour after those decisions, whatever the side, only when n is 5 or more: a hit rate counts signs and hides a tail, so read them together): per family of evidence, how often BUYING a candidate that had it beat keeping dollars (skipped purchases included); manter, keeping a holding beat selling it; vender, selling beat keeping. A small n is not evidence",
+  historico: "your own measured record one hour after each decision (n samples, acerto hit rate percent, null when n is under 5; medio, melhor and pior are the average, best and worst percent move of the TOKEN in that hour after those decisions, whatever the side, only when n is 5 or more: a hit rate counts signs and hides a tail, so read them together): comprar, your actual purchases that rose; pular, your skips where the token fell; manter, keeping a holding beat selling it; vender, selling beat keeping; per family of evidence, how often BUYING a candidate that had it beat keeping dollars (skipped purchases included); f_*, when you judged that facet >= 60 percent, how often the move agreed with it. A small n is not evidence",
   contexto: "the market around: btc_24h eth_24h percent; tendencia; vol_btc volatility regime; fund_btc_bps BTC perpetual funding in basis points (positive: longs pay shorts); oi_btc_1h percent change of its open interest in an hour (rising with price: leverage building); s1_* latest System One reading",
   mandato: "the mandate in force; agressivo_liberado false: the track record has not earned the aggressive stance yet, so asking for it changes nothing; abertas: how many of the purchase candidates have something to buy under each level of risk; the risk of the mandate no longer sizes a purchase, so the levels open the same, and 0 means no cash on the network of any candidate",
 };
@@ -126,9 +126,9 @@ function boundedContext(raw: MarketContext | null): MarketContext | null {
 function boundedHistory(raw: FamilyHistory | null): FamilyHistory | null {
   if (raw === null) return null;
   const entries = Object.entries(raw);
-  if (entries.length > 8) return null;
+  if (entries.length > 20) return null;
   for (const [k, v] of entries) {
-    if (!CODE.test(k) || v === null || typeof v !== "object" || !Number.isSafeInteger(v.n) || v.n < 0) return null;
+    if (!KEY.test(k) || v === null || typeof v !== "object" || !Number.isSafeInteger(v.n) || v.n < 0) return null;
     if (v.acerto !== null && (typeof v.acerto !== "number" || !Number.isFinite(v.acerto) || v.acerto < 0 || v.acerto > 100)) return null;
     // the move of the token after those decisions, in percent: a price cannot fall under minus 100 and a sane tail stays under a million percent
     for (const move of [v.medio, v.melhor, v.pior]) if (move !== undefined && (typeof move !== "number" || !Number.isFinite(move) || move < -100 || move > 1_000_000)) return null;
