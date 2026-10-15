@@ -310,6 +310,42 @@ describe("who is offered to the model", () => {
     const checkedOne = built.ecosystem!.candidates[0]!;
     expect(checkedOne.marks).toContain("sinal_de_risco");
   });
+
+  test("across scanned markets, a smart-money discount distortion (price below smart-money entry while wallets hold) ranks ahead of an overextended +5000% exit-liquidity token", async () => {
+    const discountMint = "So1111111111111111111111111111111111111DISC";
+    const exhaustedMint = "So1111111111111111111111111111111111111EXHA";
+    const { gateway } = fakeGateway({
+      answer: (route, params) => {
+        if (route === "/onchain/hot-tokens" && params.chainIndex === "501") {
+          return {
+            ok: true,
+            meta: META,
+            sent: true,
+            data: [
+              // Exhausted token: up +5800%, trading at $3.80 while smart money paid $1.00 (3.8x above smart money)
+              hot("501", "EXHA", exhaustedMint, { price: 3.8, changePct: 5800, liquidityUsd: 300_000, volumeUsd: 900_000 }),
+              // Discounted token: pulled back -1.5% in 24h, trading at $0.88 while smart money paid $1.00 (-12% discount) with 0% sold
+              hot("501", "DISC", discountMint, { price: 0.88, changePct: -1.5, liquidityUsd: 400_000, volumeUsd: 500_000 }),
+            ],
+          };
+        }
+        if (route === "/onchain/signals" && params.chainIndex === "501") {
+          return {
+            ok: true,
+            meta: META,
+            sent: true,
+            data: [
+              { ...signal("501", exhaustedMint, "EXHA", 5, 20_000, 10), priceUsd: 1.0 },
+              { ...signal("501", discountMint, "DISC", 5, 25_000, 0), priceUsd: 1.0 },
+            ],
+          };
+        }
+        return undefined;
+      },
+    });
+    const built = await build(gateway, request({ redes: ["501"] }));
+    expect(built.ecosystem!.candidates.map((c) => c.facts.symbol)).toEqual(["DISC", "EXHA"]);
+  });
 });
 
 describe("the Brief the model reads", () => {

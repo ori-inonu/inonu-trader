@@ -199,8 +199,27 @@ function readChain(chainIndex: string, hot: InternalGatewayResult | undefined, s
   return { chainIndex, facts, hotRows: hotRows.length, signalRows: signalRows.length };
 }
 
+/**
+ * Effective evidence rank across the 100 scanned markets of a network:
+ * - A token where tracked smart-money wallets bought (`wallets >= 2`), still hold (`soldPct <= 30%`) and the current price dipped to or near their entry (`priceUsd <= smartPriceUsd * 1.10`) with real volume (`>= $100k`)
+ *   is a price distortion in favour of the buyer and earns the traction slot even when 24h `changePct < 3%`.
+ * - A token that already ran `> 500%` in 24h AND trades at `>= 2.5x` (`+150%+`) above what smart money paid is exit liquidity and loses one rank step so it does not crowd out early setups.
+ */
+function effectiveRank(e: { facts: EcoFacts; families: readonly string[] }): number {
+  const f = e.facts;
+  let score = e.families.length;
+  if (f.smartPriceUsd != null && f.smartPriceUsd > 0 && f.priceUsd !== null && f.priceUsd > 0) {
+    if (!e.families.includes("tracao") && f.priceUsd <= f.smartPriceUsd * 1.1 && (f.soldPct === null || f.soldPct <= 30) && (f.wallets ?? 0) >= 2 && (f.volumeUsd ?? 0) >= 100_000) {
+      score += 1;
+    } else if (f.priceUsd >= f.smartPriceUsd * 2.5 && (f.changePct ?? 0) > 500) {
+      score -= 1;
+    }
+  }
+  return score;
+}
+
 const order = (a: { facts: EcoFacts; families: readonly string[] }, b: { facts: EcoFacts; families: readonly string[] }): number =>
-  b.families.length - a.families.length || (b.facts.nota ?? -1) - (a.facts.nota ?? -1) || (b.facts.liquidityUsd ?? -1) - (a.facts.liquidityUsd ?? -1) || (a.facts.candidateId < b.facts.candidateId ? -1 : 1);
+  effectiveRank(b) - effectiveRank(a) || b.families.length - a.families.length || (b.facts.nota ?? -1) - (a.facts.nota ?? -1) || (b.facts.liquidityUsd ?? -1) - (a.facts.liquidityUsd ?? -1) || (a.facts.candidateId < b.facts.candidateId ? -1 : 1);
 
 export function createEcosystemSource(deps: EcosystemDeps): BriefSource {
   return {
