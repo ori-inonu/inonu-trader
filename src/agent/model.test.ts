@@ -171,6 +171,22 @@ describe("the Brief the agent's model reads", () => {
       for (const key of ["d", "u", "b", "c", "n", "x", "i", "y"]) expect(meaning("compras", key).length).toBeGreaterThan(8);
     });
 
+    test("a holding carries complete alert codes in the Brief and omits the key when there are none", () => {
+      const { book, holdings, buys, ecoCtx } = build(1, 0);
+      const blocked = holdings.map((c) => ({ ...c, stances: ["hold"], usdByStance: { hold: 0 }, triggers: ["venda_recusada_por_impacto"] }));
+      const blockedBrief = JSON.parse(JSON.stringify(agentBrief({ book, holdings: blocked, buys, eco: ecoCtx, context: null, history: null })));
+      const blockedItem = blockedBrief.posicoes[blocked[0]!.id] as Record<string, unknown>;
+      expect(blockedItem.o).toEqual(["hold"]);
+      expect(blockedItem.t).toEqual(["venda_recusada_por_impacto"]);
+
+      const withoutTrigger = holdings.map((c) => ({ ...c, stances: ["hold"], usdByStance: { hold: 0 }, triggers: [] }));
+      const withoutBrief = agentBrief({ book, holdings: withoutTrigger, buys, eco: ecoCtx, context: null, history: null });
+      const withoutItem = withoutBrief.posicoes[withoutTrigger[0]!.id] as Record<string, unknown>;
+      expect(withoutItem.o).toEqual(["hold"]);
+      expect(Object.hasOwn(withoutItem, "t")).toBe(false);
+      expect(new TextEncoder().encode(JSON.stringify(blockedBrief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
+    });
+
     test("the legend of a purchase says that x is the executable maximum, with the four fractions the stances take of it, and that i is that same maximum against the pool liquidity", () => {
       const x = full.chaves["compras.x"] ?? "";
       expect(x).toMatch(/executable maximum/);
@@ -492,8 +508,11 @@ describe("the Brief the agent's model reads", () => {
   });
 
   test("the biggest brief stays under its byte cap", () => {
-    const { book, holdings, buys, ecoCtx } = build(8, 8);
+    const { book, holdings: rawHoldings, buys, ecoCtx } = build(8, 8);
+    const triggers = ["carteiras_venderam", "saida_dificil", "sinal_de_risco", "queda_desde_a_entrada", "caindo_agora", "venda_falhando", "venda_recusada_por_impacto"];
+    const holdings = rawHoldings.map((holding) => ({ ...holding, triggers }));
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: { regime: "lateral" }, history: { carteiras: { n: 40, acerto: 55 } } });
+    expect((brief.posicoes[holdings[0]!.id] as Record<string, unknown>).t).toEqual(triggers);
     expect(new TextEncoder().encode(JSON.stringify(brief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
   });
 });

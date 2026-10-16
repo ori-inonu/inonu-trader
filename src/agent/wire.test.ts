@@ -500,6 +500,51 @@ describe("the money mode, end to end", () => {
     expect(saved.fees["1"]).toMatchObject({ chainIndex: "1", tradeFeeUsd: 0.02, gasEstimate: 5000, source: "cotacao_de_compra" });
     expect(typeof saved.fees["1"]!.observedAtMs).toBe("number");
   });
+  test("the read-only entry probe closes a purchase only for an explicit gas-station refusal", async () => {
+    const skip: AgentModel = {
+      ...buyer(),
+      async choose({ candidates }) {
+        return {
+          raw: { posture: "neutra", stances: Object.fromEntries(candidates.map((c) => [c.id, c.kind === "holding" ? "hold" : "skip"])), profiles: {} },
+          usage: { inputTokens: 1000, outputTokens: 100 },
+        };
+      },
+    };
+    const quoteFailure = (kind: "gas" | "generic"): CliRunner => ({
+      run: async (args, options) => {
+        if (`${args[0]} ${args[1]}` === "swap quote") {
+          cliCalls.push([...args]);
+          return kind === "gas"
+            ? { exitCode: 2, stdout: "Gas station required", stderr: "", timedOut: false }
+            : { exitCode: 1, stdout: JSON.stringify({ ok: false, error: "ordinary quote failure" }), stderr: "", timedOut: false };
+        }
+        return fakeCli.run(args, options);
+      },
+    });
+
+    cliCalls.length = 0;
+    const gasService = make({ model: skip, processRunner: quoteFailure("gas") });
+    await live(gasService);
+    const gasReport = await gasService.runNow();
+    const gasCandidate = gasReport.view?.find((candidate) => candidate.kind === "buy");
+    expect(gasCandidate).toMatchObject({ closed: "gas_station_pendente", marks: expect.arrayContaining(["gas_station_pendente"]) });
+    expect(gasReport.orders).toHaveLength(0);
+    expect(cliCalls.filter((args) => args[0] === "swap" && args[1] === "quote")).toHaveLength(1);
+    expect(cliCalls.filter((args) => args[0] === "swap" && args[1] === "execute")).toHaveLength(0);
+    await gasService.close();
+
+    cliCalls.length = 0;
+    const unknownService = make({ model: skip, processRunner: quoteFailure("generic") });
+    await live(unknownService);
+    const unknownReport = await unknownService.runNow();
+    const unknownCandidate = unknownReport.view?.find((candidate) => candidate.kind === "buy");
+    expect(unknownCandidate?.closed).toBeNull();
+    expect(unknownCandidate?.marks).not.toContain("gas_station_pendente");
+    expect(unknownReport.orders).toHaveLength(0);
+    expect(cliCalls.filter((args) => args[0] === "swap" && args[1] === "quote")).toHaveLength(1);
+    expect(cliCalls.filter((args) => args[0] === "swap" && args[1] === "execute")).toHaveLength(0);
+    await unknownService.close();
+  });
 
   test("a purchase is quoted, executed, recorded before and after, and its plan opened", async () => {
     cliCalls.length = 0;

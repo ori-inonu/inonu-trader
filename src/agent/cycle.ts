@@ -25,7 +25,7 @@ import type { ExecBrief, TokenTripBrief } from "./fills";
 import { agentBrief, physicalRequestsOf, type AgentBrief, type AgentModel, type BriefInput, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
 import { offeredProfiles, planKey, PROFILES, type PlanStore, type ProfileId } from "./plans";
 import { pendingBuys } from "./pending-buys";
-import { ENTRY_COST_CLOSED, narrowBuysByEntryCost, recentSaleRefusals, withoutRefusedSales, type EntryImpactReader } from "./entry-cost";
+import { ENTRY_COST_CLOSED, ENTRY_COST_GAS_STATION, narrowBuysByEntryCost, recentSaleRefusals, withoutRefusedSales, type EntryQuoteReader } from "./entry-cost";
 import { holdingId, protect } from "./protection";
 import type { Scoreboard } from "./scoreboard";
 import type { RunState } from "./state";
@@ -187,7 +187,7 @@ export interface CycleDeps {
   /** The agent's own circuit breaker is open: no new purchase is offered to the model, and the exits, the stops and the management of what is held go on. */
   readonly buyingPaused?: () => boolean;
   /** Reads the price impact of the quote of the smallest size of a purchase (read only, it never signs): what lets the code stop offering the plans the executor is certain to refuse for entry cost (entry-cost.ts). Absent: no quote is taken. */
-  readonly entryCost?: EntryImpactReader;
+  readonly entryCost?: EntryQuoteReader;
   /** Called once per consultation with what the model was shown (the candidates, with what was on offer and the marks of care) and what it answered: for whoever studies how the decisions can be improved. Never given a balance or an address. */
   /** Called with the record of each primary consultation and, apart from it, the real clocks and the full hash of the Brief (ADENDO-D, V2-4): what lets the study of the agent bind a decision to the moment it was asked and answered. */
   readonly onConsult?: (entry: ConsultRecord, meta?: ConsultMeta) => void;
@@ -852,7 +852,18 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     considered = { holdings: holdings.length, buys: buys.length, protected: protection.handled.size };
     ecoById = new Map(eco.candidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
     byCandidate = new Map(candidates.map((c) => [c.id, c]));
-    looked = candidates.slice(0, 16).map((c): CandidateView => ({ id: c.id, kind: c.kind, symbol: c.symbol, chainIndex: c.chainIndex, stance: null, families: c.families.slice(0, 4), marks: c.marks.slice(0, 4), closed: c.kind === "buy" && c.stances.length <= 1 ? (c.marks.includes(ENTRY_COST_CLOSED) ? "custo_de_entrada" : c.cap !== undefined && c.cap.maxUsd > 0 ? "abaixo_do_minimo" : "sem_tamanho") : null, probs: null, facets: null }));
+    looked = candidates.slice(0, 16).map((c): CandidateView => ({
+      id: c.id,
+      kind: c.kind,
+      symbol: c.symbol,
+      chainIndex: c.chainIndex,
+      stance: null,
+      families: c.families.slice(0, 4),
+      marks: c.marks.includes(ENTRY_COST_GAS_STATION) ? [ENTRY_COST_GAS_STATION, ...c.marks.filter((mark) => mark !== ENTRY_COST_GAS_STATION).slice(0, 3)] : c.marks.slice(0, 4),
+      closed: c.kind === "buy" && c.stances.length <= 1 ? (c.marks.includes(ENTRY_COST_GAS_STATION) ? ENTRY_COST_GAS_STATION : c.marks.includes(ENTRY_COST_CLOSED) ? "custo_de_entrada" : c.cap !== undefined && c.cap.maxUsd > 0 ? "abaixo_do_minimo" : "sem_tamanho") : null,
+      probs: null,
+      facets: null,
+    }));
 
     /** The closing phase of this cycle (shadow). Never throws: a failure here costs the measurement, never the cycle. */
     const closingPhase = async (from: { readonly first: ModelAnswer["raw"]; readonly gated: Readonly<Record<string, string>>; readonly brief: AgentBrief } | null, saldoNow: Saldo | null, book: Book, placed: "antes" | "depois"): Promise<void> => {

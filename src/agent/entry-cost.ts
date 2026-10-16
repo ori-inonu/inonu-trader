@@ -20,6 +20,8 @@ import type { Candidate, PlannedOrder } from "./types";
 export const ENTRY_COST_CLOSED = "custo_de_entrada_alto";
 /** Some profiles of the purchase were taken off the list because their entry cost cap is below what the quote costs. */
 export const ENTRY_COST_NARROWED = "custo_de_entrada_limita_plano";
+/** The executor could not quote the purchase because Gas Station setup is pending. */
+export const ENTRY_COST_GAS_STATION = "gas_station_pendente";
 /** What the model reads when its sale was refused for price impact and the larger sizes are not offered again for a while. */
 export const SALE_REFUSED_TRIGGER = "venda_recusada_por_impacto";
 
@@ -44,9 +46,12 @@ export const entryCostFits = (profile: string, impactPct: number): boolean => Ma
 
 const withMark = (marks: readonly string[], mark: string): string[] => (marks.includes(mark) ? [...marks] : [...marks, mark]);
 
-/** The purchase as the Jev should see it once the entry cost is known: the profiles that can pay it, or closed when none can. Null, or a cost every profile pays, leaves it exactly as it was. */
-export function narrowByEntryCost(c: Candidate, impactPct: number | null): Candidate {
-  if (c.kind !== "buy" || impactPct === null || !Number.isFinite(impactPct) || c.profiles.length === 0) return c;
+/** The purchase as the Jev should see it once the entry observation is known: profiles that can pay it, or closed when none can. Unknown leaves it exactly as it was. */
+export function narrowByEntryCost(c: Candidate, observation: EntryQuoteObservation | null): Candidate {
+  if (c.kind !== "buy" || observation === null) return c;
+  if (observation.refusal === ENTRY_COST_GAS_STATION) return { ...c, stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {}, marks: withMark(c.marks, ENTRY_COST_GAS_STATION) };
+  const impactPct = observation.impactPct;
+  if (impactPct === null || !Number.isFinite(impactPct) || c.profiles.length === 0) return c;
   const kept = c.profiles.filter((p) => entryCostFits(p, impactPct));
   if (kept.length === c.profiles.length) return c;
   if (kept.length === 0) return { ...c, stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {}, marks: withMark(c.marks, ENTRY_COST_CLOSED) };
@@ -112,24 +117,30 @@ export function impactOfQuote(raw: Readonly<Record<string, unknown>>): number | 
   return Number.isFinite(n) ? n : null;
 }
 
-/** Reads the price impact of the quote of an order, null when it could not be read. Read only: it never signs and never sends. */
-export type EntryImpactReader = (order: PlannedOrder, signal: AbortSignal) => Promise<number | null>;
+/** A read-only observation of the quote probe: a finite impact if one was read and only an explicit executor gas refusal. */
+export interface EntryQuoteObservation {
+  readonly impactPct: number | null;
+  readonly refusal: "gas_station_pendente" | null;
+}
+
+/** Reads the price impact of a quote, or an explicit gas-station refusal; other failures are unknown. It never signs and never sends. */
+export type EntryQuoteReader = (order: PlannedOrder, signal: AbortSignal) => Promise<EntryQuoteObservation>;
 
 /** The reader with a short memory per token and size, so a purchase that stays on the list is not quoted again every cycle. A failure is remembered for less. */
-export function cachedImpactReader(read: EntryImpactReader, now: () => number): EntryImpactReader {
-  const memory = new Map<string, { atMs: number; impactPct: number | null }>();
+export function cachedEntryQuoteReader(read: EntryQuoteReader, now: () => number): EntryQuoteReader {
+  const memory = new Map<string, { atMs: number; observation: EntryQuoteObservation }>();
   return async (order, signal) => {
     const key = `${planKey(order.chainIndex, order.address)}:${order.usd}`;
     const seen = memory.get(key);
-    if (seen !== undefined && now() - seen.atMs < (seen.impactPct === null ? ENTRY_PROBE.failTtlMs : ENTRY_PROBE.ttlMs)) return seen.impactPct;
-    let impactPct: number | null;
+    if (seen !== undefined && now() - seen.atMs < (seen.observation.refusal === null && seen.observation.impactPct !== null && Number.isFinite(seen.observation.impactPct) ? ENTRY_PROBE.ttlMs : ENTRY_PROBE.failTtlMs)) return seen.observation;
+    let observation: EntryQuoteObservation;
     try {
-      impactPct = await read(order, signal);
+      observation = await read(order, signal);
     } catch {
-      impactPct = null;
+      observation = { impactPct: null, refusal: null };
     }
-    memory.set(key, { atMs: now(), impactPct });
-    return impactPct;
+    memory.set(key, { atMs: now(), observation });
+    return observation;
   };
 }
 
@@ -143,7 +154,7 @@ export async function narrowBuysByEntryCost(input: {
   readonly records: readonly RefusalRecord[];
   readonly nowMs: number;
   /** Null: no quote is taken (shadow mode, buying paused, a stop file, no reader wired). The ledger part still applies. */
-  readonly probe: EntryImpactReader | null;
+  readonly probe: EntryQuoteReader | null;
   readonly clock: () => number;
 }): Promise<Candidate[]> {
   const recent = recentBuyImpacts(input.records, input.nowMs);
@@ -155,7 +166,7 @@ export async function narrowBuysByEntryCost(input: {
     const smallest = smallestOffered(c);
     const applies = seen !== undefined && smallest !== null && seen.usd <= smallest.usd;
     if (applies) known.add(c.id);
-    out.set(c.id, narrowByEntryCost(c, applies ? seen.impactPct : null));
+    out.set(c.id, narrowByEntryCost(c, applies ? { impactPct: seen.impactPct, refusal: null } : null));
   }
   if (input.probe === null) return input.buys.map((c) => out.get(c.id)!);
   const unknown = [...out.values()]

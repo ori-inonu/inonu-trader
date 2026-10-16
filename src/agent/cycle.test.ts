@@ -1930,15 +1930,32 @@ describe("the entry cost is known before the Jev is asked, so it is offered only
   test("a quote of 1 percent takes the 2 percent plan off the list the model is shown", async () => {
     const r = rig({ mode: "limitado" });
     const { seen, deps } = spy(r);
-    await createCycleRunner({ ...deps, entryCost: async () => -1 }).run();
+    await createCycleRunner({ ...deps, entryCost: async () => ({ impactPct: -1, refusal: null }) }).run();
     expect(seen[BUY]!.profiles).toEqual(["alvo_5", "alvo_10", "alvo_20"]);
   });
 
   test("a quote above what any plan pays shows the purchase closed, with the mark that says why", async () => {
     const r = rig({ mode: "limitado" });
     const { seen, deps } = spy(r);
-    await createCycleRunner({ ...deps, entryCost: async () => 3.6 }).run();
+    await createCycleRunner({ ...deps, entryCost: async () => ({ impactPct: 3.6, refusal: null }) }).run();
     expect([seen[BUY]!.stances, seen[BUY]!.marks.includes("custo_de_entrada_alto")]).toEqual([["skip"], true]);
+  });
+  test("a gas refusal closes only its purchase and the report retains its cause among the four marks", async () => {
+    const marked = { ...eco(B, "BBB"), top10Pct: 90, devPct: 20, bundlePct: 25, liquidityUsd: 30_000, holders: 200 };
+    const otherAddress = "0x3333333333333333333333333333333333333333";
+    const r = rig({ mode: "limitado", ecoFacts: [marked, eco(otherAddress, "CCC")] });
+    const report = await createCycleRunner({
+      ...r.deps,
+      entryCost: async (order) => order.address === B ? { impactPct: null, refusal: "gas_station_pendente" } : { impactPct: null, refusal: null },
+    }).run();
+    const gas = report.view!.find((candidate) => candidate.id === BUY)!;
+    const unknown = report.view!.find((candidate) => candidate.id === `buy:token:1:${otherAddress}`)!;
+    expect(gas.closed).toBe("gas_station_pendente");
+    expect(gas.marks).toHaveLength(4);
+    expect(gas.marks[0]).toBe("gas_station_pendente");
+    expect(unknown.closed).toBeNull();
+    expect(unknown.marks).not.toContain("gas_station_pendente");
+    expect(report.orders).toHaveLength(0);
   });
 
   test("a purchase the executor refused for price impact a minute ago narrows from the ledger and is not quoted again", async () => {
@@ -1946,7 +1963,7 @@ describe("the entry cost is known before the Jev is asked, so it is offered only
     r.deps.ledger.append(refusal({ candidateId: BUY, quote: quoteOf(-2.75) }));
     const { seen, deps } = spy(r);
     let quotes = 0;
-    await createCycleRunner({ ...deps, entryCost: async () => (quotes++, null) }).run();
+    await createCycleRunner({ ...deps, entryCost: async () => (quotes++, { impactPct: null, refusal: null }) }).run();
     expect([seen[BUY]!.profiles, quotes]).toEqual([["alvo_20"], 0]);
   });
 
@@ -1960,7 +1977,7 @@ describe("the entry cost is known before the Jev is asked, so it is offered only
   test("in shadow no quote is taken", async () => {
     const r = rig({ mode: "sombra" });
     let quotes = 0;
-    await createCycleRunner({ ...r.deps, entryCost: async () => (quotes++, -1) }).run();
+    await createCycleRunner({ ...r.deps, entryCost: async () => (quotes++, { impactPct: -1, refusal: null }) }).run();
     expect(quotes).toBe(0);
   });
 

@@ -212,7 +212,7 @@ export function agentBrief(input: BriefInput): AgentBrief {
       h: heldHoursBrief(f?.heldHours ?? null),
       // what the token is doing right now, and how old what the facts say is: only the keys that have a value (a missing one is not a zero, and a null costs bytes)
       ...present({ g: f === null || bullishFlags(f.riskFlags).length === 0 ? null : bullishFlags(f.riskFlags).length, c5: r1(f?.change5mPct ?? null), c1: r1(f?.change1hPct ?? null), n5: r0(f?.txs5m ?? null), ag: r0(f?.dataAgeMin ?? null), mo: momentumBrief(c.momentum), tm: timingBrief(c.timing), f: c.families.length > 0 ? c.families : null, ult: input.tokenTrips?.[c.address] ?? null }),
-      t: c.triggers,
+      ...present({ t: c.triggers.length > 0 ? c.triggers : null }),
       o: c.stances,
       pl: c.plan === null ? null : { pf: c.plan.profile, e: r1(c.plan.sinceEntryPct), a: r1(c.plan.toTargetPct), s: r1(c.plan.toStopPct), hl: r0(c.plan.hoursLeft), th: c.plan.targetHit },
     };

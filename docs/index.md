@@ -14,6 +14,7 @@ confidence: medium
 
 - [Especificação do autoresearch offline](specs/autoresearch-decisoes/spec.md): métricas, alvo financeiro não comprovado e separação entre dados reais, sintéticos e ausentes.
 - [Plano e execução canônica](specs/autoresearch-decisoes/plan.md), [grafo de tarefas](specs/autoresearch-decisoes/tasks.md) e [estado e verificação](specs/autoresearch-decisoes/status.md).
+- [Decisão executável do JEV](specs/decisao-executavel-jev/spec.md): sonda, causa em `report.view`, alertas no Brief e estado da entrega local.
 
 ## Evolução e consulta rápida (2026-10-15)
 

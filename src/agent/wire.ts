@@ -23,7 +23,7 @@ import { binaryMatches, resolveCliPath, createCliExecutor, createEntryQuoter, cr
 import { configFile, createConfigStore, type ConfigPatch } from "./config";
 import { capRaised, type PolicyMirror } from "./gate";
 import { createCycleRunner, type CycleReport, type Executor } from "./cycle";
-import { cachedImpactReader, impactOfQuote } from "./entry-cost";
+import { cachedEntryQuoteReader, impactOfQuote } from "./entry-cost";
 import { createRecorders } from "./recording";
 import { createFileAgentLedger } from "./ledger";
 import { createBookReader, createEcosystemReader, createHoldingFactsReader, createMarketContext, createMomentumReader, createPriceLookup, createTimingReader, okxPublicCandles, okxPublicDerivatives, type BalanceSource, type PublicCandles, type PublicDerivatives } from "./live";
@@ -760,9 +760,9 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     ...(options.closing === false
       ? {}
       : {
-          entryCost: cachedImpactReader(async (order, signal) => {
+        entryCost: cachedEntryQuoteReader(async (order, signal) => {
             const read = await entryQuoter.read(order, { cycleId: "sonda", requestId: `sonda-${localNow()}`, signal });
-            return read.ok ? impactOfQuote(read.raw) : null;
+          return read.ok ? { impactPct: impactOfQuote(read.raw), refusal: null } : { impactPct: null, refusal: read.reason === "gas_station_pendente" ? "gas_station_pendente" : null };
           }, localNow),
         }),
     boldConviction: () => ownerProfile === "arrojado",
