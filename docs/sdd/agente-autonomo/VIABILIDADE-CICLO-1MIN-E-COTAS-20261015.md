@@ -88,3 +88,20 @@ Depois de ler os documentos de orientação da Codex (`diagnostico-compras`, `CA
 
 1. **O atrito depende da liquidez.** Execuções reais (`fills.jsonl`, taxa de rede convertida com o preço do SOL do registro de patrimônio do agente, US$ 105,48, aproximação): ativo líquido (STONK) custou de 0,17% a 0,56% de ida e volta com tudo incluído (6 pares, média cerca de 0,42%), HOTBOT 1,82% (1 par), e a cotação de entrada de um candidato com cerca de US$ 37 mil de liquidez foi de −2,09% a −2,14% só na entrada. A frase da seção 2 "girar o caixa a cada minuto não paga o atrito" vale para ativos rasos; para os líquidos, com atrito de 0,5%, 43% dos movimentos de 1 minuto e 57% dos de 5 minutos o superam, e o obstáculo é prever a direção (ver `ANALISE-10X-EM-24H-20261015.md`, seção 1.3). A taxa de rede cotada (`k`, US$ 0,0005) é cerca de 20 vezes menor que a medida no recibo (97.859 lamports, cerca de US$ 0,0103).
 2. **Tokens do modelo não são o custo que importa.** A entrada do Jev é publicada a US$ 0,042 por milhão de tokens e a saída é grátis (registrado pela Codex em 2026-10-14; a aplicação à conta não foi confirmada): 1.440 consultas por dia de 15,6 mil tokens custariam cerca de US$ 0,94 por dia. O limite real é a cota da conta, ainda desconhecida, e o teto local de 720.
+
+## 7. Correção do auditor e interpretação da cadência (2026-10-16)
+
+Um `cycleId` pode gerar mais de uma linha `kind: cycle`: o agente persiste a fase protetora antes das ordens e pode persistir depois a decisão do modelo com o mesmo ID e instante de início. Contar essas linhas como decisões distintas infla o total e introduz intervalos artificiais na cadência. Isso, isoladamente, não prova concorrência, reenvio ou colisão de IDs.
+
+`scripts/observe-24h.ts` agora usa `dedupeCycles` para a contagem, os outcomes, a cadência, os silêncios e a recuperação. A última fase válida de cada ID define o resultado; registros futuros são excluídos antes dessa seleção. IDs diferentes no mesmo instante continuam sendo ciclos diferentes. Linhas legadas sem ID são preservadas separadamente, sem inventar uma identidade pelo timestamp.
+
+O relatório distingue `total`, `rows`, `uniqueIds`, `duplicateRows`, `legacyRows` e `future`. Os três primeiros significam, respectivamente, ciclos canônicos incluindo observações legadas, linhas válidas na janela e IDs distintos conhecidos. Portanto `total` não prova consultas ao JEV: um ciclo pode manter, bloquear, proteger a carteira ou não consultar o modelo.
+
+A correção foi exercitada com um snapshot real do journal, sem chamadas ao JEV nem transações. A regressão está em `scripts/observe-24h.test.ts`. Isso não atualiza o artefato instalado nem corrige retroativamente relatórios antigos.
+
+Para o objetivo de um minuto, separar três demandas: 1.440 observações locais em 24 horas, 1.440 consultas principais se houver uma consulta por observação e uma quantidade independente de ordens. Fechamentos e fallback podem consumir chamadas adicionais. Um timer encadeado após o trabalho anterior não garante inícios igualmente espaçados.
+
+O limite salvo em configuração não é necessariamente o efetivo sob `auto`; o código deriva capacidade a partir do ritmo e do perfil. Não apresentar 144 ou 720 consultas como a cota contratual ou o limite vigente do artefato sem evidência. Preço publicado, tokens comprometidos e fatura real também são grandezas distintas.
+
+Observar a cada 60 segundos não autoriza aumentar gasto, assinar ordens, financiar gas ou alterar risco. Manter resultado incerto como desconhecido, nunca como falha presumida para reenvio. Patrimônio marcado, cash flow e markouts contrafactuais não comprovam lucro líquido; preços ausentes, taxas atribuíveis, câmbio e fluxos externos precisam de cobertura explícita.
+

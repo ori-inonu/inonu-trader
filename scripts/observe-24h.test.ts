@@ -82,13 +82,46 @@ describe("orders and receipts", () => {
 });
 
 describe("cycles, briefs and decisions", () => {
+  test("counts phases for an ID once, with its last phase outcome and reason", () => {
+    const rows = [
+      { kind: "cycle", cycleId: "c1", atMs: T0 + MIN, outcome: "protegido", reason: "proteção" },
+      { kind: "cycle", cycleId: "c1", atMs: T0 + MIN, outcome: "decidido", reason: "concluido" },
+    ];
+    expect(cycleAudit(rows, T0, T0 + 10 * MIN)).toEqual({
+      total: 1, outcomes: { decidido: 1 }, reasons: { concluido: 1 }, withDropped: 0, future: 0,
+      rows: 2, uniqueIds: 1, duplicateRows: 1, legacyRows: 0,
+    });
+  });
+  test("distinct IDs at the same timestamp remain distinct", () => {
+    const rows = ["c1", "c2"].map((cycleId) => ({ kind: "cycle", cycleId, atMs: T0 + MIN, outcome: "decidido" }));
+    expect(cycleAudit(rows, T0, T0 + 10 * MIN)).toMatchObject({ total: 2, rows: 2, uniqueIds: 2, duplicateRows: 0 });
+  });
+  test("rows without IDs remain independent legacy cycles", () => {
+    const rows = [
+      { kind: "cycle", atMs: T0 + MIN, outcome: "decidido" },
+      { kind: "cycle", atMs: T0 + MIN, outcome: "bloqueado" },
+    ];
+    expect(cycleAudit(rows, T0, T0 + 10 * MIN)).toMatchObject({ total: 2, rows: 2, uniqueIds: 0, duplicateRows: 0, legacyRows: 2 });
+  });
+  test("a future phase with an existing ID cannot hide its past phase", () => {
+    const rows = [
+      { kind: "cycle", cycleId: "c1", atMs: T0 + MIN, outcome: "decidido" },
+      { kind: "cycle", cycleId: "c1", atMs: T0 + 11 * MIN, outcome: "future" },
+    ];
+    expect(cycleAudit(rows, T0, T0 + 10 * MIN)).toMatchObject({
+      total: 1, outcomes: { decidido: 1 }, rows: 1, uniqueIds: 1, duplicateRows: 0, future: 1,
+    });
+  });
   test("cycles count outcomes and reasons, count dropped candidates, and ignore rows before the window", () => {
     const rows = [
       { kind: "cycle", atMs: T0 - MIN, outcome: "decidido", dropped: [] },
       { kind: "cycle", atMs: T0 + MIN, outcome: "decidido", dropped: [{ id: "x" }] },
       { kind: "cycle", atMs: T0 + 2 * MIN, outcome: "bloqueado", reason: "sem_preco", dropped: [] },
     ];
-    expect(cycleAudit(rows, T0, T0 + 10 * MIN)).toEqual({ total: 2, outcomes: { decidido: 1, bloqueado: 1 }, reasons: { sem_preco: 1 }, withDropped: 1, future: 0 });
+    expect(cycleAudit(rows, T0, T0 + 10 * MIN)).toEqual({
+      total: 2, outcomes: { decidido: 1, bloqueado: 1 }, reasons: { sem_preco: 1 }, withDropped: 1, future: 0,
+      rows: 2, uniqueIds: 0, duplicateRows: 0, legacyRows: 2,
+    });
   });
   test("invalid briefs are counted with their reason and the largest brief is kept", () => {
     const rows = [
