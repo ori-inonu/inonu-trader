@@ -12,9 +12,9 @@ confidence: medium
 
 Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md), [plano](plan.md) e [tarefas](tasks.md).
 
-Harness validado e gate obrigatorio final verde, conforme evidencias abaixo. `init_experiment` criou anteriormente a sessao 1 e o commit `94f632b29608` antes de a suite global ficar verde; essa inicializacao prematura nao satisfez o gate de commit do projeto e permanece no historico, sem reescrita. Uma nova baseline agora pode ser registrada com `new_segment: true`, somente depois dos reparos e verificacoes concluidos. Nenhum ciclo de otimizacao foi executado.
+Harness qualificado no commit `cea16ce2ca95`; a continuacao entrou em ciclos offline apos a baseline. O segmento 2 iniciou no commit `f758ed0c9507`, depois da requalificacao CRLF e do gate verde abaixo. Runs e decisoes de retencao ficam separados por segmento. A inicializacao prematura `94f632b29608`, anterior ao gate global verde, permanece no historico e nao vale como qualificacao.
 
-Pedido: preparar o benchmark canonico e iniciar o autoresearch, sem otimizar antes da baseline. A meta 10x/24h esta registrada como hipotese nao demonstrada. Nenhuma execucao financeira, autorizacao, nova dependencia, migracao ou consulta paga e parte deste trabalho.
+Pedido atual: continuar evoluindo a politica candidata por ciclos mensurados. A meta 10x/24h permanece hipotese nao demonstrada. Nenhuma execucao financeira, autorizacao, nova dependencia, migracao ou consulta paga faz parte deste trabalho.
 
 Inventarios de codigo/evidencia realizados por agentes somente leitura. A evidencia local agregada distingue historico de mercado de resultado liquido da carteira. `HarnessSpecReview` aprovou tecnicamente especificacao e plano sem achados antes da implementacao. Nao representa aprovacao do usuario/JEV nem lucro observado.
 
@@ -96,4 +96,21 @@ O snapshot nao e uma transacao atomica entre arquivos. Os periodos de uso sao re
 - Esse checkout tambem revelou um assert incidental de bytes em `src/onchain-read/web-fixture-drift.test.ts`. A guarda agora compara todo o JSON estrutural e o conjunto exato de rotas, sem alterar gerador, fixture ou producao. Smoke Bun 1.3.14 confirmou CRLF real, 11 rotas iguais e rejeicao de mutacao semantica. Revisao independente sem achados.
 - Gate pos-reparo saiu 0: focado 1 pass, 0 fail, 2 expect calls (208 ms); `bun run typecheck` exit 0; `bun run test` 7.841 pass, dois skips existentes, 0 fail, 983.943 expect calls, 481 arquivos (224,99 s); `bun run test:lab` 647 pass, 0 fail, 838.136 expect calls, 16 arquivos (21,41 s).
 - Proximo segmento: baseline CRLF separada e campanha pre-declarada de 12 execucoes incluindo baseline e repeticao final. Somente a candidata pode mudar o comportamento; status/log registram evidencias. O reparo de contrato acima integra a baseline e fica congelado depois. Sem inferencia JEV, holdout, qualificacao financeira ou alteracao de risco.
+
+## Campanha do segmento 2
+
+Baseline `f758ed0c9507`; avaliador e evidencia CRLF congelados conforme secao anterior. Doze execucoes pre-declaradas: baseline, dez hipoteses economicas, repeticao final dos melhores bytes retidos. Nao e holdout nem avaliacao do JEV.
+
+| Run | Hipotese | Delta sintetico pareado (bps) | Resultado |
+| --- | --- | ---: | --- |
+| 4 | Baseline ancestral | 0 | Registrada |
+| 5 | Momentum menos custos | -0,1879266929903146 | Descartada |
+| 6 | Momentum menos custos e funding adverso anunciado | 2,4292302252795377 | Retencao aprovada apos smoke, gate e revisao |
+
+- Run 5: 223 trades, um hold, 224 pares, custo conhecido em 100% dos trades, nenhuma exclusao, drawdown de 12,194002098794696% sem melhora; contrafactuais alavancados ligeiramente piores. Smoke de score zero, selecao por custo, desconhecido e empate positivo aprovado.
+- Run 6: mesma cobertura e pareamento; media candidata de 17,512688825766023 bps por epoca contra 15,083458600486491 da ancestral, drawdown de 12,194002098794696%. Funding adverso reduz o score, mas recebimentos futuros nao recebem credito. Smoke de oito fronteiras aprovado com input imutavel, incluindo score zero e funding desconhecido. A melhora observada nao prova reducao de risco: 10x ainda tem seis liquidacoes no contrafactual.
+- As 70 metricas numericas emitidas sao examinadas em cada ciclo. O catalogo congelado continua com 1.318 campos, 634 disponiveis e 684 desconhecidos. O stress de carteira e fixo, separado da candidata; seus valores inalterados nao demonstram melhora de alocacao. As lacunas financeiras e prospectivas anteriores permanecem abertas.
+
+- Qualificacao do run 6: `bun run typecheck` exit 0; global 7.841 pass, dois skips existentes, 0 fail, 983.943 expect calls em 481 arquivos (247,51 s); laboratorio 647 pass, 0 fail, 838.136 expect calls em 16 arquivos (29,92 s). Revisao independente da candidata corrigida sem achados. Comparacao profunda do objeto `REPORT.panel` confirmou igualdade integral, incluindo as 1.318 entradas, weaknesses e supplementalEvidence; 18 das 70 metricas numericas mudaram e 52 ficaram iguais.
+- Limitacao upstream preservada no avaliador congelado: a feature de settlements exclui evento exatamente na saida, enquanto o outcome pode inclui-lo. O funding anunciado multiplicado pela contagem e somente proxy point-in-time, nao garantia de custo futuro. Nao houve mudanca oportunista do avaliador ou credito por funding futuro.
 

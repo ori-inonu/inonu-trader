@@ -146,3 +146,10 @@ Registro append-only dos lotes desta wiki. Consulte [[manutencao-da-documentacao
 - Gate verde no Bun 1.3.14: focado 1 pass; typecheck exit 0; global 7.841 pass, dois skips existentes, zero falhas; laboratorio 647 pass, zero falhas. Saidas, hashes e tentativas rejeitadas em `specs/autoresearch-decisoes/status.md`.
 - Nenhuma melhora de politica foi retida ate aqui. A meta financeira 10x/24h continua nao demonstrada; nenhum caminho de dinheiro real foi alterado.
 
+## [2026-10-16] update | Primeira melhora de politica offline qualificada
+
+- Hipotese de custos isolados descartada (-0,1879266929903146 bps). Politica candidata com custos e penalidade de funding adverso anunciado aprovada para retencao: delta sintetico pareado +2,4292302252795377 bps em 224 pares completos, cobertura de custos 100%, sem exclusoes ou outcomes de custo desconhecido.
+- Selecao exige score finito estritamente positivo; empate zero mantem hold, inclusive antes lexicograficamente. Funding desconhecido nao vira zero, e recebimentos nao recebem credito. Oito cenarios reais de smoke passaram com inputs imutaveis; revisao estatica independente sem achados.
+- Gate Bun 1.3.14 verde: typecheck exit 0, global 7.841 pass/dois skips existentes/zero falhas, laboratorio 647 pass/zero falhas. Evidencias completas em `specs/autoresearch-decisoes/status.md`.
+- Drawdown da candidata segue 12,194002098794696%; 10x sintetico ainda tem seis liquidacoes. Os 1.318 campos do painel congelado permanecem integralmente iguais; o stresswallet fixo nao mede a candidata. Isso nao e melhoria demonstrada do JEV, retorno real, holdout ou qualificacao financeira.
+
