@@ -12,9 +12,9 @@ confidence: medium
 
 Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md), [plano](plan.md) e [tarefas](tasks.md).
 
-Harness qualificado no commit `cea16ce2ca95`; a continuacao entrou em ciclos offline apos a baseline. O segmento 2 iniciou no commit `f758ed0c9507`, depois da requalificacao CRLF e do gate verde abaixo. Runs e decisoes de retencao ficam separados por segmento. A inicializacao prematura `94f632b29608`, anterior ao gate global verde, permanece no historico e nao vale como qualificacao.
+Harness qualificado no commit `cea16ce2ca95`; o segmento 2 partiu da baseline `f758ed0c9507` e concluiu as 12 execucoes pre-declaradas, runs globais 4 a 15, sem ampliar a busca. A melhor candidata retida e H5, commit `220304e2bd06`; a repeticao final confirmou os mesmos bytes e metricas, sem ser uma melhora adicional. A inicializacao prematura `94f632b29608`, anterior ao gate global verde, permanece no historico e nao vale como qualificacao.
 
-Pedido atual: continuar evoluindo a politica candidata por ciclos mensurados. A meta 10x/24h permanece hipotese nao demonstrada. Nenhuma execucao financeira, autorizacao, nova dependencia, migracao ou consulta paga faz parte deste trabalho.
+Pedido atual: campanha offline concluida. A meta 10x/24h permanece hipotese nao demonstrada. Nenhuma execucao financeira, autorizacao, nova dependencia, migracao ou consulta paga faz parte deste trabalho. Qualificacoes existentes de H3/H5 nao equivalem a aprovacao financeira; qualquer gate adicional informado depois e registro separado.
 
 Inventarios de codigo/evidencia realizados por agentes somente leitura. A evidencia local agregada distingue historico de mercado de resultado liquido da carteira. `HarnessSpecReview` aprovou tecnicamente especificacao e plano sem achados antes da implementacao. Nao representa aprovacao do usuario/JEV nem lucro observado.
 
@@ -99,24 +99,30 @@ O snapshot nao e uma transacao atomica entre arquivos. Os periodos de uso sao re
 
 ## Campanha do segmento 2
 
-Baseline `f758ed0c9507`; avaliador e evidencia CRLF congelados conforme secao anterior. Doze execucoes pre-declaradas: baseline, dez hipoteses economicas, repeticao final dos melhores bytes retidos. Nao e holdout nem avaliacao do JEV.
+Baseline `f758ed0c9507`; avaliador e evidencia CRLF congelados conforme secao anterior. As 12 execucoes pre-declaradas foram runs 4 a 15: baseline, dez hipoteses e repeticao final dos melhores bytes retidos. Nao e holdout nem avaliacao do JEV.
 
 | Run | Hipotese | Delta sintetico pareado (bps) | Resultado |
 | --- | --- | ---: | --- |
 | 4 | Baseline ancestral | 0 | Registrada |
-| 5 | Momentum menos custos | -0,1879266929903146 | Descartada |
-| 6 | Momentum menos custos e funding adverso anunciado | 2,4292302252795377 | Retencao aprovada apos smoke, gate e revisao |
-| 7 | Score liquido dividido pela volatilidade historica | -2,2337483869892063 | Descartada |
-| 8 | Score liquido menos uma volatilidade historica do horizonte | 3,1695535508414894 | Retencao aprovada apos smoke, gate e revisao |
+| 5 | H2 momentum menos custos | -0.1879266929903146 | Descartada |
+| 6 | H3 custos e funding adverso anunciado | 2.4292302252795377 | Retida |
+| 7 | H4 H3 dividido por volatilidade | -2.2337483869892063 | Descartada |
+| 8 | H5 H3 menos volatilidade historica do horizonte | 3.1695535508414894 | Retida, melhor |
+| 9 | H6 perpetuo H3 vs spot liquido | 2.275691072403917 | Descartada |
+| 10 | H7 somente regra carry | -15.083458600486491 | Descartada |
+| 11 | H8 somente spot long | -55.97450860696703 | Descartada |
+| 12 | H9 net/capital multimodal | 2.275691072403917 | Descartada |
+| 13 | H10 reversao a media | -58.0748036701646 | Descartada |
+| 14 | H11 confirmacao spot | 2.4292302252795377 | Descartada |
+| 15 | Repeticao dos bytes H5 retidos | 3.1695535508414894 | Repeticao identica; sem nova melhora |
 
-- Run 5: 223 trades, um hold, 224 pares, custo conhecido em 100% dos trades, nenhuma exclusao, drawdown de 12,194002098794696% sem melhora; contrafactuais alavancados ligeiramente piores. Smoke de score zero, selecao por custo, desconhecido e empate positivo aprovado.
-- Run 6: mesma cobertura e pareamento; media candidata de 17,512688825766023 bps por epoca contra 15,083458600486491 da ancestral, drawdown de 12,194002098794696%. Funding adverso reduz o score, mas recebimentos futuros nao recebem credito. Smoke de oito fronteiras aprovado com input imutavel, incluindo score zero e funding desconhecido. A melhora observada nao prova reducao de risco: 10x ainda tem seis liquidacoes no contrafactual.
-- As 70 metricas numericas emitidas sao examinadas em cada ciclo. O catalogo congelado continua com 1.318 campos, 634 disponiveis e 684 desconhecidos. O stress de carteira e fixo, separado da candidata; seus valores inalterados nao demonstram melhora de alocacao. As lacunas financeiras e prospectivas anteriores permanecem abertas.
+- Runs 4-15 foram comparados com seus indicadores numericos e painel completos. Os ciclos emitiram 54, 65 ou 70 metricas numericas, conforme as metricas aplicaveis aos denominadores e campos; nao se presume que todos emitam 70. H5 e run 15 coincidem em bytes, 70 metricas, painel e hashes congelados. O run 15 confirma determinismo; repeticao flat nao e uma nova melhora nem outro vencedor.
+- H3 do run 6 foi retida anteriormente, mas H5 do run 8 e a melhor candidata atual. Na retencao H5: 224 pares completos, 101 trades e 123 holds; holds permanecem no denominador, cobertura de custo 1 e exclusoes 0. Media liquida candidata de 18.253012151327965 bps por epoca contra 15.083458600486491 da ancestral; drawdown 1x 9.329601331584831% contra 12.194002098794696%. Delta pareado sintetico +3.1695535508414894 bps nao e retorno financeiro.
+- O contrafactual frozen de H5 a 10x ainda perde capital: multiplicador final 0.6318694338042523, drawdown 80.38860551835474%, 3 liquidacoes em 101 trades (2.97029702970297%), taxa pior que as 6 em 224 trades da ancestral (2.6785714285714284%). Contagens absolutas menores nao significam taxa menor. O resultado nao valida margem real OKX, carteira executada ou meta 10x.
+- Run 13, H10: drawdown 10x de 114.74170280664448% no modelo frozen e multiplicador final 0.0016097101708001907; e contrafactual, nao validacao de margem real OKX.
+- Catalogo congelado: 634 campos conhecidos/disponiveis, 684 desconhecidos, de 1.318; 48.1% e disponibilidade, nao qualidade financeira. Snapshot seguro reuniu 1.110 medicoes de 20 fontes. Stress wallet fixo nao mede a alocacao da candidata.
+- Fraquezas abertas: PnL reconciliado em USD, FX contemporaneo e custos completos; zero outcomes prospectivos maduros; Choice/pBuy sem calibracao; scoreboard com 303 linhas que falham schema e resumos dependentes indisponiveis. Nao ha holdout nem evidencia de desempenho fora do workload. Necessidades futuras nao sao entregas desta campanha.
 
-- Qualificacao do run 6: `bun run typecheck` exit 0; global 7.841 pass, dois skips existentes, 0 fail, 983.943 expect calls em 481 arquivos (247,51 s); laboratorio 647 pass, 0 fail, 838.136 expect calls em 16 arquivos (29,92 s). Revisao independente da candidata corrigida sem achados. Comparacao profunda do objeto `REPORT.panel` confirmou igualdade integral, incluindo as 1.318 entradas, weaknesses e supplementalEvidence; 18 das 70 metricas numericas mudaram e 52 ficaram iguais.
-- Limitacao upstream preservada no avaliador congelado: a feature de settlements exclui evento exatamente na saida, enquanto o outcome pode inclui-lo. O funding anunciado multiplicado pela contagem e somente proxy point-in-time, nao garantia de custo futuro. Nao houve mudanca oportunista do avaliador ou credito por funding futuro.
-- Run 7: normalizar pela volatilidade regrediu o delta e elevou o drawdown 1x para 13,03726441583581%. Onze cenarios de smoke passaram, mas nao justificam reter regressao; politica descartada.
-- Run 8: penalidade pre-declarada de uma volatilidade historica, sem ajuste de limiar aos resultados. Score proxy finito e estritamente positivo exige volatilidade conhecida e positiva, sem tratar o desconhecido como zero. Sao 101 trades, 123 holds e 224 pares completos; media liquida por epoca de 18,253012151327965 bps, drawdown 1x de 9,329601331584831%, cobertura de custos 100% e nenhuma exclusao. Os holds entram na media pareada, nao sao removidos do denominador.
-- O contrafactual 10x do run 8 ainda perde capital: multiplicador final 0,6318694338042523, drawdown 80,38860551835474%, tres liquidacoes em 101 trades (2,97029702970297%). Menor contagem absoluta que a baseline nao significa menor taxa por trade. Nao representa carteira executada ou meta 10x atingida.
-- Qualificacao do run 8: doze cenarios reais de smoke com input imutavel passaram, inclusive fronteira de penalidade igual ao score, ranking e volatilidade desconhecida/zero; revisao independente sem achados. `bun run typecheck` exit 0; global 7.841 pass, dois skips existentes, 0 fail, 983.943 expect calls em 481 arquivos (268,18 s); laboratorio 647 pass, 0 fail, 838.136 expect calls em 16 arquivos (27,45 s). Hashes congelados e objeto integral `REPORT.panel` iguais; 23 das 70 metricas mudaram, incluindo uma diferenca apenas de arredondamento na media do custo de oportunidade.
+- Gate final da campanha informado pelo integrador: `bun run typecheck && bun run test && bun run test:lab`, Bun 1.3.14, PASS; typecheck exit 0, global 7.841 pass, 2 skips, 0 falhas (7.843 testes/481 arquivos), laboratorio 647 pass, 0 falhas (16 arquivos). A revisao documental independente nao teve achados. A repeticao final H5 completou 12 smokes e confirmou os mesmos bytes, hashes e metricas; isso confirma determinismo, nao nova melhora ou qualificacao financeira.
+- Limite do avaliador congelado: feature de settlements exclui evento exatamente na saida, enquanto o outcome pode inclui-lo. Funding anunciado multiplicado pela contagem e proxy point-in-time, nao garantia de custo futuro. Nao houve mudanca oportunista do avaliador ou credito por funding futuro.
 
