@@ -1,7 +1,7 @@
 ---
 title: "Índice da documentação"
 created: 2026-10-13
-updated: 2026-10-15
+updated: 2026-10-16
 type: summary
 tags: ["documentacao", "governanca"]
 sources: ["docs/SCHEMA.md", "docs/_meta/catalog.json", "docs/_meta/topic-map.md"]
@@ -9,6 +9,11 @@ confidence: medium
 ---
 
 # Índice da documentação
+
+## Benchmark de decisões (2026-10-16)
+
+- [Especificação do autoresearch offline](specs/autoresearch-decisoes/spec.md): métricas, alvo financeiro não comprovado e separação entre dados reais, sintéticos e ausentes.
+- [Plano e execução canônica](specs/autoresearch-decisoes/plan.md), [grafo de tarefas](specs/autoresearch-decisoes/tasks.md) e [estado e verificação](specs/autoresearch-decisoes/status.md).
 
 ## Evolução e consulta rápida (2026-10-15)
 

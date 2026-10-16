@@ -1,7 +1,7 @@
 ---
 title: "Log da wiki documental"
 created: 2026-10-13
-updated: 2026-10-15
+updated: 2026-10-16
 type: summary
 tags: ["documentacao", "governanca"]
 sources: ["docs/SCHEMA.md", "docs/_meta/source-manifest-20261013.json"]
@@ -128,4 +128,13 @@ Registro append-only dos lotes desta wiki. Consulte [[manutencao-da-documentacao
 
 
 
+
+## [2026-10-16] update | Benchmark offline de decisoes para autoresearch
+
+- Criados `autoresearch.sh`, workload deterministico, politica candidata isolada, inventario do painel e congelador read-only; especificacao, plano, tarefas e evidencias em `specs/autoresearch-decisoes/`.
+- Snapshot seguro de 20 fontes e 1.110 medicoes a partir de capturas locais e do home real do runtime. A execucao canonica usa somente o fixture versionado, sem rede, credenciais, relogio atual, chamadas ao JEV ou ordens financeiras.
+- Inventario executado com 1.318 campos: 634 disponiveis e 684 desconhecidos. Custos ausentes, fluxos nao conciliados, 303 linhas invalidas do scoreboard e falta de outcomes prospectivos maduros ficam visiveis, sem inventar zeros ou lucro.
+- Primaria de desenvolvimento `synthetic_paired_net_return_bps=0` em 224 pares completos, paridade com a politica ancestral. Duas execucoes finais tiveram stdout identico; smoke separado confirmou sensibilidade a politica. Nao houve otimizacao nesta fase.
+- Typecheck e 12 testes focados passaram. Revisoes independentes e smoke corrigiram falhas de validacao previa do scoreboard, privacidade do campo reason e supressao indevida do diagnostico por equity valida. Saidas da verificacao global e do laboratorio ficam em `specs/autoresearch-decisoes/status.md`, incluindo falhas preexistentes, sem alegacao de verde global.
+- Escopo dos ciclos seguintes restrito a politica candidata, com avaliador e evidencias congelados. Meta de US$ 118 para US$ 1.180 em menos de 24h continua nao demonstrada; nenhuma autorizacao, limite de risco ou caminho live foi alterado.
 
