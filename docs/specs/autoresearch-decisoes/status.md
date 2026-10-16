@@ -88,3 +88,12 @@ O snapshot nao e uma transacao atomica entre arquivos. Os periodos de uso sao re
 - As 208 alteracoes anteriores do usuario permanecem preservadas no stash `11609a10402f41cabff342965ee92f9127c1b92b`, fora da baseline de pesquisa. A nova baseline nao dispensa o mesmo gate antes dos commits futuros.
 
 
+## Requalificacao apos checkout CRLF
+
+- A continuacao executou tres runs no primeiro segmento: baseline 0 bps, custos direcionais -0,1879266929903146 bps (descartado) e funding adverso +2,4292302252795377 bps (rejeitado por `checks_failed`). O terceiro selecionava uma ordem no empate de score zero com hold; nenhuma melhora foi retida.
+- O descarte pelo autoresearch reidratou os arquivos com CRLF por `core.autocrlf=true`, mesmo com Git limpo. Os hashes fisicos mudaram: avaliador de `1a9d7e82926878c89c78e6c87ad85b76b9d621919c24bee582ed41a5089ad814` para `9e328cf327bf310d7fde35ecc3f6f792b9671a0c728617ad848748fc94904220`; evidencia de `7c95543c0aeabae02c363e5d77b82eda79d76f24bde3f7ffd989e8e75b6960c9` para `bca25e564de172ee8c0bec7d00d312afb0b0fe494b2899266095321142d88f5e`. O run 3 nao e comparavel a baseline antiga.
+- Smoke canonico com os bytes CRLF atuais: 0 bps em 224 pares completos, candidata ancestral `ae294311d701c1af11ad1de03593bfca6e5cd44968a834a81b71289d512c5838`, painel 634/1.318 campos disponiveis e 684 desconhecidos. Nenhum avaliador, fixture, atributo de checkout ou configuracao Git foi editado para mascarar a deriva.
+- Esse checkout tambem revelou um assert incidental de bytes em `src/onchain-read/web-fixture-drift.test.ts`. A guarda agora compara todo o JSON estrutural e o conjunto exato de rotas, sem alterar gerador, fixture ou producao. Smoke Bun 1.3.14 confirmou CRLF real, 11 rotas iguais e rejeicao de mutacao semantica. Revisao independente sem achados.
+- Gate pos-reparo saiu 0: focado 1 pass, 0 fail, 2 expect calls (208 ms); `bun run typecheck` exit 0; `bun run test` 7.841 pass, dois skips existentes, 0 fail, 983.943 expect calls, 481 arquivos (224,99 s); `bun run test:lab` 647 pass, 0 fail, 838.136 expect calls, 16 arquivos (21,41 s).
+- Proximo segmento: baseline CRLF separada e campanha pre-declarada de 12 execucoes incluindo baseline e repeticao final. Somente a candidata pode mudar o comportamento; status/log registram evidencias. O reparo de contrato acima integra a baseline e fica congelado depois. Sem inferencia JEV, holdout, qualificacao financeira ou alteracao de risco.
+

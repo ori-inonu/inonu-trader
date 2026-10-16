@@ -139,3 +139,10 @@ Registro append-only dos lotes desta wiki. Consulte [[manutencao-da-documentacao
 - Revisoes independentes e smokes reais concluidos; benchmark posterior com 70 metricas finitas e stdout identico byte a byte. Historico das falhas, reproducao antes/depois e saidas exatas em `specs/autoresearch-decisoes/status.md`. A inicializacao prematura anterior fica preservada; nova baseline somente apos esse gate. Alteracoes originais do usuario mantidas em stash separado.
 - Escopo dos ciclos seguintes restrito a politica candidata, com avaliador e evidencias congelados. Meta de US$ 118 para US$ 1.180 em menos de 24h continua nao demonstrada; nenhuma autorizacao, limite de risco ou caminho live foi alterado.
 
+## [2026-10-16] fix | Contrato JSON independente do checkout Windows
+
+- O descarte de um experimento reidratou arquivos como CRLF por `core.autocrlf=true`, alterando hashes brutos do avaliador/evidencia sem mudanca semantica. A comparabilidade anterior foi invalidada explicitamente; nova baseline fica separada, sem editar fixture, avaliador ou configuracao Git.
+- Removida comparacao incidental de bytes na guarda de fixture onchain. Preservadas igualdade estrutural completa e rotas exatas; smoke real confirmou as 11 rotas e a deteccao de mutacao semantica, com revisao independente sem achados.
+- Gate verde no Bun 1.3.14: focado 1 pass; typecheck exit 0; global 7.841 pass, dois skips existentes, zero falhas; laboratorio 647 pass, zero falhas. Saidas, hashes e tentativas rejeitadas em `specs/autoresearch-decisoes/status.md`.
+- Nenhuma melhora de politica foi retida ate aqui. A meta financeira 10x/24h continua nao demonstrada; nenhum caminho de dinheiro real foi alterado.
+
