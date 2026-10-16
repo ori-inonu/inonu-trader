@@ -3,7 +3,7 @@ import type { LabPolicy } from "../../src/lab/policies.ts";
 export const RESEARCH_CANDIDATE_ID = "research-candidate";
 
 /**
- * Offline historical-lookback proxy, not a forecast or JEV inference.
+ * Offline historical-lookback score penalized by a volatility proxy, not a forecast or JEV inference.
  * Unknown or invalid inputs are ignored.
  */
 export function createCandidatePolicy(): LabPolicy {
@@ -23,6 +23,7 @@ export function createCandidatePolicy(): LabPolicy {
     const retLookbackBps = candidate.features.retLookbackBps;
     const costBps = candidate.features.costBps;
     const settlementsInHorizon = candidate.features.settlementsInHorizon;
+    const volHorizonBps = candidate.features.volHorizonBps;
     if (
      typeof retLookbackBps !== "number" ||
      !Number.isFinite(retLookbackBps) ||
@@ -31,7 +32,10 @@ export function createCandidatePolicy(): LabPolicy {
      costBps < 0 ||
      typeof settlementsInHorizon !== "number" ||
      !Number.isInteger(settlementsInHorizon) ||
-     settlementsInHorizon < 0
+     settlementsInHorizon < 0 ||
+     typeof volHorizonBps !== "number" ||
+     !Number.isFinite(volHorizonBps) ||
+     volHorizonBps <= 0
     ) continue;
 
     const sideSign = candidate.side === "long" ? 1 : -1;
@@ -42,7 +46,7 @@ export function createCandidatePolicy(): LabPolicy {
      fundingPenaltyBps = Math.max(0, fundingNextBps * sideSign) * settlementsInHorizon;
     }
 
-    const score = retLookbackBps * sideSign - costBps - fundingPenaltyBps;
+    const score = retLookbackBps * sideSign - costBps - fundingPenaltyBps - volHorizonBps;
     if (
      Number.isFinite(score) &&
      score > 0 &&
@@ -65,7 +69,7 @@ export function createCandidatePolicy(): LabPolicy {
     inputTokens: 0,
     costUsd: 0,
     status: "ok",
-    note: "Offline historical-lookback proxy rule; not a forecast or JEV inference.",
+    note: "Offline historical-lookback score penalized by volatility proxy; not a forecast or JEV inference.",
    };
   },
  };

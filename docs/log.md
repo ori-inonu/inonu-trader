@@ -153,3 +153,10 @@ Registro append-only dos lotes desta wiki. Consulte [[manutencao-da-documentacao
 - Gate Bun 1.3.14 verde: typecheck exit 0, global 7.841 pass/dois skips existentes/zero falhas, laboratorio 647 pass/zero falhas. Evidencias completas em `specs/autoresearch-decisoes/status.md`.
 - Drawdown da candidata segue 12,194002098794696%; 10x sintetico ainda tem seis liquidacoes. Os 1.318 campos do painel congelado permanecem integralmente iguais; o stresswallet fixo nao mede a candidata. Isso nao e melhoria demonstrada do JEV, retorno real, holdout ou qualificacao financeira.
 
+## [2026-10-16] update | Penalidade historica de volatilidade no ciclo offline
+
+- Normalizacao do score por volatilidade descartada por regressao (-2,2337483869892063 bps). Subtrair uma volatilidade historica do horizonte, sem calibracao de limiar, melhorou o delta sintetico pareado para +3,1695535508414894 bps contra a ancestral fixa; drawdown 1x caiu de 12,194002098794696% para 9,329601331584831%.
+- A candidata opera em 101 de 224 epocas e escolhe hold nas outras 123; os holds permanecem no denominador pareado. Custos conhecidos em 100% dos trades e nenhuma exclusao. Volatilidade desconhecida/invalida nao permite operar.
+- Doze cenarios reais de smoke e revisao independente aprovados. Gate Bun 1.3.14 verde: typecheck exit 0, global 7.841 pass/dois skips existentes/zero falhas, laboratorio 647 pass/zero falhas.
+- Catalogo congelado de 1.318 campos integralmente inalterado. Contrafactual 10x ainda tem tres liquidacoes e multiplicador final 0,6318694338042523, com maior taxa de liquidacao por trade que a ancestral. A melhora e sintetica, reutiliza o mesmo conjunto e nao demonstra retorno real, inferencia JEV melhor, holdout ou autorizacao financeira.
+
