@@ -1,5 +1,4 @@
 import { afterAll, expect, setDefaultTimeout, test } from "bun:test";
-import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { delimiter, dirname, join, sep } from "node:path";
@@ -41,11 +40,17 @@ afterAll(() => {
   }
 });
 
-function run(args: string[] = [], extraEnv: Record<string, string> = {}) {
-  return spawnSync(process.execPath, ["--no-env-file", "run", cli, ...args], { cwd, env: { ...env, ...extraEnv }, encoding: "utf8", timeout: CHILD_TIMEOUT_MS });
+async function run(args: string[] = [], extraEnv: Record<string, string> = {}, command?: string[]) {
+  const child = Bun.spawn([process.execPath, ...(command ?? ["--no-env-file", "run", cli, ...args])], { cwd, env: { ...env, ...extraEnv }, stdout: "pipe", stderr: "pipe" });
+  let timedOut = false;
+  const killer = setTimeout(() => { timedOut = true; child.kill(); }, CHILD_TIMEOUT_MS);
+  try {
+    const [stdout, stderr, status] = await Promise.all([new Response(child.stdout).text(), new Response(child.stderr).text(), child.exited]);
+    return { error: timedOut ? new Error(`child timed out after ${CHILD_TIMEOUT_MS}ms`) : undefined, status, stdout, stderr };
+  } finally { clearTimeout(killer); }
 }
 
-function writeInput(directory: string, mutate: (raw: Json) => void = () => {}, name = "input.json"): string {
+function writeInput(directory: string, mutate: (raw: Json) => void = () => { }, name = "input.json"): string {
   const raw = syntheticInput() as Json;
   mutate(raw);
   const path = join(directory, name);
@@ -53,16 +58,16 @@ function writeInput(directory: string, mutate: (raw: Json) => void = () => {}, n
   return path;
 }
 
-function error(args: string[], line: string) {
-  const result = run(args);
+async function error(args: string[], line: string) {
+  const result = await run(args);
   expect(result.error).toBeUndefined();
   expect(result.status).toBe(1);
   expect(result.stdout).toBe("");
   expect(result.stderr).toBe(`okx-derivatives: ${line}\n`);
 }
 
-test("OKX-DERIV D15: the default run is a deterministic synthetic report with every qualification flag closed", () => {
-  const result = run();
+test("OKX-DERIV D15: the default run is a deterministic synthetic report with every qualification flag closed", async () => {
+  const result = await run();
   expect(result.error).toBeUndefined();
   expect(result.status).toBe(0);
   expect(result.stderr).toBe("");
@@ -80,21 +85,21 @@ test("OKX-DERIV D15: the default run is a deterministic synthetic report with ev
   expect(report.carry.conservative.netQuote).toBe("62.210000");
   expect(report.carry.summary).toEqual({ eligible: [1, 2, 3], ineligible: [5, 10, 20], unavailable: [] });
   expect(report.directional.leverageTable.every((row: Json) => row.verdict.status !== "eligible")).toBe(true);
-  expect(run().stdout).toBe(result.stdout);
+  expect((await run()).stdout).toBe(result.stdout);
   // the CLI prints exactly the library report, indented, with a final newline
   expect(result.stdout).toBe(`${JSON.stringify(buildDerivativesReport(createSyntheticAdapter(), SYNTHETIC_NOW_MS), null, 2)}\n`);
 });
 
-test("OKX-DERIV D15: the report does not depend on inherited environment variables or secrets", () => {
-  const result = run([], { OKX_API_KEY: "CANARY_API_KEY", OKX_SECRET_KEY: "CANARY_SECRET", OKX_API_PASSPHRASE: "CANARY_PASSPHRASE", HTTPS_PROXY: "http://127.0.0.1:9" });
+test("OKX-DERIV D15: the report does not depend on inherited environment variables or secrets", async () => {
+  const result = await run([], { OKX_API_KEY: "CANARY_API_KEY", OKX_SECRET_KEY: "CANARY_SECRET", OKX_API_PASSPHRASE: "CANARY_PASSPHRASE", HTTPS_PROXY: "http://127.0.0.1:9" });
   expect(result.status).toBe(0);
   expect((JSON.parse(result.stdout) as Json).schema).toBe("okx_derivatives_report_v1");
-  expect(result.stdout).toBe(run().stdout);
+  expect(result.stdout).toBe((await run()).stdout);
   expect(result.stdout + result.stderr).not.toContain("CANARY");
 });
 
-test("OKX-DERIV D15: help is in Portuguese, standalone and opens no files", () => {
-  const result = run(["--help"]);
+test("OKX-DERIV D15: help is in Portuguese, standalone and opens no files", async () => {
+  const result = await run(["--help"]);
   expect(result.status).toBe(0);
   expect(result.stderr).toBe("");
   const help = result.stdout.toLowerCase();
@@ -106,27 +111,27 @@ test("OKX-DERIV D15: help is in Portuguese, standalone and opens no files", () =
   expect(TYPOGRAPHY.test(result.stdout)).toBe(false);
 });
 
-test("OKX-DERIV D15: invalid argument forms are rejected before any file is touched", () => {
+test("OKX-DERIV D15: invalid argument forms are rejected before any file is touched", async () => {
   const cases: string[][] = [
     ["--live"], ["--help", "--snapshot", "never-read"], ["--help", "never-read"], ["--snapshot"], ["never-read.json"], ["--now-ms", "1"],
     ["--snapshot", "never-read", "--snapshot", "again"], ["--snapshot", "--now-ms", "1"], ["--snapshot", "never-read", "--now-ms"],
     ["--snapshot", "never-read", "--now-ms", "1", "extra"], ["--snapshot", ""], ["--snapshot", "never-read", "--now-ms", ""],
     ["--Snapshot", "never-read"], [" --snapshot", "never-read"], ["--snapshot=never-read"],
   ];
-  for (const args of cases) error(args, "invalid_arguments");
+  for (const args of cases) await error(args, "invalid_arguments");
   for (const clock of ["-1", "+1", "01", "1.5", "1e3", " 1", "1 ", "abc", "0x10", "12345678901234567"]) {
-    error(["--snapshot", "never-read", "--now-ms", clock], "invalid_arguments");
+    await error(["--snapshot", "never-read", "--now-ms", clock], "invalid_arguments");
   }
-  error(["--snapshot", "never-read", "--now-ms", "8640000000000001"], "invalid_clock");
-  error(["--snapshot", "never-read", "--now-ms", "9999999999999999"], "invalid_clock");
+  await error(["--snapshot", "never-read", "--now-ms", "8640000000000001"], "invalid_clock");
+  await error(["--snapshot", "never-read", "--now-ms", "9999999999999999"], "invalid_clock");
 });
 
-test("OKX-DERIV D15: a local file with the same shape gives the same report, marked imported, with flags in any order", () => {
+test("OKX-DERIV D15: a local file with the same shape gives the same report, marked imported, with flags in any order", async () => {
   const directory = folder();
   const path = writeInput(directory);
-  const baseline = JSON.parse(run().stdout) as Json;
+  const baseline = JSON.parse((await run()).stdout) as Json;
   for (const args of [["--snapshot", path, "--now-ms", String(SYNTHETIC_NOW_MS)], ["--now-ms", String(SYNTHETIC_NOW_MS), "--snapshot", path]]) {
-    const result = run(args);
+    const result = await run(args);
     expect(result.error).toBeUndefined();
     expect(result.status).toBe(0);
     expect(result.stderr).toBe("");
@@ -135,29 +140,29 @@ test("OKX-DERIV D15: a local file with the same shape gives the same report, mar
     expect(report).toEqual({ ...baseline, mode: "imported" });
   }
   const claimed = writeInput(directory, (raw) => { raw.sourceClaim = "operator_claimed"; }, "claimed.json");
-  const report = JSON.parse(run(["--snapshot", claimed, "--now-ms", String(SYNTHETIC_NOW_MS)]).stdout) as Json;
+  const report = JSON.parse((await run(["--snapshot", claimed, "--now-ms", String(SYNTHETIC_NOW_MS)])).stdout) as Json;
   expect(report.source).toBe("operator_claimed");
   expect(report.liveQualified).toBe(false);
   expect(report.financiallyAuthorized).toBe(false);
 });
 
-test("OKX-DERIV D15: the CLI only reads the file: it is not rewritten and nothing else is created", () => {
+test("OKX-DERIV D15: the CLI only reads the file: it is not rewritten and nothing else is created", async () => {
   const directory = folder();
   const path = writeInput(directory);
   const before = readFileSync(path, "utf8");
   const listing = readdirSync(directory);
-  const result = run(["--snapshot", path, "--now-ms", String(SYNTHETIC_NOW_MS)]);
+  const result = await run(["--snapshot", path, "--now-ms", String(SYNTHETIC_NOW_MS)]);
   expect(result.status).toBe(0);
   expect((JSON.parse(result.stdout) as Json).mode).toBe("imported");
   expect(readFileSync(path, "utf8")).toBe(before);
   expect(readdirSync(directory)).toEqual(listing);
 });
 
-test("OKX-DERIV D11/D15: without --now-ms a file uses the local clock, so fixed old timestamps are reported unavailable", () => {
+test("OKX-DERIV D11/D15: without --now-ms a file uses the local clock, so fixed old timestamps are reported unavailable", async () => {
   const directory = folder();
   const path = writeInput(directory);
   const before = Date.now();
-  const result = run(["--snapshot", path]);
+  const result = await run(["--snapshot", path]);
   const after = Date.now();
   expect(result.status).toBe(0);
   const report = JSON.parse(result.stdout) as Json;
@@ -169,17 +174,17 @@ test("OKX-DERIV D11/D15: without --now-ms a file uses the local clock, so fixed 
   expect(report.carry.summary.unavailable).toEqual([1, 2, 3]);
 });
 
-test("OKX-DERIV D14/D15: malformed files are rejected strictly with a finite code and no echoed content", () => {
+test("OKX-DERIV D14/D15: malformed files are rejected strictly with a finite code and no echoed content", async () => {
   const directory = folder();
   const path = join(directory, "input.json");
   const args = ["--snapshot", path, "--now-ms", String(SYNTHETIC_NOW_MS)];
 
   writeFileSync(path, "{PRIVATE_SENTINEL");
-  error(args, "invalid_json");
+  await error(args, "invalid_json");
   writeFileSync(path, "");
-  error(args, "invalid_json");
+  await error(args, "invalid_json");
   writeFileSync(path, Buffer.concat([Buffer.from('{"private":"'), Buffer.from([0xc3, 0x28]), Buffer.from('"}')]));
-  error(args, "invalid_utf8");
+  await error(args, "invalid_utf8");
 
   const cases: Array<[(raw: Json) => void, string]> = [
     [(raw) => { raw.schema = "other"; }, "invalid_input schema"],
@@ -194,32 +199,32 @@ test("OKX-DERIV D14/D15: malformed files are rejected strictly with a finite cod
   ];
   for (const [mutate, line] of cases) {
     const bad = writeInput(directory, mutate, "bad.json");
-    error(["--snapshot", bad, "--now-ms", String(SYNTHETIC_NOW_MS)], line);
+    await error(["--snapshot", bad, "--now-ms", String(SYNTHETIC_NOW_MS)], line);
   }
   writeFileSync(path, JSON.stringify([1, 2, 3]));
-  error(args, "invalid_input");
+  await error(args, "invalid_input");
   writeFileSync(path, JSON.stringify("text"));
-  error(args, "invalid_input");
+  await error(args, "invalid_input");
 });
 
-test("OKX-DERIV D15: files must be regular local files within one MiB", () => {
+test("OKX-DERIV D15: files must be regular local files within one MiB", async () => {
   const directory = folder();
   const path = join(directory, "input.json");
   const text = JSON.stringify(syntheticInput());
   const args = ["--snapshot", path, "--now-ms", String(SYNTHETIC_NOW_MS)];
   writeFileSync(path, text + " ".repeat(1_048_576 - Buffer.byteLength(text)));
-  expect(run(args).status).toBe(0);
+  expect((await run(args)).status).toBe(0);
   writeFileSync(path, text + " ".repeat(1_048_577 - Buffer.byteLength(text)));
-  error(args, "invalid_file");
+  await error(args, "invalid_file");
   mkdirSync(join(directory, "folder"));
-  error(["--snapshot", join(directory, "folder")], "invalid_file");
-  error(["--snapshot", join(directory, "missing_PRIVATE_SENTINEL.json")], "invalid_file");
+  await error(["--snapshot", join(directory, "folder")], "invalid_file");
+  await error(["--snapshot", join(directory, "missing_PRIVATE_SENTINEL.json")], "invalid_file");
   for (const bad of ["https://example.invalid/PRIVATE_SENTINEL", "file:///C:/PRIVATE_SENTINEL", "\\\\server\\share\\PRIVATE_SENTINEL", "//server/share/x", "NUL", "CON", "capture.json:stream", "C:relative"]) {
-    error(["--snapshot", bad], "invalid_file");
+    await error(["--snapshot", bad], "invalid_file");
   }
 });
 
-test("OKX-DERIV D16: at run time nothing opens a socket: fetch, WebSocket and the Bun network entry points are trapped and never called", () => {
+test("OKX-DERIV D16: at run time nothing opens a socket: fetch, WebSocket and the Bun network entry points are trapped and never called", async () => {
   // Node modules such as node:net cannot be trapped from here (mock.module does not intercept built-ins in a
   // plain subprocess); they are excluded by the static import allowlist in src/okx-derivatives/isolation.test.ts.
   const script = `
@@ -234,7 +239,7 @@ test("OKX-DERIV D16: at run time nothing opens a socket: fetch, WebSocket and th
     await import(${JSON.stringify(pathToFileURL(cli).href)});
     process.stderr.write("NETWORK_TRAPS:" + traps.length + ":" + traps.join(",") + "\\n");
   `;
-  const result = spawnSync(process.execPath, ["--no-env-file", "--eval", script], { cwd, env, encoding: "utf8", timeout: CHILD_TIMEOUT_MS });
+  const result = await run([], {}, ["--no-env-file", "--eval", script]);
   expect(result.error).toBeUndefined();
   expect(result.status).toBe(0);
   expect(result.stderr).toBe("NETWORK_TRAPS:0:\n");

@@ -54,6 +54,10 @@ O snapshot e historico e imutavel durante os ciclos. Portanto, sua analise e rep
 
 O protocolo aprovado e a revisao documental nao substituem a evidencia de execucao. Resultados observados ficam em [estado e verificacao](status.md). Nao ha inferencia nova JEV, ordens reais nem qualificacao de estrategia neste comando.
 
+## Gate antes de registrar a baseline
+
+`init_experiment` faz commit automaticamente. Portanto, a revisao do diff e os comandos obrigatorios do AGENTS.md devem passar antes dessa chamada, inclusive quando as falhas encontradas forem anteriores ao harness. Registrar falhas conhecidas nao substitui o gate. Reparos de isolamento dos testes ficam separados de melhorias da politica e nao alteram avaliador, dados, credenciais ou risco.
+
 ## Atualizacao deliberada dos dados
 
 O congelador e separado do benchmark. Nao execute durante uma comparacao em andamento. Para preparar outra baseline, use `bun --no-env-file run scripts/autoresearch/freeze-evidence.ts --runtime-home "<home absoluto>"`, com o home configurado no watchdog/launcher, nao o diretorio do executavel. A gravacao permitida e somente `scripts/autoresearch/fixtures/evidence.json`; os arquivos fonte sao somente leitura.
