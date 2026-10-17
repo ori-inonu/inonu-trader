@@ -12,6 +12,8 @@ confidence: medium
 
 Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md), [tarefas](tasks.md) e [estado](status.md).
 
+> Historico superado: nao executar o workload nem o congelador descritos abaixo. Eles foram substituidos pelo [plano real online](../autoresearch-real-online/plan.md); comandos e caminhos desta baseline sao somente registro historico.
+
 ## Abordagem
 
 Reutilizar o laboratorio puro existente (`src/lab/{source,policies,run,journal,outcomes,stats}.ts`) para executar decisoes e outcomes sinteticos deterministas. Nao instanciar chooser SDK nem MockJevChooser. A politica candidata comeca como adaptacao transparente de `momentumRulePolicy`; a ancestral vem diretamente do modulo existente, fora do escopo de otimizacao. A comparacao e por epoch pareado, nao por medias de coortes diferentes. Desconsiderar metrica de calibracao gerada a partir de preferencias.

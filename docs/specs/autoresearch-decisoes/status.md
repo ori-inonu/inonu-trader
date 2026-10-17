@@ -11,6 +11,8 @@ confidence: medium
 # Estado
 
 Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md), [plano](plan.md) e [tarefas](tasks.md).
+Este e um registro historico, substituido pelo [autoresearch real online](../autoresearch-real-online/status.md). O "pedido atual", as campanhas e os gates abaixo descrevem o trabalho anterior; nao autorizam executar novamente dados sinteticos, congeladores ou campanhas offline.
+
 
 Harness qualificado no commit `cea16ce2ca95`; o segmento 2 partiu da baseline `f758ed0c9507` e concluiu as 12 execucoes pre-declaradas, runs globais 4 a 15, sem ampliar a busca. A melhor candidata retida e H5, commit `220304e2bd06`; a repeticao final confirmou os mesmos bytes e metricas, sem ser uma melhora adicional. A inicializacao prematura `94f632b29608`, anterior ao gate global verde, permanece no historico e nao vale como qualificacao.
 

@@ -5,7 +5,7 @@ export type PanelAvailability = "available" | "unknown";
 
 export interface PanelMetricDefinition {
   readonly id: string;
-  /** Snapshot measurement ID. Null means this field is intentionally not supplied by the offline snapshot. */
+  /** Snapshot measurement ID. Null means this field is intentionally absent from collected evidence. */
   readonly measurementId: string | null;
   readonly unit: string;
   readonly sourceCode: string;
@@ -13,7 +13,7 @@ export interface PanelMetricDefinition {
   readonly horizon: string;
   readonly semantic: PanelSemantic;
   readonly schemaPath: string;
-  /** Explicit array element contract; raw row values stay unknown unless a safe aggregate is frozen. */
+  /** Explicit array element contract; raw row values stay unknown unless a safe numeric/boolean aggregate is collected. */
   readonly arrayPath: string | null;
   readonly fieldPath: string | null;
   readonly unknownReason: string | null;
@@ -111,11 +111,11 @@ function addMetric(
   definitions.push(definition);
 }
 
-const HUD_STATUS_UNKNOWN = "The approved frozen snapshot contains no current HUD/status reading; no live status is queried.";
-const USAGE_UNKNOWN = "The approved frozen snapshot contains no Settings Usage record or configured token prices.";
-const ROW_UNKNOWN = "Raw per-row data is not present in the sanitized snapshot; only explicitly frozen scalar aggregates can be reported.";
+const HUD_STATUS_UNKNOWN = "The online observation contains no current HUD/status reading; no status route is queried.";
+const USAGE_UNKNOWN = "The online observation contains no Settings Usage record or configured token prices.";
+const ROW_UNKNOWN = "Raw per-row data is not included in the report; only explicitly allowlisted numeric/boolean aggregates can be reported.";
 const TEXT_UNKNOWN = "Raw symbols, model text, addresses, reasons, and provider messages are not copied into the report.";
-const STATUS_SCOREBOARD_SCHEMA_INVALID_REASON = "Captured scoreboard rows failed frozen schema validation.";
+const STATUS_SCOREBOARD_SCHEMA_INVALID_REASON = "Collected scoreboard rows failed safe-schema validation.";
 
 const surfaces = {
   command: ["Comando"],
@@ -211,7 +211,7 @@ for (const [field, unit, semantic, fieldPath] of [
   });
 }
 for (const [field, unit] of [["cash_share_pct", "% of total",], ["with_plan_share_pct", "% of total",], ["without_plan_share_pct", "% of total",]] as const) {
-  addHud(`hud.wallet.command_distribution.${field}`, unit, "web/src/lib/hud/draw/command.ts#createCommand.wallet distribution", surfaces.command, "latest wallet read", "gross", "The command wallet bar derives cash/with-plan/without-plan shares from the live wallet; no sanitized scalar projection is frozen.");
+  addHud(`hud.wallet.command_distribution.${field}`, unit, "web/src/lib/hud/draw/command.ts#createCommand.wallet distribution", surfaces.command, "latest wallet read", "gross", "The command wallet bar derives cash/with-plan/without-plan shares from the live wallet; no scalar projection is present in collected evidence.");
 }
 addHud("hud.wallet.top_allocation.count", "count (max 8)", "web/src/lib/hud/draw/analysis.ts#createAnalysis.allocation", surfaces.wallet, "latest wallet read", "operational");
 for (const [field, unit, semantic, fieldPath] of [
@@ -226,17 +226,17 @@ for (const [field, unit, semantic, fieldPath] of [
 addHud("hud.equity.raw_series.count", "count", "src/agent/wire.ts#equitySeries -> web/src/lib/hud/model.ts#buildHudModel.equity", surfaces.results, "available raw equity points", "gross");
 addHud("hud.equity.raw_series.first_value_usd", "USD", "web/src/lib/hud/types.ts#HudModel.equity[].v", surfaces.results, "first available raw equity point", "gross");
 addHud("hud.equity.raw_series.last_value_usd", "USD", "web/src/lib/hud/types.ts#HudModel.equity[].v", surfaces.results, "last available raw equity point", "gross");
-addHud("hud.equity.raw_window_change_pct", "% (includes external flows)", "web/src/lib/hud/draw/analysis.ts#createAnalysis.kpis", surfaces.results, "first-to-last raw equity point", "gross", "The HUD's raw equity change is not a flow-adjusted return and no frozen equity series is supplied.");
+addHud("hud.equity.raw_window_change_pct", "% (includes external flows)", "web/src/lib/hud/draw/analysis.ts#createAnalysis.kpis", surfaces.results, "first-to-last raw equity point", "gross", "The HUD's raw equity change is not a flow-adjusted return and no equity series is present in the online observation.");
 for (const [field, unit, fieldPath] of [["timestamp_ms", "Unix milliseconds", "t"], ["value_usd", "USD", "v"]] as const) {
   addMetric(`hud.equity.raw_series[].${field}`, unit, `web/src/lib/hud/types.ts#HudModel.equity[].${fieldPath}`, surfaces.results, "each raw equity point", "gross", {
     arrayPath: "HudModel.equity[]", fieldPath, unknownReason: ROW_UNKNOWN,
   });
 }
-addHud("hud.wallet.flow_adjusted_return_pct", "%", "src/agent/equity.ts#buildSeries", surfaces.wallet, "flow-adjusted series horizon", "gross", "No reconciled external-flow series is present in the frozen evidence; raw HUD equity is not substituted.");
-addHud("hud.wallet.external_flows_reconciled", "boolean", "src/agent/equity.ts#buildSeries", surfaces.wallet, "flow-adjusted series horizon", "operational", "The frozen snapshot contains no complete wallet balance and external-flow reconciliation.");
-addHud("hud.wallet.net_return_usd", "USD", "src/agent/analysis.ts#buildAnalysis trips are gross only", surfaces.wallet, "portfolio observation period", "net_estimated", "No complete portfolio ledger, contemporaneous cost FX, marks, and reconciled flows are in the snapshot.");
+addHud("hud.wallet.flow_adjusted_return_pct", "%", "src/agent/equity.ts#buildSeries", surfaces.wallet, "flow-adjusted series horizon", "gross", "No reconciled external-flow series is present in the online observation; raw HUD equity is not substituted.");
+addHud("hud.wallet.external_flows_reconciled", "boolean", "src/agent/equity.ts#buildSeries", surfaces.wallet, "flow-adjusted series horizon", "operational", "The online observation contains no complete wallet balance and external-flow reconciliation.");
+addHud("hud.wallet.net_return_usd", "USD", "src/agent/analysis.ts#buildAnalysis trips are gross only", surfaces.wallet, "portfolio observation period", "net_estimated", "No complete portfolio ledger, contemporaneous cost FX, marks, and reconciled flows are available in the online observation.");
 
-// Existing analysis endpoint fields. Only the explicit scalar measurements named here can be known; absent journal input is never replaced with EMPTY_ANALYSIS zeros.
+// Existing analysis endpoint fields. Only explicitly observed scalar measurements are known; absent analysis is never replaced with EMPTY_ANALYSIS zeros.
 const funnelFields = ["consults", "items", "closed", "open", "asked", "applied", "executed", "failed"] as const;
 for (const field of funnelFields) {
   addAnalysis(`analysis.funnel.${field}`, "count", surfaces.decisions, "latest 25 valid consultations", "operational", `analysis.funnel.${field}`);
@@ -247,8 +247,8 @@ for (const [field, unit] of [
   ["closed_by_code_count", "count"], ["skipped_by_jev_count", "count"], ["blocked_by_code_count", "count"], ["not_executed_count", "count"],
 ] as const) {
   const measurementId = `hud.funnel.${field}`;
-  const reason = field.endsWith("_pct") ? "HUD conversion percentage is unknown when its denominator is zero or the frozen count projection is absent." : undefined;
-  addMetric(`hud.funnel.${field}`, unit, "web/src/lib/hud/draw/analysis.ts#createAnalysis.funnel; exact frozen HUD projection", surfaces.decisions, "latest 25 valid consultations", "operational", {
+  const reason = field.endsWith("_pct") ? "HUD conversion percentage is unknown when its denominator is zero or the online count projection is absent." : undefined;
+  addMetric(`hud.funnel.${field}`, unit, "web/src/lib/hud/draw/analysis.ts#createAnalysis.funnel; online report projection", surfaces.decisions, "latest 25 valid consultations", "operational", {
     measurementId,
     ...(reason === undefined ? {} : { unknownReason: reason }),
   });
@@ -257,26 +257,26 @@ addHud("hud.analysis.available", "boolean", "web/src/lib/hud/types.ts#HudModel.a
 addHud("hud.snapshot_at_ms", "Unix milliseconds", "web/src/lib/hud/types.ts#HudModel.snapshotAtMs", surfaces.command, "current status", "operational");
 
 // Shared source entries below carry all overlapping KPI surfaces, avoiding duplicate financial metrics.
-addHud("hud.results.kpis.raw_equity_window_change_pct", "% including external flows", "web/src/lib/hud/draw/analysis.ts#createAnalysis.kpis", surfaces.results, "first-to-last raw equity point", "gross", "No frozen equity series is supplied; this is not a flow-adjusted return.");
+addHud("hud.results.kpis.raw_equity_window_change_pct", "% including external flows", "web/src/lib/hud/draw/analysis.ts#createAnalysis.kpis", surfaces.results, "first-to-last raw equity point", "gross", "No equity series is present in the online observation; this is not a flow-adjusted return.");
 for (const [field, unit, semantic, measurementId, reason] of [
   ["points_count", "count including the synthetic origin point", "operational", "hud.results.cumulative_trip_cash.points_count", null],
   ["few_trips_warning", "boolean (<5 closed trips)", "operational", "hud.results.cumulative_trip_cash.few_trips_warning", null],
-  ["gross_gap_to_break_even_usdc", "USDC before network fee", "gross", null, "The HUD derives a gross break-even gap; no frozen value is supplied and this report does not recalculate it."],
-  ["network_fee_cost_to_break_even_usd", "USD estimated network cost", "net_estimated", null, "No contemporaneous fee/USD conversion is frozen; the HUD note does not provide a numeric USD cost."],
+  ["gross_gap_to_break_even_usdc", "USDC before network fee", "gross", null, "The HUD derives a gross break-even gap; no numeric input is present in the online observation and this report does not recalculate it."],
+  ["network_fee_cost_to_break_even_usd", "USD estimated network cost", "net_estimated", null, "No contemporaneous fee/USD conversion is present in the online observation; the HUD note does not provide a numeric USD cost."],
 ] as const) {
   addMetric(`hud.results.cumulative_trip_cash.${field}`, unit, "web/src/lib/hud/draw/analysis.ts#createAnalysis.cumulative", surfaces.results, "all closed round trips in available analysis", semantic, {
     ...(measurementId === null ? {} : { measurementId }),
     ...(reason === null ? {} : { unknownReason: reason }),
   });
 }
-addAnalysis("analysis.at_ms", "Unix milliseconds", surfaces.decisions, "buildAnalysis projection timestamp", "operational", "analysis.at_ms", "src/agent/analysis.ts#AnalysisView.atMs");
+addAnalysis("analysis.at_ms", "Unix milliseconds", surfaces.decisions, "analysis projection timestamp (not a decision time)", "operational", "analysis.at_ms", "src/agent/analysis.ts#AnalysisView.atMs");
 addAnalysis("analysis.asks.count", "count", surfaces.decisions, "all valid consultations retained by buildAnalysis", "preference", "analysis.asks.count", "src/agent/analysis.ts#AnalysisView.asks.length");
 addAnalysis("analysis.asks[].symbol", "text (suppressed)", surfaces.decisions, "up to 10 displayed requests", "preference", undefined, "src/agent/analysis.ts#AnalysisView.asks[].s", "AnalysisView.asks[]", "s", TEXT_UNKNOWN);
 for (let rank = 0; rank < 10; rank++) {
   const rankKey = `rank_${String(rank).padStart(2, "0")}`;
   for (const [field, unit, sourceField, semantic, unknownReason] of [
     ["timestamp_ms", "Unix milliseconds", "t", "preference", ROW_UNKNOWN],
-    ["p_buy_score", "preference score [0,1], not calibrated probability", "p", "preference", "No valid source pBuy score is available for this ask; null is not replaced with zero and pBuy is not a probability of profit."],
+    ["p_buy_score", "preference score [0,1], not calibrated probability", "p", "preference", "AnalysisView.p defaults a missing source Choice score to zero; the underlying score is unavailable and must remain unknown."],
     ["order_applied", "boolean", "ok", "operational", ROW_UNKNOWN],
   ] as const) {
     const measurementId = `analysis.asks.${rankKey}.${field}`;
@@ -288,7 +288,7 @@ for (const cohort of ["all", "fresh"] as const) {
     const key = `bin_${String(bin).padStart(2, "0")}`;
     const lower = (bin / 20).toFixed(2);
     const upper = ((bin + 1) / 20).toFixed(2);
-    addAnalysis(`analysis.hist.${cohort}.${key}`, "preference count", surfaces.decisions, `${cohort === "all" ? "all consultations" : "fresh rank-v1 consultations"}; preference bin [${lower}, ${upper}${bin === 19 ? "]" : ")"}`, "preference", `analysis.hist.${cohort}.${key}`, "src/agent/analysis.ts#AnalysisView.hist", `AnalysisView.hist.${cohort}[]`, key);
+    addAnalysis(`analysis.hist.${cohort}.${key}`, "preference count", surfaces.decisions, `${cohort === "all" ? "all consultations" : "consultations tagged criteria=rank-v1"}; preference bin [${lower}, ${upper}${bin === 19 ? "]" : ")"}`, "preference", `analysis.hist.${cohort}.${key}`, "src/agent/analysis.ts#AnalysisView.hist", `AnalysisView.hist.${cohort}[]`, key);
   }
 }
 addAnalysis("analysis.timeline.count", "count", surfaces.decisions, "latest 30 valid consultations", "operational", "analysis.timeline.count");
@@ -299,7 +299,7 @@ for (let rank = 0; rank < 30; rank++) {
     addAnalysis(`analysis.timeline.${rankKey}.${field}`, unit, surfaces.decisions, "latest 30 timeline rows, rank_00 oldest displayed", "operational", measurementId, `src/agent/analysis.ts#AnalysisView.timeline[].${sourceField}`, "AnalysisView.timeline[]", `${rankKey}.${sourceField}`, ROW_UNKNOWN);
   }
 }
-addAnalysis("analysis.trips.count", "count", surfaces.results, "all closed round trips from available fills", "gross", "analysis.trips.count", "src/agent/analysis.ts#AnalysisView.trips.length");
+addAnalysis("analysis.trips.count", "count", surfaces.results, "all closed round trips from available fills", "operational", "analysis.trips.count", "src/agent/analysis.ts#AnalysisView.trips.length");
 for (const [field, measurementField, unit, semantic, horizon] of [
   ["gross_in", "gross_in_usdc", "USDC (verified cash mint required)", "gross", "all closed round trips"],
   ["gross_out", "gross_out_usdc", "USDC (verified cash mint required)", "gross", "all closed round trips"],
@@ -308,7 +308,7 @@ for (const [field, measurementField, unit, semantic, horizon] of [
   ["negative_count", "negative_count", "count", "gross", "closed round trips with negative gross cash delta"],
 ] as const) {
   const measurementId = `analysis.trips.${measurementField}`;
-  addAnalysis(`analysis.trips.${field}`, unit, surfaces.results, horizon, semantic, measurementId, "src/agent/analysis.ts#buildAnalysis trip aggregates; complete valid USDC fills required", undefined, undefined, field.startsWith("gross_") ? "The trip cash amount or return is unknown unless all included fills are valid and the cash mint is verified as USDC." : undefined);
+  addAnalysis(`analysis.trips.${field}`, unit, surfaces.results, horizon, semantic, measurementId, "src/agent/analysis.ts#buildAnalysis trip aggregates; complete valid fills and verified USD cash denomination required", undefined, undefined, field.startsWith("gross_") ? "Trip cash amount or return is unknown unless all included fills are valid and the cash denomination is verified as USD." : undefined);
 }
 addAnalysis("analysis.trips.display[].symbol", "text (suppressed)", surfaces.results, "up to 2 latest displayed round trips", "gross", undefined, "src/agent/analysis.ts#AnalysisView.trips[].s", "AnalysisView.trips[]", "s", TEXT_UNKNOWN);
 addAnalysis("analysis.trips[].quantity_base_units", "token base units", surfaces.results, "each closed round trip", "gross", undefined, "src/agent/analysis.ts#AnalysisView.trips does not project token quantity", "AnalysisView.trips[]", "quantity_base_units", "AnalysisView exposes trip cash and timestamps, not token quantity; do not infer quantity from USD.");
@@ -317,7 +317,7 @@ for (const [field, unit, semantic] of [
   ["gross_delta_usdc", "USDC before network fee (verified cash mint required)", "gross"],
   ["cumulative_gross_cash_delta_usdc", "USDC before network fee (verified cash mint required)", "gross"],
 ] as const) {
-  addAnalysis(`analysis.trips.cumulative[].${field}`, unit, surfaces.results, "each chronological round-trip point; HUD chart includes a synthetic origin", semantic, undefined, "src/agent/analysis.ts#AnalysisView.trips[] -> web/src/lib/hud/draw/analysis.ts#createAnalysis.cumulative", "cumulative trip cash series[]", field, "This cumulative series field is reported per rank only when its sanitized source value is present; cash is not treated as net return.");
+  addAnalysis(`analysis.trips.cumulative[].${field}`, unit, surfaces.results, "each chronological round-trip point; HUD chart includes a synthetic origin", semantic, undefined, "src/agent/analysis.ts#AnalysisView.trips[] -> web/src/lib/hud/draw/analysis.ts#createAnalysis.cumulative", "cumulative trip cash series[]", field, "This trip cash field is unknown unless all included fills are valid and the cash denomination is verified as USD; gross cash is not treated as net return.");
 }
 for (let rank = 0; rank < 2; rank++) {
   const rankKey = `rank_${String(rank).padStart(2, "0")}`;
@@ -325,28 +325,28 @@ for (let rank = 0; rank < 2; rank++) {
     ["gross_entry_usdc", "USDC (verified cash mint required)", "in", "gross"],
     ["gross_exit_usdc", "USDC (verified cash mint required)", "out", "gross"],
     ["gross_return_pct", "% before network fee", "pct", "gross"],
-    ["buy_at_ms", "Unix milliseconds", "buyAt", "gross"],
-    ["sell_at_ms", "Unix milliseconds", "sellAt", "gross"],
+    ["buy_at_ms", "Unix milliseconds", "buyAt", "operational"],
+    ["sell_at_ms", "Unix milliseconds", "sellAt", "operational"],
     ["duration_min", "minutes", "sellAt - buyAt", "operational"],
   ] as const) {
     const measurementId = `analysis.trips.display.${rankKey}.${field}`;
-    addAnalysis(`analysis.trips.display.${rankKey}.${field}`, unit, surfaces.results, "two latest displayed round trips; rank_00 penultimate/left and rank_01 newest/right", semantic, measurementId, `src/agent/analysis.ts#AnalysisView.trips[].${sourceField}`, "AnalysisView.trips[]", `${rankKey}.${sourceField}`, field.startsWith("gross_") ? "The trip cash amount or return is unknown unless all included fills are valid and the cash mint is verified as USDC." : ROW_UNKNOWN);
+    addAnalysis(`analysis.trips.display.${rankKey}.${field}`, unit, surfaces.results, "two latest displayed round trips; rank_00 penultimate/left and rank_01 newest/right", semantic, measurementId, `src/agent/analysis.ts#AnalysisView.trips[].${sourceField}`, "AnalysisView.trips[]", `${rankKey}.${sourceField}`, field.startsWith("gross_") ? "Trip cash amount or return is unknown unless all included fills are valid and the cash denomination is verified as USD." : ROW_UNKNOWN);
   }
 }
 for (const [field, unit, semantic] of [
   ["lamports", "lamports", "operational"], ["fills", "count", "operational"], ["unmatched_sells", "count", "operational"],
 ] as const) {
-  addAnalysis(`analysis.fees.${field}`, unit, surfaces.results, "available fill history", semantic, `analysis.fees.${field}`, "src/agent/analysis.ts#AnalysisView.fees");
+  addAnalysis(`analysis.fees.${field}`, unit, surfaces.results, "available fill history", semantic, `analysis.fees.${field}`, "src/agent/analysis.ts#AnalysisView.fees", undefined, undefined, field === "lamports" ? "AnalysisView sums available wallet fees without exposing whether any fee was missing; exact fee totals remain unknown." : undefined);
 }
 addAnalysis("analysis.fees.native_sol", "SOL", surfaces.results, "available fill history", "operational", "analysis.fees.native_sol", "web/src/lib/hud/draw/analysis.ts#createAnalysis.kpis; exact lamports-to-SOL display projection", undefined, undefined, "Fee cost in SOL is unknown if any included walletFee is missing or unsafe.");
-addAnalysis("analysis.fees.usd_fx", "USD per native fee", surfaces.results, "fee observation time", "operational", "analysis.fees.usd_fx", "src/agent/fills.ts#fee conversion", undefined, undefined, "No contemporaneous native-token/USD conversion is frozen.");
+addAnalysis("analysis.fees.usd_fx", "USD per native fee", surfaces.results, "fee observation time", "operational", "analysis.fees.usd_fx", "src/agent/fills.ts#fee conversion", undefined, undefined, "No contemporaneous native-token/USD conversion is present in the online observation.");
 for (const group of ["skipped", "closed", "gated"] as const) {
   for (const window of ["15m", "1h"] as const) {
     for (const [field, unit, projectionField] of [["n", "count", "n"], ["up", "count with positive price markout", "up"], ["mean_pct", "% price move", "mean"], ["up_pct", "% of positive markouts", "up_pct"]] as const) {
       const measurementId = `analysis.placar.${group}.${window}.${field}`;
       addAnalysis(measurementId, unit, surfaces.skipped, `price markout ${window} after non-execution`, "counterfactual", measurementId, `src/agent/analysis.ts#AnalysisView.placar.${group}.${window}.${projectionField}`, undefined, undefined, field === "up_pct" ? "The markout positive fraction is unknown when its denominator n is zero or absent." : undefined);
     }
-    addAnalysis(`analysis.placar.${group}.${window}.vals[].markout_pct`, "% price markout", surfaces.skipped, `all raw markout rows for ${window} after non-execution`, "counterfactual", undefined, `src/agent/analysis.ts#AnalysisView.placar.${group}.${window}.vals[]`, "WindowStats.vals[]", "markout_pct", "Per-row numeric markouts are represented by frozen ranked entries when available; no missing row is filled with zero.");
+    addAnalysis(`analysis.placar.${group}.${window}.vals[].markout_pct`, "% price markout", surfaces.skipped, `all raw markout rows for ${window} after non-execution`, "counterfactual", undefined, `src/agent/analysis.ts#AnalysisView.placar.${group}.${window}.vals[]`, "WindowStats.vals[]", "markout_pct", "Per-row numeric markouts are represented by ranked scalar entries in the online report when available; no missing row is filled with zero.");
     for (let bin = 0; bin < 10; bin++) {
       const key = `bin_${String(bin).padStart(2, "0")}`;
       const measurementId = `analysis.placar.${group}.${window}.hist.${key}`;
@@ -409,7 +409,7 @@ for (const [field, unit, semantic, fieldPath] of [
       : suppressed ? TEXT_UNKNOWN : ROW_UNKNOWN,
   });
 }
-addHud("hud.candidates.best_open_buy_preference", "preference 0-1; not probability of profit", "web/src/lib/hud/draw/command.ts#createCommand.decision best", surfaces.command, "highest-ranked open candidate", "preference", "The HUD selects the largest non-closed candidate pbuy; the frozen snapshot does not supply a best-candidate summary.");
+addHud("hud.candidates.best_open_buy_preference", "preference 0-1; not probability of profit", "web/src/lib/hud/draw/command.ts#createCommand.decision best", surfaces.command, "highest-ranked open candidate", "preference", "The HUD selects the largest non-closed candidate pbuy; no best-candidate summary is present in the online observation.");
 addHud("hud.candidates.best_open_buy_symbol", "text (suppressed)", "web/src/lib/hud/draw/command.ts#createCommand.decision best", surfaces.command, "highest-ranked open candidate", "preference", TEXT_UNKNOWN);
 addHud("hud.candidates.total_displayed", "count (max 8)", "web/src/lib/hud/draw/command.ts#createCommand.decision list", surfaces.command, "latest consultation", "operational");
 addHud("hud.candidates.open_displayed", "count", "web/src/lib/hud/draw/command.ts#createCommand.decision", surfaces.command, "latest consultation", "operational");
@@ -446,7 +446,7 @@ addMetric("hud.activity.daily_consults", "count", "web/src/lib/hud/model.ts#stat
   measurementId: "runtime.agent_budget.consults",
   unknownReason: "The daily budget snapshot does not include a validated consult count.",
 });
-addHud("hud.activity.daily_consult_cap", "count", "web/src/lib/hud/types.ts#HudModel.budget.max", surfaces.allHud, "current UTC day", "config", "The daily consult cap depends on settings excluded from the approved frozen snapshot.");
+addHud("hud.activity.daily_consult_cap", "count", "web/src/lib/hud/types.ts#HudModel.budget.max", surfaces.allHud, "current UTC day", "config", "The daily consult cap depends on settings excluded from the online observation.");
 for (const [field, unit] of [["items_evaluated", "count"], ["buy_requests", "count"], ["code_blocked", "count"], ["orders_executed", "count"], ["chain_failures", "count"]] as const) {
   addHud(`hud.activity.${field}`, unit, "web/src/lib/hud/draw/analysis.ts#createAnalysis.activity", surfaces.results, "latest 25 consultations", "operational");
 }
@@ -477,7 +477,7 @@ for (const [field, unit, semantic, source] of [
   const sourceCode = field === "next_cycle_at_ms"
     ? "web/src/lib/hud/live.ts#countdownAt(HudModel.rhythm.nextAtMs)"
     : `web/src/lib/hud/types.ts#${source}`;
-  addHud(`hud.system.${field}`, unit, sourceCode, fieldSurfaces, "current status", semantic, sensitive ? "The source may contain an address or URL; the report never includes it, and no current HUD reading is frozen." : suppressed ? TEXT_UNKNOWN : HUD_STATUS_UNKNOWN);
+  addHud(`hud.system.${field}`, unit, sourceCode, fieldSurfaces, "current status", semantic, sensitive ? "The source may contain an address or URL; the report never includes it, and no current HUD reading is present in collected evidence." : suppressed ? TEXT_UNKNOWN : HUD_STATUS_UNKNOWN);
 }
 for (const [field, unit, semantic, source, path] of [
   ["stage", "code", "operational", "stage", "stage"], ["side", "code", "operational", "side", "side"],
@@ -506,7 +506,7 @@ for (const [field, unit, semantic, source] of [
 addHud("hud.health.rows_count", "count (max 8)", "web/src/lib/hud/draw/command.ts#createCommand.healthRows", surfaces.command, "current status", "operational", "Health rows are conditionally composed from multiple status fields; no current HUD snapshot is supplied.");
 addHud("hud.health.attention_state", "code", "web/src/lib/hud/draw/command.ts#createCommand.health", surfaces.command, "current status", "operational", "Attention state is derived from cycling, pause, lock, in-flight orders, and record health; no current HUD snapshot is supplied.");
 for (const node of ["brief", "jev", "quote", "executor", "receipt"] as const) {
-  addHud(`hud.core.nodes.${node}.status`, "display code", "web/src/lib/hud/draw/command.ts#createCommand.core nodes", surfaces.command, "derived from latest visible event", "operational", "These are renderer heuristics, not independent health probes; current event/HUD state is absent from the frozen snapshot.");
+  addHud(`hud.core.nodes.${node}.status`, "display code", "web/src/lib/hud/draw/command.ts#createCommand.core nodes", surfaces.command, "derived from latest visible event", "operational", "These are renderer heuristics, not independent health probes; current event/HUD state is absent from the online observation.");
 }
 for (const [field, unit, semantic, source] of [
   ["busy", "code (suppressed)", "operational", "busy"], ["notice_tone", "code", "operational", "notice.tone"],
@@ -536,7 +536,7 @@ for (const [field, unit, semantic, source] of [
 ] as const) {
   addHud(`hud.limits.${field}`, unit, `web/src/lib/hud/types.ts#${source}`, [...surfaces.system, "Comando limites"], "current configured guard or current UTC day", semantic);
 }
-addHud("hud.limits.buy_spend_display_valid", "boolean", "web/src/lib/hud/draw/analysis.ts#createAnalysis.limits", surfaces.system, "current analysis availability", "operational", "The HUD can draw EMPTY_ANALYSIS.spentToday as zero if analysis is absent; no frozen current status is supplied, so do not treat the UI zero as observed spend.");
+addHud("hud.limits.buy_spend_display_valid", "boolean", "web/src/lib/hud/draw/analysis.ts#createAnalysis.limits", surfaces.system, "current analysis availability", "operational", "The HUD can draw EMPTY_ANALYSIS.spentToday as zero if analysis is absent; no current status is supplied, so do not treat the UI zero as observed spend.");
 addHud("hud.provider.month_key", "month code", "web/src/lib/hud/types.ts#HudResources.monthKey", surfaces.system, "provider quota month", "operational", TEXT_UNKNOWN);
 addHud("hud.provider.month_days", "days", "web/src/lib/hud/types.ts#HudResources.days", surfaces.system, "provider quota month", "operational");
 addHud("hud.provider.requests_per_second", "requests/second", "web/src/lib/hud/types.ts#HudResources.rate.requestsPerSecond", surfaces.system, "provider rate limit", "config");
@@ -558,11 +558,11 @@ addHud("hud.market_context.trend", "code (suppressed)", "web/src/lib/hud/types.t
 // Choice requests are preferences, and six facets are judgments; none is an outcome probability or calibrated score.
 for (const [field, measurementId, horizon] of [
   ["total", "hud.preference_buy_histogram.total", "all consultations"],
-  ["fresh", "hud.preference_buy_histogram.fresh", "fresh rank-v1 consultations"],
+  ["fresh", "hud.preference_buy_histogram.fresh", "consultations tagged criteria=rank-v1"],
 ] as const) {
   addMetric(`hud.preference_buy_histogram.${field}`, "count of valid preferences", "web/src/lib/hud/draw/analysis.ts#createAnalysis.hist", surfaces.decisions, horizon, "preference", {
     measurementId,
-    unknownReason: "The displayed valid-preference count is not present in the frozen snapshot; bin absence or invalid pBuy values are not zero.",
+    unknownReason: "The displayed valid-preference count is not present in the online observation; bin absence or invalid pBuy values are not zero.",
   });
 }
 addHud("hud.preference_buy_pbuy", "preference 0-1; not calibrated probability", "web/src/lib/hud/model.ts#buyPreference", surfaces.decisions, "no calibrated event/horizon supplied", "preference", "pBuy is the largest Choice preference for a purchase option, not calibrated winProbability.");
@@ -613,7 +613,7 @@ for (const [field, sourceField] of [["id", "id"], ["label", "label"], ["url", "u
     arrayPath: "ProviderRow[]", fieldPath: sourceField, unknownReason: TEXT_UNKNOWN,
   });
 }
-addHud("usage.price_save_feedback", "code/text (suppressed)", "web/src/components/Settings/InonuUsage.tsx#saved/formError", surfaces.usage, "latest price save attempt", "operational", "Save feedback and form errors are local UI state and are not part of the frozen evidence snapshot.");
+addHud("usage.price_save_feedback", "code/text (suppressed)", "web/src/components/Settings/InonuUsage.tsx#saved/formError", surfaces.usage, "latest price save attempt", "operational", "Save feedback and form errors are local UI state and are not part of the online observation.");
 
 for (const window of ["15m", "1h", "4h", "24h"] as const) {
   for (const partition of ["all", "inaction", "by_mode.desligado", "by_mode.sombra", "by_mode.limitado"] as const) {
@@ -699,9 +699,9 @@ for (const [field, unit, semantic, horizon] of [
   ["history.change_pct", "% raw balance change including external flows; not return", "gross", "first to latest validated local equity history row"],
 ] as const) {
   const id = `wallet.equity.${field}`;
-  addMetric(id, unit, "src/agent/equity-log.ts#parseSnapshotLine -> src/agent/equity.ts#buildSeries/summarize", ["Frozen local wallet equity; identifiers suppressed; not flow-adjusted return"], horizon, semantic, {
+  addMetric(id, unit, "src/agent/equity-log.ts#parseSnapshotLine -> src/agent/equity.ts#buildSeries/summarize", ["Collected local wallet equity; identifiers suppressed; not flow-adjusted return"], horizon, semantic, {
     measurementId: id,
-    unknownReason: "No sanitized local wallet-equity projection for this field is available in the frozen snapshot.",
+    unknownReason: "No sanitized local wallet-equity projection for this field is available in collected online evidence.",
   });
 }
 for (const [field, unit, semantic] of [
@@ -711,52 +711,52 @@ for (const [field, unit, semantic] of [
   ["unmeasured_calls", "count", "operational"],
 ] as const) {
   const id = `runtime.agent_budget.${field}`;
-  addMetric(id, unit, "runtime/data/agent/budget.json#validated budget projection", ["Frozen local agent budget"], "current UTC day", semantic, {
+  addMetric(id, unit, "runtime/data/agent/budget.json#validated budget projection", ["Online runtime budget summary"], "current UTC day", semantic, {
     measurementId: id,
-    unknownReason: "The validated local agent-budget projection is not present in this frozen snapshot.",
+    unknownReason: "The validated local agent-budget projection is not present in the online observation.",
   });
 }
-// Frozen local evidence already reduced to safe scalar diagnostics; it is deliberately not mixed with HUD values or synthetic workload metrics.
+// Collected online evidence is reduced to safe scalar diagnostics; it is deliberately not mixed with HUD values or synthetic workload metrics.
 for (const [field, unit] of [
   ["orders_total", "orders"], ["fills_exact", "fills"], ["round_trips", "round trips"], ["complete_ledger", "boolean"],
   ["invalid_order_rows", "orders"], ["fee_known_orders", "orders"], ["net_usd_known_orders", "orders"], ["round_trips_net_usd_known", "round trips"],
 ] as const) {
-  addMetric(`audit.execution.${field}`, unit, "scripts/autoresearch/freeze-evidence.ts#audit.execution", ["Frozen local execution evidence; not HUD PnL"], "latest sanitized execution projection", "operational", {
+  addMetric(`audit.execution.${field}`, unit, "scripts/autoresearch/online-report.ts#buildOnlineReport execution evidence", ["Collected online execution evidence; not HUD PnL"], "available online execution projection", "operational", {
     measurementId: `audit.execution.${field}`,
-    unknownReason: "Execution projection is not available in this frozen snapshot.",
+    unknownReason: "Execution coverage is not available in the online observation.",
   });
 }
-addMetric("audit.review.review_count", "reviews", "scripts/autoresearch/freeze-evidence.ts#audit.review", ["Frozen local review evidence"], "latest sanitized review projection", "operational", { measurementId: "audit.review.review_count" });
+addMetric("audit.review.review_count", "reviews", "scripts/autoresearch/online-report.ts#buildOnlineReport review evidence", ["Collected online review evidence"], "available online review projection", "operational", { measurementId: "audit.review.review_count" });
 for (const [field, unit] of [["references_valid", "records"], ["experiments_pending", "records"], ["outcomes_mature", "records"]] as const) {
-  addMetric(`evolution.${field}`, unit, "scripts/autoresearch/freeze-evidence.ts#evolution", ["Frozen local prospective evidence; not realized PnL"], "latest sanitized evolution projection", "operational", { measurementId: `evolution.${field}` });
+  addMetric(`evolution.${field}`, unit, "scripts/autoresearch/online-report.ts#buildOnlineReport prospective evidence", ["Collected online prospective evidence; not realized PnL"], "available online prospective projection", "operational", { measurementId: `evolution.${field}` });
 }
-addMetric("audit.execution.fee_cost_usd_known_orders", "count", "scripts/autoresearch/freeze-evidence.ts#audit.execution cost conversion", ["Frozen local cost coverage"], "latest sanitized execution projection", "operational", {
+addMetric("audit.execution.fee_cost_usd_known_orders", "count", "scripts/autoresearch/online-report.ts#buildOnlineReport execution cost conversion", ["Collected online cost coverage"], "available online execution projection", "operational", {
   measurementId: "audit.execution.fee_cost_usd_known_orders",
-  unknownReason: "The frozen execution projection does not report contemporaneous native-fee/USD coverage.",
+  unknownReason: "The online observation does not provide contemporaneous native-fee/USD coverage.",
 });
-addMetric("audit.portfolio.external_flows_reconciled", "boolean", "scripts/autoresearch/freeze-evidence.ts#audit.portfolio reconciliation", ["Frozen local portfolio reconciliation"], "portfolio observation period", "operational", {
+addMetric("audit.portfolio.external_flows_reconciled", "boolean", "scripts/autoresearch/online-report.ts#buildOnlineReport portfolio reconciliation", ["Collected online portfolio reconciliation"], "portfolio observation period", "operational", {
   measurementId: "audit.portfolio.external_flows_reconciled",
-  unknownReason: "The frozen execution projection covers local transactions, not complete wallet balances and external flows.",
+  unknownReason: "The online observation covers no complete wallet balance and external-flow reconciliation.",
 });
-addMetric("provider.onchain.month", "UTC month YYYY-MM", "src/onchain-read/budget.ts#BudgetSnapshot.month", ["Settings / Usage; frozen provider budget"], "latest provider budget month", "operational", {
-  measurementId: "provider.onchain.month", unknownReason: "Provider budget month is not present in the frozen snapshot.",
+addMetric("provider.onchain.month", "UTC month YYYY-MM", "src/onchain-read/budget.ts#BudgetSnapshot.month", ["Settings / Usage; collected provider budget"], "latest provider budget month", "operational", {
+  measurementId: "provider.onchain.month", unknownReason: "Provider budget month is not present in the online observation.",
 });
-addMetric("provider.onchain.restarted_from_corrupt_file", "boolean", "src/onchain-read/budget.ts#BudgetSnapshot.restartedFromCorruptFile", ["Settings / Usage; frozen provider budget"], "latest provider budget month", "operational", {
-  measurementId: "provider.onchain.restarted_from_corrupt_file", unknownReason: "Provider budget integrity status is not present in the frozen snapshot.",
+addMetric("provider.onchain.restarted_from_corrupt_file", "boolean", "src/onchain-read/budget.ts#BudgetSnapshot.restartedFromCorruptFile", ["Settings / Usage; collected provider budget"], "latest provider budget month", "operational", {
+  measurementId: "provider.onchain.restarted_from_corrupt_file", unknownReason: "Provider budget integrity status is not present in the online observation.",
 });
 for (const tier of ["free", "basic", "premium"] as const) {
   for (const [field, unit] of [["used", "count of calls this month"], ["today", "count of calls today"], ["projection", "projected count for month"]] as const) {
     const id = `provider.onchain.tiers.${tier}.${field}`;
-    addMetric(id, unit, `src/onchain-read/budget.ts#BudgetTierSnapshot.${field}`, ["Settings / Usage; frozen provider budget"], "latest provider budget month", "operational", {
-      measurementId: id, unknownReason: "Provider budget usage counters are not present in the frozen snapshot.",
+    addMetric(id, unit, `src/onchain-read/budget.ts#BudgetTierSnapshot.${field}`, ["Settings / Usage; collected provider budget"], "latest provider budget month", "operational", {
+      measurementId: id, unknownReason: "Provider budget usage counters are not present in the online observation.",
     });
   }
   const measurementId = tier === "free" ? undefined : `provider.onchain.tiers.${tier}.cap`;
-  addMetric(`provider.onchain.tiers.${tier}.cap`, "count of calls/month", "src/onchain-read/budget.ts#BudgetTierSnapshot.cap", ["Settings / Usage; frozen provider budget"], "latest provider budget month", "config", {
+  addMetric(`provider.onchain.tiers.${tier}.cap`, "count of calls/month", "src/onchain-read/budget.ts#BudgetTierSnapshot.cap", ["Settings / Usage; collected provider budget"], "latest provider budget month", "config", {
     ...(measurementId === undefined ? {} : { measurementId }),
     unknownReason: tier === "free"
       ? "The free tier has no finite configured monthly cap (null/unbounded); it is not 0."
-      : "Provider monthly cap depends on settings excluded from the approved frozen snapshot.",
+      : "Provider monthly cap depends on settings excluded from the online observation.",
   });
 }
 
@@ -803,7 +803,7 @@ function safeSourceLabels(snapshot: EvidenceSnapshot): Map<string, string> {
 }
 const safeAggregateMeasurementPatterns = [
   /^hud\.preference_buy_histogram\.(?:total|fresh)$/,
-  /^analysis\.at_ms$/,
+  /^online\.ledger\.tail_(?:records|order_records|cycle_records)$/,
   /^analysis\.source\.(?:invalid_(?:brief|ledger|fill|scoreboard)_rows|missing_open_candidate_choice_scores)$/,
   /^analysis\.funnel\.(?:consults|items|closed|open|asked|applied|executed|failed)$/,
   /^hud\.funnel\.(?:items_to_open_pct|open_to_asked_pct|asked_to_applied_pct|applied_to_executed_pct|closed_by_code_count|skipped_by_jev_count|blocked_by_code_count|not_executed_count)$/,
@@ -1122,10 +1122,10 @@ export function buildPanelReport(snapshot: EvidenceSnapshot): WorkloadResult {
     const countMismatch = ordersTotal !== null && netOrders !== null && netOrders !== ordersTotal;
     const actual = ledgerIsKnownIncomplete || countMismatch;
     const reason = ledgerIsKnownIncomplete
-      ? "The frozen audit marks the execution ledger incomplete; known net USD counts cannot establish whole-ledger coverage."
+      ? "The collected evidence marks the execution ledger incomplete; known net USD counts cannot establish whole-ledger coverage."
       : countMismatch
-        ? "The frozen audit reports a mismatch between total orders and orders with known net USD; unknown costs/results are not zero."
-        : "A complete execution ledger or complete order-level net-USD coverage is not available in the frozen audit.";
+        ? "The collected evidence reports a mismatch between total orders and orders with known net USD; unknown costs/results are not zero."
+        : "A complete execution ledger or complete order-level net-USD coverage is not available in collected evidence.";
     weaknesses.push(weakness("net_usd_incomplete", actual ? "observed" : "structural", reason,
       [auditOrders, knownNetOrders, completeLedger].filter((entry): entry is PanelMetricEntry => entry !== undefined)));
   }
@@ -1133,10 +1133,10 @@ export function buildPanelReport(snapshot: EvidenceSnapshot): WorkloadResult {
     const countMismatch = tripsTotal !== null && netTrips !== null && netTrips !== tripsTotal;
     const actual = ledgerIsKnownIncomplete || countMismatch;
     const reason = ledgerIsKnownIncomplete
-      ? "The frozen audit marks the execution ledger incomplete; known round-trip net USD counts cannot establish whole-ledger coverage."
+      ? "The collected evidence marks the execution ledger incomplete; known round-trip net USD counts cannot establish whole-ledger coverage."
       : countMismatch
-        ? "The frozen audit reports a mismatch between closed round trips and trips with known net USD."
-        : "A complete execution ledger or complete round-trip net-USD coverage is not available in the frozen audit.";
+        ? "The collected evidence reports a mismatch between closed round trips and trips with known net USD."
+        : "A complete execution ledger or complete round-trip net-USD coverage is not available in collected evidence.";
     weaknesses.push(weakness("round_trip_net_usd_incomplete", actual ? "observed" : "structural", reason,
       [roundTrips, knownNetTrips, completeLedger].filter((entry): entry is PanelMetricEntry => entry !== undefined)));
   }
@@ -1146,7 +1146,7 @@ export function buildPanelReport(snapshot: EvidenceSnapshot): WorkloadResult {
     const actual = usdFeeOrders !== null && totalFeeOrders !== null;
     weaknesses.push(weakness("native_fee_cost_fx_missing", actual ? "observed" : "structural", actual
       ? "Some native-fee observations lack contemporaneous USD cost conversion."
-      : "The frozen audit has no complete contemporaneous native-fee/USD conversion coverage field; native fee units are not USD zero.", [knownFeeUsd, feeKnownOrders].filter((entry): entry is PanelMetricEntry => entry !== undefined)));
+      : "Collected evidence has no complete contemporaneous native-fee/USD conversion coverage field; native fee units are not USD zero.", [knownFeeUsd, feeKnownOrders].filter((entry): entry is PanelMetricEntry => entry !== undefined)));
   }
   const matureCount = numeric(evolutionMature);
   const pendingExperiments = findMetric("evolution.experiments_pending");
@@ -1154,17 +1154,17 @@ export function buildPanelReport(snapshot: EvidenceSnapshot): WorkloadResult {
   if (matureCount === null || matureCount === 0 || (pendingCount !== null && pendingCount > 0)) {
     const observedMissingness = matureCount === 0 || (pendingCount !== null && pendingCount > 0);
     const reason = matureCount === 0
-      ? "The frozen prospective-evidence projection has no mature outcomes."
+      ? "The collected prospective-evidence projection has no mature outcomes."
       : pendingCount !== null && pendingCount > 0
-        ? "The frozen prospective-evidence projection reports pending experiments whose outcomes are not mature."
-        : "Mature outcome coverage is not available in the frozen snapshot.";
+        ? "The collected prospective-evidence projection reports pending experiments whose outcomes are not mature."
+        : "Mature outcome coverage is not available in collected evidence.";
     weaknesses.push(weakness("mature_outcomes_missing", observedMissingness ? "observed" : "structural", reason,
       [evolutionMature, pendingExperiments].filter((entry): entry is PanelMetricEntry => entry !== undefined)));
   }
   if (externalFlows?.availability !== "available" || externalFlows.value !== true) {
     weaknesses.push(weakness("portfolio_flows_unreconciled", externalFlows?.availability === "available" ? "observed" : "structural", externalFlows?.availability === "available"
-      ? "The frozen portfolio reconciliation explicitly reports external flows as unreconciled."
-      : "The frozen execution projection is not a complete wallet-balance and external-flow reconciliation.", externalFlows === undefined ? [] : [externalFlows]));
+      ? "The collected portfolio reconciliation explicitly reports external flows as unreconciled."
+      : "The online observation is not a complete wallet-balance and external-flow reconciliation.", externalFlows === undefined ? [] : [externalFlows]));
   }
   const calibration = metrics.filter((entry) => entry.schemaPath === "analysis.calibration.brier_score" || entry.schemaPath === "analysis.calibration.logloss");
   weaknesses.push(weakness("choice_preferences_not_calibrated", "structural", "Choice pBuy and facets are preferences/judgments, not calibrated outcome probabilities; no Brier/logloss claim is valid without defined events and horizons.", calibration));
@@ -1179,8 +1179,8 @@ export function buildPanelReport(snapshot: EvidenceSnapshot): WorkloadResult {
       "status_scoreboard_not_captured",
       "structural",
       invalidScoreboard
-        ? `Captured scoreboard rows failed frozen schema validation, so dependent scoreboard/evidence/record metrics remain unknown; the independently validated equity series is ${equitySeriesAvailable ? "available" : "also unavailable"}.`
-        : `No scoreboard source measurements were captured, so scoreboard/evidence/record metrics remain unknown; the independently validated equity series is ${equitySeriesAvailable ? "available" : "also unavailable"}.`,
+        ? `Collected scoreboard rows failed safe-schema validation, so dependent scoreboard/evidence/record metrics remain unknown; the independently validated equity series is ${equitySeriesAvailable ? "available" : "also unavailable"}.`
+        : `No scoreboard source measurements were collected, so scoreboard/evidence/record metrics remain unknown; the independently validated equity series is ${equitySeriesAvailable ? "available" : "also unavailable"}.`,
       scoreboardMetrics,
     ));
   }

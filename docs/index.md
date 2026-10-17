@@ -10,10 +10,11 @@ confidence: medium
 
 # Índice da documentação
 
-## Benchmark de decisões (2026-10-16)
+## Autoresearch real online (2026-10-16)
 
-- [Especificação do autoresearch offline](specs/autoresearch-decisoes/spec.md): métricas, alvo financeiro não comprovado e separação entre dados reais, sintéticos e ausentes.
-- [Plano e execução canônica](specs/autoresearch-decisoes/plan.md), [grafo de tarefas](specs/autoresearch-decisoes/tasks.md) e [estado e verificação](specs/autoresearch-decisoes/status.md).
+- [Especificacao vigente](specs/autoresearch-real-online/spec.md): somente leituras reais online, desconhecidos preservados e nenhuma operacao financeira.
+- [Plano e execucao canonica](specs/autoresearch-real-online/plan.md), [grafo de tarefas](specs/autoresearch-real-online/tasks.md) e [estado e verificacao](specs/autoresearch-real-online/status.md).
+- [Benchmark offline anterior](specs/autoresearch-decisoes/spec.md): historico superado por instrucao do usuario, nao e mais o procedimento de execucao.
 - [Decisão executável do JEV](specs/decisao-executavel-jev/spec.md): sonda, causa em `report.view`, alertas no Brief e estado da entrega local.
 
 ## Evolução e consulta rápida (2026-10-15)

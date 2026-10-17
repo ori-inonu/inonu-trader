@@ -11,6 +11,8 @@ confidence: medium
 # Tarefas e dependencias
 
 Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md), [plano](plan.md) e [estado](status.md).
+Tarefas historicas encerradas. O fluxo vigente e o [autoresearch real online](../autoresearch-real-online/tasks.md); nao execute os workloads, congeladores ou passos de inicializacao offline descritos abaixo.
+
 
 | ID | Entrega | Depende de | Prova |
 | --- | --- | --- | --- |

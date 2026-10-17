@@ -1,10 +1,8 @@
 import { createHash } from "node:crypto";
-import { fileURLToPath } from "node:url";
-import type { EvidenceSnapshot } from "./autoresearch/contracts";
+import { collectOnlineObservation } from "./autoresearch/online-source";
+import { buildOnlineReport } from "./autoresearch/online-report";
 
 const root = new URL("../", import.meta.url);
-const primaryMetric = "synthetic_paired_net_return_bps";
-
 const sha256 = (bytes: string | Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 
 async function evaluatorFingerprint(): Promise<string> {
@@ -12,14 +10,11 @@ async function evaluatorFingerprint(): Promise<string> {
     "autoresearch.sh",
     "scripts/autoresearch.ts",
     "scripts/autoresearch/contracts.ts",
-    "scripts/autoresearch/workload.ts",
+    "scripts/autoresearch/online-source.ts",
+    "scripts/autoresearch/online-report.ts",
     "scripts/autoresearch/panel-metrics.ts",
-    "src/agent/shadow/sim-portfolio.ts",
+    "src/onchainos/public-okx.ts",
   ];
-  const labRoot = new URL("src/lab/", root);
-  for await (const name of new Bun.Glob("**/*.ts").scan({ cwd: fileURLToPath(labRoot), onlyFiles: true })) {
-    if (!name.endsWith(".test.ts")) files.push(`src/lab/${name.replaceAll("\\", "/")}`);
-  }
   const digest = createHash("sha256");
   for (const name of files.sort()) {
     digest.update(name).update("\0").update(await Bun.file(new URL(name, root)).bytes()).update("\0");
@@ -28,56 +23,39 @@ async function evaluatorFingerprint(): Promise<string> {
 }
 
 async function main(): Promise<void> {
-  if (Bun.argv.length > 2) throw new Error("Uso: bash autoresearch.sh (sem argumentos)");
-
-  // Fail closed if a future adapter accidentally attempts a remote consultation.
-  const denyNetwork = (): never => { throw new Error("Autoresearch offline: rede desabilitada"); };
-  globalThis.fetch = Object.assign(denyNetwork, { preconnect: denyNetwork });
-  Object.defineProperty(globalThis, "WebSocket", {
-    configurable: false,
-    value: class { constructor() { throw new Error("Autoresearch offline: WebSocket desabilitado"); } },
+  if (Bun.argv.length > 2) throw new Error("online_arguments_not_allowed");
+  const observation = await collectOnlineObservation({
+    runtimeBaseUrl: "http://127.0.0.1:3000",
+    runtimeOrigin: "http://127.0.0.1:3000",
   });
-
-  const fixtureBytes = await Bun.file(new URL("autoresearch/fixtures/evidence.json", import.meta.url)).bytes();
-  const snapshot = JSON.parse(new TextDecoder().decode(fixtureBytes)) as EvidenceSnapshot;
-  if (snapshot.schemaVersion !== 1 || !Number.isSafeInteger(snapshot.capturedAtMs)) {
-    throw new Error("Snapshot de evidencia invalido");
-  }
-
-  const [{ runWorkload }, { buildPanelReport }] = await Promise.all([
-    import("./autoresearch/workload"),
-    import("./autoresearch/panel-metrics"),
-  ]);
-  const workload = await runWorkload();
-  const panel = buildPanelReport(snapshot);
-  const metrics = { ...workload.metrics, ...panel.metrics };
-  if (!Object.hasOwn(workload.metrics, primaryMetric)) throw new Error("Metrica primaria ausente");
-  if (Object.keys(workload.metrics).some(name => Object.hasOwn(panel.metrics, name))) {
-    throw new Error("Nomes de metricas sobrepostos");
-  }
-  for (const [name, value] of Object.entries(metrics)) {
+  const result = buildOnlineReport(observation);
+  for (const [name, value] of Object.entries(result.metrics)) {
     if (!/^[a-z][a-z0-9_]*$/.test(name) || !Number.isFinite(value)) {
-      throw new Error(`Metrica nao finita ou nome invalido: ${name}`);
+      throw new Error("online_metric_invalid");
     }
   }
 
   const evaluatorHash = await evaluatorFingerprint();
-  const candidateHash = sha256(await Bun.file(new URL("autoresearch/candidate.ts", import.meta.url)).bytes());
-  const evidenceHash = sha256(fixtureBytes);
-  console.log("ASI measurement_class=synthetic_development");
+  const evidenceHash = sha256(JSON.stringify({
+    startedAtMs: observation.startedAtMs,
+    completedAtMs: observation.completedAtMs,
+    sources: observation.sources,
+  }));
+  console.log("ASI measurement_class=real_online_observation");
   console.log("ASI goal_10x_24h=not_proven");
   console.log("ASI financially_authorized=false");
-  console.log("ASI source_authenticated=false");
+  console.log("ASI optimization_eligible=false");
+  console.log("ASI runtime_identity=self_reported_loopback");
+  console.log("ASI market_transport=https_public");
   console.log(`ASI runtime=bun-${Bun.version}`);
   console.log(`ASI evaluator_sha256=${evaluatorHash}`);
-  console.log(`ASI candidate_sha256=${candidateHash}`);
   console.log(`ASI evidence_sha256=${evidenceHash}`);
-  console.log(`METRIC ${primaryMetric}=${metrics[primaryMetric]}`);
-  for (const name of Object.keys(metrics).filter(name => name !== primaryMetric).sort()) {
-    console.log(`METRIC ${name}=${metrics[name]}`);
+  for (const name of Object.keys(result.metrics).sort()) {
+    console.log(`METRIC ${name}=${result.metrics[name]}`);
   }
   console.log(`REPORT ${JSON.stringify({
-    measurementClass: "synthetic_development",
+    measurementClass: "real_online_observation",
+    optimizationEligible: false,
     goal: {
       initialUsd: 118,
       targetUsd: 1180,
@@ -85,17 +63,17 @@ async function main(): Promise<void> {
       requiredNetReturnPct: 900,
       deadlineExclusiveMs: 86_400_000,
       status: "not_proven",
-      reason: "Sem serie integral de carteira com fluxos, fills e custos USD contemporaneos conciliados; regra sintetica nao e JEV.",
+      reason: "Sem serie integral conciliada de carteira, fluxos, fills e custos USD contemporaneos; observacao nao e qualificacao financeira.",
     },
-    provenance: { evaluatorHash, candidateHash, evidenceHash, frozenAsOfMs: snapshot.capturedAtMs, sources: snapshot.sources },
-    workload: workload.report,
-    panel: panel.report,
+    provenance: { evaluatorHash, evidenceHash, sources: observation.sources },
+    observation: result.report,
   })}`);
 }
 
 if (import.meta.main) {
   main().catch((error: unknown) => {
-    console.error(error instanceof Error ? error.message : "Falha no benchmark offline");
+    console.error(error instanceof Error && /^online_[a-z0-9_]+$/.test(error.message)
+      ? error.message : "autoresearch_online_failed");
     process.exitCode = 1;
   });
 }

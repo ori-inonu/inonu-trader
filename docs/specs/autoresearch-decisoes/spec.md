@@ -10,6 +10,8 @@ confidence: medium
 
 # Autoresearch de decisoes: benchmark offline
 
+> Historico superado: o usuario determinou autoresearch somente com dados reais online. O procedimento vigente esta em [autoresearch real online](../autoresearch-real-online/spec.md). Os resultados e contratos abaixo documentam apenas a baseline anterior, nao instrucoes atuais.
+
 ## Contexto e objetivo
 
 O dono pediu metricas, evals e ciclos de melhoria da decisao JEV, com analise dos pontos fracos de todas as superficies do painel e foco em retorno liquido e gestao da carteira OKX Wallet/OnchainOS. US$ 118 para US$ 1.180 em menos de 24 horas corresponde a 10x e 900% liquidos. E um alvo de pesquisa, nao promessa, evidencia existente ou autorizacao financeira.
