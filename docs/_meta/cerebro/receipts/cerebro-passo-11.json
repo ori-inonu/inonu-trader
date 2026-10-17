@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-11",
+    "specHash": "73818aaa96f67eba3fbacee6cbddf2b7704e59f43539910ccdd3b137db073243",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "shrink_agents",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "shrink_agents",
+          "query_command",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "shrink_agents",
+              "query_command",
+              "stop"
+            ],
+            "probs": {
+              "shrink_agents": 0.86,
+              "query_command": 0.08,
+              "stop": 0.06,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "query_command",
+              "stop",
+              "shrink_agents"
+            ],
+            "probs": {
+              "query_command": 0.13,
+              "stop": 0.06,
+              "shrink_agents": 0.81,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "stop",
+              "shrink_agents",
+              "query_command"
+            ],
+            "probs": {
+              "stop": 0.05,
+              "shrink_agents": 0.87,
+              "query_command": 0.08,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "shrink_agents": 0.8467,
+          "query_command": 0.0967,
+          "stop": 0.0567
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.75,
+        "leader": "shrink_agents",
+        "railProb": {
+          "shrink_agents": 0.03,
+          "query_command": 0.12,
+          "stop": 0.01
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "shrink_agents",
+          "query_command",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "shrink_agents",
+              "query_command",
+              "stop"
+            ],
+            "probs": {
+              "shrink_agents": 0.85,
+              "query_command": 0.09,
+              "stop": 0.06,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "query_command",
+              "stop",
+              "shrink_agents"
+            ],
+            "probs": {
+              "query_command": 0.13,
+              "stop": 0.07,
+              "shrink_agents": 0.8,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "stop",
+              "shrink_agents",
+              "query_command"
+            ],
+            "probs": {
+              "stop": 0.04,
+              "shrink_agents": 0.9,
+              "query_command": 0.06,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "shrink_agents": 0.85,
+          "query_command": 0.0933,
+          "stop": 0.0567
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.7567,
+        "leader": "shrink_agents",
+        "railProb": {
+          "shrink_agents": 0.03,
+          "query_command": 0.12,
+          "stop": 0.01
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 8040,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

@@ -17,15 +17,6 @@ INONU TRADER: fork do Jev Trader. Agente autônomo de carteira que usa o modelo 
 - `.codex/`: harness do Codex (config, hooks). Ver `docs/conventions.md` e o relatório de configuração.
 - `.agents/skills/`: skills do fluxo SDD, ship-pr e review-diff.
 
-## Como rodar
-
-```
-bun install
-bun run doctor            # lê o estado do RPC e das credenciais, sem assinar
-bun run start             # servidor local na porta 3000
-bun run capture --seconds 180   # exige MODE de paper
-```
-
 ## Comandos de verificação (definition of done)
 
 Uma tarefa só está pronta quando estes comandos passam, com a saída colada no final:
@@ -60,13 +51,9 @@ Estes casos mudam o risco do sistema. Parar e pedir é a regra. O Jev decide esc
 - Autorização de carteira, saques, transferências e qualquer mudança de limite de risco.
 - Billing, contratos e qualquer serviço pago. O projeto não contrata recursos pagos.
 
-## Estado atual do produto (decisão do usuário, 2026-10-14)
+## Estado e execução
 
-O usuário trocou a demo do Monad e Kuru, com ordem a cada 300 ms, pelo agente de carteira autônomo. Não apresente o agente como cumprindo os requisitos antigos.
-
-Prioridade imediata: operação contínua no computador Windows local, com estado durável, recuperação segura e falhas visíveis. Vercel vem depois, sem budget definido. Não compre hospedagem.
-
-Especificação vigente: `docs/sdd/agente-autonomo/`. Antes de editar caminhos concorrentes, siga os contratos de dono de sessão e de evidência.
+Estado do produto e como rodar ficam no grafo: `bun scripts/cerebro.ts export fato-estado-produto` e `export fato-como-rodar`. Leia antes de mexer em caminhos concorrentes.
 
 ## Workflow padrão
 

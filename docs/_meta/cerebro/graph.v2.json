@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 716,
-  "headHash": "7b5365bc8303d91a08f262a617519fa201748afdcc195c2a1233798b059bd03d",
+  "headSeq": 726,
+  "headHash": "6455dfc7035b7dd3f789ba55140b88813ef09fc211ce34906dd5d98d8531ee06",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -927,6 +927,26 @@
       "id": "iter-hook-omp",
       "type": "iteration",
       "text": "Consenso JEV project_hook: .omp/hooks/pre/cerebro.ts (before_agent_start, 1x por sessao) reaproveita .codex/hooks/session_start.ts e injeta ~1,7 KB. Fumaça local ok; carga real no OMP nao testada (exige sessao nova)"
+    },
+    {
+      "id": "jev-cerebro-passo-11",
+      "type": "decision",
+      "text": "JEV consenso lider shrink_agents; spec 73818aaa96f67eba; recibo sha256 97fe7f674ca2791a70fedc5083bce2f7e77d7aa67f865a4056051bd2ab4f7a8f. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "fato-estado-produto",
+      "type": "fact",
+      "text": "Em 2026-10-14 o dono trocou a demo Monad/Kuru (ordem a cada 300 ms) pelo agente de carteira autonomo; nao dizer que cumpre os requisitos antigos. Prioridade: operacao continua no Windows local, estado duravel, falhas visiveis. Vercel depois, sem comprar hospedagem"
+    },
+    {
+      "id": "fato-como-rodar",
+      "type": "fact",
+      "text": "Comandos: bun install; bun run doctor (le RPC e credenciais, sem assinar); bun run start (porta 3000); bun run capture --seconds 180 (exige MODE paper). Spec vigente: docs/sdd/agente-autonomo, seguir contratos de dono de sessao e evidencia"
+    },
+    {
+      "id": "iter-encolher-agents",
+      "type": "iteration",
+      "text": "Consenso JEV shrink_agents: estado do produto e como rodar saem do AGENTS.md para nos; regras duras e Pare e pergunte ficam inline"
     }
   ],
   "edges": [
@@ -2994,6 +3014,36 @@
       "from": "iter-specs-congelados",
       "to": "iter-hook-omp",
       "seq": 716
+    },
+    {
+      "from": "iter-hook-omp",
+      "to": "jev-cerebro-passo-11",
+      "seq": 718
+    },
+    {
+      "from": "jev-cerebro-passo-11",
+      "to": "fato-estado-produto",
+      "seq": 720
+    },
+    {
+      "from": "fato-estado-produto",
+      "to": "fato-como-rodar",
+      "seq": 722
+    },
+    {
+      "from": "fato-estado-produto",
+      "to": "iter-encolher-agents",
+      "seq": 724
+    },
+    {
+      "from": "fato-como-rodar",
+      "to": "iter-encolher-agents",
+      "seq": 725
+    },
+    {
+      "from": "jev-cerebro-passo-11",
+      "to": "iter-encolher-agents",
+      "seq": 726
     }
   ],
   "retractions": [
