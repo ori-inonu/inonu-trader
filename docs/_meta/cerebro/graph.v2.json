@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 528,
-  "headHash": "276889813ccb3e040e2f1f04e23260992fad5a4372639e9247870756c8606c93",
+  "headSeq": 662,
+  "headHash": "cdac88f187d4fcbc7442e3bbd75df551a4cc946b9471da36c52b8521cbf07436",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -917,6 +917,16 @@
       "id": "iter-migrar-plans",
       "type": "iteration",
       "text": "4 plan.md viraram nos plan-<spec>-N com commit 3faf6cf e blob git; originais apagados; links de index e specs trocados. spec.md fica como contrato humano (consenso JEV migrate_plans)"
+    },
+    {
+      "id": "jev-cerebro-passo-4",
+      "type": "decision",
+      "text": "JEV consenso lider star; spec 9d8a656716d31d12; recibo sha256 caa9d720e6c3f08c2dc5eeab17ad04d38ac28cadaabbe390428040bf0556851e. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-plano-estrela",
+      "type": "iteration",
+      "text": "Nos plan-<spec>-N ligados tambem a raiz (consenso JEV star): export da raiz com profundidade 1 devolve o plano inteiro, de 6 KB a 19 KB"
     }
   ],
   "edges": [
@@ -2629,6 +2639,666 @@
       "from": "plan-autoresearch-decisoes",
       "to": "iter-migrar-plans",
       "seq": 528
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-2",
+      "seq": 529
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-3",
+      "seq": 530
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-4",
+      "seq": 531
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-5",
+      "seq": 532
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-6",
+      "seq": 533
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-7",
+      "seq": 534
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-8",
+      "seq": 535
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-9",
+      "seq": 536
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-10",
+      "seq": 537
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-11",
+      "seq": 538
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-12",
+      "seq": 539
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-13",
+      "seq": 540
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-14",
+      "seq": 541
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-15",
+      "seq": 542
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-16",
+      "seq": 543
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-17",
+      "seq": 544
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-18",
+      "seq": 545
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-19",
+      "seq": 546
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-2",
+      "seq": 547
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-3",
+      "seq": 548
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-4",
+      "seq": 549
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-5",
+      "seq": 550
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-6",
+      "seq": 551
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-7",
+      "seq": 552
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-8",
+      "seq": 553
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-9",
+      "seq": 554
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-10",
+      "seq": 555
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-11",
+      "seq": 556
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-12",
+      "seq": 557
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-13",
+      "seq": 558
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-14",
+      "seq": 559
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-15",
+      "seq": 560
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-16",
+      "seq": 561
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-17",
+      "seq": 562
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-18",
+      "seq": 563
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-19",
+      "seq": 564
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-20",
+      "seq": 565
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-2",
+      "seq": 566
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-3",
+      "seq": 567
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-4",
+      "seq": 568
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-5",
+      "seq": 569
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-6",
+      "seq": 570
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-7",
+      "seq": 571
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-8",
+      "seq": 572
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-9",
+      "seq": 573
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-10",
+      "seq": 574
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-11",
+      "seq": 575
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-12",
+      "seq": 576
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-13",
+      "seq": 577
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-14",
+      "seq": 578
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-15",
+      "seq": 579
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-16",
+      "seq": 580
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-17",
+      "seq": 581
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-18",
+      "seq": 582
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-19",
+      "seq": 583
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-20",
+      "seq": 584
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-21",
+      "seq": 585
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-22",
+      "seq": 586
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-23",
+      "seq": 587
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-24",
+      "seq": 588
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-25",
+      "seq": 589
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-26",
+      "seq": 590
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-27",
+      "seq": 591
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-28",
+      "seq": 592
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-29",
+      "seq": 593
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-30",
+      "seq": 594
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-31",
+      "seq": 595
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-32",
+      "seq": 596
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-33",
+      "seq": 597
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-34",
+      "seq": 598
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-35",
+      "seq": 599
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-36",
+      "seq": 600
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-37",
+      "seq": 601
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-38",
+      "seq": 602
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-39",
+      "seq": 603
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-40",
+      "seq": 604
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-41",
+      "seq": 605
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-2",
+      "seq": 606
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-3",
+      "seq": 607
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-4",
+      "seq": 608
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-5",
+      "seq": 609
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-6",
+      "seq": 610
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-7",
+      "seq": 611
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-8",
+      "seq": 612
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-9",
+      "seq": 613
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-10",
+      "seq": 614
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-11",
+      "seq": 615
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-12",
+      "seq": 616
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-13",
+      "seq": 617
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-14",
+      "seq": 618
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-15",
+      "seq": 619
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-16",
+      "seq": 620
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-17",
+      "seq": 621
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-18",
+      "seq": 622
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-19",
+      "seq": 623
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-20",
+      "seq": 624
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-21",
+      "seq": 625
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-22",
+      "seq": 626
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-23",
+      "seq": 627
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-24",
+      "seq": 628
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-25",
+      "seq": 629
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-26",
+      "seq": 630
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-27",
+      "seq": 631
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-28",
+      "seq": 632
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-29",
+      "seq": 633
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-30",
+      "seq": 634
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-31",
+      "seq": 635
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-32",
+      "seq": 636
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-33",
+      "seq": 637
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-34",
+      "seq": 638
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-35",
+      "seq": 639
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-36",
+      "seq": 640
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-37",
+      "seq": 641
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-38",
+      "seq": 642
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-39",
+      "seq": 643
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-40",
+      "seq": 644
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-41",
+      "seq": 645
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-42",
+      "seq": 646
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-43",
+      "seq": 647
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-44",
+      "seq": 648
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-45",
+      "seq": 649
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-46",
+      "seq": 650
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-47",
+      "seq": 651
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-48",
+      "seq": 652
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-49",
+      "seq": 653
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-50",
+      "seq": 654
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-51",
+      "seq": 655
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-52",
+      "seq": 656
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-53",
+      "seq": 657
+    },
+    {
+      "from": "iter-migrar-plans",
+      "to": "jev-cerebro-passo-4",
+      "seq": 659
+    },
+    {
+      "from": "jev-cerebro-passo-4",
+      "to": "iter-plano-estrela",
+      "seq": 661
+    },
+    {
+      "from": "iter-migrar-plans",
+      "to": "iter-plano-estrela",
+      "seq": 662
     }
   ],
   "retractions": [
