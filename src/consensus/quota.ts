@@ -1,8 +1,11 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-/** Teto diario de chamadas pagas ao Jev, somado entre execucoes e worktrees (o teto por execucao continua em --max-calls). */
-export const JEV_DAILY_CALLS = 200;
+/**
+ * Sem teto diario de chamadas pagas ao Jev: decisao do dono em 2026-10-17, que substitui o teto de 200 por dia UTC. O ledger segue contando o uso do dia, somado entre execucoes e worktrees, para visibilidade.
+ * O teto por execucao continua em --max-calls (e em JEV_JUDGE_HARD_MAX_CALLS).
+ */
+export const JEV_DAILY_CALLS = Number.POSITIVE_INFINITY;
 
 /** Ledger no diretorio git comum: todos os worktrees do repo compartilham o mesmo arquivo. */
 export const quotaPath = (): string => {
