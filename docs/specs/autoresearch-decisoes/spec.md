@@ -17,7 +17,7 @@ confidence: medium
 O dono pediu metricas, evals e ciclos de melhoria da decisao JEV, com analise dos pontos fracos de todas as superficies do painel e foco em retorno liquido e gestao da carteira OKX Wallet/OnchainOS. US$ 118 para US$ 1.180 em menos de 24 horas corresponde a 10x e 900% liquidos. E um alvo de pesquisa, nao promessa, evidencia existente ou autorizacao financeira.
 
 Esta entrega e a Fase 1 do autoresearch: preparar, executar e registrar uma baseline deterministica. Nao altera o agente vivo nem otimiza a politica nesta fase.
-Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Plano](plan.md), [tarefas](tasks.md) e [estado e verificacao](status.md).
+Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Plano](plan.md). Tarefas e estado: nos `spec-*` do grafo.
 
 
 ## Evidencia e limites

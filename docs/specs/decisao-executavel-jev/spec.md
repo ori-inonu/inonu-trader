@@ -29,8 +29,8 @@ Esta entrega porta duas correções de informação antes da consulta ao JEV: pr
 - [x] Desconhecido continua distinto de recusa; recusa, falha e desconhecido usam TTL de 60 segundos, e impacto numérico finito usa TTL de 5 minutos, com recuperação por nova observação.
 - [x] `report.view` informa a causa e inclui sua marca sem falsamente classificar como abaixo do mínimo e sem perder a marca por limite de quatro.
 - [x] `posicoes.t` é omitido quando vazio e mantém os alertas existentes quando preenchido; `posicoes.g` continua presente.
-- [x] Testes, smokes e gates integrados passaram; resultados observados constam em `status.md`.
-- [x] Revisão independente concluída sem findings; gates, build e selftest do artefato local estão registrados em `status.md`.
+- [x] Testes, smokes e gates integrados passaram; resultados observados constam em nos `spec-*` do grafo.
+- [x] Revisão independente concluída sem findings; gates, build e selftest do artefato local estão registrados em nos `spec-*` do grafo.
 - [ ] Commit e atualização local permanecem condicionados à preservação de estado e gates. A atualização está bloqueada até reconciliação das operações incertas e quiescência autorizada. Sem operações financeiras ou mudanças em live, risco, cadência, orçamento, credenciais ou schema.
 
 ## Restrições e decisões
@@ -39,7 +39,7 @@ A sondagem distingue recusa explícita, falha e desconhecido sem aumentar chamad
 
 ## Plano de tasks
 
-Ver [plano](plan.md), [grafo de tarefas](tasks.md) e [estado](status.md).
+Ver [plano](plan.md). Tarefas e estado: nos `spec-*` do grafo.
 
 ## Perguntas em aberto
 

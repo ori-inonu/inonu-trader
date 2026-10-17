@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 64,
-  "headHash": "9ffcdaab6187712fba5c734c838bcdaf2deb8c6385493f03665552d1f8c6954a",
+  "headSeq": 114,
+  "headHash": "f0a293ab021ba638449a57cac494abb70f3457a9bf15a9b1d86727fcdedc0b62",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -82,6 +82,71 @@
       "id": "iter-ordem-chaves",
       "type": "iteration",
       "text": "jev-consensus.ts le TYPESAFE_API_KEY antes de TYPESAFE_AI_API_KEY (a segunda esta invalida no ambiente); autorizado pelo dono; sem trocar o app"
+    },
+    {
+      "id": "jev-cerebro-migrar-specs",
+      "type": "decision",
+      "text": "JEV consenso lider migrate_status_delete; spec 144b8f277822e6fb; recibo sha256 56c94fb252b8c4f37585a430b6dc2985142c3676356d0634fd3180a4a906bbbb. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "spec-decisao-executavel-jev",
+      "type": "fact",
+      "text": "decisao-executavel-jev: sonda gas_station_pendente, report.view e posicoes.t no Brief; revisao 0 achados; gates 7851 pass 647 lab; build qualificado release-jev-20261016-4b8b875ef153; atualizacao do runtime BLOQUEADA ate reconciliar 4 ordens incertas"
+    },
+    {
+      "id": "spec-autoresearch-real-online",
+      "type": "fact",
+      "text": "autoresearch-real-online concluido: 2 observacoes reais, 169 metricas, 474/1140 campos conhecidos; resultado liquido USD unknown, 10x/24h nao demonstrado; sem nova inferencia JEV, sem ordens; 4 ordens incertas e 1392 falhas historicas no ledger"
+    },
+    {
+      "id": "spec-autoresearch-decisoes",
+      "type": "fact",
+      "text": "autoresearch-decisoes (sintetico, historico, substituido): harness cea16ce2ca95, H5 220304e2bd06 melhor candidata, +3.17 bps sinteticos, 12 execucoes; nao e lucro de carteira; nao reexecutar campanhas offline"
+    },
+    {
+      "id": "spec-cerebro-grafo",
+      "type": "fact",
+      "text": "cerebro-grafo concluida: add-node, link, retract, verify, export; log append-only com hash-chain; limite: nao recupera perda simultanea de log e derivado; 401 era chave AI invalida e 402 sem creditos"
+    },
+    {
+      "id": "iter-migrar-specs",
+      "type": "iteration",
+      "text": "status.md e tasks.md de 4 specs migrados para nos spec-*; 8 arquivos e 351 linhas removidos; git guarda o texto antigo; decisao do JEV migrate_status_delete"
+    },
+    {
+      "id": "src-cerebro-grafo",
+      "type": "fact",
+      "text": "Texto original: git show 86e20ee:docs/specs/cerebro-grafo/status.md (blob b1b48ce7203f) e tasks.md (074eef6918e0). Tarefas T1 mutar, T2 verificar (depende T1), T3 exportar (depende T2); export limitado a 300 caracteres e filtro parseSpec. Sem chamada paga alem do consenso, sem live."
+    },
+    {
+      "id": "regra-excluir-so-com-ponteiro",
+      "type": "decision",
+      "text": "Ao apagar arquivo de docs, o no do grafo deve citar commit e blob git do original e os contratos, hashes, limites e dependencias vigentes; resumo sozinho nao basta"
+    },
+    {
+      "id": "src-decisao-executavel-jev",
+      "type": "fact",
+      "text": "Original: git show 86e20ee:docs/specs/decisao-executavel-jev/status.md (blob 215862c9cf52), tasks.md (701dd3a0a9e5). Tarefas: P e B dependem de S; V de P e B; C de V; U de C e segue aberta. TTL 60s recusa/falha/desconhecido, 5min impacto numerico, limite 4 marcas."
+    },
+    {
+      "id": "src-decisao-runtime",
+      "type": "fact",
+      "text": "Runtime release24 sha256 6DCE963A...04D60F pid 19084 porta 3000 NAO atualizado; ledger 18:58Z com 4 ordens incertas e ref nulo. Build release-jev-20261016-4b8b875ef153 sha256 df4334822f613f5ac95b4c0ae4743f9f322303eae930048c5ec68d159073c570. C:/Users/gabri/jev-trader nao e base de prova."
+    },
+    {
+      "id": "src-real-online",
+      "type": "fact",
+      "text": "Original: git show 86e20ee:docs/specs/autoresearch-real-online/status.md (blob 8c7ecfbb467d), tasks.md (9b92b8beed92). Tarefas: C e P em paralelo apos S; I depende de C e P; V de I. Avaliador sha256 c803a011109278502d28756ba8c3a329925e81a1ea9fa71eaaa505afa49c5729."
+    },
+    {
+      "id": "src-autoresearch-decisoes",
+      "type": "fact",
+      "text": "Original: git show 86e20ee:docs/specs/autoresearch-decisoes/status.md (blob a5434886813c), tasks.md (87de78b3a419). Fixture sha256 7c95543c0aeabae02c363e5d77b82eda79d76f24bde3f7ffd989e8e75b6960c9. Substituido pelo autoresearch real online."
+    },
+    {
+      "id": "src-decisoes-evidencia",
+      "type": "fact",
+      "text": "Avaliador sha256 1a9d7e82926878c89c78e6c87ad85b76b9d621919c24bee582ed41a5089ad814. 1318 campos, 634 disponiveis, 684 desconhecidos; 20 fontes, 1110 medicoes, capturedAtMs 1792127753268. Ressalva: 2 invocacoes do congelador sem --no-env-file."
     }
   ],
   "edges": [
@@ -324,6 +389,191 @@
       "from": "iter-supersede",
       "to": "iter-ordem-chaves",
       "seq": 64
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 66
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 67
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 68
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 69
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 70
+    },
+    {
+      "from": "regra-dura-injetada",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 71
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 72
+    },
+    {
+      "from": "jev-cerebro-regras-no-grafo",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 73
+    },
+    {
+      "from": "iter-regras-inline",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 74
+    },
+    {
+      "from": "dono-aceitou-jev",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 75
+    },
+    {
+      "from": "iter-lint",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 76
+    },
+    {
+      "from": "jev-autoresearch-proxima-hipotese",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 77
+    },
+    {
+      "from": "iter-autoresearch-encerrada",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 78
+    },
+    {
+      "from": "jev-cerebro-substituicao",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 79
+    },
+    {
+      "from": "iter-supersede",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 80
+    },
+    {
+      "from": "iter-ordem-chaves",
+      "to": "jev-cerebro-migrar-specs",
+      "seq": 81
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "spec-decisao-executavel-jev",
+      "seq": 83
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "spec-autoresearch-real-online",
+      "seq": 85
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "spec-autoresearch-decisoes",
+      "seq": 87
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "spec-cerebro-grafo",
+      "seq": 89
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "spec-cerebro-grafo",
+      "seq": 90
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "iter-migrar-specs",
+      "seq": 92
+    },
+    {
+      "from": "spec-cerebro-grafo",
+      "to": "iter-migrar-specs",
+      "seq": 93
+    },
+    {
+      "from": "spec-decisao-executavel-jev",
+      "to": "iter-migrar-specs",
+      "seq": 94
+    },
+    {
+      "from": "spec-autoresearch-real-online",
+      "to": "iter-migrar-specs",
+      "seq": 95
+    },
+    {
+      "from": "spec-autoresearch-decisoes",
+      "to": "iter-migrar-specs",
+      "seq": 96
+    },
+    {
+      "from": "spec-cerebro-grafo",
+      "to": "src-cerebro-grafo",
+      "seq": 98
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "src-cerebro-grafo",
+      "seq": 99
+    },
+    {
+      "from": "iter-migrar-specs",
+      "to": "regra-excluir-so-com-ponteiro",
+      "seq": 101
+    },
+    {
+      "from": "spec-decisao-executavel-jev",
+      "to": "src-decisao-executavel-jev",
+      "seq": 103
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "src-decisao-executavel-jev",
+      "seq": 104
+    },
+    {
+      "from": "src-decisao-executavel-jev",
+      "to": "src-decisao-runtime",
+      "seq": 106
+    },
+    {
+      "from": "spec-autoresearch-real-online",
+      "to": "src-real-online",
+      "seq": 108
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "src-real-online",
+      "seq": 109
+    },
+    {
+      "from": "spec-autoresearch-decisoes",
+      "to": "src-autoresearch-decisoes",
+      "seq": 111
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "src-autoresearch-decisoes",
+      "seq": 112
+    },
+    {
+      "from": "src-autoresearch-decisoes",
+      "to": "src-decisoes-evidencia",
+      "seq": 114
     }
   ],
   "retractions": []

@@ -10,7 +10,7 @@ confidence: medium
 
 # Plano tecnico
 
-Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md), [tarefas](tasks.md) e [estado](status.md).
+Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md). Tarefas e estado: nos `spec-*` do grafo.
 
 > Historico superado: nao executar o workload nem o congelador descritos abaixo. Eles foram substituidos pelo [plano real online](../autoresearch-real-online/plan.md); comandos e caminhos desta baseline sao somente registro historico.
 
@@ -54,7 +54,7 @@ O script usa `bun --no-env-file`, le somente o snapshot versionado e executa o w
 
 O snapshot e historico e imutavel durante os ciclos. Portanto, sua analise e repetivel, nao um monitor de saldo vivo. Atualizar dados exige congelamento explicito e nova baseline. Ausencia da pasta local `data/` nao impede repetir uma baseline ja congelada.
 
-O protocolo aprovado e a revisao documental nao substituem a evidencia de execucao. Resultados observados ficam em [estado e verificacao](status.md). Nao ha inferencia nova JEV, ordens reais nem qualificacao de estrategia neste comando.
+O protocolo aprovado e a revisao documental nao substituem a evidencia de execucao. Resultados observados ficam em nos `spec-*` do grafo. Nao ha inferencia nova JEV, ordens reais nem qualificacao de estrategia neste comando.
 
 ## Gate antes de registrar a baseline
 
