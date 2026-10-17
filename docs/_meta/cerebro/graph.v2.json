@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 114,
-  "headHash": "f0a293ab021ba638449a57cac494abb70f3457a9bf15a9b1d86727fcdedc0b62",
+  "headSeq": 116,
+  "headHash": "5db0c4cf541f66f7a07f72ae28af71a99af202f79611e5152fc9e1bd7a480e0a",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -147,6 +147,11 @@
       "id": "src-decisoes-evidencia",
       "type": "fact",
       "text": "Avaliador sha256 1a9d7e82926878c89c78e6c87ad85b76b9d621919c24bee582ed41a5089ad814. 1318 campos, 634 disponiveis, 684 desconhecidos; 20 fontes, 1110 medicoes, capturedAtMs 1792127753268. Ressalva: 2 invocacoes do congelador sem --no-env-file."
+    },
+    {
+      "id": "src-real-online-limites",
+      "type": "fact",
+      "text": "Limites: 15s por leitura, 4MiB por resposta, idade maxima 120s, relogio futuro 30s. Hashes cobrem projecao sanitizada, nao autenticidade. 11 invocacoes, 3 health timeout, 1 okx_time_invalid. Ordens incertas nao sao encerradas pelo pesquisador."
     }
   ],
   "edges": [
@@ -574,6 +579,11 @@
       "from": "src-autoresearch-decisoes",
       "to": "src-decisoes-evidencia",
       "seq": 114
+    },
+    {
+      "from": "src-real-online",
+      "to": "src-real-online-limites",
+      "seq": 116
     }
   ],
   "retractions": []
