@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 804,
-  "headHash": "639fc4486338f725e836475a99320d9525bd2b7c560e951a14fe8476d44caa77",
+  "headSeq": 808,
+  "headHash": "dbbc5202ad6ebda114c82d3dafd62c32cf6c21ad714c46fc04b0929aa74d88e5",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1117,6 +1117,16 @@
       "id": "iter-curadoria-retomada",
       "type": "iteration",
       "text": "curate: plano-* gravado antes das retratacoes; retomada so com --paid e recibo consenso/forget cujo hash bate com os ids; dry-run nunca muda o grafo. Fecha lacuna de queda no meio do lote."
+    },
+    {
+      "id": "jev-cerebro-passo-19",
+      "type": "decision",
+      "text": "JEV consenso lider global_hook; spec c4b1cb028a8b52e5; recibo sha256 39e38da45523a4ff4adadd7e338a8e54a6a81d995233173fc7f6a2db0ed6795d. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-hook-global",
+      "type": "iteration",
+      "text": "Passo 19, JEV: global_hook. Criado ~/.omp/agent/hooks/pre/cerebro.ts: usa o grafo do repo atual ou de outro worktree com scripts/cerebro.ts. Logica testada de fora; carga real no OMP ainda nao provada."
     }
   ],
   "edges": [
@@ -3434,6 +3444,16 @@
       "from": "iter-curadoria",
       "to": "iter-curadoria-retomada",
       "seq": 804
+    },
+    {
+      "from": "iter-curadoria-retomada",
+      "to": "jev-cerebro-passo-19",
+      "seq": 806
+    },
+    {
+      "from": "jev-cerebro-passo-19",
+      "to": "iter-hook-global",
+      "seq": 808
     }
   ],
   "retractions": [

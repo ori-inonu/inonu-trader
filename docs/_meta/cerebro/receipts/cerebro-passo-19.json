@@ -1,0 +1,149 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-19",
+    "specHash": "c4b1cb028a8b52e5f249e595ca8ac826feca7ad3c9c4543bcaf1e46d6f13eaf3",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "global_hook",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "global_hook",
+          "switch_main"
+        ],
+        "framings": [
+          {
+            "order": [
+              "global_hook",
+              "switch_main"
+            ],
+            "probs": {
+              "global_hook": 0.99,
+              "switch_main": 0,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "switch_main",
+              "global_hook"
+            ],
+            "probs": {
+              "switch_main": 0,
+              "global_hook": 0.99,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "global_hook",
+              "switch_main"
+            ],
+            "probs": {
+              "global_hook": 0.98,
+              "switch_main": 0,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "global_hook": 0.9867,
+          "switch_main": 0
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.9867,
+        "leader": "global_hook",
+        "railProb": {
+          "global_hook": 0.03,
+          "switch_main": 0.99
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "global_hook",
+          "switch_main"
+        ],
+        "framings": [
+          {
+            "order": [
+              "global_hook",
+              "switch_main"
+            ],
+            "probs": {
+              "global_hook": 0.99,
+              "switch_main": 0,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "switch_main",
+              "global_hook"
+            ],
+            "probs": {
+              "switch_main": 0,
+              "global_hook": 0.99,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "global_hook",
+              "switch_main"
+            ],
+            "probs": {
+              "global_hook": 0.99,
+              "switch_main": 0,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "global_hook": 0.99,
+          "switch_main": 0
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.99,
+        "leader": "global_hook",
+        "railProb": {
+          "global_hook": 0.03,
+          "switch_main": 0.99
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 8,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 8,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 6044,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}
