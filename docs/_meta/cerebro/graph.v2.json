@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 837,
-  "headHash": "8095d88756d4a5955177e6891ce93523e3cd6015384a7338bfa0f53e38c2e928",
+  "headSeq": 848,
+  "headHash": "96b9956af16c26720e1d3643cdc434ef9ffd7d641f9aee3061c94b50c252b782",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1192,6 +1192,26 @@
       "id": "fato-goal1-roadmap-dono",
       "type": "fact",
       "text": "Roadmap priorizado do dono (2026-10-17): epicos E0 a E13 em P0 a P2, operacao real desabilitada ate os criterios de promocao. Texto recebido cortado em E8; E9 a E13 sem detalhe. Salvo em docs/specs/motor-decisao-onchainos/roadmap.md, com a cobertura pelo GOAL 1 anotada."
+    },
+    {
+      "id": "fato-goal1-ciclo-vida-ordem",
+      "type": "fact",
+      "text": "Ciclo de vida real da ordem (27 executadas): fila p50 5 ms; executor (cotacao, simulacao, assinatura, envio) p50 3,5 s; inclusao no bloco p50 3,9 s; recibo local p50 30,7 s (n=22). Slippage contra a cotacao p50 0 bps, p95 10,6 (15 pares). O recibo e o maior trecho evitavel."
+    },
+    {
+      "id": "fato-goal1-replay-motor",
+      "type": "fact",
+      "text": "Replay do motor sobre 240 fechamentos reais: 108 avaliaveis; a producao pulou os 108 e o motor tambem (106 no_edge, 2 edge_below_min). Custo de duas pernas p50 110 bps; melhor edge liquido +29,8 bps contra o minimo de 30. Probabilidade do modelo usada bruta, nao calibrada."
+    },
+    {
+      "id": "decisao-goal1-ligacao-ciclo",
+      "type": "decision",
+      "text": "Guarda do Executor (JEV_EXECUTOR_BREAKER=0 desliga) e observador do motor em sombra (JEV_ENGINE_SHADOW=0 desliga) ligados em wire.ts, +20 linhas. O motor ainda nao decide ordens: falta pWin calibrado (1 de 108 fechamentos liga ao scoreboard). Conflito esperado com a Auto Research nesses 4 trechos."
+    },
+    {
+      "id": "iter-goal1-ligacao-ciclo",
+      "type": "iteration",
+      "text": "GOAL 1, ligacao ao ciclo: guarda do executor em producao, observador do motor em sombra, ciclo de vida da ordem e slippage medidos, replay sobre fechamentos reais e painel estatico. Pendente: pWin calibrado, tempo de recibo, Gas Station e plano real da chave (dono)."
     }
   ],
   "edges": [
@@ -3599,6 +3619,41 @@
       "from": "iter-goal1-motor-decisao",
       "to": "fato-goal1-roadmap-dono",
       "seq": 837
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "fato-goal1-ciclo-vida-ordem",
+      "seq": 839
+    },
+    {
+      "from": "fato-goal1-hipotese-030",
+      "to": "fato-goal1-replay-motor",
+      "seq": 841
+    },
+    {
+      "from": "decisao-goal1-fronteira-motor",
+      "to": "decisao-goal1-ligacao-ciclo",
+      "seq": 843
+    },
+    {
+      "from": "iter-goal1-motor-decisao",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 845
+    },
+    {
+      "from": "decisao-goal1-ligacao-ciclo",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 846
+    },
+    {
+      "from": "fato-goal1-replay-motor",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 847
+    },
+    {
+      "from": "fato-goal1-ciclo-vida-ordem",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 848
     }
   ],
   "retractions": [

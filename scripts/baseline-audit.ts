@@ -440,6 +440,91 @@ export function auditApi(usageText: string | null, nowMs: number, source: string
   return { source, basic: projectMonth(series("basic"), nowMs, plan.basic!), premium: projectMonth(series("premium"), nowMs, plan.premium!), httpErrorsRecorded: false };
 }
 
+// ---- ciclo de vida das ordens: onde o tempo vai entre preparar e confirmar, e quanto a execução escorregou da cotação
+
+export interface ExecutionAudit {
+  /** Ordens que chegaram a executada e as que têm recibo (as demais foram resolvidas à mão pelo usuário). */
+  executed: number;
+  receipts: number;
+  /**
+   * Etapas medidas no journal. O executor externo faz cotação, simulação, assinatura e transmissão dentro de uma só
+   * etapa (`sendAndSign`): o journal não separa a assinatura. A inclusão usa o horário do bloco, de resolução de 1 s.
+   */
+  stagesMs: {
+    queue: Dist | null;
+    sendAndSign: Dist | null;
+    /** Da transmissão ao recibo visto localmente (só recibo_sucesso). */
+    receipt: Dist | null;
+    /** Da transmissão ao horário do bloco do fill; pode sair negativo em até 1 s pela resolução do bloco. */
+    chainInclusion: Dist | null;
+  };
+  /** Tempo gasto numa tentativa que falhou, do envio à falha, por motivo: o custo de insistir. */
+  failedAttemptMs: Record<string, Dist>;
+  /** Quanto o fill entregou a menos que a cotação prometia, em bps (positivo é pior). Só pares comparáveis. */
+  slippageVsQuoteBps: Dist | null;
+  slippagePairs: { matched: number; unmatched: number };
+}
+
+export function auditExecution(ledger: Row[], fills: Row[]): ExecutionAudit {
+  const byKey = new Map<string, Row[]>();
+  for (const o of ledger.filter((r) => r.kind === "order")) byKey.set(String(o.orderKey), [...(byKey.get(String(o.orderKey)) ?? []), o]);
+  const fillOf = new Map(fills.filter((f) => f.kind === "fill").map((f) => [String(f.orderKey), f] as const));
+
+  const queue: number[] = [];
+  const sendAndSign: number[] = [];
+  const receipt: number[] = [];
+  const inclusion: number[] = [];
+  const failed: Record<string, number[]> = {};
+  const slip: number[] = [];
+  let executed = 0;
+  let receipts = 0;
+  let unmatched = 0;
+
+  for (const [key, recs] of byKey) {
+    const at = (stage: string) => recs.filter((r) => r.stage === stage).sort((a, b) => a.atMs - b.atMs)[0];
+    const prepared = at("preparada");
+    const sending = at("enviando");
+    const sent = at("incerta");
+    const done = at("executada");
+    const fail = at("falhou");
+    if (prepared && sending) queue.push(sending.atMs - prepared.atMs);
+    if (fail && sending) (failed[String(fail.reason)] ??= []).push(fail.atMs - sending.atMs);
+    if (!done) continue;
+    executed++;
+    if (sending && sent) sendAndSign.push(sent.atMs - sending.atMs);
+    if (done.reason === "recibo_sucesso") {
+      receipts++;
+      if (sent) receipt.push(done.atMs - sent.atMs);
+    }
+    const fill = fillOf.get(key);
+    if (fill && sent) inclusion.push(fill.atMs - sent.atMs);
+
+    const quote = recs.find((r) => r.quote != null)?.quote as Row | undefined;
+    const expected = Number(quote?.toAmountMinor);
+    if (fill && Number.isFinite(expected) && expected > 0) {
+      // Compra: o fill traz os tokens recebidos. Venda: o fill traz o dinheiro recebido em unidades inteiras (USDC, 6 casas).
+      const actual = fill.side === "buy" ? Number(fill.tokenMinor) : Number(fill.cashUnits) * 1e6;
+      const ratio = actual / expected;
+      if (Number.isFinite(ratio) && ratio > 0.5 && ratio < 2) slip.push(((expected - actual) / expected) * 1e4);
+      else unmatched++;
+    } else if (fill) unmatched++;
+  }
+
+  return {
+    executed,
+    receipts,
+    stagesMs: { queue: dist(queue, 0), sendAndSign: dist(sendAndSign, 0), receipt: dist(receipt, 0), chainInclusion: dist(inclusion, 0) },
+    failedAttemptMs: Object.fromEntries(
+      Object.entries(failed)
+        .map(([reason, v]) => [reason, dist(v, 0)] as const)
+        .filter((e): e is readonly [string, Dist] => e[1] !== null)
+        .sort((a, b) => b[1].n - a[1].n),
+    ),
+    slippageVsQuoteBps: dist(slip, 3),
+    slippagePairs: { matched: slip.length, unmatched },
+  };
+}
+
 // ---- relatório
 
 export interface Baseline {
@@ -450,6 +535,7 @@ export interface Baseline {
   malformed: number;
   cycles: CyclesAudit;
   orders: OrdersAudit;
+  execution: ExecutionAudit;
   jev: JevAudit;
   closings: ClosingsAudit;
   fills: FillsAudit;
@@ -485,6 +571,7 @@ export function runAudit(dir: string, usagePath: string | null, nowMs: number): 
     malformed,
     cycles: auditCycles(data.ledger!),
     orders: auditOrders(data.ledger!),
+    execution: auditExecution(data.ledger!, data.fills!),
     jev: auditJev(data["decisions-meta"]!),
     closings: auditClosings(data.closings!),
     fills: auditFills(data.fills!, equity.solUsd),

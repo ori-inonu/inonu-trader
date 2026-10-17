@@ -2,7 +2,7 @@ import { afterAll, describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { auditClosings, auditCycles, auditEquity, auditFills, auditJev, auditOpportunities, auditOrders, parseJsonl, runAudit, throughputFeasibility } from "./baseline-audit";
+import { auditClosings, auditCycles, auditEquity, auditExecution, auditFills, auditJev, auditOpportunities, auditOrders, parseJsonl, runAudit, throughputFeasibility } from "./baseline-audit";
 
 const T0 = Date.UTC(2026, 9, 15, 12);
 const MIN = 60_000;
@@ -125,6 +125,86 @@ describe("auditFills", () => {
     const a = auditFills([fill("sell", 5, "M1", "AAA", 100, 11), fill("buy", 0, "M2", "BBB", 100, 5), fill("buy", 1, "M1", "AAA", 100, 10)], null);
     expect(a.roundtrips.matchedSells).toBe(1);
     expect(a.roundtrips.perSell[0]).toMatchObject({ symbol: "AAA", costUsd: 10, proceedsUsd: 11, returnPct: 10 });
+  });
+});
+
+describe("auditExecution", () => {
+  const rec = (orderKey: string, stage: string, atMs: number, extra: Record<string, unknown> = {}) => ({ kind: "order", orderKey, stage, atMs, reason: null, side: "buy", ...extra });
+  const fill = (orderKey: string, side: string, atMs: number, extra: Record<string, unknown> = {}) => ({ kind: "fill", orderKey, side, atMs, tokenMinor: "1000", cashUnits: 10, ...extra });
+
+  test("tempo em cada etapa do ciclo de vida de uma ordem executada, com o recibo e a inclusão separados", () => {
+    const ledger = [
+      rec("a", "preparada", T0),
+      rec("a", "enviando", T0 + 10),
+      rec("a", "incerta", T0 + 3_510, { reason: "transmitida" }),
+      rec("a", "executada", T0 + 33_510, { reason: "recibo_sucesso" }),
+    ];
+    const a = auditExecution(ledger, [fill("a", "buy", T0 + 7_510)]);
+    expect(a.executed).toBe(1);
+    expect(a.receipts).toBe(1);
+    expect(a.stagesMs.queue).toMatchObject({ n: 1, p50: 10 });
+    expect(a.stagesMs.sendAndSign).toMatchObject({ p50: 3_500 });
+    expect(a.stagesMs.receipt).toMatchObject({ p50: 30_000 });
+    expect(a.stagesMs.chainInclusion).toMatchObject({ p50: 4_000 });
+  });
+
+  test("ordem resolvida à mão pelo usuário não entra no tempo de recibo", () => {
+    const ledger = [rec("a", "enviando", T0), rec("a", "incerta", T0 + 3000), rec("a", "executada", T0 + 99_000, { reason: "resolvida_pelo_usuario" })];
+    const a = auditExecution(ledger, []);
+    expect(a.executed).toBe(1);
+    expect(a.receipts).toBe(0);
+    expect(a.stagesMs.receipt).toBeNull();
+  });
+
+  test("tempo gasto por tentativa que falhou, por motivo", () => {
+    const ledger = [
+      rec("a", "enviando", T0),
+      rec("a", "falhou", T0 + 2_600, { reason: "gas_station_pendente" }),
+      rec("b", "enviando", T0 + 10_000),
+      rec("b", "falhou", T0 + 12_700, { reason: "gas_station_pendente" }),
+      rec("c", "enviando", T0 + 20_000),
+      rec("c", "falhou", T0 + 21_000, { reason: "impacto_alto" }),
+    ];
+    const a = auditExecution(ledger, []);
+    expect(a.executed).toBe(0);
+    expect(a.failedAttemptMs.gas_station_pendente).toMatchObject({ n: 2, min: 2_600, max: 2_700 });
+    expect(a.failedAttemptMs.impacto_alto).toMatchObject({ n: 1, p50: 1_000 });
+    expect(Object.keys(a.failedAttemptMs)[0]).toBe("gas_station_pendente");
+  });
+
+  test("slippage contra a cotação: compra compara tokens, venda compara dinheiro; positivo é receber menos", () => {
+    const ledger = [
+      rec("buy1", "enviando", T0),
+      rec("buy1", "incerta", T0 + 1000, { quote: { toAmountMinor: "100000" } }),
+      rec("buy1", "executada", T0 + 2000, { reason: "recibo_sucesso" }),
+      rec("sell1", "enviando", T0),
+      rec("sell1", "incerta", T0 + 1000, { side: "sell", quote: { toAmountMinor: "20000000" } }),
+      rec("sell1", "executada", T0 + 2000, { side: "sell", reason: "recibo_sucesso" }),
+    ];
+    const fills = [fill("buy1", "buy", T0 + 1000, { tokenMinor: "99900" }), fill("sell1", "sell", T0 + 1000, { cashUnits: 20.02 })];
+    const a = auditExecution(ledger, fills);
+    expect(a.slippagePairs).toEqual({ matched: 2, unmatched: 0 });
+    expect(a.slippageVsQuoteBps).toMatchObject({ n: 2, min: -10, max: 10 });
+  });
+
+  test("fill sem cotação ou com unidade incompatível é contado como não comparável, nunca inventado", () => {
+    const ledger = [
+      rec("a", "enviando", T0),
+      rec("a", "incerta", T0 + 1000),
+      rec("a", "executada", T0 + 2000, { reason: "recibo_sucesso" }),
+      rec("b", "enviando", T0),
+      rec("b", "incerta", T0 + 1000, { quote: { toAmountMinor: "5" } }),
+      rec("b", "executada", T0 + 2000, { reason: "recibo_sucesso" }),
+    ];
+    const a = auditExecution(ledger, [fill("a", "buy", T0 + 1000), fill("b", "buy", T0 + 1000, { tokenMinor: "1000000" })]);
+    expect(a.slippageVsQuoteBps).toBeNull();
+    expect(a.slippagePairs).toEqual({ matched: 0, unmatched: 2 });
+  });
+
+  test("sem ordens nada é inventado", () => {
+    const a = auditExecution([], []);
+    expect(a).toMatchObject({ executed: 0, receipts: 0, failedAttemptMs: {}, slippageVsQuoteBps: null });
+    expect(a.stagesMs.queue).toBeNull();
   });
 });
 
