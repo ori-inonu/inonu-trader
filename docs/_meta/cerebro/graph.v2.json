@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1017,
-  "headHash": "0cacfc086df3e7aa9ffd63dcb838a00e6959005603ef70d3c591d14341a184ca",
+  "headSeq": 1036,
+  "headHash": "a9aa902d5238f41edd1dc29106b874a2066ab1ecd2ebb8ff7593415cf9819553",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1577,6 +1577,51 @@
       "id": "decisao-goal1-painel-e-papel",
       "type": "decision",
       "text": "Painel do motor integrado ao servidor de relatorios em /motor (journals lidos a cada 60 s, so GET, CSP restrita). Perna de papel no observador: decisao, execucao simulada e reconciliacao so quando o motor aprova, com preco do freshPrice do ciclo; grava engine-paper.jsonl."
+    },
+    {
+      "id": "iter-integracao-main-20261017",
+      "type": "iteration",
+      "text": "Integracao na main (2026-10-17): feat/retorno-composto-por-ciclo (5 commits) e goal1 (10 commits) por fast-forward local, sem push; backup fora do repo; modo real e producao nao atendidos; merge do dono, alteracoes da goal1 e R3 e R4 intocados."
+    },
+    {
+      "id": "rc3-validacao-erro",
+      "type": "fact",
+      "text": "Validacao em worktree limpo achou erro de tipo real na minha edicao do MCP (exactOptionalPropertyTypes) e a suite achou regressao minha no manifesto providers.json e no navegador (porta 8443). Validadores Haiku instaveis entre rodadas; commit e checagem feitos direto."
+    },
+    {
+      "id": "rc3-main-atualizada",
+      "type": "fact",
+      "text": "main local movida por fast-forward: c67b39e para feat/retorno-composto-por-ciclo (5 commits) e depois para integracao/goal1-na-main (merge dos 10 commits da goal1, travessoes, porta 443 no navegador). Sem push; a main rastreia upstream de terceiros."
+    },
+    {
+      "id": "rc3-goal1-integrada",
+      "type": "fact",
+      "text": "goal1 integrada so nos 10 commits; unico conflito no log do grafo, resolvido por replay de 32 eventos (13 nos, 19 ligacoes). Defaults do breaker e do motor em sombra mantidos como o autor definiu; alteracoes nao commitadas da goal1 ficaram fora."
+    },
+    {
+      "id": "rc3-suite",
+      "type": "fact",
+      "text": "Suite completa da integracao: tudo passa exceto src/real (2) igual na base e src/settings (teste de ambiente que le node_modules, igual na base). typecheck 0, test:lab 647. Falhas de web/desk (react ausente em worktree) iguais na base."
+    },
+    {
+      "id": "rc3-porta-capture",
+      "type": "fact",
+      "text": "Pendencia: src/public-market-capture e docs/PUBLIC-MARKET-CAPTURE.md ainda usam a porta 8443 (recibos com URL exata); migrar para 443 antes de 2026-10-31 e reemitir recibos. jev-trader-main (producao) so recebe a correcao quando o dono atualizar."
+    },
+    {
+      "id": "rc3-bloq-merge-dono",
+      "type": "fact",
+      "text": "Bloqueio do dono: concluir o merge do checkout principal (8 arquivos de execucao e risco sem resolucao, jev-consensus.ts, 9 remocoes vindas da main) e refazer contra a main nova. Ensaio de 5 arquivos seguros em .scratch/revisao-branches."
+    },
+    {
+      "id": "rc3-bloq-producao",
+      "type": "fact",
+      "text": "Bloqueio do dono: producao em jev-trader-main (3b695ed, portas 3020 e 3021), modo real e live. Nao tocados. Backup em C:/Users/gabri/backup-integracao-20261017. Nada removido nem apagado; sem push."
+    },
+    {
+      "id": "rc3-goal1-dirty",
+      "type": "fact",
+      "text": "Bloqueio do dono: 1712 alteracoes nao commitadas da goal1 (1062 delecoes de docs, 9 de codigo, devDependency fallow e bun.lock) pertencem a sessao ativa; R3 (33) e R4 (35) arquivos unicos so no backup."
     }
   ],
   "edges": [
@@ -4434,6 +4479,56 @@
       "from": "decisao-goal1-ligacao-ciclo",
       "to": "decisao-goal1-painel-e-papel",
       "seq": 1017
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "iter-integracao-main-20261017",
+      "seq": 1019
+    },
+    {
+      "from": "iter-integracao-main-20261017",
+      "to": "rc3-validacao-erro",
+      "seq": 1021
+    },
+    {
+      "from": "iter-integracao-main-20261017",
+      "to": "rc3-main-atualizada",
+      "seq": 1023
+    },
+    {
+      "from": "rc2-branches",
+      "to": "rc3-main-atualizada",
+      "seq": 1024
+    },
+    {
+      "from": "rc3-main-atualizada",
+      "to": "rc3-goal1-integrada",
+      "seq": 1026
+    },
+    {
+      "from": "rc3-goal1-integrada",
+      "to": "rc3-suite",
+      "seq": 1028
+    },
+    {
+      "from": "rc2-porta-8443",
+      "to": "rc3-porta-capture",
+      "seq": 1030
+    },
+    {
+      "from": "iter-integracao-main-20261017",
+      "to": "rc3-bloq-merge-dono",
+      "seq": 1032
+    },
+    {
+      "from": "rc2-live-recusado",
+      "to": "rc3-bloq-producao",
+      "seq": 1034
+    },
+    {
+      "from": "iter-integracao-main-20261017",
+      "to": "rc3-goal1-dirty",
+      "seq": 1036
     }
   ],
   "retractions": [
