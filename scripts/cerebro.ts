@@ -238,6 +238,11 @@ export async function verify(root: string): Promise<{ seq: number; hash: string 
   const { graph } = await load(root, true);
   return { seq: graph.headSeq, hash: graph.headHash };
 }
+export async function lint(root: string): Promise<string[]> {
+  const { graph } = await load(root, true);
+  const linked = new Set(graph.edges.flatMap((edge) => [edge.from, edge.to]));
+  return graph.nodes.filter((node) => !linked.has(node.id)).map((node) => node.id);
+}
 
 async function main(): Promise<void> {
   const [command, ...args] = process.argv.slice(2);
@@ -252,11 +257,15 @@ async function main(): Promise<void> {
     console.log(await exportCompact(root));
   } else if (command === "record" && args.length === 1) {
     console.log(await recordReceipt(root, args[0]!));
+  } else if (command === "lint" && args.length === 0) {
+    const orphans = await lint(root);
+    console.log(orphans.length ? `orfaos: ${orphans.join(",")}` : "ok sem orfaos");
+    if (orphans.length) process.exitCode = 1;
   } else if (command === "verify" && args.length === 0) {
     const result = await verify(root);
     console.log(`ok seq=${result.seq} hash=${result.hash}`);
   } else {
-    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, record <recibo.json>, export, verify");
+    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, record <recibo.json>, export, lint, verify");
   }
 }
 

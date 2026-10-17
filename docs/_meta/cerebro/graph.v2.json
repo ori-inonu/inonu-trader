@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 28,
-  "headHash": "6409da00001744db56ceee3debfdd2ccafea6253141a88d582237b9938382f53",
+  "headSeq": 30,
+  "headHash": "3a472480250352cf9cb7069e9612ac661ee50c0e12d90231f55d3151a0f20acc",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -52,6 +52,11 @@
       "id": "dono-aceitou-jev",
       "type": "event",
       "text": "Dono alterou criterio 2: regras de seguranca inline no AGENTS.md, historico e fatos no grafo (recomendacao do JEV aceita)"
+    },
+    {
+      "id": "iter-lint",
+      "type": "iteration",
+      "text": "Comando lint lista nos ativos sem vinculo; exit 1 se houver; teste cobre retratados"
     }
   ],
   "edges": [
@@ -144,6 +149,11 @@
       "from": "iter-regras-inline",
       "to": "dono-aceitou-jev",
       "seq": 28
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "iter-lint",
+      "seq": 30
     }
   ],
   "retractions": []
