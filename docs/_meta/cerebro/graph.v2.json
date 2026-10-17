@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 243,
-  "headHash": "cc549524c360e45d6c8152341644c50e707c4ed958abd8eae525b56c5750f1cc",
+  "headSeq": 245,
+  "headHash": "cd1a2c928507d048546ba1b76a75af2741984c658915b9990cb2a21f8c2dd264",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -217,6 +217,11 @@
       "id": "iter-hook-export",
       "type": "iteration",
       "text": "SessionStart do Codex injeta o export da ultima iteracao (cerca de 1,7 KB) em vez de arquivos fixos; escolha do JEV, dono autorizou. OMP global ainda nao usa o export"
+    },
+    {
+      "id": "iter-global-export",
+      "type": "iteration",
+      "text": "AGENTS global do OMP manda ler so a vizinhanca (export <no>) ao iniciar; OMP sem hook de sessao, entao a regra vale como instrucao, nao automatica"
     }
   ],
   "edges": [
@@ -1204,6 +1209,11 @@
       "from": "iter-lint-obsoleto",
       "to": "iter-hook-export",
       "seq": 243
+    },
+    {
+      "from": "iter-hook-export",
+      "to": "iter-global-export",
+      "seq": 245
     }
   ],
   "retractions": [
