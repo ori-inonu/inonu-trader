@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 736,
-  "headHash": "3100b718018f4af30d1fd03b5e6029e91adc7b04d508d509bb5eadb61761b5b7",
+  "headSeq": 749,
+  "headHash": "b400b7188dab692835ddf421c4f5610327536e9bcda09ccbc811eec3f9a3e38a",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -967,6 +967,36 @@
       "id": "iter-search",
       "type": "iteration",
       "text": "Consenso JEV add_search (passo 13, apos sem_consenso no passo 12 com opcoes mais amplas): comando search <palavra> em cerebro.ts, 1 teste, sem arquivo novo; documentado no AGENTS.md"
+    },
+    {
+      "id": "jev-cerebro-passo-14",
+      "type": "decision",
+      "text": "JEV consenso lider skills_to_nodes; spec 1968f822882a09d7; recibo sha256 93e9481433c9a56c4379200756faac864ab3ad7052af9277bac4e7711eac7831. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "skill-ship-pr",
+      "type": "fact",
+      "text": "Ship PR: 1 git status e branch, nunca commitar em main sem pedido; 2 skill-review-diff; 3 typecheck e test, parar se falhar; 4 commit convencional tipo(escopo): resumo, sem segredos; 5 gh pr create com o que, por que e saida; 6 sem --force nem auto-merge"
+    },
+    {
+      "id": "skill-review-diff",
+      "type": "fact",
+      "text": "Review diff: checar escopo vs spec, segredos no diff, dinheiro e risco (Market.init intacto), teste por criterio, typecheck, arquivos de outras sessoes preservados, Bun e sem ponto medio. Saida: achados por severidade (bloqueante, importante, menor) com arquivo e linha, ou evidencia"
+    },
+    {
+      "id": "skill-sdd-feature",
+      "type": "fact",
+      "text": "SDD: spec.md do template, perguntas ao Jev, plan.md, tasks.md com done e verify, status.md; implementar uma task por vez e rodar o verify dela; no fim rodar o done do AGENTS.md. Trivial pode pular. Ate 3 ciclos por task, depois escalar. Pastas em docs/specs/<slug>"
+    },
+    {
+      "id": "fato-skills-congeladas",
+      "type": "fact",
+      "text": "Texto original dos 3 SKILL.md preservado na arvore git f8f68f7fae10be0f1c569d81261ca9404a8b7472 (.agents/skills, antes do passo 14); SKILL.md atuais so apontam para os nos skill-*"
+    },
+    {
+      "id": "iter-skills-nos",
+      "type": "iteration",
+      "text": "Consenso JEV skills_to_nodes (passo 14): procedimentos das 3 skills migrados para nos skill-ship-pr, skill-review-diff e skill-sdd-feature; SKILL.md viram ponteiros"
     }
   ],
   "edges": [
@@ -3094,6 +3124,41 @@
       "from": "iter-sem-consenso-busca",
       "to": "iter-search",
       "seq": 736
+    },
+    {
+      "from": "iter-search",
+      "to": "jev-cerebro-passo-14",
+      "seq": 738
+    },
+    {
+      "from": "jev-cerebro-passo-14",
+      "to": "skill-ship-pr",
+      "seq": 740
+    },
+    {
+      "from": "skill-ship-pr",
+      "to": "skill-review-diff",
+      "seq": 742
+    },
+    {
+      "from": "skill-review-diff",
+      "to": "skill-sdd-feature",
+      "seq": 744
+    },
+    {
+      "from": "skill-sdd-feature",
+      "to": "fato-skills-congeladas",
+      "seq": 746
+    },
+    {
+      "from": "fato-skills-congeladas",
+      "to": "iter-skills-nos",
+      "seq": 748
+    },
+    {
+      "from": "iter-search",
+      "to": "iter-skills-nos",
+      "seq": 749
     }
   ],
   "retractions": [
