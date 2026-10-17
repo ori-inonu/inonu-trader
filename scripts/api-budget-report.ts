@@ -67,6 +67,7 @@ export function format(report: FullReport): string {
       `  franquia mensal: ${p.monthly.franquia === null ? "sem franquia" : `${fmt(p.monthly.used)} de ${fmt(p.monthly.franquia)} (${p.monthly.usedPct}%), restam ${fmt(p.monthly.remaining)}`}`,
       `  estado: ${p.status}${p.expiresAt === null ? "" : `, expira ${new Date(p.expiresAt).toISOString()}`}`,
     );
+    for (const e of p.topEndpoints) lines.push(`  mais usado: ${e.endpoint.replace("/api/v6/dex/", "")} hoje ${fmt(e.today)}, mês ${fmt(e.month)}`);
   }
   lines.push("", `ritmo do cliente: ${report.clientPacing.minIntervalMs} ms entre requisições = ${report.clientPacing.perMinute}/min, ${fmt(report.clientPacing.perHour)}/h, ${fmt(report.clientPacing.perDay)}/dia (${report.clientPacing.note})`);
   if (report.projection.source !== null) {

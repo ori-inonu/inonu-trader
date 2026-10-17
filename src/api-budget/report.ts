@@ -1,5 +1,5 @@
 import type { LedgerState, Period } from "./ledger.ts";
-import { ceilings, monthlyRemaining, poolId, type BudgetEntry, type BudgetRegistry, type Ceilings } from "./registry.ts";
+import { ceilings, entryId, monthlyRemaining, poolId, type BudgetEntry, type BudgetRegistry, type Ceilings } from "./registry.ts";
 
 export interface PoolReport {
   readonly pool: string;
@@ -18,6 +18,8 @@ export interface PoolReport {
   /** Quantas entradas do pool não foram confirmadas na documentação (0 quando `validated`). */
   readonly unvalidated: number;
   readonly fontes: readonly string[];
+  /** Endpoints do pool que mais consumiram no mês corrente (até 5). */
+  readonly topEndpoints: readonly { readonly endpoint: string; readonly today: number; readonly month: number }[];
   readonly expiresAt: number | null;
   readonly blockedUntil: number | null;
   readonly cooldownUntil: number | null;
@@ -75,6 +77,15 @@ export function budgetReport(registry: BudgetRegistry, state: LedgerState, now: 
       validated: entries.every((e) => e.validated),
       unvalidated: entries.filter((e) => !e.validated).length,
       fontes: [...new Set(entries.map((e) => e.fonte))],
+      topEndpoints: entries
+        .map((e) => {
+          const calls = state.endpoints?.[entryId(e)];
+          const at = stamps(now);
+          return { endpoint: e.endpoint, today: calls?.d?.stamp === at.d ? calls.d.n : 0, month: calls?.m?.stamp === at.m ? calls.m.n : 0 };
+        })
+        .filter((e) => e.month > 0)
+        .sort((a, b) => b.month - a.month)
+        .slice(0, 5),
       expiresAt: first.expiresAt ?? null,
       blockedUntil: blocked !== undefined && now < blocked ? blocked : null,
       cooldownUntil: cooldown !== undefined && now < cooldown ? cooldown : null,

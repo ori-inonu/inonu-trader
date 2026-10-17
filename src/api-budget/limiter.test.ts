@@ -151,6 +151,37 @@ describe("createPacer", () => {
   });
 });
 
+describe("contagem por endpoint", () => {
+  const entry = (endpoint: string): BudgetEntry => ({ ...base, endpoint, pool: "basic", franquiaMensal: 3 });
+
+  test("conta só chamadas liberadas, por endpoint, dentro do mesmo pool", () => {
+    const state = fresh();
+    takeSlot(state, entry("/a"), "normal", T0);
+    takeSlot(state, entry("/a"), "normal", T0);
+    takeSlot(state, entry("/b"), "normal", T0);
+    expect(takeSlot(state, entry("/b"), "normal", T0)).toBe("budget");
+    const key = (e: string) => `${base.module}|${e}|${base.key}|`;
+    expect(state.endpoints?.[key("/a")]?.m?.n).toBe(2);
+    expect(state.endpoints?.[key("/b")]?.m?.n).toBe(1);
+    expect(state.endpoints?.[key("/a")]?.d?.n).toBe(2);
+  });
+
+  test("o dia reinicia e o mês acumula", () => {
+    const state = fresh();
+    takeSlot(state, entry("/a"), "normal", T0);
+    takeSlot(state, entry("/a"), "normal", T0 + 86_400_000);
+    const calls = state.endpoints?.[`${base.module}|/a|${base.key}|`];
+    expect(calls?.d?.n).toBe(1);
+    expect(calls?.m?.n).toBe(2);
+  });
+
+  test("custo por chamada entra na contagem", () => {
+    const state = fresh();
+    takeSlot(state, { ...entry("/a"), custo: 2 }, "normal", T0);
+    expect(state.endpoints?.[`${base.module}|/a|${base.key}|`]?.m?.n).toBe(2);
+  });
+});
+
 describe("pool", () => {
   const market = (endpoint: string): BudgetEntry => ({ ...base, endpoint, pool: "market-basic", franquiaMensal: 3 });
 

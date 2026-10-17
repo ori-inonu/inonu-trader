@@ -1,6 +1,6 @@
 import { nextUtcMonthMs } from "../onchainos/http.ts";
 import type { LedgerState, Period } from "./ledger.ts";
-import { ceilings, poolId, type BudgetEntry, type Priority } from "./registry.ts";
+import { ceilings, entryId, poolId, type BudgetEntry, type Priority } from "./registry.ts";
 
 export type DenyReason = "budget" | "reserved" | "blocked_402" | "cooldown_429" | "expired";
 
@@ -48,6 +48,12 @@ export function takeSlot(state: LedgerState, entry: BudgetEntry, priority: Prior
   for (const window of windows) {
     if (window.cap === null) continue;
     usage[window.period] = { stamp: window.stamp, n: usedIn(state, id, window.period, window.stamp) + cost };
+  }
+  // Contagem por endpoint, sempre (com ou sem teto): é o que diz onde o orçamento é gasto.
+  const calls = ((state.endpoints ??= {})[entryId(entry)] ??= {});
+  for (const period of ["d", "m"] as const) {
+    const stamp = period === "d" ? iso.slice(0, 10) : iso.slice(0, 7);
+    calls[period] = { stamp, n: (calls[period]?.stamp === stamp ? calls[period]!.n : 0) + cost };
   }
   return null;
 }

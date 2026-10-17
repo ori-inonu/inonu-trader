@@ -15,6 +15,8 @@ export interface LedgerState {
   usage: Record<string, Partial<Record<Period, Usage>>>;
   blocked: Record<string, number>;
   cooldown: Record<string, number>;
+  /** Chamadas liberadas por endpoint (dia e mês UTC), independentes do pool: mostram onde a franquia é gasta. */
+  endpoints?: Record<string, Partial<Record<"d" | "m", Usage>>>;
 }
 
 /** Ledger no diretorio git comum (mesmo arquivo para todos os worktrees do repo); JEV_API_BUDGET_LEDGER (caminho completo) sobrepoe; fora do git usa data/ local. */

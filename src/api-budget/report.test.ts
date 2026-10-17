@@ -62,6 +62,23 @@ describe("relatório do orçamento", () => {
     expect(JSON.stringify(state)).toBe(snapshot);
   });
 
+  test("endpoints que mais consomem aparecem por pool, do maior para o menor", () => {
+    const state = fresh();
+    const other = OKX_MARKET_ENDPOINTS.filter((e) => e.tier === "basic")[1]!.path;
+    for (let i = 0; i < 5; i++) takeSlot(state, entryOf(basicPath), "normal", T0);
+    for (let i = 0; i < 2; i++) takeSlot(state, entryOf(other), "normal", T0);
+    const basic = pool(budgetReport(registry, state, T0), "market-basic");
+    expect(basic.topEndpoints).toEqual([
+      { endpoint: basicPath, today: 5, month: 5 },
+      { endpoint: other, today: 2, month: 2 },
+    ]);
+    expect(basic.monthly.used).toBe(7);
+    // No dia seguinte o consumo de hoje zera e o do mês permanece.
+    const next = pool(budgetReport(registry, state, T0 + 86_400_000), "market-basic");
+    expect(next.topEndpoints[0]).toEqual({ endpoint: basicPath, today: 0, month: 5 });
+    expect(pool(budgetReport(registry, fresh(), T0), "market-basic").topEndpoints).toEqual([]);
+  });
+
   test("o relatório carrega o nome da variável da chave e nunca um valor", () => {
     const text = JSON.stringify(budgetReport(registry, fresh(), T0));
     expect(text).toContain("OKX_WEB3_API_KEY");
