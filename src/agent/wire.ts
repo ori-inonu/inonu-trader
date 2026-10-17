@@ -25,6 +25,7 @@ import { capRaised, type PolicyMirror } from "./gate";
 import { createCycleRunner, type CycleReport, type Executor } from "./cycle";
 import { createProductionShadow } from "../decision-shadow/shadow";
 import { jsonlEventSink, withExecutorHealth } from "./executor-guard";
+import { jsonlTimingSink, withCliTiming } from "./cli-timing";
 import { cachedEntryQuoteReader, impactOfQuote } from "./entry-cost";
 import { createRecorders } from "./recording";
 import { createFileAgentLedger } from "./ledger";
@@ -338,7 +339,9 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       return (options.processRunner ?? createProcessRunner({ binary: path, home })).run(args, o);
     },
   };
-  const runner = createGuardedRunner(createVerifiedRunner(lazy, binary));
+  // the time of each command of the tool (swap quote, swap execute, wallet history) goes to cli-timing.jsonl: command name and duration only, never an argument (JEV_CLI_TIMING=0 turns it off)
+  const timedLazy = withCliTiming(lazy, { now: () => Date.now(), sink: jsonlTimingSink(join(dir, "cli-timing.jsonl")), enabled: () => process.env.JEV_CLI_TIMING !== "0" });
+  const runner = createGuardedRunner(createVerifiedRunner(timedLazy, binary));
   // the session of the tool is looked at again before each order, not only once per cycle: a cycle can last minutes and the session keeps running out
   const sessionLeftMs = (): number | null => {
     const text = readTextFile(join(home, "session.json"));
@@ -630,7 +633,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       }
     },
   });
-  const engineShadow = createProductionShadow({ dir, now: localNow, executorAvailable: () => guardedExecutor.health().state !== "open", enabled: () => process.env.JEV_ENGINE_SHADOW !== "0" });
+  const engineShadow = createProductionShadow({ dir, now: localNow, executorAvailable: () => guardedExecutor.health().state !== "open", enabled: () => process.env.JEV_ENGINE_SHADOW !== "0", freshPrice });
 
   const cycles = createCycleRunner({
     state: runState,

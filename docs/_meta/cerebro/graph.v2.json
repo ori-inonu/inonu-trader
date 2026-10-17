@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 848,
-  "headHash": "96b9956af16c26720e1d3643cdc434ef9ffd7d641f9aee3061c94b50c252b782",
+  "headSeq": 852,
+  "headHash": "ad367905cf60b1bf4a22e17b35f8efd05d836cb43eff55760d808fca2844a468",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1212,6 +1212,16 @@
       "id": "iter-goal1-ligacao-ciclo",
       "type": "iteration",
       "text": "GOAL 1, ligacao ao ciclo: guarda do executor em producao, observador do motor em sombra, ciclo de vida da ordem e slippage medidos, replay sobre fechamentos reais e painel estatico. Pendente: pWin calibrado, tempo de recibo, Gas Station e plano real da chave (dono)."
+    },
+    {
+      "id": "fato-goal1-reconciliacao-real",
+      "type": "fact",
+      "text": "Reconciliacao real: 26 das 27 ordens executadas tem fill (a restante foi resolvida a mao), 0 fills sem ordem, 4 transmitidas sem desfecho; as 9 compras gastaram o valor pretendido. O cronometro da CLI separa cotacao, assinatura com envio e recibo daqui para frente."
+    },
+    {
+      "id": "decisao-goal1-painel-e-papel",
+      "type": "decision",
+      "text": "Painel do motor integrado ao servidor de relatorios em /motor (journals lidos a cada 60 s, so GET, CSP restrita). Perna de papel no observador: decisao, execucao simulada e reconciliacao so quando o motor aprova, com preco do freshPrice do ciclo; grava engine-paper.jsonl."
     }
   ],
   "edges": [
@@ -3654,6 +3664,16 @@
       "from": "fato-goal1-ciclo-vida-ordem",
       "to": "iter-goal1-ligacao-ciclo",
       "seq": 848
+    },
+    {
+      "from": "fato-goal1-ciclo-vida-ordem",
+      "to": "fato-goal1-reconciliacao-real",
+      "seq": 850
+    },
+    {
+      "from": "decisao-goal1-ligacao-ciclo",
+      "to": "decisao-goal1-painel-e-papel",
+      "seq": 852
     }
   ],
   "retractions": [

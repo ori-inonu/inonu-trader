@@ -1521,6 +1521,42 @@ describe("the production controls of the decision engine, end to end (GOAL 1)", 
     expect(existsSync(join(dir, "agent", "executor-health.jsonl"))).toBe(false);
   });
 
+  test("every command of the tool is timed apart in cli-timing.jsonl, by name only, so quote, signing and receipt can be told apart", async () => {
+    delete process.env.JEV_CLI_TIMING;
+    cliCalls.length = 0;
+    const svc = make();
+    await live(svc);
+    await svc.runNow();
+    await svc.guardNow();
+    await svc.close();
+    const path = join(dir, "agent", "cli-timing.jsonl");
+    const NL = String.fromCharCode(10);
+    const rows = readFileSync(path, "utf8").trim().split(NL).map((l) => JSON.parse(l) as { command: string; ms: number; atMs: number });
+    const names = new Set(rows.map((r) => r.command));
+    expect(names.has("swap quote")).toBe(true);
+    expect(names.has("swap execute")).toBe(true);
+    expect(rows.every((r) => typeof r.ms === "number" && r.ms >= 0 && typeof r.atMs === "number")).toBe(true);
+    // nothing but the command name: no address, amount or output of the tool reaches the file
+    const text = readFileSync(path, "utf8");
+    expect(text).not.toContain(WALLET);
+    expect(text).not.toContain("0x");
+    expect(rows.length).toBe(cliCalls.length);
+  });
+
+  test("JEV_CLI_TIMING=0 turns the timing off", async () => {
+    process.env.JEV_CLI_TIMING = "0";
+    try {
+      cliCalls.length = 0;
+      const svc = make();
+      await live(svc);
+      await svc.runNow();
+      await svc.close();
+      expect(existsSync(join(dir, "agent", "cli-timing.jsonl"))).toBe(false);
+    } finally {
+      delete process.env.JEV_CLI_TIMING;
+    }
+  });
+
   test("the engine looks at the purchases of the closing beside the cycle and keeps where it differs; it never touches the order", async () => {
     delete process.env.JEV_ENGINE_SHADOW;
     cliCalls.length = 0;

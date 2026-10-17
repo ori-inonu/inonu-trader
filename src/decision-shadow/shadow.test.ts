@@ -5,7 +5,8 @@ import { join } from "node:path";
 import type { ClosingRecord } from "../agent/closing";
 import { T0, closing } from "./fixtures";
 import { SHADOW_ASSUMPTIONS, derivePortfolio, opportunityFromClosing } from "./adapter";
-import { SHADOW_LIMITS, createEngineShadow, createProductionShadow, type ShadowRecord } from "./shadow";
+import type { ReasonRecord } from "../decision/types";
+import { SHADOW_LIMITS, createEngineShadow, createProductionShadow, tokenOf, type ShadowRecord } from "./shadow";
 
 describe("opportunityFromClosing", () => {
   test("monta a oportunidade só com o que o registro traz, nas unidades certas", () => {
@@ -165,5 +166,105 @@ describe("createProductionShadow", () => {
     const off = createProductionShadow({ dir: join(dir, "nunca"), now: () => T0, enabled: () => false });
     off.observe(closing());
     expect(existsSync(join(dir, "nunca"))).toBe(false);
+  });
+});
+
+describe("perna de papel: decisão, execução simulada e reconciliação", () => {
+  const strong = () => closing({ answer: { buy: 0.9, skip: 0.1 } });
+  const weak = () => closing({ answer: { buy: 0.1, skip: 0.9 } });
+
+  function paperShadow(priceOf: (o: unknown, r: ClosingRecord) => Promise<number | undefined>) {
+    const paperLog: ReasonRecord[] = [];
+    const s = createEngineShadow({
+      pWin: { mode: "bruta" },
+      clock: { now: () => T0 + 1500 },
+      log: () => undefined,
+      paper: { priceOf: priceOf as never, log: (r) => void paperLog.push(r) },
+    });
+    return { s, paperLog };
+  }
+
+  test("a compra aprovada vira ordem de papel, com a decisão antes e o resultado depois, e custo reconciliado", async () => {
+    const { s, paperLog } = paperShadow(async () => 2);
+    const out = s.observe(strong())!;
+    expect(out.engine?.action).toBe("COMPRAR");
+    await s.settled();
+    expect(paperLog).toHaveLength(2);
+    expect(paperLog.every((r) => r.mode === "paper")).toBe(true);
+    expect(paperLog[0]!.fill).toBeUndefined();
+    const last = paperLog[1]!;
+    expect(last.fill?.status).toBe("filled");
+    expect(last.reconciliation).toMatchObject({ id: "cy-1:buy:token:501:AAA" });
+    expect(Number.isFinite(last.reconciliation!.errorBps)).toBe(true);
+    expect(last.decision.action).toBe("COMPRAR");
+  });
+
+  test("compra recusada pelo motor não gera nada no papel", async () => {
+    const { s, paperLog } = paperShadow(async () => 2);
+    expect(s.observe(weak())!.engine?.action).toBe("NAO_OPERAR");
+    await s.settled();
+    expect(paperLog).toEqual([]);
+  });
+
+  test("sem preço de referência o papel é recusado com bad_data e nada é preenchido", async () => {
+    const { s, paperLog } = paperShadow(async () => undefined);
+    s.observe(strong());
+    await s.settled();
+    expect(paperLog).toHaveLength(1);
+    expect(paperLog[0]!.decision.reasons).toEqual(["bad_data"]);
+    expect(paperLog[0]!.fill).toBeUndefined();
+  });
+
+  test("a mesma compra observada duas vezes gera uma ordem de papel só", async () => {
+    const { s, paperLog } = paperShadow(async () => 2);
+    s.observe(strong());
+    s.observe(strong());
+    await s.settled();
+    expect(paperLog.filter((r) => r.fill?.status === "filled")).toHaveLength(1);
+    expect(paperLog.some((r) => r.decision.reasons.includes("duplicate"))).toBe(true);
+  });
+
+  test("leitura de preço que lança não derruba o observador nem a produção", async () => {
+    const { s, paperLog } = paperShadow(async () => {
+      throw new Error("gateway caiu");
+    });
+    expect(s.observe(strong())!.engine?.action).toBe("COMPRAR");
+    await s.settled();
+    expect(paperLog).toEqual([]);
+  });
+
+  test("sem a opção de papel o observador só decide", async () => {
+    const s = createEngineShadow({ pWin: { mode: "bruta" }, clock: { now: () => T0 + 1500 }, log: () => undefined });
+    s.observe(strong());
+    await s.settled();
+  });
+
+  test("tokenOf lê rede e endereço do id do candidato e recusa qualquer outra forma", () => {
+    expect(tokenOf("buy:token:501:AAA")).toEqual({ chainIndex: "501", address: "AAA" });
+    expect(tokenOf("hold:token:1:0xabc")).toEqual({ chainIndex: "1", address: "0xabc" });
+    expect(tokenOf("buy:pool:501:AAA")).toBeNull();
+    expect(tokenOf("buy:token:sol:AAA")).toBeNull();
+    expect(tokenOf("buy:token:501:")).toBeNull();
+    expect(tokenOf("lixo")).toBeNull();
+  });
+
+  test("a montagem de produção grava engine-paper.jsonl quando recebe a leitura de preço do ciclo", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "engine-paper-"));
+    try {
+      const seen: string[] = [];
+      const prod = createProductionShadow({ dir, now: () => T0 + 1500, freshPrice: async (chain, address) => (seen.push(`${chain}:${address}`), 2) });
+      prod.observe(strong());
+      await prod.settled();
+      expect(seen).toEqual(["501:AAA"]);
+      const text = readFileSync(join(dir, "engine-paper.jsonl"), "utf8");
+      expect(text.trim().split(String.fromCharCode(10)).length).toBe(2);
+      expect(text).toContain('"status":"filled"');
+      const none = createProductionShadow({ dir: join(dir, "sem-preco"), now: () => T0 + 1500 });
+      none.observe(strong());
+      await none.settled();
+      expect(existsSync(join(dir, "sem-preco", "engine-paper.jsonl"))).toBe(false);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

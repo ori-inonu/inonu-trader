@@ -208,3 +208,47 @@ test("report failures preserve handler errors and headers while health stays ava
     expect(await (await fetch(`${base}/operator/history`)).json()).toEqual([cycle("only-valid")]);
   });
 });
+
+async function withPages(pages: Parameters<typeof startReportsServer>[0]["pages"], run: (base: string) => Promise<void>) {
+  const dataDir = mkdtempSync(join(tmpdir(), "inonu-reports-pages-"));
+  const server = startReportsServer({ dataDir, port: 0, origins: [ORIGIN], pages });
+  try { await run(`http://127.0.0.1:${server.port}`); }
+  finally { await server.stop(true); rmSync(dataDir, { recursive: true }); }
+}
+
+test("a registered page is served as restricted read-only HTML, GET only, under the same host check", async () => {
+  await withPages({ "/motor": () => "<!doctype html><title>Motor</title><p>ok</p>" }, async (base) => {
+    const page = await fetch(`${base}/motor`);
+    expect(page.status).toBe(200);
+    expect(page.headers.get("content-type")).toContain("text/html");
+    expect(page.headers.get("content-security-policy")).toContain("default-src 'none'");
+    expect(page.headers.get("content-security-policy")).not.toContain("script-src");
+    expect(page.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(page.headers.get("cache-control")).toBe("no-store");
+    expect(await page.text()).toContain("<p>ok</p>");
+
+    expect((await fetch(`${base}/motor`, { method: "POST" })).status).toBe(405);
+    expect((await fetch(`${base}/motor`, { headers: { host: "evil.example:3007" } })).status).not.toBe(200);
+    expect((await fetch(`${base}/outra`)).status).toBe(404);
+    // the built-in routes keep working next to the page
+    expect(((await (await fetch(`${base}/health`)).json()) as { mode: string }).mode).toBe("read-only");
+  });
+});
+
+test("an async page works and a page that throws answers a generic error without its message", async () => {
+  await withPages({ "/ok": async () => "async", "/quebra": () => { throw new Error("segredo-do-erro"); } }, async (base) => {
+    expect(await (await fetch(`${base}/ok`)).text()).toBe("async");
+    const broken = await fetch(`${base}/quebra`);
+    expect(broken.status).toBe(500);
+    expect(await broken.text()).not.toContain("segredo-do-erro");
+  });
+});
+
+test("a page path cannot shadow a built-in route and must be a plain lowercase path", () => {
+  const dataDir = mkdtempSync(join(tmpdir(), "inonu-reports-pages-"));
+  try {
+    for (const bad of ["/health", "/", "/system-one", "/operator", "motor", "/Motor", "/a/b", "/motor?x=1"]) {
+      expect(() => startReportsServer({ dataDir, port: 0, origins: [ORIGIN], pages: { [bad]: () => "x" } }), bad).toThrow("not allowed");
+    }
+  } finally { rmSync(dataDir, { recursive: true }); }
+});

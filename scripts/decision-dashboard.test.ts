@@ -1,6 +1,12 @@
-import { describe, expect, test } from "bun:test";
-import { clean, renderDashboard, type DashboardInput } from "./decision-dashboard";
+import { afterAll, describe, expect, test } from "bun:test";
+import { appendFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { startReportsServer } from "../src/dashboard/reports-server";
+import { closing } from "../src/decision-shadow/fixtures";
+import { buildLiveInput, clean, createMotorPage, renderDashboard, type DashboardInput } from "./decision-dashboard";
 
+const BANNED = new RegExp("[" + [0xb7, 0x2013, 0x2014, 0x2212, 0x2022].map((c) => String.fromCharCode(c)).join("") + "]");
 const d = (p50: number) => ({ n: 10, min: 1, p50, p95: p50 * 2, p99: p50 * 3, mean: p50, max: p50 * 4 });
 const input: DashboardInput = {
   generatedAt: "2026-10-17T20:00:00.000Z",
@@ -37,7 +43,7 @@ describe("renderDashboard", () => {
   });
 
   test("obedece à regra do produto: sem ponto médio, travessão ou meia-risca, sem animação nem script", () => {
-    expect(html).not.toMatch(/[·–—−•]/);
+    expect(html).not.toMatch(BANNED);
     expect(html).not.toMatch(/animation|@keyframes|blink|pulse|<script/i);
   });
 
@@ -66,10 +72,67 @@ describe("renderDashboard", () => {
   });
 
   test("clean troca os caracteres proibidos por hífen", () => {
-    expect(clean("a—b–c·d−e")).toBe("a-b-c-d-e");
+    expect(clean("a" + String.fromCharCode(0x2014) + "b" + String.fromCharCode(0x2013) + "c" + String.fromCharCode(0xb7) + "d" + String.fromCharCode(0x2212) + "e")).toBe("a-b-c-d-e");
   });
 
   test("o painel declara que não é lucro", () => {
     expect(html).toContain("Nada aqui é lucro");
+  });
+});
+
+describe("painel ao vivo", () => {
+  const root = mkdtempSync(join(tmpdir(), "motor-live-"));
+  afterAll(() => rmSync(root, { recursive: true, force: true }));
+  const T0 = 1_792_000_000_000;
+  const NL = String.fromCharCode(10);
+  const lines = (rows: object[]) => rows.map((r) => JSON.stringify(r)).join(NL) + NL;
+
+  function agentDir(name: string): string {
+    const dir = join(root, name, "agent");
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "ledger.jsonl"), lines([{ kind: "cycle", cycleId: "c1", atMs: T0, mode: "limitado", outcome: "decidido", reason: null }, { kind: "order", orderKey: "k1", stage: "enviando", atMs: T0 }, { kind: "order", orderKey: "k1", stage: "falhou", atMs: T0 + 2600, reason: "gas_station_pendente", side: "buy" }]));
+    writeFileSync(join(dir, "closings.jsonl"), lines([closing({ answer: { buy: 0.1, skip: 0.9 } })]));
+    return dir;
+  }
+  const empty = join(root, "bench");
+
+  test("monta o painel direto dos journals, com os mesmos blocos do relatório em arquivo", () => {
+    const html = renderDashboard(buildLiveInput({ agentDir: agentDir("a"), benchDir: empty, ledgerPath: join(root, "a", "budget.json") }, T0 + 60_000));
+    expect(html).toContain("Estado do agente");
+    expect(html).toContain("gas_station_pendente");
+    expect(html).toContain("Motor de decisão contra o ciclo atual");
+    expect(html).toContain("Breaker do executor");
+    expect(html).toContain("Hipótese de 0,3% líquido");
+    expect(html).toContain("Orçamento de API");
+    expect(html).not.toMatch(BANNED);
+  });
+
+  test("a página refaz o painel só depois do prazo do cache", () => {
+    const dir = agentDir("b");
+    let t = T0;
+    const page = createMotorPage({ agentDir: dir, benchDir: empty, ledgerPath: join(root, "b", "budget.json") }, { ttlMs: 1000, now: () => t });
+    const first = page();
+    appendFileSync(join(dir, "ledger.jsonl"), lines([{ kind: "cycle", cycleId: "c2", atMs: T0 + 5, mode: "limitado", outcome: "decidido", reason: null }]));
+    t += 500;
+    expect(page()).toBe(first);
+    t += 600;
+    expect(page()).not.toBe(first);
+  });
+
+  test("é servida pelo servidor de relatórios em /motor, só leitura, sob a política de conteúdo restrita", async () => {
+    const dir = agentDir("c");
+    const dataDir = join(root, "c", "data");
+    mkdirSync(dataDir, { recursive: true });
+    const origin = "http://127.0.0.1:3009";
+    const server = startReportsServer({ dataDir, port: 0, origins: [origin], pages: { "/motor": createMotorPage({ agentDir: dir, benchDir: empty, ledgerPath: join(root, "c", "budget.json") }) } });
+    try {
+      const res = await fetch(`http://127.0.0.1:${server.port}/motor`);
+      expect(res.status).toBe(200);
+      expect(res.headers.get("content-security-policy")).toContain("default-src 'none'");
+      expect(await res.text()).toContain("Estado do agente");
+      expect((await fetch(`http://127.0.0.1:${server.port}/motor`, { method: "POST" })).status).toBe(405);
+    } finally {
+      await server.stop(true);
+    }
   });
 });

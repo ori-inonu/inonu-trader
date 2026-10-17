@@ -2,7 +2,7 @@ import { afterAll, describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { auditClosings, auditCycles, auditEquity, auditExecution, auditFills, auditJev, auditOpportunities, auditOrders, parseJsonl, runAudit, throughputFeasibility } from "./baseline-audit";
+import { auditClosings, auditCliTiming, auditCycles, auditEquity, auditExecution, auditFills, auditReconciliation, auditJev, auditOpportunities, auditOrders, parseJsonl, runAudit, throughputFeasibility } from "./baseline-audit";
 
 const T0 = Date.UTC(2026, 9, 15, 12);
 const MIN = 60_000;
@@ -205,6 +205,67 @@ describe("auditExecution", () => {
     const a = auditExecution([], []);
     expect(a).toMatchObject({ executed: 0, receipts: 0, failedAttemptMs: {}, slippageVsQuoteBps: null });
     expect(a.stagesMs.queue).toBeNull();
+  });
+});
+
+describe("auditCliTiming", () => {
+  test("duração por comando, com os que falharam contados à parte", () => {
+    const rows = [
+      { command: "swap quote", ms: 900, exitCode: 0, timedOut: false },
+      { command: "swap quote", ms: 1100, exitCode: 0, timedOut: false },
+      { command: "swap execute", ms: 3000, exitCode: 2, timedOut: false },
+      { command: "swap execute", ms: 3200, exitCode: 0, timedOut: false },
+      { command: "wallet history", ms: 400, exitCode: null, timedOut: false },
+      { command: "wallet history", ms: 30_000, exitCode: 1, timedOut: true },
+    ];
+    const a = auditCliTiming(rows);
+    expect(a.n).toBe(6);
+    expect(a.byCommand["swap quote"]).toMatchObject({ n: 2, min: 900, max: 1100 });
+    expect(a.failures).toEqual({ "swap execute": 1, "wallet history": 2 });
+    expect(Object.keys(a.byCommand)[0]).toBe("swap quote");
+  });
+
+  test("linha sem comando ou sem duração é ignorada e sem dado não há número", () => {
+    expect(auditCliTiming([{ command: "swap quote" }, { ms: 5 }, {}])).toEqual({ n: 0, byCommand: {}, failures: {} });
+    expect(auditCliTiming([])).toEqual({ n: 0, byCommand: {}, failures: {} });
+  });
+});
+
+describe("auditReconciliation", () => {
+  const o = (orderKey: string, stage: string, extra: Record<string, unknown> = {}) => ({ kind: "order", orderKey, stage, atMs: T0, side: "buy", usd: 10, reason: null, ...extra });
+  const f = (orderKey: string, side: string, cashUnits: number) => ({ kind: "fill", orderKey, side, cashUnits, atMs: T0 });
+
+  test("conta executadas com recibo, resolvidas à mão, com e sem fill, falhas finais e ordens sem desfecho", () => {
+    const ledger = [
+      o("a", "preparada"), o("a", "executada", { reason: "recibo_sucesso" }),
+      o("b", "executada", { reason: "resolvida_pelo_usuario", side: "sell", usd: 19 }),
+      o("c", "falhou", { reason: "gas_station_pendente" }),
+      o("d", "incerta", { reason: "recusa_sem_prova" }),
+      o("e", "incerta", { reason: "recusa_sem_prova" }),
+      o("e", "falhou", { reason: "simulacao_falhou" }),
+    ];
+    const a = auditReconciliation(ledger, [f("a", "buy", 10)]);
+    expect(a).toMatchObject({ orderKeys: 5, executed: 2, withReceipt: 1, resolvedByUser: 1, withFill: 1, executedWithoutFill: 1, fillsWithoutOrder: 0, terminalFailures: 2 });
+    expect(a.unresolved).toEqual({ count: 1, byReason: { recusa_sem_prova: 1 } });
+  });
+
+  test("compra deve gastar o valor pretendido; venda mostra a diferença de preço e custo", () => {
+    const ledger = [
+      o("b1", "executada", { reason: "recibo_sucesso", usd: 10 }),
+      o("s1", "executada", { reason: "recibo_sucesso", side: "sell", usd: 20 }),
+    ];
+    const a = auditReconciliation(ledger, [f("b1", "buy", 10), f("s1", "sell", 20.2)]);
+    expect(a.cashVsIntendedBps.buy).toMatchObject({ n: 1, p50: 0 });
+    expect(a.cashVsIntendedBps.sell).toMatchObject({ n: 1, p50: 100 });
+  });
+
+  test("fill sem ordem no ledger aparece como divergência", () => {
+    const a = auditReconciliation([o("a", "executada", { reason: "recibo_sucesso" })], [f("a", "buy", 10), f("fantasma", "buy", 5)]);
+    expect(a.fillsWithoutOrder).toBe(1);
+  });
+
+  test("sem ordens nada é inventado", () => {
+    expect(auditReconciliation([], [])).toMatchObject({ orderKeys: 0, executed: 0, cashVsIntendedBps: { buy: null, sell: null }, unresolved: { count: 0, byReason: {} } });
   });
 });
 

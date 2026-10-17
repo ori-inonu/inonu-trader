@@ -1,5 +1,14 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { startReportsServer, type ReportsServerOptions } from "../src/dashboard/reports-server";
+import { createMotorPage } from "./decision-dashboard";
+
+/** Pasta dos journals do agente: JEV_AGENT_DIR, ou a pasta padrão do app em %LOCALAPPDATA%. Sem ela a página /motor não existe. */
+function agentDir(): string | null {
+  const dir = process.env.JEV_AGENT_DIR ?? (process.env.LOCALAPPDATA === undefined ? undefined : join(process.env.LOCALAPPDATA, "InonuTrader", "data", "agent"));
+  return dir !== undefined && existsSync(dir) ? dir : null;
+}
 
 const HELP = `Inonu Trader reports server (read-only)
 Usage: bun --no-env-file --no-install scripts/reports-server.ts [options]
@@ -38,8 +47,11 @@ if (import.meta.main) {
     const options = parseArgs(Bun.argv.slice(2));
     if (options === null) console.log(HELP);
     else {
-      const server = startReportsServer(options);
-      console.log(`Inonu reports read-only at http://127.0.0.1:${server.port}; execution and live feed disabled.`);
+      const agent = agentDir();
+      const usagePath = agent === null ? undefined : join(agent, "..", "onchain", `usage-${new Date().toISOString().slice(0, 7)}.json`);
+      const pages: NonNullable<ReportsServerOptions["pages"]> = agent === null ? {} : { "/motor": createMotorPage({ agentDir: agent, benchDir: fileURLToPath(new URL("../data/bench/", import.meta.url)), ...(usagePath !== undefined && existsSync(usagePath) ? { usagePath } : {}) }) };
+      const server = startReportsServer({ ...options, pages });
+      console.log(`Inonu reports read-only at http://127.0.0.1:${server.port}; execution and live feed disabled.${agent === null ? "" : " Painel do motor em /motor."}`);
     }
   } catch {
     console.error("Reports server could not start. Check --help and the local configuration.");

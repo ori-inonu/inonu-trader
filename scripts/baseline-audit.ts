@@ -525,6 +525,103 @@ export function auditExecution(ledger: Row[], fills: Row[]): ExecutionAudit {
   };
 }
 
+// ---- cronômetro por comando da CLI (cli-timing.jsonl, gravado pelo agente a partir da instrumentação nova)
+
+export interface CliTimingAudit {
+  /** Registros do cronômetro. Zero enquanto a instrumentação não acumulou amostras (o journal antigo não a tem). */
+  n: number;
+  /** Duração por comando: "swap quote" (cotação do executor), "swap execute" (simulação, assinatura e transmissão dentro da CLI), "wallet history" (consulta de recibo). */
+  byCommand: Record<string, Dist>;
+  /** Comandos que esgotaram o prazo ou saíram com erro, por comando. */
+  failures: Record<string, number>;
+}
+
+export function auditCliTiming(rows: Row[]): CliTimingAudit {
+  const by = new Map<string, number[]>();
+  const failures: Record<string, number> = {};
+  for (const r of rows) {
+    const command = typeof r.command === "string" ? r.command : undefined;
+    const ms = num(r.ms);
+    if (command === undefined || ms === undefined) continue;
+    by.set(command, [...(by.get(command) ?? []), ms]);
+    if (r.timedOut === true || (num(r.exitCode) !== undefined && r.exitCode !== 0) || r.exitCode === null) failures[command] = (failures[command] ?? 0) + 1;
+  }
+  return {
+    n: [...by.values()].reduce((s, v) => s + v.length, 0),
+    byCommand: Object.fromEntries([...by].map(([k, v]) => [k, dist(v, 0)!] as const).sort((a, b) => b[1].n - a[1].n)),
+    failures,
+  };
+}
+
+// ---- reconciliação: cada ordem do ledger contra o que a cadeia mostrou (fills), e o dinheiro movido contra o pretendido
+
+export interface ReconciliationAudit {
+  orderKeys: number;
+  executed: number;
+  /** Executadas com recibo da cadeia, e as resolvidas à mão pelo usuário (sem recibo). */
+  withReceipt: number;
+  resolvedByUser: number;
+  /** Executadas que têm o fill correspondente e as que não têm (uma resolvida à mão pode não ter). */
+  withFill: number;
+  executedWithoutFill: number;
+  fillsWithoutOrder: number;
+  /** Ordens transmitidas que nunca chegaram a um desfecho final (executada ou falhou): estado incerto. */
+  unresolved: { count: number; byReason: Record<string, number> };
+  terminalFailures: number;
+  /**
+   * Dinheiro que o fill mostra contra o valor pretendido da ordem, em bps. Compra: o fill é o dinheiro gasto, e deve bater.
+   * Venda: o pretendido é o valor da posição na decisão, e o fill é o que entrou; a diferença é movimento de preço mais custo.
+   */
+  cashVsIntendedBps: { buy: Dist | null; sell: Dist | null };
+}
+
+export function auditReconciliation(ledger: Row[], fills: Row[]): ReconciliationAudit {
+  const byKey = new Map<string, Row[]>();
+  for (const o of ledger.filter((r) => r.kind === "order")) byKey.set(String(o.orderKey), [...(byKey.get(String(o.orderKey)) ?? []), o]);
+  const fillOf = new Map(fills.filter((f) => f.kind === "fill").map((f) => [String(f.orderKey), f] as const));
+
+  let executed = 0;
+  let withReceipt = 0;
+  let resolvedByUser = 0;
+  let withFill = 0;
+  let terminalFailures = 0;
+  const unresolved: Record<string, number> = {};
+  const diff: Record<"buy" | "sell", number[]> = { buy: [], sell: [] };
+
+  for (const [key, recs] of byKey) {
+    const done = recs.find((r) => r.stage === "executada");
+    if (done) {
+      executed++;
+      if (done.reason === "recibo_sucesso") withReceipt++;
+      if (done.reason === "resolvida_pelo_usuario") resolvedByUser++;
+      const fill = fillOf.get(key);
+      if (fill) {
+        withFill++;
+        const intended = num(done.usd);
+        const cash = num(fill.cashUnits);
+        if (intended !== undefined && intended > 0 && cash !== undefined) diff[done.side === "sell" ? "sell" : "buy"].push(((cash - intended) / intended) * 1e4);
+      }
+    } else if (recs.some((r) => r.stage === "falhou")) {
+      terminalFailures++;
+    } else {
+      const sent = recs.find((r) => r.stage === "incerta");
+      if (sent) unresolved[String(sent.reason)] = (unresolved[String(sent.reason)] ?? 0) + 1;
+    }
+  }
+  return {
+    orderKeys: byKey.size,
+    executed,
+    withReceipt,
+    resolvedByUser,
+    withFill,
+    executedWithoutFill: executed - withFill,
+    fillsWithoutOrder: [...fillOf.keys()].filter((k) => !byKey.has(k)).length,
+    unresolved: { count: Object.values(unresolved).reduce((s, n) => s + n, 0), byReason: unresolved },
+    terminalFailures,
+    cashVsIntendedBps: { buy: dist(diff.buy, 1), sell: dist(diff.sell, 1) },
+  };
+}
+
 // ---- relatório
 
 export interface Baseline {
@@ -536,6 +633,8 @@ export interface Baseline {
   cycles: CyclesAudit;
   orders: OrdersAudit;
   execution: ExecutionAudit;
+  reconciliation: ReconciliationAudit;
+  cliTiming: CliTimingAudit;
   jev: JevAudit;
   closings: ClosingsAudit;
   fills: FillsAudit;
@@ -546,7 +645,7 @@ export interface Baseline {
   caveats: string[];
 }
 
-const FILES = ["ledger", "decisions-meta", "closings", "fills", "equity", "scoreboard"] as const;
+const FILES = ["ledger", "decisions-meta", "closings", "fills", "equity", "scoreboard", "cli-timing"] as const;
 
 export function runAudit(dir: string, usagePath: string | null, nowMs: number): Baseline {
   const data: Record<string, Row[]> = {};
@@ -572,6 +671,8 @@ export function runAudit(dir: string, usagePath: string | null, nowMs: number): 
     cycles: auditCycles(data.ledger!),
     orders: auditOrders(data.ledger!),
     execution: auditExecution(data.ledger!, data.fills!),
+    reconciliation: auditReconciliation(data.ledger!, data.fills!),
+    cliTiming: auditCliTiming(data["cli-timing"]!),
     jev: auditJev(data["decisions-meta"]!),
     closings: auditClosings(data.closings!),
     fills: auditFills(data.fills!, equity.solUsd),

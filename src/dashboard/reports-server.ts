@@ -6,12 +6,22 @@ export interface ReportsServerOptions {
   dataDir: string;
   port: number;
   origins: string[];
+  /**
+   * Páginas HTML de leitura, por caminho exato (por exemplo "/motor"). Só GET, sob as mesmas verificações de host e origem,
+   * com política de conteúdo restrita (sem script, sem rede). Uma página que lança vira "report unreadable" sem detalhe.
+   */
+  pages?: Readonly<Record<string, () => string | Promise<string>>>;
 }
+
+const BUILT_IN_PATHS = new Set(["/", "/health", "/system-one"]);
 
 function validate(options: ReportsServerOptions): void {
   if (!isAbsolute(options.dataDir)) throw new Error("Reports data directory must be absolute");
   if (!Number.isSafeInteger(options.port) || options.port < 0 || options.port > 65535) throw new Error("Reports port must be an integer from 0 to 65535");
   if (!Array.isArray(options.origins) || options.origins.length === 0) throw new Error("Reports origins must not be empty");
+  for (const path of Object.keys(options.pages ?? {})) {
+    if (!/^\/[a-z0-9-]+$/.test(path) || BUILT_IN_PATHS.has(path) || isOperatorPath(path)) throw new Error("Reports page path is not allowed");
+  }
   for (const value of options.origins) {
     let url: URL;
     try { url = new URL(value); } catch { throw new Error("Reports origin must be a canonical local HTTP(S) origin"); }
@@ -42,24 +52,34 @@ export function startReportsServer(options: ReportsServerOptions) {
   const dataDir = options.dataDir;
   const origins = [...options.origins];
   const allowedOrigins = new Set(origins);
+  const pages = options.pages ?? {};
   const systemOne = createSystemOneHandler(join(dataDir, "system-one/latest.json"), origins);
   return Bun.serve({
     hostname: "127.0.0.1",
     port: options.port,
-    fetch(req, server) {
+    async fetch(req, server) {
       const host = req.headers.get("host");
       const origin = req.headers.get("origin");
       if ((host !== `127.0.0.1:${server.port}` && host !== `localhost:${server.port}`) || (origin !== null && !allowedOrigins.has(origin))) {
         return withHeaders(Response.json({ error: "host or origin not allowed" }, { status: 403 }), null);
       }
       const pathname = new URL(req.url).pathname;
-      const known = pathname === "/" || pathname === "/health" || isOperatorPath(pathname) || pathname === "/system-one";
+      const page = Object.hasOwn(pages, pathname) ? pages[pathname] : undefined;
+      const known = pathname === "/" || pathname === "/health" || isOperatorPath(pathname) || pathname === "/system-one" || page !== undefined;
       if (!known) return withHeaders(Response.json({ error: "not found" }, { status: 404 }), origin);
       if (req.method === "OPTIONS") return withHeaders(new Response(null, { status: 204 }), origin);
       if (req.method !== "GET") return withHeaders(Response.json({ error: "method not allowed" }, { status: 405, headers: { allow: "GET, OPTIONS" } }), origin);
       let response: Response;
       try {
-        if (isOperatorPath(pathname)) {
+        if (page !== undefined) {
+          response = new Response(await page(), {
+            headers: {
+              "content-type": "text/html; charset=utf-8",
+              "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+              "x-content-type-options": "nosniff",
+            },
+          });
+        } else if (isOperatorPath(pathname)) {
           // Refresh same-size journal rewrites even when a producer preserves mtime.
           response = createOperatorHandler({ origins, token: null, statePath: join(dataDir, "operator/latest.json"), journalPath: join(dataDir, "operator/cycles.jsonl") })(req, pathname);
         } else if (pathname === "/system-one") {

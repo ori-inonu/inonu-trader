@@ -4,8 +4,15 @@
 // Run: bun --no-env-file scripts/decision-dashboard.ts   (gera data/bench/dashboard.html)
 import { existsSync, readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { defaultLedgerPath } from "../src/api-budget/ledger";
+import { assessHypothesis } from "../src/decision/hypothesis";
 import type { Dist } from "../src/decision/metrics";
+import { buildReport } from "./api-budget-report";
+import { parseJsonl, runAudit } from "./baseline-audit";
+import { inputsFrom } from "./edge-hypothesis";
+import { readClosings, replayClosings, summarizeShadow } from "./shadow-engine";
+import { simulate, terminalOrders } from "./simulate-executor-health";
 
 type Json = Record<string, any>;
 
@@ -26,8 +33,11 @@ const n = (v: unknown, digits = 0): string => (typeof v === "number" && Number.i
 const pct = (v: unknown, digits = 1): string => (typeof v === "number" && Number.isFinite(v) ? `${(v * 100).toLocaleString("pt-BR", { maximumFractionDigits: digits })}%` : "sem dado");
 
 /** Texto exibido nunca leva ponto médio, travessão ou meia-risca (regra do produto). */
+/** Ponto médio, meia-risca, travessão, sinal de menos e marcador, por código de ponto (o fonte não leva os caracteres). */
+const BANNED = new RegExp("[" + [0xb7, 0x2013, 0x2014, 0x2212, 0x2022].map((c) => String.fromCharCode(c)).join("") + "]", "g");
+
 export function clean(text: string): string {
-  return text.replace(/[·–—−•]/g, "-");
+  return text.replace(BANNED, "-");
 }
 
 const card = (label: string, value: string, note = ""): string => `<div class="card"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div>${note === "" ? "" : `<div class="note">${esc(note)}</div>`}</div>`;
@@ -74,6 +84,7 @@ export function renderDashboard(input: DashboardInput): string {
           card("Maior bloqueio", top ? top.reason : "nenhum", top ? `${n(top.count)} falhas, ${pct(top.shareOfFailures)} do total; ${n(top.executedAfterFirst)} execuções depois do primeiro` : ""),
           card("Drawdown do patrimônio", b.equity?.drawdown ? `${n(b.equity.drawdown.pct, 1)}%` : "sem dado", "inclui depósitos e preço das posições: não é lucro de trading"),
           card("Vendas pareadas", n(b.fills?.roundtrips?.matchedSells), `${n(b.fills?.roundtrips?.wins)} com ganho, retorno ${b.fills?.roundtrips?.returnPct === null ? "sem dado" : `${n(b.fills?.roundtrips?.returnPct, 2)}%`}`),
+          card("Reconciliação", `${n(b.reconciliation?.withFill)} de ${n(b.reconciliation?.executed)}`, `executadas com fill; ${n(b.reconciliation?.unresolved?.count)} sem desfecho; ${n(b.reconciliation?.fillsWithoutOrder)} fill sem ordem`),
         ].join("")}</div>`,
       ),
     );
@@ -87,11 +98,18 @@ export function renderDashboard(input: DashboardInput): string {
       section(
         "latencia",
         "Latência por etapa",
-        "Cada etapa medida à parte. A decisão local não é o gargalo. A assinatura não é separável no journal: está dentro do tempo do executor. A rede é medida até o host público, sem a API assinada.",
+        `Cada etapa medida à parte. A decisão local não é o gargalo. Os comandos da CLI do executor entram assim que o cronômetro novo acumula amostras (${n(b.cliTiming?.n)} até agora); a assinatura fica dentro de swap execute, porque é a CLI que assina. A rede é medida até o host público, sem a API assinada.`,
         table(
           ["Etapa", "Amostras", "p50", "p95", "p99", "Máximo"],
           [
             ...(input.network === undefined ? [] : [distRow("Rede: conexão TCP", input.network.tcpMs, "ms"), distRow("Rede: handshake TLS", input.network.tlsMs, "ms")]),
+            ...(b.cliTiming?.n > 0
+              ? [
+                  distRow("CLI do executor: swap quote (cotação)", b.cliTiming.byCommand?.["swap quote"], "ms"),
+                  distRow("CLI do executor: swap execute (simulação, assinatura e transmissão)", b.cliTiming.byCommand?.["swap execute"], "ms"),
+                  distRow("CLI do executor: wallet history (consulta de recibo)", b.cliTiming.byCommand?.["wallet history"], "ms"),
+                ]
+              : []),
             distRow("Modelo (pergunta até resposta)", b.jev?.latencyMs, "ms"),
             distRow("Cotação de entrada (pedido até resposta)", b.closings?.quoteNetworkMs, "ms"),
             distRow("Fila da ordem (preparada até enviando)", s.queue, "ms"),
@@ -236,6 +254,48 @@ ${caveats.length > 0 ? `<section id="limites"><h2>Limites desta leitura</h2><ul>
   return clean(html);
 }
 
+export interface LivePaths {
+  /** Pasta dos journals do agente (ledger, fills, closings, scoreboard...), só leitura. */
+  readonly agentDir: string;
+  /** Pasta dos relatórios gerados (paper-run, rede, benchmark da decisão local). */
+  readonly benchDir: string;
+  readonly usagePath?: string | undefined;
+  readonly ledgerPath?: string | undefined;
+}
+
+/** Monta o painel direto dos journals, sem depender de relatórios antigos em disco; só o que é gerado por outros scripts (paper-run, rede) vem de benchDir. */
+export function buildLiveInput(paths: LivePaths, nowMs: number): DashboardInput {
+  const baseline = runAudit(paths.agentDir, paths.usagePath ?? null, nowMs);
+  const closingsPath = join(paths.agentDir, "closings.jsonl");
+  const ledgerPath = join(paths.agentDir, "ledger.jsonl");
+  const bench = (name: string) => read(join(paths.benchDir, name));
+  const decisionBench = bench("decision-after.json") as { latencyMs?: { p95?: number } } | undefined;
+  const hypothesis = assessHypothesis(inputsFrom(baseline, decisionBench ?? null, 30, 90));
+  const apiBudget = buildReport({ ledgerPath: paths.ledgerPath ?? defaultLedgerPath(), plan: "free", now: nowMs, ...(paths.usagePath === undefined ? {} : { usagePath: paths.usagePath }) });
+  return {
+    generatedAt: new Date(nowMs).toISOString(),
+    baseline: baseline as unknown as Json,
+    shadow: existsSync(closingsPath) ? (summarizeShadow(replayClosings(readClosings(closingsPath), { mode: "bruta" }), "bruta", nowMs) as unknown as Json) : undefined,
+    hypothesis: { ...hypothesis } as unknown as Json,
+    executorSim: existsSync(ledgerPath) ? (simulate(terminalOrders(parseJsonl(readFileSync(ledgerPath, "utf8")).rows)) as unknown as Json) : undefined,
+    paperRun: bench("paper-run.json"),
+    network: bench("network-rtt.json"),
+    apiBudget: JSON.parse(JSON.stringify(apiBudget)) as Json,
+  };
+}
+
+/** Página para o servidor de relatórios: refaz o painel a cada `ttlMs` e, entre uma montagem e outra, devolve a anterior. */
+export function createMotorPage(paths: LivePaths, options: { readonly ttlMs?: number; readonly now?: () => number } = {}): () => string {
+  const ttlMs = options.ttlMs ?? 60_000;
+  const now = options.now ?? Date.now;
+  let cached: { at: number; html: string } | null = null;
+  return () => {
+    const t = now();
+    if (cached === null || t - cached.at >= ttlMs) cached = { at: t, html: renderDashboard(buildLiveInput(paths, t)) };
+    return cached.html;
+  };
+}
+
 function read(path: string): Json | undefined {
   try {
     return existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as Json) : undefined;
@@ -246,8 +306,6 @@ function read(path: string): Json | undefined {
 
 if (import.meta.main) {
   const bench = resolve(import.meta.dir, "../data/bench");
-  const { buildReport } = await import("./api-budget-report");
-  const { defaultLedgerPath } = await import("../src/api-budget/ledger");
   const home = process.env.LOCALAPPDATA === undefined ? undefined : resolve(process.env.LOCALAPPDATA, "InonuTrader", "data", "onchain", `usage-${new Date().toISOString().slice(0, 7)}.json`);
   const apiBudget = buildReport({ ledgerPath: defaultLedgerPath(), ...(home !== undefined && existsSync(home) ? { usagePath: home } : {}), plan: "free", now: Date.now() });
   const html = renderDashboard({
