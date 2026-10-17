@@ -117,7 +117,9 @@ test("record links a JEV receipt to active nodes and rejects malformed receipts"
   writeFileSync(file, JSON.stringify({ receipt: { v: 1, specId: "s1", specHash: "a".repeat(64), status: "consenso", leader: "x" } }));
   expect(await recordReceipt(root, file)).toBe("jev-s1");
   expect(await verify(root)).toMatchObject({ seq: 3 });
-  expect(readFileSync(join(root, "receipts", "s1.json"), "utf8")).toContain("consenso");
+  const copy = readFileSync(join(root, "receipts", "s1.json"));
+  expect(copy.equals(readFileSync(file))).toBe(true);
+  expect(readFileSync(join(root, "events.jsonl"), "utf8")).toContain(createHash("sha256").update(copy).digest("hex"));
   writeFileSync(file, JSON.stringify({ receipt: { v: 1, specId: "s2", specHash: "zz", status: "consenso" } }));
   await expect(recordReceipt(root, file)).rejects.toThrow("recibo invalido");
   expect(await verify(root)).toMatchObject({ seq: 3 });
