@@ -39,7 +39,7 @@ A sondagem distingue recusa explícita, falha e desconhecido sem aumentar chamad
 
 ## Plano de tasks
 
-Ver [plano](plan.md). Tarefas e estado: nos `spec-*` do grafo.
+Plano, tarefas e estado: nos `plan-decisao-executavel-jev` e `spec-*` do grafo.
 
 ## Perguntas em aberto
 

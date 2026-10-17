@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 245,
-  "headHash": "cd1a2c928507d048546ba1b76a75af2741984c658915b9990cb2a21f8c2dd264",
+  "headSeq": 528,
+  "headHash": "276889813ccb3e040e2f1f04e23260992fad5a4372639e9247870756c8606c93",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -222,6 +222,701 @@
       "id": "iter-global-export",
       "type": "iteration",
       "text": "AGENTS global do OMP manda ler so a vizinhanca (export <no>) ao iniciar; OMP sem hook de sessao, entao a regra vale como instrucao, nao automatica"
+    },
+    {
+      "id": "jev-cerebro-passo-3",
+      "type": "decision",
+      "text": "JEV consenso lider migrate_plans; spec 88d96363581498a6; recibo sha256 f5c971b8a6eab00414d41531856b8618387f322ba908da6e0dfcf9a3ed966233. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "plan-cerebro-grafo",
+      "type": "fact",
+      "text": "Plano migrado de docs/specs/cerebro-grafo/plan.md; git 3faf6cf blob ba62cd023694d510144d2a2a877859d5eac1dbf1; 18 linhas em 19 nos plan-cerebro-grafo-N."
+    },
+    {
+      "id": "plan-cerebro-grafo-1",
+      "type": "fact",
+      "text": "Plano: Grafo documental do cerebro v2"
+    },
+    {
+      "id": "plan-cerebro-grafo-2",
+      "type": "fact",
+      "text": "Abordagem"
+    },
+    {
+      "id": "plan-cerebro-grafo-3",
+      "type": "fact",
+      "text": "Registrar cada adicao, vinculo ou retratacao em `docs/_meta/cerebro/events.jsonl`, sem editar eventos anteriores; cada mutacao materializa `graph.v2.json`."
+    },
+    {
+      "id": "plan-cerebro-grafo-4",
+      "type": "fact",
+      "text": "`export` usa `exportCompact`, que apenas le o log e o derivado e retorna um `DecisionSpec` compacto. Nao reescreve `graph.v2.json`."
+    },
+    {
+      "id": "plan-cerebro-grafo-5",
+      "type": "fact",
+      "text": "Oferecer estes comandos em `scripts/cerebro.ts`: `bun scripts/cerebro.ts add-node <tipo> <id> <texto> [ids-link-com-virgula]`, `bun scripts/cerebro.ts link <origem> <destino>`, `bun scripts/cerebro.ts retract <id> <motivo>`, `bun scripts/cerebro.ts export` e `bun"
+    },
+    {
+      "id": "plan-cerebro-grafo-6",
+      "type": "fact",
+      "text": "scripts/cerebro.ts verify`."
+    },
+    {
+      "id": "plan-cerebro-grafo-7",
+      "type": "fact",
+      "text": "A exportacao limita o texto a 300 caracteres e aplica o filtro de segredo/endereco de `parseSpec`."
+    },
+    {
+      "id": "plan-cerebro-grafo-8",
+      "type": "fact",
+      "text": "Isolar a implementacao de v2: `graph.json` v1, curadoria, fontes e `outputs.json` ficam byte a byte inalterados."
+    },
+    {
+      "id": "plan-cerebro-grafo-9",
+      "type": "fact",
+      "text": "Arquivos"
+    },
+    {
+      "id": "plan-cerebro-grafo-10",
+      "type": "fact",
+      "text": "Alteracoes de implementacao previstas: `scripts/cerebro.ts`, `scripts/cerebro.test.ts`, `docs/_meta/cerebro/events.jsonl` e `docs/_meta/cerebro/graph.v2.json`."
+    },
+    {
+      "id": "plan-cerebro-grafo-11",
+      "type": "fact",
+      "text": "Controles v1 preservados: `graph.json`, curadoria, fontes e `outputs.json`."
+    },
+    {
+      "id": "plan-cerebro-grafo-12",
+      "type": "fact",
+      "text": "Esta entrega documental nao altera script, teste, log de eventos ou grafo."
+    },
+    {
+      "id": "plan-cerebro-grafo-13",
+      "type": "fact",
+      "text": "Trade-offs e riscos"
+    },
+    {
+      "id": "plan-cerebro-grafo-14",
+      "type": "fact",
+      "text": "O log append-only preserva a historia; o derivado e materializado pelas mutacoes e conferido por recomputacao em `verify`."
+    },
+    {
+      "id": "plan-cerebro-grafo-15",
+      "type": "fact",
+      "text": "Uma retratacao conserva o evento anterior; apagar ou reescrever esconderia historico e nao e permitido."
+    },
+    {
+      "id": "plan-cerebro-grafo-16",
+      "type": "fact",
+      "text": "`export` e somente leitura: usa log e derivado, retorna `DecisionSpec` de ate 300 caracteres filtrado por `parseSpec`, sem reescrever arquivos."
+    },
+    {
+      "id": "plan-cerebro-grafo-17",
+      "type": "fact",
+      "text": "`verify` cobre a chain de eventos, retratacoes, igualdade do derivado recomputado e hashes v1."
+    },
+    {
+      "id": "plan-cerebro-grafo-18",
+      "type": "fact",
+      "text": "Nao fazer chamada paga ao JEV durante o trabalho. Encaminhar a ele cada decisao de design pendente antes de implementa-la."
+    },
+    {
+      "id": "plan-cerebro-grafo-19",
+      "type": "fact",
+      "text": "A verificacao da implementacao deve usar `bun --no-env-file test scripts/cerebro.test.ts`, cobrindo comandos, chain de eventos, retratacao, derivado por recomputacao e hashes dos artefatos v1."
+    },
+    {
+      "id": "plan-decisao-executavel-jev",
+      "type": "fact",
+      "text": "Plano migrado de docs/specs/decisao-executavel-jev/plan.md; git 3faf6cf blob 2059b8a626c98e0fd0b00913b950de415e44707a; 16 linhas em 20 nos plan-decisao-executavel-jev-N."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-1",
+      "type": "fact",
+      "text": "Plano: evidência executável no Brief do JEV"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-2",
+      "type": "fact",
+      "text": "Abordagem"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-3",
+      "type": "fact",
+      "text": "Preservar a fronteira isolada da entrega em dois cortes funcionais independentes e uma integração:"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-4",
+      "type": "fact",
+      "text": "Sonda e projeção: distinguir recusa, falha e desconhecido, todos com TTL curto existente de 60 segundos. Uma observação com impacto numérico finito usa o TTL existente de 5 minutos. Impacto só é aplicável quando finito. Após expiração, uma nova observação bem-sucedida permite"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-5",
+      "type": "fact",
+      "text": "reavaliar. Preservar os triggers existentes, filtros, limites e ordenação. Em `report.view`, manter causa correta e reservar uma das quatro marcas para a recusa, sem nova marcação de valor abaixo do mínimo."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-6",
+      "type": "fact",
+      "text": "Brief de posições: serializar `posicoes.t` apenas quando houver alertas, preservando seus códigos e a legenda `posicoes.g`. Não afirmar ausência de `t` no HEAD limpo."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-7",
+      "type": "fact",
+      "text": "Integração: revisar somente a fatia autorizada, rodar os testes e smokes listados em nos `spec-*` do grafo, atualizar evidências, efetuar commit e atualizar o software local apenas após gates aprovados e conferência de estado. Não reiniciar, publicar ou disparar operação"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-8",
+      "type": "fact",
+      "text": "financeira sem autorização específica; não alterar live, risco, cadência, orçamento, credenciais ou schema."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-9",
+      "type": "fact",
+      "text": "Arquivos e fronteira"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-10",
+      "type": "fact",
+      "text": "O port documental está limitado a `docs/specs/decisao-executavel-jev/{spec,plan,tasks,status}.md` e uma ligação mínima em `docs/index.md` na árvore limpa. Nenhum código ou documento de outra sessão entra nesta entrega. A referência `C:/Users/gabri/jev-trader` não é fonte de prova"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-11",
+      "type": "fact",
+      "text": "para este commit e não deve ser alterada."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-12",
+      "type": "fact",
+      "text": "Riscos e trade-offs"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-13",
+      "type": "fact",
+      "text": "Falha e desconhecido não são recusa explícita; confundi-los bloquearia indevidamente a avaliação."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-14",
+      "type": "fact",
+      "text": "Expiração permite reavaliação, mas não comprova que falhas posteriores à execução eram detectáveis pela sonda."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-15",
+      "type": "fact",
+      "text": "O relatório tem limite de quatro marcas; garantir a causa da recusa sem alterar o schema."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-16",
+      "type": "fact",
+      "text": "O processo instalado reportou versão `0.0.2` e `startedAt` `1792077348955`; esses dados não identificam hash de commit nem provam que contém este port."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-17",
+      "type": "fact",
+      "text": "Não tratar gates anteriores do checkout de referência como prova das mudanças isoladas."
+    },
+    {
+      "id": "plan-decisao-executavel-jev-18",
+      "type": "fact",
+      "text": "Verificação"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-19",
+      "type": "fact",
+      "text": "A integração executou os testes de regressão e smokes previstos, `bun run typecheck`, `bun run test` e `bun run test:lab`; build e selftest qualificado também passaram. Resultados observados constam em nos `spec-*` do grafo. Revisão sem findings. O commit está pendente e a"
+    },
+    {
+      "id": "plan-decisao-executavel-jev-20",
+      "type": "fact",
+      "text": "atualização local permanece bloqueada até reconciliação das operações incertas e quiescência autorizada."
+    },
+    {
+      "id": "plan-autoresearch-real-online",
+      "type": "fact",
+      "text": "Plano migrado de docs/specs/autoresearch-real-online/plan.md; git 3faf6cf blob 0f1542472dfbe0ed4bcd1f5cec7d55d0252d1029; 34 linhas em 41 nos plan-autoresearch-real-online-N."
+    },
+    {
+      "id": "plan-autoresearch-real-online-1",
+      "type": "fact",
+      "text": "Plan: cutover real online do autoresearch"
+    },
+    {
+      "id": "plan-autoresearch-real-online-2",
+      "type": "fact",
+      "text": "Status: implementado e revisado, gate real online e verificacao obrigatoria aprovados"
+    },
+    {
+      "id": "plan-autoresearch-real-online-3",
+      "type": "fact",
+      "text": "Abordagem e contratos"
+    },
+    {
+      "id": "plan-autoresearch-real-online-4",
+      "type": "fact",
+      "text": "O caminho canonico passa a ser coletor/avaliador observacional. A fonte das escolhas e o processo existente, nao uma politica local de substituicao. Nao instanciar wire, Market, scheduler, executor ou cliente JEV para realizar a coleta."
+    },
+    {
+      "id": "plan-autoresearch-real-online-5",
+      "type": "fact",
+      "text": "Coletar por GET o health e os agregados/registro de ordens passivos do runtime local. Usar Origin/Host ja permitidos, sem mudar guards ou autenticar de outra forma. A leitura de ledger e limitada e nunca prova completude global."
+    },
+    {
+      "id": "plan-autoresearch-real-online-6",
+      "type": "fact",
+      "text": "Consultar o provedor publico OKX existente para relogio e mercado real. Preco CEX e contexto de mercado, nao preco executavel de swaps nem avaliacao de tokens diferentes. Validar esquema, horario do provedor, resposta, timeout e redirecionamento; falha nao substitui dados reais"
+    },
+    {
+      "id": "plan-autoresearch-real-online-7",
+      "type": "fact",
+      "text": "por fixture."
+    },
+    {
+      "id": "plan-autoresearch-real-online-8",
+      "type": "fact",
+      "text": "Construir em memoria `EvidenceSnapshot` a partir de campos numericos/booleanos explicitamente permitidos. A fonte preserva hash/instantes e limita o que afirma. Atributos privados/textos livres nao entram no report."
+    },
+    {
+      "id": "plan-autoresearch-real-online-9",
+      "type": "fact",
+      "text": "Reutilizar `buildPanelReport` e o catalogo existente para mostrar cobertura, lacunas e pontos fracos de todas as superficies. Adaptar linguagem que presume snapshot congelado; nao ampliar semanticas financeiras. Dado ausente ou fato sem instante verificavel permanece unknown."
+    },
+    {
+      "id": "plan-autoresearch-real-online-10",
+      "type": "fact",
+      "text": "Cada invocacao do CLI registra uma observacao real. Invocacoes consecutivas nao implicam decisoes novas; o instante da ultima consulta registrada aparece separado. Nao criar daemon nem alterar a cadencia do agente. Resultados operacionais nao substituem primaria financeira: sem"
+    },
+    {
+      "id": "plan-autoresearch-real-online-11",
+      "type": "fact",
+      "text": "resultado liquido conciliado nao ha score de promocao."
+    },
+    {
+      "id": "plan-autoresearch-real-online-12",
+      "type": "fact",
+      "text": "Remover do caminho de autoresearch o workload/candidato artificiais, a fixture versionada e o congelador exclusivo dessa baseline, migrando seus consumidores pertinentes. Preservar historico documental como historico superado, nao como instrucoes de execucao atual. Nao remover os"
+    },
+    {
+      "id": "plan-autoresearch-real-online-13",
+      "type": "fact",
+      "text": "laboratorios independentes do produto."
+    },
+    {
+      "id": "plan-autoresearch-real-online-14",
+      "type": "fact",
+      "text": "Fatias e ownership"
+    },
+    {
+      "id": "plan-autoresearch-real-online-15",
+      "type": "fact",
+      "text": "Integrador: este SDD, CLI `scripts/autoresearch.ts`, wrapper `autoresearch.sh`, contrato compartilhado, cutover de paths legados e documentacao canonica."
+    },
+    {
+      "id": "plan-autoresearch-real-online-16",
+      "type": "fact",
+      "text": "Coletor: modulo de leitura online independente em `scripts/autoresearch/`; validacao das fontes, erros constantes e proveniencia sanitizada; nenhum import financeiro com side effect."
+    },
+    {
+      "id": "plan-autoresearch-real-online-17",
+      "type": "fact",
+      "text": "Projetor: modulo de projecao real em `scripts/autoresearch/`, `panel-metrics.ts` e consumidores de testes afetados; relatorio de observacoes, lacunas e metricas sem inventar resultado."
+    },
+    {
+      "id": "plan-autoresearch-real-online-18",
+      "type": "fact",
+      "text": "Antes de edicoes paralelas, o integrador fixa as interfaces concretas compartilhadas no contrato. Cada fatia altera apenas seus arquivos. Referencias LSP foram tentadas para exports legados; referencias incompletas do servidor exigem tambem verificacao textual dos consumidores"
+    },
+    {
+      "id": "plan-autoresearch-real-online-19",
+      "type": "fact",
+      "text": "conhecidos. Sem build/lint/tests/formatters intermediarios pelos agentes; a verificacao integrada ocorre uma vez apos a composicao."
+    },
+    {
+      "id": "plan-autoresearch-real-online-20",
+      "type": "fact",
+      "text": "Tradeoffs e riscos"
+    },
+    {
+      "id": "plan-autoresearch-real-online-21",
+      "type": "fact",
+      "text": "Online nao e deterministico: cada rodada e nova observacao e fica identificada por horario/hash. Nao comparar sua nota com a baseline sintetica."
+    },
+    {
+      "id": "plan-autoresearch-real-online-22",
+      "type": "fact",
+      "text": "Um endpoint online pode retornar uma janela historica ou cache. Preservar o instante original e reportar atraso/ausencia de decisao nova, nao contar polling como inteligencia nova."
+    },
+    {
+      "id": "plan-autoresearch-real-online-23",
+      "type": "fact",
+      "text": "Ledger limitado, analise por simbolo e markouts da UI nao sao reconciliacao integral. Round trips/variacao bruta/custos nativos permanecem separados de PnL USD liquido."
+    },
+    {
+      "id": "plan-autoresearch-real-online-24",
+      "type": "fact",
+      "text": "O funil local cobre as ultimas 25 consultas e a timeline as ultimas 30. `hist.fresh` classifica o criterio `rank-v1`, nao recencia temporal. A projecao pode estar em cache por cinco segundos; somente timestamps dos fatos servem para avaliar idade das decisoes."
+    },
+    {
+      "id": "plan-autoresearch-real-online-25",
+      "type": "fact",
+      "text": "A rota de analise substitui `pBuy` ausente por zero em `asks[].p`. Esse campo e ambiguo e nao prova score Choice zero; a projecao conserva a lacuna, sem inferir dado faltante. Preferencia tambem nao e probabilidade de lucro."
+    },
+    {
+      "id": "plan-autoresearch-real-online-26",
+      "type": "fact",
+      "text": "Atribuir uma decisao ao JEV exige evidencia de `CycleRecord.modelo` e vinculo univoco; timestamp ou nome do processo nao bastam. A cauda limitada do ledger nao permite presumir esse vinculo para todo o historico da analise."
+    },
+    {
+      "id": "plan-autoresearch-real-online-27",
+      "type": "fact",
+      "text": "O processo instalado pode ter uma versao anterior ao codigo. Identificar o processo observado e nao alegar que melhorias nao instaladas ja estao em uso."
+    },
+    {
+      "id": "plan-autoresearch-real-online-28",
+      "type": "fact",
+      "text": "Coleta indisponivel deve terminar com erro, sem imprimir dados financeiros substitutos. Nao tentar corrigir credenciais, risco, sessao ou ordens como efeito lateral."
+    },
+    {
+      "id": "plan-autoresearch-real-online-29",
+      "type": "fact",
+      "text": "Limites de coleta: timeout de 15 segundos, ate 4 MiB por resposta, ate 120 segundos de atraso para projecao local e cotacao publica e tolerancia de relogio futuro de 30 segundos. `health.startedAt` identifica o processo e nunca rejuvenesce os fatos de decisao."
+    },
+    {
+      "id": "plan-autoresearch-real-online-30",
+      "type": "fact",
+      "text": "Execucao canonica"
+    },
+    {
+      "id": "plan-autoresearch-real-online-31",
+      "type": "fact",
+      "text": "Na raiz do repositorio, com o processo local ja em execucao e acesso HTTPS publico a OKX:"
+    },
+    {
+      "id": "plan-autoresearch-real-online-32",
+      "type": "fact",
+      "text": "```sh"
+    },
+    {
+      "id": "plan-autoresearch-real-online-33",
+      "type": "fact",
+      "text": "bash autoresearch.sh"
+    },
+    {
+      "id": "plan-autoresearch-real-online-34",
+      "type": "fact",
+      "text": "```"
+    },
+    {
+      "id": "plan-autoresearch-real-online-35",
+      "type": "fact",
+      "text": "O wrapper usa `bun --no-env-file` e o CLI faz uma coleta por invocacao. Nao le fixtures, `.env` ou journals locais como fonte alternativa. Apenas GET de `/health`, `/agent/analysis`, `/agent/ledger?n=200` e do relogio/ticker publico OKX. O Origin permitido acompanha a origem"
+    },
+    {
+      "id": "plan-autoresearch-real-online-36",
+      "type": "fact",
+      "text": "loopback ja existente."
+    },
+    {
+      "id": "plan-autoresearch-real-online-37",
+      "type": "fact",
+      "text": "Saida bem-sucedida: `ASI measurement_class=real_online_observation`, numeros finitos em `METRIC` e JSON sanitizado em `REPORT`. Sem primaria financeira conciliada, `optimization_eligible=false`; cobertura operacional nao e score de promocao. Falha de fonte requerida encerra com"
+    },
+    {
+      "id": "plan-autoresearch-real-online-38",
+      "type": "fact",
+      "text": "erro constante e codigo nao zero, sem REPORT de sucesso nem fallback. Invocar novamente coleta outra observacao, nao necessariamente outra decisao."
+    },
+    {
+      "id": "plan-autoresearch-real-online-39",
+      "type": "fact",
+      "text": "Gates e aprovacao"
+    },
+    {
+      "id": "plan-autoresearch-real-online-40",
+      "type": "fact",
+      "text": "A revisao independente deste spec/plan e dos contratos concretos antecede implementacao. Nenhuma consulta paga nova ao JEV e autorizada por este plano. A revisao de codigo, a execucao real online e os gates do AGENTS antecedem a integracao final. O smoke financeiro e somente"
+    },
+    {
+      "id": "plan-autoresearch-real-online-41",
+      "type": "fact",
+      "text": "leitura, sem transacao."
+    },
+    {
+      "id": "plan-autoresearch-decisoes",
+      "type": "fact",
+      "text": "Plano migrado de docs/specs/autoresearch-decisoes/plan.md; git 3faf6cf blob 1d67034c468f00f7c4f6d4335399ccff166d772f; 43 linhas em 53 nos plan-autoresearch-decisoes-N."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-1",
+      "type": "fact",
+      "text": "--"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-2",
+      "type": "fact",
+      "text": "title: \"Autoresearch de decisoes: plano tecnico\""
+    },
+    {
+      "id": "plan-autoresearch-decisoes-3",
+      "type": "fact",
+      "text": "created: 2026-10-16"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-4",
+      "type": "fact",
+      "text": "updated: 2026-10-16"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-5",
+      "type": "fact",
+      "text": "type: summary"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-6",
+      "type": "fact",
+      "text": "tags: [\"jev\", \"pesquisa\", \"backtest\"]"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-7",
+      "type": "fact",
+      "text": "sources: [\"docs/specs/autoresearch-decisoes/spec.md\", \"src/lab/run.ts\", \"src/agent/shadow/sim-portfolio.ts\"]"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-8",
+      "type": "fact",
+      "text": "confidence: medium"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-9",
+      "type": "fact",
+      "text": "--"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-10",
+      "type": "fact",
+      "text": "Plano tecnico"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-11",
+      "type": "fact",
+      "text": "Navegacao: [[inteligencia-e-resultados]] e [[laboratorio-e-paper]]. [Especificacao](spec.md). Tarefas e estado: nos `spec-*` do grafo."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-12",
+      "type": "fact",
+      "text": "Historico superado: nao executar o workload nem o congelador descritos abaixo. Eles foram substituidos pelo [plano real online](../autoresearch-real-online/plan.md); comandos e caminhos desta baseline sao somente registro historico."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-13",
+      "type": "fact",
+      "text": "Abordagem"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-14",
+      "type": "fact",
+      "text": "Reutilizar o laboratorio puro existente (`src/lab/{source,policies,run,journal,outcomes,stats}.ts`) para executar decisoes e outcomes sinteticos deterministas. Nao instanciar chooser SDK nem MockJevChooser. A politica candidata comeca como adaptacao transparente de"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-15",
+      "type": "fact",
+      "text": "`momentumRulePolicy`; a ancestral vem diretamente do modulo existente, fora do escopo de otimizacao. A comparacao e por epoch pareado, nao por medias de coortes diferentes. Desconsiderar metrica de calibracao gerada a partir de preferencias."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-16",
+      "type": "fact",
+      "text": "Usar `src/agent/shadow/sim-portfolio.ts` para o stress de carteira. Nenhum modulo vivo e editado. O workload nao depende dos arquivos data/ nem de credenciais. Um congelador separado le capturas publicas, projecoes explicitamente permitidas e journals selecionados no home"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-17",
+      "type": "fact",
+      "text": "autoritativo do runtime. Esse home e resolvido pelo contrato desktop existente, ou informado explicitamente ao congelador; nao presumir que esteja no checkout. A saida e um snapshot sanitizado novo para a baseline. Metadados de origem, hashes e limites acompanham os agregados,"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-18",
+      "type": "fact",
+      "text": "sem caminhos pessoais. O benchmark so le esse snapshot versionado."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-19",
+      "type": "fact",
+      "text": "Arquivos e donos de integracao"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-20",
+      "type": "fact",
+      "text": "`autoresearch.sh`, `scripts/autoresearch.ts`, `scripts/autoresearch/contracts.ts`: integracao central, saida estavel e contrato compartilhado."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-21",
+      "type": "fact",
+      "text": "`scripts/autoresearch/{candidate,workload}.ts`: politica isolada, execucao de laboratorio e stress financeiro."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-22",
+      "type": "fact",
+      "text": "`scripts/autoresearch/panel-metrics.ts`: inventario de todas as superficies, estados por metrica e diagnostico de fraquezas."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-23",
+      "type": "fact",
+      "text": "`scripts/autoresearch/freeze-evidence.ts`, `scripts/autoresearch/fixtures/evidence.json`: congelamento sanitizado de agregados reais e proveniencia. O congelador nao roda em ciclos normais."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-24",
+      "type": "fact",
+      "text": "`docs/specs/autoresearch-decisoes/` e indice documental: escopo, limites, procedimento e evidencias de verificacao."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-25",
+      "type": "fact",
+      "text": "Contrato: `runWorkload(): Promise<WorkloadResult>`, com `metrics: Record<string, number>` e `report: unknown`. `buildPanelReport(snapshot: EvidenceSnapshot)` retorna relatorio determinista. `EvidenceSnapshot` usa schemaVersion=1, fontes com"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-26",
+      "type": "fact",
+      "text": "id/path/hash/asOfMs/classification/limitations e medicoes com id/value/unit/status/reason/sourceId. `status` distingue observed, derived e unknown; null sempre traz motivo. Nunca incluir enderecos, texto de modelo, carteira ou segredo."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-27",
+      "type": "fact",
+      "text": "Tradeoffs"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-28",
+      "type": "fact",
+      "text": "Sem rede nao ha novas respostas do JEV. O benchmark mede mecanica, comparacao de politica transparente e diagnosticos congelados; nao comprova inteligencia do modelo, vantagem DEX ou retorno futuro. Usar retorno sintetico explicitamente nomeado evita apresentar custo proxy como"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-29",
+      "type": "fact",
+      "text": "custo real. Nao fabricar um score financeiro observado quando a evidencia nao o permite."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-30",
+      "type": "fact",
+      "text": "Limites do experimento"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-31",
+      "type": "fact",
+      "text": "O avaliador, fixtures, ancestral e inventario ficam off-limits na Fase 2. Escopo inicial de otimizacao: somente `scripts/autoresearch/candidate.ts`; qualquer mudanca de contrato/dados requer nova baseline, nao comparacao com a anterior. Nao liberar live nem promover por benchmark"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-32",
+      "type": "fact",
+      "text": "sintetico. A meta financeira permanece nao demonstrada e nao e criterio automatico de encerramento bem-sucedido."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-33",
+      "type": "fact",
+      "text": "Revisao antes da implementacao"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-34",
+      "type": "fact",
+      "text": "Especificacao e plano submetidos a revisao tecnica independente antes de implementar. Nenhuma consulta paga ao Jev foi feita ou sera alegada como aprovacao. Este plano operacionaliza contratos existentes, sem decidir novo perfil monetario ou parametro do agente vivo."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-35",
+      "type": "fact",
+      "text": "Execucao canonica"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-36",
+      "type": "fact",
+      "text": "Na raiz do repositorio, com Bun instalado:"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-37",
+      "type": "fact",
+      "text": "```sh"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-38",
+      "type": "fact",
+      "text": "bash autoresearch.sh"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-39",
+      "type": "fact",
+      "text": "```"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-40",
+      "type": "fact",
+      "text": "O script usa `bun --no-env-file`, le somente o snapshot versionado e executa o workload em memoria. Saida: `METRIC nome=valor` para numeros finitos, `ASI` para hashes e classe de medicao, e `REPORT` com JSON contendo todas as metricas do painel, lacunas e limites da meta. Falha"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-41",
+      "type": "fact",
+      "text": "de execucao ou ausencia de pares elegiveis deve encerrar com codigo diferente de zero."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-42",
+      "type": "fact",
+      "text": "O snapshot e historico e imutavel durante os ciclos. Portanto, sua analise e repetivel, nao um monitor de saldo vivo. Atualizar dados exige congelamento explicito e nova baseline. Ausencia da pasta local `data/` nao impede repetir uma baseline ja congelada."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-43",
+      "type": "fact",
+      "text": "O protocolo aprovado e a revisao documental nao substituem a evidencia de execucao. Resultados observados ficam em nos `spec-*` do grafo. Nao ha inferencia nova JEV, ordens reais nem qualificacao de estrategia neste comando."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-44",
+      "type": "fact",
+      "text": "Gate antes de registrar a baseline"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-45",
+      "type": "fact",
+      "text": "`init_experiment` faz commit automaticamente. Portanto, a revisao do diff e os comandos obrigatorios do AGENTS.md devem passar antes dessa chamada, inclusive quando as falhas encontradas forem anteriores ao harness. Registrar falhas conhecidas nao substitui o gate. Reparos de"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-46",
+      "type": "fact",
+      "text": "isolamento dos testes ficam separados de melhorias da politica e nao alteram avaliador, dados, credenciais ou risco."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-47",
+      "type": "fact",
+      "text": "Atualizacao deliberada dos dados"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-48",
+      "type": "fact",
+      "text": "O congelador e separado do benchmark. Nao execute durante uma comparacao em andamento. Para preparar outra baseline, use `bun --no-env-file run scripts/autoresearch/freeze-evidence.ts --runtime-home \"<home absoluto>\"`, com o home configurado no watchdog/launcher, nao o diretorio"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-49",
+      "type": "fact",
+      "text": "do executavel. A gravacao permitida e somente `scripts/autoresearch/fixtures/evidence.json`; os arquivos fonte sao somente leitura."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-50",
+      "type": "fact",
+      "text": "Projecoes numericas de `equity.jsonl` nao preservam classificacao de caixa/reserva. Fluxos e PnL calculados pelos projetores existentes sao inferidos a partir de mudancas de unidades, nao conciliacao externa de depositos e saques nem retorno liquido auditado. A origem dos dados e"
+    },
+    {
+      "id": "plan-autoresearch-decisoes-51",
+      "type": "fact",
+      "text": "declarada pelo produtor e nao autenticada. Precos nulos/zero ambiguos e custos desconhecidos permanecem lacunas, nunca prova de 10x."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-52",
+      "type": "fact",
+      "text": "Contadores de uso distinguem custo medido de estimativa. Estado diario de budget sem configuracao nao estabelece o limite efetivo. Preferencias, mais ordens, cobertura do painel e ocupacao de caixa nao sao alvos de retorno."
+    },
+    {
+      "id": "plan-autoresearch-decisoes-53",
+      "type": "fact",
+      "text": "Uma nova baseline requer rever os parsers, projetores e limites atuais; nao adaptar dados ou avaliador para melhorar o placar da baseline antiga. O esquema dos journals nao e migrado por este procedimento."
+    },
+    {
+      "id": "iter-migrar-plans",
+      "type": "iteration",
+      "text": "4 plan.md viraram nos plan-<spec>-N com commit 3faf6cf e blob git; originais apagados; links de index e specs trocados. spec.md fica como contrato humano (consenso JEV migrate_plans)"
     }
   ],
   "edges": [
@@ -1214,6 +1909,726 @@
       "from": "iter-hook-export",
       "to": "iter-global-export",
       "seq": 245
+    },
+    {
+      "from": "iter-global-export",
+      "to": "jev-cerebro-passo-3",
+      "seq": 247
+    },
+    {
+      "from": "spec-cerebro-grafo",
+      "to": "plan-cerebro-grafo",
+      "seq": 249
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "plan-cerebro-grafo-1",
+      "seq": 251
+    },
+    {
+      "from": "plan-cerebro-grafo-1",
+      "to": "plan-cerebro-grafo-2",
+      "seq": 253
+    },
+    {
+      "from": "plan-cerebro-grafo-2",
+      "to": "plan-cerebro-grafo-3",
+      "seq": 255
+    },
+    {
+      "from": "plan-cerebro-grafo-3",
+      "to": "plan-cerebro-grafo-4",
+      "seq": 257
+    },
+    {
+      "from": "plan-cerebro-grafo-4",
+      "to": "plan-cerebro-grafo-5",
+      "seq": 259
+    },
+    {
+      "from": "plan-cerebro-grafo-5",
+      "to": "plan-cerebro-grafo-6",
+      "seq": 261
+    },
+    {
+      "from": "plan-cerebro-grafo-6",
+      "to": "plan-cerebro-grafo-7",
+      "seq": 263
+    },
+    {
+      "from": "plan-cerebro-grafo-7",
+      "to": "plan-cerebro-grafo-8",
+      "seq": 265
+    },
+    {
+      "from": "plan-cerebro-grafo-8",
+      "to": "plan-cerebro-grafo-9",
+      "seq": 267
+    },
+    {
+      "from": "plan-cerebro-grafo-9",
+      "to": "plan-cerebro-grafo-10",
+      "seq": 269
+    },
+    {
+      "from": "plan-cerebro-grafo-10",
+      "to": "plan-cerebro-grafo-11",
+      "seq": 271
+    },
+    {
+      "from": "plan-cerebro-grafo-11",
+      "to": "plan-cerebro-grafo-12",
+      "seq": 273
+    },
+    {
+      "from": "plan-cerebro-grafo-12",
+      "to": "plan-cerebro-grafo-13",
+      "seq": 275
+    },
+    {
+      "from": "plan-cerebro-grafo-13",
+      "to": "plan-cerebro-grafo-14",
+      "seq": 277
+    },
+    {
+      "from": "plan-cerebro-grafo-14",
+      "to": "plan-cerebro-grafo-15",
+      "seq": 279
+    },
+    {
+      "from": "plan-cerebro-grafo-15",
+      "to": "plan-cerebro-grafo-16",
+      "seq": 281
+    },
+    {
+      "from": "plan-cerebro-grafo-16",
+      "to": "plan-cerebro-grafo-17",
+      "seq": 283
+    },
+    {
+      "from": "plan-cerebro-grafo-17",
+      "to": "plan-cerebro-grafo-18",
+      "seq": 285
+    },
+    {
+      "from": "plan-cerebro-grafo-18",
+      "to": "plan-cerebro-grafo-19",
+      "seq": 287
+    },
+    {
+      "from": "spec-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev",
+      "seq": 289
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "plan-decisao-executavel-jev-1",
+      "seq": 291
+    },
+    {
+      "from": "plan-decisao-executavel-jev-1",
+      "to": "plan-decisao-executavel-jev-2",
+      "seq": 293
+    },
+    {
+      "from": "plan-decisao-executavel-jev-2",
+      "to": "plan-decisao-executavel-jev-3",
+      "seq": 295
+    },
+    {
+      "from": "plan-decisao-executavel-jev-3",
+      "to": "plan-decisao-executavel-jev-4",
+      "seq": 297
+    },
+    {
+      "from": "plan-decisao-executavel-jev-4",
+      "to": "plan-decisao-executavel-jev-5",
+      "seq": 299
+    },
+    {
+      "from": "plan-decisao-executavel-jev-5",
+      "to": "plan-decisao-executavel-jev-6",
+      "seq": 301
+    },
+    {
+      "from": "plan-decisao-executavel-jev-6",
+      "to": "plan-decisao-executavel-jev-7",
+      "seq": 303
+    },
+    {
+      "from": "plan-decisao-executavel-jev-7",
+      "to": "plan-decisao-executavel-jev-8",
+      "seq": 305
+    },
+    {
+      "from": "plan-decisao-executavel-jev-8",
+      "to": "plan-decisao-executavel-jev-9",
+      "seq": 307
+    },
+    {
+      "from": "plan-decisao-executavel-jev-9",
+      "to": "plan-decisao-executavel-jev-10",
+      "seq": 309
+    },
+    {
+      "from": "plan-decisao-executavel-jev-10",
+      "to": "plan-decisao-executavel-jev-11",
+      "seq": 311
+    },
+    {
+      "from": "plan-decisao-executavel-jev-11",
+      "to": "plan-decisao-executavel-jev-12",
+      "seq": 313
+    },
+    {
+      "from": "plan-decisao-executavel-jev-12",
+      "to": "plan-decisao-executavel-jev-13",
+      "seq": 315
+    },
+    {
+      "from": "plan-decisao-executavel-jev-13",
+      "to": "plan-decisao-executavel-jev-14",
+      "seq": 317
+    },
+    {
+      "from": "plan-decisao-executavel-jev-14",
+      "to": "plan-decisao-executavel-jev-15",
+      "seq": 319
+    },
+    {
+      "from": "plan-decisao-executavel-jev-15",
+      "to": "plan-decisao-executavel-jev-16",
+      "seq": 321
+    },
+    {
+      "from": "plan-decisao-executavel-jev-16",
+      "to": "plan-decisao-executavel-jev-17",
+      "seq": 323
+    },
+    {
+      "from": "plan-decisao-executavel-jev-17",
+      "to": "plan-decisao-executavel-jev-18",
+      "seq": 325
+    },
+    {
+      "from": "plan-decisao-executavel-jev-18",
+      "to": "plan-decisao-executavel-jev-19",
+      "seq": 327
+    },
+    {
+      "from": "plan-decisao-executavel-jev-19",
+      "to": "plan-decisao-executavel-jev-20",
+      "seq": 329
+    },
+    {
+      "from": "spec-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online",
+      "seq": 331
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "plan-autoresearch-real-online-1",
+      "seq": 333
+    },
+    {
+      "from": "plan-autoresearch-real-online-1",
+      "to": "plan-autoresearch-real-online-2",
+      "seq": 335
+    },
+    {
+      "from": "plan-autoresearch-real-online-2",
+      "to": "plan-autoresearch-real-online-3",
+      "seq": 337
+    },
+    {
+      "from": "plan-autoresearch-real-online-3",
+      "to": "plan-autoresearch-real-online-4",
+      "seq": 339
+    },
+    {
+      "from": "plan-autoresearch-real-online-4",
+      "to": "plan-autoresearch-real-online-5",
+      "seq": 341
+    },
+    {
+      "from": "plan-autoresearch-real-online-5",
+      "to": "plan-autoresearch-real-online-6",
+      "seq": 343
+    },
+    {
+      "from": "plan-autoresearch-real-online-6",
+      "to": "plan-autoresearch-real-online-7",
+      "seq": 345
+    },
+    {
+      "from": "plan-autoresearch-real-online-7",
+      "to": "plan-autoresearch-real-online-8",
+      "seq": 347
+    },
+    {
+      "from": "plan-autoresearch-real-online-8",
+      "to": "plan-autoresearch-real-online-9",
+      "seq": 349
+    },
+    {
+      "from": "plan-autoresearch-real-online-9",
+      "to": "plan-autoresearch-real-online-10",
+      "seq": 351
+    },
+    {
+      "from": "plan-autoresearch-real-online-10",
+      "to": "plan-autoresearch-real-online-11",
+      "seq": 353
+    },
+    {
+      "from": "plan-autoresearch-real-online-11",
+      "to": "plan-autoresearch-real-online-12",
+      "seq": 355
+    },
+    {
+      "from": "plan-autoresearch-real-online-12",
+      "to": "plan-autoresearch-real-online-13",
+      "seq": 357
+    },
+    {
+      "from": "plan-autoresearch-real-online-13",
+      "to": "plan-autoresearch-real-online-14",
+      "seq": 359
+    },
+    {
+      "from": "plan-autoresearch-real-online-14",
+      "to": "plan-autoresearch-real-online-15",
+      "seq": 361
+    },
+    {
+      "from": "plan-autoresearch-real-online-15",
+      "to": "plan-autoresearch-real-online-16",
+      "seq": 363
+    },
+    {
+      "from": "plan-autoresearch-real-online-16",
+      "to": "plan-autoresearch-real-online-17",
+      "seq": 365
+    },
+    {
+      "from": "plan-autoresearch-real-online-17",
+      "to": "plan-autoresearch-real-online-18",
+      "seq": 367
+    },
+    {
+      "from": "plan-autoresearch-real-online-18",
+      "to": "plan-autoresearch-real-online-19",
+      "seq": 369
+    },
+    {
+      "from": "plan-autoresearch-real-online-19",
+      "to": "plan-autoresearch-real-online-20",
+      "seq": 371
+    },
+    {
+      "from": "plan-autoresearch-real-online-20",
+      "to": "plan-autoresearch-real-online-21",
+      "seq": 373
+    },
+    {
+      "from": "plan-autoresearch-real-online-21",
+      "to": "plan-autoresearch-real-online-22",
+      "seq": 375
+    },
+    {
+      "from": "plan-autoresearch-real-online-22",
+      "to": "plan-autoresearch-real-online-23",
+      "seq": 377
+    },
+    {
+      "from": "plan-autoresearch-real-online-23",
+      "to": "plan-autoresearch-real-online-24",
+      "seq": 379
+    },
+    {
+      "from": "plan-autoresearch-real-online-24",
+      "to": "plan-autoresearch-real-online-25",
+      "seq": 381
+    },
+    {
+      "from": "plan-autoresearch-real-online-25",
+      "to": "plan-autoresearch-real-online-26",
+      "seq": 383
+    },
+    {
+      "from": "plan-autoresearch-real-online-26",
+      "to": "plan-autoresearch-real-online-27",
+      "seq": 385
+    },
+    {
+      "from": "plan-autoresearch-real-online-27",
+      "to": "plan-autoresearch-real-online-28",
+      "seq": 387
+    },
+    {
+      "from": "plan-autoresearch-real-online-28",
+      "to": "plan-autoresearch-real-online-29",
+      "seq": 389
+    },
+    {
+      "from": "plan-autoresearch-real-online-29",
+      "to": "plan-autoresearch-real-online-30",
+      "seq": 391
+    },
+    {
+      "from": "plan-autoresearch-real-online-30",
+      "to": "plan-autoresearch-real-online-31",
+      "seq": 393
+    },
+    {
+      "from": "plan-autoresearch-real-online-31",
+      "to": "plan-autoresearch-real-online-32",
+      "seq": 395
+    },
+    {
+      "from": "plan-autoresearch-real-online-32",
+      "to": "plan-autoresearch-real-online-33",
+      "seq": 397
+    },
+    {
+      "from": "plan-autoresearch-real-online-33",
+      "to": "plan-autoresearch-real-online-34",
+      "seq": 399
+    },
+    {
+      "from": "plan-autoresearch-real-online-34",
+      "to": "plan-autoresearch-real-online-35",
+      "seq": 401
+    },
+    {
+      "from": "plan-autoresearch-real-online-35",
+      "to": "plan-autoresearch-real-online-36",
+      "seq": 403
+    },
+    {
+      "from": "plan-autoresearch-real-online-36",
+      "to": "plan-autoresearch-real-online-37",
+      "seq": 405
+    },
+    {
+      "from": "plan-autoresearch-real-online-37",
+      "to": "plan-autoresearch-real-online-38",
+      "seq": 407
+    },
+    {
+      "from": "plan-autoresearch-real-online-38",
+      "to": "plan-autoresearch-real-online-39",
+      "seq": 409
+    },
+    {
+      "from": "plan-autoresearch-real-online-39",
+      "to": "plan-autoresearch-real-online-40",
+      "seq": 411
+    },
+    {
+      "from": "plan-autoresearch-real-online-40",
+      "to": "plan-autoresearch-real-online-41",
+      "seq": 413
+    },
+    {
+      "from": "spec-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes",
+      "seq": 415
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "plan-autoresearch-decisoes-1",
+      "seq": 417
+    },
+    {
+      "from": "plan-autoresearch-decisoes-1",
+      "to": "plan-autoresearch-decisoes-2",
+      "seq": 419
+    },
+    {
+      "from": "plan-autoresearch-decisoes-2",
+      "to": "plan-autoresearch-decisoes-3",
+      "seq": 421
+    },
+    {
+      "from": "plan-autoresearch-decisoes-3",
+      "to": "plan-autoresearch-decisoes-4",
+      "seq": 423
+    },
+    {
+      "from": "plan-autoresearch-decisoes-4",
+      "to": "plan-autoresearch-decisoes-5",
+      "seq": 425
+    },
+    {
+      "from": "plan-autoresearch-decisoes-5",
+      "to": "plan-autoresearch-decisoes-6",
+      "seq": 427
+    },
+    {
+      "from": "plan-autoresearch-decisoes-6",
+      "to": "plan-autoresearch-decisoes-7",
+      "seq": 429
+    },
+    {
+      "from": "plan-autoresearch-decisoes-7",
+      "to": "plan-autoresearch-decisoes-8",
+      "seq": 431
+    },
+    {
+      "from": "plan-autoresearch-decisoes-8",
+      "to": "plan-autoresearch-decisoes-9",
+      "seq": 433
+    },
+    {
+      "from": "plan-autoresearch-decisoes-9",
+      "to": "plan-autoresearch-decisoes-10",
+      "seq": 435
+    },
+    {
+      "from": "plan-autoresearch-decisoes-10",
+      "to": "plan-autoresearch-decisoes-11",
+      "seq": 437
+    },
+    {
+      "from": "plan-autoresearch-decisoes-11",
+      "to": "plan-autoresearch-decisoes-12",
+      "seq": 439
+    },
+    {
+      "from": "plan-autoresearch-decisoes-12",
+      "to": "plan-autoresearch-decisoes-13",
+      "seq": 441
+    },
+    {
+      "from": "plan-autoresearch-decisoes-13",
+      "to": "plan-autoresearch-decisoes-14",
+      "seq": 443
+    },
+    {
+      "from": "plan-autoresearch-decisoes-14",
+      "to": "plan-autoresearch-decisoes-15",
+      "seq": 445
+    },
+    {
+      "from": "plan-autoresearch-decisoes-15",
+      "to": "plan-autoresearch-decisoes-16",
+      "seq": 447
+    },
+    {
+      "from": "plan-autoresearch-decisoes-16",
+      "to": "plan-autoresearch-decisoes-17",
+      "seq": 449
+    },
+    {
+      "from": "plan-autoresearch-decisoes-17",
+      "to": "plan-autoresearch-decisoes-18",
+      "seq": 451
+    },
+    {
+      "from": "plan-autoresearch-decisoes-18",
+      "to": "plan-autoresearch-decisoes-19",
+      "seq": 453
+    },
+    {
+      "from": "plan-autoresearch-decisoes-19",
+      "to": "plan-autoresearch-decisoes-20",
+      "seq": 455
+    },
+    {
+      "from": "plan-autoresearch-decisoes-20",
+      "to": "plan-autoresearch-decisoes-21",
+      "seq": 457
+    },
+    {
+      "from": "plan-autoresearch-decisoes-21",
+      "to": "plan-autoresearch-decisoes-22",
+      "seq": 459
+    },
+    {
+      "from": "plan-autoresearch-decisoes-22",
+      "to": "plan-autoresearch-decisoes-23",
+      "seq": 461
+    },
+    {
+      "from": "plan-autoresearch-decisoes-23",
+      "to": "plan-autoresearch-decisoes-24",
+      "seq": 463
+    },
+    {
+      "from": "plan-autoresearch-decisoes-24",
+      "to": "plan-autoresearch-decisoes-25",
+      "seq": 465
+    },
+    {
+      "from": "plan-autoresearch-decisoes-25",
+      "to": "plan-autoresearch-decisoes-26",
+      "seq": 467
+    },
+    {
+      "from": "plan-autoresearch-decisoes-26",
+      "to": "plan-autoresearch-decisoes-27",
+      "seq": 469
+    },
+    {
+      "from": "plan-autoresearch-decisoes-27",
+      "to": "plan-autoresearch-decisoes-28",
+      "seq": 471
+    },
+    {
+      "from": "plan-autoresearch-decisoes-28",
+      "to": "plan-autoresearch-decisoes-29",
+      "seq": 473
+    },
+    {
+      "from": "plan-autoresearch-decisoes-29",
+      "to": "plan-autoresearch-decisoes-30",
+      "seq": 475
+    },
+    {
+      "from": "plan-autoresearch-decisoes-30",
+      "to": "plan-autoresearch-decisoes-31",
+      "seq": 477
+    },
+    {
+      "from": "plan-autoresearch-decisoes-31",
+      "to": "plan-autoresearch-decisoes-32",
+      "seq": 479
+    },
+    {
+      "from": "plan-autoresearch-decisoes-32",
+      "to": "plan-autoresearch-decisoes-33",
+      "seq": 481
+    },
+    {
+      "from": "plan-autoresearch-decisoes-33",
+      "to": "plan-autoresearch-decisoes-34",
+      "seq": 483
+    },
+    {
+      "from": "plan-autoresearch-decisoes-34",
+      "to": "plan-autoresearch-decisoes-35",
+      "seq": 485
+    },
+    {
+      "from": "plan-autoresearch-decisoes-35",
+      "to": "plan-autoresearch-decisoes-36",
+      "seq": 487
+    },
+    {
+      "from": "plan-autoresearch-decisoes-36",
+      "to": "plan-autoresearch-decisoes-37",
+      "seq": 489
+    },
+    {
+      "from": "plan-autoresearch-decisoes-37",
+      "to": "plan-autoresearch-decisoes-38",
+      "seq": 491
+    },
+    {
+      "from": "plan-autoresearch-decisoes-38",
+      "to": "plan-autoresearch-decisoes-39",
+      "seq": 493
+    },
+    {
+      "from": "plan-autoresearch-decisoes-39",
+      "to": "plan-autoresearch-decisoes-40",
+      "seq": 495
+    },
+    {
+      "from": "plan-autoresearch-decisoes-40",
+      "to": "plan-autoresearch-decisoes-41",
+      "seq": 497
+    },
+    {
+      "from": "plan-autoresearch-decisoes-41",
+      "to": "plan-autoresearch-decisoes-42",
+      "seq": 499
+    },
+    {
+      "from": "plan-autoresearch-decisoes-42",
+      "to": "plan-autoresearch-decisoes-43",
+      "seq": 501
+    },
+    {
+      "from": "plan-autoresearch-decisoes-43",
+      "to": "plan-autoresearch-decisoes-44",
+      "seq": 503
+    },
+    {
+      "from": "plan-autoresearch-decisoes-44",
+      "to": "plan-autoresearch-decisoes-45",
+      "seq": 505
+    },
+    {
+      "from": "plan-autoresearch-decisoes-45",
+      "to": "plan-autoresearch-decisoes-46",
+      "seq": 507
+    },
+    {
+      "from": "plan-autoresearch-decisoes-46",
+      "to": "plan-autoresearch-decisoes-47",
+      "seq": 509
+    },
+    {
+      "from": "plan-autoresearch-decisoes-47",
+      "to": "plan-autoresearch-decisoes-48",
+      "seq": 511
+    },
+    {
+      "from": "plan-autoresearch-decisoes-48",
+      "to": "plan-autoresearch-decisoes-49",
+      "seq": 513
+    },
+    {
+      "from": "plan-autoresearch-decisoes-49",
+      "to": "plan-autoresearch-decisoes-50",
+      "seq": 515
+    },
+    {
+      "from": "plan-autoresearch-decisoes-50",
+      "to": "plan-autoresearch-decisoes-51",
+      "seq": 517
+    },
+    {
+      "from": "plan-autoresearch-decisoes-51",
+      "to": "plan-autoresearch-decisoes-52",
+      "seq": 519
+    },
+    {
+      "from": "plan-autoresearch-decisoes-52",
+      "to": "plan-autoresearch-decisoes-53",
+      "seq": 521
+    },
+    {
+      "from": "jev-cerebro-passo-3",
+      "to": "iter-migrar-plans",
+      "seq": 523
+    },
+    {
+      "from": "iter-global-export",
+      "to": "iter-migrar-plans",
+      "seq": 524
+    },
+    {
+      "from": "plan-cerebro-grafo",
+      "to": "iter-migrar-plans",
+      "seq": 525
+    },
+    {
+      "from": "plan-decisao-executavel-jev",
+      "to": "iter-migrar-plans",
+      "seq": 526
+    },
+    {
+      "from": "plan-autoresearch-real-online",
+      "to": "iter-migrar-plans",
+      "seq": 527
+    },
+    {
+      "from": "plan-autoresearch-decisoes",
+      "to": "iter-migrar-plans",
+      "seq": 528
     }
   ],
   "retractions": [

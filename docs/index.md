@@ -13,7 +13,7 @@ confidence: medium
 ## Autoresearch real online (2026-10-16)
 
 - [Especificacao vigente](specs/autoresearch-real-online/spec.md): somente leituras reais online, desconhecidos preservados e nenhuma operacao financeira.
-- [Plano e execucao canonica](specs/autoresearch-real-online/plan.md). Estado, tarefas e verificacao: nos `spec-*` do grafo (`docs/_meta/cerebro`).
+- Plano e execucao canonica (nos `plan-autoresearch-real-online`). Estado, tarefas e verificacao: nos `spec-*` do grafo (`docs/_meta/cerebro`).
 - [Benchmark offline anterior](specs/autoresearch-decisoes/spec.md): historico superado por instrucao do usuario, nao e mais o procedimento de execucao.
 - [Decisão executável do JEV](specs/decisao-executavel-jev/spec.md): sonda, causa em `report.view`, alertas no Brief e estado da entrega local.
 - [Grafo documental v2](specs/cerebro-grafo/spec.md): eventos append-only, exportacao limitada para JEV e preservacao byte a byte do v1.

@@ -1,0 +1,185 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-3",
+    "specHash": "88d96363581498a6fec95b341a728611355e11563dd8a501b2c03d5034edee52",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "migrate_plans",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "migrate_plans",
+          "migrate_plans_specs",
+          "migrate_log",
+          "keep_files"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_plans",
+              "migrate_plans_specs",
+              "migrate_log",
+              "keep_files"
+            ],
+            "probs": {
+              "migrate_plans": 0.92,
+              "migrate_plans_specs": 0.01,
+              "migrate_log": 0.04,
+              "keep_files": 0.02,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_plans_specs",
+              "migrate_log",
+              "keep_files",
+              "migrate_plans"
+            ],
+            "probs": {
+              "migrate_plans_specs": 0.06,
+              "migrate_log": 0.07,
+              "keep_files": 0.01,
+              "migrate_plans": 0.85,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_log",
+              "keep_files",
+              "migrate_plans",
+              "migrate_plans_specs"
+            ],
+            "probs": {
+              "migrate_log": 0.19,
+              "keep_files": 0.02,
+              "migrate_plans": 0.75,
+              "migrate_plans_specs": 0.02,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "migrate_plans": 0.84,
+          "migrate_plans_specs": 0.03,
+          "migrate_log": 0.1,
+          "keep_files": 0.0167
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.74,
+        "leader": "migrate_plans",
+        "railProb": {
+          "migrate_plans": 0.04,
+          "migrate_plans_specs": 0.08,
+          "migrate_log": 0.06,
+          "keep_files": 0.06
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "migrate_plans",
+          "migrate_plans_specs",
+          "migrate_log",
+          "keep_files"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_plans",
+              "migrate_plans_specs",
+              "migrate_log",
+              "keep_files"
+            ],
+            "probs": {
+              "migrate_plans": 0.91,
+              "migrate_plans_specs": 0.01,
+              "migrate_log": 0.05,
+              "keep_files": 0.02,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_plans_specs",
+              "migrate_log",
+              "keep_files",
+              "migrate_plans"
+            ],
+            "probs": {
+              "migrate_plans_specs": 0.08,
+              "migrate_log": 0.08,
+              "keep_files": 0.02,
+              "migrate_plans": 0.8099999999999999,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_log",
+              "keep_files",
+              "migrate_plans",
+              "migrate_plans_specs"
+            ],
+            "probs": {
+              "migrate_log": 0.17,
+              "keep_files": 0.03,
+              "migrate_plans": 0.76,
+              "migrate_plans_specs": 0.02,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "migrate_plans": 0.8267,
+          "migrate_plans_specs": 0.0367,
+          "migrate_log": 0.1,
+          "keep_files": 0.0233
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.7267,
+        "leader": "migrate_plans",
+        "railProb": {
+          "migrate_plans": 0.04,
+          "migrate_plans_specs": 0.08,
+          "migrate_log": 0.06,
+          "keep_files": 0.06
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 10,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 10,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 9163,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}
