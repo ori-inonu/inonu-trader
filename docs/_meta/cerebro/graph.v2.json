@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 775,
-  "headHash": "09d9f359f39b64b6481522db7b47bad2a53791093b49c7aeccc6f0006f4306b0",
+  "headSeq": 802,
+  "headHash": "3bce0175b59f6763cf3f49a0e5b8d2707d968a321befc2ea1ea65c003ec12164",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1052,6 +1052,66 @@
       "id": "iter-stop-aviso",
       "type": "iteration",
       "text": "Consenso JEV stop_warn (passo 17): stop_verify.ts avisa no stderr se working tree ou ultimo commit mudou sem tocar events.jsonl; nunca bloqueia. Limite: um commit com grafo mascara o aviso do anterior"
+    },
+    {
+      "id": "jev-curadoria-3cdc3d81ade9",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec 58db8ded532bb72d; recibo sha256 b4c4a230122027de6f69a4713e169c7d92293cec06c8dbe5e28b669184fd11e1. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "mantidos-curadoria-3cdc3d81ade9",
+      "type": "event",
+      "text": "Mantidos sem decisao de esquecer (sem_consenso): iter-global-export,iter-migrar-plans,iter-plano-estrela,iter-log-congelado,iter-esquecer,iter-retratar-antigas,iter-research-congelado,iter-specs-congelados,iter-hook-omp"
+    },
+    {
+      "id": "jev-curadoria-cdb42b2f7648",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec d0602afa9c971f5d; recibo sha256 9ccac43302a435310ec123e7c17472d1571d39ab543d0ad6e4db19e9510c0e24. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "mantidos-curadoria-cdb42b2f7648",
+      "type": "event",
+      "text": "Mantidos sem decisao de esquecer (sem_consenso): iter-encolher-agents,plan-autoresearch-decisoes-31,plan-autoresearch-decisoes-49"
+    },
+    {
+      "id": "jev-curadoria-18ec3209cf50",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec c0f23a8d8e804a1d; recibo sha256 42b4e507ab1fd2e09bc233067ee45eec3bc237958326b2181536b32931d78b72. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "mantidos-curadoria-18ec3209cf50",
+      "type": "event",
+      "text": "Mantidos sem decisao de esquecer (sem_consenso): iter-sem-consenso-busca"
+    },
+    {
+      "id": "fato-pesquisa-grafo-memoria",
+      "type": "fact",
+      "text": "Pesquisa: mem0, Graphiti, LightRAG, GraphRAG, Letta. Ganho/custo: validade e origem em arestas, supersessao sem apagar, dedup por chave, busca lexical com vizinhanca. Embeddings e comunidades nao."
+    },
+    {
+      "id": "fato-pesquisa-jev-workflows",
+      "type": "fact",
+      "text": "Pesquisa: jev-harness (TypeSafeAI): proposta validada, JEV por perguntas estreitas, decisao deterministica, recibo preso ao estado dos arquivos, estados distintos para indisponivel e rejeitado."
+    },
+    {
+      "id": "fato-pesquisa-loop-harness",
+      "type": "fact",
+      "text": "Pesquisa: Ralph, Anthropic, LangGraph, OpenHands. Ciclo sense recall decide act verify remember forget, uma unidade por ciclo, estado duravel, estagnacao por assinatura, orcamento explicito."
+    },
+    {
+      "id": "fato-pesquisa-omp-jev",
+      "type": "fact",
+      "text": "Pesquisa: motor de consenso nao consulta grafo nem fontes; sem_consenso nao e decisao executavel e nao se reformula sem fato novo; 401 engolido e custo ausente no recibo sao lacunas."
+    },
+    {
+      "id": "jev-cerebro-passo-18",
+      "type": "decision",
+      "text": "JEV consenso lider in_cerebro; spec a5f4b846de5d4670; recibo sha256 07487293370f21a0f390267c2f611a7ebf520cbf88cf29d702ae84a8929eb987. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-curadoria",
+      "type": "iteration",
+      "text": "Comando curate: candidatos por iteracao velha, chave @ repetida e arquivo morto; JEV decide esquecer ou manter (passo 18, in_cerebro); mantidos nao sao reperguntados. Ciclos reais: sem_consenso, nada esquecido."
     }
   ],
   "edges": [
@@ -3289,6 +3349,81 @@
       "from": "iter-auditoria-prompts",
       "to": "iter-stop-aviso",
       "seq": 775
+    },
+    {
+      "from": "iter-stop-aviso",
+      "to": "jev-curadoria-3cdc3d81ade9",
+      "seq": 777
+    },
+    {
+      "from": "jev-curadoria-3cdc3d81ade9",
+      "to": "mantidos-curadoria-3cdc3d81ade9",
+      "seq": 779
+    },
+    {
+      "from": "mantidos-curadoria-3cdc3d81ade9",
+      "to": "jev-curadoria-cdb42b2f7648",
+      "seq": 781
+    },
+    {
+      "from": "jev-curadoria-cdb42b2f7648",
+      "to": "mantidos-curadoria-cdb42b2f7648",
+      "seq": 783
+    },
+    {
+      "from": "mantidos-curadoria-cdb42b2f7648",
+      "to": "jev-curadoria-18ec3209cf50",
+      "seq": 785
+    },
+    {
+      "from": "jev-curadoria-18ec3209cf50",
+      "to": "mantidos-curadoria-18ec3209cf50",
+      "seq": 787
+    },
+    {
+      "from": "iter-stop-aviso",
+      "to": "fato-pesquisa-grafo-memoria",
+      "seq": 789
+    },
+    {
+      "from": "iter-stop-aviso",
+      "to": "fato-pesquisa-jev-workflows",
+      "seq": 791
+    },
+    {
+      "from": "iter-stop-aviso",
+      "to": "fato-pesquisa-loop-harness",
+      "seq": 793
+    },
+    {
+      "from": "iter-stop-aviso",
+      "to": "fato-pesquisa-omp-jev",
+      "seq": 795
+    },
+    {
+      "from": "fato-pesquisa-omp-jev",
+      "to": "jev-cerebro-passo-18",
+      "seq": 797
+    },
+    {
+      "from": "jev-cerebro-passo-18",
+      "to": "iter-curadoria",
+      "seq": 799
+    },
+    {
+      "from": "fato-pesquisa-grafo-memoria",
+      "to": "iter-curadoria",
+      "seq": 800
+    },
+    {
+      "from": "fato-pesquisa-jev-workflows",
+      "to": "iter-curadoria",
+      "seq": 801
+    },
+    {
+      "from": "fato-pesquisa-loop-harness",
+      "to": "iter-curadoria",
+      "seq": 802
     }
   ],
   "retractions": [

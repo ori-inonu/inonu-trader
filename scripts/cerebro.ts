@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { appendFile, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseSpec } from "../src/consensus/spec";
 import type { DecisionSpec } from "../src/consensus/engine";
@@ -268,6 +269,50 @@ export async function stale(root: string, recent = 20): Promise<string[]> {
   return graph.nodes.filter((node) => node.type === "iteration" && !fresh.has(node.id) && !touched.has(node.id)).map((node) => node.id);
 }
 
+/** Candidatos a esquecer: iteracoes velhas, a mais antiga de cada chave @ repetida e nos que so citam arquivos `x.ts` que ja nao existem (sem git/commit/congelado no texto). Max 10 por ciclo. */
+export async function candidates(root: string, repo: string): Promise<{ id: string; why: string }[]> {
+  const { graph } = await load(root, true);
+  const found = new Map<string, string>((await stale(root)).map((id) => [id, "iteracao sem ligacao recente"]));
+  const keys = new Map<string, string>();
+  for (const node of graph.nodes) {
+    const key = /^@(\S+) /.exec(node.text)?.[1];
+    if (key !== undefined) { const old = keys.get(key); if (old !== undefined) found.set(old, `chave @${key} repetida`); keys.set(key, node.id); }
+    const paths = [...node.text.matchAll(/`([\w.-]+(?:\/[\w.-]+)+\.(?:ts|md|json))`/g)].map((m) => m[1]!);
+    if (node.type !== "event" && paths.length && !/git|commit|congel/i.test(node.text) && !paths.some((p) => existsSync(join(repo, p)))) found.set(node.id, "cita so arquivos inexistentes");
+  }
+  const kept = new Set(graph.nodes.filter((n) => n.id.startsWith("mantidos-")).flatMap((n) => n.text.split(": ")[1]!.split(",")));
+  return [...found].filter(([id]) => !kept.has(id)).slice(0, 10).map(([id, why]) => ({ id, why }));
+}
+/** Ciclo de curadoria: o JEV decide esquecer ou manter; o mesmo conjunto nunca e reperguntado (sem_consenso nao se reformula). Sem `paid`, so lista. */
+export async function curate(root: string, repo: string, paid: boolean): Promise<string> {
+  const found = await candidates(root, repo);
+  if (!found.length) return "nada a esquecer";
+  const id = `curadoria-${createHash("sha256").update(found.map((c) => c.id).sort().join(",")).digest("hex").slice(0, 12)}`;
+  if ((await load(root, true)).graph.nodes.some((n) => n.id === `jev-${id}`)) return `ja decidido: ${id}`;
+  if (!paid) return `candidatos (${id}): ${found.map((c) => `${c.id} (${c.why})`).join("; ")}`;
+  const nodes = (await load(root, true)).graph.nodes;
+  const spec = {
+    id, goal: "Esquecer nos obsoletos do grafo do projeto, sem apagar historico (retratar).", facts: Object.fromEntries(found.map((c, i) => [`c${i}`, `${c.id} (${c.why}): ${nodes.find((n) => n.id === c.id)!.text}`.slice(0, 240)])),
+    rails: ["retratar e reversivel pelo historico", "nao esquecer regra de seguranca nem decisao do dono"],
+    options: [{ id: "forget", label: "Esquecer", what: "Retratar todos os candidatos listados" }, { id: "keep", label: "Manter", what: "Nenhuma mudanca" }]
+  };
+  const specPath = join(root, `${id}.tmp.json`), out = join(root, "receipts", `${id}.json`);
+  await mkdir(join(root, "receipts"), { recursive: true });
+  await writeFile(specPath, JSON.stringify(spec));
+  Bun.spawnSync(["bun", "--no-env-file", resolve(import.meta.dir, "jev-consensus.ts"), "run", specPath, "--allow-paid-inference", "--max-calls", "40", "--out", out], { stdout: "ignore", stderr: "ignore" });
+  await unlink(specPath);
+  if (!existsSync(out)) return `juiz indisponivel: ${id}, nada mudou`;
+  const receipt = JSON.parse(await readFile(out, "utf8")) as { receipt: { status: string; leader?: string } };
+  const rid = await recordReceipt(root, out);
+  if (receipt.receipt.status !== "consenso" || receipt.receipt.leader !== "forget") {
+    await addNode(root, { id: `mantidos-${id}`, type: "event", text: `Mantidos sem decisao de esquecer (${receipt.receipt.status}): ${found.map((c) => c.id).join(",")}` }, [rid]);
+    return `${receipt.receipt.status}: nada esquecido (${rid})`;
+  }
+  for (const c of found) await retractNode(root, c.id, `curadoria JEV ${id}: ${c.why}`);
+  await addNode(root, { id: `iter-${id}`, type: "iteration", text: `Curadoria: JEV decidiu esquecer ${found.length} nos obsoletos (${found.map((c) => c.id).join(", ").slice(0, 150)})` }, [rid]);
+  return `esquecidos ${found.length}: ${id}`;
+}
+
 async function main(): Promise<void> {
   const [command, ...args] = process.argv.slice(2);
   const root = resolve(import.meta.dir, "../docs/_meta/cerebro");
@@ -291,11 +336,13 @@ async function main(): Promise<void> {
     if (orphans.length) process.exitCode = 1;
     const old = await stale(root);
     if (old.length) console.log(`esquecer? (retract se superado): ${old.join(",")}`);
+  } else if (command === "curate" && args.length <= 1) {
+    console.log(await curate(root, resolve(root, "../../.."), args[0] === "--paid"));
   } else if (command === "verify" && args.length === 0) {
     const result = await verify(root);
     console.log(`ok seq=${result.seq} hash=${result.hash}`);
   } else {
-    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, supersede <velho> <novo>, record <recibo.json>, export, search <palavra>, lint, verify");
+    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, supersede <velho> <novo>, record <recibo.json>, export, search <palavra>, curate [--paid], lint, verify");
   }
 }
 

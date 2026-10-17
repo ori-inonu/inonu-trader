@@ -1,9 +1,9 @@
 import { afterEach, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { addNode, exportCompact, linkNodes, lint, recordReceipt, retractNode, search, stale, supersedeNode, verify } from "./cerebro";
+import { addNode, candidates, curate, exportCompact, linkNodes, lint, recordReceipt, retractNode, search, stale, supersedeNode, verify } from "./cerebro";
 
 const roots: string[] = [];
 afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
@@ -161,6 +161,23 @@ test("search matches id or text case-insensitively and skips retracted nodes", a
   expect(await search(root, "FUNDING")).toEqual(["a: Funding adverso.", "funding-b: Outro."]);
   await retractNode(root, "a", "obsoleto");
   expect(await search(root, "funding")).toEqual(["funding-b: Outro."]);
+});
+
+test("curation lists repeated keys and dead paths, spares git pointers, and never asks the judge twice or without paid consent", async () => {
+  const root = tempRoot(), repo = tempRoot();
+  mkdirSync(join(repo, "src"));
+  writeFileSync(join(repo, "src", "vivo.ts"), "");
+  await addNode(root, { id: "a", type: "fact", text: "@k velho." });
+  await addNode(root, { id: "b", type: "fact", text: "@k novo." }, ["a"]);
+  await addNode(root, { id: "c", type: "fact", text: "Usa `src/morto.ts`." }, ["b"]);
+  await addNode(root, { id: "d", type: "fact", text: "Era `src/morto.ts`, ponteiro git abc." }, ["c"]);
+  await addNode(root, { id: "e", type: "fact", text: "Usa `src/vivo.ts`." }, ["d"]);
+  expect((await candidates(root, repo)).map((c) => `${c.id}:${c.why}`)).toEqual(["a:chave @k repetida", "c:cita so arquivos inexistentes"]);
+  const id = (await curate(root, repo, false)).match(/curadoria-[0-9a-f]{12}/)![0];
+  await addNode(root, { id: `jev-${id}`, type: "decision", text: "decidido" }, ["e"]);
+  expect(await curate(root, repo, true)).toBe(`ja decidido: ${id}`);
+  await addNode(root, { id: "mantidos-x", type: "event", text: "Mantidos sem decisao de esquecer (sem_consenso): a,c" }, ["e"]);
+  expect(await candidates(root, repo)).toEqual([]);
 });
 
 test("export with a focus returns only nodes within the given depth and rejects unknown ids", async () => {
