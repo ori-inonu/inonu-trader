@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { addNode, exportCompact, linkNodes, lint, recordReceipt, retractNode, stale, supersedeNode, verify } from "./cerebro";
+import { addNode, exportCompact, linkNodes, lint, recordReceipt, retractNode, search, stale, supersedeNode, verify } from "./cerebro";
 
 const roots: string[] = [];
 afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
@@ -152,6 +152,15 @@ test("stale lists only old iterations with no link to recent nodes", async () =>
   expect(await stale(root, 2)).toEqual(["i1"]);
   await addNode(root, { id: "i4", type: "iteration", text: "Nova." }, ["i1"]);
   expect(await stale(root, 2)).toEqual([]);
+});
+
+test("search matches id or text case-insensitively and skips retracted nodes", async () => {
+  const root = tempRoot();
+  await addNode(root, { id: "a", type: "fact", text: "Funding adverso." });
+  await addNode(root, { id: "funding-b", type: "fact", text: "Outro." }, ["a"]);
+  expect(await search(root, "FUNDING")).toEqual(["a: Funding adverso.", "funding-b: Outro."]);
+  await retractNode(root, "a", "obsoleto");
+  expect(await search(root, "funding")).toEqual(["funding-b: Outro."]);
 });
 
 test("export with a focus returns only nodes within the given depth and rejects unknown ids", async () => {

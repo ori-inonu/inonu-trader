@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 731,
-  "headHash": "ee607d9209ed71b249535830209846070e0d64182a30b16423937c35433edcc2",
+  "headSeq": 736,
+  "headHash": "3100b718018f4af30d1fd03b5e6029e91adc7b04d508d509bb5eadb61761b5b7",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -957,6 +957,16 @@
       "id": "iter-sem-consenso-busca",
       "type": "iteration",
       "text": "Consenso JEV cerebro-passo-12 sem_consenso (search_command lidera, sem maioria estavel): comando search NAO implementado; decisao fica com o dono"
+    },
+    {
+      "id": "jev-cerebro-passo-13",
+      "type": "decision",
+      "text": "JEV consenso lider add_search; spec 74bff079568719e6; recibo sha256 e34cb8273efc847214b824e00cc011c12026f23e5229ea866f43dc3e315e19d9. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-search",
+      "type": "iteration",
+      "text": "Consenso JEV add_search (passo 13, apos sem_consenso no passo 12 com opcoes mais amplas): comando search <palavra> em cerebro.ts, 1 teste, sem arquivo novo; documentado no AGENTS.md"
     }
   ],
   "edges": [
@@ -3069,6 +3079,21 @@
       "from": "iter-encolher-agents",
       "to": "iter-sem-consenso-busca",
       "seq": 731
+    },
+    {
+      "from": "iter-sem-consenso-busca",
+      "to": "jev-cerebro-passo-13",
+      "seq": 733
+    },
+    {
+      "from": "jev-cerebro-passo-13",
+      "to": "iter-search",
+      "seq": 735
+    },
+    {
+      "from": "iter-sem-consenso-busca",
+      "to": "iter-search",
+      "seq": 736
     }
   ],
   "retractions": [

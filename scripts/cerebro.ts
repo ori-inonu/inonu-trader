@@ -254,6 +254,12 @@ export async function lint(root: string): Promise<string[]> {
   const keys = graph.nodes.map((node) => /^@(\S+) /.exec(node.text)?.[1]).filter((key): key is string => key !== undefined);
   return [...orphans, ...new Set(keys.filter((key, i) => keys.indexOf(key) !== i))].map((item) => (orphans.includes(item) ? item : `chave:${item}`));
 }
+/** Nos ativos cujo id ou texto contem a palavra (sem diferenciar caixa): `id: inicio do texto`. */
+export async function search(root: string, word: string): Promise<string[]> {
+  const { graph } = await load(root, true);
+  const w = word.toLowerCase();
+  return graph.nodes.filter((n) => `${n.id} ${n.text}`.toLowerCase().includes(w)).map((n) => `${n.id}: ${n.text.slice(0, 80)}`);
+}
 /** Candidatos a esquecimento: iteracoes fora dos ultimos `recent` nos, sem aresta com os recentes. Aviso, nunca falha. */
 export async function stale(root: string, recent = 20): Promise<string[]> {
   const { graph } = await load(root, true);
@@ -277,6 +283,8 @@ async function main(): Promise<void> {
     console.log(await exportCompact(root, args[0], args[1] ? Number(args[1]) : undefined));
   } else if (command === "record" && (args.length === 1 || args.length === 2)) {
     console.log(await recordReceipt(root, args[0]!, args[1]?.split(",")));
+  } else if (command === "search" && args.length === 1) {
+    console.log((await search(root, args[0]!)).join("\n"));
   } else if (command === "lint" && args.length === 0) {
     const orphans = await lint(root);
     console.log(orphans.length ? `orfaos: ${orphans.join(",")}` : "ok sem orfaos");
@@ -287,7 +295,7 @@ async function main(): Promise<void> {
     const result = await verify(root);
     console.log(`ok seq=${result.seq} hash=${result.hash}`);
   } else {
-    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, supersede <velho> <novo>, record <recibo.json>, export, lint, verify");
+    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, supersede <velho> <novo>, record <recibo.json>, export, search <palavra>, lint, verify");
   }
 }
 

@@ -69,7 +69,7 @@ Estado do produto e como rodar ficam no grafo: `bun scripts/cerebro.ts export fa
 - Retrate fatos obsoletos com um evento tombstone append-only; nunca apague eventos para esquecer.
 - Exporte somente fatos primitivos compactos, com strings de ate 300 caracteres e sem enderecos ou segredos.
 - A verificacao detecta adulteracao ou truncamento frente ao derivado conhecido, sem prometer que nada sera perdido.
-- Comandos: `bun scripts/cerebro.ts export [no [profundidade]]` (consultar, com no devolve so a vizinhanca), `add-node`, `link`, `retract`, `supersede <velho> <novo>` (fato obsoleto), `record <recibo.json> [nos]` (atualizar; sem nos liga ao ultimo no), `lint` (orfaos e `@chave` duplicada) e `verify` (checar). Cada iteracao cria um no ligado ao anterior.
+- Comandos: `bun scripts/cerebro.ts export [no [profundidade]]` (consultar, com no devolve so a vizinhanca), `search <palavra>` (achar ids), `add-node`, `link`, `retract`, `supersede <velho> <novo>` (fato obsoleto), `record <recibo.json> [nos]` (atualizar; sem nos liga ao ultimo no), `lint` (orfaos, `@chave` duplicada, avisos `esquecer?`) e `verify` (checar). Cada iteracao cria um no ligado ao anterior.
 
 ## Pointers
 
