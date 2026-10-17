@@ -12,7 +12,7 @@
     {
       "id": "okx-ws",
       "label": "OKX tempo real, WebSocket publico",
-      "url": "wss://ws.okx.com:8443/ws/v5/public",
+      "url": "wss://ws.okx.com/ws/v5/public",
       "uso": "negocios com o lado agressor, para o motor de fluxo",
       "custo": "gratuito, sem chave",
       "quemFala": "o nucleo e o navegador"

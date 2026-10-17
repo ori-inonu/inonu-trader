@@ -6,7 +6,7 @@ A mesa e a tela unica do Jev: uma central de decisao em tela cheia, sem rolagem,
 
 | Fonte | Uso | Credencial | Onde roda |
 | --- | --- | --- | --- |
-| OKX v5 WebSocket publico (`wss://ws.okx.com:8443/ws/v5/public`) | livro (`books`), trades, tickers, funding, mark, open interest | nenhuma | navegador |
+| OKX v5 WebSocket publico (`wss://ws.okx.com/ws/v5/public`) | livro (`books`), trades, tickers, funding, mark, open interest | nenhuma | navegador |
 | OKX v5 WebSocket business (`/ws/v5/business`) | candles em tempo real | nenhuma | navegador |
 | OKX v5 REST publico (`https://www.okx.com/api/v5/market`, `/public`) | historico de candles, instrumentos, carga inicial | nenhuma | navegador |
 | Backend Jev (`/system-one`, `/operator`) | decisoes reais do Jev e ciclo do operador | so no servidor | backend Bun |

@@ -6,8 +6,8 @@ import { isRecord } from "./okx-parse";
 import type { Timers } from "./runtime";
 import type { DeskFeedStatus } from "./types";
 
-export const OKX_PUBLIC_WS_URL = "wss://ws.okx.com:8443/ws/v5/public";
-export const OKX_BUSINESS_WS_URL = "wss://ws.okx.com:8443/ws/v5/business";
+export const OKX_PUBLIC_WS_URL = "wss://ws.okx.com/ws/v5/public";
+export const OKX_BUSINESS_WS_URL = "wss://ws.okx.com/ws/v5/business";
 
 /** The subset of the browser WebSocket this client uses. */
 export interface WebSocketLike {

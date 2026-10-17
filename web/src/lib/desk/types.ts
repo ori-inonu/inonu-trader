@@ -2,7 +2,7 @@
  * Contract of the trading desk (Mesa de Operacoes).
  *
  * Everything here describes REAL data read by the browser from the keyless OKX public v5 API
- * (REST https://www.okx.com, WebSocket wss://ws.okx.com:8443/ws/v5/public and /business).
+ * (REST https://www.okx.com, WebSocket wss://ws.okx.com/ws/v5/public and /business).
  * No type in this file admits an invented value: a number that is not known is `null`, a feed
  * that is not delivering is `stale` or `failed`, and every channel carries its own provenance.
  *

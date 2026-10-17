@@ -151,7 +151,7 @@ describe("start", () => {
   test("opens both sockets, subscribes the focus and watchlist, and adds the perpetual once REST confirms it", async () => {
     const env = makeEnv();
     env.controller.start();
-    expect(env.instances.map((i) => i.url)).toEqual(["wss://ws.okx.com:8443/ws/v5/public", "wss://ws.okx.com:8443/ws/v5/business"]);
+    expect(env.instances.map((i) => i.url)).toEqual(["wss://ws.okx.com/ws/v5/public", "wss://ws.okx.com/ws/v5/business"]);
     env.pub().open();
     env.biz().open();
     expect(argsOf(env.pub(), "subscribe")).toEqual(
