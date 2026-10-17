@@ -1,0 +1,149 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-2",
+    "specHash": "269f890b842e8947d940f18311e47595f55b2b822cc0141d2616b1e0c038de3d",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "hook_export",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "hook_export",
+          "migrate_docs"
+        ],
+        "framings": [
+          {
+            "order": [
+              "hook_export",
+              "migrate_docs"
+            ],
+            "probs": {
+              "hook_export": 0.78,
+              "migrate_docs": 0.19,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "migrate_docs",
+              "hook_export"
+            ],
+            "probs": {
+              "migrate_docs": 0.42,
+              "hook_export": 0.53,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "hook_export",
+              "migrate_docs"
+            ],
+            "probs": {
+              "hook_export": 0.76,
+              "migrate_docs": 0.2,
+              "none_fits": 0.04
+            }
+          }
+        ],
+        "means": {
+          "hook_export": 0.69,
+          "migrate_docs": 0.27
+        },
+        "noneFits": 0.04,
+        "agreement": 1,
+        "margin": 0.42,
+        "leader": "hook_export",
+        "railProb": {
+          "hook_export": 0.07,
+          "migrate_docs": 0.16
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "hook_export",
+          "migrate_docs"
+        ],
+        "framings": [
+          {
+            "order": [
+              "hook_export",
+              "migrate_docs"
+            ],
+            "probs": {
+              "hook_export": 0.73,
+              "migrate_docs": 0.24,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "migrate_docs",
+              "hook_export"
+            ],
+            "probs": {
+              "migrate_docs": 0.43,
+              "hook_export": 0.52,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "hook_export",
+              "migrate_docs"
+            ],
+            "probs": {
+              "hook_export": 0.78,
+              "migrate_docs": 0.19,
+              "none_fits": 0.03
+            }
+          }
+        ],
+        "means": {
+          "hook_export": 0.6767,
+          "migrate_docs": 0.2867
+        },
+        "noneFits": 0.0367,
+        "agreement": 1,
+        "margin": 0.39,
+        "leader": "hook_export",
+        "railProb": {
+          "hook_export": 0.07,
+          "migrate_docs": 0.16
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 8,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 8,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 6564,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

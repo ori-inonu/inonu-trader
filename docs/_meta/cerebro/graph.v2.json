@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 238,
-  "headHash": "ae46c708bdbb191cc5b46ba12dfeebe1811d617e713baf12c7b4fc7d53384edb",
+  "headSeq": 243,
+  "headHash": "cc549524c360e45d6c8152341644c50e707c4ed958abd8eae525b56c5750f1cc",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -207,6 +207,16 @@
       "id": "iter-lint-obsoleto",
       "type": "iteration",
       "text": "Testado lint de no sem iteracao vizinha: acusou 8 de 40 nos, todos legitimos (src-* e regra). Sem sinal util, nao implementado. Passo restante com mais valor: hook_export ou migrate_docs"
+    },
+    {
+      "id": "jev-cerebro-passo-2",
+      "type": "decision",
+      "text": "JEV consenso lider hook_export; spec 269f890b842e8947; recibo sha256 c110413c8d4c96c7f662b18df91c0e2f1cbe4bb505bfee42621ff1b7e03b8da9. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-hook-export",
+      "type": "iteration",
+      "text": "SessionStart do Codex injeta o export da ultima iteracao (cerca de 1,7 KB) em vez de arquivos fixos; escolha do JEV, dono autorizou. OMP global ainda nao usa o export"
     }
   ],
   "edges": [
@@ -1179,6 +1189,21 @@
       "from": "iter-proximo-passo",
       "to": "iter-lint-obsoleto",
       "seq": 238
+    },
+    {
+      "from": "iter-lint-obsoleto",
+      "to": "jev-cerebro-passo-2",
+      "seq": 240
+    },
+    {
+      "from": "jev-cerebro-passo-2",
+      "to": "iter-hook-export",
+      "seq": 242
+    },
+    {
+      "from": "iter-lint-obsoleto",
+      "to": "iter-hook-export",
+      "seq": 243
     }
   ],
   "retractions": [
