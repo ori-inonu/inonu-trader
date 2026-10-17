@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 808,
-  "headHash": "dbbc5202ad6ebda114c82d3dafd62c32cf6c21ad714c46fc04b0929aa74d88e5",
+  "headSeq": 810,
+  "headHash": "eb553e85fece36b3a2830ed36a349cc2a76745c5642fd4643940724c753172c2",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1127,6 +1127,11 @@
       "id": "iter-hook-global",
       "type": "iteration",
       "text": "Passo 19, JEV: global_hook. Criado ~/.omp/agent/hooks/pre/cerebro.ts: usa o grafo do repo atual ou de outro worktree com scripts/cerebro.ts. Logica testada de fora; carga real no OMP ainda nao provada."
+    },
+    {
+      "id": "fato-hook-global-carregou",
+      "type": "fact",
+      "text": "Prova: omp -p --no-session no checkout principal, sem hook de projeto, devolveu o campo goal do grafo (Contexto documental para uma decisao posterior). Hook global carregou numa sessao real do OMP."
     }
   ],
   "edges": [
@@ -3454,6 +3459,11 @@
       "from": "jev-cerebro-passo-19",
       "to": "iter-hook-global",
       "seq": 808
+    },
+    {
+      "from": "iter-hook-global",
+      "to": "fato-hook-global-carregou",
+      "seq": 810
     }
   ],
   "retractions": [
