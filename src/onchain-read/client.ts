@@ -282,7 +282,7 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
           const sent = await send(request, cred, dispatched);
           await settle(target, sent, dispatched);
           return dispatched.n > 1 ? { ...sent, extraDispatches: dispatched.n - 1 } : sent;
-        });
+        }, (r) => r.ok);
       } catch (error) {
         if (error instanceof BudgetDenied) return { ok: false, error: DENIED[error.reason], sent: false };
         throw error;

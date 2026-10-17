@@ -60,20 +60,30 @@ export function createPaperPort(options: PaperPortOptions): PaperPort {
       const prior = done.get(order.id);
       if (prior !== undefined) return prior;
       if (order.nonce !== lastNonce + 1) return refuse(order, "nonce", false);
+      // A partir daqui a ordem está em sequência: o nonce é consumido por qualquer desfecho (preenchida, recusada ou
+      // falha). Se só o preenchimento o consumisse, uma recusa deixaria o chamador adiante da porta para sempre.
+      lastNonce = order.nonce;
       if (!(order.sizeUsd > 0)) return refuse(order, "tamanho_invalido");
       // Spot: vender exige posição. O paper não opera a descoberto.
       if (order.side === "sell" && (positions.get(order.symbol)?.units ?? 0) <= 0) return refuse(order, "sem_posicao");
-      lastNonce = order.nonce;
 
-      const failure = options.failure?.(order);
+      // Os callbacks são do chamador e podem lançar; a porta nunca lança, devolve a falha como fill.
+      let failure: string | undefined;
+      let quoted: number | undefined;
+      let slippage = 0;
+      try {
+        failure = options.failure?.(order);
+        quoted = failure === undefined ? options.priceFor(order) : undefined;
+        slippage = failure === undefined ? (options.slippageBps?.(order) ?? 0) : 0;
+      } catch {
+        return settle({ id: order.id, status: "failed", fillPriceUsd: 0, feeUsd: 0, gasUsd: 0, slippageBps: 0, reason: "erro_da_fonte_de_preco" });
+      }
       if (failure !== undefined) {
         gas += options.gasUsd;
         return settle({ id: order.id, status: "failed", fillPriceUsd: 0, feeUsd: 0, gasUsd: options.gasUsd, slippageBps: 0, reason: failure });
       }
-      const quoted = options.priceFor(order);
-      if (quoted === undefined || !(quoted > 0)) return refuse(order, "sem_preco");
+      if (quoted === undefined || !(quoted > 0) || !Number.isFinite(slippage)) return refuse(order, "sem_preco");
 
-      const slippage = options.slippageBps?.(order) ?? 0;
       const price = order.side === "buy" ? quoted * (1 + slippage / 1e4) : quoted * (1 - slippage / 1e4);
       if (order.side === "buy" ? price > order.limitPriceUsd : price < order.limitPriceUsd) return refuse(order, "limite_de_preco");
 

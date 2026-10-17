@@ -41,7 +41,7 @@ export interface ApiBudgetOptions {
 export interface ApiBudget {
   acquire(request: BudgetRequest, now?: number): Promise<BudgetDecision>;
   /** Executa `fn` se o orçamento liberar; lança BudgetDenied caso contrário. Usa cache e coalescing quando há cacheKey. */
-  run<T>(request: BudgetRequest, fn: () => Promise<T>): Promise<T>;
+  run<T>(request: BudgetRequest, fn: () => Promise<T>, ok?: (result: T) => boolean): Promise<T>;
   /** Registra 402 (bloqueio até o reset mensal) ou 429 (cooldown com backoff com jitter e Retry-After). Devolve o instante (epoch ms) até o qual a entrada fica negada. */
   reject(request: BudgetRequest, status: 402 | 429, attempt?: number, retryAfterMs?: number): Promise<number>;
   /** Escala atual do ritmo da entrada, em [0.25, 1]: cai no 429 e recupera com sucessos. 1 é o ritmo declarado. */
@@ -72,27 +72,30 @@ export function createApiBudget(options: ApiBudgetOptions): ApiBudget {
     });
   };
 
-  const execute = async <T>(request: BudgetRequest, fn: () => Promise<T>): Promise<T> => {
+  const execute = async <T>(request: BudgetRequest, fn: () => Promise<T>, ok?: (result: T) => boolean): Promise<T> => {
     const decision = await acquire(request, options.now());
     if (!decision.ok) throw new BudgetDenied(decision.reason);
     const entry = resolve(request);
     await pacer.wait(entry);
     const result = await fn();
-    pacer.reward(entry);
+    // Só sucesso de verdade recupera o ritmo; um cliente que devolve a falha como valor (429, 5xx) informa isso em `ok`.
+    if (ok === undefined || ok(result)) pacer.reward(entry);
+    else pacer.reset(entry);
     return result;
   };
 
   return {
     acquire: (request, now = options.now()) => acquire(request, now),
 
-    run<T>(request: BudgetRequest, fn: () => Promise<T>): Promise<T> {
-      if (request.cacheKey === undefined) return execute(request, fn);
+    run<T>(request: BudgetRequest, fn: () => Promise<T>, ok?: (result: T) => boolean): Promise<T> {
+      if (request.cacheKey === undefined) return execute(request, fn, ok);
       const key = `${generation.get(request.cacheKey) ?? 0}|${request.cacheKey}`;
       const hit = cache.get(key, request.ttlMs ?? 0);
       if (hit?.fresh) return Promise.resolve(hit.entry.data as T);
       return cache.coalesce(key, async () => {
-        const data = await execute(request, fn);
-        cache.set(key, data);
+        const data = await execute(request, fn, ok);
+        // Falha devolvida como valor não entra no cache: a próxima chamada tenta de novo.
+        if (ok === undefined || ok(data)) cache.set(key, data);
         return data;
       }) as Promise<T>;
     },

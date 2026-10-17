@@ -140,6 +140,18 @@ describe("createPacer", () => {
     expect(pacer.scale(entry)).toBe(1);
   });
 
+  test("reset interrompe a sequência de sucessos sem mexer na escala", () => {
+    const pacer = createPacer(() => T0, async () => undefined);
+    const entry = { ...base, rps: 1 };
+    pacer.penalize(entry);
+    for (let i = 0; i < RECOVER_AFTER - 1; i++) pacer.reward(entry);
+    pacer.reset(entry);
+    pacer.reward(entry);
+    expect(pacer.scale(entry)).toBe(0.5);
+    for (let i = 0; i < RECOVER_AFTER - 1; i++) pacer.reward(entry);
+    expect(pacer.scale(entry)).toBeCloseTo(0.625, 10);
+  });
+
   test("um 429 zera a sequencia de sucessos", () => {
     const pacer = createPacer(() => T0, async () => undefined);
     const entry = { ...base, rps: 1 };

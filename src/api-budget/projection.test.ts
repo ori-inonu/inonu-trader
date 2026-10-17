@@ -39,6 +39,17 @@ describe("projectMonth", () => {
     expect(p.exhaustionDay).toBeNull();
   });
 
+  test("dia ausente no arquivo conta como zero; dia anterior ao primeiro registro fica de fora", () => {
+    const p = projectMonth({ "05": 3000, "06": 3000, "07": 3000 }, Date.UTC(2026, 9, 20, 13), 100_000);
+    // Janela 17, 18 e 19: nenhuma chamada nesses dias, então o ritmo é zero e não 3000.
+    expect(p.ratePerDay).toBe(0);
+    expect(p.exhaustionDay).toBeNull();
+    // Hoje é o dia 8: janela 5, 6 e 7 (nenhum anterior ao primeiro registro).
+    expect(projectMonth({ "05": 3000, "06": 3000, "07": 3000 }, Date.UTC(2026, 9, 8, 13), 100_000).ratePerDay).toBe(3000);
+    // Primeiro registro no dia 6 e hoje o dia 8: a janela só alcança o dia 7 (o dia 5 é anterior ao contador).
+    expect(projectMonth({ "06": 100, "07": 300 }, Date.UTC(2026, 9, 8, 13), 100_000).ratePerDay).toBe(200);
+  });
+
   test("sem dia completo não há ritmo nem projeção", () => {
     const p = projectMonth({ "17": 300 }, NOW, 100_000);
     expect(p.ratePerDay).toBeNull();

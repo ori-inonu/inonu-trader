@@ -15,8 +15,8 @@ export interface RunnerDeps {
   readonly port: ExecutionPort;
   readonly portfolio: () => Portfolio;
   readonly telemetry?: LatencyRecorder;
-  /** Trilha auditável, uma linha por evento. Se falhar antes de um envio, o envio não acontece (falha fechada). */
-  readonly log?: (record: ReasonRecord) => void | Promise<void>;
+  /** Trilha auditável, uma linha por evento. Obrigatória: se faltar ou falhar antes de um envio, o envio não acontece (falha fechada). */
+  readonly log: (record: ReasonRecord) => void | Promise<void>;
   /** Pior preço aceito em relação ao preço da oportunidade, em bps. Vira o preço-limite da ordem. */
   readonly limitSlippageBps: number;
 }
@@ -41,12 +41,13 @@ function refused(d: Decision, reason: Reason, ms: number): Decision {
  * de dados fica antes e a confirmação depois. Cada decisão, de operar ou não, deixa uma linha no log com o motivo.
  */
 export function createRunner(deps: RunnerDeps): Runner {
+  if (typeof deps.log !== "function") throw new Error("runner sem log de auditoria: nenhuma ordem pode sair sem trilha");
   if (deps.guard.mode !== deps.port.mode) throw new Error(`guard (${deps.guard.mode}) e porta (${deps.port.mode}) em modos diferentes`);
   const hr = deps.hr ?? (() => performance.now());
   let nonce = { last: 0 };
 
   const write = async (opp: Opportunity, decision: Decision, extra: Pick<ReasonRecord, "fill" | "reconciliation"> = {}): Promise<void> => {
-    await deps.log?.({ v: 1, tsMs: deps.clock.now(), mode: deps.port.mode, venue: opp.venue, chain: opp.chain, decision, ...extra });
+    await deps.log({ v: 1, tsMs: deps.clock.now(), mode: deps.port.mode, venue: opp.venue, chain: opp.chain, decision, ...extra });
   };
   /** Log de uma recusa: falha de escrita não muda o resultado, porque nada foi enviado. */
   const writeRefusal = async (opp: Opportunity, decision: Decision): Promise<void> => {

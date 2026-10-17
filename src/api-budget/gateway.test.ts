@@ -128,6 +128,29 @@ describe("api-budget gateway", () => {
     expect(await second.acquire(request)).toEqual({ ok: false, reason: "budget" });
   });
 
+  test("resultado de falha devolvido como valor não recupera o ritmo nem entra no cache", async () => {
+    const { budget } = setup([{ ...quote, rpd: undefined }]);
+    await budget.reject(request, 429, 0);
+    expect(budget.scale(request)).toBe(0.5);
+    // Passado o cooldown, 40 falhas devolvidas como valor não recuperam nenhum degrau.
+    const failing = { ...request };
+    const settled = setup([{ ...quote, rpd: undefined }]);
+    await settled.budget.reject(failing, 429, 0);
+    settled.clock.t += 60_000;
+    for (let i = 0; i < 40; i++) await settled.budget.run(failing, async () => ({ ok: false }), (r) => r.ok);
+    expect(settled.budget.scale(failing)).toBe(0.5);
+    for (let i = 0; i < 20; i++) await settled.budget.run(failing, async () => ({ ok: true }), (r) => r.ok);
+    expect(settled.budget.scale(failing)).toBeCloseTo(0.625, 10);
+
+    let calls = 0;
+    const cached = { ...request, cacheKey: "k", ttlMs: 60_000 };
+    const attempt = () => settled.budget.run(cached, async () => ({ ok: ++calls > 1 }), (r) => r.ok);
+    expect((await attempt()).ok).toBe(false);
+    expect((await attempt()).ok).toBe(true);
+    expect((await attempt()).ok).toBe(true);
+    expect(calls).toBe(2);
+  });
+
   test("429 reduz a escala do ritmo e o pool inteiro entra em cooldown", async () => {
     const entries: BudgetEntry[] = [
       { ...quote, endpoint: "/a", pool: "p", rpd: undefined },

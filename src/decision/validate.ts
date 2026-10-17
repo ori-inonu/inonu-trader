@@ -1,4 +1,4 @@
-import type { Opportunity } from "./types";
+import type { Limits, Opportunity, Portfolio } from "./types";
 
 /** Tolerância para uma cotação marcada ligeiramente no futuro por diferença de relógio entre fonte e motor. */
 export const MAX_QUOTE_FUTURE_MS = 1000;
@@ -38,4 +38,39 @@ export function invalidFields(opp: Opportunity): string[] {
     checks.push(["costs.failProb", prob(c.failProb)]);
   }
   return checks.filter(([, ok]) => !ok).map(([name]) => name);
+}
+
+const unit = (v: unknown): boolean => finite(v) && v >= 0 && v <= 1;
+
+/** Carteira com número corrompido desligaria limites sem aviso (NaN nunca é maior que nada): recusar é o único jeito seguro. */
+export function invalidPortfolio(port: Portfolio): string[] {
+  const checks: Array<[string, boolean]> = [
+    ["equityUsd", finite(port.equityUsd) && port.equityUsd > 0],
+    ["peakEquityUsd", finite(port.peakEquityUsd) && port.peakEquityUsd > 0],
+    ["cashUsd", nonNeg(port.cashUsd)],
+    ["dayPnlUsd", finite(port.dayPnlUsd)],
+    ["gasBalanceUsd", port.gasBalanceUsd === undefined || nonNeg(port.gasBalanceUsd)],
+    ["exposureUsd", port.exposureUsd !== null && typeof port.exposureUsd === "object" && Object.values(port.exposureUsd).every(finite)],
+    ["correlation", typeof port.correlation === "function"],
+  ];
+  return checks.filter(([, ok]) => !ok).map(([name]) => "portfolio." + name);
+}
+
+export function invalidLimits(limits: Limits): string[] {
+  const checks: Array<[string, boolean]> = [
+    ["minNetEdgeBps", finite(limits.minNetEdgeBps)],
+    ["maxQuoteAgeMs", nonNeg(limits.maxQuoteAgeMs)],
+    ["maxSlippageBps", nonNeg(limits.maxSlippageBps)],
+    ["maxGasUsd", nonNeg(limits.maxGasUsd)],
+    ["minGasBalanceUsd", limits.minGasBalanceUsd === undefined || nonNeg(limits.minGasBalanceUsd)],
+    ["maxRiskScore", unit(limits.maxRiskScore)],
+    ["minLiquidityMultiple", nonNeg(limits.minLiquidityMultiple)],
+    ["maxPositionPct", unit(limits.maxPositionPct)],
+    ["maxGrossExposurePct", nonNeg(limits.maxGrossExposurePct)],
+    ["maxDayLossPct", unit(limits.maxDayLossPct)],
+    ["maxDrawdownPct", unit(limits.maxDrawdownPct)],
+    ["maxCorrelation", unit(limits.maxCorrelation)],
+    ["kellyFraction", unit(limits.kellyFraction)],
+  ];
+  return checks.filter(([, ok]) => !ok).map(([name]) => "limits." + name);
 }

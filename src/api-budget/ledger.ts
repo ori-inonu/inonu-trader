@@ -39,14 +39,35 @@ function runGit(): string | null {
 
 const emptyState = (): LedgerState => ({ usage: {}, blocked: {}, cooldown: {} });
 
-/** Estado salvo, ou vazio. Arquivo ilegível (truncado por uma queda) é posto de lado em `.corrupt` e o orçamento recomeça. */
-function loadState(path: string): LedgerState {
-  if (!existsSync(path)) return emptyState();
+/** Interpreta o texto salvo. Só JSON inválido ou de forma errada lança SyntaxError: é o que conta como corrupção. */
+function parseState(text: string): LedgerState {
+  const raw = JSON.parse(text) as Partial<LedgerState> | null;
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) throw new SyntaxError("forma inválida");
+  return { ...raw, usage: raw.usage ?? {}, blocked: raw.blocked ?? {}, cooldown: raw.cooldown ?? {} };
+}
+
+/**
+ * Estado salvo, ou vazio quando o arquivo não existe. Arquivo de conteúdo inválido (truncado por uma queda) é posto de
+ * lado em `.corrupt` e o orçamento recomeça. Erro de leitura (EBUSY, EPERM, EACCES) NÃO é corrupção: perder o estado
+ * reabriria um bloqueio 402 ou um cooldown 429, então a leitura é repetida e, persistindo, o erro sobe.
+ */
+async function loadState(path: string): Promise<LedgerState> {
+  let text = "";
+  for (let attempt = 0; ; attempt++) {
+    try {
+      text = readFileSync(path, "utf8");
+      break;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code === "ENOENT") return emptyState();
+      if ((code !== "EPERM" && code !== "EBUSY") || attempt >= 4) throw error;
+      await Bun.sleep(20 * (attempt + 1));
+    }
+  }
   try {
-    const raw = JSON.parse(readFileSync(path, "utf8")) as Partial<LedgerState> | null;
-    if (raw === null || typeof raw !== "object") throw new Error("forma inválida");
-    return { ...raw, usage: raw.usage ?? {}, blocked: raw.blocked ?? {}, cooldown: raw.cooldown ?? {} };
-  } catch {
+    return parseState(text);
+  } catch (error) {
+    if (!(error instanceof SyntaxError)) throw error;
     try {
       renameSync(path, `${path}.corrupt`);
     } catch {
@@ -56,9 +77,29 @@ function loadState(path: string): LedgerState {
   }
 }
 
+/** Trava com mais de 10 s é de processo morto. Retorna true quando a trava sumiu ou foi reclamada e vale tentar de novo já. */
+function reclaimIfStale(lock: string): boolean {
+  let age: number;
+  try {
+    age = Date.now() - statSync(lock).mtimeMs;
+  } catch {
+    return true; // o dono soltou entre o mkdir que falhou e o stat
+  }
+  if (age <= 10_000) return false;
+  // Renomear é atômico: se dois esperam, só um consegue, e ninguém remove a trava que o outro acabou de criar.
+  const aside = `${lock}.stale-${process.pid}-${Math.random().toString(36).slice(2)}`;
+  try {
+    renameSync(lock, aside);
+  } catch {
+    return true;
+  }
+  rmSync(aside, { recursive: true, force: true });
+  return true;
+}
+
 /**
- * Leitura, alteração e gravação sob exclusão mútua por diretório (mkdir é atômico). Trava com mais de 10 s é de
- * processo morto e é removida. A gravação vai para arquivo temporário e depois é renomeada.
+ * Leitura, alteração e gravação sob exclusão mútua por diretório (mkdir é atômico). A gravação vai para arquivo
+ * temporário e depois é renomeada.
  */
 export async function updateLedger<T>(path: string, body: (state: LedgerState) => T): Promise<T> {
   mkdirSync(dirname(path), { recursive: true });
@@ -68,13 +109,13 @@ export async function updateLedger<T>(path: string, body: (state: LedgerState) =
       mkdirSync(lock);
       break;
     } catch {
-      if (existsSync(lock) && Date.now() - statSync(lock).mtimeMs > 10_000) rmSync(lock, { recursive: true, force: true });
-      else if (attempt > 600) throw new Error("ledger do api-budget travado");
-      else await Bun.sleep(25);
+      if (reclaimIfStale(lock)) continue;
+      if (attempt > 600) throw new Error("ledger do api-budget travado");
+      await Bun.sleep(25);
     }
   }
   try {
-    const state = loadState(path);
+    const state = await loadState(path);
     const result = body(state);
     writeFileSync(`${path}.tmp`, JSON.stringify(state));
     // No Windows o rename sobre um arquivo aberto por um leitor (o relatório) pode falhar por instantes.
@@ -97,9 +138,8 @@ export async function updateLedger<T>(path: string, body: (state: LedgerState) =
 /** Leitura sem escrita e sem trava, para relatórios. Arquivo ausente ou ilegível é um ledger vazio. */
 export function readLedger(path: string): LedgerState {
   try {
-    const raw = JSON.parse(readFileSync(path, "utf8")) as Partial<LedgerState>;
-    return { usage: raw.usage ?? {}, blocked: raw.blocked ?? {}, cooldown: raw.cooldown ?? {} };
+    return parseState(readFileSync(path, "utf8"));
   } catch {
-    return { usage: {}, blocked: {}, cooldown: {} };
+    return emptyState();
   }
 }

@@ -63,6 +63,15 @@ describe("assessHypothesis", () => {
     expect(a.requiredPWinBySymmetricMove.every((r) => r.costBps === 0)).toBe(true);
   });
 
+  test("o status das compras vem dos dados: amostra grande e boa não é 'não sustentada'", () => {
+    const good = assessHypothesis({ ...measured, forwardBuys: { n: 200, meanBps: 150, atLeastTarget: { k: 180, ci95: [0.85, 0.94] } } });
+    expect(byId(good, "retorno_das_compras").status).toBe("nao_demonstrada");
+    const bad = assessHypothesis({ ...measured, forwardBuys: { n: 200, meanBps: -100, atLeastTarget: { k: 5, ci95: [0.01, 0.06] } } });
+    expect(byId(bad, "retorno_das_compras").status).toBe("nao_sustentada");
+    const small = assessHypothesis({ ...measured, forwardBuys: { n: 12, meanBps: -100, atLeastTarget: { k: 0, ci95: [0, 0.24] } } });
+    expect(byId(small, "retorno_das_compras").status).toBe("nao_demonstrada");
+  });
+
   test("amostra grande de vendas sem ganho passa a não sustentar o retorno", () => {
     const a = assessHypothesis({ ...measured, realized: { n: 60, wins: 5, atLeastTarget: 2, returnPct: -0.5 } });
     expect(byId(a, "retorno_realizado").status).toBe("nao_sustentada");

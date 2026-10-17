@@ -338,7 +338,7 @@ export function backoffMs(attempt: number, retryAfterMs: number | undefined, rng
 
 export function createTransport(config: TransportConfig): Transport {
   // epoch ms until which every read is refused after a 402: a payment demand blocks until the next UTC month
-  let paymentBlockedUntil = 0;
+  const paymentBlocked = new Map<string, number>();
   function emit(event: CallEvent): void {
     if (config.onCall === undefined) return;
     try {
@@ -399,7 +399,7 @@ export function createTransport(config: TransportConfig): Transport {
       const requestPath = `${path}${method === "GET" ? buildQuery(input.query, path) : ""}`;
       const body = method === "POST" ? buildBody(input.body, path) : "";
       if (!config.canSend()) throw new OnchainosError("offline", config.offlineDetail, { endpoint: path });
-      if (config.now() < paymentBlockedUntil) throw new OnchainosError("http", "pagamento exigido pelo provedor: chamadas bloqueadas até o próximo mês UTC", { endpoint: path, httpStatus: 402 });
+      if (config.now() < (paymentBlocked.get(path) ?? 0)) throw new OnchainosError("http", "pagamento exigido pelo provedor: chamadas bloqueadas até o próximo mês UTC", { endpoint: path, httpStatus: 402 });
 
       config.quota.recordCall(endpoint.tier);
       const requestedAtMs = config.now();
@@ -428,7 +428,7 @@ export function createTransport(config: TransportConfig): Transport {
           continue;
         }
         if (status < 200 || status >= 300) {
-          if (status === 402) paymentBlockedUntil = nextUtcMonthMs(config.now());
+          if (status === 402) paymentBlocked.set(path, nextUtcMonthMs(config.now()));
           emit({ endpoint: pathOnly(path), tier: endpoint.tier, attempt: attempts, status, elapsedMs, outcome: "error" });
           const info = readProviderInfo(text, secrets);
           const kind: OnchainosErrorKind = status === 429 ? "rate_limited" : "http";

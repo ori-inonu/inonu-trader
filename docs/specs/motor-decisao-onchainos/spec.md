@@ -40,10 +40,10 @@ O teste `src/decision/boundary.test.ts` verifica a fronteira no código-fonte: i
 
 ### Peças
 
-- `src/decision/pipeline.ts`: filtro (dado inválido, executor, risco, cotação velha, liquidez, slippage, gas, saldo de gas, correlação), edge líquido, tamanho por Kelly fracionado, controles de portfólio. Para na primeira etapa com motivo.
+- `src/decision/pipeline.ts`: filtro (dado inválido, executor, risco, cotação velha, liquidez, slippage, gas, saldo de gas, correlação), edge líquido, tamanho por Kelly fracionado, controles de portfólio. Para na primeira etapa com motivo. Oportunidade, carteira ou limites com número não finito ou fora do domínio são recusados com `bad_data` antes de qualquer conta. Quem fecha uma posição (venda com `legs: 1`) é redução de risco: sai por inteiro até o teto de liquidez, sem os limites de exposição, perda do dia, drawdown nem correlação, mas continua sujeito a risco do token, cotação válida, saldo de gas e executor disponível.
 - `src/decision/edge.ts`: custo por perna pago `legs` vezes (padrão 2), spread cheio uma vez, saída uma vez; `requiredPWin` resolve a probabilidade mínima para o alvo.
-- `src/decision/runner.ts`: decide, admite (breaker, idempotência, limites), pede autorização ao executor, grava a decisão antes de enviar (sem trilha de auditoria não há ordem), envia, atualiza breakers e reconcilia o custo da perna de entrada.
-- `src/decision/paper-port.ts`: porta paper e replay, idempotente por id, nonce sequencial, preço-limite, PnL realizado líquido de taxa e gas.
+- `src/decision/runner.ts`: decide, admite (breaker, idempotência, limites), pede autorização ao executor, grava a decisão antes de enviar (o log é obrigatório e, sem trilha de auditoria, não há ordem), serializa os passos para o nonce e o portfólio não intercalarem, envia, atualiza breakers e reconcilia o custo da perna de entrada.
+- `src/decision/paper-port.ts`: porta paper e replay que nunca lança: idempotente por id, nonce sequencial consumido por qualquer desfecho em sequência (preenchida, recusada ou falha), preço-limite, PnL realizado líquido de taxa e gas.
 - `src/decision/executor-health.ts`: abre após 3 falhas persistentes iguais, libera uma sonda por vez depois de 15 min, dobrando até 4 h.
 - `src/decision/telemetry.ts`: latência por etapa (`dados`, `decisao_local`, `cotacao`, `submissao`, `assinatura`, `inclusao`, `finalizacao`); etapa sem amostra aparece como não medida, nunca como zero.
 - `src/api-budget/*`: registry por módulo, endpoint, chave (nome da variável), cadeia, pool; tetos por minuto, hora e dia separados da franquia mensal; reserva de 20% para execução e segurança; cache com TTL e invalidação; coalescing; backoff com jitter e Retry-After no 429; bloqueio até o mês seguinte no 402; pacing adaptativo; contagem por endpoint; batcher (desligado até o limite de lote ser conhecido).
@@ -105,6 +105,10 @@ Conclusão operacional: o padrão correto do motor é `NAO_OPERAR`, e uma opera�
 - Concluir o setup do Gas Station da carteira: sem isso nenhuma ordem, de compra ou de venda, sai.
 - Conferir no portal o plano real das chaves Trade e Market e a data de criação da chave Trade. Com `JEV_OKX_PLAN` e `JEV_OKX_KEY_CREATED_AT` o registry passa a usar esses valores. Se a chave Trade já saiu do Trial, não defina `JEV_OKX_KEY_CREATED_AT`: passados 60 dias o registry nega as cotações como pagamento exigido.
 - Qualquer elevação de plano, uso de pagamento por chamada ou ligação do live.
+
+## Revisão independente
+
+Um revisor sem acesso à minha conclusão leu o código crítico e achou defeitos reais, todos corrigidos com teste: nonce da porta e do runner que se desalinhavam para sempre depois de uma recusa; carteira ou limites com `NaN` que desligavam limites e davam tamanho `NaN`; posição acima do limite que não podia ser fechada; pacer que contava falha devolvida como sucesso; `readLedger` que perdia a contagem por endpoint; erro de leitura que apagava o ledger; corridas na trava do ledger; status das compras que ignorava os dados; projeção que ignorava dias sem chamada; bloqueio 402 global. Aceito sem correção: uma chamada sem credencial ainda ocupa um slot do orçamento (impacto desprezível).
 
 ## Próximas ações
 

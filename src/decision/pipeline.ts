@@ -1,7 +1,7 @@
 import { grossEdgeBps, totalCostBps } from "./edge";
 import { checkLimits } from "./controls";
-import { notionalCapUsd, positionRoomUsd, sizeUsd } from "./sizing";
-import { invalidFields } from "./validate";
+import { isClosing, notionalCapUsd, positionRoomUsd, sizeUsd } from "./sizing";
+import { invalidFields, invalidLimits, invalidPortfolio } from "./validate";
 import type {
   Action,
   Decision,
@@ -26,9 +26,10 @@ export function evaluate(
 ): Decision {
   const now = clock.now();
   const stages: StageTrace[] = [];
-  if (invalidFields(opp).length > 0) {
+  if (invalidFields(opp).length + invalidPortfolio(port).length + invalidLimits(limits).length > 0) {
     return { action: "NAO_OPERAR", id: String(opp.id), symbol: String(opp.symbol), sizeUsd: 0, grossEdgeBps: 0, costBps: 0, netEdgeBps: 0, reasons: ["bad_data"], stages: [{ name: "filtro", ok: false, reason: "bad_data", ms: 0 }] };
   }
+  const closing = isClosing(opp);
   const cap = notionalCapUsd(opp, port, limits);
   const gross = grossEdgeBps(opp);
   // Cota superior: no teto o custo por notional é o menor possível. Se já falha aqui, nenhum tamanho passa.
@@ -62,14 +63,19 @@ export function evaluate(
     if (opp.blocked !== undefined) r.push("blocked_token");
     if (opp.riskScore > limits.maxRiskScore) r.push("risk_score_high");
     if (now - opp.quoteAtMs > limits.maxQuoteAgeMs) r.push("quote_stale");
-    if (opp.liquidityUsd < limits.minLiquidityMultiple * positionRoomUsd(opp, port, limits)) r.push("liquidity_thin");
+    // Quem fecha vende até onde a liquidez deixa (o teto de notional cuida disso): liquidez rasa não prende a saída.
+    if (!closing && opp.liquidityUsd < limits.minLiquidityMultiple * positionRoomUsd(opp, port, limits)) r.push("liquidity_thin");
     if (opp.costs.slippageBps > limits.maxSlippageBps) r.push("slippage_over_cap");
     if (opp.costs.gasUsd > limits.maxGasUsd) r.push("gas_over_cap");
     if (limits.minGasBalanceUsd !== undefined && !(port.gasBalanceUsd !== undefined && port.gasBalanceUsd >= limits.minGasBalanceUsd)) r.push("gas_balance_low");
-    const correlated = Object.entries(port.exposureUsd).some(
-      ([s, v]) => v !== 0 && s !== opp.symbol && Math.abs(port.correlation(opp.symbol, s)) > limits.maxCorrelation,
-    );
-    if (correlated) r.push("correlation_high");
+    // Correlação limita risco novo: não vale para fechar uma posição. Valor não finito é dado ruim, nunca "sem correlação".
+    if (!closing) {
+      const corr = Object.entries(port.exposureUsd)
+        .filter(([s, v]) => v !== 0 && s !== opp.symbol)
+        .map(([s]) => port.correlation(opp.symbol, s));
+      if (corr.some((c) => !Number.isFinite(c))) r.push("bad_data");
+      else if (corr.some((c) => Math.abs(c) > limits.maxCorrelation)) r.push("correlation_high");
+    }
     return r;
   });
   if (filtro.length > 0) return decide("NAO_OPERAR", filtro);
@@ -83,7 +89,7 @@ export function evaluate(
 
   const sizing = timed("sizing", () => {
     size = sizeUsd(opp, port, limits);
-    if (size <= 0) return ["size_zero"];
+    if (!(size > 0)) return ["size_zero"];
     // Custos recalculados no tamanho final: gas e falha pesam mais em bps quando o notional é menor.
     cost = totalCostBps(opp, size);
     net = gross - cost;
@@ -94,7 +100,7 @@ export function evaluate(
   if (sizing.length > 0) return decide("NAO_OPERAR", sizing);
 
   const controles = timed("controles", () => {
-    const r = checkLimits(size, opp.symbol, port, limits);
+    const r = checkLimits(size, opp.symbol, port, limits, closing);
     return r === "ok" ? [] : [r];
   });
   if (controles.length > 0) return decide("NAO_OPERAR", controles);

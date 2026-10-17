@@ -168,6 +168,20 @@ describe("runner", () => {
     expect((await runner.step(opportunity("b"))).fill?.status).toBe("filled");
   });
 
+  test("venda sem posição é recusada pela porta e a próxima ordem ainda sai (regressão do nonce)", async () => {
+    const { runner } = setup({ deps: { portfolio: () => portfolio({ exposureUsd: { TOKEN: 500 } }) } });
+    const sale = await runner.step(opportunity("s1", { side: "sell", legs: 1 }));
+    expect(sale.fill).toMatchObject({ status: "rejected", reason: "sem_posicao" });
+    const next = await runner.step(opportunity("b1", { symbol: "OTHER" }));
+    expect(next.fill?.status).toBe("filled");
+    const again = await runner.step(opportunity("b2", { symbol: "OTHER" }));
+    expect(again.fill?.status).toBe("filled");
+  });
+
+  test("sem log de auditoria o runner nem monta", () => {
+    expect(() => setup({ deps: { log: undefined as never } })).toThrow("sem log de auditoria");
+  });
+
   test("guard e porta em modos diferentes não montam", () => {
     expect(() => setup({ deps: { guard: createGuard({ mode: "replay", failureThreshold: 3, cooldownMs: 1 }) } })).toThrow("modos diferentes");
   });

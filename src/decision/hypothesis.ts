@@ -90,7 +90,8 @@ export function assessHypothesis(i: HypothesisInputs): Assessment {
     const f = i.forwardBuys;
     findings.push({
       id: "retorno_das_compras",
-      status: f.n < 30 ? "nao_demonstrada" : "nao_sustentada",
+      // Só com amostra suficiente E média não positiva E o limite superior do IC abaixo de metade das compras chegando ao alvo.
+      status: f.n >= 30 && f.meanBps <= 0 && f.atLeastTarget.ci95[1] < 0.5 ? "nao_sustentada" : "nao_demonstrada",
       evidence: `${f.n} compras do modelo, retorno médio ${num(f.meanBps, 0)} bps em 15 minutos; ${f.atLeastTarget.k} chegaram a ${i.targetNetBps} bps (IC 95% da fração: ${pct(f.atLeastTarget.ci95[0])} a ${pct(f.atLeastTarget.ci95[1])}), antes de qualquer custo.`,
     });
   }

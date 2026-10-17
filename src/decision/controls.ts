@@ -1,4 +1,4 @@
-import { sizeUsd } from "./sizing";
+import { isClosing, sizeUsd } from "./sizing";
 import type { Limits, Mode, Opportunity, Portfolio, Reason } from "./types";
 
 /** Só replay e paper. Qualquer caminho de execução passa por aqui; não existe modo live neste módulo. */
@@ -56,8 +56,13 @@ export function breakerRecord(b: Breaker, ok: boolean, now: number): void {
   }
 }
 
-/** Limites de portfólio para um tamanho já escolhido. Retorna "ok" ou o primeiro motivo violado. */
-export function checkLimits(size: number, symbol: string, port: Portfolio, limits: Limits): Reason {
+/**
+ * Limites de portfólio para um tamanho já escolhido. Retorna "ok" ou o primeiro motivo violado.
+ * Fechar uma posição (`closing`) reduz risco: os limites de exposição, de perda do dia e de drawdown existem para
+ * impedir risco novo e não podem impedir a saída.
+ */
+export function checkLimits(size: number, symbol: string, port: Portfolio, limits: Limits, closing = false): Reason {
+  if (closing) return Number.isFinite(size) && size > 0 ? "ok" : "bad_data";
   const equity = port.equityUsd;
   const gross = Object.values(port.exposureUsd).reduce((sum, v) => sum + Math.abs(v), 0);
   const held = port.exposureUsd[symbol] ?? 0;
@@ -82,7 +87,7 @@ export function checkControls(
   if (!breakerAllow(guard.breaker, clock.now())) return "breaker_open";
   if (guard.decided.has(opp.id)) return "duplicate";
   guard.decided.add(opp.id);
-  return checkLimits(sizeUsd(opp, port, limits), opp.symbol, port, limits);
+  return checkLimits(sizeUsd(opp, port, limits), opp.symbol, port, limits, isClosing(opp));
 }
 
 export interface NonceState {

@@ -41,7 +41,8 @@ describe("custo por perna", () => {
     // bruto 0,6 x 250 - 0,4 x 100 = 110 bps. No teto de 1000 USD: uma perna custa 49,5 (líquido 60,5); duas custam 95 (líquido 15).
     const thin: Opportunity = { ...base, upBps: 250, downBps: 100, pWin: 0.6 };
     const strict = { ...limits, minNetEdgeBps: 30 };
-    const one = evaluate({ ...thin, legs: 1, side: "sell" }, port, strict, clock);
+    const holding = { ...port, exposureUsd: { TOKEN: 1000 } };
+    const one = evaluate({ ...thin, legs: 1, side: "sell" }, holding, strict, clock);
     expect(one.action).toBe("VENDER");
     expect(one.netEdgeBps).toBeCloseTo(60.5, 9);
     const both = evaluate(thin, port, strict, clock);
@@ -110,5 +111,74 @@ describe("controles de ambiente", () => {
     expect(evaluate(base, port, on, clock).reasons).toEqual(["gas_balance_low"]);
     // Controle desligado: o saldo não importa.
     expect(evaluate(base, { ...port, gasBalanceUsd: 0 }, limits, clock).action).toBe("COMPRAR");
+  });
+});
+
+describe("dado ruim na carteira e nos limites", () => {
+  test("campo não finito em qualquer um dos três lados recusa com bad_data, em vez de desligar um limite", () => {
+    const refused = (o: Opportunity, p: Portfolio, l: Limits) => evaluate(o, p, l, clock);
+    expect(refused(base, { ...port, dayPnlUsd: Number.NaN }, limits).reasons).toEqual(["bad_data"]);
+    expect(refused(base, { ...port, peakEquityUsd: Number.NaN }, limits).reasons).toEqual(["bad_data"]);
+    expect(refused(base, { ...port, equityUsd: 0 }, limits).reasons).toEqual(["bad_data"]);
+    expect(refused(base, { ...port, exposureUsd: { X: Number.NaN } }, limits).reasons).toEqual(["bad_data"]);
+    expect(refused(base, { ...port, gasBalanceUsd: Number.NaN }, limits).reasons).toEqual(["bad_data"]);
+    expect(refused(base, port, { ...limits, kellyFraction: Number.NaN }).reasons).toEqual(["bad_data"]);
+    expect(refused(base, port, { ...limits, maxDayLossPct: Number.NaN }).reasons).toEqual(["bad_data"]);
+    expect(refused(base, port, { ...limits, maxPositionPct: 2 }).reasons).toEqual(["bad_data"]);
+  });
+
+  test("correlação não finita é dado ruim, nunca ausência de correlação", () => {
+    const d = evaluate(base, { ...port, exposureUsd: { OTHER: 500 }, correlation: () => Number.NaN }, limits, clock);
+    expect(d.action).toBe("NAO_OPERAR");
+    expect(d.reasons).toEqual(["bad_data"]);
+  });
+
+  test("tamanho nunca sai NaN: o resultado do sizing é sempre finito e positivo ou zero", () => {
+    const d = evaluate(base, port, limits, clock);
+    expect(Number.isFinite(d.sizeUsd) && d.sizeUsd > 0).toBe(true);
+  });
+});
+
+describe("fechar posição é redução de risco", () => {
+  const sell: Opportunity = { ...base, side: "sell", legs: 1, upBps: 250, downBps: 100, pWin: 0.6 };
+  const loose = { ...limits, minNetEdgeBps: 10 };
+  const held = (usd: number, extra: Partial<Portfolio> = {}): Portfolio => ({ ...port, exposureUsd: { TOKEN: usd }, ...extra });
+
+  test("posição que valorizou acima do limite de posição ainda pode ser fechada, por inteiro", () => {
+    // maxPositionPct 5% de 20 mil = 1000 USD. Com 1500 abertos, abrir daria size_zero; fechar sai por inteiro.
+    expect(evaluate({ ...sell, side: "buy", legs: 2 }, held(1500), loose, clock).reasons).toEqual(["size_zero"]);
+    const d = evaluate(sell, held(1500), loose, clock);
+    expect(d.action).toBe("VENDER");
+    expect(d.sizeUsd).toBe(1500);
+  });
+
+  test("perda do dia e drawdown acima do limite impedem abrir, não fechar", () => {
+    const bad = held(800, { dayPnlUsd: -5000, peakEquityUsd: 40_000 });
+    expect(evaluate({ ...sell, side: "buy", legs: 2 }, bad, loose, clock).action).toBe("NAO_OPERAR");
+    expect(evaluate(sell, bad, loose, clock)).toMatchObject({ action: "VENDER", sizeUsd: 800 });
+  });
+
+  test("correlação alta com outra posição não prende a saída, mas prende a entrada", () => {
+    const p = { ...held(800), exposureUsd: { TOKEN: 800, OTHER: 500 }, correlation: () => 0.95 };
+    expect(evaluate(sell, p, loose, clock).action).toBe("VENDER");
+    expect(evaluate({ ...base, symbol: "NEW" }, p, loose, clock).reasons).toEqual(["correlation_high"]);
+  });
+
+  test("liquidez rasa limita o tamanho da saída em vez de recusá-la", () => {
+    // liquidez 1500 e múltiplo 2: no máximo 750 USD saem de uma vez.
+    const d = evaluate({ ...sell, liquidityUsd: 1500 }, held(2000), loose, clock);
+    expect(d).toMatchObject({ action: "VENDER", sizeUsd: 750 });
+  });
+
+  test("sem posição aberta não há o que fechar", () => {
+    const d = evaluate(sell, port, loose, clock);
+    expect(d.action).toBe("NAO_OPERAR");
+    expect(d.reasons).toEqual(["size_zero"]);
+  });
+
+  test("risco do token, cotação velha e executor indisponível continuam valendo para a saída", () => {
+    expect(evaluate({ ...sell, riskScore: 0.9 }, held(800), loose, clock).reasons).toEqual(["risk_score_high"]);
+    expect(evaluate({ ...sell, quoteAtMs: NOW - 10_000 }, held(800), loose, clock).reasons).toEqual(["quote_stale"]);
+    expect(evaluate(sell, held(800, { executorAvailable: false }), loose, clock).reasons).toEqual(["executor_unavailable"]);
   });
 });

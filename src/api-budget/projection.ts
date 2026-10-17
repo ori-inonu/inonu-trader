@@ -29,12 +29,12 @@ export function projectMonth(days: DailyUse, nowMs: number, franquia: number, wi
   const daysInMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0)).getUTCDate();
   const used = Object.values(days).reduce((sum, n) => sum + n, 0);
 
-  const complete = Object.keys(days)
-    .map(Number)
-    .filter((d) => d < today)
-    .sort((a, b) => b - a)
-    .slice(0, windowDays);
-  const ratePerDay = complete.length === 0 ? null : complete.reduce((sum, d) => sum + (days[String(d).padStart(2, "0")] ?? 0), 0) / complete.length;
+  // Janela de dias do calendário imediatamente antes de hoje. Dia ausente no arquivo é dia sem chamada (zero); dia
+  // anterior ao primeiro registro é dia em que o contador ainda não existia e fica de fora.
+  const first = Math.min(...Object.keys(days).map(Number));
+  const window: number[] = [];
+  for (let d = today - 1; d >= Math.max(1, today - windowDays); d--) if (d >= first) window.push(d);
+  const ratePerDay = window.length === 0 ? null : window.reduce((sum, d) => sum + (days[String(d).padStart(2, "0")] ?? 0), 0) / window.length;
 
   const todayUse = days[String(today).padStart(2, "0")] ?? 0;
   const left = daysInMonth - today;

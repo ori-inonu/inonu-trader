@@ -42,6 +42,25 @@ describe("porta paper", () => {
     expect((await p.submit(order("b", 2))).status).toBe("filled");
   });
 
+  test("toda recusa em sequência consome o nonce: a ordem seguinte usa o nonce seguinte", async () => {
+    const p = port();
+    expect((await p.submit(order("venda-sem-posicao", 1, { side: "sell" }))).reason).toBe("sem_posicao");
+    expect((await p.submit(order("a", 2))).status).toBe("filled");
+    expect((await p.submit(order("tamanho", 3, { sizeUsd: 0 }))).reason).toBe("tamanho_invalido");
+    expect((await p.submit(order("b", 4))).status).toBe("filled");
+    const semPreco = port({ priceFor: () => undefined });
+    expect((await semPreco.submit(order("x", 1))).reason).toBe("sem_preco");
+    expect((await semPreco.submit(order("y", 2))).reason).toBe("sem_preco");
+  });
+
+  test("callback que lança vira falha, nunca exceção, e consome o nonce", async () => {
+    const p = port({ priceFor: () => { throw new Error("fonte caiu"); } });
+    const first = await p.submit(order("a", 1));
+    expect(first).toMatchObject({ status: "failed", reason: "erro_da_fonte_de_preco", gasUsd: 0 });
+    expect((await p.submit(order("b", 2))).reason).toBe("erro_da_fonte_de_preco");
+    expect(p.pnl().gasUsd).toBe(0);
+  });
+
   test("preço pior que o limite é recusado; vender abaixo do limite também", async () => {
     const buy = await port({ priceFor: () => 2.5 }).submit(order("a", 1));
     expect(buy).toMatchObject({ status: "rejected", reason: "limite_de_preco" });

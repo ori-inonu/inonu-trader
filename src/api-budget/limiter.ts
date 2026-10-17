@@ -83,6 +83,8 @@ export interface Pacer {
   penalize(entry: BudgetEntry): void;
   /** Chamada bem-sucedida: após RECOVER_AFTER sucessos seguidos a escala sobe 25% (até 1). */
   reward(entry: BudgetEntry): void;
+  /** Chamada que voltou com falha (5xx, não autorizado, erro do provedor): interrompe a sequência de sucessos sem mexer na escala. */
+  reset(entry: BudgetEntry): void;
 }
 
 /**
@@ -111,6 +113,9 @@ export function createPacer(now: () => number, sleep: (ms: number) => Promise<vo
       const s = stateOf(poolId(entry));
       s.scale = Math.max(MIN_SCALE, s.scale / 2);
       s.streak = 0;
+    },
+    reset(entry) {
+      stateOf(poolId(entry)).streak = 0;
     },
     reward(entry) {
       const s = stateOf(poolId(entry));
