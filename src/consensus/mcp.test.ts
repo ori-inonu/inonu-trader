@@ -96,6 +96,12 @@ describe("the sequential decisions answer as an MCP server, and the paid part ne
     expect(seen).toEqual([7, undefined]);
   });
 
+  test.each([0, -3, 2.5, "5", null])("a max_calls that is given but is not a positive integer (%p) is refused, never silently dropped to no ceiling", async (bad) => {
+    let ran = 0;
+    const r = await call("consensus_run", { spec: raw(), max_calls: bad }, deps({ run: async () => (ran++, { receipt, meter: {} }) }));
+    expect([text(r).refused, ran]).toEqual(["max_calls, se informado, deve ser inteiro positivo", 0]);
+  });
+
   test("a bad spec comes back as an error result with a code, never as an exception", async () => {
     const r = await call("consensus_plan", { spec: { id: "x" } });
     expect([r.result.isError, text(r).error]).toEqual([true, "spec_invalida: options (de 2 a 8)"]);

@@ -65,7 +65,9 @@ export async function handleMessage(message: unknown, deps: McpDeps): Promise<Js
     if (params.name === "consensus_run") {
       if (!deps.hasKey()) return reply(id, content({ refused: "chave do provedor ausente no ambiente do servidor" }, true));
       const spec = parseSpec(args.spec);
-      const cap = typeof args.max_calls === "number" && Number.isInteger(args.max_calls) && args.max_calls >= 1 ? args.max_calls : undefined;
+      const given = args.max_calls;
+      if (given !== undefined && (typeof given !== "number" || !Number.isInteger(given) || given < 1)) return reply(id, content({ refused: "max_calls, se informado, deve ser inteiro positivo" }, true));
+      const cap = given;
       const { receipt, meter } = await deps.run(spec, cap);
       return reply(id, content({ receipt, meter, disclaimer: DISCLAIMER }));
     }

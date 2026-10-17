@@ -38,6 +38,7 @@ if (command === "plan") {
 }
 
 const capFlag = flag("--max-calls");
+if (rest.includes("--max-calls") && capFlag === undefined) refuse("recusado: --max-calls precisa de um valor");
 const cap = capFlag === undefined ? undefined : Number(capFlag);
 if (cap !== undefined && (!Number.isInteger(cap) || cap < 1)) refuse("recusado: --max-calls, se passado, deve ser inteiro positivo");
 const apiKey = process.env.TYPESAFE_API_KEY ?? process.env.TYPESAFE_AI_API_KEY;
