@@ -54,6 +54,8 @@ export interface FakeReply {
   status?: number;
   /** An object is sent as JSON; a string is sent as it is. */
   body?: unknown;
+  /** Response headers, looked up by lower case name (`retry-after`). */
+  headers?: Readonly<Record<string, string>>;
   /** The injected fetch throws this value. */
   throws?: unknown;
   /** The injected fetch never answers until the signal aborts it. */
@@ -108,8 +110,10 @@ export function makeFakeFetch(script: FakeScript, clock?: FakeClock): FakeFetch 
     }
     const status = reply.status ?? 200;
     const text = typeof reply.body === "string" ? reply.body : JSON.stringify(reply.body ?? envelope([]));
+    const headers = reply.headers;
     return Promise.resolve({
       status,
+      ...(headers === undefined ? {} : { headers: { get: (name: string): string | null => headers[name.toLowerCase()] ?? null } }),
       text: () => {
         if (reply.bodyThrows === true) return Promise.reject(new Error("corpo ilegível"));
         if (reply.hangBody === true) return new Promise<string>(() => undefined);

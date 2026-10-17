@@ -84,10 +84,14 @@ function sleep(ms: number, signal?: AbortSignal): Promise<void> {
   return promise;
 }
 
-/** Retry-After (delta seconds) as ms; absent or unparsable is undefined. */
+/** The longest Retry-After the ledger will keep: a bad value must not wedge the pool until someone edits the ledger by hand. */
+const RETRY_AFTER_MAX_MS = 3_600_000;
+
+/** Retry-After (delta seconds) as ms, at most one hour; absent, negative or unparsable is undefined. */
 function retryAfterMs(res: Response): number | undefined {
-  const raw = res.headers.get("retry-after");
-  return raw !== null && Number.isFinite(Number(raw)) ? Number(raw) * 1000 : undefined;
+  const raw = res.headers.get("retry-after")?.trim();
+  const seconds = raw === undefined || raw === "" ? Number.NaN : Number(raw);
+  return Number.isFinite(seconds) && seconds >= 0 ? Math.min(seconds * 1000, RETRY_AFTER_MAX_MS) : undefined;
 }
 
 interface Dispatch {

@@ -343,6 +343,26 @@ describe("D4: bounded retries", () => {
     await expect(http.get(GAS, { chainIndex: "1" })).rejects.toMatchObject({ kind: "rate_limited", httpStatus: 429, attempts: 3 });
   });
 
+  test("D4: a Retry-After in seconds is a floor under the backoff", async () => {
+    const { clock, http } = stack([{ status: 429, headers: { "retry-after": "5" } }, OK([{ ok: true }])]);
+    await http.get(GAS, { chainIndex: "1" });
+    // the deterministic backoff would be 1000 ms; the provider asked for 5 s
+    expect(clock.sleeps).toEqual([5000]);
+  });
+
+  test("D4: a Retry-After above the backoff cap is not waited for: the 429 is reported at once", async () => {
+    const { clock, fake, http } = stack([{ status: 429, headers: { "retry-after": "3600" } }, OK([{ ok: true }])]);
+    await expect(http.get(GAS, { chainIndex: "1" })).rejects.toMatchObject({ kind: "rate_limited", httpStatus: 429, attempts: 1 });
+    expect(clock.sleeps).toEqual([]);
+    expect(fake.calls.length).toBe(1);
+  });
+
+  test("D4: a Retry-After in HTTP-date form is ignored and the backoff applies", async () => {
+    const { clock, http } = stack([{ status: 429, headers: { "retry-after": "Wed, 21 Oct 2026 07:28:00 GMT" } }, OK([{ ok: true }])]);
+    await http.get(GAS, { chainIndex: "1" });
+    expect(clock.sleeps).toEqual([1000]);
+  });
+
   test("D4: the backoff doubles and is capped, with no randomness", async () => {
     const { clock, fake, http } = stack([{ status: 500 }, { status: 500 }, { status: 500 }, { status: 500 }, { status: 500 }, { status: 500 }], {
       maxRetries: 5,

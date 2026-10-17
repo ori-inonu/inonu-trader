@@ -429,7 +429,9 @@ export function createTransport(config: TransportConfig): Transport {
         const retryable = status === 429 || status >= 500;
         const elapsedMs = Math.max(0, config.now() - startedAtMs);
 
-        if (retryable && index < config.maxRetries) {
+        // a Retry-After longer than the backoff cap is not waited for inside the call: the 429 is reported and the caller decides
+        const waitTooLong = retryAfterMs !== undefined && retryAfterMs > config.backoffMaxMs;
+        if (retryable && index < config.maxRetries && !waitTooLong) {
           emit({ endpoint: pathOnly(path), tier: endpoint.tier, attempt: attempts, status, elapsedMs, outcome: "retry" });
           config.quota.recordRetry();
           await config.sleep(backoffMs(index, retryAfterMs, config.random ?? (() => 1), { baseMs: config.backoffBaseMs, maxMs: config.backoffMaxMs }));

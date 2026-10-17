@@ -533,6 +533,14 @@ describe("onchain client", () => {
     expect(calls).toHaveLength(1);
   });
 
+  test.each([["999999", 3_600_000], ["-5", 500], ["abc", 500], ["7", 7_000]])("429 with Retry-After %s sets the cooldown to %i ms (capped at one hour, junk ignored)", async (header, expectedMs) => {
+    const t = 1_000_000;
+    const { f } = fakeFetch(() => new Response("x", { status: 429, headers: { "retry-after": header } }));
+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0, budget: testBudget(() => t) });
+    await client.call(REQ, "free", ALLOW_DISPATCH);
+    expect(client.status().cooldownUntilMs).toBe(t + expectedMs);
+  });
+
   test("429 opens a jittered backoff cooldown (jitter 0.5 -> 500 ms) that short-circuits later calls", async () => {
     let t = 1_000_000;
     const { calls, f } = fakeFetch(() => new Response("x", { status: 429 }));
