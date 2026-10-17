@@ -285,6 +285,8 @@ export async function candidates(root: string, repo: string): Promise<{ id: stri
 }
 /** Ciclo de curadoria: o JEV decide esquecer ou manter; o mesmo conjunto nunca e reperguntado (sem_consenso nao se reformula). Sem `paid`, so lista. */
 export async function curate(root: string, repo: string, paid: boolean): Promise<string> {
+  const resumed = paid ? await resume(root) : undefined;
+  if (resumed) return `retomado: ${resumed}`;
   const found = await candidates(root, repo);
   if (!found.length) return "nada a esquecer";
   const id = `curadoria-${createHash("sha256").update(found.map((c) => c.id).sort().join(",")).digest("hex").slice(0, 12)}`;
@@ -303,14 +305,29 @@ export async function curate(root: string, repo: string, paid: boolean): Promise
   await unlink(specPath);
   if (!existsSync(out)) return `juiz indisponivel: ${id}, nada mudou`;
   const receipt = JSON.parse(await readFile(out, "utf8")) as { receipt: { status: string; leader?: string } };
-  const rid = await recordReceipt(root, out);
-  if (receipt.receipt.status !== "consenso" || receipt.receipt.leader !== "forget") {
+  if (receipt.receipt.status === "consenso" && receipt.receipt.leader === "forget") {
+    await addNode(root, { id: `plano-${id}`, type: "event", text: `Esquecer por decisao JEV ${id}: ${found.map((c) => c.id).join(",")}` }, [nodes.at(-1)!.id]);
+  } else {
+    const rid = await recordReceipt(root, out);
     await addNode(root, { id: `mantidos-${id}`, type: "event", text: `Mantidos sem decisao de esquecer (${receipt.receipt.status}): ${found.map((c) => c.id).join(",")}` }, [rid]);
     return `${receipt.receipt.status}: nada esquecido (${rid})`;
   }
-  for (const c of found) await retractNode(root, c.id, `curadoria JEV ${id}: ${c.why}`);
-  await addNode(root, { id: `iter-${id}`, type: "iteration", text: `Curadoria: JEV decidiu esquecer ${found.length} nos obsoletos (${found.map((c) => c.id).join(", ").slice(0, 150)})` }, [rid]);
-  return `esquecidos ${found.length}: ${id}`;
+  return (await resume(root)) ?? "nada a retomar";
+}
+/** Conclui planos `plano-*` ja decididos pelo JEV (recibo gravado) e ainda sem `iter-*`: retrata so o que falta, entao uma queda no meio do lote nao perde a decisao. */
+async function resume(root: string): Promise<string | undefined> {
+  const { graph } = await load(root, true);
+  const open = graph.nodes.find((n) => n.id.startsWith("plano-") && !graph.nodes.some((m) => m.id === `iter-${n.id.slice(6)}`));
+  if (!open) return undefined;
+  const id = open.id.slice(6);
+  if (!graph.nodes.some((n) => n.id === `jev-${id}`)) await recordReceipt(root, join(root, "receipts", `${id}.json`), [open.id]);
+  const ids = open.text.split(": ")[1]!.split(",");
+  const r = JSON.parse(await readFile(join(root, "receipts", `${id}.json`), "utf8")) as { receipt: { status: string; leader?: string } };
+  if (id !== `curadoria-${createHash("sha256").update([...ids].sort().join(",")).digest("hex").slice(0, 12)}` || r.receipt.status !== "consenso" || r.receipt.leader !== "forget") throw new Error(`plano sem recibo valido: ${id}`);
+  const pending = ids.filter((x) => graph.nodes.some((n) => n.id === x));
+  for (const x of pending) await retractNode(root, x, `curadoria JEV ${id}`);
+  await addNode(root, { id: `iter-${id}`, type: "iteration", text: `Curadoria: JEV decidiu esquecer ${ids.length} nos obsoletos (${ids.join(", ").slice(0, 150)})` }, [open.id]);
+  return `esquecidos ${pending.length} de ${ids.length}: ${id}`;
 }
 
 async function main(): Promise<void> {

@@ -180,6 +180,26 @@ test("curation lists repeated keys and dead paths, spares git pointers, and neve
   expect(await candidates(root, repo)).toEqual([]);
 });
 
+test("an interrupted forget plan resumes only with paid consent and a valid consensus receipt, retracting just what is left", async () => {
+  const root = tempRoot(), repo = tempRoot();
+  await addNode(root, { id: "a", type: "fact", text: "Alfa." });
+  await addNode(root, { id: "b", type: "fact", text: "Beta." }, ["a"]);
+  const id = `curadoria-${createHash("sha256").update("a,b").digest("hex").slice(0, 12)}`;
+  await addNode(root, { id: `plano-${id}`, type: "event", text: `Esquecer por decisao JEV ${id}: a,b` }, ["b"]);
+  await retractNode(root, "a", "ja feito antes da queda");
+  const write = (status: string) => { mkdirSync(join(root, "receipts"), { recursive: true }); writeFileSync(join(root, "receipts", `${id}.json`), JSON.stringify({ receipt: { v: 1, specId: id, specHash: "0".repeat(64), status, leader: "forget" } })); };
+  const before = await verify(root);
+  await curate(root, repo, false);
+  expect(await verify(root)).toEqual(before);
+  write("sem_consenso");
+  await expect(curate(root, repo, true)).rejects.toThrow("plano sem recibo valido");
+  expect((await search(root, "Beta")).length).toBe(1);
+  write("consenso");
+  expect(await curate(root, repo, true)).toBe(`retomado: esquecidos 1 de 2: ${id}`);
+  expect(await search(root, "Beta")).toEqual([]);
+  expect((await search(root, "Esquecer por")).length).toBe(1);
+});
+
 test("export with a focus returns only nodes within the given depth and rejects unknown ids", async () => {
   const root = tempRoot();
   await addNode(root, { id: "a", type: "fact", text: "Alfa." });

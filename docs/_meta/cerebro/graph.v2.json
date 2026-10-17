@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 802,
-  "headHash": "3bce0175b59f6763cf3f49a0e5b8d2707d968a321befc2ea1ea65c003ec12164",
+  "headSeq": 804,
+  "headHash": "639fc4486338f725e836475a99320d9525bd2b7c560e951a14fe8476d44caa77",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1112,6 +1112,11 @@
       "id": "iter-curadoria",
       "type": "iteration",
       "text": "Comando curate: candidatos por iteracao velha, chave @ repetida e arquivo morto; JEV decide esquecer ou manter (passo 18, in_cerebro); mantidos nao sao reperguntados. Ciclos reais: sem_consenso, nada esquecido."
+    },
+    {
+      "id": "iter-curadoria-retomada",
+      "type": "iteration",
+      "text": "curate: plano-* gravado antes das retratacoes; retomada so com --paid e recibo consenso/forget cujo hash bate com os ids; dry-run nunca muda o grafo. Fecha lacuna de queda no meio do lote."
     }
   ],
   "edges": [
@@ -3424,6 +3429,11 @@
       "from": "fato-pesquisa-loop-harness",
       "to": "iter-curadoria",
       "seq": 802
+    },
+    {
+      "from": "iter-curadoria",
+      "to": "iter-curadoria-retomada",
+      "seq": 804
     }
   ],
   "retractions": [
