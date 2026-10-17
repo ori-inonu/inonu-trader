@@ -48,3 +48,11 @@ A `main` local (`c67b39e` antes desta sessão) rastreia `upstream/main`, o repos
 ## 5. Prontidão para operação real (apenas informativo)
 
 O agente **não** liga nem recomenda ligar operação real. O estado verificado hoje não atende a nenhum portão: merge do checkout principal sem resolver, dois testes de `src/real` e um de `src/settings` já falham na base `c67b39e`, a qualificação formal (`docs/LIVE-QUALIFICATION.md`, `scripts/qualify-live.ts`) não foi percorrida, e a regra do `AGENTS.md` mantém o live bloqueado até qualificação e autorização do dono. Qualquer passo nessa direção é do dono.
+
+## 6. Rodada 2: autoresearch e trabalho do Codex (estado final)
+
+- **`main` local** avançada por fast-forward até a ponta de `integracao/evidencias-codex` (sem push). Contém, além do que a seção 2 descreve: a branch `autoresearch` (18 conflitos resolvidos à mão), 3 correções vindas da revisão independente, o módulo `src/decision-evidence` (R3) e o registro no grafo. Decisões, validação e pendências: [integracao-autoresearch.md](integracao-autoresearch.md).
+- **Worktrees removidos** (somente os meus, limpos ou com cópia em `C:/Users/gabri/backup-integracao-20261017/`): `rc-base`, `rc-depois`, `rc-goal1` e os três `wf_1930517d-e57-*`. Nenhuma branch foi apagada. A pasta vazia `.claude/worktrees/rc-autoresearch` ficou presa por um processo do Windows; pode apagar depois.
+- **R4** (`learning-evidence`) ganhou a branch `codex/learning-evidence-wip` (commit `12a5bfa`) no worktree do Codex. R3 já está na `main`; a cópia não rastreada continua no worktree do Codex e pode ser descartada pelo dono.
+- **Intocados**: o merge em andamento do checkout principal, `jev-trader-goal1` (sessão ativa e alterações não commitadas), `jev-trader-main` (produção, portas 3020 e 3021) e os worktrees de `feat/cerebro-grafo-v2` e `decision-weight-evidence`.
+- **Modo real, produção e live: não ligados.** Continua sendo decisão do dono, depois da qualificação (`docs/LIVE-QUALIFICATION.md`, `scripts/qualify-live.ts`) e da atualização do checkout de produção com plano de rollback.
