@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { AgentScreen, type AgentScreenProps } from "@/components/Agent/AgentScreen";
 import { CONNECTED_STATE, DISCONNECTED_STATE, NOW, rawStatus, sampleStatus, WALLET_TRADING } from "./fixtures";
 
-const noop = () => {};
+const noop = () => { };
 const base = (over: Partial<AgentScreenProps> = {}): AgentScreenProps => ({
   load: "ready",
   error: null,
@@ -248,7 +248,8 @@ describe("the steps of the agent's own wallet", () => {
   });
 
   test("when it all holds the card is gone and the agent is trading", () => {
-    const s = sampleStatus({ mode: "limitado", authority: { level: "dinheiro", blocked: null, ownerPolicy: "exigida" }, wallet: WALLET_TRADING, last: null, config: { ...(rawStatus().status.config as object), managed: { kind: "agentica", evm: "0x2222222222222222222222222222222222222222", solana: null } } });
+    const book = rawStatus().status.book as Record<string, unknown>;
+    const s = sampleStatus({ mode: "limitado", authority: { level: "dinheiro", blocked: null, ownerPolicy: "exigida" }, wallet: WALLET_TRADING, last: null, book: { ...book, observedAtMs: NOW - 4 * 60_000, quality: "current" }, config: { ...(rawStatus().status.config as object), managed: { kind: "agentica", evm: "0x2222222222222222222222222222222222222222", solana: null } } });
     const html = draw({ status: s });
     expect(html).not.toContain("o que falta para ele executar sozinho");
     expect(html).toContain("Operando");

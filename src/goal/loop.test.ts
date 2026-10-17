@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { addTask, bearings, blockTask, decide, humanReturned, LIMITS, markPassed, newState, onStop, STAGES, type GoalState, type StopInput } from "./loop";
+import { addTask, bearings, blockTask, decide, FENCED_TOPICS, LIMITS, markPassed, newState, onStop, STAGES, type GoalState, type StopInput } from "./loop";
 
 const NOW = Date.UTC(2026, 9, 15, 16, 0, 0);
 const SESSION = "b042d27b-ae6e-41ff-9200-03525d35a410";
@@ -72,16 +72,22 @@ describe("a stop is answered with the next step of the workflow, and never with 
     expect(r.output?.reason).toContain("consensus_run");
   });
 
-  test("after too many idle stops the session may stop and the question for the person is recorded", () => {
+  test("many idle stops in a row never let the session stop: the wayfinder keeps coming, with the questions sent to the Jev", () => {
     let s = state();
-    for (let i = 0; i < LIMITS.maxIdleStops + 1; i++) s = onStop(s, input({ digest: "same" })).state;
-    expect([onStop(s, input({ digest: "same" })).output, s.needsHuman !== null]).toEqual([null, true]);
+    for (let i = 0; i < 20; i++) s = onStop(s, input({ digest: "same" })).state;
+    const r = onStop(s, input({ digest: "same" }));
+    expect([r.output?.decision, r.output?.reason.includes("consensus_run"), r.output?.reason.includes("Nunca pare para perguntar")]).toEqual(["block", true, true]);
   });
 
-  test("past the hourly cap of continuations the session may stop and says why", () => {
-    const stamps = Array.from({ length: LIMITS.maxBlocksPerHour }, (_, i) => NOW - i * 1000);
-    const r = onStop(state({ loop: { stops: 0, blocks: 0, idleStops: 0, lastDigest: null, blockStamps: stamps } }), input());
-    expect([r.output, r.state.needsHuman !== null]).toEqual([null, true]);
+  test("many continuations in the same hour still continue: the loop has no hourly cap", () => {
+    let s = state();
+    for (let i = 0; i < 100; i++) s = onStop(s, input({ digest: `d${i}` })).state;
+    expect(onStop(s, input({ digest: "last" })).output?.decision).toBe("block");
+  });
+
+  test("the fenced topics are listed in the wayfinder message as never decided by the Jev and never asked of the person", () => {
+    const reason = onStop(state(), input()).output!.reason;
+    expect(FENCED_TOPICS.every((topic) => reason.includes(topic))).toBe(true);
   });
 
   test("a task recorded as blocked leaves the queue with its reason, so it is not handed over again", () => {
@@ -90,12 +96,12 @@ describe("a stop is answered with the next step of the workflow, and never with 
     expect([blocked.queue[0]!.status, onStop(blocked, input()).output?.reason.includes("Needs the quota")]).toEqual(["blocked", false]);
   });
 
-  test("when everything left is blocked, the first repeated stop releases the session with the blocked reasons as the question, instead of sending the wayfinder again", () => {
+  test("when everything left is blocked, the session keeps going with the wayfinder step and never releases itself to ask the person", () => {
     let s = addTask(state(), { stage: "planejar", title: "Owner decision on the hot interval" });
-    s = blockTask(s, s.queue[0]!.id, "only the owner decides what changes the live behavior");
+    s = blockTask(s, s.queue[0]!.id, "fenced: only the owner decides what changes the live behavior");
     const first = onStop(s, input({ digest: "same" }));
     const second = onStop(first.state, input({ digest: "same" }));
-    expect([first.output?.decision, second.output, second.state.needsHuman?.includes("only the owner decides")]).toEqual(["block", null, true]);
+    expect([first.output?.decision, second.output?.decision, second.output?.reason.includes("consensus_run")]).toEqual(["block", "block", true]);
   });
 
   test("a queue that still has a task to do is never released by the blocked rule", () => {
@@ -141,12 +147,7 @@ describe("a stop is answered with the next step of the workflow, and never with 
 
   test("the bearings at a session start list the features with their passes and what the person is waited for", () => {
     const s = markPassed(addTask(addTask(state(), { stage: "planejar", title: "A" }), { stage: "implementar", title: "B" }), "t1", "ok");
-    const text = bearings({ ...s, needsHuman: "Which path?" });
-    expect([text.includes("1 de 2 passaram"), text.includes("[x] t1"), text.includes("Which path?")]).toEqual([true, true, true]);
-  });
-
-  test("when the person comes back the loop counts again", () => {
-    const s = humanReturned({ ...state(), needsHuman: "x", loop: { stops: 9, blocks: 5, idleStops: 4, lastDigest: "d", blockStamps: [] } });
-    expect([s.needsHuman, s.loop.idleStops]).toEqual([null, 0]);
+    const text = bearings(s);
+    expect([text.includes("1 de 2 passaram"), text.includes("[x] t1"), text.includes("Esperando o usuario")]).toEqual([true, true, false]);
   });
 });

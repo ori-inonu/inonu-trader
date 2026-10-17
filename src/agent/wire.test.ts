@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, setSystemTime, test } from "bun:test";
-import { createHash } from "node:crypto";
+import { afterEach, beforeEach, describe, expect, setSystemTime, spyOn, test } from "bun:test";
+import * as filesystem from "node:fs";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { BriefSource, BuiltBrief } from "../inonu/ask";
@@ -11,6 +12,7 @@ import type { SettingsStore } from "../settings/store";
 import type { CliResult, CliRunner } from "./cli";
 import { resetOkxClockForTests } from "../okx-clock";
 import { createAgentService, STOP_MARK } from "./wire";
+import { MAX_BOOK_AGE_MS } from "./gate";
 import type { AgentModel } from "./model";
 import { DISCLOSURE } from "./state";
 
@@ -105,8 +107,653 @@ const configure = (svc: ReturnType<typeof make>, kind: "propria" | "agentica" = 
 const connect = (svc: ReturnType<typeof make>) => {
   expect(svc.connect({ disclosure: DISCLOSURE })).toMatchObject({ ok: true });
 };
+type ManualTimer = { readonly ms: number; readonly fn: () => void; canceled: boolean };
+const manualTimers = () => {
+  const timers: ManualTimer[] = [];
+  return {
+    timers,
+    schedule(ms: number, fn: () => void) {
+      const timer: ManualTimer = { ms, fn, canceled: false };
+      timers.push(timer);
+      return () => { timer.canceled = true; };
+    },
+  };
+};
+const fireTimer = (timers: ManualTimer[], ms: number): ManualTimer => {
+  const timer = timers.find((candidate) => candidate.ms === ms && !candidate.canceled);
+  if (timer === undefined) throw new Error(`missing timer: ${ms}`);
+  timer.canceled = true;
+  timer.fn();
+  return timer;
+};
+const flushAsync = async (): Promise<void> => {
+  for (let i = 0; i < 40; i++) await Promise.resolve();
+};
+const waitFor = async (condition: () => boolean): Promise<void> => {
+  for (let i = 0; i < 50; i++) {
+    if (condition()) return;
+    await flushAsync();
+  }
+  if (!condition()) throw new Error("condition did not settle");
+};
+
+describe("wallet status freshness", () => {
+  const connected = async (balanceSource: { balances(address: string, chains: readonly string[]): Promise<readonly RawTokenAsset[]> }) => {
+    const svc = make({ balances: balanceSource });
+    configure(svc);
+    connect(svc);
+    await svc.runNow();
+    return svc;
+  };
+
+  test("a failed managed read keeps the last good values and their original observation time, marked stale", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    try {
+      let fail = false;
+      const svc = await connected({
+        balances: async () => {
+          if (fail) throw new Error("synthetic managed read failure");
+          return balances.balances();
+        }
+      });
+      const first = svc.status().book!;
+      expect(first.quality).toBe("current");
+      expect(svc.devStatus().book).toEqual({
+        atMs: first.atMs, observedAtMs: first.observedAtMs, quality: "current",
+        totalUsd: first.totalUsd, agentUsd: first.agentUsd, cashUsd: first.cashUsd,
+      });
+      fail = true;
+      nowMs += 30_000;
+      await svc.runNow();
+      expect(svc.status().book).toMatchObject({
+        atMs: expect.any(Number), observedAtMs: first.observedAtMs, quality: "stale",
+        totalUsd: first.totalUsd, agentUsd: first.agentUsd, cashUsd: first.cashUsd,
+      });
+      expect(svc.devStatus().book).toEqual({
+        atMs: expect.any(Number),
+        observedAtMs: first.observedAtMs, quality: "stale", totalUsd: null, agentUsd: null, cashUsd: null,
+      });
+      expect(svc.status().book!.atMs).not.toBe(first.observedAtMs);
+    } finally {
+      Date.now = realNow;
+    }
+  });
+
+  test("without a successful managed book all financial values and the observation timestamp stay null", async () => {
+    const svc = await connected({ balances: async () => { throw new Error("synthetic managed read failure"); } });
+    expect(svc.status().book).toMatchObject({
+      quality: "unavailable", observedAtMs: null, totalUsd: null, agentUsd: null, cashUsd: null, positions: [],
+    });
+    expect(svc.devStatus().book).toEqual({
+      atMs: expect.any(Number), observedAtMs: null, quality: "unavailable",
+      totalUsd: null, agentUsd: null, cashUsd: null,
+    });
+  });
+
+  test("an unpriced managed position makes the successful fresh book partial", async () => {
+    const svc = await connected({ balances: async () => [asset({ tokenPrice: "" })] });
+    expect(svc.status().book).toMatchObject({ quality: "partial", managedOk: true, unpriced: 1 });
+    const full = svc.status().book!;
+    expect(svc.devStatus().book).toEqual({
+      atMs: full.atMs, observedAtMs: full.observedAtMs, quality: "partial",
+      totalUsd: full.totalUsd, agentUsd: full.agentUsd, cashUsd: full.cashUsd,
+    });
+  });
+
+  test("the existing book-age cutoff marks an otherwise successful cached book stale", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    try {
+      const svc = await connected({ balances: async () => balances.balances() });
+      const first = svc.status().book!;
+      expect(first.quality).toBe("current");
+      nowMs += MAX_BOOK_AGE_MS + 1;
+      expect(svc.status().book).toMatchObject({ quality: "stale", observedAtMs: first.observedAtMs });
+    } finally {
+      Date.now = realNow;
+    }
+  });
+
+  test("a failed principal/watch-only read does not taint the managed-wallet quality", async () => {
+    const svc = make({
+      balances: {
+        balances: async (address) => {
+          if (address === B) throw new Error("synthetic watch read failure");
+          return balances.balances();
+        }
+      }
+    });
+    configure(svc);
+    expect(svc.updateConfig({ watch: { evm: B, solana: null } })).toMatchObject({ ok: true });
+    connect(svc);
+    await svc.runNow();
+    expect(svc.status().book).toMatchObject({ quality: "current", managedOk: true, watchFailed: 1 });
+  });
+
+  test("a managed snapshot completed before the read deadline is retained when its watch-only read is still pending", async () => {
+    let managedCalls = 0;
+    let watchCalls = 0;
+    let pendingWatch = false;
+    const modelCalls = { n: 0 };
+    const svc = make({
+      model: buyer(modelCalls),
+      balances: {
+        balances: async (address) => {
+          if (address === B) {
+            watchCalls++;
+            if (pendingWatch) return new Promise<readonly RawTokenAsset[]>(() => { });
+            return [];
+          }
+          managedCalls++;
+          return [asset(pendingWatch ? { balance: "300000", rawBalance: "300000000000000000000000" } : {})];
+        },
+      },
+    });
+    configure(svc);
+    connect(svc);
+    await svc.runNow();
+    expect(managedCalls).toBe(1);
+    const previousObservedAtMs = svc.status().book!.observedAtMs!;
+    const nativeNow = Date.now;
+    const modelCallsBeforeTimeout = modelCalls.n;
+    const nativeSetTimeout = globalThis.setTimeout;
+    try {
+      Date.now = () => previousObservedAtMs + 1000;
+      expect(svc.updateConfig({ watch: { evm: B, solana: null } })).toMatchObject({ ok: true });
+      pendingWatch = true;
+      // Advance only the existing 25-second cycle deadline so this behavior stays deterministic and fast.
+      globalThis.setTimeout = ((handler: Parameters<typeof setTimeout>[0], timeout?: number) =>
+        nativeSetTimeout(handler, timeout === 25_000 ? 0 : timeout)) as typeof setTimeout;
+      await svc.runNow();
+    } finally {
+      globalThis.setTimeout = nativeSetTimeout;
+      Date.now = nativeNow;
+    }
+
+    expect(managedCalls).toBe(2);
+    expect(watchCalls).toBe(1);
+    expect(modelCalls.n).toBe(modelCallsBeforeTimeout);
+    const refreshedBook = svc.status().book!;
+    expect(refreshedBook).toMatchObject({ quality: "partial", managedOk: true, watchFailed: 1, agentUsd: null, totalUsd: null });
+    expect(refreshedBook.positions).toEqual(expect.arrayContaining([expect.objectContaining({ wallet: "agente", usd: null })]));
+    expect(refreshedBook.atMs).toBe(previousObservedAtMs + 1000);
+    expect(refreshedBook.observedAtMs).toBe(refreshedBook.atMs);
+  });
+
+  test("the status keeps managed rows within its 24-row limit ahead of larger watch-only positions", async () => {
+    const watched = Array.from({ length: 30 }, (_, i) => asset({
+      tokenContractAddress: `0x${(i + 100).toString(16).padStart(40, "0")}`,
+      symbol: `W${i}`,
+      balance: "100",
+      rawBalance: "100000000000000000000",
+      tokenPrice: "100",
+    }));
+    const svc = make({
+      balances: {
+        balances: async (address) => address === B ? watched : [asset({})],
+      },
+    });
+    configure(svc);
+    expect(svc.updateConfig({ watch: { evm: B, solana: null } })).toMatchObject({ ok: true });
+    connect(svc);
+    await svc.runNow();
+
+    const rows = svc.status().book!.positions;
+    expect(rows).toHaveLength(24);
+    expect(rows[0]).toMatchObject({ symbol: "AAA", wallet: "agente" });
+    expect(rows.slice(1).every((row) => row.wallet === "principal")).toBe(true);
+  });
+  test("a managed-wallet change invalidates cached values and fences an in-flight read, including a switch back", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    try {
+      let hold = false;
+      let started!: () => void;
+      let release!: () => void;
+      const readStarted = new Promise<void>((resolve) => { started = resolve; });
+      const blockedRead = new Promise<void>((resolve) => { release = resolve; });
+      const svc = await connected({
+        balances: async () => {
+          if (hold) {
+            started();
+            await blockedRead;
+          }
+          return balances.balances();
+        }
+      });
+      expect(svc.status().book?.quality).toBe("current");
+      nowMs += 30_000;
+      hold = true;
+      const inFlight = svc.runNow();
+      try {
+        await readStarted;
+        expect(svc.updateConfig({ managed: { kind: "propria", evm: B, solana: null } })).toMatchObject({ ok: true });
+        expect(svc.status().book).toBeNull();
+      } finally {
+        release();
+        await inFlight;
+      }
+      expect(svc.status().book).toBeNull();
+      expect(svc.updateConfig({ managed: { kind: "propria", evm: WALLET, solana: null } })).toMatchObject({ ok: true });
+      expect(svc.status().book).toBeNull();
+    } finally {
+      Date.now = realNow;
+    }
+  });
+  test("a started service without a managed wallet never schedules a balance refresh", async () => {
+    const timers = manualTimers();
+    let calls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      balances: { balances: async () => { calls++; return []; } },
+    });
+    try {
+      expect(svc.status().book).toBeNull();
+      expect(timers.timers.some((timer) => timer.ms === 30_000 && !timer.canceled)).toBe(false);
+      expect(calls).toBe(0);
+    } finally {
+      await svc.close();
+    }
+  });
+
+  test("the started wallet refresh reads without a cycle or status request", async () => {
+    const timers = manualTimers();
+    const modelCalls = { n: 0 };
+    let calls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      model: buyer(modelCalls),
+      balances: { balances: async () => { calls++; return balances.balances(); } },
+    });
+    try {
+      configure(svc);
+      expect(modelCalls.n).toBe(0);
+      fireTimer(timers.timers, 30_000);
+      await waitFor(() => calls === 1);
+      await flushAsync();
+      expect(svc.status().book).toMatchObject({ quality: "current", managedOk: true });
+      expect(modelCalls.n).toBe(0);
+      expect(calls).toBe(1);
+    } finally {
+      await svc.close();
+    }
+  });
+
+  test("the cycle reuses a successful read inside 30 seconds and the refresh gets the changed balance at expiry", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    const timers = manualTimers();
+    let calls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      balances: {
+        balances: async () => {
+          calls++;
+          const amount = calls === 1 ? "2.5" : "5";
+          const rawBalance = calls === 1 ? "2500000000000000000" : "5000000000000000000";
+          return [asset({ balance: amount, rawBalance }), asset({ tokenContractAddress: USDC, symbol: "USDC", balance: "1000", rawBalance: "1000000000", tokenPrice: "1" })];
+        },
+      },
+    });
+    try {
+      configure(svc);
+      connect(svc);
+      await svc.runNow();
+      const first = svc.status().book!;
+      expect(first.quality).toBe("current");
+      expect(calls).toBe(1);
+      nowMs += 29_999;
+      await svc.runNow();
+      expect(calls).toBe(1);
+      nowMs += 1;
+      fireTimer(timers.timers, 30_000);
+      await waitFor(() => calls === 2);
+      await flushAsync();
+      const refreshed = svc.status().book!;
+      expect(refreshed.quality).toBe("current");
+      expect(refreshed.agentUsd).toBeGreaterThan(first.agentUsd!);
+      expect(refreshed.observedAtMs).toBe(nowMs);
+    } finally {
+      Date.now = realNow;
+      await svc.close();
+    }
+  });
+
+  test("a failed background balance refresh keeps the last verified value and marks it stale", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    const timers = manualTimers();
+    let fail = false;
+    let calls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      balances: {
+        balances: async () => {
+          calls++;
+          if (fail) throw new Error("synthetic refresh failure");
+          return balances.balances();
+        },
+      },
+    });
+    try {
+      configure(svc);
+      fireTimer(timers.timers, 30_000);
+      await waitFor(() => calls === 1);
+      await flushAsync();
+      const first = svc.status().book!;
+      expect(first.quality).toBe("current");
+      fail = true;
+      nowMs += 30_000;
+      fireTimer(timers.timers, 30_000);
+      await waitFor(() => calls === 2);
+      await flushAsync();
+      expect(svc.status().book).toMatchObject({
+        quality: "stale", observedAtMs: first.observedAtMs,
+        totalUsd: first.totalUsd, agentUsd: first.agentUsd, cashUsd: first.cashUsd,
+      });
+    } finally {
+      Date.now = realNow;
+      await svc.close();
+    }
+  });
+
+  test("a managed-wallet change fences a late refresh result from the previous wallet", async () => {
+    const timers = manualTimers();
+    const oldRead = Promise.withResolvers<readonly RawTokenAsset[]>();
+    const oldStarted = Promise.withResolvers<void>();
+    let oldCalls = 0;
+    let newCalls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      balances: {
+        balances: async (address) => {
+          if (address === WALLET) {
+            oldCalls++;
+            oldStarted.resolve();
+            return oldRead.promise;
+          }
+          newCalls++;
+          return [asset({ address, balance: "7", rawBalance: "7000000000000000000" })];
+        },
+      },
+    });
+    try {
+      configure(svc);
+      fireTimer(timers.timers, 30_000);
+      await oldStarted.promise;
+      expect(svc.updateConfig({ managed: { kind: "propria", evm: B, solana: null } })).toMatchObject({ ok: true });
+      fireTimer(timers.timers, 30_000);
+      await waitFor(() => newCalls === 1 && svc.status().book?.quality === "current");
+      expect(svc.status().book?.agentUsd).toBe(28);
+      oldRead.resolve([asset({})]);
+      await flushAsync();
+      expect(svc.status().book).toMatchObject({ quality: "current", agentUsd: 28 });
+      expect(oldCalls).toBe(1);
+      expect(newCalls).toBe(1);
+    } finally {
+      await svc.close();
+    }
+  });
+
+  test("a stale price/liquidity response cannot publish a position as current", async () => {
+    const timers = manualTimers();
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      gateway: {
+        callInternal: async (route: string) => {
+          if (route !== "/onchain/price-info") return ok({ riskLevel: 1, tags: [] });
+          const response = ok([{ price: 4, liquidityUsd: 800_000 }]);
+          if (!response.ok) return response;
+          return { ...response, meta: { ...response.meta, stale: true } };
+        },
+      } as never,
+    });
+    try {
+      configure(svc);
+      fireTimer(timers.timers, 30_000);
+      await flushAsync();
+      const book = svc.status().book!;
+      expect(book.quality).toBe("partial");
+      expect(book.positions).toEqual(expect.arrayContaining([expect.objectContaining({ symbol: "AAA", usd: null })]));
+    } finally {
+      await svc.close();
+    }
+  });
+
+  test("close cancels the wallet refresh timer and its callback cannot read afterwards", async () => {
+    const timers = manualTimers();
+    let calls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      balances: { balances: async () => { calls++; return balances.balances(); } },
+    });
+    configure(svc);
+    const timer = timers.timers.find((candidate) => candidate.ms === 30_000 && !candidate.canceled)!;
+    await svc.close();
+    expect(timer.canceled).toBe(true);
+    timer.fn();
+    await flushAsync();
+    expect(calls).toBe(0);
+  });
+
+  test("30-second ticks and an overlapping cycle share at most one balance read per address", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    const timers = manualTimers();
+    const sol = "So11111111111111111111111111111111111111112";
+    const watchedSol = "So22222222222222222222222222222222222222222";
+    const addresses = [WALLET, sol, B, watchedSol];
+    const started = new Map<string, Promise<void>>();
+    const markStarted = new Map<string, () => void>();
+    const releases = new Map<string, (() => void)[]>();
+    const calls = new Map<string, number>();
+    const active = new Map<string, number>();
+    const maximumActive = new Map<string, number>();
+    for (const address of addresses) started.set(address, new Promise<void>((resolve) => markStarted.set(address, resolve)));
+    const releaseAll = (): void => {
+      for (const queue of releases.values()) for (const release of queue) release();
+    };
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      balances: {
+        balances: async (address) => {
+          calls.set(address, (calls.get(address) ?? 0) + 1);
+          const count = (active.get(address) ?? 0) + 1;
+          active.set(address, count);
+          maximumActive.set(address, Math.max(maximumActive.get(address) ?? 0, count));
+          markStarted.get(address)?.();
+          const pending = Promise.withResolvers<void>();
+          const queue = releases.get(address) ?? [];
+          queue.push(pending.resolve);
+          releases.set(address, queue);
+          await pending.promise;
+          active.set(address, (active.get(address) ?? 1) - 1);
+          return [];
+        },
+      },
+    });
+    try {
+      expect(svc.updateConfig({ auto: false, managed: { kind: "propria", evm: WALLET, solana: sol } })).toMatchObject({ ok: true });
+      expect(svc.updateConfig({ watch: { evm: B, solana: watchedSol } })).toMatchObject({ ok: true });
+      connect(svc);
+      await Promise.all(started.values());
+      nowMs += 30_000;
+      fireTimer(timers.timers, 30_000);
+      await flushAsync();
+      nowMs += 30_000;
+      fireTimer(timers.timers, 30_000);
+      for (const address of addresses) {
+        expect(calls.get(address)).toBe(1);
+        expect(maximumActive.get(address)).toBe(1);
+      }
+    } finally {
+      releaseAll();
+      await flushAsync();
+      await svc.close();
+      Date.now = realNow;
+    }
+  });
+
+
+  test("a delayed refresh cannot replace metadata from a newer failed wallet read", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    const timers = manualTimers();
+    const delayedInfo = Promise.withResolvers<InternalGatewayResult>();
+    let holdInfo = false;
+    let infoCalls = 0;
+    let balanceCalls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      gateway: {
+        callInternal: async (route: string) => {
+          if (route === "/onchain/price-info") {
+            infoCalls++;
+            if (holdInfo) return delayedInfo.promise;
+            return ok([{ price: 4, liquidityUsd: 800_000 }]);
+          }
+          return ok({ riskLevel: 1, tags: [] });
+        }
+      } as never,
+      balances: {
+        balances: async () => {
+          balanceCalls++;
+          if (balanceCalls === 3) throw new Error("synthetic newer wallet failure");
+          return balances.balances();
+        }
+      },
+    });
+    try {
+      configure(svc);
+      connect(svc);
+      await svc.scheduler.idle();
+      expect(svc.status().book?.quality).toBe("current");
+      holdInfo = true;
+      nowMs += 10 * 60_000;
+      fireTimer(timers.timers, 30_000);
+      await waitFor(() => balanceCalls === 2 && infoCalls >= 2);
+      nowMs += MAX_BOOK_AGE_MS + 1;
+      await svc.runNow();
+      expect(svc.devStatus().book?.quality).toBe("stale");
+      delayedInfo.resolve(ok([{ price: 4, liquidityUsd: 800_000 }]));
+      await flushAsync();
+      expect(svc.devStatus().book?.quality).toBe("stale");
+    } finally {
+      delayedInfo.resolve(ok([{ price: 4, liquidityUsd: 800_000 }]));
+      await flushAsync();
+      await svc.close();
+      Date.now = realNow;
+    }
+  });
+
+  test("an older cycle result arriving after a newer refresh cannot replace the newer snapshot", async () => {
+    const realNow = Date.now;
+    let nowMs = realNow();
+    Date.now = () => nowMs;
+    const timers = manualTimers();
+    const priceInfos: ((result: InternalGatewayResult) => void)[] = [];
+    const secondInfo = Promise.withResolvers<void>();
+    let calls = 0;
+    const svc = make({
+      start: true,
+      schedule: timers.schedule,
+      gateway: {
+        callInternal: async (route: string, params: Readonly<Record<string, string>>) => {
+          if (route === "/onchain/price-info" && params.token === A) {
+            const pending = Promise.withResolvers<InternalGatewayResult>();
+            priceInfos.push(pending.resolve);
+            if (priceInfos.length === 2) secondInfo.resolve();
+            return pending.promise;
+          }
+          return route === "/onchain/token-risk" ? ok({ riskLevel: 1, tags: [] }) : ok(null);
+        },
+      } as never,
+      balances: {
+        balances: async () => {
+          calls++;
+          const amount = calls === 1 ? "2.5" : "5";
+          const rawBalance = calls === 1 ? "2500000000000000000" : "5000000000000000000";
+          return [asset({ balance: amount, rawBalance }), asset({ tokenContractAddress: USDC, symbol: "USDC", balance: "1000", rawBalance: "1000000000", tokenPrice: "1" })];
+        },
+      },
+    });
+    try {
+      configure(svc);
+      connect(svc);
+      await waitFor(() => priceInfos.length === 1);
+      nowMs += 30_000;
+      fireTimer(timers.timers, 30_000);
+      await secondInfo.promise;
+      priceInfos[1]!(ok([{ price: 4, liquidityUsd: 800_000 }]));
+      await waitFor(() => svc.status().book?.agentUsd === 1020);
+      expect(svc.status().book?.quality).toBe("current");
+      priceInfos[0]!(ok([{ price: 4, liquidityUsd: 800_000 }]));
+      await svc.scheduler.idle();
+      await flushAsync();
+      expect(calls).toBe(2);
+      expect(svc.status().book).toMatchObject({ quality: "current", agentUsd: 1020 });
+    } finally {
+      for (const resolve of priceInfos) resolve(ok([{ price: 4, liquidityUsd: 800_000 }]));
+      await flushAsync();
+      await svc.close();
+      Date.now = realNow;
+    }
+  });
+
+});
 
 describe("a fresh agent", () => {
+  test("dev status reads only local state and cached data", async () => {
+    const gatewayCalls: string[] = [];
+    const balanceCalls: string[] = [];
+    const service = make({
+      gateway: { callInternal: async (route: string) => { gatewayCalls.push(route); return ok(null); } } as never,
+      balances: { balances: async (...args) => { balanceCalls.push(args[0]); return []; } },
+    });
+    const cliCount = cliCalls.length;
+    const fsSpies = [
+      spyOn(filesystem, "appendFileSync"),
+      spyOn(filesystem, "chmodSync"),
+      spyOn(filesystem, "existsSync"),
+      spyOn(filesystem, "mkdirSync"),
+      spyOn(filesystem, "readFileSync"),
+      spyOn(filesystem, "renameSync"),
+      spyOn(filesystem, "rmSync"),
+      spyOn(filesystem, "writeFileSync"),
+    ];
+    try {
+      const status = service.devStatus();
+      expect(status).toEqual({
+        atMs: expect.any(Number),
+        connected: false,
+        book: { atMs: expect.any(Number), observedAtMs: null, quality: "unavailable", totalUsd: null, agentUsd: null, cashUsd: null },
+      });
+      expect(gatewayCalls).toEqual([]);
+      expect(balanceCalls).toEqual([]);
+      expect(cliCalls.slice(cliCount)).toEqual([]);
+      expect(fsSpies.every((spy) => spy.mock.calls.length === 0)).toBe(true);
+    } finally {
+      for (const spy of fsSpies) spy.mockRestore();
+      await service.close();
+    }
+  });
   test("is not connected, says what each thing it does still needs, and wrote nothing yet", () => {
     const svc = make({ store: store({ okx: false, key: false }), model: null, ownerProfile: "livre" });
     const s = svc.status();
@@ -230,6 +877,38 @@ describe("shadow mode, end to end", () => {
     expect(s.ledger.map((r) => r.kind)).toEqual(["cycle", "order"]);
     // the files are on disk
     for (const f of ["ledger.jsonl", "scoreboard.jsonl", "state.json", "config.json", "budget.json"]) expect(existsSync(join(dir, "agent", f))).toBe(true);
+  });
+
+  test("a stale OnchainOS spot quote falls back to the scan price for a limited-mode plan", async () => {
+    let priceCalls = 0;
+    const svc = make({
+      gateway: {
+        callInternal: async (route: string): Promise<InternalGatewayResult> => {
+          if (route === "/onchain/price") {
+            priceCalls++;
+            const result = ok([{ price: 9 }]);
+            if (!result.ok) return result;
+            return { ...result, meta: { ...result.meta, stale: true }, sent: false };
+          }
+          if (route === "/onchain/candles") return ok(calmRows());
+          if (route === "/onchain/price-info") return ok([{ price: 4, liquidityUsd: 800_000, change: { h24: 1 }, volume: { h24: 500_000 } }]);
+          return ok({ riskLevel: 1, tags: [] });
+        },
+      } as never,
+    });
+    try {
+      expect(svc.updateConfig({ auto: false, managed: { kind: "agentica", evm: WALLET, solana: null }, riskPct: 0.1, cli: { path: "C:\\agent\\onchainos.exe", sha256: SHA } })).toMatchObject({ ok: true });
+      connect(svc);
+      mkdirSync(join(dir, "agent", "onchainos-home"), { recursive: true });
+      writeFileSync(join(dir, "agent", "onchainos-home", "session.json"), JSON.stringify({ sessionKeyExpireAt: Date.now() + 100 * HOUR }));
+      expect(svc.status().mode).toBe("limitado");
+      const report = await svc.runNow();
+      expect(report.outcome).toBe("decidido");
+      expect(priceCalls).toBe(2);
+      expect(svc.status().plans[0]?.entryPriceUsd).toBe(0.5);
+    } finally {
+      await svc.close();
+    }
   });
 
   test("the same picture is not asked about again", async () => {
@@ -477,6 +1156,37 @@ describe("the money mode, end to end", () => {
     mkdirSync(join(dir, "agent", "onchainos-home"), { recursive: true });
     writeFileSync(join(dir, "agent", "onchainos-home", "session.json"), JSON.stringify({ sessionKeyExpireAt: Date.now() + 100 * 24 * HOUR }));
   };
+  const ENTRY_BUY_ID = `buy:token:1:${B}`;
+  const failingQuote = (error: string, exitCode: number, calls: { quotes: number; executes: number }): CliRunner => ({
+    run: async (args, options) => {
+      const command = `${args[0]} ${args[1]}`;
+      if (command === "swap quote") {
+        calls.quotes++;
+        return { exitCode, stdout: JSON.stringify({ ok: false, error }), stderr: "", timedOut: false };
+      }
+      if (command === "swap execute") calls.executes++;
+      return fakeCli.run(args, options);
+    },
+  });
+  const observingModel = () => {
+    const seen: {
+      candidate: Parameters<AgentModel["choose"]>[0]["candidates"][number] | null;
+      item: Record<string, unknown> | null;
+    } = { candidate: null, item: null };
+    const base = buyer();
+    const model: AgentModel = {
+      ...base,
+      async choose(input) {
+        seen.candidate = input.candidates.find((candidate) => candidate.id === ENTRY_BUY_ID) ?? null;
+        seen.item = input.brief.compras[ENTRY_BUY_ID] ?? null;
+        return {
+          raw: { posture: "neutra", stances: Object.fromEntries(input.candidates.map((candidate) => [candidate.id, "skip"])), profiles: {} },
+          usage: { inputTokens: 1000, outputTokens: 100 },
+        };
+      },
+    };
+    return { seen, model };
+  };
 
   test("the time left of the session of the account is on the status, in milliseconds, and unknown when the tool has no session (A1.12)", async () => {
     const svc = make();
@@ -546,6 +1256,25 @@ describe("the money mode, end to end", () => {
     await unknownService.close();
   });
 
+  test("an explicit gas-station refusal closes and marks only the quoted purchase in the model Brief", async () => {
+    const calls = { quotes: 0, executes: 0 };
+    const { seen, model } = observingModel();
+    const svc = make({ processRunner: failingQuote("Gas station required", 2, calls), model });
+    await live(svc);
+    const report = await svc.runNow();
+    expect(report.view?.find((candidate) => candidate.id === ENTRY_BUY_ID)?.closed).toBe("gas_station_pendente");
+    expect(calls).toEqual({ quotes: 1, executes: 0 });
+    expect(report.orders).toEqual([]);
+    expect(seen.candidate).toMatchObject({ stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {} });
+    expect(seen.candidate?.marks.filter((mark) => mark === "gas_station_pendente")).toHaveLength(1);
+    expect(seen.candidate?.triggers).not.toContain("gas_station_pendente");
+    expect(seen.item).toMatchObject({ o: ["skip"], pf: [] });
+    expect(seen.item?.m).toContain("gas_station_pendente");
+    await svc.close();
+  });
+
+
+
   test("a purchase is quoted, executed, recorded before and after, and its plan opened", async () => {
     cliCalls.length = 0;
     const svc = make();
@@ -611,16 +1340,15 @@ describe("the money mode, end to end", () => {
   test("the closing of the purchase the model made leaves its record in closings.jsonl, coded when the quote of the tool cannot be bound to the request, and the order goes out as before", async () => {
     cliCalls.length = 0;
     const svc = make();
+    expect(svc.updateConfig({ budget: { maxConsultsPerDay: 720, maxTokensPerDay: null } })).toMatchObject({ ok: true });
     await live(svc);
     const report = await svc.runNow();
     expect(report.orders.map((o) => [o.stage, o.reason])).toEqual([["incerta", "transmitida"]]);
     const lines = readFileSync(join(dir, "agent", "closings.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l));
     expect(lines).toHaveLength(1);
-    // the quote this fake tool answers has no identity of the pair, so it does not bind: a code, no question to the model, nothing guessed
-    expect(lines[0]).toMatchObject({ phase: "closing", mode: "shadow", criteria: "closing-v1", quote: null, brief: null, answer: null, would: null, applied: "buy_third" });
-    expect(typeof lines[0].quoteFailure).toBe("string");
-    // three quotes of the tool were asked (the read-only one before the model is asked, for the entry cost; the read-only one of the closing; then the executor's own), never an execute before the executor
-    expect(cliCalls.filter((c) => c[0] === "swap").map((c) => c[1])).toEqual(["quote", "quote", "quote", "execute"]);
+    // This synthetic CLI returns a quote with no request identity; the record exposes the classified binding failure.
+    expect(lines[0]).toMatchObject({ phase: "closing", mode: "shadow", criteria: "closing-v1", quote: null, quoteFailure: "quote_identity_mismatch", brief: null, answer: null, would: null, wouldReason: "quote_identity_mismatch", applied: "buy_third" });
+    expect(cliCalls.filter((c) => c[0] === "swap" && c[1] === "execute")).toHaveLength(1);
     await svc.close();
   });
 
@@ -1199,7 +1927,7 @@ describe("the money mode, end to end", () => {
         },
       };
       const moving = { balances: async () => [asset({ tokenPrice: String(price) }), asset({ tokenContractAddress: USDC, symbol: "USDC", balance: "1000", rawBalance: "1000000000", tokenPrice: "1" })] };
-      const svc = make({ guardEveryMs: 0, start: true, schedule: () => () => {}, balances: moving, model: holder, eventMinGapMs: over.eventMinGapMs ?? 0 });
+      const svc = make({ guardEveryMs: 0, start: true, schedule: () => () => { }, balances: moving, model: holder, eventMinGapMs: over.eventMinGapMs ?? 0 });
       expect(svc.updateConfig({ auto, managed: { kind: "agentica", evm: WALLET, solana: null }, riskPct: 0.1, cli: { path: "C:/agent/onchainos.exe", sha256: SHA } })).toMatchObject({ ok: true });
       connect(svc);
       mkdirSync(join(dir, "agent", "onchainos-home"), { recursive: true });
@@ -1209,54 +1937,103 @@ describe("the money mode, end to end", () => {
     const settle = async () => { for (let i = 0; i < 20; i++) await new Promise((r) => setTimeout(r, 10)); };
 
     test("a move of half the stop distance since the last look is one more look; a smaller one, or the same one again, is not", async () => {
-      const { svc, calls, setPrice } = setup(true);
-      await svc.runNow();
-      expect(calls.n).toBe(1);
-      setPrice(4.08);
-      await svc.guardNow();
-      await settle();
-      expect(calls.n).toBe(1);
-      setPrice(4.2);
-      await svc.guardNow();
-      await settle();
-      expect(calls.n).toBe(2);
-      // the look moved the baseline: the same price is no news, and the chain of ticks was counted again from that cycle
-      await svc.guardNow();
-      await settle();
-      expect(calls.n).toBe(2);
-      await svc.close();
+      const realNow = Date.now;
+      let nowMs = realNow();
+      Date.now = () => nowMs;
+      let close: (() => Promise<void>) | null = null;
+      try {
+        const { svc, calls, setPrice } = setup(true);
+        close = () => svc.close();
+        await svc.runNow();
+        expect(calls.n).toBe(1);
+        // A changed provider fixture is not an observation while the shared wallet snapshot is cached.
+        setPrice(4.2);
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(1);
+        nowMs += 30_000;
+        setPrice(4.08);
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(1);
+        setPrice(4.2);
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(1);
+        nowMs += 30_000;
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(2);
+        // The look moved the baseline: the same price remains no news after the cache expires.
+        nowMs += 30_000;
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(2);
+      } finally {
+        try {
+          if (close !== null) await close();
+        } finally {
+          Date.now = realNow;
+        }
+      }
     });
 
     test("a fact the guard saw before the gap was gone is not lost: the same fact seen again after it asks for the look ONCE, before any tick", async () => {
-      // the local clock is the real one: a gap of a third of a second stands for the 90 s of the real service
-      const { svc, calls, setPrice } = setup(true, { eventMinGapMs: 350 });
-      await svc.runNow();
-      expect(calls.n).toBe(1);
-      setPrice(4.2);
-      await svc.guardNow();
-      await settle();
-      // too soon after the last cycle: held back, not spent
-      expect(calls.n).toBe(1);
-      await new Promise((r) => setTimeout(r, 400));
-      await svc.guardNow();
-      await settle();
-      expect(calls.n).toBe(2);
-      // and it was consumed: another pass with the same price asks for nothing more
-      await new Promise((r) => setTimeout(r, 400));
-      await svc.guardNow();
-      await settle();
-      expect(calls.n).toBe(2);
-      await svc.close();
+      // The 30 s wallet snapshot is shared; use the actual 90 s service gap so a fresh observation can wait and then be admitted.
+      const realNow = Date.now;
+      let nowMs = realNow();
+      Date.now = () => nowMs;
+      let close: (() => Promise<void>) | null = null;
+      try {
+        const { svc, calls, setPrice } = setup(true, { eventMinGapMs: 90_000 });
+        close = () => svc.close();
+        await svc.runNow();
+        expect(calls.n).toBe(1);
+        setPrice(4.2);
+        nowMs += 30_000;
+        await svc.guardNow();
+        await settle();
+        // The fact was observed but held inside the event gap.
+        expect(calls.n).toBe(1);
+        nowMs += 60_000;
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(2);
+        // A later fresh snapshot with the same price is consumed, not a second look.
+        nowMs += 90_000;
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(2);
+      } finally {
+        try {
+          if (close !== null) await close();
+        } finally {
+          Date.now = realNow;
+        }
+      }
     });
 
     test("a configuration the person set by hand keeps its own rhythm: the guard does not ask for extra looks", async () => {
-      const { svc, calls, setPrice } = setup(false);
-      await svc.runNow();
-      setPrice(4.4);
-      await svc.guardNow();
-      await settle();
-      expect(calls.n).toBe(1);
-      await svc.close();
+      const realNow = Date.now;
+      let nowMs = realNow();
+      Date.now = () => nowMs;
+      let close: (() => Promise<void>) | null = null;
+      try {
+        const { svc, calls, setPrice } = setup(false);
+        close = () => svc.close();
+        await svc.runNow();
+        setPrice(4.4);
+        nowMs += 30_000;
+        await svc.guardNow();
+        await settle();
+        expect(calls.n).toBe(1);
+      } finally {
+        try {
+          if (close !== null) await close();
+        } finally {
+          Date.now = realNow;
+        }
+      }
     });
   });
 

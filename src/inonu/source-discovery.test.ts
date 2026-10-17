@@ -170,6 +170,47 @@ describe("the candidates and the Brief", () => {
   });
 });
 
+describe("stale discovery sources", () => {
+  test("stale signals are refused before deeper reads", async () => {
+    const { gateway, calls } = fakeGateway({
+      answer: (route) => route === "/onchain/signals" ? { ok: true, data: SIGNALS, meta: { ...META, stale: true }, sent: true } : undefined,
+    });
+    expect(await codeOf(build(gateway))).toBe("sem_sinais");
+    expect(calls.map((call) => call.route)).toEqual(["/onchain/hot-tokens", "/onchain/signals"]);
+  });
+
+  test("stale hot data does not affect candidate ranking and remains marked in the Brief", async () => {
+    const current = await build(fakeGateway().gateway);
+    const { gateway } = fakeGateway({
+      answer: (route) => route === "/onchain/hot-tokens" ? { ok: true, data: [...HOT].reverse(), meta: { ...META, stale: true }, sent: true } : undefined,
+    });
+    const stale = await build(gateway);
+    expect(stale.candidates.map((candidate) => candidate.id)).toEqual(current.candidates.map((candidate) => candidate.id));
+    expect(stale.brief.nulos["hot-tokens"]).toBe("dado_stale");
+    expect(stale.brief.idades["hot-tokens"]).toBe(META.ageMs);
+    expect(stale.brief.fluxo?.quentes).toBe(0);
+  });
+
+  test("stale token risk does not exclude, enrich facts, or count as checked", async () => {
+    const { gateway } = fakeGateway({
+      answer: (route, params) => route === "/onchain/token-risk" && params.token === "AAA"
+        ? { ok: true, data: { chainIndex: CHAIN, address: "AAA", riskLevel: 5, tags: ["honeypot"], devRugCount: 9 }, meta: { ...META, stale: true }, sent: true }
+        : undefined,
+    });
+    const built = await build(gateway);
+    const aaa = built.candidates.find((candidate) => candidate.id === `token:${CHAIN}:AAA`);
+    expect(aaa?.estado).toBe("risco_nao_conferido");
+    expect(built.brief.nulos["token-risk"]).toBe("dado_stale");
+    expect(built.brief.nulos.honeypot_excluidos).toBeUndefined();
+  });
+
+  test("fresh hot and risk data retain their current behavior", async () => {
+    const built = await build(fakeGateway().gateway);
+    expect(built.brief.nulos["hot-tokens"]).toBeUndefined();
+    expect(built.candidates.find((candidate) => candidate.id === `token:${CHAIN}:AAA`)?.estado).toBe("risco_conferido");
+  });
+});
+
 describe("when there is nothing to ask the model", () => {
   test("no signals on the network: refused before the model, with a constant code", async () => {
     const { gateway } = fakeGateway({ answer: (route) => (route === "/onchain/signals" ? { ok: true, data: [], meta: META, sent: true } : undefined) });

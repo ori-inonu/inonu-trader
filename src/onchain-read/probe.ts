@@ -26,9 +26,9 @@ export function createProbeOnchainos(base: ProbeDeps): OnchainosProbe {
     try {
       const budget = createOkxBudget({ ledgerPath: join(dir, "ledger.json"), now: base.now });
       const client = createOnchainClient({ credentials: () => credentials, fetch: base.fetch, now: base.now, minIntervalMs: 0, budget });
-      const market = await client.call({ method: "GET", path: "/api/v6/dex/market/supported/chain" }, FREE);
+      const market = await client.call({ method: "GET", path: "/api/v6/dex/market/supported/chain" }, FREE, () => ({ ok: true }));
       if (!market.ok) return { ok: false, code: market.error };
-      const balance = await client.call({ method: "GET", path: "/api/v6/dex/balance/supported/chain" }, FREE);
+      const balance = await client.call({ method: "GET", path: "/api/v6/dex/balance/supported/chain" }, FREE, () => ({ ok: true }));
       if (!balance.ok) return { ok: false, code: balance.error };
       return { ok: true, code: "ok" };
     } finally {

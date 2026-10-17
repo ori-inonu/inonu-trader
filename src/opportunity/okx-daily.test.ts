@@ -44,6 +44,17 @@ describe("tickers", () => {
     expect(result.rejected).toBe(3);
   });
 
+  test("rejects non-decimal numeric text rather than Number coercions", async () => {
+    const { fetch } = fake([ok([
+      TICKER({ instId: "HEX-USDT", last: "0x64" }),
+      TICKER({ instId: "SPACED-USDT", last: " 100 " }),
+      TICKER({ instId: "OK-USDT" }),
+    ])]);
+    const { tickers, rejected } = await createOkxDaily({ fetch, sleep: noWait }).tickers();
+    expect(tickers.map((t) => t.instId)).toEqual(["OK-USDT"]);
+    expect(rejected).toBe(2);
+  });
+
   test("a missing best bid or ask is null, not zero", async () => {
     const { fetch } = fake([ok([TICKER({ bidPx: "", askPx: undefined })])]);
     const [t] = (await createOkxDaily({ fetch, sleep: noWait }).tickers()).tickers;

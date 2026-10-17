@@ -21,6 +21,7 @@ Pesquisa (somente leitura), mapa Wayfinder e rascunhos de spec, plano e tarefas.
 - [Fontes de vantagem](specs/retorno-composto-por-ciclo/fontes-de-edge.md) e [linha de base e validação](specs/retorno-composto-por-ciclo/validacao-e-baseline.md).
 - [Ciclo 2: mapa Wayfinder, 12 decisões do Jev, fatias em sombra e entrada do planejamento](specs/retorno-composto-por-ciclo/wayfinder.md); [especificações das fatias](specs/retorno-composto-por-ciclo/specs/) e [decisões e recibos do Jev](specs/retorno-composto-por-ciclo/decisoes-jev/).
 - [Revisão de branches e worktrees e integração na main](specs/retorno-composto-por-ciclo/revisao-branches-worktrees.md): inventário, o que foi feito, correções e o que fica para o dono.
+- [Integração da branch autoresearch na main](specs/retorno-composto-por-ciclo/integracao-autoresearch.md): decisões de cada conflito, o que ficou de fora e o que fica para o dono.
 - [Spec](specs/retorno-composto-por-ciclo/spec.md), [plano](specs/retorno-composto-por-ciclo/plan.md), [tarefas](specs/retorno-composto-por-ciclo/tasks.md) e [status](specs/retorno-composto-por-ciclo/status.md) (rascunhos).
 - [Evidência bruta dos agentes](specs/retorno-composto-por-ciclo/evidence/) com o veredito do cético por afirmação.
 
@@ -32,6 +33,18 @@ Pesquisa (somente leitura), mapa Wayfinder e rascunhos de spec, plano e tarefas.
 - [Benchmark offline anterior](specs/autoresearch-decisoes/spec.md): historico superado por instrucao do usuario, nao e mais o procedimento de execucao.
 - [Decisão executável do JEV](specs/decisao-executavel-jev/spec.md): sonda, causa em `report.view`, alertas no Brief e estado da entrega local.
 - [Grafo documental v2](specs/cerebro-grafo/spec.md): eventos append-only, exportacao limitada para JEV e preservacao byte a byte do v1.
+
+## Inteligência e revisão por ciclo (2026-10-16)
+
+- [Especificação de inteligência e revisão dos ciclos JEV](specs/inteligencia-ciclos-jev/spec.md).
+- [Plano](specs/inteligencia-ciclos-jev/plan.md), [tarefas](specs/inteligencia-ciclos-jev/tasks.md), [status e verificação](specs/inteligencia-ciclos-jev/status.md) e [pesquisa/inventário](specs/inteligencia-ciclos-jev/research.md).
+
+- [Inventário e contratos oficiais por recurso](specs/inteligencia-ciclos-jev/inventory.md), [matriz de contratos de API](specs/inteligencia-ciclos-jev/api-contracts.md) e [observações read-only dos ciclos disponíveis](specs/inteligencia-ciclos-jev/observations.md).
+- [Captura da HUD ativa com revisão expandida](specs/inteligencia-ciclos-jev/agentview-page10-expanded.webp).
+
+## Cerebro documental
+
+- [Grafo documental v2](specs/cerebro-grafo/spec.md), [plano](specs/cerebro-grafo/plan.md), [tarefas](specs/cerebro-grafo/tasks.md) e [estado](specs/cerebro-grafo/status.md): fonte de eventos append-only, grafo derivado e preservacao de v1.
 
 ## Evolução e consulta rápida (2026-10-15)
 

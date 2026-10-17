@@ -5,7 +5,7 @@
  */
 import { decide } from "../src/consensus/engine";
 import { createJevJudge } from "../src/consensus/jev-judge";
-import { JEV_DAILY_CALLS, quotaPath, refund, reserve } from "../src/consensus/quota";
+import { quotaPath, refund, reserve } from "../src/consensus/quota";
 import { handleMessage, type McpDeps } from "../src/consensus/mcp";
 
 const keyOf = (): string | undefined => process.env.TYPESAFE_AI_API_KEY ?? process.env.TYPESAFE_API_KEY;
@@ -14,13 +14,15 @@ const deps: McpDeps = {
   hasKey: () => typeof keyOf() === "string" && keyOf() !== "",
   run: async (spec, maxCalls) => {
     const path = quotaPath();
-    const granted = await reserve(path, maxCalls);
-    if (granted === 0) throw new Error(`teto diario de ${JEV_DAILY_CALLS} chamadas ao Jev esgotado`);
-    const judge = createJevJudge({ apiKey: keyOf()!, maxCalls: granted });
+    // Sem teto: so reserva no ledger quando max_calls foi dado; sem ele o uso e somado ao ledger depois da execucao.
+    const granted = maxCalls === undefined ? undefined : await reserve(path, maxCalls);
+    if (granted === 0) throw new Error("sem chamadas ao Jev disponiveis para esta execucao");
+    const judge = granted === undefined ? createJevJudge({ apiKey: keyOf()! }) : createJevJudge({ apiKey: keyOf()!, maxCalls: granted });
     try {
       return { receipt: await decide(spec, judge), meter: judge.meter() };
     } finally {
-      await refund(path, granted - judge.meter().sent);
+      if (granted === undefined) await reserve(path, judge.meter().sent);
+      else await refund(path, granted - judge.meter().sent);
     }
   },
 };

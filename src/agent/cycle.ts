@@ -6,8 +6,8 @@
  * ones only exist when the person turns the agent on.
  */
 import { createHash } from "node:crypto";
-import type { EcoContext, EcoFacts, Saldo } from "../opportunity/ecosystem";
-import type { Budget } from "./budget";
+import { isEcoSourceFresh, type EcoContext, type EcoFacts, type Saldo } from "../opportunity/ecosystem";
+import type { Budget, BudgetTicket } from "./budget";
 import { verifyBook } from "./book";
 import { describeAnswer, type GateDetail } from "./conviction";
 import type { QuoteFacts } from "./quote-facts";
@@ -22,7 +22,7 @@ import { halfDone, halfProgress } from "./exit";
 import { orderKey, type AgentLedger, type OrderRecord, type OrderStage } from "./ledger";
 import type { Mandate } from "./mandate";
 import type { ExecBrief, TokenTripBrief } from "./fills";
-import { agentBrief, physicalRequestsOf, type AgentBrief, type AgentModel, type BriefInput, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
+import { agentBrief, type AgentBrief, type AgentModel, type BriefInput, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
 import { offeredProfiles, planKey, PROFILES, type PlanStore, type ProfileId } from "./plans";
 import { pendingBuys } from "./pending-buys";
 import { ENTRY_COST_CLOSED, ENTRY_COST_GAS_STATION, narrowBuysByEntryCost, recentSaleRefusals, withoutRefusedSales, type EntryQuoteReader } from "./entry-cost";
@@ -319,7 +319,7 @@ function buyQuality(c: Candidate, ef?: EcoFacts): number {
   return score;
 }
 
-class Deadline extends Error {}
+class Deadline extends Error { }
 
 async function withDeadline<T>(ms: number, run: (signal: AbortSignal) => Promise<T>): Promise<T> {
   const controller = new AbortController();
@@ -352,6 +352,36 @@ async function withSoftDeadline<T>(ms: number, run: (signal: AbortSignal) => Pro
 }
 
 const hashOf = (value: unknown): string => createHash("sha256").update(JSON.stringify(value)).digest("hex");
+
+/** Candidate observation ages advance on cache hits, without new candle information. Keep them in the sent Brief; omit only finite age values from the consultation-change guard. Unknown age and expiry remain material changes. */
+function materialCandidateItems(items: AgentBrief["posicoes"]): AgentBrief["posicoes"] {
+  let copy: Record<string, Record<string, unknown>> | null = null;
+  for (const [id, item] of Object.entries(items)) {
+    let next: Record<string, unknown> | null = null;
+    for (const field of ["mo", "tm"] as const) {
+      const facts = item[field];
+      if (facts === null || typeof facts !== "object" || Array.isArray(facts)) continue;
+      const record = facts as Record<string, unknown>;
+      if (!Object.hasOwn(record, "ag") || typeof record.ag !== "number" || !Number.isFinite(record.ag)) continue;
+      const { ag: _age, ...withoutAge } = record;
+      next ??= { ...item };
+      next[field] = withoutAge;
+    }
+    if (next !== null) {
+      copy ??= { ...items };
+      copy[id] = next;
+    }
+  }
+  return copy ?? items;
+}
+
+function materialBrief(brief: AgentBrief, includeMacro: boolean): AgentBrief {
+  const posicoes = materialCandidateItems(brief.posicoes);
+  const compras = materialCandidateItems(brief.compras);
+  const contexto = includeMacro ? (materialContext(brief.contexto) as AgentBrief["contexto"]) : brief.contexto;
+  if (posicoes === brief.posicoes && compras === brief.compras && contexto === brief.contexto) return brief;
+  return { ...brief, posicoes, compras, contexto };
+}
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 type OutcomeRow = Mutable<OrderOutcome> & { costUsd?: number | null };
@@ -471,12 +501,12 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
 
     const factsOf = guardOnly
       ? // the watch needs prices and nothing else: the one the balance came with is a price
-        (p: Position): HoldingFacts | null => (p.priceUsd != null && Number.isFinite(p.priceUsd) && p.priceUsd > 0 ? priceOnlyFacts(p.priceUsd) : null)
+      (p: Position): HoldingFacts | null => (p.priceUsd != null && Number.isFinite(p.priceUsd) && p.priceUsd > 0 ? priceOnlyFacts(p.priceUsd) : null)
       : await withSoftDeadline(deps.timeouts.factsMs ?? deps.timeouts.readMs, (signal) => deps.holdingFacts(book, signal), deps.timeouts.graceMs).catch(() => {
-      notes.push("fatos_indisponiveis");
-      // the stop of a position needs a price: when the read fails the price the balance came with is still a price
-      return (p: Position): HoldingFacts | null => (p.priceUsd != null && Number.isFinite(p.priceUsd) && p.priceUsd > 0 ? priceOnlyFacts(p.priceUsd) : null);
-    });
+        notes.push("fatos_indisponiveis");
+        // the stop of a position needs a price: when the read fails the price the balance came with is still a price
+        return (p: Position): HoldingFacts | null => (p.priceUsd != null && Number.isFinite(p.priceUsd) && p.priceUsd > 0 ? priceOnlyFacts(p.priceUsd) : null);
+      });
     const priceOf = (p: Position): number | null => factsOf(p)?.priceUsd ?? null;
     const positionOf = new Map(book.positions.map((p) => [holdingId(p), p]));
     // held = there is a balance, or the balance is unknown (the same rule as the orphan cleanup: a position we cannot see the size of is not a position that left)
@@ -762,10 +792,11 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     // ---- what the model will be asked about: read after the exits, so they never wait for these reads
     const eco: EcoContext = await withDeadline(deps.timeouts.readMs, (signal) => deps.ecosystem(saldo, signal)).catch(() => {
       notes.push("ecossistema_indisponivel");
-      return { observedAtMs: deps.now(), saldo, candidates: [], excluded: {} };
+      return { observedAtMs: null, saldo, candidates: [], excluded: {}, sourceQuality: { state: "unavailable", ageMs: null } };
     });
+    const ecoCandidates = isEcoSourceFresh(eco) ? eco.candidates : [];
     await Promise.all(
-      eco.candidates.map(async (c) => {
+      ecoCandidates.map(async (c) => {
         timings.set(c.facts.candidateId, await withDeadline(deps.timeouts.readMs, (signal) => deps.timingOf(c.facts, signal)).catch(() => null));
       }),
     );
@@ -782,7 +813,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
           holdingTimings.set(c.id, existing !== undefined ? existing : await withDeadline(deps.timeouts.readMs, (signal) => deps.timingOf(identityOf(c), signal)).catch(() => null));
         }),
     );
-    const ecoFamiliesByKey = new Map(eco.candidates.map((e) => [planKey(e.facts.chainIndex, e.facts.address), e.families]));
+    const ecoFamiliesByKey = new Map(ecoCandidates.map((e) => [planKey(e.facts.chainIndex, e.facts.address), e.families]));
     const holdingsPlain = holdingsBase.map((c) => {
       const tf = holdingTimings.get(c.id) ?? null;
       const ecoFams = ecoFamiliesByKey.get(planKey(c.chainIndex, c.address)) ?? [];
@@ -792,15 +823,15 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     // what the plan is selling this very cycle is not bought back by the model in the same cycle; a token with an order in flight is not touched by the model at all
     const paused = deps.buyingPaused?.() ?? false;
     if (paused) notes.push("compras_pausadas");
-    const ecoFactsByBuyId = new Map(eco.candidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
+    const ecoFactsByBuyId = new Map(ecoCandidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
     // what the few tokens that matter are doing in the last hour (five-minute bars): at most three purchases that are still open (cleanest structure and best smart-money price distortion first) and three holdings, so the quota goes where the decisions are
     const momentum = new Map<string, MomentumFacts | null>();
     if (deps.momentumOf !== undefined) {
       const open = paused
         ? []
         : [...buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, undefined, limited?.policy?.perTxUsd ?? null).filter((c) => c.stances.length > 1)]
-            .sort((a, b) => buyQuality(b, ecoFactsByBuyId.get(b.id)) - buyQuality(a, ecoFactsByBuyId.get(a.id)))
-            .slice(0, MOMENTUM_READS);
+          .sort((a, b) => buyQuality(b, ecoFactsByBuyId.get(b.id)) - buyQuality(a, ecoFactsByBuyId.get(a.id)))
+          .slice(0, MOMENTUM_READS);
       await Promise.all(
         [...open, ...holdingsPlain.slice(0, MOMENTUM_READS)].map(async (c) => {
           momentum.set(c.id, await withDeadline(deps.timeouts.readMs, (signal) => deps.momentumOf!(identityOf(c), signal)).catch(() => null));
@@ -850,7 +881,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
     openedNow = mandateView === null ? null : { ...mandateView.openByRisk, ...(mandateNow!.aggressiveOpen || mandateView.openByRisk.agressivo === undefined ? {} : { agressivo: 0 }) };
     const candidates: Candidate[] = [...holdings, ...shownBuys];
     considered = { holdings: holdings.length, buys: buys.length, protected: protection.handled.size };
-    ecoById = new Map(eco.candidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
+    ecoById = new Map(ecoCandidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
     byCandidate = new Map(candidates.map((c) => [c.id, c]));
     looked = candidates.slice(0, 16).map((c): CandidateView => ({
       id: c.id,
@@ -936,10 +967,10 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       const marketContext = deps.context();
       const briefInput: BriefInput = { book: view, holdings, buys: shownBuys, eco, context: macroPrepared === null ? marketContext : { ...(marketContext ?? {}), ...macroPrepared.context }, history: deps.history(), exec: deps.execFacts?.() ?? null, ...(deps.tokenTrips === undefined ? {} : { tokenTrips: deps.tokenTrips() }), mandate: mandateView, ...(deps.feeOf === undefined ? {} : { feeOf: deps.feeOf }) };
       const baseBrief = agentBrief(briefInput);
-      // the "nothing changed" key is the Brief WITHOUT the memory: the memory carries the as-of time of the cycle and would make every Brief look new and ask the model again
-      // and, with the macro context, without the keys that change with the clock alone (the age of the observation and the time the context was made): the full Brief, with everything, is hashed below
-      const baseHash = hashOf(macroPrepared === null ? baseBrief : { ...baseBrief, contexto: materialContext(baseBrief.contexto) });
-      if (lastConsult !== null && lastConsult.hash === baseHash && deps.now() - lastConsult.atMs < deps.refreshMs) return no("sem_mudanca");
+      // The material-change key excludes cycle memory, clock-only macro timestamps and cache-hit ages of the same momentum/timing observations. The separately recorded fingerprint covers the exact full Brief; an expired observation disappears and remains a material change.
+      const material = materialBrief(baseBrief, macroPrepared !== null);
+      const consultationHash = hashOf(material);
+      if (lastConsult !== null && lastConsult.hash === consultationHash && deps.now() - lastConsult.atMs < deps.refreshMs) return no("sem_mudanca");
       // the memory hook (OFF unless the host binds it): the as-of time is read here, before the model, and a hook that fails costs the cycle nothing
       let brief = baseBrief;
       let memoryRecord: MemoryHookRecord | undefined;
@@ -954,7 +985,8 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
           notes.push("memoria_falhou");
         }
       }
-      const hash = hashOf(brief);
+      // Reuse the normalized hash only when it is also the exact full Brief; audit and memory consumers bind to every transmitted field.
+      const hash = macroPrepared === null && brief === baseBrief && material === baseBrief ? consultationHash : hashOf(brief);
       // with the macro context the model is sent the FROZEN clone, so what the proof recomputes is exactly what was read; without it nothing changes
       let sentBrief: AgentBrief = brief;
       let sentSha: string | null = null;
@@ -970,7 +1002,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       const estimate = model.estimateTokens(brief, candidates);
       const budgetCheck = deps.budget.check(estimate);
       if (!budgetCheck.ok) return no(budgetCheck.reason);
-      let ticket;
+      let ticket: BudgetTicket;
       try {
         ticket = deps.budget.begin(estimate);
       } catch {
@@ -981,12 +1013,20 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
       let answeredAtMs = 0;
       try {
         askedAtMs = deps.now();
-        answer = await withDeadline(deps.timeouts.modelMs, (signal) => model.choose({ brief: sentBrief, candidates, signal }));
+        answer = await withDeadline(deps.timeouts.modelMs, (signal) => model.choose({
+          brief: sentBrief,
+          candidates,
+          signal,
+          admitFallback: () => {
+            if (signal.aborted) throw new Error("aborted");
+            const fallback = deps.budget.begin(estimate);
+            deps.budget.finish(ticket, null);
+            ticket = fallback;
+          },
+        }));
         answeredAtMs = deps.now();
-      } catch (error) {
+      } catch {
         deps.budget.finish(ticket, null);
-        // a request that went out before the one that failed (refused for its shape, then asked again) is a consultation too
-        for (let i = 1; i < physicalRequestsOf(error); i++) deps.budget.countExtra(estimate);
         return no("modelo_erro", { consulted: true, modelo: model.name });
       }
       deps.budget.finish(ticket, answer.usage);
@@ -1003,9 +1043,7 @@ export function createCycleRunner(deps: CycleDeps): CycleRunner & { guard(): Pro
         }
         macroRecord = { hostEpoch: macroPrepared.hostEpoch, contextAtMs: macroPrepared.contextAtMs, registry: macroPrepared.registry, registryHash: macroPrepared.registryHash, snapshots: macroPrepared.snapshots, briefSha64: sentSha, proof: review === null ? null : review.proof };
       }
-      // two physical requests for one choice: the refused one has no usage to report, so it counts as a consultation of unknown usage
-      for (let i = 1; i < (answer.physicalRequests ?? 1); i++) deps.budget.countExtra(estimate);
-      lastConsult = { hash: baseHash, atMs: deps.now() };
+      lastConsult = { hash: consultationHash, atMs: deps.now() };
       const extra = { consulted: true, modelo: model.name, usage: answer.usage };
       // what the Jev chose is the decision: no bar of conviction, no smaller size, no veto of the code stands between its choice and the order (the owner's decision of 2026-10-14). How sure it was is recorded next to it.
       const raw = answer.raw;

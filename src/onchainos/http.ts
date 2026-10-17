@@ -35,6 +35,7 @@ export interface FetchInit {
 export interface FetchResponseLike {
   readonly status: number;
   text(): Promise<string>;
+  readonly headers?: { get(name: string): string | null };
 }
 
 /** The only door to the network. Always injected by the caller; a real `Response` satisfies it. */
@@ -263,8 +264,9 @@ export interface TransportConfig {
   readonly maxRetries: number;
   readonly backoffBaseMs: number;
   readonly backoffMaxMs: number;
-  readonly random?: (() => number) | undefined;
   readonly maxResponseChars: number;
+  /** Source of the backoff jitter, a value in [0, 1). Absent: the deterministic ceiling, no randomness. */
+  readonly random?: (() => number) | undefined;
   readonly onCall?: ((event: CallEvent) => void) | undefined;
 }
 
@@ -336,6 +338,12 @@ export function backoffMs(attempt: number, retryAfterMs: number | undefined, rng
   return Math.max(retryAfterMs ?? 0, Math.floor(rng() * ceiling));
 }
 
+/** Retry-After as whole seconds; the HTTP-date form is ignored (it falls back to the backoff). */
+function retryAfterOf(response: FetchResponseLike): number | undefined {
+  const value = response.headers?.get("retry-after")?.trim();
+  return value !== undefined && /^\d+$/.test(value) ? Number(value) * 1000 : undefined;
+}
+
 export function createTransport(config: TransportConfig): Transport {
   // epoch ms until which every read is refused after a 402: a payment demand blocks until the next UTC month
   const paymentBlocked = new Map<string, number>();
@@ -353,7 +361,7 @@ export function createTransport(config: TransportConfig): Transport {
     requestPath: string,
     body: string,
     endpoint: string,
-  ): Promise<{ status: number; text: string; signature: string | null }> {
+  ): Promise<{ status: number; text: string; signature: string | null; retryAfterMs: number | undefined }> {
     const timestamp = new Date(config.now()).toISOString();
     const auth = config.authenticate?.({ method, requestPath, body, timestamp });
     const headers: Record<string, string> = { ...(auth?.headers ?? {}) };
@@ -377,7 +385,7 @@ export function createTransport(config: TransportConfig): Transport {
       if (typeof response?.status !== "number" || !Number.isInteger(response.status)) throw new OnchainosError("schema", "resposta sem status HTTP válido", { endpoint });
       const text = await Promise.race([response.text(), deadline]);
       if (typeof text !== "string") throw new OnchainosError("schema", "corpo da resposta não é texto", { endpoint });
-      return { status: response.status, text, signature: auth?.signature ?? null };
+      return { status: response.status, text, signature: auth?.signature ?? null, retryAfterMs: retryAfterOf(response) };
     } catch (error) {
       if (error instanceof OnchainosError) throw error;
       if (timedOut || error === TIMEOUT_MARK) throw new OnchainosError("timeout", `tempo esgotado após ${config.timeoutMs} ms`, { endpoint });
@@ -408,7 +416,7 @@ export function createTransport(config: TransportConfig): Transport {
         config.quota.recordAttempt(endpoint.tier);
         const startedAtMs = config.now();
         const attempts = index + 1;
-        let outcome: { status: number; text: string; signature: string | null };
+        let outcome: { status: number; text: string; signature: string | null; retryAfterMs: number | undefined };
         try {
           outcome = await send(method, requestPath, body, path);
         } catch (error) {
@@ -416,7 +424,7 @@ export function createTransport(config: TransportConfig): Transport {
           if (error instanceof OnchainosError) throw new OnchainosError(error.kind, error.detail, { endpoint: path, attempts, rowIndex: error.rowIndex });
           throw new OnchainosError("network", "falha de rede ao chamar o endpoint", { endpoint: path, attempts });
         }
-        const { status, text, signature } = outcome;
+        const { status, text, signature, retryAfterMs } = outcome;
         const secrets = signature === null ? config.secrets : [...config.secrets, signature];
         const retryable = status === 429 || status >= 500;
         const elapsedMs = Math.max(0, config.now() - startedAtMs);
@@ -424,7 +432,7 @@ export function createTransport(config: TransportConfig): Transport {
         if (retryable && index < config.maxRetries) {
           emit({ endpoint: pathOnly(path), tier: endpoint.tier, attempt: attempts, status, elapsedMs, outcome: "retry" });
           config.quota.recordRetry();
-          await config.sleep(backoffMs(index, undefined, config.random ?? (() => 1), { baseMs: config.backoffBaseMs, maxMs: config.backoffMaxMs }));
+          await config.sleep(backoffMs(index, retryAfterMs, config.random ?? (() => 1), { baseMs: config.backoffBaseMs, maxMs: config.backoffMaxMs }));
           continue;
         }
         if (status < 200 || status >= 300) {

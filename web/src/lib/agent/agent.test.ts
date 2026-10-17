@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { createAgentClient, DISCLOSURE } from "./client";
 import { CONNECTED_STATE, DISCONNECTED_STATE, NOW, rawStatus, sampleStatus, WALLET_TRADING } from "./fixtures";
 import { parseStatus } from "./parse";
+import { parseDevStatus } from "./dev-status";
 import { currentOrders, agoText, budgetText, effectiveMode, contextRows, eventLine, evidenceLines, evidenceText, headline, inFlightLine, modeLead, needsPersonWord, inText, ledgerLine, moneyEvidence, pctText, profileText, radarRows, readinessText, reasonText, sessionText, shortAddress, signedUsdText, stanceText, strategyRows, usdText, MODE_TEXT } from "./view";
 import { connectBrowserWallet, type WalletWindow } from "./wallet-connect";
 
@@ -77,6 +78,15 @@ describe("the status the core gives", () => {
 
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 
+test("the development panel's client fetches only the cached status projection", async () => {
+  const seen: string[] = [];
+  const cached = { ok: true, status: { atMs: 1, connected: true, book: null } };
+  const client = createAgentClient("http://ignored-core", async (url) => (seen.push(url), response(cached)), true);
+  expect(await client.devStatus()).toEqual({ ok: true, status: cached.status });
+  expect(seen).toEqual(["/api/dev-agent/agent/dev-status"]);
+  expect(parseDevStatus(cached)).toEqual(cached.status);
+});
+
 describe("the client", () => {
   test("status is a GET with no intent header, and parses the body", async () => {
     const seen: RequestInit[] = [];
@@ -99,6 +109,20 @@ describe("the client", () => {
     expect(JSON.parse(seen[0]!.init.body as string)).toEqual({ disclosure: DISCLOSURE, managed: { kind: "propria", evm: "0x1111111111111111111111111111111111111111", solana: null } });
     expect(JSON.parse(seen[1]!.init.body as string)).toEqual({ disclosure: DISCLOSURE });
     expect(JSON.parse(seen[3]!.init.body as string)).toEqual({ action: "install" });
+  });
+  test("development reads use the same-origin proxy and every write is rejected before fetch", async () => {
+    const seen: { url: string; init: RequestInit }[] = [];
+    const cached = { ok: true, status: { atMs: 1, connected: true, book: null } };
+    const client = createAgentClient("http://ignored-core", async (url, init) => (seen.push({ url, init: init ?? {} }), response(cached)), true);
+    expect((await client.devStatus()).ok).toBe(true);
+    expect(seen[0]!.url).toBe("/api/dev-agent/agent/dev-status");
+    expect(await client.connect()).toEqual({ ok: false, reason: "dev_somente_leitura" });
+    expect(await client.disconnect()).toEqual({ ok: false, reason: "dev_somente_leitura" });
+    expect(await client.wallet("install")).toEqual({ ok: false, reason: "dev_somente_leitura" });
+    expect(await client.wallet("login")).toEqual({ ok: false, reason: "dev_somente_leitura" });
+    expect(await client.wallet("poll")).toEqual({ ok: false, reason: "dev_somente_leitura" });
+    expect(await client.resolve("order", "executada")).toEqual({ ok: false, reason: "dev_somente_leitura" });
+    expect(seen).toHaveLength(1);
   });
 
   test("there is no call left for a mode, a permission, a configuration or a stop", () => {

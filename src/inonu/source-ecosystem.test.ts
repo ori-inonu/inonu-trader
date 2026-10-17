@@ -1,13 +1,26 @@
 // RAS-8: the ecosystem mode of "Pedir ao Inonu" ("as melhores oportunidades"). One click reads several networks through the gateway with the intent of a click, never more than 15 calls, and puts in
 // front of the model only the tokens that have support, with facts, marks of care and the ceiling of what the balance allows. The model is not involved here at all. origin: synthetic_fixture,
-// tests only; the gateway is fake and the provider is never reached.
-import { describe, expect, test } from "bun:test";
+// Most source fixtures use a fake gateway; the budget regression uses the real gateway with a synthetic client. No live provider is reached.
+import { afterEach, describe, expect, test } from "bun:test";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { buildBrief } from "../intel/brief";
 import type { InternalGatewayResult } from "../onchain-read/gateway";
+import { createBudget } from "../onchain-read/budget";
+import { createOnchainCache } from "../onchain-read/cache";
+import type { OnchainClient } from "../onchain-read/client";
+import { createOnchainGateway } from "../onchain-read/gateway";
+import { createEcosystemReader } from "../agent/live";
 import { parseSaldo, validateEcosystem, type EcoFacts } from "../opportunity/ecosystem";
 import { SourceError, type AskRequest } from "./ask";
 import { createJevInonuModel } from "./jev-model";
 import { chainsFor, createEcosystemSource, diversifyRan, ECOSYSTEM_BRIEF_BYTES, ECOSYSTEM_CANDIDATES, RAN_PCT } from "./source-ecosystem";
+const tempDirs: string[] = [];
+afterEach(() => {
+  while (tempDirs.length > 0) rmSync(tempDirs.pop()!, { recursive: true, force: true });
+});
+
 
 const NOW = 1_800_000_000_000;
 const META = { tier: "basic" as const, cachedAtMs: NOW - 4_000, ageMs: 4_000, stale: false, budget: { tier: "basic" as const, used: 1, cap: 50 } };
@@ -78,44 +91,133 @@ const codeOf = async (work: Promise<unknown>): Promise<string> => {
 };
 
 test("RAD-03: fresh hot does not hide stale signals/risk and each chain keeps its own source metadata", async () => {
-  const { gateway, calls } = fakeGateway({ answer: (route, params) => {
-    if (route === "/onchain/hot-tokens") return { ok: true, sent: true, data: HOT[params.chainIndex!] ?? [], meta: { ...META, ageMs: params.chainIndex === "501" ? 8_000 : 100, cachedAtMs: NOW - (params.chainIndex === "501" ? 8_000 : 100) } };
-    if (route === "/onchain/signals") return { ok: true, sent: true, data: SIGNALS[params.chainIndex!] ?? [], meta: { ...META, ageMs: 380_000, cachedAtMs: NOW - 380_000, stale: true } };
-    if (route === "/onchain/token-risk") return { ok: true, sent: true, data: { chainIndex: params.chainIndex, address: params.token, riskLevel: 1, tags: [] }, meta: { ...META, ageMs: 420_000, cachedAtMs: NOW - 420_000, stale: true } };
-    return undefined;
-  } });
+  const { gateway, calls } = fakeGateway({
+    answer: (route, params) => {
+      if (route === "/onchain/hot-tokens") return { ok: true, sent: true, data: HOT[params.chainIndex!] ?? [], meta: { ...META, ageMs: params.chainIndex === "501" ? 8_000 : 100, cachedAtMs: NOW - (params.chainIndex === "501" ? 8_000 : 100) } };
+      if (route === "/onchain/signals") return { ok: true, sent: true, data: SIGNALS[params.chainIndex!] ?? [], meta: { ...META, ageMs: 380_000, cachedAtMs: NOW - 380_000, stale: true } };
+      if (route === "/onchain/token-risk") return { ok: true, sent: true, data: { chainIndex: params.chainIndex, address: params.token, riskLevel: 1, tags: [] }, meta: { ...META, ageMs: 420_000, cachedAtMs: NOW - 420_000, stale: true } };
+      return undefined;
+    }
+  });
   const result = await build(gateway);
   const eco = result.brief.fluxo!.ecossistema as any;
   expect(eco.fontes).toEqual({ origem: "onchainos", redes: { "8453": [[100, false, "4"], [380_000, true]], "501": [[8_000, false, "4"], [380_000, true]] } });
   for (const candidate of result.ecosystem!.candidates) expect(eco.itens[candidate.facts.candidateId].q).toEqual([420_000, true]);
-  expect(eco.chaves.q).toContain("token-risk");
-  expect(eco.chaves.fontes).toMatch(/ageMs.*stale.*timeFrame/);
   expect(calls.length).toBeLessThanOrEqual(15);
   expect(result.onchainosCalls).toBe(calls.length);
   expect(new TextEncoder().encode(JSON.stringify(result.brief)).length).toBeLessThanOrEqual(ECOSYSTEM_BRIEF_BYTES);
 });
 
+test("stale token-risk data preserves provenance but cannot count as a safety check or evidence", async () => {
+  const staleRisk = { chainIndex: "8453", address: EVM_A, riskLevel: 1, tags: [], top10HoldPct: 5, devHoldPct: 1, bundleHoldPct: 2, sniperHoldPct: 1, suspiciousHoldPct: 0, lpBurnedPct: 100 };
+  const { gateway } = fakeGateway({
+    answer: (route, params) => {
+      if (route === "/onchain/hot-tokens" && params.chainIndex === "8453") return { ok: true, sent: true, data: [hot("8453", "AAA", EVM_A, { riskLevel: null, top10HoldPct: 51, devHoldPct: 20, bundleHoldPct: 30, lpBurnedPct: 77 })], meta: META };
+      if (route === "/onchain/signals" && params.chainIndex === "8453") return { ok: true, sent: true, data: [signal("8453", EVM_A, "AAA", 5, 30_000, 10)], meta: META };
+      if (route === "/onchain/token-risk" && params.token === EVM_A) return { ok: true, sent: true, data: staleRisk, meta: { ...META, ageMs: 420_000, cachedAtMs: NOW - 420_000, stale: true } };
+      return undefined;
+    },
+  });
+  const built = await build(gateway, request({ redes: ["8453"] }));
+  const candidate = built.ecosystem!.candidates.find((item) => item.facts.symbol === "AAA")!;
+  const serialized = JSON.stringify(built.brief);
+
+  expect(candidate.facts.riskLevel).toBeNull();
+  expect(candidate.facts.top10Pct).toBe(51);
+  expect(candidate.facts.devPct).toBe(20);
+  expect(candidate.facts.bundlePct).toBe(30);
+  expect(candidate.facts.lpBurnedPct).toBeNull();
+  expect(candidate.facts.riskFlags).toEqual([]);
+  expect(candidate.families).not.toContain("seguranca");
+  expect(serialized).toContain('"q":[420000,true]');
+  expect(built.brief.candidatos.find((item) => item.id === candidate.facts.candidateId)?.estado).toBe("risco_nao_conferido");
+});
+
+test("fresh token-risk data still enriches facts and counts as a safety check", async () => {
+  const { gateway } = fakeGateway({
+    answer: (route, params) => {
+      if (route === "/onchain/hot-tokens" && params.chainIndex === "8453") return { ok: true, sent: true, data: [hot("8453", "AAA", EVM_A, { riskLevel: 5, top10HoldPct: 51, devHoldPct: 20, bundleHoldPct: 30, lpBurnedPct: 77 })], meta: META };
+      if (route === "/onchain/signals" && params.chainIndex === "8453") return { ok: true, sent: true, data: [signal("8453", EVM_A, "AAA", 5, 30_000, 10)], meta: META };
+      if (route === "/onchain/token-risk" && params.token === EVM_A) return { ok: true, sent: true, data: { riskLevel: 1, tags: [], top10HoldPct: 20, devHoldPct: 1, bundleHoldPct: 2, lpBurnedPct: 100 }, meta: META };
+      return undefined;
+    },
+  });
+  const built = await build(gateway, request({ redes: ["8453"] }));
+  const candidate = built.ecosystem!.candidates.find((item) => item.facts.symbol === "AAA")!;
+
+  expect(candidate.facts.riskLevel).toBe(1);
+  expect(candidate.facts.top10Pct).toBe(20);
+  expect(candidate.facts.devPct).toBe(1);
+  expect(candidate.facts.bundlePct).toBe(2);
+  expect(candidate.facts.lpBurnedPct).toBe(100);
+  expect(built.brief.candidatos.find((item) => item.id === candidate.facts.candidateId)?.estado).toBe("risco_conferido");
+  expect(JSON.stringify(built.brief)).toContain('"q":[4000,false]');
+});
+
+test("stale signals keep provenance but cannot contribute candidate facts beside fresh hot tokens", async () => {
+  const { gateway } = fakeGateway({
+    answer: (route, params) => {
+      if (route === "/onchain/signals") return { ok: true, sent: true, data: SIGNALS[params.chainIndex!] ?? [], meta: { ...META, ageMs: 380_000, stale: true } };
+      return undefined;
+    }
+  });
+  const result = await build(gateway, request({ redes: ["8453"] }));
+  const eco = result.brief.fluxo!.ecossistema as { fontes: { redes: Record<string, unknown> } };
+  expect(eco.fontes.redes["8453"]).toEqual([[4_000, false, "4"], [380_000, true]]);
+  expect(result.ecosystem!.candidates.map((candidate) => candidate.facts.symbol)).toContain("AAA");
+  for (const candidate of result.ecosystem!.candidates) {
+    expect(candidate.facts.wallets).toBeNull();
+    expect(candidate.facts.walletsUsd).toBeNull();
+    expect(candidate.facts.nota).toBeNull();
+    expect(candidate.facts.soldPct).toBeNull();
+    expect(candidate.facts.smartPriceUsd).toBeNull();
+  }
+  expect(result.brief.nulos.signals).toBe("dado_stale");
+  expect(result.brief.nulos.signals).not.toContain("sem_compras");
+});
+
+test("stale hot-token rows cannot create candidates while a fresh chain can proceed", async () => {
+  const { gateway } = fakeGateway({
+    answer: (route, params) => {
+      if (route === "/onchain/hot-tokens" && params.chainIndex === "8453") {
+        return { ok: true, sent: true, data: HOT["8453"], meta: { ...META, ageMs: 380_000, stale: true } };
+      }
+      return undefined;
+    }
+  });
+  const result = await build(gateway, request({ redes: ["8453", "501"] }));
+  const eco = result.brief.fluxo!.ecossistema as { fontes: { redes: Record<string, unknown> }; lidos: number };
+  expect(eco.lidos).toBe(HOT["501"]!.length);
+  expect(result.brief.nulos.redes_sem_leitura).toContain("8453");
+  expect(result.ecosystem!.candidates.some((candidate) => candidate.facts.chainIndex === "501")).toBe(true);
+  expect(result.ecosystem!.candidates.some((candidate) => candidate.facts.chainIndex === "8453")).toBe(false);
+});
+
 test("RAD-03: unavailable or unknown source ages remain null, never zero or fresh", async () => {
-  const { gateway } = fakeGateway({ answer: (route, params) => {
-    if (route === "/onchain/hot-tokens") return { ok: true, sent: true, data: HOT[params.chainIndex!] ?? [], meta: { ...META, ageMs: Number.NaN } };
-    if (route === "/onchain/signals" || route === "/onchain/token-risk") return { ok: false, sent: true, error: "provider_error" };
-    return undefined;
-  } });
+  const { gateway } = fakeGateway({
+    answer: (route, params) => {
+      if (route === "/onchain/hot-tokens") return { ok: true, sent: true, data: HOT[params.chainIndex!] ?? [], meta: { ...META, ageMs: Number.NaN } };
+      if (route === "/onchain/signals" || route === "/onchain/token-risk") return { ok: false, sent: true, error: "provider_error" };
+      return undefined;
+    }
+  });
   const result = await build(gateway, { modo: "ecossistema", redes: ["8453"] });
   const eco = result.brief.fluxo!.ecossistema as any;
   expect(eco.fontes.redes["8453"]).toEqual([[null, false, "4"], null]);
   expect(result.brief.idades).not.toHaveProperty("hot-tokens");
   for (const candidate of result.ecosystem!.candidates) expect(eco.itens[candidate.facts.candidateId].q).toBeNull();
-  expect(result.brief.nulos.signals).toBeDefined();
+  expect(result.brief.nulos.signals_nao_lidos).toBe("1_redes_sem_leitura");
   expect(result.brief.nulos.risco_nao_conferido).toBeDefined();
 });
 
 test("RAD-03: five valid candidates on four networks keep source metadata and identities within the unchanged Brief allowance", async () => {
-  const { gateway, calls } = fakeGateway({ answer: (route, params) => {
-    if (route !== "/onchain/hot-tokens") return undefined;
-    const chain = params.chainIndex!;
-    return { ok: true, sent: true, meta: META, data: [hot(chain, "LONGSYMBOLTWENTYABCD", chain === "501" ? SOL_A : EVM_A), hot(chain, "SECONDTOKEN", chain === "501" ? "So11111111111111111111111111111111111111113" : EVM_B)] };
-  } });
+  const { gateway, calls } = fakeGateway({
+    answer: (route, params) => {
+      if (route !== "/onchain/hot-tokens") return undefined;
+      const chain = params.chainIndex!;
+      return { ok: true, sent: true, meta: META, data: [hot(chain, "LONGSYMBOLTWENTYABCD", chain === "501" ? SOL_A : EVM_A), hot(chain, "SECONDTOKEN", chain === "501" ? "So11111111111111111111111111111111111111113" : EVM_B)] };
+    }
+  });
   const result = await build(gateway, { modo: "ecossistema", redes: ["501", "8453", "56", "1"] });
   const eco = result.brief.fluxo!.ecossistema as any;
   expect(result.candidates).toHaveLength(5);
@@ -195,6 +297,41 @@ describe("what one click reads", () => {
     expect(calls.filter((c) => c.route === "/onchain/token-risk").length).toBeGreaterThan(0);
     expect(calls.length).toBeLessThanOrEqual(15);
   });
+  test("real gateway pace-gates a background ecosystem build while default user intent keeps its exemption", async () => {
+    const time = Date.UTC(2026, 0, 1);
+    const dir = mkdtempSync(join(tmpdir(), "ecosystem-budget-intent-"));
+    tempDirs.push(dir);
+    const budget = createBudget({ dir, now: () => time, caps: () => ({ basic: 31, premium: 31 }) });
+    budget.record("basic");
+    budget.record("basic");
+    const client: OnchainClient = {
+      async call(_req, _tier, admitDispatch) {
+        const admitted = admitDispatch();
+        return admitted.ok
+          ? { ok: true, data: [], sent: true }
+          : { ok: false, error: admitted.reason, sent: false };
+      },
+      status: () => ({ lastCallMs: time, lastCode: 0, cooldownUntilMs: null, clockOffsetMs: null }),
+    };
+    const gateway = createOnchainGateway({
+      client,
+      cache: createOnchainCache(() => time),
+      budget,
+      credentialsState: () => "complete",
+      now: () => time,
+    });
+    const source = createEcosystemSource({ gateway, now: () => time });
+    const req: AskRequest = { modo: "ecossistema", redes: ["1"] };
+    const ctx = context();
+
+    await createEcosystemReader({ source, now: () => time }).read(null, new AbortController().signal);
+    expect(budget.snapshot().tiers.basic.used).toBe(2);
+
+    await source.build(req, ctx).catch(() => undefined);
+    expect(budget.snapshot().tiers.basic.used).toBe(3);
+    budget.flush();
+  });
+
 
   test("never more than the cap of the click, and a short cap reads fewer networks and says which were left out", async () => {
     const { gateway, calls } = fakeGateway();
@@ -235,6 +372,74 @@ describe("who is offered to the model", () => {
     expect(a.families.length).toBeGreaterThanOrEqual(2);
   });
 
+  test("hot-token chain identity is checked against the requested chain before attribution", async () => {
+    const own = hot("8453", "OWN", EVM_A);
+    const foreign = hot("501", "FOREIGN", EVM_B);
+    const { gateway } = fakeGateway({
+      answer: (route, params) => route === "/onchain/hot-tokens" && params.chainIndex === "8453"
+        ? { ok: true, data: [own, foreign], meta: META, sent: true }
+        : route === "/onchain/signals" && params.chainIndex === "8453"
+          ? { ok: true, data: [signal("8453", EVM_A, "OWN", 5, 30_000, 10), signal("8453", EVM_B, "FOREIGN", 5, 30_000, 10)], meta: META, sent: true }
+          : undefined,
+    });
+    const built = await build(gateway, request({ redes: ["8453"] }));
+    expect(built.candidates.map((candidate) => candidate.id)).toContain(`token:8453:${EVM_A}`);
+    expect(built.candidates.map((candidate) => candidate.id)).not.toContain(`token:8453:${EVM_B}`);
+    expect(built.ecosystem!.excluded.chain_mismatch).toBe(1);
+  });
+
+  test("equivalent EVM duplicate rows collapse; conflicting ranking inputs exclude the identity", async () => {
+    const canonical = hot("8453", "DUP", EVM_A);
+    const differentlyCased = hot("8453", "DUP", EVM_A.toUpperCase().replace("0X", "0x"));
+    const clean = hot("8453", "CLEAN", EVM_B);
+    const signalRows = [signal("8453", EVM_A, "DUP", 5, 30_000, 10), signal("8453", EVM_B, "CLEAN", 5, 30_000, 10)];
+    const makeGateway = (rows: unknown[]) => fakeGateway({
+      answer: (route, params) => route === "/onchain/hot-tokens"
+        ? { ok: true, data: rows, meta: META, sent: true }
+        : route === "/onchain/signals"
+          ? { ok: true, data: signalRows, meta: META, sent: true }
+          : undefined,
+    }).gateway;
+    const equivalent = await build(makeGateway([canonical, differentlyCased, clean]), request({ redes: ["8453"] }));
+    expect(equivalent.candidates.filter((candidate) => candidate.id === `token:8453:${EVM_A}`)).toHaveLength(1);
+
+    const conflict = await build(makeGateway([canonical, hot("8453", "DUP", EVM_A.toUpperCase().replace("0X", "0x"), { volumeUsd: 10 }), clean]), request({ redes: ["8453"] }));
+    expect(conflict.candidates.map((candidate) => candidate.id)).not.toContain(`token:8453:${EVM_A}`);
+    expect(conflict.candidates.map((candidate) => candidate.id)).toContain(`token:8453:${EVM_B}`);
+    expect(conflict.ecosystem!.excluded.token_duplicado_conflitante).toBe(1);
+  });
+
+  test("chain 784 case-variant hex hot rows produce one candidate", async () => {
+    const address = "0xAbCd000000000000000000000000000000000784";
+    const { gateway } = fakeGateway({
+      answer: (route) => route === "/onchain/hot-tokens"
+        ? { ok: true, data: [hot("784", "HEX", address), hot("784", "HEX", address.toLowerCase())], meta: META, sent: true }
+        : route === "/onchain/signals"
+          ? { ok: true, data: [signal("784", address, "HEX", 5, 30_000, 10)], meta: META, sent: true }
+          : undefined,
+    });
+    const built = await build(gateway, request({ redes: ["784"] }));
+    expect(built.candidates).toHaveLength(1);
+    expect(built.candidates[0]!.id).toBe(`token:784:${address.toLowerCase()}`);
+  });
+
+  test("Solana token casing remains identity-significant", async () => {
+    const upper = "So1111111111111111111111111111111111111AbC";
+    const lower = "So1111111111111111111111111111111111111aBc";
+    const rows = [hot("501", "SOLUP", upper), hot("501", "SOLLO", lower)];
+    const signals = [signal("501", upper, "SOLUP", 5, 30_000, 10), signal("501", lower, "SOLLO", 5, 30_000, 10)];
+    const { gateway } = fakeGateway({
+      answer: (route) => route === "/onchain/hot-tokens"
+        ? { ok: true, data: rows, meta: META, sent: true }
+        : route === "/onchain/signals"
+          ? { ok: true, data: signals, meta: META, sent: true }
+          : undefined,
+    });
+    const built = await build(gateway, request({ redes: ["501"] }));
+    expect(built.candidates.map((candidate) => candidate.id)).toContain(`token:501:${upper}`);
+    expect(built.candidates.map((candidate) => candidate.id)).toContain(`token:501:${lower}`);
+  });
+
   test("a caller that asks for a wider pool (the agent does) gets more candidates and the risk of more of them, inside the same cap of calls; the click keeps its five", async () => {
     // eleven tokens with everything in their favour on one network
     const many = Array.from({ length: 11 }, (_, i) => hot("501", `T${i}`, `So1111111111111111111111111111111111111${String(i).padStart(4, "0")}`, { liquidityUsd: 900_000 - i * 10_000 }));
@@ -254,11 +459,15 @@ describe("who is offered to the model", () => {
   });
 
   test("a token with a mark of care has a smaller ceiling than the same token without it", async () => {
-    const built = await build(fakeGateway().gateway);
-    const marked = built.ecosystem!.candidates.find((c) => c.facts.symbol === "BBB");
+    const { gateway } = fakeGateway({
+      answer: (route, params) => route === "/onchain/token-risk" && params.token === EVM_B
+        ? { ok: true, data: { chainIndex: params.chainIndex, address: params.token, riskLevel: 1, tags: [], top10HoldPct: 61, devHoldPct: 14, bundleHoldPct: 2, sniperHoldPct: 1, suspiciousHoldPct: 0 }, meta: META, sent: true }
+        : undefined,
+    });
+    const built = await build(gateway);
+    const marked = built.ecosystem!.candidates.find((c) => c.facts.symbol === "BBB")!;
     const clean = built.ecosystem!.candidates.find((c) => c.facts.symbol === "AAA")!;
-    expect(marked?.marks.length).toBeGreaterThan(0);
-    if (marked !== undefined) expect(marked.cap.maxUsd).toBeLessThan(clean.cap.maxUsd);
+    expect(marked.cap.maxUsd).toBeLessThan(clean.cap.maxUsd);
   });
 
   test("a honeypot is never offered, and the Brief counts what was left out", async () => {

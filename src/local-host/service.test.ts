@@ -2,33 +2,39 @@ import { expect, test } from "bun:test";
 import { mkdtempSync, rmSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
-import type { DesktopHandlers } from "../desktop/handlers";
-import type { AgentService } from "../agent/service";
+import { createDesktopHandlers, type DesktopHandlers } from "../desktop/handlers";
 import { localSelftestStore } from "./core-entry";
 import { startLocalService } from "./service";
 
 function fixture() {
   const dir = mkdtempSync(join(tmpdir(), "inonu-local-service-synthetic-"));
-  return { dir, async setup() { await Bun.write(join(dir, "web", "index.html"), "<html><body>synthetic_fixture</body></html>"); }, cleanup() {
-    const exact = resolve(dir);
-    if (dirname(exact) !== resolve(tmpdir()) || !basename(exact).startsWith("inonu-local-service-synthetic-")) throw new Error("unsafe_fixture_cleanup");
-    rmSync(exact, { recursive: true, force: true });
-  } };
+  return {
+    dir, async setup() { await Bun.write(join(dir, "web", "index.html"), "<html><body>synthetic_fixture</body></html>"); }, cleanup() {
+      const exact = resolve(dir);
+      if (dirname(exact) !== resolve(tmpdir()) || !basename(exact).startsWith("inonu-local-service-synthetic-")) throw new Error("unsafe_fixture_cleanup");
+      rmSync(exact, { recursive: true, force: true });
+    }
+  };
 }
 
 function deferred() { let resolve!: () => void; const promise = new Promise<void>((r) => { resolve = r; }); return { promise, resolve }; }
 
-function fakeHandlers(close: () => Promise<void>, afterClose: () => void): DesktopHandlers {
-  const handler = () => new Response("synthetic", { status: 200 });
-  return { agentService: { close } as AgentService, close: afterClose, agent: handler, settings: handler, onchain: handler, inonu: handler, systemOne: handler, jevRead: handler } as unknown as DesktopHandlers;
+function createHandlers(options: Parameters<typeof createDesktopHandlers>[0], beforeAgentClose?: (close: () => Promise<void>) => Promise<void>, afterClose: () => void = () => { }): DesktopHandlers {
+  const handlers = createDesktopHandlers({ ...options, pulse: false, liveFeed: false, agent: false });
+  const closeAgent = handlers.agentService.close.bind(handlers.agentService);
+  handlers.agentService.close = () => beforeAgentClose ? beforeAgentClose(closeAgent) : closeAgent();
+  const closeServices = handlers.close.bind(handlers);
+  handlers.close = () => { afterClose(); closeServices(); };
+  return handlers;
 }
 
 for (const options of [{}, { pulse: false }, { pulse: true }, { pulse: true, selftest: true }] as const) {
   test(`local service always binds pulse explicitly and selftest keeps it off: ${JSON.stringify(options)}`, async () => {
     const f = fixture(); await f.setup();
     let received: Parameters<NonNullable<Parameters<typeof startLocalService>[0]["createHandlers"]>>[0] | undefined;
-    const service = startLocalService({ dataDir: join(f.dir, "data"), webDir: join(f.dir, "web"), version: "synthetic", port: 0, store: localSelftestStore(join(f.dir, "data")), ...options,
-      createHandlers: (opts) => { received = opts; return fakeHandlers(async () => {}, () => {}); },
+    const service = startLocalService({
+      dataDir: join(f.dir, "data"), webDir: join(f.dir, "web"), version: "synthetic", port: 0, store: localSelftestStore(join(f.dir, "data")), ...options,
+      createHandlers: (opts) => { received = opts; return createHandlers(opts); },
     });
     try {
       expect(received?.pulse).toBe("pulse" in options && options.pulse === true && !("selftest" in options && options.selftest === true));
@@ -42,7 +48,7 @@ for (const options of [{}, { pulse: false }, { pulse: true }, { pulse: true, sel
 test("shutdown keeps the HTTP process alive while the agent drains; then closes the other services and socket", async () => {
   const f = fixture(); await f.setup();
   const gate = deferred(); let closed = 0;
-  const service = startLocalService({ dataDir: join(f.dir, "data"), webDir: join(f.dir, "web"), version: "synthetic", port: 0, store: localSelftestStore(join(f.dir, "data")), createHandlers: () => fakeHandlers(() => gate.promise, () => { closed++; }) });
+  const service = startLocalService({ dataDir: join(f.dir, "data"), webDir: join(f.dir, "web"), version: "synthetic", port: 0, store: localSelftestStore(join(f.dir, "data")), createHandlers: (opts) => createHandlers(opts, async (closeAgent) => { await gate.promise; await closeAgent(); }, () => { closed++; }) });
   try {
     let done = false; service.done.then(() => { done = true; });
     const stopping = service.stop();
@@ -57,7 +63,7 @@ test("shutdown keeps the HTTP process alive while the agent drains; then closes 
 test("a drain timeout retains the service and lock; a later successful drain can close it", async () => {
   const f = fixture(); await f.setup();
   let held = true; let attempt = 0; let closed = 0;
-  const service = startLocalService({ dataDir: join(f.dir, "data"), webDir: join(f.dir, "web"), version: "synthetic", port: 0, store: localSelftestStore(join(f.dir, "data")), createHandlers: () => fakeHandlers(async () => { if (++attempt === 1) throw new Error("close_timeout"); held = false; }, () => { closed++; }) });
+  const service = startLocalService({ dataDir: join(f.dir, "data"), webDir: join(f.dir, "web"), version: "synthetic", port: 0, store: localSelftestStore(join(f.dir, "data")), createHandlers: (opts) => createHandlers(opts, async (closeAgent) => { if (++attempt === 1) throw new Error("close_timeout"); held = false; await closeAgent(); }, () => { closed++; }) });
   try {
     await expect(service.stop()).rejects.toThrow("close_timeout");
     expect(held).toBe(true); expect(closed).toBe(0);

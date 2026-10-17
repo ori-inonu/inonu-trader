@@ -23,14 +23,17 @@ export interface OkxCredentials {
   readonly passphrase: string;
 }
 
+export type DispatchAdmission =
+  | { readonly ok: true }
+  | { readonly ok: false; readonly reason: "budget_exhausted" | "pace_limited" };
+
 export type ClientErrorCode =
   | "no_credentials" | "provider_unauthorized" | "provider_payment_required" | "rate_limited" | "provider_error"
-  | "schema" | "clock_skew" | "unsupported_chain";
+  | "schema" | "clock_skew" | "unsupported_chain" | "budget_exhausted" | "pace_limited";
 
-/** `extraDispatches` is present only when the call took more than one physical request (the 50102 retry): each one is a request the provider received, so the caller counts them all against the quota. */
 export type ClientResult =
-  | { readonly ok: true; readonly data: unknown; readonly sent: true; readonly extraDispatches?: number }
-  | { readonly ok: false; readonly error: ClientErrorCode; readonly sent: boolean; readonly extraDispatches?: number };
+  | { readonly ok: true; readonly data: unknown; readonly sent: true }
+  | { readonly ok: false; readonly error: ClientErrorCode; readonly sent: boolean };
 
 export interface OnchainClientDeps {
   readonly credentials: () => OkxCredentials | null;
@@ -66,9 +69,18 @@ const RATE_CODES = new Set(["50011"]);
 const OKX_KEY = OKX_KEY_ENV;
 const DENIED: Record<DenyReason, ClientErrorCode> = { blocked_402: "provider_payment_required", expired: "provider_payment_required", cooldown_429: "rate_limited", budget: "rate_limited", reserved: "rate_limited" };
 
-function sleep(ms: number): Promise<void> {
+/** Resolves after `ms`, or as soon as `signal` aborts, so a call past its deadline does not wait out a pacing sleep. */
+function sleep(ms: number, signal?: AbortSignal): Promise<void> {
   const { promise, resolve } = Promise.withResolvers<void>();
-  setTimeout(resolve, ms);
+  let timer!: ReturnType<typeof setTimeout>;
+  const finish = () => {
+    clearTimeout(timer);
+    signal?.removeEventListener("abort", finish);
+    resolve();
+  };
+  timer = setTimeout(finish, ms);
+  signal?.addEventListener("abort", finish, { once: true });
+  if (signal?.aborted) finish();
   return promise;
 }
 
@@ -101,7 +113,7 @@ export function createOkxBudget(options: { readonly ledgerPath: string; readonly
 }
 
 export interface OnchainClient {
-  call(request: ProviderRequest, tier: OnchainTier): Promise<ClientResult>;
+  call(request: ProviderRequest, tier: OnchainTier, admitDispatch: () => DispatchAdmission): Promise<ClientResult>;
   status(): ClientStatus;
 }
 
@@ -133,28 +145,56 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
   }
 
   /** One deadline covers fetch, body consumption and the optional clock retry. */
-  async function send(request: ProviderRequest, cred: OkxCredentials, dispatched: Dispatch): Promise<ClientResult> {
+  async function send(
+    request: ProviderRequest,
+    cred: OkxCredentials,
+    admitDispatch: () => DispatchAdmission,
+    dispatched: Dispatch,
+  ): Promise<ClientResult> {
     const controller = new AbortController();
+    const deadlineAt = performance.now() + timeoutMs;
     let timer!: ReturnType<typeof setTimeout>;
-    const deadline = new Promise<ClientResult>((resolve) => {
-      timer = setTimeout(() => {
-        controller.abort();
-        lastCallMs = deps.now();
-        resolve({ ok: false, error: "provider_error", sent: true });
-      }, timeoutMs);
-    });
+    const { promise: deadline, resolve: resolveDeadline } = Promise.withResolvers<ClientResult>();
+    timer = setTimeout(() => {
+      controller.abort();
+      lastCallMs = deps.now();
+      resolveDeadline({ ok: false, error: "provider_error", sent: dispatched.n > 0 });
+    }, timeoutMs);
     try {
-      return await Promise.race([sendBeforeDeadline(request, cred, controller.signal, dispatched), deadline]);
+      return await Promise.race([
+        sendBeforeDeadline(request, cred, admitDispatch, controller, deadlineAt, dispatched),
+        deadline,
+      ]);
     } finally {
       clearTimeout(timer);
     }
   }
 
-  async function sendBeforeDeadline(request: ProviderRequest, cred: OkxCredentials, signal: AbortSignal, dispatched: Dispatch): Promise<ClientResult> {
-    const expired = (): ClientResult => ({ ok: false, error: "provider_error", sent: true });
+  async function sendBeforeDeadline(
+    request: ProviderRequest,
+    cred: OkxCredentials,
+    admitDispatch: () => DispatchAdmission,
+    controller: AbortController,
+    deadlineAt: number,
+    dispatched: Dispatch,
+  ): Promise<ClientResult> {
+    const { signal } = controller;
+    const expired = (): ClientResult => ({ ok: false, error: "provider_error", sent: dispatched.n > 0 });
+    const isAbortedOrTimedOut = (): boolean => {
+      if (signal.aborted) return true;
+      if (performance.now() < deadlineAt) return false;
+      controller.abort();
+      return true;
+    };
+
     // A 50102 is retried exactly once, inside this queue slot, when the response itself teaches a new offset.
     for (let attempt = 0; attempt < 2; attempt += 1) {
-      if (signal.aborted) return expired();
+      if (isAbortedOrTimedOut()) return expired();
+      if (attempt > 0) {
+        const wait = Math.max(0, lastSentMs + minIntervalMs - deps.now());
+        if (wait > 0) await sleep(wait, signal);
+        if (isAbortedOrTimedOut()) return expired();
+      }
       const offsetUsed = offsetMs;
       const sentLocal = deps.now();
       const timestamp = new Date(sentLocal + offsetUsed).toISOString();
@@ -178,31 +218,40 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
         };
         const url = BASE + request.path;
         const dispatch = deps.fetch.bind(deps);
-        // Measure dispatch after synchronous preparation, including URL and transport lookup.
+        if (isAbortedOrTimedOut()) return expired();
+        const admission = admitDispatch();
+        if (!admission.ok) return { ok: false, error: admission.reason, sent: dispatched.n > 0 };
         lastSentMs = deps.now();
         dispatched.n += 1;
         res = await dispatch(url, init);
       } catch {
-        if (signal.aborted) return expired();
+        if (isAbortedOrTimedOut()) return expired();
         lastCallMs = deps.now();
-        return { ok: false, error: "provider_error", sent: true };
+        return { ok: false, error: "provider_error", sent: dispatched.n > 0 };
       }
-      if (signal.aborted) return expired();
+      if (isAbortedOrTimedOut()) return expired();
       const recvLocal = deps.now();
-      lastCallMs = recvLocal;
-      lastCode = res.status;
 
       // The Date header (1 s resolution) measures the clock skew against the midpoint of the round trip.
       const headerMs = Date.parse(res.headers.get("date") ?? "");
       let learned = offsetUsed;
-      let measured = false;
+      let skew: number | null = null;
       if (Number.isFinite(headerMs)) {
-        measured = true;
-        const skew = headerMs - (sentLocal + recvLocal) / 2;
-        clockOffsetMs = skew;
+        skew = headerMs - (sentLocal + recvLocal) / 2;
         learned = Math.abs(skew) >= 10_000 ? skew : 0;
-        offsetMs = learned;
       }
+      const recordResponse = (): boolean => {
+        if (isAbortedOrTimedOut()) return false;
+        lastCallMs = recvLocal;
+        lastCode = res.status;
+        if (skew !== null) {
+          clockOffsetMs = skew;
+          offsetMs = learned;
+        }
+        return true;
+      };
+      const responseResult = (result: ClientResult): ClientResult =>
+        recordResponse() ? result : expired();
 
       // Error statuses whose bodies can carry the clock code are read; others are not worth the bytes.
       if (res.status === 401 || res.status === 403) {
@@ -212,38 +261,49 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
         } catch {
           raw = null;
         }
-        if (signal.aborted) return expired();
+        if (isAbortedOrTimedOut()) return expired();
         const code = bodyCode(raw);
+        if (isAbortedOrTimedOut()) return expired();
         if (code === CLOCK_CODE) {
-          if (attempt === 0 && measured && Math.abs(learned - offsetUsed) >= 5_000) continue;
-          return { ok: false, error: "clock_skew", sent: true };
+          if (attempt === 0 && skew !== null && Math.abs(learned - offsetUsed) >= 5_000) {
+            if (!recordResponse()) return expired();
+            continue;
+          }
+          return responseResult({ ok: false, error: "clock_skew", sent: true });
         }
-        return { ok: false, error: "provider_unauthorized", sent: true };
+        return responseResult({ ok: false, error: "provider_unauthorized", sent: true });
       }
-      if (res.status === 402) return { ok: false, error: "provider_payment_required", sent: true };
+      if (res.status === 402) return responseResult({ ok: false, error: "provider_payment_required", sent: true });
       if (res.status === 429) {
+        if (!recordResponse()) return expired();
         dispatched.retryAfterMs = retryAfterMs(res);
         return { ok: false, error: "rate_limited", sent: true };
       }
-      if (res.status >= 500 || !res.ok) return { ok: false, error: "provider_error", sent: true };
+      if (res.status >= 500 || !res.ok) return responseResult({ ok: false, error: "provider_error", sent: true });
       let raw: string;
       try {
         raw = await res.text();
       } catch {
-        return { ok: false, error: "provider_error", sent: true };
+        if (isAbortedOrTimedOut()) return expired();
+        return responseResult({ ok: false, error: "provider_error", sent: true });
       }
-      if (signal.aborted) return expired();
-      if (new TextEncoder().encode(raw).length > maxBytes) return { ok: false, error: "provider_error", sent: true };
+      if (isAbortedOrTimedOut()) return expired();
+      if (new TextEncoder().encode(raw).length > maxBytes) {
+        return responseResult({ ok: false, error: "provider_error", sent: true });
+      }
       let body: unknown;
       try {
         body = JSON.parse(raw);
       } catch {
-        return { ok: false, error: "provider_error", sent: true };
+        if (isAbortedOrTimedOut()) return expired();
+        return responseResult({ ok: false, error: "provider_error", sent: true });
       }
+      if (isAbortedOrTimedOut()) return expired();
       const env = body as { code?: unknown; data?: unknown };
       if (typeof env !== "object" || env === null || typeof env.code !== "string" || !("data" in env)) {
-        return { ok: false, error: "schema", sent: true };
+        return responseResult({ ok: false, error: "schema", sent: true });
       }
+      if (!recordResponse()) return expired();
       lastCode = Number(env.code);
       if (env.code === "0") return { ok: true, data: env.data, sent: true };
       if (env.code === UNSUPPORTED_CHAIN_CODE) return { ok: false, error: "unsupported_chain", sent: true };
@@ -269,7 +329,8 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
     }
   }
 
-  function call(request: ProviderRequest): Promise<ClientResult> {
+  /** `admitDispatch` is the caller's own quota gate: asked right before each physical request (the 50102 retry included); a refusal sends nothing. */
+  function call(request: ProviderRequest, _tier: OnchainTier, admitDispatch: () => DispatchAdmission): Promise<ClientResult> {
     const target: BudgetRequest = { module: "okx", endpoint: request.path.split("?")[0] ?? request.path, key: OKX_KEY };
     const result = queue.then(async (): Promise<ClientResult> => {
       const dispatched: Dispatch = { n: 0 };
@@ -279,9 +340,9 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
           if (wait > 0) await sleep(wait);
           const cred = deps.credentials();
           if (cred === null) return { ok: false, error: "no_credentials", sent: false };
-          const sent = await send(request, cred, dispatched);
+          const sent = await send(request, cred, admitDispatch, dispatched);
           await settle(target, sent, dispatched);
-          return dispatched.n > 1 ? { ...sent, extraDispatches: dispatched.n - 1 } : sent;
+          return sent;
         }, (r) => r.ok);
       } catch (error) {
         if (error instanceof BudgetDenied) return { ok: false, error: DENIED[error.reason], sent: false };

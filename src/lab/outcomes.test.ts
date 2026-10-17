@@ -519,6 +519,20 @@ describe("LB12 leverage counterfactual", () => {
     expect(scanLiquidation({ side: "short", entryPrice: entry, leverage: 10, maintenanceMarginPpm: MMR_PPM, feePpm: FEE_PPM, bars: shortBars, fundingPayments: [] }).liquidated).toBe(false);
     expect(scanLiquidation({ side: "short", entryPrice: entry, leverage: 10, maintenanceMarginPpm: MMR_PPM, feePpm: FEE_PPM, bars: shortBars, fundingPayments: [{ settleMs: 5, paid: 0.02 }] }).liquidated).toBe(true);
   });
+  test("LB12 non-liquidated scan counts funding only through the final bar", () => {
+    const scan = scanLiquidation({
+      side: "long",
+      entryPrice: 100,
+      leverage: 10,
+      maintenanceMarginPpm: MMR_PPM,
+      feePpm: FEE_PPM,
+      bars: [{ endMs: 10, high: 100, low: 100 }],
+      fundingPayments: [{ settleMs: 5, paid: 0.01 }, { settleMs: 10, paid: 0.005 }, { settleMs: 15, paid: 0.02 }],
+    });
+    expect(scan.liquidated).toBe(false);
+    expect(scan.atMs).toBe(null);
+    expect(scan.fundingPaid).toBe(0.015);
+  });
 
   test("LB12 a payment after the bar is not applied to it, and the first liquidating bar is reported", () => {
     const bars = [

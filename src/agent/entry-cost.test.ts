@@ -113,6 +113,29 @@ describe("the quote taken before the Jev is asked is small, one at a time, and n
     expect(out[1]).toBe(unknown);
   });
 
+  test("a finite quote narrows the purchase it was taken for", async () => {
+    const out = await run([token(1, 0)], async (order) => ({ impactPct: order.address === "T1" ? -1 : null, refusal: null }));
+    expect(out[0]!.profiles).toEqual(["alvo_5", "alvo_10", "alvo_20"]);
+  });
+
+  test("an explicit gas-station refusal closes and marks only its purchase; a generic absence leaves another purchase open", async () => {
+    const marked = token(1, 1);
+    const alreadyMarked = { ...marked, marks: [...marked.marks, "gas_station_pendente"], triggers: ["prior_observation"] };
+    const refused = token(2, 2);
+    const unknown = token(3, 3);
+    const out = await run([alreadyMarked, refused, unknown], async (order) => order.address === "T1" || order.address === "T2"
+      ? { impactPct: null, refusal: "gas_station_pendente" }
+      : { impactPct: null, refusal: null });
+    const first = out.find((c) => c.id === alreadyMarked.id)!;
+    const second = out.find((c) => c.id === refused.id)!;
+    expect(first).toMatchObject({ stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {} });
+    expect(first.marks.filter((mark) => mark === "gas_station_pendente")).toHaveLength(1);
+    expect(first.triggers).toEqual(["prior_observation"]);
+    expect(second).toMatchObject({ stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {} });
+    expect(second.marks.filter((mark) => mark === "gas_station_pendente")).toHaveLength(1);
+    expect(out[2]).toBe(unknown);
+  });
+
   test("no more than the best few open purchases are quoted in a cycle", async () => {
     const asked: string[] = [];
     await run([token(1, 1), token(2, 2), token(3, 3), token(4, 4), token(5, 5)], async (order) => (asked.push(order.address), observation(null)));
@@ -170,6 +193,50 @@ describe("the quote taken before the Jev is asked is small, one at a time, and n
     clock += 2;
     await cached(order, signal);
     expect(calls).toBe(2);
+  });
+
+  test("unknown and gas-station refusal observations use the short cache TTL", async () => {
+    const observations: EntryQuoteObservation[] = [
+      { impactPct: null, refusal: null },
+      { impactPct: null, refusal: "gas_station_pendente" },
+    ];
+    const order = smallestOrderOf(buy())!;
+    const signal = new AbortController().signal;
+    for (const observation of observations) {
+      let clock = NOW;
+      let calls = 0;
+      const read = cachedEntryQuoteReader(async () => (calls++, observation), () => clock);
+      expect(await read(order, signal)).toEqual(observation);
+      clock += ENTRY_PROBE.failTtlMs - 1;
+      expect(await read(order, signal)).toEqual(observation);
+      expect(calls).toBe(1);
+      clock += 2;
+      expect(await read(order, signal)).toEqual(observation);
+      expect(calls).toBe(2);
+    }
+  });
+
+  test("a gas-station refusal closes only until its short TTL; recovery applies the finite impact for the longer TTL", async () => {
+    let clock = NOW;
+    let calls = 0;
+    const refusal: EntryQuoteObservation = { impactPct: null, refusal: "gas_station_pendente" };
+    const impact: EntryQuoteObservation = { impactPct: -0.2, refusal: null };
+    const read = cachedEntryQuoteReader(async () => (calls++ === 0 ? refusal : impact), () => clock);
+    const c = token(1, 0);
+    const inspect = () => run([c], read);
+    expect((await inspect())[0]).toMatchObject({ stances: ["skip"], marks: expect.arrayContaining(["gas_station_pendente"]) });
+    clock += ENTRY_PROBE.failTtlMs - 1;
+    expect((await inspect())[0]!.stances).toEqual(["skip"]);
+    expect(calls).toBe(1);
+    clock += 2;
+    expect((await inspect())[0]).toBe(c);
+    expect(calls).toBe(2);
+    clock += ENTRY_PROBE.ttlMs - 1;
+    expect((await inspect())[0]).toBe(c);
+    expect(calls).toBe(2);
+    clock += 2;
+    expect((await inspect())[0]).toBe(c);
+    expect(calls).toBe(3);
   });
 
   test("a finite impact is kept for five minutes, then an unknown reread reopens the purchase", async () => {

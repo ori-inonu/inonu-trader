@@ -72,31 +72,28 @@ describe("the sequential decisions answer as an MCP server, and the paid part ne
     expect([text(r).plannedCalls > 0, ran]).toEqual([true, 0]);
   });
 
-  test("the paid run is refused unless allow_paid_inference is true", async () => {
+  test("the paid run needs no yes flag and no cap: it runs with the key alone", async () => {
     let ran = 0;
-    const r = await call("consensus_run", { spec: raw(), max_calls: 10, allow_paid_inference: false }, deps({ run: async () => (ran++, { receipt, meter: {} }) }));
-    expect([r.result.isError, ran]).toEqual([true, 0]);
-  });
-
-  test("the paid run is refused above the hard cap of calls", async () => {
-    const r = await call("consensus_run", { spec: raw(), max_calls: 500, allow_paid_inference: true });
-    expect(r.result.isError).toBe(true);
+    const r = await call("consensus_run", { spec: raw() }, deps({ run: async () => (ran++, { receipt, meter: {} }) }));
+    expect([r.result.isError, ran]).toEqual([undefined, 1]);
   });
 
   test("the paid run is refused without the key in the environment of the server", async () => {
-    const r = await call("consensus_run", { spec: raw(), max_calls: 10, allow_paid_inference: true }, deps({ hasKey: () => false }));
+    const r = await call("consensus_run", { spec: raw() }, deps({ hasKey: () => false }));
     expect(text(r).refused).toContain("chave");
   });
 
-  test("with the yes, a cap and the key, the receipt comes back with the disclaimer", async () => {
-    const r = await call("consensus_run", { spec: raw(), max_calls: 10, allow_paid_inference: true });
+  test("with the key, the receipt comes back with the disclaimer", async () => {
+    const r = await call("consensus_run", { spec: raw() });
     expect([text(r).receipt.status, text(r).disclaimer]).toEqual(["consenso", DISCLAIMER]);
   });
 
-  test("the cap handed to the run is the one asked for", async () => {
-    let seen = 0;
-    await call("consensus_run", { spec: raw(), max_calls: 7, allow_paid_inference: true }, deps({ run: async (_s: DecisionSpec, cap: number) => ((seen = cap), { receipt, meter: {} }) }));
-    expect(seen).toBe(7);
+  test("a ceiling is handed to the run only when the caller gives one; otherwise there is none", async () => {
+    const seen: Array<number | undefined> = [];
+    const run = async (_s: DecisionSpec, cap: number | undefined) => (seen.push(cap), { receipt, meter: {} });
+    await call("consensus_run", { spec: raw(), max_calls: 7 }, deps({ run }));
+    await call("consensus_run", { spec: raw() }, deps({ run }));
+    expect(seen).toEqual([7, undefined]);
   });
 
   test("a bad spec comes back as an error result with a code, never as an exception", async () => {

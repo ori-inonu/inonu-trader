@@ -20,8 +20,8 @@ import { newReconcileMemory, settleByReceipts, type RefRecovery } from "./reconc
 import { installCli, PINNED_SHA256, pollLogin, readAddresses, startLogin, type InstallResult } from "./agent-wallet";
 import { createSolanaReceiptReader, createSolanaSwapFinder, withSolanaReceiptFallback } from "../server/solana-receipts";
 import { binaryMatches, resolveCliPath, createCliExecutor, createEntryQuoter, createReceiptLookup, readAccountStatus, type AccountStatus, createGuardedRunner, createLimitedFactsReader, createProcessRunner, createVerifiedRunner, readTextFile, sha256File as realSha256File, type CliRunner } from "./cli";
-import { configFile, createConfigStore, type ConfigPatch } from "./config";
-import { capRaised, type PolicyMirror } from "./gate";
+import { configFile, createConfigStore, type AgentConfig, type ConfigPatch } from "./config";
+import { MAX_BOOK_AGE_MS, capRaised, type PolicyMirror } from "./gate";
 import { createCycleRunner, type CycleReport, type Executor } from "./cycle";
 import { createProductionShadow } from "../decision-shadow/shadow";
 import { jsonlEventSink, withExecutorHealth } from "./executor-guard";
@@ -29,7 +29,8 @@ import { jsonlTimingSink, withCliTiming } from "./cli-timing";
 import { cachedEntryQuoteReader, impactOfQuote } from "./entry-cost";
 import { createRecorders } from "./recording";
 import { createFileAgentLedger } from "./ledger";
-import { createBookReader, createEcosystemReader, createHoldingFactsReader, createMarketContext, createMomentumReader, createPriceLookup, createTimingReader, okxPublicCandles, okxPublicDerivatives, type BalanceSource, type PublicCandles, type PublicDerivatives } from "./live";
+import { verifyBook } from "./book";
+import { createBookReader, createEcosystemReader, createHoldingFactsReader, createMarketContext, createMomentumReader, createPriceLookup, createTimingReader, okxPublicCandles, okxPublicDerivatives, type BalanceSource, type BookReadInfo, type PublicCandles, type PublicDerivatives } from "./live";
 import { createJevAgentModel, questionsDigest, type AgentModel } from "./model";
 import { createPlanStore, planFileStore, planKey, planView } from "./plans";
 import { createScheduler, type Scheduler } from "./scheduler";
@@ -54,13 +55,15 @@ export const STOP_MARK = "inonu-agent: stop file written by the app when it disc
 import { DISCIPLINE, lapsedPause } from "./autonomy";
 import { boldHotIntervalMin, deriveSettings, effectiveIntervalMin, HOT_INTERVAL_MIN, hotWithinQuota, OWNER_AUTHORIZATIONS, OWNER_PROFILE, type EffectiveSettings, type OwnerProfile } from "./autopilot";
 import { createMandateStore, mandateFileStore } from "./mandate";
-import type { AgentService, AgentStatus, AuthorityView, BookStatus, ConfigChange, ConnectChange, PositionRow, Readiness, ResolveResult, WalletAction, WalletSetupResult, WalletSetupView } from "./service";
+import type { AgentDevStatus, AgentService, AgentStatus, AuthorityView, BookStatus, ConfigChange, ConnectChange, PositionRow, Readiness, ResolveResult, WalletAction, WalletSetupResult, WalletSetupView } from "./service";
 import type { Book, Mode } from "./types";
 
 /** How often the guard looks over the positions between the cycles: the stop of a plan does not wait for the next look of the model. */
 const GUARD_EVERY_MS = 45_000;
 /** The least time between two readings of the wallet's value kept for the equity series. */
 const EQUITY_EVERY_MS = 4 * 60_000;
+/** The read-only wallet snapshot is shared by cycles and the background refresh, never fetched more than once per address in this window. */
+const WALLET_REFRESH_MS = 30_000;
 /** How many consultations of the model are kept in `briefs.jsonl` for the study of the decisions. */
 const BRIEFS_KEPT = 120;
 /** How many closings (closing.ts) are kept in `closings.jsonl` for the study of the second look. */
@@ -193,11 +196,11 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     if (outcome === "executada" && record !== undefined && record.source === "protecao" && record.stance === "trim_half" && halfDone(ledger.orderRecords(), planKey(record.chainIndex, record.address), plans.get(planKey(record.chainIndex, record.address))?.entryAtMs ?? 0)) plans.markTrimmed(planKey(record.chainIndex, record.address));
     return true;
   };
-  let analysisMemo: { readonly at: number; readonly value: AnalysisView } | null = null;
-  // set by close(): the cycle in flight sends nothing more, and no new one begins
+  let analysisMemo: { readonly at: number; readonly page: number; readonly value: AnalysisView } | null = null;
   let closing = false;
   let closed: Promise<void> | null = null;
-
+  let cancelWalletRefresh: (() => void) | null = null;
+  let walletRefreshController: AbortController | null = null;
   const state = createAgentState({ ...agentStateFile(join(dir, "state.json")), now: localNow });
   const configStore = createConfigStore(configFile(join(dir, "config.json")));
   const ledger = createFileAgentLedger(join(dir, "ledger.jsonl"));
@@ -240,6 +243,25 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       },
     };
   let lastBook: Book | null = null;
+  const managedKey = (managed: AgentConfig["managed"]): string =>
+    JSON.stringify({ kind: managed.kind, evm: managed.evm?.toLowerCase() ?? null, solana: managed.solana });
+  let managedWalletKey = managedKey(configStore.get().managed);
+  let managedWalletGeneration = 0;
+  let bookConfigGeneration = 0;
+  let bookConfigSignature: string | null = null;
+  let bookReadSequence = 0;
+  let latestPublishedBookSequence = 0;
+  let activeCycleBookSequence = 0;
+  let managedReadInfo: BookReadInfo | null = null;
+  let latestManagedReadInfoSequence = 0;
+  const rememberManagedReadInfo = (sequence: number, before: BookReadInfo | null, info: BookReadInfo | null): void => {
+    if (info !== null && info !== before && sequence >= latestManagedReadInfoSequence) {
+      managedReadInfo = info;
+      latestManagedReadInfoSequence = sequence;
+    }
+  };
+  let activeBookReadGeneration: number | null = null;
+  let activeBookConfigGeneration: number | null = null;
   /** The owner's policy as the signing tool last reported it: the autopilot never plans to spend what it would refuse. */
   let lastPolicy: PolicyMirror | null = null;
 
@@ -289,7 +311,16 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   };
   // the capacity covers the fastest rhythm the agent may keep: under the bold profile that is the hot interval, because the agent looks every two minutes while the market has something to offer
   rhythmMin = () => (ownerProfile === "arrojado" ? Math.min(settings().intervalMin, HOT_INTERVAL_MIN) : settings().intervalMin);
-  const bookReader = createBookReader({ config: () => ({ ...configStore.get(), chains: settings().chains }), source: balances, now: localNow });
+  const bookReader = createBookReader({ config: () => ({ ...configStore.get(), chains: settings().chains }), source: balances, now: localNow, cacheMs: WALLET_REFRESH_MS });
+  const bookReaderConfigKey = (): string => {
+    const config = configStore.get();
+    return JSON.stringify({
+      managed: managedKey(config.managed),
+      watch: { evm: config.watch.evm?.toLowerCase() ?? null, solana: config.watch.solana },
+      chains: settings().chains,
+    });
+  };
+  bookConfigSignature = bookReaderConfigKey();
 
   // what is read about them and the market
   const factsReader = createHoldingFactsReader({ gateway: options.gateway, plans, now: localNow });
@@ -356,6 +387,30 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   };
   // the book the executor settles in: the one a full cycle published, else the one the guard read (right after a start the guard may be the first to look)
   let guardBook: Book | null = null;
+  const syncManagedWallet = (): void => {
+    const next = managedKey(configStore.get().managed);
+    const managedChanged = next !== managedWalletKey;
+    if (managedChanged) {
+      managedWalletKey = next;
+      managedWalletGeneration++;
+      lastBook = null;
+    }
+    forgetSettings();
+    const nextConfig = bookReaderConfigKey();
+    if (nextConfig !== bookConfigSignature) {
+      bookConfigSignature = nextConfig;
+      bookConfigGeneration++;
+      bookReader.invalidate();
+      walletRefreshController?.abort();
+      cancelWalletRefresh?.();
+      cancelWalletRefresh = null;
+      managedReadInfo = null;
+      latestManagedReadInfoSequence = 0;
+      activeBookReadGeneration = null;
+      activeBookConfigGeneration = null;
+      guardBook = null;
+    }
+  };
   // the allowlisted facts of the quote of each order (quote-facts.ts), handed over by the executor as it reads the quote and written on the order record by the cycle; the newest few hundred are kept, in memory only
   const quotes = new Map<string, QuoteFacts>();
   // the read-only quote of an entry, for the closing: the same tool and the same guard as the executor, asked for the quote only
@@ -511,6 +566,8 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       const previous = current.managed;
       const watch = previous.kind === "propria" && (previous.evm !== null || previous.solana !== null) && current.watch.evm === null && current.watch.solana === null ? { evm: previous.evm, solana: previous.solana } : current.watch;
       const changed = configStore.update({ managed: { kind: "agentica", evm: found.evm, solana: found.solana }, watch });
+      syncManagedWallet();
+      armWalletRefresh();
       loginWaiting = false;
       loginUrl = null;
       forgetSettings();
@@ -562,7 +619,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     (async (chainIndex: string, address: string, signal: AbortSignal): Promise<number | null> => {
       if (signal.aborted) return null;
       const result = await options.gateway.callInternal("/onchain/price", { chainIndex, token: address }, "background");
-      if (!result.ok || !Array.isArray(result.data)) return null;
+      if (!result.ok || result.meta?.stale === true || !Array.isArray(result.data)) return null;
       const price = (result.data[0] as { price?: unknown } | undefined)?.price;
       return typeof price === "number" && Number.isFinite(price) && price > 0 ? price : null;
     });
@@ -652,15 +709,38 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     buyingPaused: () => isPaused(state.get(), localNow()),
     requireOwnerPolicy: policyRequired,
     onGuardBook: (b) => {
+      if (activeBookReadGeneration !== managedWalletGeneration || activeBookConfigGeneration !== bookConfigGeneration) return;
       guardBook = b;
       recorders?.recordBook(b, "guard");
       for (const e of priceMoveEvents({ looked: lookedAt, book: b, plans, nowMs: localNow() })) events.notify(e);
     },
 
-    readBook: (signal) => bookReader.read(signal),
+    readBook: async (signal) => {
+      const generation = managedWalletGeneration;
+      const configGeneration = bookConfigGeneration;
+      const sequence = ++bookReadSequence;
+      activeCycleBookSequence = sequence;
+      const before = bookReader.last();
+      const book = await bookReader.read(signal);
+      if (generation !== managedWalletGeneration || configGeneration !== bookConfigGeneration) return null;
+      const info = bookReader.last();
+      rememberManagedReadInfo(sequence, before, info);
+      activeBookReadGeneration = generation;
+      activeBookConfigGeneration = configGeneration;
+      if (signal.aborted) {
+        if (book !== null && sequence >= latestPublishedBookSequence) {
+          lastBook = verifyBook(book, () => null).book;
+          latestPublishedBookSequence = sequence;
+        }
+        return null;
+      }
+      return sequence < latestPublishedBookSequence ? null : book;
+    },
     // only the verified view is shown and used to pick a settlement coin: a claimed value nobody could pay is never displayed as capital
     onBook: (book) => {
+      if (activeBookReadGeneration !== managedWalletGeneration || activeBookConfigGeneration !== bookConfigGeneration || activeCycleBookSequence < latestPublishedBookSequence) return;
       lastBook = book;
+      latestPublishedBookSequence = activeCycleBookSequence;
       recorders?.recordBook(book, "look");
       lookingAt = pricesOf(book);
       recordEquity(book);
@@ -680,16 +760,16 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     ...(options.memory === undefined || !options.memory.enabled
       ? {}
       : {
-          memoryHook: (ask: { readonly asOfMs: number; readonly cycleId: string; readonly itemIds: readonly string[] }) => {
-            const memory = options.memory!;
-            // the cohort is explicit: the latest cycles of the ledger before this one, never the whole history
-            const cohortCycleIds = ledger.tail(MEMORY_TAIL_FOR_COHORT).flatMap((r) => (r.kind === "cycle" && r.cycleId !== ask.cycleId ? [r.cycleId] : [])).slice(-(memory.cohortSize ?? 24));
-            return buildMemoryBrief(
-              { enabled: true, asOfMs: ask.asOfMs, cycleId: ask.cycleId, arm: memory.arm ?? "A", cohortCycleIds, itemIds: ask.itemIds, ...(memory.maxBytes === undefined ? {} : { maxBytes: memory.maxBytes }) },
-              { read: memory.read, clock: memory.clock ?? (() => performance.now()) },
-            );
-          },
-        }),
+        memoryHook: (ask: { readonly asOfMs: number; readonly cycleId: string; readonly itemIds: readonly string[] }) => {
+          const memory = options.memory!;
+          // the cohort is explicit: the latest cycles of the ledger before this one, never the whole history
+          const cohortCycleIds = ledger.tail(MEMORY_TAIL_FOR_COHORT).flatMap((r) => (r.kind === "cycle" && r.cycleId !== ask.cycleId ? [r.cycleId] : [])).slice(-(memory.cohortSize ?? 24));
+          return buildMemoryBrief(
+            { enabled: true, asOfMs: ask.asOfMs, cycleId: ask.cycleId, arm: memory.arm ?? "A", cohortCycleIds, itemIds: ask.itemIds, ...(memory.maxBytes === undefined ? {} : { maxBytes: memory.maxBytes }) },
+            { read: memory.read, clock: memory.clock ?? (() => performance.now()) },
+          );
+        },
+      }),
     tokenTrips: () => tokenTripsBrief(fills.all(), localNow()),
     feeOf: (chainIndex) => {
       const fee = fees.get(chainIndex);
@@ -778,7 +858,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
           },
         }),
     riskPct: () => settings().riskPct,
-    // the price impact of the entry quote, read before the model is asked so that it is not offered plans the executor will refuse (entry-cost.ts): the same read-only quote of the closing, never signed, never sent
+    // the entry quote's finite impact or explicit gas-station refusal is read before the model is asked; every other refusal stays unknown (entry-cost.ts). Read only, never signed or sent
     ...(options.closing === false
       ? {}
       : {
@@ -852,7 +932,65 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       macroEvents?.wake();
     },
   });
-  if (options.start === true) scheduler.start();
+  const timerOf = options.schedule ?? ((ms: number, fn: () => void) => {
+    const timer = setTimeout(fn, ms);
+    return () => clearTimeout(timer);
+  });
+  const hasManagedWallet = (): boolean => {
+    const managed = configStore.get().managed;
+    return managed.evm !== null || managed.solana !== null;
+  };
+  const refreshManagedBook = async (): Promise<void> => {
+    if (closing || options.start !== true || !hasManagedWallet()) return;
+    if (walletRefreshController !== null && !walletRefreshController.signal.aborted) return;
+    const controller = new AbortController();
+    walletRefreshController = controller;
+    const generation = managedWalletGeneration;
+    const configGeneration = bookConfigGeneration;
+    const sequence = ++bookReadSequence;
+    const before = bookReader.last();
+    try {
+      const raw = await bookReader.read(controller.signal);
+      if (generation !== managedWalletGeneration || configGeneration !== bookConfigGeneration || closing) return;
+      const info = bookReader.last();
+      rememberManagedReadInfo(sequence, before, info);
+      if (raw === null || info?.managedOk !== true || controller.signal.aborted) return;
+      const facts = await factsReader.read(raw, controller.signal);
+      if (generation !== managedWalletGeneration || configGeneration !== bookConfigGeneration || closing || controller.signal.aborted) return;
+      const verified = verifyBook(raw, facts).book;
+      if (sequence < latestPublishedBookSequence) return;
+      lastBook = verified;
+      latestPublishedBookSequence = sequence;
+      if (sequence >= latestManagedReadInfoSequence) {
+        managedReadInfo = info;
+        latestManagedReadInfoSequence = sequence;
+      }
+      forgetSettings();
+      recordEquity(verified);
+    } catch {
+      // A failed refresh keeps the last verified snapshot; the book reader's attempt metadata marks it stale.
+    } finally {
+      if (walletRefreshController === controller) walletRefreshController = null;
+    }
+  };
+  const armWalletRefresh = (): void => {
+    if (closing || options.start !== true || !hasManagedWallet()) {
+      cancelWalletRefresh?.();
+      cancelWalletRefresh = null;
+      return;
+    }
+    if (cancelWalletRefresh !== null) return;
+    cancelWalletRefresh = timerOf(WALLET_REFRESH_MS, () => {
+      cancelWalletRefresh = null;
+      if (closing) return;
+      void refreshManagedBook();
+      armWalletRefresh();
+    });
+  };
+  if (options.start === true) {
+    scheduler.start();
+    armWalletRefresh();
+  }
   // the pulse is read every few seconds for material facts, with the scheduler's own timer; a closed service reads nothing more
   let cancelMacroPoll: (() => void) | null = null;
   const armMacroPoll = (): void => {
@@ -944,7 +1082,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   const positionRows = (book: Book): PositionRow[] => {
     const total = book.totalUsd !== null && book.totalUsd > 0 ? book.totalUsd : null;
     return [...book.positions]
-      .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1))
+      .sort((a, b) => Number(b.wallet === "agente") - Number(a.wallet === "agente") || (b.usd ?? -1) - (a.usd ?? -1))
       .slice(0, 24)
       .map((p) => {
         const plan = plans.get(planKey(p.chainIndex, p.address));
@@ -961,20 +1099,61 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       });
   };
 
-  const bookStatus = (): BookStatus | null => {
-    const info = bookReader.last();
-    if (info === null) return null;
-    const book = lastBook;
+  const unavailableDevBook = (atMs: number): NonNullable<AgentDevStatus["book"]> => ({
+    atMs, observedAtMs: null, quality: "unavailable", totalUsd: null, agentUsd: null, cashUsd: null,
+  });
+
+  const devBookProjection = (info: BookReadInfo, book: Book | null, now: number): AgentDevStatus["book"] => {
+    if (book === null) return unavailableDevBook(info.atMs);
+    const ageMs = now - book.observedAtMs;
+    const stale = !info.managedOk || ageMs < -5_000 || ageMs > MAX_BOOK_AGE_MS;
+    const unpriced = book.positions.some((p) => p.wallet === "agente" && p.usd === null);
+    const quality = stale ? "stale" : unpriced ? "partial" : "current";
+    if (quality === "stale") return { atMs: info.atMs, observedAtMs: book.observedAtMs, quality, totalUsd: null, agentUsd: null, cashUsd: null };
     return {
       atMs: info.atMs,
+      observedAtMs: book.observedAtMs,
+      quality,
+      totalUsd: book.totalUsd,
+      agentUsd: book.agentUsd,
+      cashUsd: Object.values(book.cashByChain).reduce((sum, value) => sum + value, 0),
+    };
+  };
+
+  const bookStatus = (): BookStatus | null => {
+    const info = managedReadInfo;
+    if (info === null) return null;
+    const book = lastBook;
+    if (book === null) {
+      return {
+        atMs: info.atMs,
+        observedAtMs: null,
+        quality: "unavailable",
+        managedOk: info.managedOk,
+        watchFailed: info.watchFailed,
+        flagged: 0,
+        unpriced: 0,
+        totalUsd: null,
+        agentUsd: null,
+        cashUsd: null,
+        positions: [],
+      };
+    }
+    const ageMs = localNow() - book.observedAtMs;
+    const stale = !info.managedOk || ageMs < -5_000 || ageMs > MAX_BOOK_AGE_MS;
+    const unpriced = book.positions.filter((p) => p.wallet === "agente" && p.usd === null).length;
+    return {
+      atMs: info.atMs,
+      observedAtMs: book.observedAtMs,
+      quality: stale ? "stale" : unpriced > 0 ? "partial" : "current",
       managedOk: info.managedOk,
       watchFailed: info.watchFailed,
-      flagged: info.flagged,
-      unpriced: info.unpriced,
-      totalUsd: book?.totalUsd ?? null,
-      agentUsd: book?.agentUsd ?? null,
-      cashUsd: book === null ? 0 : Object.values(book.cashByChain).reduce((s, v) => s + v, 0),
-      positions: book === null ? [] : positionRows(book),
+      flagged: info.managedOk ? info.flagged : (book.flaggedKeys ?? []).length,
+      unpriced,
+      totalUsd: book.totalUsd,
+      agentUsd: book.agentUsd,
+      cashUsd: Object.values(book.cashByChain).reduce((s, v) => s + v, 0),
+      positions: positionRows(book),
     };
   };
 
@@ -1014,6 +1193,15 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
         lock: lock.held(),
       };
     },
+    devStatus(): AgentDevStatus {
+      const now = localNow();
+      const info = managedReadInfo;
+      return {
+        atMs: now,
+        connected: state.get().connected,
+        book: info === null ? unavailableDevBook(now) : devBookProjection(info, lastBook, now),
+      };
+    },
     connect(input): ConnectChange {
       // another window holds the folder: what is changed here would never reach the agent that runs
       if (!lock.held()) return { ok: false, reason: "outra_instancia" };
@@ -1030,7 +1218,8 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
               : {}
             : { managed: input.managed };
         const changed = configStore.update(patch);
-        forgetSettings();
+        syncManagedWallet();
+        armWalletRefresh();
         if (!changed.ok) return { ok: false, reason: "carteira_invalida" };
       }
       // the wallet is not needed to connect: the agent's own wallet comes with the sign-in that follows, and until a wallet is there the agent waits
@@ -1107,7 +1296,8 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
         if (raisesCaps || raisesBudget) return { ok: false, reason: "parar_antes_de_subir_tetos" };
       }
       const changed = configStore.update(patch);
-      forgetSettings();
+      syncManagedWallet();
+      armWalletRefresh();
       return changed;
     },
     resolve(orderKey, outcome): ResolveResult {
@@ -1121,15 +1311,15 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     runNow: (): Promise<CycleReport> => scheduler.runNow(),
     guardNow: (): Promise<CycleReport> => watch.guard(),
     ledgerTail: (n) => ledger.tail(n),
-    analysis: (): AnalysisView => {
-      // read only, from the files the agent keeps; the same answer is kept for a few seconds because the screen asks every few seconds
+    analysis: (reviewPage = 1): AnalysisView => {
+      // read only, from the files the agent keeps; the same selected page is kept for a few seconds
       const now = localNow();
-      if (analysisMemo !== null && now - analysisMemo.at < ANALYSIS_MEMO_MS) return analysisMemo.value;
+      if (analysisMemo !== null && analysisMemo.page === reviewPage && now - analysisMemo.at < ANALYSIS_MEMO_MS) return analysisMemo.value;
       const parsed = (path: string): unknown[] => linesOf(path).filter((l) => l.trim() !== "").map((l) => { try { return JSON.parse(l) as unknown; } catch { return null; } });
-      const value = buildAnalysis({ nowMs: now, briefs: parsed(join(dir, "briefs.jsonl")), orders: ledger.orderRecords(), fills: fills.all(), scoreboard: parsed(scoreboardPath) });
+      const value = buildAnalysis({ nowMs: now, briefs: parsed(join(dir, "briefs.jsonl")), orders: ledger.orderRecords(), fills: fills.all(), scoreboard: parsed(scoreboardPath), reviewPage });
       const used = budget.status().committedTokens;
       const withRuntime: AnalysisView = { ...value, runtime: { tokensToday: Number.isFinite(used) ? used : null, riskPct: Number.isFinite(settings().riskPct) ? settings().riskPct : null } };
-      analysisMemo = { at: now, value: withRuntime };
+      analysisMemo = { at: now, page: reviewPage, value: withRuntime };
       return withRuntime;
     },
     close(timeoutMs = 180_000): Promise<void> {
@@ -1140,6 +1330,9 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       macroEvents?.stop();
       cancelMacroPoll?.();
       cancelMacroPoll = null;
+      cancelWalletRefresh?.();
+      cancelWalletRefresh = null;
+      walletRefreshController?.abort();
       scheduler.stop();
       // eslint-disable-next-line prefer-const
       let attempt: Promise<void> | null = null;

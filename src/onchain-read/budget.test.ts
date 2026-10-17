@@ -39,6 +39,19 @@ describe("onchain budget", () => {
     expect(snap.tiers.free.used).toBe(1);
     expect(snap.tiers.premium.today).toBe(1);
   });
+  test("keeps recorded usage in memory when the persistence directory is a file", () => {
+    const dir = tempDir();
+    writeFileSync(join(dir, "onchain"), "not a directory");
+    const budget = createBudget({ dir, now: () => T0, caps: () => ({ basic: 50_000, premium: 50_000 }) });
+
+    expect(() => budget.record("basic")).not.toThrow();
+    expect(() => budget.flush()).not.toThrow();
+
+    const snapshot = budget.snapshot();
+    expect(snapshot.tiers.basic.used).toBe(1);
+    expect(snapshot.tiers.basic.today).toBe(1);
+  });
+
 
   test("month rollover restarts the counter and writes a new file", () => {
     const dir = tempDir();

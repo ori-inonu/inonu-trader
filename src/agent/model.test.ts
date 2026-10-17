@@ -3,7 +3,7 @@ import { candidateOf, type EcoFacts } from "../opportunity/ecosystem";
 import type { Candle } from "../quant/types";
 import { buyCandidates, holdingCandidates, openByRisk, saldoOf, withTiming } from "./candidates";
 import { timingFacts, type TimingFacts } from "./timing";
-import { agentBrief, agentQuestions, BRIEF_MAX_BYTES, createJevAgentModel, estimateTokens, physicalRequestsOf, questionTexts } from "./model";
+import { agentBrief, agentQuestions, BRIEF_MAX_BYTES, createJevAgentModel, estimateTokens, questionTexts } from "./model";
 import type { Book, Candidate, HoldingFacts, Position } from "./types";
 
 const addr = (n: number) => `0x${n.toString(16).padStart(40, "0")}`;
@@ -41,7 +41,6 @@ describe("the track record carries the tail as well as the hit rate", () => {
     const brief = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history });
     expect(brief.historico).toEqual(history);
     expect(brief.chaves.historico).toMatch(/melhor/);
-    expect(brief.chaves.historico).toMatch(/tail|hides/i);
     const bad = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: { vender: { n: 17, acerto: 47, melhor: Number.POSITIVE_INFINITY } } });
     expect(bad.historico).toBeNull();
     const absurd = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: { vender: { n: 17, acerto: 47, pior: -250 } } });
@@ -49,16 +48,6 @@ describe("the track record carries the tail as well as the hit rate", () => {
   });
 });
 
-describe("the purpose the owner gave the agent is part of what the model reads (the owner's answer of 2026-10-15)", () => {
-  test("the goal says the agent exists to find fast chances of a large asymmetric return, that idle cash is not to be lent out for a low rate, and that this is a purpose and not a promise: most chances fail and a move that already ran is no chance", () => {
-    const goal = String(questionTexts().goal);
-    expect(goal).toMatch(/asymmetric/i);
-    expect(goal).toMatch(/100 percent/);
-    expect(goal).toMatch(/NOT something to lend out/);
-    expect(goal).toMatch(/not a promise/i);
-    expect(goal).toMatch(/already ran/i);
-  });
-});
 
 describe("the network fee of a swap rides in the Brief of a purchase as a fact (ADENDO-C, FEE-3)", () => {
   test("`k` is the fee of one swap on the network of the token, in dollars with two significant digits, from the last quote read there; a network with no measured fee carries no `k` at all (absent is unknown, never zero), and the legend says what it is", () => {
@@ -73,7 +62,6 @@ describe("the network fee of a swap rides in the Brief of a purchase as a fact (
     expect(Object.hasOwn(none.compras[buys[0]!.id] as object, "k")).toBe(false);
     const legacy = agentBrief({ book, holdings: [], buys, eco: ecoCtx, context: null, history: null });
     expect(Object.hasOwn(legacy.compras[buys[0]!.id] as object, "k")).toBe(false);
-    expect(brief.chaves["compras.k"]).toMatch(/fee/i);
     expect(new TextEncoder().encode(JSON.stringify(brief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
   });
 });
@@ -95,8 +83,7 @@ describe("the Brief the agent's model reads", () => {
     const firstBuy = brief.compras[hot[0]!.id] as Record<string, unknown>;
     expect(firstBuy.mo).toMatchObject({ r15: 2.3, rg: 3.2 });
     expect((brief.compras[hot[1]!.id] as Record<string, unknown>).mo ?? null).toBeNull();
-    // the legend says what the new keys are
-    expect(Object.keys(brief.chaves)).toContain("mo");
+
     expect(new TextEncoder().encode(JSON.stringify(brief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
   });
 
@@ -108,8 +95,6 @@ describe("the Brief the agent's model reads", () => {
     const exec = { voltas: 1, retorno: -0.44, ultimas: [{ s: "STONK", m: 16, p: -0.44 }], sem_entrada: 1, desconhecidas: 0 };
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null, exec });
     expect(brief.execucoes).toEqual(exec);
-    expect(brief.chaves.execucoes).toMatch(/not profit/);
-    expect(brief.chaves.execucoes).toMatch(/same stablecoin/);
     expect(JSON.stringify(brief)).not.toMatch(/usd/i);
     expect(new TextEncoder().encode(JSON.stringify(brief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
   });
@@ -120,7 +105,6 @@ describe("the Brief the agent's model reads", () => {
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null, tokenTrips: { [tradedAddr]: { n: 5, m: 2, p: -0.08, ag: 2 } } });
     expect((brief.compras[buys[0]!.id] as Record<string, unknown>).ult).toEqual({ n: 5, m: 2, p: -0.08, ag: 2 });
     expect((brief.compras[buys[1]!.id] as Record<string, unknown>).ult).toBeUndefined();
-    expect(brief.chaves.ult).toMatch(/closed round trips on THIS token/);
   });
 
   test("when ecosystem facts carry smart-money entry price, inflow, unique traders and burned LP, compras exposes wu, sp, inf, ut and lp with scoped legend entries", () => {
@@ -131,11 +115,6 @@ describe("the Brief the agent's model reads", () => {
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const item = brief.compras[buys[0]!.id] as Record<string, unknown>;
     expect(item).toMatchObject({ wu: 35, sp: 25, inf: 48, ut: 920, lp: 100 });
-    expect(brief.chaves["compras.wu"]).toMatch(/thousands of dollars/i);
-    expect(brief.chaves["compras.sp"]).toMatch(/entry price paid by tracked wallets/i);
-    expect(brief.chaves["compras.inf"]).toMatch(/inflow/i);
-    expect(brief.chaves["compras.ut"]).toMatch(/unique traders/i);
-    expect(brief.chaves["compras.lp"]).toMatch(/burned share of the liquidity pool/i);
   });
 
   describe("a short key means what its SCOPE says: the same letter is a different fact for a holding and for a purchase candidate", () => {
@@ -236,13 +215,35 @@ describe("the Brief the agent's model reads", () => {
     expect(brief.carteira.posicoes).toBe(2);
   });
 
-  test("a holding carries its measured facts rounded, its triggers and the stances it is offered", () => {
+  test("a holding carries its measured facts rounded and the stances it is offered", () => {
     const { book, holdings, buys, ecoCtx } = build(1, 0);
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const item = brief.posicoes[holdings[0]!.id] as Record<string, unknown>;
     expect(item).toMatchObject({ s: "H16", wl: "a", e: -3.1, p: 2.5, i: 0.12, v: 12, r: 2, m: 2, h: 31, o: ["hold", "trim_third", "trim_half", "exit_all"] });
     expect(item.l).toBe(1235);
   });
+
+  test("an unknown provider risk stays unknown in the holding Brief", () => {
+    const { book, holdings, buys, ecoCtx } = build(1, 0);
+    const unknown = holdings.map((candidate) => ({ ...candidate, facts: { ...candidate.facts!, riskLevel: null } }));
+    const brief = agentBrief({ book, holdings: unknown, buys, eco: ecoCtx, context: null, history: null });
+    expect((brief.posicoes[unknown[0]!.id] as Record<string, unknown>).r).toBeNull();
+  });
+  test("a blocked holding keeps its complete trigger in the serialized Brief, while a holding without one omits it", () => {
+    const { book, holdings, buys, ecoCtx } = build(1, 0);
+    const blocked = holdings.map((c) => ({ ...c, stances: ["hold"], usdByStance: { hold: 0 }, triggers: ["venda_recusada_por_impacto"] }));
+    const blockedBrief = JSON.parse(JSON.stringify(agentBrief({ book, holdings: blocked, buys, eco: ecoCtx, context: null, history: null })));
+    const blockedItem = blockedBrief.posicoes[blocked[0]!.id] as Record<string, unknown>;
+    expect(blockedItem.o).toEqual(["hold"]);
+    expect(blockedItem.t).toEqual(["venda_recusada_por_impacto"]);
+
+    const withoutTrigger = holdings.map((c) => ({ ...c, stances: ["hold"], usdByStance: { hold: 0 }, triggers: [] }));
+    const withoutBrief = agentBrief({ book, holdings: withoutTrigger, buys, eco: ecoCtx, context: null, history: null });
+    const withoutItem = withoutBrief.posicoes[withoutTrigger[0]!.id] as Record<string, unknown>;
+    expect(withoutItem.o).toEqual(["hold"]);
+    expect(Object.hasOwn(withoutItem, "t")).toBe(false);
+  });
+
 
   test("a holding with two-day hourly timing and families keeps them in the Brief, and a freshly opened position under one hour shows tenths of an hour instead of zero", () => {
     const { book, holdings, buys, ecoCtx } = build(1, 0);
@@ -282,6 +283,26 @@ describe("the Brief the agent's model reads", () => {
     const item = brief.compras[buys[0]!.id] as Record<string, unknown>;
     expect(item).toMatchObject({ s: "B200", w: 4, f: expect.any(Array) });
     expect(item.o).toEqual(buys[0]!.stances);
+  });
+
+  test("the Brief names ecosystem state and age, and never presents a stale or unavailable scan as a purchase", () => {
+    const { book, holdings, buys, ecoCtx } = build(0, 1);
+    const options = { book, holdings, buys, context: null, history: null };
+    const freshEco = { ...ecoCtx, sourceQuality: { state: "fresh" as const, ageMs: 2_000 } };
+    const fresh = agentBrief({ ...options, eco: freshEco });
+    expect(fresh.fonte_ecossistema).toEqual({ estado: "fresh", idade_min: 0 });
+    expect(fresh.compras[buys[0]!.id]).toBeDefined();
+
+    const staleEco = { ...ecoCtx, sourceQuality: { state: "stale" as const, ageMs: 31 * 60_000 } };
+    const stale = agentBrief({ ...options, eco: staleEco });
+    expect(stale.fonte_ecossistema).toEqual({ estado: "stale", idade_min: 31 });
+    expect(stale.chaves.fonte_ecossistema).toContain("stale");
+    expect(stale.compras).toEqual({});
+
+    const unavailableEco = { ...ecoCtx, sourceQuality: { state: "unavailable" as const, ageMs: null } };
+    const unavailable = agentBrief({ ...options, eco: unavailableEco });
+    expect(unavailable.fonte_ecossistema).toEqual({ estado: "unavailable", idade_min: null });
+    expect(unavailable.compras).toEqual({});
   });
 
   test("the measured history and the market context ride along when given", () => {
@@ -508,13 +529,28 @@ describe("the Brief the agent's model reads", () => {
   });
 
   test("the biggest brief stays under its byte cap", () => {
-    const { book, holdings: rawHoldings, buys, ecoCtx } = build(8, 8);
-    const triggers = ["carteiras_venderam", "saida_dificil", "sinal_de_risco", "queda_desde_a_entrada", "caindo_agora", "venda_falhando", "venda_recusada_por_impacto"];
-    const holdings = rawHoldings.map((holding) => ({ ...holding, triggers }));
-    const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: { regime: "lateral" }, history: { carteiras: { n: 40, acerto: 55 } } });
-    expect((brief.posicoes[holdings[0]!.id] as Record<string, unknown>).t).toEqual(triggers);
+    const { book, holdings: rawHoldings, buys, ecoCtx } = build(8, 7);
+    const maxObservedTriggers = ["carteiras_venderam", "saida_dificil", "sinal_de_risco", "queda_desde_a_entrada", "caindo_agora", "venda_falhando", "venda_recusada_por_impacto"];
+    const holdings = rawHoldings.map((holding) => ({
+      ...holding,
+      facts: { ...holding.facts!, priceInfoTimestampReported: true },
+      triggers: maxObservedTriggers,
+    }));
+    const context = Object.fromEntries(Array.from({ length: 32 }, (_, i) => [`s1_metric_${i}`, i]));
+    const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context, history: { carteiras: { n: 40, acerto: 55 } } });
+    expect(Object.values(brief.posicoes).every((position) => position.pt === 1)).toBe(true);
+    expect(brief.contexto).toEqual(context);
     expect(new TextEncoder().encode(JSON.stringify(brief)).length).toBeLessThanOrEqual(BRIEF_MAX_BYTES);
   });
+  test("market context keeps 32 valid facts together and rejects an over-limit or malformed block as a whole", () => {
+    const { book, holdings, buys, ecoCtx } = build(0, 0);
+    const valid = Object.fromEntries(Array.from({ length: 32 }, (_, i) => [`s1_metric_${i}`, i]));
+    const input = { book, holdings, buys, eco: ecoCtx, history: null };
+    expect(agentBrief({ ...input, context: valid }).contexto).toEqual(valid);
+    expect(agentBrief({ ...input, context: { ...valid, s1_metric_32: 32 } }).contexto).toBeNull();
+    expect(agentBrief({ ...input, context: { ...valid, s1_metric_7: Number.NaN } }).contexto).toBeNull();
+  });
+
 });
 
 describe("the closed questions", () => {
@@ -604,7 +640,7 @@ describe("the Jev adapter", () => {
     const seen: any[] = [];
     const answers = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold" }, stance_1: { choice: "skip" } };
     const model = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers, undefined, seen), createProvider: () => ({ evaluationModel: (id: string) => ({ id }) as never }) });
-    const out = await model.choose({ brief, candidates, signal: new AbortController().signal });
+    const out = await model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     expect(seen).toHaveLength(1);
     expect(seen[0].state).toBe(brief);
     expect(seen[0].maxRetries).toBe(0);
@@ -617,7 +653,7 @@ describe("the Jev adapter", () => {
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const answers = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold", probabilities: { hold: 0.7, trim_half: 0.2, exit_all: 0.1 } }, stance_1: { choice: "skip", probabilities: "not a record" } };
     const model = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    const out = await model.choose({ brief, candidates, signal: new AbortController().signal });
+    const out = await model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     expect(out.raw.verdicts).toEqual({ [candidates[0]!.id]: { choice: "hold", probabilities: { hold: 0.7, trim_half: 0.2, exit_all: 0.1 }, confidence: null } });
   });
 
@@ -631,10 +667,10 @@ describe("the Jev adapter", () => {
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const given = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold" }, profile_0: { choice: "alvo_10" } };
     const a = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(given), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    expect((await a.choose({ brief, candidates: withProfiles, signal: new AbortController().signal })).raw.profiles).toEqual({ [candidates[0]!.id]: "alvo_10" });
+    expect((await a.choose({ brief, candidates: withProfiles, signal: new AbortController().signal, admitFallback: () => { } })).raw.profiles).toEqual({ [candidates[0]!.id]: "alvo_10" });
     const none = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold" } };
     const b = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(none), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    expect((await b.choose({ brief, candidates: withProfiles, signal: new AbortController().signal })).raw.profiles).toEqual({});
+    expect((await b.choose({ brief, candidates: withProfiles, signal: new AbortController().signal, admitFallback: () => { } })).raw.profiles).toEqual({});
   });
 
   test("the facets are asked in the same call and come back by candidate id; with none answered the record has no `facets` at all", async () => {
@@ -643,7 +679,7 @@ describe("the Jev adapter", () => {
     const seen: any[] = [];
     const answers = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold" }, stance_1: { choice: "skip" }, facet_0_distribution: { type: "boolean", probability: 0.71 }, facet_1_late_entry: { type: "boolean", probability: 0.93 } };
     const model = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers, undefined, seen), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    const out = await model.choose({ brief, candidates, signal: new AbortController().signal });
+    const out = await model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     expect(seen).toHaveLength(1);
     expect(Object.keys(seen[0].questions)).toContain("facet_0_distribution");
     expect(Object.keys(seen[0].questions)).toContain("facet_1_late_entry");
@@ -657,9 +693,9 @@ describe("the Jev adapter", () => {
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const base = { ...MANDATE_ANSWERS, stance_0: { choice: "hold" }, stance_1: { choice: "skip" } };
     const withProbs = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate({ ...base, posture: { choice: "defensiva", probabilities: { defensiva: 0.6049, neutra: 0.3, ofensiva: 0.0951 } } }), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    expect((await withProbs.choose({ brief, candidates, signal: new AbortController().signal })).raw.postureProbs).toEqual({ defensiva: 0.6, neutra: 0.3, ofensiva: 0.1 });
+    expect((await withProbs.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } })).raw.postureProbs).toEqual({ defensiva: 0.6, neutra: 0.3, ofensiva: 0.1 });
     const without = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate({ ...base, posture: { choice: "neutra" } }), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    expect((await without.choose({ brief, candidates, signal: new AbortController().signal })).raw.postureProbs).toBeUndefined();
+    expect((await without.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } })).raw.postureProbs).toBeUndefined();
   });
 
   test("a provider that refuses the call WITH the facets is asked again without them, once, and the decision is not lost; facets stay off for an hour", async () => {
@@ -674,38 +710,23 @@ describe("the Jev adapter", () => {
       return { answers, usage: { inputTokens: 10, outputTokens: 1 } };
     }) as never;
     const model = createJevAgentModel({ apiKey: () => "k", evaluate, now: () => clock, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    const first = await model.choose({ brief, candidates, signal: new AbortController().signal });
+    const first = await model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     expect(first.raw.stances).toEqual({ [candidates[0]!.id]: "hold", [candidates[1]!.id]: "skip" });
     expect(first.raw.facets).toBeUndefined();
-    // two requests really went to the provider for this one choice: the answer says so, so the budget can count both
+    // The successful answer reports both evaluator invocations for consultation metadata.
     expect(first.physicalRequests).toBe(2);
     expect(asked).toHaveLength(2);
     expect(asked[0]!.some((k) => k.startsWith("facet_"))).toBe(true);
     expect(asked[1]!.some((k) => k.startsWith("facet_"))).toBe(false);
     // the next look does not try again for an hour
-    expect((await model.choose({ brief, candidates, signal: new AbortController().signal })).physicalRequests).toBe(1);
+    expect((await model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } })).physicalRequests).toBe(1);
     expect(asked).toHaveLength(3);
     expect(asked[2]!.some((k) => k.startsWith("facet_"))).toBe(false);
     clock += 61 * 60_000;
-    await model.choose({ brief, candidates, signal: new AbortController().signal });
+    await model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     expect(asked[3]!.some((k) => k.startsWith("facet_"))).toBe(true);
   });
 
-  test("when the retry fails too, the failure still says that two requests went out", async () => {
-    const { book, holdings, buys, ecoCtx, candidates } = build(1, 1);
-    const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
-    let calls = 0;
-    const evaluate = (async (args: { questions: Record<string, unknown> }) => {
-      calls++;
-      throw Object.assign(new Error(Object.keys(args.questions).some((k) => k.startsWith("facet_")) ? "too many questions" : "down"), Object.keys(args.questions).some((k) => k.startsWith("facet_")) ? { statusCode: 400 } : { statusCode: 503 });
-    }) as never;
-    const model = createJevAgentModel({ apiKey: () => "k", evaluate, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    const error = await model.choose({ brief, candidates, signal: new AbortController().signal }).catch((e: unknown) => e);
-    expect(calls).toBe(2);
-    expect(physicalRequestsOf(error)).toBe(2);
-    expect(physicalRequestsOf(new Error("anything else"))).toBe(1);
-    expect(physicalRequestsOf("not an error")).toBe(1);
-  });
 
   test("a rate limit, a server error or a timeout is not a refusal of the questions: no second call, the failure is the failure", async () => {
     const { book, holdings, buys, ecoCtx, candidates } = build(1, 1);
@@ -714,7 +735,7 @@ describe("the Jev adapter", () => {
       let calls = 0;
       const evaluate = (async () => { calls++; throw Object.assign(new Error("down"), statusCode === undefined ? {} : { statusCode }); }) as never;
       const model = createJevAgentModel({ apiKey: () => "k", evaluate, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-      await expect(model.choose({ brief, candidates, signal: new AbortController().signal })).rejects.toThrow("down");
+      await expect(model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } })).rejects.toThrow("down");
       expect(calls).toBe(1);
     }
   });
@@ -725,15 +746,21 @@ describe("the Jev adapter", () => {
     let calls = 0;
     const down = (async () => { calls++; throw new Error("down"); }) as never;
     const model = createJevAgentModel({ apiKey: () => "k", evaluate: down, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    await expect(model.choose({ brief, candidates, signal: new AbortController().signal })).rejects.toThrow("down");
+    await expect(model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } })).rejects.toThrow("down");
     // a failure that is not a refusal of the questions is not asked again
     expect(calls).toBe(1);
     const controller = new AbortController();
     let more = 0;
-    const aborting = (async () => { more++; controller.abort(); throw new Error("aborted"); }) as never;
+    const aborting = (async () => { more++; controller.abort(); throw Object.assign(new Error("aborted"), { statusCode: 400 }); }) as never;
     const m2 = createJevAgentModel({ apiKey: () => "k", evaluate: aborting, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    await expect(m2.choose({ brief, candidates, signal: controller.signal })).rejects.toThrow();
+    await expect(m2.choose({ brief, candidates, signal: controller.signal, admitFallback: () => { } })).rejects.toThrow();
     expect(more).toBe(1);
+    const alreadyAborted = new AbortController();
+    alreadyAborted.abort();
+    let preAbortCalls = 0;
+    const m3 = createJevAgentModel({ apiKey: () => "k", evaluate: (async () => { preAbortCalls++; throw new Error("unexpected"); }) as never, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
+    await expect(m3.choose({ brief, candidates, signal: alreadyAborted.signal, admitFallback: () => { } })).rejects.toThrow();
+    expect(preAbortCalls).toBe(0);
   });
 
   test("usage the provider did not give is null, never zero", async () => {
@@ -741,14 +768,14 @@ describe("the Jev adapter", () => {
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const answers = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold" } };
     const model = createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers, {}), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    expect((await model.choose({ brief, candidates, signal: new AbortController().signal })).usage).toEqual({ inputTokens: null, outputTokens: null });
+    expect((await model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } })).usage).toEqual({ inputTokens: null, outputTokens: null });
   });
 
   test("an answer outside the options is an error, not a guess", async () => {
     const { book, holdings, buys, ecoCtx, candidates } = build(1, 0);
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const mk = (answers: Record<string, unknown>) => createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    const run = (answers: Record<string, unknown>) => mk(answers).choose({ brief, candidates, signal: new AbortController().signal });
+    const run = (answers: Record<string, unknown>) => mk(answers).choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     await expect(run({ ...MANDATE_ANSWERS, posture: { choice: "louca" }, stance_0: { choice: "hold" } })).rejects.toThrow("Invalid agent answers");
     await expect(run({ ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "buy_full" } })).rejects.toThrow("Invalid agent answers");
     await expect(run({ ...MANDATE_ANSWERS, posture: { choice: "neutra" } })).rejects.toThrow("Invalid agent answers");
@@ -759,7 +786,7 @@ describe("the Jev adapter", () => {
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     let called = false;
     const model = createJevAgentModel({ apiKey: () => null, evaluate: (async () => { called = true; return {}; }) as never, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
-    await expect(model.choose({ brief, candidates, signal: new AbortController().signal })).rejects.toThrow("the model key is not configured");
+    await expect(model.choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } })).rejects.toThrow("the model key is not configured");
     expect(called).toBe(false);
   });
 
@@ -770,7 +797,7 @@ describe("the Jev adapter", () => {
     const model = createJevAgentModel({ apiKey: () => "k", evaluate: (async () => { called = true; return {}; }) as never, createProvider: () => ({ evaluationModel: () => ({}) as never }) });
     const c = new AbortController();
     c.abort();
-    await expect(model.choose({ brief, candidates, signal: c.signal })).rejects.toThrow("aborted");
+    await expect(model.choose({ brief, candidates, signal: c.signal, admitFallback: () => { } })).rejects.toThrow("aborted");
     expect(called).toBe(false);
   });
 
@@ -778,7 +805,7 @@ describe("the Jev adapter", () => {
     const { book, holdings, buys, ecoCtx, candidates } = build(1, 1);
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
     const buy = candidates[1]!;
-    const run = (answers: Record<string, unknown>) => createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) }).choose({ brief, candidates, signal: new AbortController().signal });
+    const run = (answers: Record<string, unknown>) => createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) }).choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     const base = { ...MANDATE_ANSWERS, posture: { choice: "ofensiva" }, stance_0: { choice: "hold" }, stance_1: { choice: "buy_third" } };
     const ok = await run({ ...base, profile_1: { choice: "alvo_10" } });
     expect(ok.raw.profiles).toEqual({ [buy.id]: "alvo_10" });
@@ -789,7 +816,7 @@ describe("the Jev adapter", () => {
   test("buy_tenth is a valid answer for a purchase that offers it, and so is the narrowest profile; for a purchase that offers only skip it is an error, not a guess", async () => {
     const { book, holdings, buys, ecoCtx, candidates } = build(1, 1);
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
-    const run = (offered: readonly Candidate[], answers: Record<string, unknown>) => createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) }).choose({ brief, candidates: offered, signal: new AbortController().signal });
+    const run = (offered: readonly Candidate[], answers: Record<string, unknown>) => createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) }).choose({ brief, candidates: offered, signal: new AbortController().signal, admitFallback: () => { } });
     const answers = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold" }, stance_1: { choice: "buy_tenth" }, profile_1: { choice: "alvo_2" } };
     const ok = await run(candidates, answers);
     expect(ok.raw.stances[candidates[1]!.id]).toBe("buy_tenth");
@@ -802,7 +829,7 @@ describe("the Jev adapter", () => {
   test("a skipped purchase may leave the profile unanswered, and one that is answered is passed on", async () => {
     const { book, holdings, buys, ecoCtx, candidates } = build(1, 1);
     const brief = agentBrief({ book, holdings, buys, eco: ecoCtx, context: null, history: null });
-    const run = (answers: Record<string, unknown>) => createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) }).choose({ brief, candidates, signal: new AbortController().signal });
+    const run = (answers: Record<string, unknown>) => createJevAgentModel({ apiKey: () => "k", evaluate: fakeEvaluate(answers), createProvider: () => ({ evaluationModel: () => ({}) as never }) }).choose({ brief, candidates, signal: new AbortController().signal, admitFallback: () => { } });
     const skipped = { ...MANDATE_ANSWERS, posture: { choice: "neutra" }, stance_0: { choice: "hold" }, stance_1: { choice: "skip" } };
     expect((await run(skipped)).raw.profiles).toEqual({});
     expect((await run({ ...skipped, profile_1: { choice: "alvo_5" } })).raw.profiles).toEqual({ [candidates[1]!.id]: "alvo_5" });

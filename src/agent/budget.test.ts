@@ -44,22 +44,6 @@ describe("the model budget of the agent", () => {
     expect(budget.status()).toMatchObject({ committedTokens: 5000, unmeasuredCalls: 2 });
   });
 
-  test("a request that already went out is counted as a consultation of unknown usage, even past the limit, and is saved", () => {
-    const { budget, saved } = make({ maxConsultsPerDay: 1, maxTokensPerDay: null });
-    const a = budget.begin(1000);
-    budget.finish(a, { inputTokens: 800, outputTokens: 100 });
-    budget.countExtra(1000);
-    expect(budget.status()).toMatchObject({ consults: 2, committedTokens: 1900, measuredTokens: 900, unmeasuredCalls: 1 });
-    expect(saved.at(-1)).toMatchObject({ consults: 2, unmeasuredCalls: 1 });
-    // the day is now spent, as it should be: the next consultation is refused
-    expect(budget.check(1)).toEqual({ ok: false, reason: "consultas_esgotadas" });
-  });
-
-  test("a counter that cannot be saved does not hide the request that already happened", () => {
-    const budget = createBudget({ limits: { maxConsultsPerDay: 10, maxTokensPerDay: null }, now: () => DAY1, load: () => null, persist: () => { throw new Error("disk full"); } });
-    expect(() => budget.countExtra(500)).not.toThrow();
-    expect(budget.status()).toMatchObject({ consults: 1, committedTokens: 500, unmeasuredCalls: 1 });
-  });
 
   test("the token cap counts what is committed, estimate included", () => {
     const { budget } = make({ maxConsultsPerDay: 10, maxTokensPerDay: 3000 });
@@ -107,13 +91,13 @@ describe("the model budget of the agent", () => {
   test("an untrusted saved state is refused: the day counts as spent", () => {
     expect(parseBudgetState({ version: 1, day: "2026-10-14", consults: -1, committedTokens: 0, measuredTokens: 0, unmeasuredCalls: 0 })).toBeNull();
     expect(parseBudgetState({ version: 1, day: "2026-10-14", consults: 1 })).toBeNull();
-    const budget = createBudget({ limits: DEFAULT_LIMITS, now: () => DAY1, load: () => ({ junk: true }), persist: () => {} });
+    const budget = createBudget({ limits: DEFAULT_LIMITS, now: () => DAY1, load: () => ({ junk: true }), persist: () => { } });
     expect(budget.check(1)).toEqual({ ok: false, reason: "consultas_esgotadas" });
   });
 
   test("a change of the limits applies at the next check", () => {
     const limits = { maxConsultsPerDay: 1, maxTokensPerDay: null as number | null };
-    const budget = createBudget({ limits, now: () => DAY1, load: () => null, persist: () => {} });
+    const budget = createBudget({ limits, now: () => DAY1, load: () => null, persist: () => { } });
     budget.begin(1);
     expect(budget.check(1)).toEqual({ ok: false, reason: "consultas_esgotadas" });
     limits.maxConsultsPerDay = 5;
@@ -133,7 +117,7 @@ describe("the model budget of the agent", () => {
 describe("the day's consultations are paced, so 144 of them cannot be spent by noon and leave the afternoon blind", () => {
   const at = (hh: number, mm = 0) => Date.UTC(2026, 9, 14, hh, mm, 0);
   const paced = (consults: number, now: number) =>
-    createBudget({ limits: DEFAULT_LIMITS, now: () => now, load: () => ({ version: 1, day: "2026-10-14", consults, committedTokens: 0, measuredTokens: 0, unmeasuredCalls: 0 }), persist: () => {}, pace: true });
+    createBudget({ limits: DEFAULT_LIMITS, now: () => now, load: () => ({ version: 1, day: "2026-10-14", consults, committedTokens: 0, measuredTokens: 0, unmeasuredCalls: 0 }), persist: () => { }, pace: true });
 
   test("what the clock allows grows through the UTC day, with a small reserve for a moment that needs a quick answer", () => {
     // six hours into the day a quarter of 144 is 36, plus the reserve of 8

@@ -5,8 +5,9 @@
  *  - one FEATURE at a time, in the order explore, plan, implement, verify, record (the plan is a file with what is out of scope and an end to end check; implementation starts with a test that fails; verification ends with an
  *    adversarial review by a fresh subagent that reports only gaps of correctness or of the stated requirements);
  *  - a feature list and a progress file that survive the context (state.json and progress.txt), read again at every session start;
- *  - STOPPING CONDITIONS and a human checkpoint: a stop with nothing new counts as idle, two idle stops send the session to the wayfinder step (ask the Jev, as evaluator and as a vote, which path to take), four make it
- *    stop and leave the question for the person, an hourly cap bounds the continuations, and a paused goal, an achieved goal and a goal past its deadline let the session stop.
+ *  - NO QUESTIONS TO THE PERSON: a stop with nothing new counts as idle, two idle stops send the session to the wayfinder step, where every open question is written as a structured decision request and sent to the Jev
+ *    (as evaluator and as a vote). If the Jev is unavailable the session picks the most reversible option, records it and goes on. Items the Jev may not decide (money, wallet, secrets, data migrations, history rewrites,
+ *    production dependencies, billing) are recorded as blocked and skipped; the session keeps working on the rest. The only exits are: goal achieved, goal paused, goal past its deadline, goal closed.
  * It is bound to ONE session: any other session is never held back. The hook never spends anything and never orders anything: it only builds the message that continues the session. Pure: no clock, no storage, no process,
  * no network; the entry points (scripts/hooks) read and write the state.
  */
@@ -51,13 +52,22 @@ export interface GoalState {
   readonly rails: readonly string[];
   readonly queue: readonly Task[];
   readonly decisions: readonly Decision[];
-  readonly loop: { readonly stops: number; readonly blocks: number; readonly idleStops: number; readonly lastDigest: string | null; readonly blockStamps: readonly number[] };
-  /** Set when the loop stops on purpose and the person has to answer something. */
-  readonly needsHuman: string | null;
+  readonly loop: { readonly stops: number; readonly blocks: number; readonly idleStops: number; readonly lastDigest: string | null };
 }
 
-/** CHOICES of this code, not calibrated: the stops with nothing new before the wayfinder step and before giving up, and the continuations an hour. */
-export const LIMITS = { wayfinderAfterIdle: 2, maxIdleStops: 4, maxBlocksPerHour: 40 } as const;
+/** CHOICES of this code, not calibrated: the stops with nothing new before the wayfinder step. There is no cap that ends the session: only the deadline, a pause, or an achieved goal does. */
+export const LIMITS = { wayfinderAfterIdle: 2 } as const;
+
+/** Work the Jev may never decide and the session may never ask the person about: it is recorded as blocked and the session moves to the next item. */
+export const FENCED_TOPICS: readonly string[] = [
+  "dinheiro real, carteira, ordens, saques e transferencias",
+  "segredos, chaves e credenciais",
+  "limites de risco e liberacao de live",
+  "migracoes de dados ou de schema, inclusive os journals",
+  "reescrita de historico e apagar branches",
+  "dependencias de producao novas ou trocadas",
+  "billing, contratos e servicos pagos",
+];
 
 export interface StopInput {
   readonly sessionId: string;
@@ -76,7 +86,7 @@ export interface StopOutput {
 export function newState(input: { sessionId: string; goal: string; nowMs: number; deadlineMs: number | null; checkCommand: string | null; rails: readonly string[] }): GoalState {
   return {
     v: 1, sessionId: input.sessionId, goal: input.goal, active: true, paused: false, createdAtMs: input.nowMs, deadlineMs: input.deadlineMs, checkCommand: input.checkCommand, rails: input.rails,
-    queue: [], decisions: [], loop: { stops: 0, blocks: 0, idleStops: 0, lastDigest: null, blockStamps: [] }, needsHuman: null,
+    queue: [], decisions: [], loop: { stops: 0, blocks: 0, idleStops: 0, lastDigest: null },
   };
 }
 
@@ -92,11 +102,6 @@ export const blockTask = (s: GoalState, id: string, reason: string): GoalState =
 
 export function decide(s: GoalState, d: { summary: string; receiptHash?: string; paidCalls?: number; nowMs: number }): GoalState {
   return { ...s, decisions: [...s.decisions, { atMs: d.nowMs, summary: d.summary, receiptHash: d.receiptHash ?? null, paidCalls: d.paidCalls ?? 0 }] };
-}
-
-/** The person came back: the loop starts counting again. */
-export function humanReturned(s: GoalState): GoalState {
-  return { ...s, needsHuman: null, loop: { ...s.loop, idleStops: 0 } };
 }
 
 const head = (s: GoalState): string => [`[Gancho do objetivo] Objetivo: ${s.goal}`, "Trilhos (nao cruzar, em nenhuma etapa):", ...s.rails.map((r) => `- ${r}`)].join("\n");
@@ -117,7 +122,7 @@ const taskMessage = (s: GoalState, t: Task): string =>
     STAGE_HELP[t.stage],
     ...(t.steps.length > 0 ? ["O que deve ficar pronto:", ...t.steps.map((x) => `- ${x}`)] : []),
     ...(t.verify !== null ? [`Verificacao (exit 0 = passou): ${t.verify}`] : []),
-    `Ao terminar: bun scripts/hooks/goal.ts pass ${t.id} --evidence "<arquivo, teste ou saida>". Se travar: bun scripts/hooks/goal.ts blocked ${t.id} --reason "<por que>".`,
+    `Ao terminar: bun scripts/hooks/goal.ts pass ${t.id} --evidence "<arquivo, teste ou saida>". Se travar: bun scripts/hooks/goal.ts blocked ${t.id} --reason "<por que>" e siga para a proxima funcionalidade.`,
     "Nao declare vitoria sem a verificacao e nao responda com relatorio sem dado novo: ou voce avanca este passo, ou registra o bloqueio.",
   ].join("\n");
 
@@ -128,38 +133,32 @@ const wayfinderMessage = (s: GoalState, idle: number): string =>
     idle >= LIMITS.wayfinderAfterIdle ? `Nao houve artefato novo nas ultimas ${idle} paradas.` : "Nao ha passo na fila.",
     "Rode o passo Wayfinder agora, em vez de um relatorio: ache o proximo caminho, nunca feche um caminho dizendo que nao ha; diga a restricao que o prende e o experimento mais proximo que ela permite.",
     "1. Explorar: liste de 3 a 5 caminhos seguros para o proximo avanco rumo ao objetivo (o que ja esta decidido segue abaixo).",
-    "2. Pergunte ao Jev pelo MCP jev-consensus (avaliador e votacao em varias molduras): consensus_plan (gratis) e depois consensus_run (allow_paid_inference true, max_calls ate 15) com esses caminhos, os trilhos e fatos sem endereco, chave ou saldo.",
-    '3. Registre a decisao: bun scripts/hooks/goal.ts decide "<resumo>" --receipt <hash> --paid <n>. Adicione o caminho vencedor a fila, uma funcionalidade por vez: bun scripts/hooks/goal.ts add planejar "<titulo>" --verify "<comando>" (etapas: explorar, planejar, implementar, verificar, registrar) e comece pelo plano.',
-    "4. Sem consenso: faca ao usuario a pergunta que o recibo indicar. Sem caminho novo: registre o bloqueio (goal.ts blocked) e pare, em vez de repetir.",
+    "2. Monte cada duvida como decisao estruturada, nao como pergunta ao usuario: {\"pergunta\": \"...\", \"opcoes\": [{\"id\": \"A\", \"descricao\": \"...\", \"evidencia\": \"...\"}], \"restricoes\": [\"trilhos e fatos\"], \"reversivel\": true}. Sem endereco, chave ou saldo.",
+    "3. Leve a decisao ao Jev pelo MCP jev-consensus: consensus_run, sem teto de chamadas (o dono paga o Jev e nao quer teto). Se o servidor MCP nao estiver conectado, use bun scripts/jev-consensus.ts run com o mesmo JSON.",
+    '4. Registre a decisao: bun scripts/hooks/goal.ts decide "<resumo>" --receipt <hash> --paid <n>. Adicione o caminho vencedor a fila, uma funcionalidade por vez: bun scripts/hooks/goal.ts add planejar "<titulo>" --verify "<comando>" (etapas: explorar, planejar, implementar, verificar, registrar) e comece pelo plano.',
+    "5. Sem consenso, ou com o Jev fora do ar: escolha a opcao mais reversivel e de menor risco, registre com goal.ts decide (receipt sem-jev) e siga. Nunca pare para perguntar ao usuario.",
+    `6. Fora do Jev, nunca decida nem pergunte: ${FENCED_TOPICS.join("; ")}. Se a tarefa depender disso, registre goal.ts blocked com o motivo e escolha outra. Esses bloqueios ficam na lista para o dono ler depois.`,
+    "7. Sem caminho novo: registre o bloqueio (goal.ts blocked) e siga com o proximo caminho, em vez de repetir o relatorio.",
     ...(s.decisions.length > 0 ? ["", "Decisoes ja registradas:", ...s.decisions.slice(-3).map((d) => `- ${d.summary}`)] : []),
   ].join("\n");
 
-/** What to do when the session stops: the new state and the output that keeps it going, or null to let it stop. Pure. */
+/** What to do when the session stops: the new state and the output that keeps it going. It returns null only when the goal is inactive, paused, achieved or past its deadline. Pure. */
 export function onStop(s0: GoalState, input: StopInput): { state: GoalState; output: StopOutput | null } {
   if (!s0.active || s0.sessionId !== input.sessionId) return { state: s0, output: null };
   if (input.goalAchieved === true) return { state: { ...s0, active: false }, output: null };
   if (s0.deadlineMs !== null && input.nowMs >= s0.deadlineMs) return { state: { ...s0, active: false }, output: null };
-  if (s0.paused || s0.needsHuman !== null) return { state: s0, output: null };
+  if (s0.paused) return { state: s0, output: null };
 
   const idle = s0.loop.lastDigest !== null && s0.loop.lastDigest === input.digest ? s0.loop.idleStops + 1 : 0;
-  const stamps = s0.loop.blockStamps.filter((t) => input.nowMs - t < 3_600_000);
-  const base: GoalState = { ...s0, loop: { ...s0.loop, stops: s0.loop.stops + 1, idleStops: idle, lastDigest: input.digest, blockStamps: stamps } };
-
-  if (idle >= LIMITS.maxIdleStops) return { state: { ...base, needsHuman: `Sem artefato novo em ${idle} paradas seguidas: o laco parou de continuar sozinho. Qual caminho ou dado novo voce quer que eu siga?` }, output: null };
-  // human checkpoint: when nothing is left to do and what remains is blocked, one wayfinder step is enough; a repeated stop with nothing new hands the question to the person instead of looping
-  const blocked = base.queue.filter((t) => t.status === "blocked");
-  if (idle >= 1 && blocked.length > 0 && !base.queue.some((t) => t.status === "todo" || t.status === "doing")) {
-    return { state: { ...base, needsHuman: `Tudo que resta esta bloqueado: ${blocked.map((t) => `${t.title} (${t.reason ?? "sem motivo"})`).join("; ")}. Qual destes voce destrava, ou que dado novo devo seguir?` }, output: null };
-  }
-  if (stamps.length >= LIMITS.maxBlocksPerHour) return { state: { ...base, needsHuman: `Limite de ${LIMITS.maxBlocksPerHour} continuacoes por hora atingido: o laco parou para nao gastar sem controle. Quer que eu continue?` }, output: null };
+  const base: GoalState = { ...s0, loop: { ...s0.loop, stops: s0.loop.stops + 1, idleStops: idle, lastDigest: input.digest } };
 
   const pending = idle >= LIMITS.wayfinderAfterIdle ? undefined : base.queue.find((t) => t.status === "doing") ?? base.queue.find((t) => t.status === "todo");
   const next: GoalState = pending !== undefined && pending.status === "todo" ? setTask(base, pending.id, { status: "doing" }) : base;
   const reason = pending !== undefined ? taskMessage(next, next.queue.find((t) => t.id === pending.id)!) : wayfinderMessage(next, idle);
-  return { state: { ...next, loop: { ...next.loop, blocks: next.loop.blocks + 1, blockStamps: [...stamps, input.nowMs] } }, output: { decision: "block", reason } };
+  return { state: { ...next, loop: { ...next.loop, blocks: next.loop.blocks + 1 } }, output: { decision: "block", reason } };
 }
 
-/** A short account of where the goal stands, for the session start: the goal, the features with their passes, the last decisions and what the person is waited for. */
+/** A short account of where the goal stands, for the session start: the goal, the features with their passes and the last decisions. */
 export function bearings(s: GoalState): string {
   const done = s.queue.filter((t) => t.passes).length;
   return [
@@ -168,7 +167,6 @@ export function bearings(s: GoalState): string {
     ...(s.smokeCommand ? [`Verificacao basica antes de comecar (pegue o rumo): ${s.smokeCommand}`] : []),
     ...s.queue.map((t) => `- [${t.passes ? "x" : t.status === "blocked" ? "!" : " "}] ${t.id} ${t.stage}: ${t.title}${t.status === "blocked" && t.reason !== null ? ` (bloqueada: ${t.reason})` : ""}`),
     ...(s.decisions.length > 0 ? ["Ultimas decisoes:", ...s.decisions.slice(-3).map((d) => `- ${d.summary}`)] : []),
-    ...(s.needsHuman !== null ? [`Esperando o usuario: ${s.needsHuman}`] : []),
     "Trilhos:",
     ...s.rails.map((r) => `- ${r}`),
   ].join("\n");

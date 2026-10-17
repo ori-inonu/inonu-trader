@@ -198,6 +198,67 @@ describe("the book of the wallets", () => {
     expect(book.agentUsd).toBeNull();
   });
 
+  test("an inconsistent raw balance is unknown, not a complete zero", () => {
+    const out = bookFromAssets([{ wallet: "agente", assets: [asset({ balance: "0", rawBalance: "1000000" })] }], NOW);
+    expect(out.book.positions[0]).toMatchObject({ usd: null, balanceMinor: null, decimals: null });
+    expect(out.unpriced).toBe(1);
+    expect(out.book.totalUsd).toBeNull();
+    expect(out.book.agentUsd).toBeNull();
+
+    const empty = bookFromAssets([{ wallet: "agente", assets: [asset({ balance: "0", rawBalance: "0" })] }], NOW).book;
+    expect(empty.totalUsd).toBe(0);
+    expect(empty.agentUsd).toBe(0);
+  });
+
+  test("non-finite conversions and overflowing products stay unknown with the exact raw balance", () => {
+    const huge = `1${"0".repeat(308)}`;
+    const overflow = bookFromAssets([{
+      wallet: "agente", assets: [
+        asset({ tokenContractAddress: "", symbol: "ETH", balance: `1${"0".repeat(308)}0`, rawBalance: `1${"0".repeat(308)}0`, tokenPrice: "1" }),
+        asset({ tokenContractAddress: "0x2222222222222222222222222222222222222222", balance: huge, rawBalance: huge, tokenPrice: "2" }),
+      ]
+    }], NOW).book;
+    expect(overflow.positions.map((p) => ({ usd: p.usd, balanceMinor: p.balanceMinor }))).toEqual([
+      { usd: null, balanceMinor: `1${"0".repeat(308)}0` },
+      { usd: null, balanceMinor: huge },
+    ]);
+    const safeRounded = bookFromAssets([{ wallet: "agente", assets: [asset({ balance: huge, rawBalance: huge, tokenPrice: "1" })] }], NOW).book;
+    expect(safeRounded.positions[0]!.usd).toBe(1e308);
+    expect(Number.isFinite(safeRounded.positions[0]!.usd!)).toBe(true);
+    for (const p of [...overflow.positions, ...safeRounded.positions]) if (p.usd !== null) expect(Number.isFinite(p.usd)).toBe(true);
+  });
+
+  test("overflowing merge, totals and cash become unknown without fabricated cash", () => {
+    const huge = `1${"0".repeat(308)}`;
+    const duplicate = asset({ balance: huge, rawBalance: huge, tokenPrice: "1" });
+    const merged = bookFromAssets([{ wallet: "agente", assets: [duplicate, duplicate] }], NOW).book;
+    expect(merged.positions).toHaveLength(1);
+    expect(merged.positions[0]).toMatchObject({ usd: null, balanceMinor: `2${"0".repeat(308)}` });
+    const distinct = bookFromAssets([{
+      wallet: "agente", assets: [
+        asset({ tokenContractAddress: "0x1111111111111111111111111111111111111111", balance: huge, rawBalance: huge, tokenPrice: "1" }),
+        asset({ tokenContractAddress: "0x2222222222222222222222222222222222222222", balance: huge, rawBalance: huge, tokenPrice: "1" }),
+      ]
+    }], NOW).book;
+    expect(distinct.totalUsd).toBeNull();
+    expect(distinct.agentUsd).toBeNull();
+    expect(distinct.positions.every((p) => p.usd === 1e308 && Number.isFinite(p.usd))).toBe(true);
+    const cash = bookFromAssets([{ wallet: "agente", assets: [usdc(huge, huge), usdc(huge, huge)] }], NOW).book;
+    expect(cash.cashByChain).toEqual({});
+    expect(cash.agentUsd).toBeNull();
+    expect(Object.values(cash.cashByChain).every(Number.isFinite)).toBe(true);
+    const cashAcrossContracts = bookFromAssets([{
+      wallet: "agente", assets: [
+        usdc(huge, huge),
+        asset({ tokenContractAddress: "0xdac17f958d2ee523a2206206994597c13d831ec7", symbol: "USDT", balance: huge, rawBalance: huge, tokenPrice: "1" }),
+      ]
+    }], NOW).book;
+    expect(cashAcrossContracts.positions.every((p) => p.usd === 1e308 && Number.isFinite(p.usd))).toBe(true);
+    expect(cashAcrossContracts.cashByChain).toEqual({});
+    expect(cashAcrossContracts.totalUsd).toBeNull();
+    expect(cashAcrossContracts.agentUsd).toBeNull();
+  });
+
   test("a wallet that was read and is empty is worth zero, which is different from unknown", () => {
     const { book } = bookFromAssets([{ wallet: "agente", assets: [] }], NOW);
     expect(book.agentUsd).toBe(0);

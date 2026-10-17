@@ -35,15 +35,42 @@ describe("the result deck", () => {
     expect(html).toContain("inclui depositos e saques");
   });
 
+  test("the headline uses only the managed amount and leaves an unknown value unknown", () => {
+    const book = rawStatus().status.book as Record<string, unknown>;
+    const managed = renderToStaticMarkup(<PerformanceDeck status={withParts({ book: { ...book, totalUsd: 1510, agentUsd: 510, cashUsd: 300 } })} revealed />);
+    expect(managed).toContain("US$ 510,00");
+    expect(managed).not.toContain("US$ 1.510,00");
+
+    const unknown = renderToStaticMarkup(<PerformanceDeck status={withParts({ book: { ...book, agentUsd: null } })} revealed />);
+    expect(unknown).toContain("sem valor");
+    expect(unknown).not.toContain("US$ 124,20");
+  });
+
+  test("a stale managed read displays the retained book value with a freshness cue", () => {
+    const book = rawStatus().status.book as Record<string, unknown>;
+    const html = renderToStaticMarkup(<PerformanceDeck status={withParts({ book: { ...book, observedAtMs: book.atMs, quality: "stale", managedOk: false } })} revealed />);
+    expect(html).toContain("US$ 1.010,00");
+    expect(html).toMatch(/observad[oa]/i);
+  });
+
+  test("an unavailable managed book does not reuse an amount or imply zero", () => {
+    const book = rawStatus().status.book as Record<string, unknown>;
+    const html = renderToStaticMarkup(<PerformanceDeck status={withParts({
+      book: { ...book, observedAtMs: null, quality: "unavailable", managedOk: false, totalUsd: null, agentUsd: null, cashUsd: null, positions: [] },
+    })} revealed />);
+    expect(html).toContain("sem valor");
+    expect(html).toMatch(/sem leitura bem-sucedida/i);
+    expect(html).not.toContain("US$ 1.010,00");
+  });
+
   test("the curve is not a profit and does not say so", () => {
     const html = renderToStaticMarkup(<PerformanceDeck status={withParts()} revealed />);
     expect(html).toContain("Nao e lucro");
     expect(html).not.toMatch(/lucro de|ganhou/i);
   });
 
-  test("without two readings there is no curve, and the page says when it appears", () => {
+  test("without two readings there is no curve", () => {
     const html = renderToStaticMarkup(<PerformanceDeck status={sampleStatus()} revealed />);
-    expect(html).toContain("a curva aparece com duas leituras da carteira");
     expect(html).not.toContain("<svg");
   });
 

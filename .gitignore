@@ -17,3 +17,12 @@ web/.smoke-profile/
 
 # desktop build output (scripts/build-desktop.ts)
 /dist/
+.omp/brain-runtime/
+.codegraph/
+
+# Next.js smoke build output and Playwright captures: local only
+web/.next-t18-smoke/
+.playwright-mcp/
+
+# local harness and verifier run logs: never committed
+.tmp/

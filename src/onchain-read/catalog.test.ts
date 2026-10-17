@@ -17,13 +17,17 @@ test("quote maps swapMode and keeps legacy mode only when swapMode is absent", (
 });
 
 test("quote preserves exact integer strings above 2^53 without qualifying output units or combining costs", () => {
-  expect(endpointFor("/onchain/quote")!.normalize(shadowQuote())).toMatchObject({ ok: true, data: {
-    fromAmountRaw: "9007199254740993", toAmountRaw: "123456789012345678901234567890", outputUnit: "unverified",
-    estimateGasFee: 120000, tradeFee: 0.12, priceImpactPct: -0.4,
-  } });
-  expect(endpointFor("/onchain/quote")!.normalize(shadowQuote({ fromTokenAmount: 100, toTokenAmount: 200, tradeFee: "" }))).toMatchObject({ ok: true, data: {
-    fromAmount: 100, toAmount: 200, fromAmountRaw: null, toAmountRaw: null, outputUnit: "unverified", tradeFee: null,
-  } });
+  expect(endpointFor("/onchain/quote")!.normalize(shadowQuote())).toMatchObject({
+    ok: true, data: {
+      fromAmountRaw: "9007199254740993", toAmountRaw: "123456789012345678901234567890", outputUnit: "unverified",
+      estimateGasFee: 120000, tradeFee: 0.12, priceImpactPct: -0.4,
+    }
+  });
+  expect(endpointFor("/onchain/quote")!.normalize(shadowQuote({ fromTokenAmount: 100, toTokenAmount: 200, tradeFee: "" }))).toMatchObject({
+    ok: true, data: {
+      fromAmount: 100, toAmount: 200, fromAmountRaw: null, toAmountRaw: null, outputUnit: "unverified", tradeFee: null,
+    }
+  });
 });
 function fixture(name: string): { code: string; data: unknown; msg: string } {
   const raw = JSON.parse(readFileSync(fileURLToPath(new URL(`./fixtures/${name}.json`, import.meta.url)), "utf8"));
@@ -282,6 +286,24 @@ describe("normalizers on official-shaped fixtures", () => {
     expect(serialized).not.toContain("5jds1qi6nYu2JTZv5YTczPwyaq1RAkNkjbpsma8xSTem");
     expect(serialized).not.toContain("logo");
   });
+  test("signals require reported chain and token identity matching the request", () => {
+    const ep = endpointFor("/onchain/signals")!;
+    const params = { chainIndex: "501", token: "FN9ZSeNDdPV6bBF9DeDYxvqYK4JvFKeF7DBrhGGXJZ3Q" };
+    const token = { tokenAddress: params.token, symbol: "TOK", marketCapUsd: "100", holders: "5", top10HolderPercent: "20" };
+    const first = { timestamp: "1774364940575", amountUsd: "10", price: "1", triggerWalletCount: "1", walletType: "1", chainIndex: params.chainIndex, token };
+    const rows = [
+      first,
+      { ...first, chainIndex: "1" },
+      { ...first, token: { ...token, tokenAddress: "AytNmHWe8uXfgBACLnvhyKWrecAcYFywLK2nXbegpump" } },
+    ];
+    const matching = ep.normalizeRequest!(rows, params, 1774364940575);
+    expect(matching).toMatchObject({ ok: true, data: [{ chainIndex: "501", token: { address: params.token } }] });
+    expect((matching as { ok: true; data: unknown[] }).data).toHaveLength(1);
+    const { chainIndex: _chain, ...withoutChain } = first;
+    const { tokenAddress: _address, ...withoutAddress } = token;
+    expect(ep.normalizeRequest!([{ ...withoutChain, token }], params, 1774364940575)).toMatchObject({ ok: true, data: [] });
+    expect(ep.normalizeRequest!([{ ...first, token: withoutAddress }], params, 1774364940575)).toMatchObject({ ok: true, data: [] });
+  });
 
   test("leaderboard shortens wallets and maps top tokens", () => {
     const n = endpointFor("/onchain/leaderboard")!.normalize(fixture("leaderboard").data);
@@ -469,8 +491,147 @@ describe("new routes: normalizers on real-shaped fixtures", () => {
     expect(n.ok).toBe(true);
     expect((n as { ok: true; data: unknown[] }).data).toHaveLength(0);
   });
+  test("price-info binds reported identity to request and keeps undocumented identity unknown", () => {
+    const ep = endpointFor("/onchain/price-info")!;
+    const params = { chainIndex: "1", token: "0xabcdef0123456789abcdef0123456789abcdef01" };
+    const matched = { chainIndex: "1", tokenContractAddress: params.token, price: "2", time: "1000" };
+    expect(ep.normalizeRequest!([matched], params, 2000)).toMatchObject({ ok: true, data: [{ chainIndex: "1", address: params.token, price: 2 }] });
+    expect(ep.normalizeRequest!([{ price: "2" }], params, 2000)).toMatchObject({ ok: true, data: [{ chainIndex: null, address: null, tsMs: null }] });
+    expect(ep.normalizeRequest!([{ ...matched, chainIndex: "10" }], params, 2000)).toEqual({ ok: true, data: [] });
+    expect(ep.normalizeRequest!([{ ...matched, tokenContractAddress: "0x1111111111111111111111111111111111111111" }], params, 2000)).toEqual({ ok: true, data: [] });
+  });
 
-  test("token-risk is one object: integers 0..5 for riskLevel, tags filtered, percents untouched", () => {
+  test("price-info rejects conflicting duplicates and invalid or future documented millisecond times", () => {
+    const ep = endpointFor("/onchain/price-info")!;
+    const params = { chainIndex: "1", token: "0xabcdef0123456789abcdef0123456789abcdef01" };
+    const row = { chainIndex: "1", tokenContractAddress: params.token, price: "2", time: "1000" };
+    expect(ep.normalizeRequest!([row, { ...row, price: "3" }], params, 2000)).toEqual({ ok: true, data: [] });
+    expect(ep.normalizeRequest!([{ ...row, time: "not-a-time" }], params, 2000)).toEqual({ ok: true, data: [] });
+    expect(ep.normalizeRequest!([{ ...row, time: "2001" }], params, 2000)).toEqual({ ok: true, data: [] });
+    expect(ep.normalizeRequest!([{ ...row, time: "1000" }, { ...row }], params, 2000)).toMatchObject({ ok: true, data: [{ price: 2 }] });
+  });
+
+  test("hot-token numeric domains drop invalid required fields and null invalid optional fields", () => {
+    const base = {
+      chainIndex: "1", tokenSymbol: "TOK", tokenContractAddress: "token",
+      price: "1", marketCap: "-2", volume: "-3", change: "-4.5", liquidity: "-5", holders: "-6",
+      uniqueTraders: "-1", txsBuy: "9007199254740992", txsSell: "2.5",
+      top10HoldPercent: "101", devHoldPercent: "-1", bundleHoldPercent: "50",
+      riskLevelControl: "6", firstTradeTime: "1000",
+    };
+    const result = endpointFor("/onchain/hot-tokens")!.normalize([
+      base, { ...base, tokenSymbol: "NEG", price: "-0.01" }, { ...base, tokenSymbol: "CHANGE", change: "invalid" },
+    ]);
+    expect(result).toMatchObject({
+      ok: true,
+      data: [{
+        symbol: "TOK", price: 1, marketCap: null, volumeUsd: null, changePct: -4.5, liquidityUsd: null, holders: null,
+        uniqueTraders: null, txsBuy: null, txsSell: null, top10HoldPct: null,
+        devHoldPct: null, bundleHoldPct: 50, riskLevel: null, firstTradeMs: null,
+      }],
+    });
+    expect(result.ok && Array.isArray(result.data) ? result.data : []).toHaveLength(1);
+  });
+
+  test("price-info preserves signed changes and rejects invalid price while nulling metric outliers", () => {
+    const ep = endpointFor("/onchain/price-info")!;
+    const row = {
+      chainIndex: "1", tokenContractAddress: "token", price: "1", time: "1000",
+      marketCap: "-1", liquidity: "2", holders: "9007199254740992", circSupply: "3",
+      maxPrice: "-1", minPrice: "0.5", tradeNum: "-2",
+      priceChange5M: "-3.5", priceChange1H: "2", priceChange4H: "0", priceChange24H: "101",
+      volume5M: "-1", volume1H: "2", volume4H: "3", volume24H: "4",
+      txs5M: "-1", txs1H: "2.5", txs4H: "3", txs24H: "9007199254740992",
+    };
+    const result = ep.normalizeRequest!([row, { ...row, price: "-1" }], { chainIndex: "1", token: "token" }, 2000);
+    expect(result).toMatchObject({
+      ok: true,
+      data: [{
+        price: 1, marketCap: null, holders: null, high24h: null, low24h: 0.5, tradeNum: null,
+        change: { m5: -3.5, h1: 2, h4: 0, h24: 101 },
+        volume: { m5: null, h1: 2, h4: 3, h24: 4 },
+        txs: { m5: null, h1: null, h4: 3, h24: null },
+      }],
+    });
+    expect(result.ok && Array.isArray(result.data) ? result.data : []).toHaveLength(1);
+  });
+
+  test("signals drop invalid required values and null out-of-range optional percent fields", () => {
+    const token = { tokenAddress: "token", marketCapUsd: "-1", holders: "-2", top10HolderPercent: "101" };
+    const row = {
+      timestamp: "1774364940575", amountUsd: "10", price: "1", triggerWalletCount: "2",
+      walletType: "1", soldRatioPercent: "-1", token,
+    };
+    const result = endpointFor("/onchain/signals")!.normalize([
+      row, { ...row, price: "-1" }, { ...row, amountUsd: "-1" }, { ...row, triggerWalletCount: "1.5" },
+    ]);
+    expect(result).toMatchObject({
+      ok: true,
+      data: [{
+        priceUsd: 1, amountUsd: 10, walletCount: 2, soldRatioPct: null,
+        token: { marketCap: null, holders: null, top10HoldPct: null },
+      }],
+    });
+    expect(result.ok && Array.isArray(result.data) ? result.data : []).toHaveLength(1);
+  });
+  test("request-scoped signals retain the six-hour boundary and discard older or future timestamps", () => {
+    const nowMs = 1774364940575;
+    const windowMs = 6 * 60 * 60 * 1000;
+    const token = { tokenAddress: "token", marketCapUsd: "100", holders: "5", top10HolderPercent: "20" };
+    const row = {
+      timestamp: String(nowMs), amountUsd: "10", price: "1", triggerWalletCount: "2",
+      walletType: "1", chainIndex: "1", token,
+    };
+    const ep = endpointFor("/onchain/signals")!;
+    const result = ep.normalizeRequest!(
+      [
+        { ...row, timestamp: String(nowMs) },
+        { ...row, timestamp: String(nowMs - windowMs) },
+        { ...row, timestamp: String(nowMs - windowMs - 1) },
+        { ...row, timestamp: String(nowMs + 1) },
+      ],
+      { chainIndex: "1" },
+      nowMs,
+    );
+    expect(result).toMatchObject({ ok: true, data: [{ tsMs: nowMs }, { tsMs: nowMs - windowMs }] });
+    expect(ep.normalize!([
+      { ...row, timestamp: String(nowMs - windowMs - 1) },
+      { ...row, timestamp: String(nowMs + 1) },
+    ])).toMatchObject({ ok: true, data: [{ tsMs: nowMs - windowMs - 1 }, { tsMs: nowMs + 1 }] });
+  });
+
+
+  test("token-risk nulls invalid percent, count, epoch, and nonnegative metrics while preserving risk bounds", () => {
+    const base = fixtureReal("token-risk").data as Record<string, unknown>;
+    const result = endpointFor("/onchain/token-risk")!.normalize({
+      ...base,
+      riskControlLevel: "6", top10HoldPercent: "101", devHoldingPercent: "-1",
+      devCreateTokenCount: "-1", devLaunchedTokenCount: "2.5", createTime: "1000", progress: "-1",
+    });
+    expect(result).toMatchObject({
+      ok: true,
+      data: {
+        riskLevel: null, top10HoldPct: null, devHoldPct: null,
+        devCreateCount: null, devLaunchedCount: null, createdMs: null, progressPct: null,
+      },
+    });
+  });
+
+  test("risk zero is undefined in both onchain sources while levels 1 through 5 remain available", () => {
+    const base = fixtureReal("token-risk").data as Record<string, unknown>;
+    const riskEndpoint = endpointFor("/onchain/token-risk")!;
+    expect(riskEndpoint.normalize({ ...base, riskControlLevel: "0" })).toMatchObject({ ok: true, data: { riskLevel: null } });
+    for (const level of ["1", "5"]) {
+      expect(riskEndpoint.normalize({ ...base, riskControlLevel: level })).toMatchObject({ ok: true, data: { riskLevel: Number(level) } });
+    }
+    const hotEndpoint = endpointFor("/onchain/hot-tokens")!;
+    const hotBase = { chainIndex: "8453", tokenSymbol: "TOK", tokenContractAddress: "token", price: "1", change: "0" };
+    expect(hotEndpoint.normalize([{ ...hotBase, riskLevelControl: "0" }])).toMatchObject({ ok: true, data: [{ riskLevel: null }] });
+    expect(hotEndpoint.normalize([{ ...hotBase, riskLevelControl: "1" }])).toMatchObject({ ok: true, data: [{ riskLevel: 1 }] });
+  });
+
+
+  test("token-risk is one object: integers 1..5 for riskLevel, tags filtered, percents bounded", () => {
     const n = endpointFor("/onchain/token-risk")!.normalize(fixtureReal("token-risk").data);
     expect(n.ok).toBe(true);
     const d = (n as { ok: true; data: Record<string, unknown> }).data;
@@ -489,6 +650,19 @@ describe("new routes: normalizers on real-shaped fixtures", () => {
     const empty = endpointFor("/onchain/token-risk")!.normalize([]);
     expect(empty).toEqual({ ok: true, data: null });
     expect(endpointFor("/onchain/token-risk")!.normalize("nope").ok).toBe(false); // must be an object
+  });
+  test("token-risk rejects reported request identity mismatches but leaves absent identity unknown", () => {
+    const ep = endpointFor("/onchain/token-risk")!;
+    const params = { chainIndex: "1", token: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" };
+    const data = fixtureReal("token-risk").data as Record<string, unknown>;
+    const matched = ep.normalizeRequest!(data, params, 0);
+    expect(matched).toMatchObject({ ok: true, data: { chainIndex: "1", address: params.token } });
+    const mismatchChain = ep.normalizeRequest!({ ...data, chainIndex: "10" }, params, 0);
+    const mismatchToken = ep.normalizeRequest!({ ...data, tokenContractAddress: "0x1111111111111111111111111111111111111111" }, params, 0);
+    expect(mismatchChain).toEqual({ ok: false });
+    expect(mismatchToken).toEqual({ ok: false });
+    const { chainIndex: _chain, tokenContractAddress: _address, ...withoutIdentity } = data;
+    expect(ep.normalizeRequest!(withoutIdentity, params, 0)).toMatchObject({ ok: true, data: { chainIndex: null, address: null } });
   });
 
   test("pool percent strings keep percentage points and missing fees remain unknown", () => {

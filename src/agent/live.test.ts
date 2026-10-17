@@ -2,8 +2,10 @@ import { describe, expect, test } from "bun:test";
 import type { RawTokenAsset } from "../okx-wallet/portfolio";
 import type { BriefSource, BuiltBrief } from "../inonu/ask";
 import type { InternalGatewayResult } from "../onchain-read/gateway";
+import { endpointFor } from "../onchain-read/catalog";
 import { candidateOf, type EcoFacts } from "../opportunity/ecosystem";
 import type { Candle } from "../quant/types";
+import { verifyBook } from "./book";
 import { createBookReader, createEcosystemReader, createHoldingFactsReader, createMarketContext, createMomentumReader, createPriceLookup, createTimingReader, okxPublicCandles, okxPublicDerivatives } from "./live";
 import { DEFAULT_CONFIG, type AgentConfig } from "./config";
 import { createPlanStore, planKey, type PositionPlan } from "./plans";
@@ -23,6 +25,10 @@ const config = (over: Partial<AgentConfig> = {}): AgentConfig => ({ ...DEFAULT_C
 
 const ok = (data: unknown): InternalGatewayResult => ({ ok: true, data, meta: { tier: "basic", cachedAtMs: NOW, ageMs: 0, stale: false, budget: { tier: "basic", used: 1, cap: null } }, sent: true });
 const fail = (): InternalGatewayResult => ({ ok: false, error: "provider_unavailable", sent: true } as never);
+const stale = (data: unknown): InternalGatewayResult => {
+  const result = ok(data);
+  return result.ok ? { ...result, meta: { ...result.meta, stale: true } } : result;
+};
 type Call = { route: string; params: Record<string, string> };
 const gatewayOf = (answer: (call: Call) => InternalGatewayResult) => {
   const calls: Call[] = [];
@@ -77,7 +83,7 @@ describe("the book reader", () => {
 
   test("a read that fails once and then answers is a book: a passing hiccup does not cost the cycle (and five minutes)", async () => {
     let calls = 0;
-    const reader = createBookReader({ config: () => config(), source: { balances: async () => { calls++; if (calls === 1) throw new Error("blip"); return [asset()]; } }, now: () => NOW, sleep: async () => {} });
+    const reader = createBookReader({ config: () => config(), source: { balances: async () => { calls++; if (calls === 1) throw new Error("blip"); return [asset()]; } }, now: () => NOW, sleep: async () => { } });
     const book = await reader.read(live);
     expect(book).not.toBeNull();
     expect(calls).toBe(2);
@@ -104,10 +110,114 @@ describe("the book reader", () => {
     expect(calls).toBe(1);
   });
 
-  test("a read that was cancelled gives no book", async () => {
+  test("a same-tick abort prevents queued provider calls", async () => {
     const controller = new AbortController();
-    const reader = createBookReader({ config: () => config(), source: { balances: async () => { controller.abort(); return [asset()]; } }, now: () => NOW });
-    expect(await reader.read(controller.signal)).toBeNull();
+    let calls = 0;
+    const reader = createBookReader({
+      config: () => config(),
+      source: { balances: async () => { calls++; return [asset()]; } },
+      now: () => NOW,
+    });
+    const read = reader.read(controller.signal);
+    controller.abort();
+    expect(await read).toBeNull();
+    expect(calls).toBe(0);
+    expect(reader.last()).toMatchObject({ managedOk: false, atMs: NOW });
+  });
+
+  test("a pending managed read records failure immediately on abort and cannot overwrite it when the provider resolves", async () => {
+    const controller = new AbortController();
+    let calls = 0;
+    const { promise: pending, resolve: releasePending } = Promise.withResolvers<readonly RawTokenAsset[]>();
+    const { promise: providerStarted, resolve: markProviderStarted } = Promise.withResolvers<void>();
+    let now = NOW;
+    const reader = createBookReader({
+      config: () => config(),
+      source: {
+        balances: async () => {
+          calls++;
+          markProviderStarted();
+          return calls === 1 ? pending : [asset()];
+        }
+      },
+      now: () => now,
+    });
+    const abortedRead = reader.read(controller.signal);
+    await providerStarted;
+    controller.abort();
+    expect(reader.last()).toMatchObject({ atMs: NOW, managedOk: false });
+    expect(await abortedRead).toBeNull();
+    expect(calls).toBe(1);
+
+    releasePending([asset()]);
+    await Promise.resolve();
+    expect(reader.last()).toMatchObject({ atMs: NOW, managedOk: false });
+    now = NOW + 1000;
+    expect(await reader.read(live)).not.toBeNull();
+    expect(reader.last()).toMatchObject({ atMs: now, managedOk: true });
+    expect(calls).toBe(2);
+  });
+
+  test("an older aborted read cannot overwrite a newer result", async () => {
+    const controller = new AbortController();
+    let calls = 0;
+    const { promise: pending, resolve: releasePending } = Promise.withResolvers<readonly RawTokenAsset[]>();
+    const reader = createBookReader({
+      config: () => config(),
+      source: { balances: async () => calls++ === 0 ? pending : [asset()] },
+      now: () => NOW,
+    });
+    const olderRead = reader.read(controller.signal);
+    expect(await reader.read(live)).not.toBeNull();
+    const newer = reader.last();
+    controller.abort();
+    expect(await olderRead).toBeNull();
+    expect(reader.last()).toEqual(newer);
+    releasePending([asset()]);
+    await Promise.resolve();
+    expect(reader.last()).toEqual(newer);
+    expect(calls).toBe(2);
+  });
+
+  test("a watch-only abort returns the completed managed Book without tainting its freshness", async () => {
+    const controller = new AbortController();
+    let now = NOW;
+    let managedReads = 0;
+    let watchReads = 0;
+    const { promise: watchPending, resolve: releaseWatch } = Promise.withResolvers<readonly RawTokenAsset[]>();
+    const reader = createBookReader({
+      config: () => config({ watch: { evm: EVM2, solana: null } }),
+      source: {
+        balances: async (address) => {
+          if (address === EVM) {
+            managedReads++;
+            return [asset(managedReads === 1 ? {} : { balance: "9", rawBalance: "9000000000000000000" })];
+          }
+          watchReads++;
+          return watchReads === 1 ? [asset({ address: EVM2 })] : watchPending;
+        }
+      },
+      now: () => now,
+    });
+    const lastGoodBook = await reader.read(live);
+    expect(lastGoodBook?.agentUsd).toBe(10);
+    const lastGoodInfo = reader.last();
+    expect(lastGoodBook?.observedAtMs).toBe(lastGoodInfo?.atMs);
+
+    now = NOW + 1000;
+    const read = reader.read(controller.signal);
+    await new Promise<void>((resolve) => setImmediate(resolve));
+    controller.abort();
+    const freshBook = await read;
+    expect(freshBook).toMatchObject({ observedAtMs: now, agentUsd: 36 });
+    const freshInfo = reader.last();
+    expect(freshInfo).toMatchObject({ atMs: now, managedOk: true, watchFailed: 1 });
+    expect(freshBook?.observedAtMs).toBe(freshInfo?.atMs);
+    expect(lastGoodBook?.agentUsd).toBe(10);
+    expect(lastGoodBook?.observedAtMs).toBe(NOW);
+    expect(managedReads).toBe(2);
+    expect(watchReads).toBe(2);
+    releaseWatch([asset({ address: EVM2 })]);
   });
 });
 
@@ -125,6 +235,18 @@ describe("the timing reader", () => {
     expect(t).toMatchObject({ bars: 48, rsi: expect.any(Number) });
   });
 
+  test("gateway-stale hourly bars cannot provide timing evidence", async () => {
+    const reader = createTimingReader({ gateway: gatewayOf(() => stale(calmRows())).gateway, now: () => NOW });
+    expect(await reader.read(facts, live)).toBeNull();
+  });
+
+  test("future and non-finite hourly timestamps cannot provide timing facts", async () => {
+    const future = calmRows().map((row, i) => i === 59 ? { ...row, ts: NOW + 1 } : row);
+    expect(await createTimingReader({ gateway: gatewayOf(() => ok(future)).gateway, now: () => NOW }).read(facts, live)).toBeNull();
+    const invalid = calmRows().map((row, i) => i === 59 ? { ...row, ts: Number.NaN } : row);
+    expect(await createTimingReader({ gateway: gatewayOf(() => ok(invalid)).gateway, now: () => NOW }).read(facts, live)).toBeNull();
+  });
+
   test("cached for ten minutes", async () => {
     const g = gatewayOf(() => ok(calmRows()));
     let now = NOW;
@@ -136,6 +258,19 @@ describe("the timing reader", () => {
     now += 2 * 60_000;
     await reader.read(facts, live);
     expect(g.calls).toHaveLength(2);
+  });
+
+  test("a clock regression does not serve a timing cache entry as younger", async () => {
+    const g = gatewayOf(() => ok(calmRows()));
+    let now = NOW;
+    const reader = createTimingReader({ gateway: g.gateway, now: () => now });
+    expect((await reader.read(facts, live))?.ageMin).toBe(60);
+    now -= 30_000;
+    expect(await reader.read(facts, live)).toBeNull();
+    expect(g.calls).toHaveLength(1);
+    now = NOW;
+    expect((await reader.read(facts, live))?.ageMin).toBe(60);
+    expect(g.calls).toHaveLength(1);
   });
 
   test("a failure is null, and remembered for two minutes only", async () => {
@@ -168,12 +303,43 @@ describe("the holding facts reader", () => {
 
   test("market facts from the provider, the exit impact from the size of the position, the price from the balance", async () => {
     const g = gatewayOf(route);
-    const factsOf = await createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => NOW }).read(bookOf([held()]), live);
+    const factsOf = await createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => NOW }).read(bookOf([held()]), live);
     expect(factsOf(held())).toMatchObject({ priceUsd: 4, changeH24Pct: -3.5, liquidityUsd: 50_000, volumeH24Usd: 900_000, exitImpactPct: 0.2, riskLevel: 2, riskFlags: [], sinceEntryPct: null, heldHours: null, soldPct: null });
   });
 
+  test("raw token-risk zero is unknown to holding facts while independent fresh price facts remain", async () => {
+    const endpoint = endpointFor("/onchain/token-risk")!;
+    const raw = {
+      chainIndex: "1", tokenContractAddress: TOKEN, tokenTags: [],
+      top10HoldPercent: "13.68", lpBurnedPercent: "74.36",
+    };
+    for (const [level, expected] of [["0", null], ["1", 1]] as const) {
+      const parsed = endpoint.normalizeRequest!({ ...raw, riskControlLevel: level }, { chainIndex: "1", token: TOKEN }, NOW);
+      if (!parsed.ok) throw new Error("synthetic token-risk payload was rejected");
+      const g = gatewayOf((call) => call.route === "/onchain/price-info" ? ok([{ ...infoRow, tsMs: NOW }]) : ok(parsed.data));
+      const p = held();
+      const factsOf = await createHoldingFactsReader({
+        gateway: g.gateway,
+        plans: createPlanStore({ read: () => null, write: () => { } }),
+        now: () => NOW,
+      }).read(bookOf([p]), live);
+      expect(factsOf(p)).toMatchObject({ riskLevel: expected, priceUsd: 4, changeH24Pct: -3.5 });
+    }
+  });
+  test("timestamp presence comes only from an observed normalized price-info row", async () => {
+    const p = held();
+    for (const [row, expected] of [[{ ...infoRow, tsMs: 0 }, true], [infoRow, false]] as const) {
+      const g = gatewayOf((call) => call.route === "/onchain/price-info" ? ok([row]) : ok({ riskLevel: 2, tags: [] }));
+      const factsOf = await createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => NOW }).read(bookOf([p]), live);
+      expect(factsOf(p)?.priceInfoTimestampReported).toBe(expected);
+      expect(g.calls.map((call) => call.route).sort()).toEqual(["/onchain/price-info", "/onchain/token-risk"]);
+    }
+    const missing = await createHoldingFactsReader({ gateway: gatewayOf(() => fail()).gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => NOW }).read(bookOf([p]), live);
+    expect(missing(p)?.priceInfoTimestampReported).toBeUndefined();
+  });
+
   test("the entry and the hours held come from the plan", async () => {
-    const plans = createPlanStore({ read: () => null, write: () => {} });
+    const plans = createPlanStore({ read: () => null, write: () => { } });
     const plan: PositionPlan = { key: planKey("1", TOKEN), chainIndex: "1", address: TOKEN, symbol: "AAA", profile: "alvo_10", entryPriceUsd: 3.2, entryAtMs: NOW - 5 * HOUR, peakPriceUsd: 4.5, targetHit: false, trimmed: false, cycleId: "c0" };
     plans.open(plan);
     const factsOf = await createHoldingFactsReader({ gateway: gatewayOf(route).gateway, plans, now: () => NOW }).read(bookOf([held()]), live);
@@ -183,7 +349,7 @@ describe("the holding facts reader", () => {
   test("market facts of a position that matters are read every 10 minutes and risk every 6 hours, not every cycle", async () => {
     const g = gatewayOf(route);
     let now = NOW;
-    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => now });
+    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => now });
     await reader.read(bookOf([held()]), live);
     expect(g.calls.map((c) => c.route).sort()).toEqual(["/onchain/price-info", "/onchain/token-risk"]);
     now += 9 * 60_000;
@@ -198,17 +364,60 @@ describe("the holding facts reader", () => {
     expect(g.calls.filter((c) => c.route === "/onchain/token-risk")).toHaveLength(2);
   });
 
-  test("only the biggest positions are read, and every one that has a plan", async () => {
+  test("a planned position and the highest-USD managed position fill the capped reads", async () => {
     const mk = (n: number, usd: number) => held({ id: `token:1:0x${n.toString(16).padStart(40, "0")}`, address: `0x${n.toString(16).padStart(40, "0")}`, usd });
     const many = Array.from({ length: 6 }, (_, i) => mk(i + 16, 100 + i));
-    const plans = createPlanStore({ read: () => null, write: () => {} });
+    const plans = createPlanStore({ read: () => null, write: () => { } });
     const smallest = many[0]!;
     plans.open({ key: planKey("1", smallest.address), chainIndex: "1", address: smallest.address, symbol: "S", profile: "alvo_5", entryPriceUsd: 1, entryAtMs: NOW, peakPriceUsd: 1, targetHit: false, trimmed: false, cycleId: "c" });
     const g = gatewayOf(route);
     await createHoldingFactsReader({ gateway: g.gateway, plans, now: () => NOW, max: 2 }).read(bookOf(many), live);
     const read = new Set(g.calls.map((c) => c.params.token));
-    expect(read.size).toBe(3);
-    expect(read.has(smallest.address)).toBe(true);
+    expect(read).toEqual(new Set([smallest.address, many[5]!.address]));
+  });
+
+  test("plans, then managed holdings, get existing read slots ahead of larger watch positions and keep verified values", async () => {
+    const mk = (n: number, usd: number, wallet: "agente" | "principal", symbol: string): Position => {
+      const address = `0x${n.toString(16).padStart(40, "0")}`;
+      return held({ id: `token:1:${address}`, address, usd, wallet, symbol });
+    };
+    const plannedHigh = mk(30, 1000, "principal", "PH");
+    const plannedLow = mk(31, 2, "principal", "PL");
+    const managedAaa = mk(32, 10, "agente", "AAA");
+    const managedBbb = mk(33, 8, "agente", "BBB");
+    const managedCcc = mk(34, 7, "agente", "CCC");
+    const watchHigh = mk(35, 100, "principal", "WH");
+    const watchNext = mk(36, 90, "principal", "WN");
+    const plans = createPlanStore({ read: () => null, write: () => { } });
+    const open = (p: Position) => plans.open({ key: planKey(p.chainIndex, p.address), chainIndex: p.chainIndex, address: p.address, symbol: p.symbol, profile: "alvo_5", entryPriceUsd: 1, entryAtMs: NOW, peakPriceUsd: 1, targetHit: false, trimmed: false, cycleId: "priority" });
+    open(plannedHigh);
+    open(plannedLow);
+    const book = bookOf([plannedHigh, plannedLow, watchHigh, watchNext, managedAaa, managedBbb, managedCcc]);
+    const g = gatewayOf(route);
+    const factsOf = await createHoldingFactsReader({ gateway: g.gateway, plans, now: () => NOW, max: 3 }).read(book, live);
+    const priceReads = new Set(g.calls.filter((call) => call.route === "/onchain/price-info").map((call) => call.params.token));
+    expect(priceReads).toEqual(new Set([plannedHigh.address, plannedLow.address, managedAaa.address]));
+    expect(priceReads.size).toBe(3);
+    const verified = verifyBook(book, factsOf);
+    expect(verified.book.positions.find((p) => p.id === managedAaa.id)).toMatchObject({ usd: 10 });
+    expect(verified.book.agentUsd).toBe(10);
+  });
+
+  test("every planned eligible position is read when plans alone exceed max", async () => {
+    const mk = (n: number, usd: number, wallet: "agente" | "principal", symbol: string): Position => {
+      const address = `0x${n.toString(16).padStart(40, "0")}`;
+      return held({ id: `token:1:${address}`, address, usd, wallet, symbol });
+    };
+    const planned = [mk(40, 2, "principal", "P1"), mk(41, 3, "principal", "P2"), mk(42, 4, "principal", "P3")];
+    const managed = [mk(43, 30, "agente", "A"), mk(44, 20, "agente", "B")];
+    const watch = mk(45, 100, "principal", "W");
+    const plans = createPlanStore({ read: () => null, write: () => { } });
+    for (const p of planned) plans.open({ key: planKey(p.chainIndex, p.address), chainIndex: p.chainIndex, address: p.address, symbol: p.symbol, profile: "alvo_5", entryPriceUsd: 1, entryAtMs: NOW, peakPriceUsd: 1, targetHit: false, trimmed: false, cycleId: "priority" });
+    const g = gatewayOf(route);
+    await createHoldingFactsReader({ gateway: g.gateway, plans, now: () => NOW, max: 1 }).read(bookOf([...planned, ...managed, watch]), live);
+    const priceReads = new Set(g.calls.filter((call) => call.route === "/onchain/price-info").map((call) => call.params.token));
+    expect(priceReads).toEqual(new Set(planned.map((p) => p.address)));
+    expect(priceReads.size).toBe(3);
   });
 
   test("the dust and the absurdly big claims are not read; a position the agent opened is read whatever it claims", async () => {
@@ -217,7 +426,7 @@ describe("the holding facts reader", () => {
     const fine = mk(17, 300);
     const fantasy = mk(18, 148_000_000);
     const opened = mk(19, 3);
-    const plans = createPlanStore({ read: () => null, write: () => {} });
+    const plans = createPlanStore({ read: () => null, write: () => { } });
     plans.open({ key: planKey("1", opened.address), chainIndex: "1", address: opened.address, symbol: "O", profile: "alvo_5", entryPriceUsd: 1, entryAtMs: NOW, peakPriceUsd: 1, targetHit: false, trimmed: false, cycleId: "c" });
     const g = gatewayOf(route);
     await createHoldingFactsReader({ gateway: g.gateway, plans, now: () => NOW }).read(bookOf([dust, fine, fantasy, opened]), live);
@@ -227,13 +436,13 @@ describe("the holding facts reader", () => {
   test("the native coin and cash are not read; the native keeps the price of the balance", async () => {
     const g = gatewayOf(route);
     const native = held({ id: "token:1:native", address: "native", symbol: "ETH", priceUsd: 3000 });
-    const factsOf = await createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => NOW }).read(bookOf([native, held({ isCash: true, symbol: "USDC" })]), live);
+    const factsOf = await createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => NOW }).read(bookOf([native, held({ isCash: true, symbol: "USDC" })]), live);
     expect(g.calls).toHaveLength(0);
     expect(factsOf(native)).toMatchObject({ priceUsd: 3000, riskLevel: null, liquidityUsd: null });
   });
 
   test("a provider that fails leaves nulls, not zeros", async () => {
-    const factsOf = await createHoldingFactsReader({ gateway: gatewayOf(() => fail()).gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => NOW }).read(bookOf([held()]), live);
+    const factsOf = await createHoldingFactsReader({ gateway: gatewayOf(() => fail()).gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => NOW }).read(bookOf([held()]), live);
     expect(factsOf(held())).toMatchObject({ priceUsd: 4, changeH24Pct: null, liquidityUsd: null, riskLevel: null, exitImpactPct: null });
   });
 });
@@ -336,17 +545,60 @@ describe("the ecosystem reader", () => {
     expect(counter.n).toBe(3);
   });
 
-  test("a scan that fails serves the last one, and nothing once it is too old", async () => {
+  test("a failed scan marks the retained result stale and makes it unavailable after its maximum age", async () => {
     let fail = false;
     const s = sourceOf(() => (fail ? new Error("down") : built([eco(16)])));
     let now = NOW;
     const reader = createEcosystemReader({ source: s.source, now: () => now });
-    expect((await reader.read(null, live)).candidates).toHaveLength(1);
+    const fresh = await reader.read(null, live);
+    expect(fresh.sourceQuality).toEqual({ state: "fresh", ageMs: 0 });
     fail = true;
     now += 31 * 60_000;
-    expect((await reader.read(null, live)).candidates).toHaveLength(1);
+    const stale = await reader.read(null, live);
+    expect(stale.candidates).toHaveLength(0);
+    expect(stale.observedAtMs).toBe(NOW);
+    expect(stale.sourceQuality).toEqual({ state: "stale", ageMs: 31 * 60_000 });
     now += 3 * HOUR;
-    expect((await reader.read(null, live)).candidates).toHaveLength(0);
+    const unavailable = await reader.read(null, live);
+    expect(unavailable.candidates).toHaveLength(0);
+    expect(unavailable.sourceQuality).toEqual({ state: "unavailable", ageMs: null });
+    expect(unavailable.observedAtMs).toBeNull();
+  });
+  test("an aborted refresh retains only the old observation and a later successful scan recovers", async () => {
+    let now = NOW;
+    let calls = 0;
+    const buildGate = Promise.withResolvers<BuiltBrief>();
+    const source: BriefSource = {
+      build: async () => {
+        calls++;
+        if (calls === 2) return await buildGate.promise;
+        return built([eco(16)]);
+      },
+    };
+    const reader = createEcosystemReader({ source, now: () => now });
+    expect((await reader.read(null, live)).sourceQuality?.state).toBe("fresh");
+    now += 31 * 60_000;
+    const controller = new AbortController();
+    const pending = reader.read(null, controller.signal);
+    controller.abort();
+    buildGate.resolve(built([eco(17)]));
+    const stale = await pending;
+    expect(stale.sourceQuality).toEqual({ state: "stale", ageMs: 31 * 60_000 });
+    expect(stale.observedAtMs).toBe(NOW);
+    expect(stale.candidates).toEqual([]);
+    const recovered = await reader.read(null, live);
+    expect(recovered.sourceQuality).toEqual({ state: "fresh", ageMs: 0 });
+    expect(recovered.observedAtMs).toBe(now);
+    expect(recovered.candidates).toHaveLength(1);
+  });
+
+
+  test("a response with no usable ecosystem scan is unavailable rather than an empty fresh scan", async () => {
+    const reader = createEcosystemReader({ source: sourceOf(() => ({ brief: {} as never, candidates: [], onchainosCalls: 0 })).source, now: () => NOW });
+    const context = await reader.read(null, live);
+    expect(context.candidates).toEqual([]);
+    expect(context.sourceQuality).toEqual({ state: "unavailable", ageMs: null });
+    expect(context.observedAtMs).toBeNull();
   });
 
   test("with no balance the candidates come without a ceiling", async () => {
@@ -392,10 +644,55 @@ describe("the market context", () => {
     expect(stale.get()).toBeNull();
   });
 
+  test("a fresh explicitly synthetic System One reading contributes no System One fields", async () => {
+    const reader = createMarketContext({
+      candles: async (instId) => instId === "BTC-USDT" ? series(() => 100) : null,
+      systemOne: () => ({
+        completedAtMs: NOW - 5 * 60_000,
+        decision: { choice: "long-3x" },
+        brief: {
+          market: { source: "synthetic" },
+          wallet: { source: "synthetic" },
+          quant: { sigma: { regime: "stressed" } },
+        },
+      }),
+      now: () => NOW,
+    });
+    await reader.refresh(live);
+    expect(reader.get()).toMatchObject({ s1_escolha: null, s1_regime: null, s1_idade_min: null });
+  });
+
+  test("a declared public System One source is projected as before", async () => {
+    const reader = createMarketContext({
+      candles: async () => null,
+      systemOne: () => ({
+        completedAtMs: NOW,
+        decision: { choice: "long-3x" },
+        brief: {
+          market: { source: "okx_public_v5" },
+          wallet: { source: "okx_balance_api" },
+          quant: { sigma: { regime: "stressed" } },
+        },
+      }),
+      now: () => NOW,
+    });
+    await reader.refresh(live);
+    expect(reader.get()).toMatchObject({ s1_escolha: "comprado", s1_regime: "estressada", s1_idade_min: 0 });
+  });
+
   test("System One holding is a code, not a free text", async () => {
     const reader = createMarketContext({ candles: async () => null, systemOne: () => ({ completedAtMs: NOW, decision: { choice: "hold" }, brief: {} }), now: () => NOW });
     await reader.refresh(live);
     expect(reader.get()!.s1_escolha).toBe("manter");
+  });
+  test("market returns and volatility exclude unconfirmed candles and need enough closed bars", async () => {
+    const rows = series((i) => 100 + i).map((c, i) => ({ ...c, confirmed: i < 24 }));
+    const reader = createMarketContext({ candles: async (id) => id === "BTC-USDT" ? rows : null, systemOne: () => null, now: () => NOW });
+    await reader.refresh(live);
+    const context = reader.get()!;
+    expect(context.btc_1h).toBeGreaterThan(0);
+    expect(context.btc_4h).toBeGreaterThan(0);
+    expect(context).toMatchObject({ btc_24h: null, tendencia: null, vol_btc: null });
   });
 
   test("the leverage in the market: funding at once, the change of the open interest once an hour of samples exists", async () => {
@@ -515,20 +812,32 @@ describe("the price at the end of a window", () => {
 });
 
 describe("the public candles", () => {
-  const row = (ts: number, close: string, confirm = "1") => [String(ts), "1", "2", "0.5", close, "10", "10", "10", confirm];
+  const row = (ts: number, close: string, confirm = "1") => [String(ts), "1", String(Math.max(2, Number(close))), "0.5", close, "10", "10", "10", confirm];
   const fakeFetch = (body: unknown, ok = true) => (async () => ({ ok, json: async () => body })) as unknown as typeof fetch;
 
   test("rows come newest first and go out oldest first, as numbers", async () => {
     const candles = await okxPublicCandles(fakeFetch({ code: "0", data: [row(3000, "3"), row(2000, "2"), row(1000, "1", "0")] }))("BTC-USDT", "1H", 3, live);
     expect(candles!.map((c) => c.startMs)).toEqual([1000, 2000, 3000]);
     expect(candles![0]).toMatchObject({ close: 1, confirmed: false });
-    expect(candles![2]).toMatchObject({ open: 1, high: 2, low: 0.5, close: 3, volume: 10, confirmed: true });
+    expect(candles![2]).toMatchObject({ open: 1, high: 3, low: 0.5, close: 3, volume: 10, confirmed: true });
+  });
+  test("an open latest candle remains marked open while closed candles stay confirmed", async () => {
+    const candles = await okxPublicCandles(fakeFetch({ code: "0", data: [row(2000, "2", "0"), row(1000, "1", "1")] }))("BTC-USDT", "1H", 2, live);
+    expect(candles?.map((c) => c.confirmed)).toEqual([true, false]);
+  });
+  test("requires documented confirm values and coherent OHLC bounds", async () => {
+    expect(await okxPublicCandles(fakeFetch({ code: "0", data: [row(1, "1", "2")] }))("BTC-USDT", "1H", 1, live)).toBeNull();
+    expect(await okxPublicCandles(fakeFetch({ code: "0", data: [row(1, "3")] }))("BTC-USDT", "1H", 1, live)).not.toBeNull();
+    const impossible = ["1", "1", "2", "1.5", "1.2", "10", "10", "10", "1"];
+    expect(await okxPublicCandles(fakeFetch({ code: "0", data: [impossible] }))("BTC-USDT", "1H", 1, live)).toBeNull();
   });
 
   test("an error code, a bad row, a bad symbol or a bad limit is null", async () => {
     expect(await okxPublicCandles(fakeFetch({ code: "51001", data: [] }))("BTC-USDT", "1H", 3, live)).toBeNull();
     expect(await okxPublicCandles(fakeFetch({ code: "0", data: [["x"]] }))("BTC-USDT", "1H", 3, live)).toBeNull();
     expect(await okxPublicCandles(fakeFetch({ code: "0", data: [row(1, "abc")] }))("BTC-USDT", "1H", 3, live)).toBeNull();
+    expect(await okxPublicCandles(fakeFetch({ code: "0", data: [row(1.5, "1")] }))("BTC-USDT", "1H", 1, live)).toBeNull();
+    expect(await okxPublicCandles(fakeFetch({ code: "0", data: [row(-1, "1")] }))("BTC-USDT", "1H", 1, live)).toBeNull();
     expect(await okxPublicCandles(fakeFetch({}, false))("BTC-USDT", "1H", 3, live)).toBeNull();
     expect(await okxPublicCandles(fakeFetch({ code: "0", data: [] }))("btc usdt", "1H", 3, live)).toBeNull();
     expect(await okxPublicCandles(fakeFetch({ code: "0", data: [] }))("BTC-USDT", "1H", 0, live)).toBeNull();
@@ -549,6 +858,16 @@ describe("the five-minute reader: what a token is doing right now", () => {
     expect(m).toMatchObject({ bars: 23 });
     expect(m!.ret15mPct).toBeCloseTo(6, 6);
     expect(m!.marks).toContain("disparando");
+  });
+
+  test("gateway-stale five-minute bars cannot provide momentum evidence", async () => {
+    const reader = createMomentumReader({ gateway: gatewayOf(() => stale(rows(Array.from({ length: 20 }, () => 100)))).gateway, now: () => NOW });
+    expect(await reader.read(facts, live)).toBeNull();
+  });
+
+  test("future five-minute timestamps cannot produce momentum facts", async () => {
+    const future = rows(Array.from({ length: 20 }, () => 100), -1);
+    expect(await createMomentumReader({ gateway: gatewayOf(() => ok(future)).gateway, now: () => NOW }).read(facts, live)).toBeNull();
   });
 
   test("cached five minutes, a failure remembered for one, and old or broken data is simply no data", async () => {
@@ -595,7 +914,7 @@ describe("the facts of a holding carry how fresh they are and what the last minu
         ? ok([{ price: 2, liquidityUsd: 80_000, change: { m5: -1.5, h1: 4.25, h4: 9, h24: 12 }, volume: { m5: 900, h1: 20_000, h24: 300_000 }, txs: { m5: 31, h1: 280, h24: 4000 }, tsMs: NOW - 90_000 }])
         : ok({ riskLevel: 1 }),
     );
-    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => NOW });
+    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => NOW });
     const p = held();
     const f = (await reader.read(bookOf([p]), live))(p)!;
     expect(f).toMatchObject({ change5mPct: -1.5, change1hPct: 4.25, txs5m: 31, txs1h: 280, volume5mUsd: 900 });
@@ -603,23 +922,22 @@ describe("the facts of a holding carry how fresh they are and what the last minu
     expect(f.dataAgeMin).toBeCloseTo(1.5, 6);
   });
 
-  test("what the gateway served from its own cache keeps its age: a two-hour old answer is two hours old, with or without a stamp of the provider, and the age is never reset by reading it", async () => {
-    const stale = (data: unknown): InternalGatewayResult => ({ ok: true, data, meta: { tier: "premium", cachedAtMs: NOW - 7_200_000, ageMs: 7_200_000, stale: true, budget: { tier: "premium", used: 1, cap: null } }, sent: false });
-    const g = gatewayOf((c) => (c.route === "/onchain/price-info" ? stale([{ price: 2, liquidityUsd: 80_000, change: { m5: 1, h1: 2, h24: 3 }, volume: { h24: 1 }, txs: { m5: 4 } }]) : ok({ riskLevel: 1 })));
-    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => NOW });
+  test("provider age dominates a fresh gateway cache age, and a local cache hit never rejuvenates it", async () => {
+    const cached = (data: unknown): InternalGatewayResult => ({ ok: true, data, meta: { tier: "premium", cachedAtMs: NOW - 5 * 60_000, ageMs: 5 * 60_000, stale: false, budget: { tier: "premium", used: 1, cap: null } }, sent: false });
+    const g = gatewayOf((c) => (c.route === "/onchain/price-info" ? cached([{ price: 2, liquidityUsd: 80_000, change: { m5: 1, h1: 2, h24: 3 }, volume: { h24: 1 }, txs: { m5: 4 }, tsMs: NOW - 30 * 60_000 }]) : ok({ riskLevel: 1 })));
+    let now = NOW;
+    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => now });
     const p = held();
-    const f = (await reader.read(bookOf([p]), live))(p)!;
-    expect(f.dataAgeMin).toBeGreaterThanOrEqual(120);
-    // and one with a provider stamp older than the cache says takes the older of the two
-    const both = gatewayOf((c) => (c.route === "/onchain/price-info" ? ok([{ price: 2, liquidityUsd: 80_000, change: { h24: 3 }, volume: { h24: 1 }, tsMs: NOW - 30 * 60_000 }]) : ok({ riskLevel: 1 })));
-    const reader2 = createHoldingFactsReader({ gateway: both.gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => NOW });
-    expect((await reader2.read(bookOf([p]), live))(p)!.dataAgeMin).toBeGreaterThanOrEqual(30);
+    expect((await reader.read(bookOf([p]), live))(p)!.dataAgeMin).toBe(30);
+    now += 60_000;
+    expect((await reader.read(bookOf([p]), live))(p)!.dataAgeMin).toBe(31);
+    expect(g.calls.filter((c) => c.route === "/onchain/price-info")).toHaveLength(1);
   });
 
   test("a token the person could still act on is read every ten minutes, a dust position only every hour (the quota goes where the decisions are)", async () => {
     const g = gatewayOf((c) => (c.route === "/onchain/price-info" ? ok([{ price: 2, liquidityUsd: 80_000, change: { h24: 1 }, volume: { h24: 1 }, tsMs: NOW }]) : ok({ riskLevel: 1 })));
     let now = NOW;
-    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => {} }), now: () => now });
+    const reader = createHoldingFactsReader({ gateway: g.gateway, plans: createPlanStore({ read: () => null, write: () => { } }), now: () => now });
     const big = held({ usd: 60 });
     const dust = held({ id: "token:1:dust", address: EVM2, usd: 6 });
     const read = () => reader.read(bookOf([big, dust]), live);
@@ -643,7 +961,7 @@ describe("the facts of a holding carry how fresh they are and what the last minu
         : ok({ riskLevel: 1, tags: ["communityRecognized", "devAddLiquidity", "dexBoost", "lowLiquidity"], devRugCount: 1 }),
     );
     let now = NOW;
-    const plans = createPlanStore({ read: () => null, write: () => {} });
+    const plans = createPlanStore({ read: () => null, write: () => { } });
     plans.open({ key: planKey("1", TOKEN), chainIndex: "1", address: TOKEN, symbol: "AAA", profile: "alvo_5", entryPriceUsd: 2, entryAtMs: NOW, peakPriceUsd: 2, targetHit: false, trimmed: false, cycleId: "c1" });
     const reader = createHoldingFactsReader({ gateway: g.gateway, plans, now: () => now });
     const p = held({ usd: 60 });

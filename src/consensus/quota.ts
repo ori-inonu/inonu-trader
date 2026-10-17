@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 /**
  * Sem teto diario de chamadas pagas ao Jev: decisao do dono em 2026-10-17, que substitui o teto de 200 por dia UTC. O ledger segue contando o uso do dia, somado entre execucoes e worktrees, para visibilidade.
- * O teto por execucao continua em --max-calls (e em JEV_JUDGE_HARD_MAX_CALLS).
+ * O teto por execucao e opcional: so vale quando --max-calls (ou max_calls no MCP) e informado.
  */
 export const JEV_DAILY_CALLS = Number.POSITIVE_INFINITY;
 

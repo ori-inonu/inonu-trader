@@ -26,7 +26,7 @@ export function createCommand(D: HudModel) {
       const size = Math.max(16, Math.min(30, 238 / (("US$ " + fmt(D.wallet.total, 2)).length * 0.62)));
       s += countText(0, 106, D.wallet.total, 2, "US$ ", "", "t-big", `font-size:${size.toFixed(1)}px`);
     }
-    if (D.wallet.total !== null && D.wallet.readAtMs !== null) s += text(0, 126, `ATUALIZADA HA ${Math.max(0, Math.round((D.snapshotAtMs - D.wallet.readAtMs) / 60000))} MIN`, "t-sub", "font-size:9px");
+    if (D.wallet.total !== null && D.wallet.observedAtMs !== null) s += text(0, 126, `SALDO LIDO HA ${Math.max(0, Math.round((D.snapshotAtMs - D.wallet.observedAtMs) / 60000))} MIN`, "t-sub", "font-size:9px");
     // the two figures of the round trips are stacked on the right (each is a label, a number and a note of its own), so no note can run into the other figure
     const stat = (y: number, label: string, value: number, d: number, pre: string, suf: string, sub: string, col: string): string => text(250, y, label, "t-sub", "font-size:10px") + countText(250, y + 21, value, d, pre, suf, "t-num", `font-size:18px;fill:${col}`) + text(250, y + 36, sub, "t-sub", "font-size:9px");
     if (D.analysisOk) {
@@ -58,8 +58,10 @@ export function createCommand(D: HudModel) {
   function positions(): string {
     const ps = D.wallet.positions;
     const total = D.wallet.total ?? ps.reduce((a, p) => a + (p.usd ?? 0), 0);
+    const valid = D.wallet.quality === "current" || D.wallet.quality === "partial" || D.wallet.quality === "stale";
     let s = title(480, "ONDE ESTA O CAPITAL", "CAIXA, TOKENS E O QUE TEM PLANO DE SAIDA");
-    if (!(total > 0)) return s + text(0, 100, "SEM LEITURA DA CARTEIRA", "t-sub", "font-size:10px");
+    if (!valid) return s + text(0, 100, "SEM LEITURA DA CARTEIRA", "t-sub", "font-size:10px");
+    if (!(total > 0)) return s + text(0, 100, D.wallet.quality === "partial" ? "LEITURA PARCIAL: TOTAL VALORADO EM ZERO" : "TOTAL VALORADO EM ZERO", "t-sub", "font-size:10px");
     const cash = ps.filter((p) => p.cash).reduce((a, p) => a + (p.usd ?? 0), 0);
     const tok = ps.filter((p) => !p.cash && p.usd !== null && p.usd > 0);
     const withPlan = tok.filter((p) => p.plan !== null).reduce((a, p) => a + (p.usd ?? 0), 0);
@@ -162,12 +164,13 @@ export function createCommand(D: HudModel) {
     rows.push({ label: "CONEXAO COM A CARTEIRA", value: H.login === "logado" ? "LOGADA" + (H.sessionDays === null ? "" : ", SESSAO " + Math.max(0, Math.round(H.sessionDays)) + " DIAS") : H.login.replace(/_/g, " ").toUpperCase(), col: H.login === "logado" && (H.sessionDays === null || H.sessionDays > 3) ? COL.green : COL.amber, frac: null });
     rows.push({ label: "MODELO", value: `${(D.agent.model ?? "-").toUpperCase()}, ${D.budget.tokens === null ? "-" : fmt(D.budget.tokens / 1e6, 2) + "M"} TOKENS HOJE`, col: H.modelOk ? COL.green : COL.amber, frac: null });
     rows.push({ label: "CONSULTAS DO DIA", value: `${D.budget.consults} DE ${D.budget.max}`, col: COL.cy, frac: D.budget.max > 0 ? D.budget.consults / D.budget.max : null });
+    const dayCap = D.agent.caps === null ? undefined : D.agent.caps.maxDailyBuyUsd;
+    const spent = D.analysisOk ? D.a.orders.spentToday.buy : null;
     if (D.analysisOk) {
       const ok = D.a.orders.outcomes.executada ?? 0, fail = D.a.orders.outcomes.falhou ?? 0;
       rows.push({ label: "ORDENS NA CADEIA", value: `${ok} OK, ${fail} COM FALHA`, col: fail > ok / 3 ? COL.amber : COL.green, frac: null });
-      const dayCap = D.agent.caps === null ? undefined : D.agent.caps.maxDailyBuyUsd;
-      rows.push({ label: "COMPRAS DO DIA", value: `US$ ${fmt(D.a.orders.spentToday.buy, 0)}, LIMITE ${capText(dayCap)}`, col: COL.cy, frac: capUse(D.a.orders.spentToday.buy, dayCap) });
     }
+    rows.push({ label: "COMPRAS DO DIA", value: `${spent === null ? "SEM DADO DO NUCLEO" : `US$ ${fmt(spent, 0)}`}, LIMITE ${capText(dayCap)}`, col: COL.cy, frac: spent === null ? null : capUse(spent, dayCap) });
     rows.push({ label: "ALAVANCAGEM", value: leverageText(D.agent.leverage, true), col: D.agent.leverage !== null && D.agent.leverage.granted ? COL.soft : COL.mute, frac: null });
     return rows;
   }

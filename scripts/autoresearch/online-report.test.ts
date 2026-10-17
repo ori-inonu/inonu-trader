@@ -75,6 +75,8 @@ function analysisView(overrides: Partial<AnalysisView> = {}): AnalysisView {
     recent: [],
     orders: { outcomes: {}, reasons: {}, spentToday: { buy: 0, sell: 0 } },
     runtime: { tokensToday: null, riskPct: null },
+    cycleReviewPage: { page: 1, pageSize: 12, total: 0, totalPages: 1 },
+    cycleReviews: [],
   };
   return { ...base, ...overrides };
 }

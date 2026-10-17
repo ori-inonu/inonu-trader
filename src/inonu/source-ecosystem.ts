@@ -24,8 +24,8 @@ import { SourceError, type AskRequest, type BriefSource, type BuiltBrief } from 
 import { MAX_ONCHAIN_CALLS } from "./onchain-plan";
 
 export interface EcosystemDeps {
-  readonly gateway: Pick<OnchainGatewayInternal, "callInternal">;
-  readonly now: () => number;
+ readonly gateway: Pick<OnchainGatewayInternal, "callInternal">;
+ readonly now: () => number;
 }
 
 /** The networks read when the person did not choose and the balance does not say: where most tokens and tracked wallets are. */
@@ -47,24 +47,24 @@ export const RAN_PCT = 30;
  * ones that ran do, so nothing is hidden. The selection keeps the order of the ranking. With `withTail` the rest follows it, in the original order (the reads of risk go to the head). Pure; the input is not changed.
  */
 export function diversifyRan<T extends { readonly facts: { readonly changePct: number | null } }>(sorted: readonly T[], take: number, withTail = false): T[] {
-  const ran = (e: T): boolean => e.facts.changePct !== null && Number.isFinite(e.facts.changePct) && e.facts.changePct > RAN_PCT;
-  const cap = Math.max(2, Math.floor(take / 2));
-  const chosen = new Set<T>();
-  let ranCount = 0;
-  for (const e of sorted) {
-    if (chosen.size >= take) break;
-    if (ran(e)) {
-      if (ranCount >= cap) continue;
-      ranCount += 1;
-    }
-    chosen.add(e);
+ const ran = (e: T): boolean => e.facts.changePct !== null && Number.isFinite(e.facts.changePct) && e.facts.changePct > RAN_PCT;
+ const cap = Math.max(2, Math.floor(take / 2));
+ const chosen = new Set<T>();
+ let ranCount = 0;
+ for (const e of sorted) {
+  if (chosen.size >= take) break;
+  if (ran(e)) {
+   if (ranCount >= cap) continue;
+   ranCount += 1;
   }
-  for (const e of sorted) {
-    if (chosen.size >= take) break;
-    chosen.add(e);
-  }
-  const head = sorted.filter((e) => chosen.has(e));
-  return withTail ? [...head, ...sorted.filter((e) => !chosen.has(e))] : head;
+  chosen.add(e);
+ }
+ for (const e of sorted) {
+  if (chosen.size >= take) break;
+  chosen.add(e);
+ }
+ const head = sorted.filter((e) => chosen.has(e));
+ return withTail ? [...head, ...sorted.filter((e) => !chosen.has(e))] : head;
 }
 
 const CREDENTIAL_ERRORS = new Set(["no_credentials", "incomplete_credentials"]);
@@ -76,127 +76,160 @@ const rowsOf = (v: unknown): Rec[] => (Array.isArray(v) ? v.map(rec).filter((r):
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const text = (v: unknown): string | null => (typeof v === "string" && v.length > 0 ? v : null);
 
+/** Matches tokenCandidate: hexadecimal 0x addresses are case-insensitive; other identifiers retain their exact casing. */
+const candidateAddress = (address: string): string => (/^0x[0-9a-fA-F]+$/.test(address) ? address.toLowerCase() : address);
+
 /** Source age is independent of the click clock; absence never asserts freshness. */
 type SourceMeta = [ageMs: number | null, stale: boolean | null];
 type HotMeta = [ageMs: number | null, stale: boolean | null, timeFrame: "4"];
 const sourceMeta = (result: InternalGatewayResult): SourceMeta | null => {
-  if (!result.ok) return null;
-  const age = num(result.meta.ageMs);
-  return [age !== null && age >= 0 ? age : null, typeof result.meta.stale === "boolean" ? result.meta.stale : null];
+ if (!result.ok) return null;
+ const age = num(result.meta.ageMs);
+ return [age !== null && age >= 0 ? age : null, typeof result.meta.stale === "boolean" ? result.meta.stale : null];
 };
 
 const like = (result: InternalGatewayResult): GatewayLike =>
-  result.ok ? { ok: true, data: result.data, meta: { ageMs: result.meta.ageMs, stale: result.meta.stale } } : { ok: false, error: result.error };
+ result.ok ? { ok: true, data: result.data, meta: { ageMs: result.meta.ageMs, stale: result.meta.stale } } : { ok: false, error: result.error };
 
 /** The chains to read: the person's choice, else the networks where the balance holds cash (most cash first), else the default. */
 export function chainsFor(request: AskRequest): string[] {
-  const chosen = request.redes?.length ? [...request.redes] : request.saldo === undefined ? [] : [...request.saldo.chains].filter((c) => c.cashUsd > 0).sort((a, b) => b.cashUsd - a.cashUsd).map((c) => c.chainIndex);
-  const list = chosen.length > 0 ? chosen : [...DEFAULT_ECOSYSTEM_CHAINS];
-  return [...new Set(list)].slice(0, ECOSYSTEM_MAX_CHAINS);
+ const chosen = request.redes?.length ? [...request.redes] : request.saldo === undefined ? [] : [...request.saldo.chains].filter((c) => c.cashUsd > 0).sort((a, b) => b.cashUsd - a.cashUsd).map((c) => c.chainIndex);
+ const list = chosen.length > 0 ? chosen : [...DEFAULT_ECOSYSTEM_CHAINS];
+ return [...new Set(list)].slice(0, ECOSYSTEM_MAX_CHAINS);
 }
 
 interface ChainRead {
-  readonly chainIndex: string;
-  readonly facts: EcoFacts[];
-  /** The nota of each token with purchases of tracked wallets is in its facts; this is only the count of hot rows. */
-  readonly hotRows: number;
-  readonly signalRows: number;
+ readonly chainIndex: string;
+ readonly facts: EcoFacts[];
+ /** The nota of each token with purchases of tracked wallets is in its facts; this is only the count of hot rows. */
+ readonly hotRows: number;
+ readonly signalRows: number;
+ readonly chainMismatches: number;
+ readonly conflictingDuplicates: number;
 }
+
+/** Fields that determine the facts and ranking of a normalized hot-token row. */
+const HOT_RANKING_FIELDS = [
+ "symbol", "price", "changePct", "volumeUsd", "liquidityUsd", "marketCap", "holders", "uniqueTraders",
+ "txsBuy", "txsSell", "inflowUsd", "riskLevel", "top10HoldPct", "devHoldPct", "bundleHoldPct",
+] as const;
 
 /** The facts of every token of one network that the hot list names, with what the tracked wallets did in it. */
 function readChain(chainIndex: string, hot: InternalGatewayResult | undefined, signals: InternalGatewayResult | undefined): ChainRead | null {
-  if (hot === undefined || !hot.ok) return null;
-  const hotRows = rowsOf(hot.data);
-  const signalRows = signals !== undefined && signals.ok ? rowsOf(signals.data) : [];
-  const read = signals !== undefined && signals.ok;
+ if (hot === undefined || !hot.ok || hot.meta.stale === true) return null;
+ const reportedRows = rowsOf(hot.data);
+ const hotRows = reportedRows.filter((row) => row.chainIndex === chainIndex);
+ const usableSignals = signals !== undefined && signals.ok && signals.meta.stale !== true;
+ const signalRows = usableSignals ? rowsOf(signals.data) : [];
+ const read = usableSignals;
 
-  const groups = new Map<string, { rows: SignalLike[]; usd: number; weightedSold: number; soldUsd: number; priceWeightedUsd: number; pricedUsd: number }>();
-  for (const row of signalRows) {
-    const address = text(rec(row.token)?.address);
-    if (address === null) continue;
-    const key = /^0x/i.test(address) ? address.toLowerCase() : address;
-    const group = groups.get(key) ?? { rows: [], usd: 0, weightedSold: 0, soldUsd: 0, priceWeightedUsd: 0, pricedUsd: 0 };
-    const amountUsd = num(row.amountUsd);
-    const sold = num(row.soldRatioPct);
-    const sigPrice = num(row.priceUsd);
-    group.rows.push({ amountUsd: amountUsd ?? Number.NaN, soldRatioPct: sold, walletCount: num(row.walletCount) ?? Number.NaN });
-    if (amountUsd !== null && amountUsd > 0) {
-      group.usd += amountUsd;
-      if (sold !== null && sold >= 0 && sold <= 100) {
-        group.weightedSold += amountUsd * sold;
-        group.soldUsd += amountUsd;
-      }
-      if (sigPrice !== null && sigPrice > 0) {
-        group.priceWeightedUsd += amountUsd * sigPrice;
-        group.pricedUsd += amountUsd;
-      }
-    }
-    groups.set(key, group);
+ const unique = new Map<string, Rec>();
+ const ambiguous = new Set<string>();
+ for (const row of hotRows) {
+  const address = text(row.address);
+  if (address === null) continue;
+  const key = candidateAddress(address);
+  const previous = unique.get(key);
+  if (previous === undefined) {
+   unique.set(key, row);
+  } else if (HOT_RANKING_FIELDS.some((field) => previous[field] !== row[field])) {
+   ambiguous.add(key);
   }
-  const inputs = new Map([...groups].map(([key, g]) => [key, signalsInputs(g.rows)] as const));
-  const netUnsoldSet = [...inputs.values()].flatMap((i) => (i.netUnsoldUsd === null ? [] : [i.netUnsoldUsd]));
-  const liquiditySet = hotRows.flatMap((r) => (num(r.liquidityUsd) === null ? [] : [num(r.liquidityUsd)!]));
+ }
+ for (const key of ambiguous) unique.delete(key);
+ const unambiguousRows = [...unique.values()];
 
-  const facts: EcoFacts[] = [];
-  const seen = new Set<string>();
-  for (const row of hotRows) {
-    const address = text(row.address);
-    const symbol = text(row.symbol);
-    if (address === null || symbol === null || !/^[A-Za-z0-9]{1,20}$/.test(symbol)) continue;
-    const key = /^0x/i.test(address) ? address.toLowerCase() : address;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    const group = groups.get(key);
-    const input = inputs.get(key);
-    const buys = num(row.txsBuy);
-    const sells = num(row.txsSell);
-    const txs = buys !== null && sells !== null && buys >= 0 && sells >= 0 ? buys + sells : null;
-    const liquidityUsd = num(row.liquidityUsd);
-    const nota =
-      !read || group === undefined || input === undefined
-        ? null
-        : trailScore(
-            {
-              compra: input.netUnsoldUsd === null ? null : boughtComponent(input.netUnsoldUsd, netUnsoldSet),
-              carteiras: walletsComponent(input.walletCount),
-              naoVendida: unsoldComponent(input.soldPercents),
-              qualidade: null,
-              concentracao: null,
-              risco: null,
-              liquidez: liquidityUsd === null ? null : liquidityComponent(liquidityUsd, liquiditySet),
-              fluxo: null,
-              sentimento: null,
-            },
-            { honeypot: false },
-          ).nota;
-    facts.push({
-      candidateId: tokenCandidate({ chainIndex, address }).id,
-      chainIndex,
-      address: key,
-      symbol,
-      nota,
-      priceUsd: num(row.price),
-      changePct: num(row.changePct),
-      volumeUsd: num(row.volumeUsd),
-      liquidityUsd,
-      marketCapUsd: num(row.marketCap),
-      holders: num(row.holders),
-      buyShare: txs !== null && txs > 0 ? buys! / txs : null,
-      txs,
-      top10Pct: num(row.top10HoldPct),
-      devPct: num(row.devHoldPct),
-      bundlePct: num(row.bundleHoldPct),
-      riskLevel: num(row.riskLevel),
-      riskFlags: [],
-      wallets: group === undefined ? (read ? 0 : null) : input?.walletCount ?? null,
-      walletsUsd: group === undefined ? (read ? 0 : null) : group.usd,
-      soldPct: group === undefined || group.soldUsd <= 0 ? null : group.weightedSold / group.soldUsd,
-      smartPriceUsd: group === undefined || group.pricedUsd <= 0 ? null : group.priceWeightedUsd / group.pricedUsd,
-      inflowUsd: num(row.inflowUsd),
-      uniqueTraders: num(row.uniqueTraders),
-    });
+ const groups = new Map<string, { rows: SignalLike[]; usd: number; weightedSold: number; soldUsd: number; priceWeightedUsd: number; pricedUsd: number }>();
+ for (const row of signalRows) {
+  const address = text(rec(row.token)?.address);
+  if (address === null) continue;
+  const key = candidateAddress(address);
+  const group = groups.get(key) ?? { rows: [], usd: 0, weightedSold: 0, soldUsd: 0, priceWeightedUsd: 0, pricedUsd: 0 };
+  const amountUsd = num(row.amountUsd);
+  const sold = num(row.soldRatioPct);
+  const sigPrice = num(row.priceUsd);
+  group.rows.push({ amountUsd: amountUsd ?? Number.NaN, soldRatioPct: sold, walletCount: num(row.walletCount) ?? Number.NaN });
+  if (amountUsd !== null && amountUsd > 0) {
+   group.usd += amountUsd;
+   if (sold !== null && sold >= 0 && sold <= 100) {
+    group.weightedSold += amountUsd * sold;
+    group.soldUsd += amountUsd;
+   }
+   if (sigPrice !== null && sigPrice > 0) {
+    group.priceWeightedUsd += amountUsd * sigPrice;
+    group.pricedUsd += amountUsd;
+   }
   }
-  return { chainIndex, facts, hotRows: hotRows.length, signalRows: signalRows.length };
+  groups.set(key, group);
+ }
+ const inputs = new Map([...groups].map(([key, g]) => [key, signalsInputs(g.rows)] as const));
+ const netUnsoldSet = [...inputs.values()].flatMap((i) => (i.netUnsoldUsd === null ? [] : [i.netUnsoldUsd]));
+ const liquiditySet = unambiguousRows.flatMap((r) => (num(r.liquidityUsd) === null ? [] : [num(r.liquidityUsd)!]));
+
+ const facts: EcoFacts[] = [];
+ for (const row of unambiguousRows) {
+  const address = text(row.address);
+  const symbol = text(row.symbol);
+  if (address === null || symbol === null || !/^[A-Za-z0-9]{1,20}$/.test(symbol)) continue;
+  const key = candidateAddress(address);
+  const group = groups.get(key);
+  const input = inputs.get(key);
+  const buys = num(row.txsBuy);
+  const sells = num(row.txsSell);
+  const txs = buys !== null && sells !== null && buys >= 0 && sells >= 0 ? buys + sells : null;
+  const liquidityUsd = num(row.liquidityUsd);
+  const nota =
+   !read || group === undefined || input === undefined
+    ? null
+    : trailScore(
+     {
+      compra: input.netUnsoldUsd === null ? null : boughtComponent(input.netUnsoldUsd, netUnsoldSet),
+      carteiras: walletsComponent(input.walletCount),
+      naoVendida: unsoldComponent(input.soldPercents),
+      qualidade: null,
+      concentracao: null,
+      risco: null,
+      liquidez: liquidityUsd === null ? null : liquidityComponent(liquidityUsd, liquiditySet),
+      fluxo: null,
+      sentimento: null,
+     },
+     { honeypot: false },
+    ).nota;
+  facts.push({
+   candidateId: tokenCandidate({ chainIndex, address }).id,
+   chainIndex,
+   address: key,
+   symbol,
+   nota,
+   priceUsd: num(row.price),
+   changePct: num(row.changePct),
+   volumeUsd: num(row.volumeUsd),
+   liquidityUsd,
+   marketCapUsd: num(row.marketCap),
+   holders: num(row.holders),
+   buyShare: txs !== null && txs > 0 ? buys! / txs : null,
+   txs,
+   top10Pct: num(row.top10HoldPct),
+   devPct: num(row.devHoldPct),
+   bundlePct: num(row.bundleHoldPct),
+   riskLevel: num(row.riskLevel),
+   riskFlags: [],
+   wallets: group === undefined ? (read ? 0 : null) : input?.walletCount ?? null,
+   walletsUsd: group === undefined ? (read ? 0 : null) : group.usd,
+   soldPct: group === undefined || group.soldUsd <= 0 ? null : group.weightedSold / group.soldUsd,
+   smartPriceUsd: group === undefined || group.pricedUsd <= 0 ? null : group.priceWeightedUsd / group.pricedUsd,
+   inflowUsd: num(row.inflowUsd),
+   uniqueTraders: num(row.uniqueTraders),
+  });
+ }
+ return {
+  chainIndex,
+  facts,
+  hotRows: reportedRows.length,
+  signalRows: signalRows.length,
+  chainMismatches: reportedRows.length - hotRows.length,
+  conflictingDuplicates: ambiguous.size,
+ };
 }
 
 /**
@@ -206,196 +239,211 @@ function readChain(chainIndex: string, hot: InternalGatewayResult | undefined, s
  * - A token that already ran `> 500%` in 24h AND trades at `>= 2.5x` (`+150%+`) above what smart money paid is exit liquidity and loses one rank step so it does not crowd out early setups.
  */
 function effectiveRank(e: { facts: EcoFacts; families: readonly string[] }): number {
-  const f = e.facts;
-  let score = e.families.length;
-  if (f.smartPriceUsd != null && f.smartPriceUsd > 0 && f.priceUsd !== null && f.priceUsd > 0) {
-    if (!e.families.includes("tracao") && f.priceUsd <= f.smartPriceUsd * 1.1 && (f.soldPct === null || f.soldPct <= 30) && (f.wallets ?? 0) >= 2 && (f.volumeUsd ?? 0) >= 100_000) {
-      score += 1;
-    } else if (f.priceUsd >= f.smartPriceUsd * 2.5 && (f.changePct ?? 0) > 500) {
-      score -= 1;
-    }
+ const f = e.facts;
+ let score = e.families.length;
+ if (f.smartPriceUsd != null && f.smartPriceUsd > 0 && f.priceUsd !== null && f.priceUsd > 0) {
+  if (!e.families.includes("tracao") && f.priceUsd <= f.smartPriceUsd * 1.1 && (f.soldPct === null || f.soldPct <= 30) && (f.wallets ?? 0) >= 2 && (f.volumeUsd ?? 0) >= 100_000) {
+   score += 1;
+  } else if (f.priceUsd >= f.smartPriceUsd * 2.5 && (f.changePct ?? 0) > 500) {
+   score -= 1;
   }
-  return score;
+ }
+ return score;
 }
 
 const order = (a: { facts: EcoFacts; families: readonly string[] }, b: { facts: EcoFacts; families: readonly string[] }): number =>
-  effectiveRank(b) - effectiveRank(a) || b.families.length - a.families.length || (b.facts.nota ?? -1) - (a.facts.nota ?? -1) || (b.facts.liquidityUsd ?? -1) - (a.facts.liquidityUsd ?? -1) || (a.facts.candidateId < b.facts.candidateId ? -1 : 1);
+ effectiveRank(b) - effectiveRank(a) || b.families.length - a.families.length || (b.facts.nota ?? -1) - (a.facts.nota ?? -1) || (b.facts.liquidityUsd ?? -1) - (a.facts.liquidityUsd ?? -1) || (a.facts.candidateId < b.facts.candidateId ? -1 : 1);
 
 export function createEcosystemSource(deps: EcosystemDeps): BriefSource {
-  return {
-    async build(request: AskRequest, context): Promise<BuiltBrief> {
-      if (request.modo !== "ecossistema") throw new SourceError("modo_nao_disponivel");
-      if (context.signal.aborted) throw new SourceError("cancelado");
-      const chains = chainsFor(request);
-      const cap = Math.min(MAX_ONCHAIN_CALLS, context.maxOnchainosCalls);
-      // the click wants the usual few; a caller that decides by itself (the agent) may ask for a wider pool so that enough of them stay open after the code's entry rules
-      const take = Math.min(ECOSYSTEM_MAX_CANDIDATES, Math.max(ECOSYSTEM_CANDIDATES, Math.floor(context.candidates ?? ECOSYSTEM_CANDIDATES)));
-      const riskReads = take === ECOSYSTEM_CANDIDATES ? RISK_READS : Math.min(take + 2, ECOSYSTEM_MAX_CANDIDATES + 2);
-      const saldo: Saldo | null = request.saldo ?? null;
+ return {
+  async build(request: AskRequest, context): Promise<BuiltBrief> {
+   if (request.modo !== "ecossistema") throw new SourceError("modo_nao_disponivel");
+   if (context.signal.aborted) throw new SourceError("cancelado");
+   const chains = chainsFor(request);
+   const cap = Math.min(MAX_ONCHAIN_CALLS, context.maxOnchainosCalls);
+   // the click wants the usual few; a caller that decides by itself (the agent) may ask for a wider pool so that enough of them stay open after the code's entry rules
+   const take = Math.min(ECOSYSTEM_MAX_CANDIDATES, Math.max(ECOSYSTEM_CANDIDATES, Math.floor(context.candidates ?? ECOSYSTEM_CANDIDATES)));
+   const riskReads = take === ECOSYSTEM_CANDIDATES ? RISK_READS : Math.min(take + 2, ECOSYSTEM_MAX_CANDIDATES + 2);
+   const saldo: Saldo | null = request.saldo ?? null;
 
-      let attempted = 0;
-      let sent = 0;
-      let credentialFailures = 0;
-      const read = async (route: string, params: Record<string, string>): Promise<InternalGatewayResult> => {
-        if (context.signal.aborted) throw new SourceError("cancelado", sent);
-        attempted += 1;
-        const result = await deps.gateway.callInternal(route, params, "user");
-        if (result.sent) sent += 1;
-        if (!result.ok && CREDENTIAL_ERRORS.has(result.error)) credentialFailures += 1;
-        return result;
-      };
+   let attempted = 0;
+   let sent = 0;
+   let credentialFailures = 0;
+   const read = async (route: string, params: Record<string, string>): Promise<InternalGatewayResult> => {
+    if (context.signal.aborted) throw new SourceError("cancelado", sent);
+    attempted += 1;
+    const result = await deps.gateway.callInternal(route, params, context.budgetIntent ?? "user");
+    if (result.sent) sent += 1;
+    if (!result.ok && CREDENTIAL_ERRORS.has(result.error)) credentialFailures += 1;
+    return result;
+   };
 
-      // 1. the hot list and the tracked wallets of each network, one network after the other
-      const reads: ChainRead[] = [];
-      const missing: string[] = [];
-      const sourceByChain: Record<string, [HotMeta | null, SourceMeta | null]> = {};
-      let hotAge: number | null = null;
-      let signalsRead = 0;
-      for (const chainIndex of chains) {
-        if (attempted + 2 > cap) {
-          missing.push(chainIndex);
-          continue;
-        }
-        const hot = await read("/onchain/hot-tokens", { chainIndex, timeFrame: "4", limit: "100" });
-        const signals = await read("/onchain/signals", { chainIndex, walletType: "1,2,3", limit: "100" });
-        const hotMeta = sourceMeta(hot);
-        sourceByChain[chainIndex] = [hotMeta === null ? null : [...hotMeta, "4"], sourceMeta(signals)];
-        const chain = readChain(chainIndex, hot, signals);
-        if (chain === null) {
-          missing.push(chainIndex);
-          continue;
-        }
-        if (signals.ok) signalsRead += 1;
-        if (hotMeta?.[0] !== null && hotMeta?.[0] !== undefined) hotAge = Math.max(hotAge ?? 0, hotMeta[0]);
-        reads.push(chain);
-      }
-      if (attempted > 0 && credentialFailures === attempted) throw new SourceError("sem_credencial_onchainos", sent);
-      if (reads.length === 0) throw new SourceError("sem_dados_onchain", sent);
+   // 1. the hot list and the tracked wallets of each network, one network after the other
+   const reads: ChainRead[] = [];
+   const missing: string[] = [];
+   const sourceByChain: Record<string, [HotMeta | null, SourceMeta | null]> = {};
+   let hotAge: number | null = null;
+   let signalsStale = 0;
+   let signalsUnavailable = 0;
+   for (const chainIndex of chains) {
+    if (attempted + 2 > cap) {
+     missing.push(chainIndex);
+     continue;
+    }
+    const hot = await read("/onchain/hot-tokens", { chainIndex, timeFrame: "4", limit: "100" });
+    const signals = await read("/onchain/signals", { chainIndex, walletType: "1,2,3", limit: "100" });
+    const hotMeta = sourceMeta(hot);
+    sourceByChain[chainIndex] = [hotMeta === null ? null : [...hotMeta, "4"], sourceMeta(signals)];
+    if (!signals.ok) signalsUnavailable += 1;
+    else if (signals.meta.stale === true) signalsStale += 1;
+    const chain = readChain(chainIndex, hot, signals);
+    if (chain === null) {
+     missing.push(chainIndex);
+     continue;
+    }
+    if (hotMeta?.[0] !== null && hotMeta?.[0] !== undefined) hotAge = Math.max(hotAge ?? 0, hotMeta[0]);
+    reads.push(chain);
+   }
+   if (attempted > 0 && credentialFailures === attempted) throw new SourceError("sem_credencial_onchainos", sent);
+   if (reads.length === 0) throw new SourceError("sem_dados_onchain", sent);
 
-      // 2. who has support, and the risk of the first of them
-      const excluded: Record<string, number> = {};
-      const bump = (reason: string) => void (excluded[reason] = (excluded[reason] ?? 0) + 1);
-      const pool: { facts: EcoFacts; families: ReturnType<typeof familiesOf> }[] = [];
-      for (const chain of reads) {
-        for (const facts of chain.facts) {
-          if (!enters(facts)) {
-            bump("pool_ou_detentores");
-            continue;
-          }
-          const families = familiesOf(facts);
-          if (families.length < 2) {
-            bump("pouco_apoio");
-            continue;
-          }
-          pool.push({ facts, families });
-        }
-      }
-      pool.sort(order);
-      if (pool.length === 0) throw new SourceError("sem_candidatos", sent);
-      // the reads of risk go to the ones the model will see: not only the ones that already ran in the last day
-      const ranked = diversifyRan(pool, riskReads, true);
+   // 2. who has support, and the risk of the first of them
+   const excluded: Record<string, number> = {};
+   const bump = (reason: string, count = 1) => void (excluded[reason] = (excluded[reason] ?? 0) + count);
+   for (const chain of reads) {
+    if (chain.chainMismatches > 0) bump("chain_mismatch", chain.chainMismatches);
+    if (chain.conflictingDuplicates > 0) bump("token_duplicado_conflitante", chain.conflictingDuplicates);
+   }
+   const pool: { facts: EcoFacts; families: ReturnType<typeof familiesOf> }[] = [];
+   for (const chain of reads) {
+    for (const facts of chain.facts) {
+     if (!enters(facts)) {
+      bump("pool_ou_detentores");
+      continue;
+     }
+     const families = familiesOf(facts);
+     if (families.length < 2) {
+      bump("pouco_apoio");
+      continue;
+     }
+     pool.push({ facts, families });
+    }
+   }
+   pool.sort(order);
+   if (pool.length === 0) throw new SourceError("sem_candidatos", sent);
+   // the reads of risk go to the ones the model will see: not only the ones that already ran in the last day
+   const ranked = diversifyRan(pool, riskReads, true);
 
-      const checked = new Set<string>();
-      const riskFacts = new Map<string, EcoFacts>();
-      const riskMeta = new Map<string, SourceMeta | null>();
-      let riskUnchecked = 0;
-      for (const entry of ranked.slice(0, riskReads)) {
-        if (attempted + 1 > cap) {
-          riskUnchecked += 1;
-          continue;
-        }
-        const result = await read("/onchain/token-risk", { chainIndex: entry.facts.chainIndex, token: entry.facts.address });
-        riskMeta.set(entry.facts.candidateId, sourceMeta(result));
-        const digest = buildOnchainDigest({ sources: { risk: like(result) }, sets: { netUnsoldUsd: [], liquidityUsd: [] }, quality: null, symbol: { origin: "onchain_token", communityRecognized: null, sameSymbolMatches: 0 } });
-        if (digest.honeypot === true) {
-          bump("honeypot");
-          riskFacts.set(entry.facts.candidateId, { ...entry.facts, riskFlags: ["honeypot"] });
-          checked.add(entry.facts.candidateId);
-          continue;
-        }
-        if (result.ok) checked.add(entry.facts.candidateId);
-        else riskUnchecked += 1;
-        const validFlags = (digest.risco?.flags ?? []).filter((flag) => FLAG.test(flag));
-        const warnFlags = bearishFlags(validFlags);
-        const flags = [...warnFlags, ...validFlags.filter((flag) => !warnFlags.includes(flag))].slice(0, 3);
-        const rObj = result.ok ? rec(result.data) : null;
-        riskFacts.set(entry.facts.candidateId, {
-          ...entry.facts,
-          riskLevel: entry.facts.riskLevel ?? num(rObj?.riskLevel),
-          top10Pct: entry.facts.top10Pct ?? num(rObj?.top10HoldPct),
-          devPct: entry.facts.devPct ?? num(rObj?.devHoldPct),
-          bundlePct: entry.facts.bundlePct ?? num(rObj?.bundleHoldPct),
-          lpBurnedPct: num(rObj?.lpBurnedPct),
-          riskFlags: flags,
-        });
-      }
-      riskUnchecked += Math.max(0, Math.min(pool.length, take + 1) - Math.min(pool.length, riskReads));
+   const checked = new Set<string>();
+   const staleRisk = new Set<string>();
+   const riskFacts = new Map<string, EcoFacts>();
+   const riskMeta = new Map<string, SourceMeta | null>();
+   let riskUnchecked = 0;
+   for (const entry of ranked.slice(0, riskReads)) {
+    if (attempted + 1 > cap) {
+     riskUnchecked += 1;
+     continue;
+    }
+    const result = await read("/onchain/token-risk", { chainIndex: entry.facts.chainIndex, token: entry.facts.address });
+    riskMeta.set(entry.facts.candidateId, sourceMeta(result));
+    if (result.ok && result.meta.stale === true) {
+     staleRisk.add(entry.facts.candidateId);
+     riskUnchecked += 1;
+     // Token-risk-only measures have no usable hot-token fallback when this read is stale.
+     riskFacts.set(entry.facts.candidateId, { ...entry.facts, lpBurnedPct: null });
+     continue;
+    }
+    const digest = buildOnchainDigest({ sources: { risk: like(result) }, sets: { netUnsoldUsd: [], liquidityUsd: [] }, quality: null, symbol: { origin: "onchain_token", communityRecognized: null, sameSymbolMatches: 0 } });
+    if (digest.honeypot === true) {
+     bump("honeypot");
+     riskFacts.set(entry.facts.candidateId, { ...entry.facts, riskFlags: ["honeypot"] });
+     checked.add(entry.facts.candidateId);
+     continue;
+    }
+    if (result.ok) checked.add(entry.facts.candidateId);
+    else riskUnchecked += 1;
+    const validFlags = (digest.risco?.flags ?? []).filter((flag) => FLAG.test(flag));
+    const warnFlags = bearishFlags(validFlags);
+    const flags = [...warnFlags, ...validFlags.filter((flag) => !warnFlags.includes(flag))].slice(0, 3);
+    const rObj = result.ok ? rec(result.data) : null;
+    riskFacts.set(entry.facts.candidateId, {
+     ...entry.facts,
+     riskLevel: num(rObj?.riskLevel) ?? entry.facts.riskLevel,
+     top10Pct: num(rObj?.top10HoldPct) ?? entry.facts.top10Pct,
+     devPct: num(rObj?.devHoldPct) ?? entry.facts.devPct,
+     bundlePct: num(rObj?.bundleHoldPct) ?? entry.facts.bundlePct,
+     lpBurnedPct: num(rObj?.lpBurnedPct) ?? entry.facts.lpBurnedPct ?? null,
+     riskFlags: flags,
+    });
+   }
+   riskUnchecked += Math.max(0, Math.min(pool.length, take + 1) - Math.min(pool.length, riskReads));
 
-      // 3. the best five, with their ceilings (a tail token whose token-risk was not read when others were cannot claim the "seguranca" family to leapfrog checked tokens)
-      const refined = diversifyRan(
-        pool
-          .map((entry) => {
-            const facts = riskFacts.get(entry.facts.candidateId) ?? entry.facts;
-            const families = familiesOf(facts).filter((f) => f !== "seguranca" || checked.has(entry.facts.candidateId) || checked.size === 0);
-            return { facts, families };
-          })
-          .filter((entry) => !entry.facts.riskFlags.includes("honeypot"))
-          .filter((entry) => entry.families.length >= 2)
-          .sort(order),
-        take,
-      );
-      if (refined.length === 0) throw new SourceError("sem_candidatos", sent);
-      const candidates: EcoCandidate[] = refined.map((entry) => {
-        const cand = candidateOf(entry.facts, saldo);
-        return checked.has(entry.facts.candidateId) || checked.size === 0 ? cand : { ...cand, families: entry.families };
-      });
+   // 3. the best five, with their ceilings (a tail token whose token-risk was not read when others were cannot claim the "seguranca" family to leapfrog checked tokens)
+   const refined = diversifyRan(
+    pool
+     .map((entry) => {
+      const facts = riskFacts.get(entry.facts.candidateId) ?? entry.facts;
+      const families = familiesOf(facts).filter((f) => f !== "seguranca" || checked.has(entry.facts.candidateId) || (checked.size === 0 && !staleRisk.has(entry.facts.candidateId)));
+      return { facts, families };
+     })
+     .filter((entry) => !entry.facts.riskFlags.includes("honeypot"))
+     .filter((entry) => entry.families.length >= 2)
+     .sort(order),
+    take,
+   );
+   if (refined.length === 0) throw new SourceError("sem_candidatos", sent);
+   const candidates: EcoCandidate[] = refined.map((entry) => {
+    const cand = candidateOf(entry.facts, saldo);
+    return checked.has(entry.facts.candidateId) || (checked.size === 0 && !staleRisk.has(entry.facts.candidateId)) ? cand : { ...cand, families: entry.families };
+   });
 
-      const itens: Record<string, unknown> = {};
-      const briefCandidates: BriefCandidate[] = candidates.map((c) => {
-        itens[c.facts.candidateId] = { ...briefItem(c, saldo === null ? null : saldo.totalUsd), q: riskMeta.get(c.facts.candidateId) ?? null };
-        return { ...tokenCandidate({ chainIndex: c.facts.chainIndex, address: c.facts.address, ...(c.facts.nota === null ? {} : { nota: c.facts.nota }) }), fatores: [...c.families], estado: checked.has(c.facts.candidateId) ? "risco_conferido" : "risco_nao_conferido" };
-      });
+   const itens: Record<string, unknown> = {};
+   const briefCandidates: BriefCandidate[] = candidates.map((c) => {
+    itens[c.facts.candidateId] = { ...briefItem(c, saldo === null ? null : saldo.totalUsd), q: riskMeta.get(c.facts.candidateId) ?? null };
+    return { ...tokenCandidate({ chainIndex: c.facts.chainIndex, address: c.facts.address, ...(c.facts.nota === null ? {} : { nota: c.facts.nota }) }), fatores: [...c.families], estado: checked.has(c.facts.candidateId) ? "risco_conferido" : "risco_nao_conferido" };
+   });
 
-      const idades: Record<string, number> = {};
-      const origens: Record<string, string> = { "hot-tokens": "onchainos", "signals": "onchainos" };
-      const nulos: Record<string, string> = { trilha: "por_candidato", risco: "por_candidato", regime: "nao_se_aplica_a_token" };
-      if (hotAge !== null) idades["hot-tokens"] = hotAge;
-      if (signalsRead < reads.length) nulos.signals = `${reads.length - signalsRead}_redes_sem_compras_de_carteiras`;
-      if (missing.length > 0) nulos.redes_sem_leitura = missing.join(",");
-      if (riskUnchecked > 0) nulos.risco_nao_conferido = String(riskUnchecked);
-      if (saldo === null) nulos.saldo = "nao_lido:sem_tamanho";
+   const idades: Record<string, number> = {};
+   const origens: Record<string, string> = { "hot-tokens": "onchainos", "signals": "onchainos" };
+   const nulos: Record<string, string> = { trilha: "por_candidato", risco: "por_candidato", regime: "nao_se_aplica_a_token" };
+   if (hotAge !== null) idades["hot-tokens"] = hotAge;
+   if (signalsStale > 0) nulos.signals = "dado_stale";
+   if (signalsUnavailable > 0) nulos.signals_nao_lidos = `${signalsUnavailable}_redes_sem_leitura`;
+   if (missing.length > 0) nulos.redes_sem_leitura = missing.join(",");
+   if (riskUnchecked > 0) nulos.risco_nao_conferido = String(riskUnchecked);
+   if (saldo === null) nulos.saldo = "nao_lido:sem_tamanho";
 
-      const input: BriefInput = {
-        alvo: { escopo: "ecossistema", chainIndexes: reads.map((r) => r.chainIndex) },
-        asOfMs: deps.now(),
-        familiasHabilitadas: ["ecossistema"],
-        fluxo: {
-          ecossistema: {
-            redes: reads.length,
-            lidos: reads.reduce((s, r) => s + r.hotRows, 0),
-            caixaPct: saldo === null || saldo.totalUsd <= 0 ? null : Math.round((saldo.cashUsd / saldo.totalUsd) * 100),
-            chaves: BRIEF_KEYS as unknown as Record<string, string>,
-            fontes: { origem: "onchainos", redes: sourceByChain },
-            itens: itens as never,
-          },
-        },
-        candidatos: briefCandidates,
-        trilha: null,
-        risco: null,
-        regime: null,
-        idades,
-        origens,
-        nulos,
-      };
-      try {
-        const { brief } = buildBrief(input, { maxBytes: Math.ceil((ECOSYSTEM_BRIEF_BYTES * take) / ECOSYSTEM_CANDIDATES) });
-        const ecosystem: EcoContext = { observedAtMs: deps.now(), saldo, candidates, excluded };
-        return { brief, candidates: brief.candidatos, onchainosCalls: sent, ecosystem };
-      } catch (error) {
-        if (error instanceof BriefTooLarge) throw new SourceError("brief_grande_demais", sent);
-        throw error;
-      }
+   const input: BriefInput = {
+    alvo: { escopo: "ecossistema", chainIndexes: reads.map((r) => r.chainIndex) },
+    asOfMs: deps.now(),
+    familiasHabilitadas: ["ecossistema"],
+    fluxo: {
+     ecossistema: {
+      redes: reads.length,
+      lidos: reads.reduce((s, r) => s + r.hotRows, 0),
+      caixaPct: saldo === null || saldo.totalUsd <= 0 ? null : Math.round((saldo.cashUsd / saldo.totalUsd) * 100),
+      chaves: BRIEF_KEYS as unknown as Record<string, string>,
+      fontes: { origem: "onchainos", redes: sourceByChain },
+      itens: itens as never,
+     },
     },
-  };
+    candidatos: briefCandidates,
+    trilha: null,
+    risco: null,
+    regime: null,
+    idades,
+    origens,
+    nulos,
+   };
+   try {
+    const { brief } = buildBrief(input, { maxBytes: Math.ceil((ECOSYSTEM_BRIEF_BYTES * take) / ECOSYSTEM_CANDIDATES) });
+    const ecosystem: EcoContext = { observedAtMs: deps.now(), saldo, candidates, excluded };
+    return { brief, candidates: brief.candidatos, onchainosCalls: sent, ecosystem };
+   } catch (error) {
+    if (error instanceof BriefTooLarge) throw new SourceError("brief_grande_demais", sent);
+    throw error;
+   }
+  },
+ };
 }
 

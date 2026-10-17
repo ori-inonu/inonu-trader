@@ -180,6 +180,17 @@ async function waitUntil<T>(read: () => Promise<T>, accept: (value: T) => boolea
   throw new Error(`Timed out waiting for ${description}; last value: ${JSON.stringify(latest)}`);
 }
 
+function captureChildOutput(output: { text: string; bytes: number }, chunk: Buffer | string) {
+  const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+  output.bytes += bytes.byteLength;
+  const remaining = 64 * 1024 - Buffer.byteLength(output.text);
+  if (remaining > 0) output.text += bytes.subarray(0, remaining).toString("utf8");
+}
+
+function childOutputEvidence(output: { text: string; bytes: number }) {
+  return { text: output.text, bytes: output.bytes, truncated: output.bytes > Buffer.byteLength(output.text) };
+}
+
 async function canConnect(port: number): Promise<boolean> {
   return await new Promise((resolveConnection) => {
     const socket = createConnection({ host: "127.0.0.1", port });
@@ -327,7 +338,22 @@ test("mounted FlowChart reports unavailable PnL for every non-finite or missing 
   let fixturePort: number | null = null;
   let debugPort: number | null = null;
   let status: "passed" | "failed" = "failed";
+  let mountedActualFlowChart: boolean | null = null;
+  let resizeObserverObservation: Record<string, unknown> | null = null;
+  let browserVersion: Record<string, string | null> | null = null;
   let failure: unknown;
+  const edgeProcessEvents: Record<string, unknown> = {
+    spawnRequestedAt: null,
+    pid: null,
+    spawn: null,
+    error: null,
+    exit: null,
+    close: null,
+  };
+  const edgeStdout = { text: "", bytes: 0 };
+  const edgeStderr = { text: "", bytes: 0 };
+  let edgeDevToolsPortFirstObservedAt: string | null = null;
+  let edgeDevToolsPortFileContents: string | null = null;
 
   try {
     assert.ok(existsSync(FIXTURE_ENTRY), `Required mounted FlowChart fixture is missing: ${FIXTURE_ENTRY}`);
@@ -394,6 +420,7 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
     const profileDir = join(runDir, "edge-profile");
     mkdirSync(profileDir, { recursive: true });
 
+    edgeProcessEvents.spawnRequestedAt = new Date().toISOString();
     browser = spawn(EDGE_PATH, [
       `--user-data-dir=${profileDir}`,
       "--headless=new",
@@ -409,16 +436,54 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
       "--remote-debugging-port=0",
       "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
       "about:blank",
-    ], { stdio: "ignore", windowsHide: true });
+    ], { stdio: ["ignore", "pipe", "pipe"], windowsHide: true });
+    edgeProcessEvents.pid = browser.pid ?? null;
     let launchError: Error | null = null;
-    browser.once("error", (error: Error) => { launchError = error; });
+    browser.once("spawn", () => {
+      edgeProcessEvents.spawn = { at: new Date().toISOString(), pid: browser.pid ?? null };
+    });
+    browser.once("error", (error: Error) => {
+      launchError = error;
+      edgeProcessEvents.error = {
+        at: new Date().toISOString(),
+        name: error.name,
+        message: error.message,
+        code: (error as NodeJS.ErrnoException).code ?? null,
+      };
+    });
+    browser.once("exit", (code: number | null, signal: NodeJS.Signals | null) => {
+      edgeProcessEvents.exit = { at: new Date().toISOString(), code, signal };
+    });
+    browser.once("close", (code: number | null, signal: NodeJS.Signals | null) => {
+      edgeProcessEvents.close = { at: new Date().toISOString(), code, signal };
+    });
+    browser.stdout?.on("data", (chunk: Buffer | string) => captureChildOutput(edgeStdout, chunk));
+    browser.stderr?.on("data", (chunk: Buffer | string) => captureChildOutput(edgeStderr, chunk));
+    browser.stdout?.setEncoding("utf8");
+    browser.stderr?.setEncoding("utf8");
     const activePortFile = join(profileDir, "DevToolsActivePort");
-    const activePort = await waitUntil(async () => {
-      if (launchError) throw launchError;
-      if (!existsSync(activePortFile)) return null;
-      const port = Number(readFileSync(activePortFile, "utf8").split(/\r?\n/)[0]);
-      return Number.isInteger(port) && port > 0 ? port : null;
-    }, (port) => port !== null, "Edge's loopback-only DevToolsActivePort");
+    let activePort: number | null;
+    try {
+      activePort = await waitUntil(async () => {
+        if (launchError) throw launchError;
+        if (!existsSync(activePortFile)) return null;
+        edgeDevToolsPortFileContents = readFileSync(activePortFile, "utf8");
+        const port = Number(edgeDevToolsPortFileContents.split(/\r?\n/)[0]);
+        if (!Number.isInteger(port) || port <= 0) return null;
+        edgeDevToolsPortFirstObservedAt ??= new Date().toISOString();
+        return port;
+      }, (port) => port !== null, "Edge's loopback-only DevToolsActivePort");
+    } catch (error) {
+      const reason = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+      throw new Error(`Edge DevTools bootstrap failed (${reason}); owned process diagnostics: ${JSON.stringify({
+        state: { pid: browser.pid ?? null, exitCode: browser.exitCode, signalCode: browser.signalCode },
+        events: edgeProcessEvents,
+        devToolsPortFirstObservedAt: edgeDevToolsPortFirstObservedAt,
+        devToolsPortFileContents: edgeDevToolsPortFileContents,
+        stdout: childOutputEvidence(edgeStdout),
+        stderr: childOutputEvidence(edgeStderr),
+      })}`);
+    }
     debugPort = activePort as number;
 
     const targetList = await waitUntil(async () => {
@@ -428,7 +493,15 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
     }, (targets) => targets.some((target) => target.type === "page"), "isolated Edge page target");
     const pageTarget = targetList.find((target) => target.type === "page");
     assert.ok(pageTarget, "Edge did not expose an isolated page target");
-    const browserInfo = await (await fetch(`http://127.0.0.1:${debugPort}/json/version`)).json() as { webSocketDebuggerUrl: string };
+    const browserInfo = await (await fetch(`http://127.0.0.1:${debugPort}/json/version`)).json() as {
+      Browser?: string;
+      "Protocol-Version"?: string;
+      webSocketDebuggerUrl: string;
+    };
+    browserVersion = {
+      browser: browserInfo.Browser ?? null,
+      protocolVersion: browserInfo["Protocol-Version"] ?? null,
+    };
     const browserWebsocketUrl = new URL(browserInfo.webSocketDebuggerUrl);
     browserWebsocketUrl.hostname = "127.0.0.1";
     browserControl = new CdpClient(browserWebsocketUrl.toString(), fixtureOrigin);
@@ -463,6 +536,59 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
         (value) => value !== null && typeof value === "object",
         `mounted chart output for ${name}`,
       ) as { block: string; pnl: string };
+      mountedActualFlowChart = true;
+      if (resizeObserverObservation === null) {
+        const observerSetup = await client!.evaluate(`(() => {
+          const svg = document.querySelector('svg[role="img"][aria-label^="Gráfico de preço"]');
+          const target = svg?.parentElement;
+          if (!target || typeof ResizeObserver !== "function") return null;
+          const observer = new ResizeObserver(([entry]) => {
+            const viewBox = svg.getAttribute("viewBox");
+            const values = viewBox?.split(/\\s+/).map(Number) ?? [];
+            window.__flowChartNativeResizeObservation = {
+              viewBox,
+              width: values[2] ?? null,
+              height: values[3] ?? null,
+              nativeResizeObserver: true,
+              callbackWidth: entry.contentRect.width,
+              callbackHeight: entry.contentRect.height,
+            };
+            observer.disconnect();
+          });
+          observer.observe(target);
+          return { nativeApiAvailable: true };
+        })()`) as { nativeApiAvailable: boolean } | null;
+        assert.ok(observerSetup?.nativeApiAvailable, "The mounted chart panel could not be observed with native ResizeObserver");
+        const layout = await waitUntil(
+          () => client!.evaluate("window.__flowChartNativeResizeObservation ?? null"),
+          (value) => value !== null && typeof value === "object",
+          "native ResizeObserver callback on mounted FlowChart panel",
+        ) as {
+          viewBox: string | null;
+          width: number | null;
+          height: number | null;
+          nativeResizeObserver: boolean;
+          callbackWidth: number;
+          callbackHeight: number;
+        };
+        assert.ok(
+          layout.nativeResizeObserver && layout.viewBox !== null
+          && Number(layout.width) > 0 && Number(layout.height) > 0
+          && layout.callbackWidth > 0 && layout.callbackHeight > 0,
+          "The mounted chart did not expose a measured native ResizeObserver callback",
+        );
+        resizeObserverObservation = {
+          status: "observed",
+          source: "Native ResizeObserver callback from Runtime.evaluate on the mounted chart panel",
+          observerRole: "test-owned observer; production component observer was not instrumented",
+          nativeApiAvailable: layout.nativeResizeObserver,
+          viewBox: layout.viewBox,
+          width: layout.width,
+          height: layout.height,
+          callbackWidth: layout.callbackWidth,
+          callbackHeight: layout.callbackHeight,
+        };
+      }
       const passed = actual.pnl === expectedPnl;
       observations.push({ case: name, expected: expectedPnl, actual: actual.pnl, passed, block: actual.block });
       return actual;
@@ -542,6 +668,8 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
         Bun.sleep(1000).then(() => false),
       ]);
       browserControl.disconnect();
+    } else {
+      teardown.browserCloseAcknowledged = null;
     }
 
     let edgeProcessExited = browser ? await waitForChildExit(browser, 5000) : false;
@@ -564,7 +692,13 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
       teardown.edgeTaskkill = {
         pid: browser?.pid ?? null,
         status: null,
-        note: edgeProcessExited ? "Browser.close stopped the isolated Edge process" : "Edge process was not created",
+        note: !browser
+          ? "Edge child was not created"
+          : edgeProcessExited
+            ? teardown.browserCloseAcknowledged === true
+              ? "Browser.close acknowledgement and owned process exit were observed"
+              : "Owned process exit was observed without Browser.close acknowledgement"
+            : "No owned PID was available for taskkill; process exit was not confirmed",
       };
     }
     teardown.edgeProcessExited = edgeProcessExited;
@@ -577,13 +711,12 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
     }
 
     const [fixturePortClosed, edgeDebugPortClosed] = await Promise.all([
-      fixturePort === null ? Promise.resolve(false) : waitForPortClosed(fixturePort),
-      debugPort === null ? Promise.resolve(false) : waitForPortClosed(debugPort),
+      fixturePort === null ? Promise.resolve(null) : waitForPortClosed(fixturePort),
+      debugPort === null ? Promise.resolve(null) : waitForPortClosed(debugPort),
     ]);
     teardown.fixturePortClosed = fixturePortClosed;
     teardown.edgeDebugPortClosed = edgeDebugPortClosed;
-
-    if ((!edgeProcessExited || !fixturePortClosed || !edgeDebugPortClosed) && !failure) {
+    if ((!edgeProcessExited || fixturePortClosed !== true || edgeDebugPortClosed !== true) && !failure) {
       status = "failed";
       failure = new Error("An owned fixture or Edge resource remained open after bounded teardown");
     }
@@ -593,12 +726,21 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
       status,
       failure: failure instanceof Error ? { name: failure.name, message: failure.message, stack: failure.stack } : failure ?? null,
       runDir,
-      mountedActualFlowChart: true,
-      browser: "Microsoft Edge headless, isolated user-data-dir, loopback DevTools",
-      resizeObserver: "native browser ResizeObserver; production component effect was not mocked",
+      mountedActualFlowChart,
+      browserLaunch: {
+        targetPath: EDGE_PATH,
+        requestedMode: "headless with isolated user-data-dir and loopback DevTools",
+      },
+      browserVersion,
+      resizeObserverObservation,
       fixtureOrigin: fixturePort === null ? null : `http://127.0.0.1:${fixturePort}`,
       fixturePort,
       edgeDebugPort: debugPort,
+      edgeProcess: edgeProcessEvents,
+      edgeDevToolsPortFirstObservedAt,
+      edgeDevToolsPortFileContents,
+      edgeStdout: childOutputEvidence(edgeStdout),
+      edgeStderr: childOutputEvidence(edgeStderr),
       observations,
       screenshots,
       consoleErrors,
@@ -607,7 +749,7 @@ body{background:#0b1016;color:#eef4f8;font-family:Arial,sans-serif}
       limitations: [
         "Synthetic component fixture only; not a whole-dashboard or production-server qualification.",
         "No wallet, provider, account, backend, live RPC/API, or financial activity was used.",
-        "The test exercises actual FlowChart client mounting and its ResizeObserver sizing effect in isolated Edge.",
+        "The test observes FlowChart DOM and ResizeObserver-backed layout only after actual rendered output is measured; bootstrap failures can stop before mount.",
       ],
     };
     writeFileSync(join(runDir, "observations.json"), `${JSON.stringify(evidence, null, 2)}\n`);

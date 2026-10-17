@@ -4,142 +4,19 @@ globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
 alwaysApply: false
 ---
 
-Default to using Bun instead of Node.js.
+Default to using Bun instead of Node.js: `bun <file>`, `bun test`, `bun install`, `bun run <script>`, `bunx`, `bun:sqlite`, `Bun.serve()`, `Bun.file`. Bun loads `.env` by itself. Code examples (server, HTML imports, tests) live in `docs/conventions.md`.
 
-- Use `bun <file>` instead of `node <file>` or `ts-node <file>`
-- Use `bun test` instead of `jest` or `vitest`
-- Use `bun build <file.html|file.ts|file.css>` instead of `webpack` or `esbuild`
-- Use `bun install` instead of `npm install` or `yarn install` or `pnpm install`
-- Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
-- Use `bunx <package> <command>` instead of `npx <package> <command>`
-- Bun automatically loads .env, so don't use dotenv.
+## Where things live
 
-## APIs
-
-- `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
-- `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
-- `Bun.redis` for Redis. Don't use `ioredis`.
-- `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
-- `WebSocket` is built-in. Don't use `ws`.
-- Prefer `Bun.file` over `node:fs`'s readFile/writeFile
-- Bun.$`ls` instead of execa.
-
-## Testing
-
-Use `bun test` to run tests.
-
-```ts#index.test.ts
-import { test, expect } from "bun:test";
-
-test("hello world", () => {
-  expect(1).toBe(1);
-});
-```
-
-## Frontend
-
-Use HTML imports with `Bun.serve()`. Don't use `vite`. HTML imports fully support React, CSS, Tailwind.
-
-Server:
-
-```ts#index.ts
-import index from "./index.html"
-
-Bun.serve({
-  routes: {
-    "/": index,
-    "/api/users/:id": {
-      GET: (req) => {
-        return new Response(JSON.stringify({ id: req.params.id }));
-      },
-    },
-  },
-  // optional websocket support
-  websocket: {
-    open: (ws) => {
-      ws.send("Hello, world!");
-    },
-    message: (ws, message) => {
-      ws.send(message);
-    },
-    close: (ws) => {
-      // handle close
-    }
-  },
-  development: {
-    hmr: true,
-    console: true,
-  }
-})
-```
-
-HTML files can import .tsx, .jsx or .js files directly and Bun's bundler will transpile & bundle automatically. `<link>` tags can point to stylesheets and Bun's CSS bundler will bundle.
-
-```html#index.html
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-    <script type="module" src="./frontend.tsx"></script>
-  </body>
-</html>
-```
-
-With the following `frontend.tsx`:
-
-```tsx#frontend.tsx
-import React from "react";
-import { createRoot } from "react-dom/client";
-
-// import .css files directly and it works
-import './index.css';
-
-const root = createRoot(document.body);
-
-export default function Frontend() {
-  return <h1>Hello, world!</h1>;
-}
-
-root.render(<Frontend />);
-```
-
-Then, run index.ts
-
-```sh
-bun --hot ./index.ts
-```
-
-For more information, read the Bun API docs in `node_modules/bun-types/docs/**.mdx`.
-
-## The core message (do not break this)
-
-The demo exists to support this tweet. Every design or strategy change must keep all four claims true:
-
-> I built a trading bot with Jev!
->
-> Jev decides if it should "buy" or "sell", given the price feed of an asset pair, and executes real trades.
->
-> It uses Monad to place the orders on Kuru's on-chain order book in every 300ms block.
->
-> Demo link: https://jev-trader.vercel.app
-
-Non-negotiables: Jev makes the buy/sell call (not code), from the price feed; real trades from a real wallet; an order placed on Kuru's on-chain book every 300 ms block; the demo is the live dashboard. Never decide every N blocks. No middle dots, em dashes or en dashes in any rendered text. No blinking or pulsing indicators.
-
-## Canonical spec for the wallet evidence work
-
-Requirements, real-state inventory, the evidence contract and the task plan for verifiable manual portfolio management live in one folder: `docs/sdd/carteira-evidencia/` (`requirements.md`, `design.md`, `tasks.md`). Read `tasks.md` first for what to do next and which paths are reserved by concurrent sessions; do not copy its content elsewhere.
+- Repo map, verification commands, hard rules and the "stop and ask" list: `AGENTS.md`. Read it first.
+- Memory of the project is a graph: `docs/_meta/cerebro/` (`bun run scripts/cerebro.ts search <termo>`; `export`, `add-node`, `link`, `retract`, `supersede`, `verify`). Prefer querying it over re-reading prose. Never store secrets in it.
+- Product state: the autonomous wallet agent replaced the old Monad and Kuru demo (decision of 2026-10-14). Spec: `docs/sdd/agente-autonomo/`. Wallet evidence: `docs/sdd/carteira-evidencia/` (read `tasks.md` first; do not copy its content elsewhere).
+- No middle dots, em dashes or en dashes in rendered text. No blinking or pulsing indicators.
 
 ## Agent skills
 
-Repo map, verification commands and the "stop and ask" list live in `AGENTS.md`. Read it first; this section only adds the Claude Code specifics. Global defaults in `~/.claude/CLAUDE.md` apply here too.
+Global defaults in `~/.claude/CLAUDE.md` apply here too.
 
-### Issue tracker
-
-Issues live on GitHub (`origin` is `ori-inonu/inonu-trader`). Use the `gh` CLI for all operations. Do not use `.scratch/` for issues; it holds local evidence and is git-ignored.
-
-### Triage labels
-
-Default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`.
-
-### Domain docs
-
-Single-context repo. Read `GLOSSARY.md` and `docs/adr/` at the repo root when they exist. Neither exists yet; create them lazily when a term or decision is actually settled, not up front. `docs/` already holds specs and evidence (see `docs/index.md`); ADRs go in `docs/adr/`.
+- Issues live on GitHub (`origin` is `ori-inonu/inonu-trader`); use the `gh` CLI. `.scratch/` holds local evidence and is git-ignored.
+- Triage labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`.
+- Single-context repo. Read `GLOSSARY.md` and `docs/adr/` when they exist; create them lazily when a term or decision is settled. Specs and evidence are indexed in `docs/index.md`.

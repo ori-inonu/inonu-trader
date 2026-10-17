@@ -1,4 +1,6 @@
-import { describe, expect, test } from "bun:test";
+import { auditConsult } from "../decision-review/audit";
+import { createHash } from "node:crypto";
+import { describe, expect, test, vi } from "bun:test";
 import { candidateOf, type EcoFacts } from "../opportunity/ecosystem";
 import { createBudget, DEFAULT_LIMITS, type BudgetLimits, type BudgetState } from "./budget";
 import { createCycleRunner, type CycleDeps, type ExecResult, type Executor } from "./cycle";
@@ -9,7 +11,8 @@ import type { Candle } from "../quant/types";
 import { createAgentLedger, type OrderRecord } from "./ledger";
 import type { QuoteFacts } from "./quote-facts";
 import type { ClosingRecord } from "./closing";
-import type { AgentModel, ModelAnswer } from "./model";
+import { createJevAgentModel, type AgentBrief, type AgentModel, type ModelAnswer } from "./model";
+import type { MomentumFacts } from "./momentum";
 import { createScoreboard } from "./scoreboard";
 import { runState, type MutableRunState } from "./run-state.test-helper";
 import type { Book, HoldingFacts, Mode, Position } from "./types";
@@ -73,10 +76,6 @@ interface RigOptions {
   plans?: PositionPlan[];
   prices?: Record<string, number>;
   timing?: TimingFacts | null;
-  /** How many physical requests the fake model says one choice took (a provider that refused the facets and was asked again is 2). */
-  physicalRequests?: number;
-  /** The model fails after that many physical requests went out. */
-  failAfterRequests?: number;
 }
 
 function rig(o: RigOptions = {}): Rig {
@@ -86,26 +85,25 @@ function rig(o: RigOptions = {}): Rig {
   const state = runState(o.mode ?? "sombra");
   const budgetSaved: BudgetState[] = [];
   const budget = createBudget({ limits: o.limits ?? DEFAULT_LIMITS, now: () => NOW, load: () => null, persist: (s) => void budgetSaved.push(s) });
-  const scoreboard = createScoreboard({ read: () => [], append: () => {} });
+  const scoreboard = createScoreboard({ read: () => [], append: () => { } });
   const r = { modelCalls: 0, execCalls: [] as { key: string; stageAtCall: string | null }[], shown: [] as string[][], offered: {} as Record<string, readonly string[]> } as { modelCalls: number; execCalls: { key: string; stageAtCall: string | null }[]; shown: string[][]; offered: Record<string, readonly string[]> };
-  const planStore = createPlanStore({ read: () => null, write: () => {} });
+  const planStore = createPlanStore({ read: () => null, write: () => { } });
   for (const plan of o.plans ?? []) planStore.open(plan);
   const model: AgentModel | null = o.noModel
     ? null
     : {
-        name: "fake",
-        estimateTokens: () => 1000,
-        async choose({ candidates }) {
-          r.modelCalls++;
-          r.shown.push(candidates.map((c) => c.id));
-          r.offered = Object.fromEntries(candidates.map((c) => [c.id, c.stances]));
-          if (o.modelThrows) throw new Error("provider down");
-          if (o.failAfterRequests !== undefined) throw Object.assign(new Error("provider down after retry"), { physicalRequests: o.failAfterRequests });
-          const ids = candidates.map((c) => c.id);
-          const raw = o.answer ? o.answer(ids) : { posture: "neutra", stances: Object.fromEntries(candidates.map((c) => [c.id, c.kind === "holding" ? "hold" : "skip"])), profiles: {} };
-          return { raw, usage: { inputTokens: 900, outputTokens: 60 }, ...(o.physicalRequests === undefined ? {} : { physicalRequests: o.physicalRequests }) };
-        },
-      };
+      name: "fake",
+      estimateTokens: () => 1000,
+      async choose({ candidates }) {
+        r.modelCalls++;
+        r.shown.push(candidates.map((c) => c.id));
+        r.offered = Object.fromEntries(candidates.map((c) => [c.id, c.stances]));
+        if (o.modelThrows) throw new Error("provider down");
+        const ids = candidates.map((c) => c.id);
+        const raw = o.answer ? o.answer(ids) : { posture: "neutra", stances: Object.fromEntries(candidates.map((c) => [c.id, c.kind === "holding" ? "hold" : "skip"])), profiles: {} };
+        return { raw, usage: { inputTokens: 900, outputTokens: 60 } };
+      },
+    };
   let n = 0;
   const executor: Executor = {
     async execute(order, ctx) {
@@ -144,6 +142,64 @@ function rig(o: RigOptions = {}): Rig {
   };
   return Object.assign(r, { deps, lines, stopFile, planStore, setMode: (m: Mode) => state.set(m), state }) as Rig;
 }
+async function runAdmittedFallback(limits: BudgetLimits, failPersistAt?: number, abortBetween = false) {
+  const r = rig();
+  let persists = 0;
+  let evaluateCalls = 0;
+  const firstStarted = Promise.withResolvers<void>();
+  const budget = createBudget({
+    limits,
+    now: () => NOW,
+    load: () => null,
+    persist: () => {
+      persists++;
+      if (persists === failPersistAt) throw new Error("synthetic persistence failure");
+    },
+  });
+  const adapter = createJevAgentModel({
+    apiKey: () => "synthetic-key",
+    createProvider: () => ({ evaluationModel: () => ({}) as never }),
+    evaluate: (async ({ abortSignal }: { abortSignal: AbortSignal }) => {
+      evaluateCalls++;
+      if (evaluateCalls === 1) {
+        if (abortBetween) {
+          firstStarted.resolve();
+          const { promise, reject } = Promise.withResolvers<never>();
+          abortSignal.addEventListener("abort", () => reject(Object.assign(new Error("deadline"), { statusCode: 400 })), { once: true });
+          return promise;
+        }
+        throw Object.assign(new Error("shape refusal"), { statusCode: 400 });
+      }
+      return {
+        answers: {
+          posture: { choice: "neutra" },
+          mandate_risk: { choice: "moderado" },
+          mandate_reserve: { choice: "media" },
+          mandate_concentration: { choice: "media" },
+          mandate_look: { choice: "normal" },
+          stance_0: { choice: "hold" },
+          stance_1: { choice: "skip" },
+        },
+        usage: { inputTokens: 7, outputTokens: 4 },
+      };
+    }) as never,
+  });
+  const model = { ...adapter, estimateTokens: () => 1000 };
+  const deps = {
+    ...r.deps,
+    budget,
+    model,
+    ...(abortBetween ? { timeouts: { ...r.deps.timeouts, modelMs: 1 } } : {}),
+  };
+  const running = createCycleRunner(deps).run();
+  if (abortBetween) {
+    await firstStarted.promise;
+    await vi.advanceTimersByTime(1);
+  }
+  const result = await running;
+  return { r, result, evaluateCalls, budget: budget.status() };
+}
+
 
 const records = (lines: string[]) => lines.map((l) => JSON.parse(l) as Record<string, unknown>);
 const sellAndBuy = (ids: readonly string[]) => ({
@@ -266,12 +322,18 @@ describe("the closing of a purchase, in shadow, inside the cycle", () => {
   /** A quoter that answers the quote the real tool would for the token and the size it is asked for (read only). */
   const quoterFor = () => {
     const asked: { token: string; usd: number }[] = [];
-    return { asked, quoter: { read: async (order: { address: string; usd: number; candidateId: string; chainIndex: string }, ctx: { cycleId: string; requestId: string }) => {
-      asked.push({ token: order.address, usd: order.usd });
-      const minor = String(Math.round(order.usd * 1_000_000));
-      return { ok: true as const, request: { cycleId: ctx.cycleId, candidateId: order.candidateId, requestId: ctx.requestId, chainIndex: order.chainIndex, fromAddress: USDC_EVM, toAddress: order.address, fromAmountMinor: minor, fromDecimals: 6, toDecimals: null, startedAtMs: NOW - 500, receivedAtMs: NOW - 100 },
-        raw: { chainIndex: order.chainIndex, swapMode: "exactIn", action: "ok", fromTokenAmount: minor, toTokenAmount: "123", priceImpactPercent: "-0.3", tradeFee: "0.0005", fromToken: { tokenContractAddress: USDC_EVM, decimal: "6", taxRate: "0", isHoneyPot: false }, toToken: { tokenContractAddress: order.address, decimal: "6", taxRate: "0", isHoneyPot: false } } };
-    } } };
+    return {
+      asked, quoter: {
+        read: async (order: { address: string; usd: number; candidateId: string; chainIndex: string }, ctx: { cycleId: string; requestId: string }) => {
+          asked.push({ token: order.address, usd: order.usd });
+          const minor = String(Math.round(order.usd * 1_000_000));
+          return {
+            ok: true as const, request: { cycleId: ctx.cycleId, candidateId: order.candidateId, requestId: ctx.requestId, chainIndex: order.chainIndex, fromAddress: USDC_EVM, toAddress: order.address, fromAmountMinor: minor, fromDecimals: 6, toDecimals: null, startedAtMs: NOW - 500, receivedAtMs: NOW - 100 },
+            raw: { chainIndex: order.chainIndex, swapMode: "exactIn", action: "ok", fromTokenAmount: minor, toTokenAmount: "123", priceImpactPercent: "-0.3", tradeFee: "0.0005", fromToken: { tokenContractAddress: USDC_EVM, decimal: "6", taxRate: "0", isHoneyPot: false }, toToken: { tokenContractAddress: order.address, decimal: "6", taxRate: "0", isHoneyPot: false } }
+          };
+        }
+      }
+    };
   };
   const withClose = (r: Rig, answer: { buy: number; skip: number } | null, counter: { n: number }) => ({
     ...r.deps.model!,
@@ -312,7 +374,7 @@ describe("the closing of a purchase, in shadow, inside the cycle", () => {
     const r = rig({ mode: "limitado", positions: [cash(1000), pos()] });
     const { asked, quoter } = quoterFor();
     const calls = { n: 0 };
-    await createCycleRunner({ ...r.deps, model: withClose(r, { buy: 0.8, skip: 0.2 }, calls), closing: { quoter: quoter as never, record: () => {}, maxPerCycle: 2, timeouts: { quoteMs: 1000, modelMs: 1000 } } }).run();
+    await createCycleRunner({ ...r.deps, model: withClose(r, { buy: 0.8, skip: 0.2 }, calls), closing: { quoter: quoter as never, record: () => { }, maxPerCycle: 2, timeouts: { quoteMs: 1000, modelMs: 1000 } } }).run();
     expect(asked).toEqual([]);
     expect(calls.n).toBe(0);
     const off = rig({ mode: "limitado", positions: [cash(1000), pos()], answer: lean(0.55) });
@@ -454,6 +516,85 @@ describe("a cycle that does not consult the model", () => {
     expect(r.deps.budget.status().consults).toBe(1);
   });
 
+  test("cache-hit candle ages stay in the sent Brief without causing a repeat model call", async () => {
+    const r = rig();
+    let now = NOW;
+    let timingAge = 1;
+    let momentumAge = 1;
+    const original = r.deps.model as AgentModel;
+    const briefs: AgentBrief[] = [];
+    const fingerprints: { readonly shortHash: string; readonly fullHash: string }[] = [];
+    const model: AgentModel = {
+      ...original,
+      async choose(input) {
+        briefs.push(input.brief);
+        return original.choose(input);
+      },
+    };
+    const runner = createCycleRunner({
+      ...r.deps,
+      model,
+      now: () => now,
+      readBook: async (signal) => {
+        const book = await r.deps.readBook(signal);
+        return book === null ? null : { ...book, observedAtMs: now - 1_000 };
+      },
+      refreshMs: 30 * 60_000,
+      timingOf: async () => ({ ...calm, ageMin: timingAge }),
+      momentumOf: async () => ({
+        bars: 13, ret5mPct: 0, ret15mPct: 0, ret1hPct: 0, rangeHourPct: 1, volRatio: null, barAgeMin: momentumAge, marks: [],
+      } satisfies MomentumFacts),
+      onConsult: (event, meta) => {
+        if (meta === undefined) return;
+        const record = event as unknown as { readonly briefHash: string };
+        fingerprints.push({ shortHash: record.briefHash, fullHash: meta.briefHash });
+      },
+    });
+
+    expect((await runner.run()).consulted).toBe(true);
+    expect((Object.values(briefs[0]!.compras)[0]!.tm as Record<string, unknown>).ag).toBe(1);
+    expect((Object.values(briefs[0]!.compras)[0]!.mo as Record<string, unknown>).ag).toBe(1);
+    expect(fingerprints).toHaveLength(1);
+    const fingerprint = fingerprints[0]!;
+    expect(fingerprint.fullHash).toBe(createHash("sha256").update(JSON.stringify(briefs[0]!)).digest("hex"));
+    expect(fingerprint.shortHash).toBe(fingerprint.fullHash.slice(0, 16));
+
+    now += 60_000;
+    timingAge += 1;
+    momentumAge += 1;
+    expect(await runner.run()).toMatchObject({ outcome: "mantido", reason: "sem_mudanca", consulted: false });
+    expect(r.modelCalls).toBe(1);
+    expect(briefs).toHaveLength(1);
+  });
+  test("stable price timestamp presence is not age, but a reported-presence transition is material", async () => {
+    const r = rig();
+    let now = NOW;
+    let timingAge = 1;
+    let momentumAge = 1;
+    let pt = true;
+    const runner = createCycleRunner({
+      ...r.deps,
+      now: () => now,
+      holdingFacts: async () => () => ({ ...facts, dataAgeMin: 2, priceInfoTimestampReported: pt }),
+      timingOf: async () => ({ ...calm, ageMin: timingAge }),
+      momentumOf: async () => ({
+        bars: 13, ret5mPct: 0, ret15mPct: 0, ret1hPct: 0, rangeHourPct: 1, volRatio: null, barAgeMin: momentumAge, marks: [],
+      } satisfies MomentumFacts),
+      onConsult: (event) => {
+        expect(auditConsult(event)?.briefFingerprint).toBe("matched");
+      },
+    });
+    expect((await runner.run()).consulted).toBe(true);
+    now += 60_000;
+    timingAge += 1;
+    momentumAge += 1;
+    expect(await runner.run()).toMatchObject({ outcome: "mantido", reason: "sem_mudanca", consulted: false });
+    pt = false;
+    expect((await runner.run()).consulted).toBe(true);
+    expect(r.modelCalls).toBe(2);
+    expect(r.execCalls).toHaveLength(0);
+  });
+
   test("after the refresh time it asks again even if nothing changed", async () => {
     const r = rig();
     let now = NOW;
@@ -494,6 +635,41 @@ describe("a cycle that consults the model", () => {
     expect(out.orders).toHaveLength(0);
     expect(r.execCalls).toHaveLength(0);
   });
+  test("the real adapter admits a refused-shape fallback through the real cycle budget", async () => {
+    const blocked = await runAdmittedFallback({ maxConsultsPerDay: 1, maxTokensPerDay: null });
+    expect(blocked.evaluateCalls).toBe(1);
+    expect(blocked.budget).toMatchObject({ consults: 1, committedTokens: 1000, measuredTokens: 0, unmeasuredCalls: 1 });
+    expect(blocked.result).toMatchObject({ outcome: "mantido", reason: "modelo_erro" });
+    expect(blocked.r.execCalls).toHaveLength(0);
+
+    const admitted = await runAdmittedFallback({ maxConsultsPerDay: 2, maxTokensPerDay: null });
+    expect(admitted.evaluateCalls).toBe(2);
+    expect(admitted.budget).toMatchObject({ consults: 2, committedTokens: 1011, measuredTokens: 11, unmeasuredCalls: 1 });
+    expect(admitted.result.outcome).toBe("decidido");
+    expect(admitted.r.execCalls).toHaveLength(0);
+
+    const tokenBlocked = await runAdmittedFallback({ maxConsultsPerDay: 2, maxTokensPerDay: 1000 });
+    expect(tokenBlocked.evaluateCalls).toBe(1);
+    expect(tokenBlocked.budget).toMatchObject({ consults: 1, committedTokens: 1000, measuredTokens: 0, unmeasuredCalls: 1 });
+    expect(tokenBlocked.result.reason).toBe("modelo_erro");
+    expect(tokenBlocked.r.execCalls).toHaveLength(0);
+
+    const persistenceBlocked = await runAdmittedFallback({ maxConsultsPerDay: 2, maxTokensPerDay: null }, 2);
+    expect(persistenceBlocked.evaluateCalls).toBe(1);
+    expect(persistenceBlocked.budget).toMatchObject({ consults: 1, committedTokens: 1000, measuredTokens: 0, unmeasuredCalls: 1 });
+    expect(persistenceBlocked.r.execCalls).toHaveLength(0);
+    vi.useFakeTimers();
+    try {
+      const aborted = await runAdmittedFallback({ maxConsultsPerDay: 2, maxTokensPerDay: null }, undefined, true);
+      expect(aborted.evaluateCalls).toBe(1);
+      expect(aborted.budget).toMatchObject({ consults: 1, committedTokens: 1000, measuredTokens: 0, unmeasuredCalls: 1 });
+      expect(aborted.result).toMatchObject({ outcome: "mantido", reason: "modelo_erro" });
+      expect(aborted.r.execCalls).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
 });
 
 describe("shadow mode: decides, records, measures, moves nothing", () => {
@@ -523,20 +699,6 @@ describe("shadow mode: decides, records, measures, moves nothing", () => {
     expect(r.deps.budget.status()).toMatchObject({ consults: 1, measuredTokens: 960, committedTokens: 960 });
   });
 
-  test("a choice that took two physical requests (the first refused, then asked again) counts both: the second with its usage, the first as a consultation of unknown usage", async () => {
-    const r = rig({ physicalRequests: 2 });
-    await createCycleRunner(r.deps).run();
-    expect(r.deps.budget.status()).toMatchObject({ consults: 2, measuredTokens: 960, committedTokens: 1960, unmeasuredCalls: 1 });
-  });
-
-  test("a failure after the retry still counts both requests, and a plain failure counts one", async () => {
-    const two = rig({ failAfterRequests: 2 });
-    await createCycleRunner(two.deps).run();
-    expect(two.deps.budget.status()).toMatchObject({ consults: 2, unmeasuredCalls: 2 });
-    const one = rig({ modelThrows: true });
-    await createCycleRunner(one.deps).run();
-    expect(one.deps.budget.status()).toMatchObject({ consults: 1, unmeasuredCalls: 1 });
-  });
 });
 
 describe("limited mode: carries the orders out inside the policy", () => {
@@ -1716,7 +1878,7 @@ describe("the plans of the positions", () => {
   });
 
   test("unreadable plans keep the agent from trading (a position without its stop is not opened), and it goes on in the shadow", async () => {
-    const broken = createPlanStore({ read: () => ({ junk: true }), write: () => {} });
+    const broken = createPlanStore({ read: () => ({ junk: true }), write: () => { } });
     const live = rig({ mode: "limitado" });
     const out = await createCycleRunner({ ...live.deps, plans: broken }).run();
     expect(out.mode).toBe("sombra");
@@ -1748,7 +1910,7 @@ describe("a slow reading of the facts", () => {
 
   test("a reader that never comes back fails the step after the grace period, and the cycle goes on without facts", async () => {
     const r = rig({ positions: [cash(1000), pos()] });
-    const never = () => new Promise<(p: Position) => HoldingFacts | null>(() => {});
+    const never = () => new Promise<(p: Position) => HoldingFacts | null>(() => { });
     const started = Date.now();
     const out = await createCycleRunner({ ...r.deps, holdingFacts: never, timeouts: { modelMs: 5000, readMs: 5000, factsMs: 20, graceMs: 60, orderMs: 5000 } }).run();
     expect(out.notes).toContain("fatos_indisponiveis");
@@ -1965,6 +2127,16 @@ describe("the entry cost is known before the Jev is asked, so it is offered only
     let quotes = 0;
     await createCycleRunner({ ...deps, entryCost: async () => (quotes++, { impactPct: null, refusal: null }) }).run();
     expect([seen[BUY]!.profiles, quotes]).toEqual([["alvo_20"], 0]);
+  });
+
+  test("an explicit gas refusal keeps its cause in the report ahead of the minimum-size fallback and within the four-mark view cap", async () => {
+    const r = rig({ mode: "limitado", ecoFacts: [{ ...eco(B, "BBB"), liquidityUsd: 40_000, top10Pct: 60, devPct: 15, bundlePct: 25 }] });
+    const report = await createCycleRunner({ ...r.deps, entryCost: async () => ({ impactPct: null, refusal: "gas_station_pendente" }) }).run();
+    const view = report.view?.find((candidate) => candidate.id === BUY);
+    expect(view?.closed).toBe("gas_station_pendente");
+    expect(view?.marks).toEqual(["gas_station_pendente", "concentracao", "criador", "bundlers"]);
+    expect(view?.marks).toHaveLength(4);
+    expect(report.orders).toEqual([]);
   });
 
   test("a quote that fails leaves the offer exactly as it was", async () => {

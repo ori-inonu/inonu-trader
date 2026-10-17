@@ -7,7 +7,7 @@
 import { createTypeSafeAi } from "@ai-sdk/typesafe-ai";
 import { closingAnswerOf, closingQuestion, type ClosingAnswer, type ClosingBrief } from "./closing";
 import { experimental_evaluate } from "ai";
-import { briefItem, type EcoContext } from "../opportunity/ecosystem";
+import { briefItem, isEcoSourceFresh, type EcoContext, type EcoSourceState } from "../opportunity/ecosystem";
 import { bearishFlags, bullishFlags } from "../opportunity/risk-tags";
 import type { Verdict } from "./conviction";
 import { facetQuestions, facetTexts, readFacets } from "./facets";
@@ -18,7 +18,7 @@ import { MACRO_LEGEND, hasMacroKeys } from "./macro-keys";
 import { BRIEF_MEMORY_LEGEND, type BriefMemory } from "./memory-hook";
 import { POSTURES, type Book, type Candidate } from "./types";
 
-/** The biggest Brief the model is sent: eight holdings and eight purchases measure about 10 KB, a real consultation about 10.2 KB (it was 9 KB before the executable maximum, the fourth size, the fourth profile, the fee and the tail of the record were added). It is enforced by the tests, not cut at run time. */
+/** Reference Brief budget: 12,000 bytes. The producer shortlist is bounded to eight holdings and seven purchases; tests assert the budget. The runtime does not truncate an oversized Brief. */
 export const BRIEF_MAX_BYTES = 12_000;
 const DEFAULT_MODEL_ID = "jev-latest";
 
@@ -39,6 +39,8 @@ export interface AgentBrief {
   readonly execucoes?: ExecBrief;
   /** The earlier choices made on these very items, from an explicit cohort of earlier cycles (the memory hook, OFF unless switched on): pending, inconclusive, never a recommendation or a result. The key exists only when the hook produced a value. */
   readonly memoria?: BriefMemory;
+  /** The age and status of the ecosystem scan, when this context uses the cached reader. */
+  readonly fonte_ecossistema?: { readonly estado: EcoSourceState; readonly idade_min: number | null };
   /** The mandate in force, in the model's own words, and whether the aggressive stance is open to it: the measurement has to earn that. */
   readonly mandato: { readonly risco: string; readonly reserva: string; readonly concentracao: string; readonly olhar: string; readonly agressivo_liberado: boolean; readonly abertas: Readonly<Record<string, number>> | null } | null;
 }
@@ -57,6 +59,8 @@ const EXTRA_COMPRA_LEGEND: Readonly<Record<string, string>> = {
   "compras.ut": "number of unique traders in the hot-token window (compare with trades to judge real breadth vs wash trading)",
   "compras.lp": "burned share of the liquidity pool from token-risk, percent 0-100",
 };
+const EXTRA_ECO_SOURCE_LEGEND =
+  "state of the ecosystem source and age in minutes of the latest scan; stale means retained data, not a purchase opportunity; unavailable means no usable scan";
 
 const LEGEND: Readonly<Record<string, string>> = {
   caixa: "share of the agent wallet in dollar coins, percent",
@@ -68,9 +72,10 @@ const LEGEND: Readonly<Record<string, string>> = {
   "posicoes.w": "share of the whole portfolio, percent",
   "posicoes.p": "24h price change percent",
   "posicoes.v": "tracked wallets that already sold it, percent of what they bought",
+  "posicoes.g": "number of provider tags in favour: smart-money buying or a recognized community",
   "posicoes.m": "number of tags the provider marks that WARN (honeypot, little liquidity, the developer selling)",
-  "posicoes.g": "number of tags in favour (smart money buying, recognised community); only when present",
   "posicoes.h": "hours held",
+  "posicoes.pt": "price-info timestamp:1 reported/0 missing; omit=unknown; freshness unverified",
   "posicoes.t": "triggers the code noticed (observations, not advice)",
   "compras.n": "trail of the tracked wallets, 0-100; null unknown",
   "compras.w": "number of tracked wallets that bought it",
@@ -90,17 +95,17 @@ const LEGEND: Readonly<Record<string, string>> = {
   "compras.k": "network fee of one swap on this token's network, in dollars, from the last quote read there; absent when none was read (unknown, never zero)",
   l: "pool liquidity, thousands of dollars",
   "posicoes.i": "position as a percent of the pool liquidity: how hard it is to leave",
-  r: "provider risk 0-5; null unknown",
+  r: "provider risk 1-5; null unknown",
   e: "percent since the agent bought it; null when the agent did not",
   o: "the stances you may choose",
   pl: "the plan of a holding the agent opened: pf profile, e percent since entry, a percent to the target, s percent to the stop, hl hours left, th target reached",
   c5: "price change in the last 5 minutes, percent; c1 in the last hour",
   n5: "number of trades in the last 5 minutes",
-  ag: "age in minutes of the facts of this holding (how stale they may be)",
-  mo: "the last hour in 5-minute bars: r5 r15 r1 percent change over 5 min, 15 min, 1 h; rg percent range of the hour (under 0.5 nothing moved); vr volume of the last 15 min over the 45 before; ag minutes since the last bar",
-  tm: "moment of a purchase: rsi 0-100; rp position in the 2-day range 0-100; r4 r24 percent in 4 and 24 h; up percent from the 2-day low; dd percent below the 2-day high; sg normal hourly move percent",
+  ag: "holding price-info age min=max(provider-ts age if known, cache age+since read); 0 proves neither timestamp presence nor all-input freshness; not balance age",
+  mo: "last hour, 5m on-chain candles: r5/r15/r1 percent change over 5/15/60m; rg hourly range percent; vr last 15m/prior 45m volume ratio; mo.ag minutes since the newest 5m candle started (not price-info age); omitted if unknown or over 20m old",
+  tm: "last 48 1h on-chain bars; included only if newest is within 3h. ag minutes since the start of the newest 1h candle (not fetchedAt, price/balance timestamp or latency); absent/null means unknown or an older producer omitted it. rsi 0-100; rp 0-100 in 2-day range; r4/r24 returns percent; up percent above low; dd percent below high; sg normal hourly move percent; null unknown",
   pf: "target and stop profiles offered for the purchase (pick one with the stance)",
-  historico: "your own measured record one hour after each decision (n samples, acerto hit rate percent, null when n is under 5; medio, melhor and pior are the average, best and worst percent move of the TOKEN in that hour after those decisions, whatever the side, only when n is 5 or more: a hit rate counts signs and hides a tail, so read them together): comprar, your actual purchases that rose; pular, your skips where the token fell; manter, keeping a holding beat selling it; vender, selling beat keeping; per family of evidence, how often BUYING a candidate that had it beat keeping dollars (skipped purchases included); f_*, when you judged that facet >= 60 percent, how often the move agreed with it. A small n is not evidence",
+  historico: "your scored decisions, not receipts or PnL: TOKEN moves over the next hour, even if execution is unresolved. n samples; acerto hit rate percent, null below 5; medio/melhor/pior mean/best/worst TOKEN move percent, regardless of side, only at n>=5. Hit rate counts signs and hides tails: read them together. comprar buy choice then rise; pular skip then fall; manter keeping beat selling; vender selling beat keeping. Per evidence family: how often buying beat dollar cash, including skipped candidates. f_*: moves agreeing with a facet rated >=60 percent. Small n is not evidence. For chain-recorded closed trips see execucoes",
   contexto: "the market around: btc_1h btc_4h btc_24h eth_24h percent (compare token mo.r1 and tm.r4 against btc_1h and btc_4h for relative strength or pricing lag); tendencia; vol_btc volatility regime; fund_btc_bps BTC perpetual funding in basis points (positive: longs pay shorts); oi_btc_1h percent change of its open interest in an hour (rising with price: leverage building); s1_* latest System One reading",
   mandato: "the mandate in force; agressivo_liberado false: the track record has not earned the aggressive stance yet, so asking for it changes nothing; abertas: how many of the purchase candidates have something to buy under each level of risk; the risk of the mandate no longer sizes a purchase, so the levels open the same, and 0 means no cash on the network of any candidate",
 };
@@ -181,7 +186,7 @@ function momentumBrief(m: Candidate["momentum"]): Record<string, number | null> 
 /** The two-day hourly structure of a token as short keys; null when there is none. */
 function timingBrief(t: Candidate["timing"]): Record<string, number | null> | null {
   if (t === undefined || t === null) return null;
-  return { rsi: r0(t.rsi), rp: t.rangePos === null ? null : r0(t.rangePos * 100), r4: r1(t.ret4hPct), r24: r1(t.ret24hPct), up: r0(t.runUpPct), dd: r1(t.drawFromHighPct), sg: r2(t.sigmaHourPct) };
+  return { rsi: r0(t.rsi), rp: t.rangePos === null ? null : r0(t.rangePos * 100), r4: r1(t.ret4hPct), r24: r1(t.ret24hPct), up: r0(t.runUpPct), dd: r1(t.drawFromHighPct), sg: r2(t.sigmaHourPct), ag: r0(t.ageMin ?? null) };
 }
 
 /** Hours held: to a tenth of an hour while under one hour (so a 2-minute position is 0.1, never 0), whole hours from one hour up. */
@@ -210,6 +215,8 @@ export function agentBrief(input: BriefInput): AgentBrief {
       m: f === null ? null : bearishFlags(f.riskFlags).length,
       e: r1(f?.sinceEntryPct ?? null),
       h: heldHoursBrief(f?.heldHours ?? null),
+      // pt is only the normalized source-row timestamp-presence observation; unknown legacy/non-observed facts omit it
+      ...present({ pt: f?.priceInfoTimestampReported === true ? 1 : f?.priceInfoTimestampReported === false ? 0 : undefined }),
       // what the token is doing right now, and how old what the facts say is: only the keys that have a value (a missing one is not a zero, and a null costs bytes)
       ...present({ g: f === null || bullishFlags(f.riskFlags).length === 0 ? null : bullishFlags(f.riskFlags).length, c5: r1(f?.change5mPct ?? null), c1: r1(f?.change1hPct ?? null), n5: r0(f?.txs5m ?? null), ag: r0(f?.dataAgeMin ?? null), mo: momentumBrief(c.momentum), tm: timingBrief(c.timing), f: c.families.length > 0 ? c.families : null, ult: input.tokenTrips?.[c.address] ?? null }),
       ...present({ t: c.triggers.length > 0 ? c.triggers : null }),
@@ -217,9 +224,11 @@ export function agentBrief(input: BriefInput): AgentBrief {
       pl: c.plan === null ? null : { pf: c.plan.profile, e: r1(c.plan.sinceEntryPct), a: r1(c.plan.toTargetPct), s: r1(c.plan.toStopPct), hl: r0(c.plan.hoursLeft), th: c.plan.targetHit },
     };
   }
-  const ecoById = new Map(input.eco.candidates.map((c) => [`buy:${c.facts.candidateId}`, c]));
+  const ecoSourceFresh = isEcoSourceFresh(input.eco);
+  const ecoById = new Map((ecoSourceFresh ? input.eco.candidates : []).map((c) => [`buy:${c.facts.candidateId}`, c]));
+  const buysToShow = ecoSourceFresh ? input.buys : [];
   const compras: Record<string, Record<string, unknown>> = {};
-  for (const c of input.buys) {
+  for (const c of buysToShow) {
     const e = ecoById.get(c.id);
     if (e === undefined) continue;
     const t = c.timing;
@@ -247,7 +256,7 @@ export function agentBrief(input: BriefInput): AgentBrief {
       tm: timingBrief(t),
     };
   }
-  const hasUlt = [...input.holdings, ...input.buys].some((c) => input.tokenTrips?.[c.address] !== undefined);
+  const hasUlt = [...input.holdings, ...buysToShow].some((c) => input.tokenTrips?.[c.address] !== undefined);
   const extraCompraKeys: Record<string, string> = {};
   for (const item of Object.values(compras)) {
     for (const k of ["wu", "sp", "inf", "ut", "lp"] as const) {
@@ -263,9 +272,10 @@ export function agentBrief(input: BriefInput): AgentBrief {
       principal: total === null || book.agentUsd === null ? null : r1(((total - book.agentUsd) / total) * 100),
       posicoes: book.positions.filter((p) => !p.isCash && p.usd !== null && p.usd > 0).length,
     },
-    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(input.memory == null ? {} : { memoria: BRIEF_MEMORY_LEGEND }), ...(hasMacroKeys(contexto) ? { contexto_macro: MACRO_LEGEND } : {}), ...(hasUlt ? { ult: ULT_LEGEND } : {}), ...extraCompraKeys },
+    chaves: { ...(input.mandate == null ? withoutMandate(LEGEND) : LEGEND), ...(input.exec == null ? {} : { execucoes: EXEC_LEGEND }), ...(input.memory == null ? {} : { memoria: BRIEF_MEMORY_LEGEND }), ...(hasMacroKeys(contexto) ? { contexto_macro: MACRO_LEGEND } : {}), ...(hasUlt ? { ult: ULT_LEGEND } : {}), ...(input.eco.sourceQuality === undefined ? {} : { fonte_ecossistema: EXTRA_ECO_SOURCE_LEGEND }), ...extraCompraKeys },
     posicoes,
     compras,
+    ...(input.eco.sourceQuality === undefined ? {} : { fonte_ecossistema: { estado: input.eco.sourceQuality.state, idade_min: input.eco.sourceQuality.ageMs === null ? null : Math.floor(input.eco.sourceQuality.ageMs / 60_000) } }),
     contexto,
     historico: boundedHistory(input.history),
     // the key exists only when there is something real to say: a Brief without fills is exactly the one it always was
@@ -433,7 +443,7 @@ export interface ModelAnswer {
     readonly facets?: Readonly<Record<string, Readonly<Record<string, number>>>>;
   };
   readonly usage: { readonly inputTokens: number | null; readonly outputTokens: number | null };
-  /** How many requests really went to the provider for this choice: 2 when one was refused for its shape and asked again without the facets. Absent means 1. The usage above is that of the last one; the budget counts the others. */
+  /** Number of evaluator invocations for successful consultation metadata; failed calls settle only through their admitted budget ticket. */
   readonly physicalRequests?: number;
 }
 
@@ -441,7 +451,7 @@ export interface AgentModel {
   readonly name: string;
   /** A conservative reservation of the tokens one choice will use, for the budget. Not a claim about the bill. */
   estimateTokens(brief: AgentBrief, candidates: readonly Candidate[]): number;
-  choose(input: { readonly brief: AgentBrief; readonly candidates: readonly Candidate[]; readonly signal: AbortSignal }): Promise<ModelAnswer>;
+  choose(input: { readonly brief: AgentBrief; readonly candidates: readonly Candidate[]; readonly signal: AbortSignal; readonly admitFallback: () => void }): Promise<ModelAnswer>;
   /** The closing question of a purchase (closing.ts), one physical request to the provider. Optional: a model that has none is never asked, and the closing records why. */
   close?(input: { readonly brief: ClosingBrief; readonly symbol: string; readonly signal: AbortSignal }): Promise<{ readonly answer: ClosingAnswer | null; readonly usage: ModelAnswer["usage"] }>;
 }
@@ -474,11 +484,6 @@ const refusedForShape = (error: unknown): boolean => {
   return status === 400 || status === 413 || status === 422;
 };
 
-/** How many requests really went to the provider before this failure: an adapter that asked twice says so on the error it throws, and any other failure is one request. */
-export const physicalRequestsOf = (error: unknown): number => {
-  const n = error !== null && typeof error === "object" ? (error as { physicalRequests?: unknown }).physicalRequests : undefined;
-  return typeof n === "number" && Number.isSafeInteger(n) && n >= 1 ? n : 1;
-};
 
 /** After a call that carried the facets failed and the same call without them worked, the facets are left out for this long. */
 const FACETS_OFF_MS = 60 * 60_000;
@@ -504,7 +509,7 @@ export function createJevAgentModel(options: JevAgentModelOptions): AgentModel {
       const usage = (result as { usage?: { inputTokens?: unknown; outputTokens?: unknown } }).usage;
       return { answer: closingAnswerOf(answers?.closing), usage: { inputTokens: token(usage?.inputTokens), outputTokens: token(usage?.outputTokens) } };
     },
-    async choose({ brief, candidates, signal }) {
+    async choose({ brief, candidates, signal, admitFallback }) {
       const apiKey = options.apiKey();
       if (apiKey === null || apiKey.length === 0) throw new Error("the model key is not configured");
       if (signal.aborted) throw new Error("aborted");
@@ -519,28 +524,25 @@ export function createJevAgentModel(options: JevAgentModelOptions): AgentModel {
         // the facets are an experiment: when the provider REFUSED a call that carried them for its shape (a request it finds invalid or too large), the same call without them is asked once, so the decision is not lost
         // for a record. Any other failure (a rate limit, the service down, a timeout, a network error) is not about the questions, and asking again at once only adds load: it is the failure.
         if (!wantFacets || signal.aborted || !refusedForShape(error)) throw error;
-        // two requests have now gone to the provider for this one choice: the budget must see both, whether the second works or not
+        if (signal.aborted) throw new Error("aborted");
+        admitFallback();
+        if (signal.aborted) throw new Error("aborted");
         requests = 2;
-        try {
-          result = await evaluate({ model, state: brief as never, questions: plain as never, maxRetries: 0, abortSignal: signal });
-        } catch (second) {
-          throw Object.assign(second !== null && typeof second === "object" ? second : new Error(String(second)), { physicalRequests: 2 });
-        }
+        result = await evaluate({ model, state: brief as never, questions: plain as never, maxRetries: 0, abortSignal: signal });
         facetsOffUntil = clock() + FACETS_OFF_MS;
       }
       const answers = (result as { answers?: Record<string, { choice?: unknown; probabilities?: unknown }> }).answers;
       const usage = (result as { usage?: { inputTokens?: unknown; outputTokens?: unknown } }).usage;
-      const failed = (message: string): Error => Object.assign(new Error(message), { physicalRequests: requests });
       const posture = answers?.posture?.choice;
-      if (typeof posture !== "string" || !Object.hasOwn(POSTURE_CRITERIA, posture)) throw failed("Invalid agent answers");
+      if (typeof posture !== "string" || !Object.hasOwn(POSTURE_CRITERIA, posture)) throw new Error("Invalid agent answers");
       const mandate = parseMandate({ risk: answers?.mandate_risk?.choice, reserve: answers?.mandate_reserve?.choice, concentration: answers?.mandate_concentration?.choice, look: answers?.mandate_look?.choice });
-      if (mandate === null) throw failed("Invalid agent answers");
+      if (mandate === null) throw new Error("Invalid agent answers");
       const stances: Record<string, string> = {};
       const profiles: Record<string, string> = {};
       const verdicts: Record<string, Verdict> = {};
       candidates.forEach((c, index) => {
         const choice = answers?.[`stance_${index}`]?.choice;
-        if (typeof choice !== "string" || !c.stances.includes(choice)) throw failed("Invalid agent answers");
+        if (typeof choice !== "string" || !c.stances.includes(choice)) throw new Error("Invalid agent answers");
         stances[c.id] = choice;
         // how sure it was: the probabilities the provider sent, exactly as sent (whether they are a distribution is judged where they are used); nothing is made up when it sent none
         const sent = answers?.[`stance_${index}`]?.probabilities;
@@ -557,7 +559,7 @@ export function createJevAgentModel(options: JevAgentModelOptions): AgentModel {
           const profile = answers?.[`profile_${index}`]?.choice;
           // the profile is only used when the purchase is not skipped, so a skipped one may leave it unanswered
           if (typeof profile === "string" && c.profiles.includes(profile)) profiles[c.id] = profile;
-          else if (choice !== "skip") throw failed("Invalid agent answers");
+          else if (choice !== "skip") throw new Error("Invalid agent answers");
         }
       });
       const facets = readFacets(answers as Record<string, unknown> | undefined, candidates);

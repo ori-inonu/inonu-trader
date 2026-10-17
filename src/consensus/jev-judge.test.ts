@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { JudgeQuestion } from "./engine";
-import { createJevJudge, JEV_JUDGE_HARD_MAX_CALLS, type EvaluateFn } from "./jev-judge";
+import { createJevJudge, type EvaluateFn } from "./jev-judge";
 
 const q = (over: Partial<JudgeQuestion> = {}): JudgeQuestion => ({
   kind: "pick", id: "pick:r1:f0", keys: ["A", "B", "none_fits"], state: { goal: "g", facts: {}, rails: [], options: [] },
@@ -25,12 +25,18 @@ describe("the Jev is the judge through one narrow Choice question per call, with
     expect((await judge.ask(q()))!.probabilities).toEqual({ A: 0.6, B: 0.3, none_fits: 0.1 });
   });
 
-  test("past the cap no question is sent: the answer is null and the refusal is counted", async () => {
+  test("with no ceiling given, every question is sent: the owner pays for the Jev and asked for no cap", async () => {
+    let calls = 0;
+    const judge = createJevJudge({ apiKey: SECRET, model: {}, evaluate: async (a) => (calls++, ok({ A: 1, B: 0, none_fits: 0 })(a)) });
+    for (let i = 0; i < 60; i++) await judge.ask(q());
+    expect([calls, judge.meter().sent, judge.meter().maxCalls]).toEqual([60, 60, null]);
+  });
+
+  test("a ceiling that is given is respected: past it, no question is sent and the answer is null", async () => {
     let calls = 0;
     const judge = createJevJudge({ apiKey: SECRET, maxCalls: 1, model: {}, evaluate: async (a) => (calls++, ok({ A: 1, B: 0, none_fits: 0 })(a)) });
     await judge.ask(q());
-    const second = await judge.ask(q());
-    expect([second, calls, judge.meter().refusedByCap]).toEqual([null, 1, 1]);
+    expect([await judge.ask(q()), calls]).toEqual([null, 1]);
   });
 
   test("an exception of the provider is a null answer, counted, never thrown", async () => {
@@ -55,7 +61,7 @@ describe("the Jev is the judge through one narrow Choice question per call, with
     expect(JSON.stringify([answer, judge.meter()])).not.toContain(SECRET);
   });
 
-  test("a cap above the hard maximum, or below one, is refused when the judge is built", () => {
-    expect([() => createJevJudge({ apiKey: SECRET, maxCalls: JEV_JUDGE_HARD_MAX_CALLS + 1 }), () => createJevJudge({ apiKey: SECRET, maxCalls: 0 })].map((f) => { try { f(); return "ok"; } catch { return "refused"; } })).toEqual(["refused", "refused"]);
+  test("a ceiling that makes no sense (zero or fractional) is refused when the judge is built", () => {
+    expect([() => createJevJudge({ apiKey: SECRET, maxCalls: 0 }), () => createJevJudge({ apiKey: SECRET, maxCalls: 1.5 })].map((f) => { try { f(); return "ok"; } catch { return "refused"; } })).toEqual(["refused", "refused"]);
   });
 });

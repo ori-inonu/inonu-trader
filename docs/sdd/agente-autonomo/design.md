@@ -40,7 +40,7 @@ agendador (a cada intervalMin, derivado do mandato; um tick não faz nada sem ca
   5. CANDIDATOS compras do ecossistema (tamanho derivado) + posições da carteira gerida + manter; compra fechada por preço esticado,
                 parabólico, queda livre, sem histórico fresco, sem perfil; token em voo ou saindo pelo plano não é oferecido;
                 compras novas pausadas pelo disjuntor: nenhuma compra é oferecida
-  6. ORÇAMENTO  consultas e tokens do dia; esgotado: "manter" sem consultar; mesmo Brief dentro do prazo: não pergunta
+  6. ORÇAMENTO  cada chamada física (incluído fallback) admitida antes de enviada; consultas/tokens do dia; esgotado o limite local: "manter" sem consultar; mesmo Brief dentro do prazo: não pergunta (T17)
   7. JEV        uma consulta: postura + mandato + uma ação por candidato + um perfil por compra, tudo por id fechado
   8. VALIDA     existe, foi oferecida, respeita a postura, não compra e vende o mesmo ativo, mandato feito das opções oferecidas
   9. ORDENS     o código calcula: vendas por fração exata (BigInt), compras em dólar repartindo o caixa; tetos derivados

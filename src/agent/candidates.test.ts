@@ -396,6 +396,16 @@ describe("how many purchases each level of risk puts on offer", () => {
     expect(openByRisk(ctx(), () => calm, minBuyUsd, levels)).toEqual({ cauteloso: 2, moderado: 2, agressivo: 2 });
   });
 
+  test("stale or unavailable ecosystem scans offer no purchases and count no open risk budget", () => {
+    const stale = { ...ctx(), sourceQuality: { state: "stale" as const, ageMs: 31 * 60_000 } };
+    const unavailable = { ...ctx(), sourceQuality: { state: "unavailable" as const, ageMs: null } };
+    const none = { cauteloso: 0, moderado: 0, agressivo: 0 };
+    expect(buyCandidates(stale, () => calm)).toEqual([]);
+    expect(openByRisk(stale, () => calm, minBuyUsd, levels)).toEqual(none);
+    expect(buyCandidates(unavailable, () => calm)).toEqual([]);
+    expect(openByRisk(unavailable, () => calm, minBuyUsd, levels)).toEqual(none);
+  });
+
   test("a missing history closes nothing, so it does not change the count", () => {
     expect(openByRisk(ctx(), () => null, minBuyUsd, levels)).toEqual({ cauteloso: 2, moderado: 2, agressivo: 2 });
   });
