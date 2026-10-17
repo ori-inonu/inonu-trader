@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 236,
-  "headHash": "bd236d3f52180054f97f5dc849ecb764c43a5abaff1ba4f4792a865ef530a3f6",
+  "headSeq": 238,
+  "headHash": "ae46c708bdbb191cc5b46ba12dfeebe1811d617e713baf12c7b4fc7d53384edb",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -202,6 +202,11 @@
       "id": "iter-proximo-passo",
       "type": "iteration",
       "text": "JEV sem consenso sobre o proximo passo; rodadas pendem a hook_export (injetar export do no). Nada implementado; decisao volta ao dono"
+    },
+    {
+      "id": "iter-lint-obsoleto",
+      "type": "iteration",
+      "text": "Testado lint de no sem iteracao vizinha: acusou 8 de 40 nos, todos legitimos (src-* e regra). Sem sinal util, nao implementado. Passo restante com mais valor: hook_export ou migrate_docs"
     }
   ],
   "edges": [
@@ -1169,6 +1174,11 @@
       "from": "jev-cerebro-proximo-passo",
       "to": "iter-proximo-passo",
       "seq": 236
+    },
+    {
+      "from": "iter-proximo-passo",
+      "to": "iter-lint-obsoleto",
+      "seq": 238
     }
   ],
   "retractions": [
