@@ -158,7 +158,9 @@ test("search matches id or text case-insensitively and skips retracted nodes", a
   const root = tempRoot();
   await addNode(root, { id: "a", type: "fact", text: "Funding adverso." });
   await addNode(root, { id: "funding-b", type: "fact", text: "Outro." }, ["a"]);
-  expect(await search(root, "FUNDING")).toEqual(["a: Funding adverso.", "funding-b: Outro."]);
+  expect(await search(root, "FUNDING")).toEqual(["funding-b: Outro.", "a: Funding adverso."]);
+  expect(await search(root, "outro adverso")).toEqual(["funding-b: Outro.", "a: Funding adverso."]);
+  expect(await search(root, "funding adverso")).toEqual(["a: Funding adverso.", "funding-b: Outro."]);
   await retractNode(root, "a", "obsoleto");
   expect(await search(root, "funding")).toEqual(["funding-b: Outro."]);
 });
@@ -197,7 +199,7 @@ test("an interrupted forget plan resumes only with paid consent and a valid cons
   write("consenso");
   expect(await curate(root, repo, true)).toBe(`retomado: esquecidos 1 de 2: ${id}`);
   expect(await search(root, "Beta")).toEqual([]);
-  expect((await search(root, "Esquecer por")).length).toBe(1);
+  expect((await search(root, `plano-${id}`)).length).toBe(1);
 });
 
 test("export with a focus returns only nodes within the given depth and rejects unknown ids", async () => {

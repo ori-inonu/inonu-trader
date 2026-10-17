@@ -255,11 +255,14 @@ export async function lint(root: string): Promise<string[]> {
   const keys = graph.nodes.map((node) => /^@(\S+) /.exec(node.text)?.[1]).filter((key): key is string => key !== undefined);
   return [...orphans, ...new Set(keys.filter((key, i) => keys.indexOf(key) !== i))].map((item) => (orphans.includes(item) ? item : `chave:${item}`));
 }
-/** Nos ativos cujo id ou texto contem a palavra (sem diferenciar caixa): `id: inicio do texto`. */
-export async function search(root: string, word: string): Promise<string[]> {
+/** Nos ativos que contem alguma palavra, ordenados por palavras achadas, ligacao a outro achado e recencia: `id: inicio do texto`. */
+export async function search(root: string, query: string): Promise<string[]> {
   const { graph } = await load(root, true);
-  const w = word.toLowerCase();
-  return graph.nodes.filter((n) => `${n.id} ${n.text}`.toLowerCase().includes(w)).map((n) => `${n.id}: ${n.text.slice(0, 80)}`);
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const hits = new Map(graph.nodes.map((n, i) => [n.id, { n, i, count: words.filter((w) => `${n.id} ${n.text}`.toLowerCase().includes(w)).length }] as const).filter(([, h]) => h.count > 0));
+  const linked = new Set(graph.edges.flatMap((e) => (hits.has(e.from) && hits.has(e.to) ? [e.from, e.to] : [])));
+  const score = (h: { i: number; count: number; n: { id: string } }) => h.count + (linked.has(h.n.id) ? 0.5 : 0) + h.i / graph.nodes.length / 2;
+  return [...hits.values()].sort((a, b) => score(b) - score(a)).map(({ n }) => `${n.id}: ${n.text.slice(0, 80)}`);
 }
 /** Candidatos a esquecimento: iteracoes fora dos ultimos `recent` nos, sem aresta com os recentes. Aviso, nunca falha. */
 export async function stale(root: string, recent = 20): Promise<string[]> {
