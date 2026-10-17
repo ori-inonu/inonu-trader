@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 62,
-  "headHash": "c0c56b1afd3ff00b6bcc1d2e5cdd719fdd9a05ca6baf6afb1495a950e793c158",
+  "headSeq": 64,
+  "headHash": "9ffcdaab6187712fba5c734c838bcdaf2deb8c6385493f03665552d1f8c6954a",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -77,6 +77,11 @@
       "id": "iter-supersede",
       "type": "iteration",
       "text": "Comando supersede: aposenta no obsoleto apontando o substituto; escolha do JEV (supersede_command, margem ~0.88)"
+    },
+    {
+      "id": "iter-ordem-chaves",
+      "type": "iteration",
+      "text": "jev-consensus.ts le TYPESAFE_API_KEY antes de TYPESAFE_AI_API_KEY (a segunda esta invalida no ambiente); autorizado pelo dono; sem trocar o app"
     }
   ],
   "edges": [
@@ -314,6 +319,11 @@
       "from": "iter-autoresearch-encerrada",
       "to": "iter-supersede",
       "seq": 62
+    },
+    {
+      "from": "iter-supersede",
+      "to": "iter-ordem-chaves",
+      "seq": 64
     }
   ],
   "retractions": []
