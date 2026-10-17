@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 229,
-  "headHash": "7580a0d3cd596180cc97062a404cf366feb5b2210fb31f0b0c71938066ff2af6",
+  "headSeq": 232,
+  "headHash": "9fe290ed60a8f9e189899829ccd92558cd7159ecf0b74a9ddce4c768b70e85b9",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -189,9 +189,9 @@
       "text": "export aceita no e profundidade e devolve so a vizinhanca (opcao do JEV); record liga o recibo so aos nos pedidos, por padrao ao ultimo, pois antes ligava a todos e tornava arestas sem sentido"
     },
     {
-      "id": "lacuna-prompts-runtime",
+      "id": "fato-runtime-estruturado",
       "type": "fact",
-      "text": "Prompts ainda em codigo de runtime: src/jev-read/decide.ts, src/inonu/ask.ts, src/lab-jev/jev-chooser.ts, src/agent/book.ts. Trocar por grafo muda a entrada da inferencia do JEV; exige decisao do dono e do JEV antes. Goal segue aberto"
+      "text": "Correcao: o runtime do agente ja envia ao JEV estado estruturado (brief, vocabulario fixo, JevStateError recusa texto livre), nao prosa. As ocorrencias de prompt em src sao comentarios e estimativas de tokens. Sem prompt de runtime a trocar"
     }
   ],
   "edges": [
@@ -1147,9 +1147,15 @@
     },
     {
       "from": "iter-subgrafo",
-      "to": "lacuna-prompts-runtime",
-      "seq": 229
+      "to": "fato-runtime-estruturado",
+      "seq": 231
     }
   ],
-  "retractions": []
+  "retractions": [
+    {
+      "id": "lacuna-prompts-runtime",
+      "reason": "substituido por fato-runtime-estruturado",
+      "seq": 232
+    }
+  ]
 }
