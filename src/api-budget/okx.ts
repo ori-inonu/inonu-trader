@@ -68,10 +68,23 @@ export const OKX_MARKET_ENDPOINTS: readonly Listed[] = [
   at("basic", "market/social/sentiment/ranking", false),
   at("basic", "market/social/vibe/timeline", false),
   at("basic", "market/social/vibe/top-kols", false),
+  // Módulos de rotas (src/onchain-read/routes): a faixa é a que a própria rota declara; a página de custos não as lista.
+  at("free", "balance/total-value-by-address", false),
+  at("free", "balance/all-token-balances-by-address", false),
+  at("free", "post-transaction/transactions-by-address", false),
+  at("basic", "market/portfolio/token/latest-pnl", false),
+  at("premium", "market/portfolio/overview", false),
+  at("premium", "market/portfolio/recent-pnl", false),
+  at("premium", "market/address-tracker/trades", false),
+  at("premium", "market/token/cluster/list", false),
+  at("premium", "market/memepump/tokenList", false),
 ];
 
 /** Cotação do agregador (Trade API). O catálogo local a conta como Basic no gateway; aqui ela pertence ao pool Trade. */
 export const OKX_QUOTE_PATH = dex("aggregator/quote");
+
+/** Caminhos da Trade API que o cliente assina: cotação, swap e aprovação. Dividem o mesmo pool e o mesmo RPS. */
+export const OKX_TRADE_PATHS: readonly string[] = [OKX_QUOTE_PATH, dex("aggregator/swap"), dex("aggregator/approve-transaction")];
 
 export interface OkxRegistryOptions {
   /** Plano Market: chave de OKX_MARKET_PLANS. Padrão "free". */
@@ -99,15 +112,17 @@ export function okxEntries(options: OkxRegistryOptions = {}): BudgetEntry[] {
       fonte: e.listed ? OKX_MARKET_FEE_URL : OKX_CATALOG_SOURCE,
     };
   });
-  entries.push({
-    module: "okx",
-    endpoint: OKX_QUOTE_PATH,
-    key: OKX_KEY_ENV,
-    pool: "trade",
-    rps: options.tradeRps ?? 1,
-    ...(options.tradeKeyCreatedAtMs === undefined ? {} : { expiresAt: options.tradeKeyCreatedAtMs + OKX_TRADE_TRIAL_MS }),
-    validated: true,
-    fonte: OKX_TRADE_FEE_URL,
-  });
+  for (const endpoint of OKX_TRADE_PATHS) {
+    entries.push({
+      module: "okx",
+      endpoint,
+      key: OKX_KEY_ENV,
+      pool: "trade",
+      rps: options.tradeRps ?? 1,
+      ...(options.tradeKeyCreatedAtMs === undefined ? {} : { expiresAt: options.tradeKeyCreatedAtMs + OKX_TRADE_TRIAL_MS }),
+      validated: true,
+      fonte: OKX_TRADE_FEE_URL,
+    });
+  }
   return entries;
 }

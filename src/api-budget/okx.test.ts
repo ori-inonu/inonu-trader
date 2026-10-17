@@ -1,19 +1,28 @@
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createBudgetRegistry, poolId } from "./registry.ts";
-import { OKX_KEY_ENV, OKX_MARKET_ENDPOINTS, OKX_MARKET_PLANS, OKX_QUOTE_PATH, OKX_TRADE_TRIAL_MS, okxEntries } from "./okx.ts";
+import { OKX_KEY_ENV, OKX_MARKET_ENDPOINTS, OKX_MARKET_PLANS, OKX_QUOTE_PATH, OKX_TRADE_PATHS, OKX_TRADE_TRIAL_MS, okxEntries } from "./okx.ts";
 
 const T0 = Date.UTC(2026, 9, 1);
 
 describe("registro OKX", () => {
   test("todo caminho que o cliente assina está cadastrado, e só eles", () => {
-    // Quem assina caminhos OKX: o catálogo de rotas e o teste de conexão (probe).
-    const source = ["catalog.ts", "probe.ts"].map((file) => readFileSync(join(import.meta.dir, "../onchain-read", file), "utf8")).join(" ");
-    const signed = new Set(source.match(/\/api\/v6\/dex\/[a-z0-9/-]+/g) ?? []);
-    const registered = new Set([...OKX_MARKET_ENDPOINTS.map((e) => e.path), OKX_QUOTE_PATH]);
+    // Quem assina caminhos OKX: o catálogo de rotas, o teste de conexão (probe) e os módulos de rotas.
+    const dir = join(import.meta.dir, "../onchain-read");
+    const routes = readdirSync(join(dir, "routes")).filter((file) => file.endsWith(".ts") && !file.endsWith(".test.ts")).map((file) => join("routes", file));
+    const source = ["catalog.ts", "probe.ts", ...routes].map((file) => readFileSync(join(dir, file), "utf8")).join(" ");
+    const signed = new Set(source.match(/\/api\/v6\/dex\/[A-Za-z0-9/-]+/g) ?? []);
+    const registered = new Set([...OKX_MARKET_ENDPOINTS.map((e) => e.path), ...OKX_TRADE_PATHS]);
     expect([...signed].filter((path) => !registered.has(path))).toEqual([]);
     expect([...registered].filter((path) => !signed.has(path))).toEqual([]);
+  });
+
+  test("a cotação, o swap e a aprovação pertencem ao pool Trade, com o mesmo RPS", () => {
+    expect(OKX_TRADE_PATHS).toContain(OKX_QUOTE_PATH);
+    const entries = okxEntries().filter((e) => OKX_TRADE_PATHS.includes(e.endpoint));
+    expect(entries.length).toBe(OKX_TRADE_PATHS.length);
+    for (const entry of entries) expect(entry).toMatchObject({ pool: "trade", rps: 1 });
   });
 
   test("plano Free: 100 mil Basic e 100 mil Premium compartilhados por faixa, faixa gratuita sem franquia", () => {

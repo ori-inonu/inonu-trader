@@ -27,7 +27,7 @@ describe("relatório do orçamento", () => {
     expect(basic.endpoints).toBe(OKX_MARKET_ENDPOINTS.filter((e) => e.tier === "basic").length);
     expect(basic.validated).toBe(false);
     expect(basic.unvalidated).toBe(OKX_MARKET_ENDPOINTS.filter((e) => e.tier === "basic" && !e.listed).length);
-    expect(pool(report, "market-premium").unvalidated).toBe(0);
+    expect(pool(report, "market-premium").unvalidated).toBe(OKX_MARKET_ENDPOINTS.filter((e) => e.tier === "premium" && !e.listed).length);
     expect(pool(report, "market-premium").monthly.used).toBe(1);
 
     const trade = pool(report, "trade");
