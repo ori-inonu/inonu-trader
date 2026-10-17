@@ -1,0 +1,20 @@
+{
+  "baseline": "00a593bcabe25dbb6d83795268533551098f645b",
+  "branch": "codex/decision-weight-evidence",
+  "initialGitStatus": "clean before own docs",
+  "rootReservedPaths": [
+    "src/jev-read/**",
+    "src/intel/ml/**"
+  ],
+  "moduleAbsentAtRootAndIsolatedWorkspace": true,
+  "sourceHashes": {
+    "src/jev-read/decide.ts": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+    "src/jev-read/types.ts": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+    "src/jev-read/public-view.ts": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515"
+  },
+  "specSha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+  "acceptanceSha256": "3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8",
+  "publicAcceptanceIdentical": true,
+  "implementation": "not_started",
+  "independentSpecReview": "pending"
+}

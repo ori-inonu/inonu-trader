@@ -1,0 +1,169 @@
+{
+  "revision": 9,
+  "phase": "implementation",
+  "status": "active",
+  "objective": {
+    "goal": "Implementar anotação local pura e verificável da origem dos pesos de decisão do Jev, dentro do objetivo contínuo de pesquisa e melhoria do Inonu Trader sobre OKX Wallet/Onchain OS.",
+    "constraints": [
+      "Entrega exclusiva em novos src/decision-evidence/weights.ts, weights.test.ts e documentação pública própria; preservar raiz e reservas concorrentes.",
+      "Nenhuma adoção live, alteração de decisões, prompts, modelos, risco, alavancagem, carteira ou ordens.",
+      "Nenhum trade, transferência, pagamento, publicação, staging, commit, push ou deployment.",
+      "Preservar contrato Jev/Kuru/Monad por bloco de 300 ms e desconhecidos como desconhecidos.",
+      "Implementação somente após aprovação independente da SPEC; critérios PP-1..PP-6 imutáveis.",
+      "Decisões técnicas delegadas a Jev, approved_by=jev_delegated, human_response=false; custos desconhecidos null."
+    ],
+    "human_event": {
+      "kind": "user_request",
+      "event_id": "goal-request-20261013-01a1362a"
+    },
+    "created_at": "2026-10-13T18:49:50.758Z"
+  },
+  "constraints": [
+    "Entrega exclusiva em novos src/decision-evidence/weights.ts, weights.test.ts e documentação pública própria; preservar raiz e reservas concorrentes.",
+    "Nenhuma adoção live, alteração de decisões, prompts, modelos, risco, alavancagem, carteira ou ordens.",
+    "Nenhum trade, transferência, pagamento, publicação, staging, commit, push ou deployment.",
+    "Preservar contrato Jev/Kuru/Monad por bloco de 300 ms e desconhecidos como desconhecidos.",
+    "Implementação somente após aprovação independente da SPEC; critérios PP-1..PP-6 imutáveis.",
+    "Decisões técnicas delegadas a Jev, approved_by=jev_delegated, human_response=false; custos desconhecidos null."
+  ],
+  "implementer_id": "root-01a1362a",
+  "lease": {
+    "writer_id": "root-01a1362a",
+    "role": "implementer",
+    "claimed_at": "2026-10-13T18:49:53.153Z",
+    "expires_at": "2026-10-13T19:42:01.543Z"
+  },
+  "specification": {
+    "references": [
+      {
+        "path": "docs/sdd/decision-weight-provenance/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "excerpt": "### PP-1: anotação isolada e invariância"
+      }
+    ],
+    "criteria": [
+      {
+        "id": "PP-1",
+        "requirement": "Anotação pura isolada com cinco campos, sem mutação, IO, rede, modelos ou decisão financeira."
+      },
+      {
+        "id": "PP-2",
+        "requirement": "Origem depende de evidência contemporânea compatível e normalização observada, tolerância absoluta 1e-12, sem argmax e sem inferência numérica de origem."
+      },
+      {
+        "id": "PP-3",
+        "requirement": "Validar ações/status/pesos/soma, null conservador nos estados não ok, peso reportado somente provider_reported, calibração not_established."
+      },
+      {
+        "id": "PP-4",
+        "requirement": "Registros históricos unknown preservam peso selecionado; projeção allowlist sem dados brutos; sem migração ou integração existente."
+      },
+      {
+        "id": "PP-5",
+        "requirement": "TDD pela API pública com dez fixtures literais, fronteiras, inválidos, pureza e repetibilidade; sem APIs ou contas reais."
+      },
+      {
+        "id": "PP-6",
+        "requirement": "Somente dois arquivos novos e documentação pública própria; Bun sem .env, tipos focados, fontes atuais e revisão independente em cópia isolada com hashes."
+      }
+    ],
+    "frozen_at": "2026-10-13T18:59:04.939Z"
+  },
+  "evidence": [
+    {
+      "id": "e0a00b03-927f-4600-a808-73a96da15f76",
+      "phase": "research",
+      "kind": "research_and_independent_specification_review",
+      "summary": "Baseline limpo isolado 00a593bcabe25dbb6d83795268533551098f645b, branch codex/decision-weight-evidence, módulo ausente nas duas raízes. Fontes reservadas capturadas e hashes verificados. SPEC v2 e seis critérios foram aprovados independentemente somente como planejamento; documentação pública preserva a seção de aceitação literalmente.",
+      "references": [
+        {
+          "path": "docs/sdd/decision-weight-provenance/SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "excerpt": "### PP-1: anotação isolada e invariância"
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/local-records/REPORT-v2.md",
+          "sha256": "064c9e5924f56d74b8489b8f3890d7a1757ef53eff96bb8ddd19e791bff9c726",
+          "excerpt": "Verdict: approved_planning_only"
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/local-records/preflight.json",
+          "sha256": "3a61757e05f875f4d9a3f01fb583bd32217f986dff8f43d2b9e4896dcd8ef3e3",
+          "excerpt": "\"publicAcceptanceIdentical\": true"
+        }
+      ],
+      "recorded_at": "2026-10-13T18:58:58.191Z",
+      "fresh": true,
+      "stale": false,
+      "superseded": false
+    },
+    {
+      "id": "68a29300-a0ad-474b-8241-1e1d868ed6a2",
+      "phase": "implementation",
+      "kind": "implementation_and_local_verification",
+      "summary": "API pura de origem implementada em dois novos arquivos com documentação própria. Quatro ciclos TDD observados; candidato de cinco arquivos congelado. Execução final 11 pass, 0 fail, 76 expectativas, tipos focados exit0. Git apply check/apply em pasta descartável com autocrlf=false/eol=lf preservou hashes exatos; configuração global autocrlf=true causou somente conversão LF para CRLF na primeira checagem e foi isolada sem modificar configuração global. Fontes reservadas atuais iguais, nenhum diff tracked/staged, nenhuma integração root ou avaliação financeira. Revisões independentes estão em execução.",
+      "references": [
+        {
+          "path": "docs/sdd/decision-weight-provenance/local-records/CANDIDATE-v1.json",
+          "sha256": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+          "excerpt": "\"sha256\": \"5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469\""
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/local-records/tests-v1.log",
+          "sha256": "398a07fd3b56585478fce3c1ca544f2513a29e7a2362d662341f7058dabb6d5b",
+          "excerpt": "11 pass"
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/local-records/verification-runs-v1.json",
+          "sha256": "84a0ff66d9096ab5ad0612f1fd4ec0ca8edd0f1224d2f72357c32142a1a011d2",
+          "excerpt": "\"exitCode\": 0"
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/local-records/PATCH-CHECK-v2.json",
+          "sha256": "ef7fac1e3340e0486f8c4ad97730faf34cd4293588be9c8dd9efc7ba0bd0919a",
+          "excerpt": "\"authored_hashes_match\": true"
+        }
+      ],
+      "recorded_at": "2026-10-13T19:13:22.232Z",
+      "fresh": true,
+      "stale": false,
+      "superseded": false
+    }
+  ],
+  "decisions": [
+    {
+      "id": "provenance-jev-delegated-seam",
+      "decision": "approved_by=jev_delegated; human_response=false. Recibos reais escolheram probability_provenance, additive_annotation e separate_local_task. Anotação pura em caminhos novos; sem adoção runtime e sem calibração financeira. Custo faturado desconhecido=null.",
+      "references": [
+        {
+          "path": "docs/sdd/decision-weight-provenance/decision-receipts.json",
+          "sha256": "109c6341fc595418e4eee650094dbbc6acfe422ab8f9607ba7d12d39b2c442a6",
+          "excerpt": "\"approved_by\": \"jev_delegated\""
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/local-records/execution-decision.json",
+          "sha256": "3deb8bf75c0cc8369d98ae29b07b1555780fd3a33f93c6e52842f6eef63c52ca",
+          "excerpt": "\"recommendation\": \"separate_local_task\""
+        }
+      ],
+      "recorded_at": "2026-10-13T18:59:00.433Z",
+      "valid": true,
+      "fresh": true,
+      "stale": false,
+      "status": "current",
+      "freshness": "current",
+      "superseded": false
+    }
+  ],
+  "failed_hypotheses": [],
+  "supersessions": [],
+  "coverage": {},
+  "audit_revalidations": [],
+  "cycle_history": [],
+  "cycle_start": null,
+  "checkpoint": null,
+  "memories": [],
+  "updated_at": "2026-10-13T19:13:22.232Z",
+  "resume_pending_claim": false,
+  "cycle_history_freshness": []
+}

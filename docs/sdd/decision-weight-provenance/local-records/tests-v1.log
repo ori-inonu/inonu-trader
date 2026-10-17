@@ -1,0 +1,18 @@
+
+src\decision-evidence\weights.test.ts:
+(pass) historical unit weights retain their value without implying provider provenance [0.56ms]
+(pass) reported weights are normalized without requiring the chosen action to be the largest [0.28ms]
+(pass) compatible explicit vectors are supported for every action, including missing or null unused weights [0.10ms]
+(pass) missing, historical or malformed evidence cannot establish origin [2.31ms]
+(pass) choice, vector and status mismatches keep origin unknown [0.69ms]
+(pass) malformed response values match the observed adapter validation contract [1.01ms]
+(pass) vector comparisons accept the absolute boundary and do not repair larger differences [0.21ms]
+(pass) repeated annotations of frozen provider evidence remain pure and exclude extra fields [0.28ms]
+(pass) invalid responses and observed matching failures identify only canonical safety holds [0.18ms]
+(pass) a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback [0.09ms]
+(pass) invalid decisions return null instead of inventing weights or status [0.15ms]
+
+ 11 pass
+ 0 fail
+ 76 expect() calls
+Ran 11 tests across 1 file. [61.00ms]

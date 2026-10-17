@@ -1,0 +1,517 @@
+{
+  "version": 2,
+  "review_type": "specification_planning",
+  "review_axis": "Spec",
+  "phase": "wayfinder_planning",
+  "decision": "approved_planning_only",
+  "status": "approved_planning_only",
+  "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+  "reviewer_canonical": "/root/spec_review",
+  "author_id": "root-01a1362a",
+  "independent_reviewer": true,
+  "conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "review_copy": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2",
+  "scope": "Independent corrected v2 planning contract review against frozen PP-1..PP-6 and supplied source snapshots. No implementation or exporter rereview.",
+  "implementation_status": "not_started",
+  "implementation_certified": false,
+  "financial_calibration": "not_established",
+  "live_integration_approved": false,
+  "execution_environment": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never",
+    "requested_input_policy": "Read-only execution on all isolated-copy inputs.",
+    "observed_input_policy": "Read/hash/attribute checks of inputs only. Writes exclusively assigned REPORT-v2.md and coverage-v2.json.",
+    "input_isolation": "Coordinator-provided separate copy with ReadOnly attributes; attributes do not enforce process filesystem permissions.",
+    "required_configuration": "GPT-6.1 Sol/xhigh",
+    "effective_model_or_tier_verified": false
+  },
+  "input_integrity": {
+    "before": [
+      {
+        "path": "NEXT-SPEC.md",
+        "read_path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\provenance-spec-review-v2\\NEXT-SPEC.md",
+        "bytes": 9679,
+        "readonly": true,
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f"
+      },
+      {
+        "path": "decision-receipts.json",
+        "read_path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\provenance-spec-review-v2\\decision-receipts.json",
+        "bytes": 3159,
+        "readonly": true,
+        "sha256": "109c6341fc595418e4eee650094dbbc6acfe422ab8f9607ba7d12d39b2c442a6"
+      },
+      {
+        "path": "sources/decide.ts",
+        "read_path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\provenance-spec-review-v2\\sources\\decide.ts",
+        "bytes": 10830,
+        "readonly": true,
+        "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0"
+      },
+      {
+        "path": "sources/types.ts",
+        "read_path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\provenance-spec-review-v2\\sources\\types.ts",
+        "bytes": 7958,
+        "readonly": true,
+        "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc"
+      },
+      {
+        "path": "sources/public-view.ts",
+        "read_path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\provenance-spec-review-v2\\sources\\public-view.ts",
+        "bytes": 6716,
+        "readonly": true,
+        "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515"
+      }
+    ],
+    "after": [
+      {
+        "path": "NEXT-SPEC.md",
+        "bytes": 9679,
+        "readonly": true,
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f"
+      },
+      {
+        "path": "decision-receipts.json",
+        "bytes": 3159,
+        "readonly": true,
+        "sha256": "109c6341fc595418e4eee650094dbbc6acfe422ab8f9607ba7d12d39b2c442a6"
+      },
+      {
+        "path": "sources/decide.ts",
+        "bytes": 10830,
+        "readonly": true,
+        "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0"
+      },
+      {
+        "path": "sources/types.ts",
+        "bytes": 7958,
+        "readonly": true,
+        "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc"
+      },
+      {
+        "path": "sources/public-view.ts",
+        "bytes": 6716,
+        "readonly": true,
+        "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515"
+      }
+    ],
+    "unchanged": true,
+    "all_supplied_hashes_match": true,
+    "prior_v1_reports_preserved": [
+      {
+        "path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\provenance-plan-review\\REPORT-v1.md",
+        "sha256": "43476529534059973abf88625d33e895fbc0545f141e6342212587c88c1ef7ca"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\provenance-plan-review\\coverage-v1.json",
+        "sha256": "55fab7cba10d844e9632110a91a4f992db0f2c574531cf66c28924b0dc53c319"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "name": "initial_integrity_and_full_read",
+      "command": "$reviewRoot = 'C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2'; $relativePaths = @('NEXT-SPEC.md','decision-receipts.json','sources/decide.ts','sources/types.ts','sources/public-view.ts'); $inputs = foreach ($relativePath in $relativePaths) { $inputPath = Join-Path $reviewRoot $relativePath; $item = Get-Item -LiteralPath $inputPath; [pscustomobject]@{path=$relativePath;read_path=$inputPath;bytes=$item.Length;readonly=$item.IsReadOnly;sha256=(Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash.ToLower();content=[System.IO.File]::ReadAllText($inputPath)} }; $inputs | ConvertTo-Json -Depth 3",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2",
+      "exit_code": 0,
+      "result": "Five complete inputs read; every expected hash matched and every ReadOnly attribute true."
+    },
+    {
+      "name": "complete_v1_v2_comparison",
+      "execution": "In-memory LCS of exact captured SPEC lines; hash/content equality for remaining four captured inputs.",
+      "result": "Only version line 2, compatibility line 50 and normalization line 52 changed; two literal fixtures added at v2 lines 71-72. No other acceptance or source/receipt changes.",
+      "acceptance_weakened": false
+    },
+    {
+      "name": "final_integrity_and_identity",
+      "command": "$reviewRoot = 'C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2'; $relativePaths = @('NEXT-SPEC.md','decision-receipts.json','sources/decide.ts','sources/types.ts','sources/public-view.ts'); $inputs = foreach ($relativePath in $relativePaths) { $inputPath = Join-Path $reviewRoot $relativePath; $item = Get-Item -LiteralPath $inputPath; [pscustomobject]@{path=$relativePath;bytes=$item.Length;readonly=$item.IsReadOnly;sha256=(Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash.ToLower()} }; $priorRoot = 'C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-plan-review'; [pscustomobject]@{inputs=@($inputs);v1_reports=@((Get-FileHash -LiteralPath (Join-Path $priorRoot 'REPORT-v1.md') -Algorithm SHA256 | Select-Object Path,Hash),(Get-FileHash -LiteralPath (Join-Path $priorRoot 'coverage-v1.json') -Algorithm SHA256 | Select-Object Path,Hash));reviewer_id=$env:CODEX_THREAD_ID;conversation=$env:CODEX_SESSION_ID;utc=(Get-Date).ToUniversalTime().ToString('o')} | ConvertTo-Json -Depth 5",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2",
+      "exit_code": 0,
+      "stdout": "{\r\n  \"inputs\": [\r\n    {\r\n      \"path\": \"NEXT-SPEC.md\",\r\n      \"bytes\": 9679,\r\n      \"readonly\": true,\r\n      \"sha256\": \"6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f\"\r\n    },\r\n    {\r\n      \"path\": \"decision-receipts.json\",\r\n      \"bytes\": 3159,\r\n      \"readonly\": true,\r\n      \"sha256\": \"109c6341fc595418e4eee650094dbbc6acfe422ab8f9607ba7d12d39b2c442a6\"\r\n    },\r\n    {\r\n      \"path\": \"sources/decide.ts\",\r\n      \"bytes\": 10830,\r\n      \"readonly\": true,\r\n      \"sha256\": \"3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0\"\r\n    },\r\n    {\r\n      \"path\": \"sources/types.ts\",\r\n      \"bytes\": 7958,\r\n      \"readonly\": true,\r\n      \"sha256\": \"7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc\"\r\n    },\r\n    {\r\n      \"path\": \"sources/public-view.ts\",\r\n      \"bytes\": 6716,\r\n      \"readonly\": true,\r\n      \"sha256\": \"9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515\"\r\n    }\r\n  ],\r\n  \"v1_reports\": [\r\n    {\r\n      \"Path\": \"C:\\\\Users\\\\gabri\\\\.codex\\\\tmp\\\\inonu-innovation-01a1362a\\\\provenance-plan-review\\\\REPORT-v1.md\",\r\n      \"Hash\": \"43476529534059973ABF88625D33E895FBC0545F141E6342212587C88C1EF7CA\"\r\n    },\r\n    {\r\n      \"Path\": \"C:\\\\Users\\\\gabri\\\\.codex\\\\tmp\\\\inonu-innovation-01a1362a\\\\provenance-plan-review\\\\coverage-v1.json\",\r\n      \"Hash\": \"55FAB7CBA10D844E9632110A91A4F992DB0F2C574531CF66C28924B0DC53C319\"\r\n    }\r\n  ],\r\n  \"reviewer_id\": \"01a13658-c294-7fc0-8b26-1e3f28c2945f\",\r\n  \"conversation\": \"01a1362a-b876-7fa0-9b66-b45202296099\",\r\n  \"utc\": \"2026-10-13T18:46:55.0880315Z\"\r\n}\r\n",
+      "result": "Five inputs unchanged; v1 report hashes unchanged; own reviewer/conversation identity observed."
+    },
+    {
+      "name": "implementation_tests_typecheck_runtime",
+      "executed": false,
+      "result": "No implementation exists; planning requirements reviewed only. No exporter replay, new probe, network/API/model call, environment access for candidate execution or financial calibration test."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "PP-1",
+      "status": "planning_pass",
+      "observed_requirement": "Pure additive function with exact five-field allowlist; no input mutation, I/O, environment, models or buy/sell decision.",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 34,
+          "line_end": 42,
+          "excerpt": "Função pura `annotateDecisionWeights(decision: unknown, evidence: unknown)` em módulo novo. A decisão contém action, probabilities e status. O chamador fornece evidência explicitamente discriminada:\n\n- `{ kind: \"observed_response\", raw: unknown }`: resposta observada no mesmo processamento da decisão.\n- `{ kind: \"observed_failure\", status: \"error\" | \"timeout\" }`: falha observada nesse processamento.\n- `{ kind: \"historical_record\" }`: não há a resposta contemporânea.\n\nA anotação retorna somente `schemaVersion: 1`, `origin`, `selectedWeight`, `reportedSelectedWeight` e `financialCalibration: \"not_established\"`. Origin tem quatro valores: provider_reported, adapter_choice_fallback, adapter_safety_fallback, unknown. Decisão inválida retorna null. Não copia a decisão, payload bruto, confidence, credenciais ou texto do provedor.\n\nA origem é uma classificação da evidência fornecida, não prova criptográfica de transporte. O chamador será responsável por fornecer a resposta contemporânea correta. Essa integração ainda não existe."
+        },
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 46,
+          "line_end": 47,
+          "excerpt": "### PP-1: anotação isolada e invariância\nA função retorna somente os cinco campos listados, sem alterar entradas, decisão, ação, pesos, status ou campos legados. Não lê ambiente/arquivos, não usa rede, não consulta modelos e não decide buy/sell. Entradas congeladas e comparação antes/depois devem comprovar ausência de mutação."
+        }
+      ],
+      "result": "Observable and feasible in a new isolated module. Frozen inputs and before/after tests are specified, not yet executed.",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "review_type": "specification_planning",
+      "implementation_status": "not_started",
+      "implementation_certified": false
+    },
+    {
+      "id": "PP-2",
+      "status": "planning_pass",
+      "observed_requirement": "Origins based on explicit contemporary compatible evidence and existing adapter normalization; historical/mismatched evidence unknown.",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 49,
+          "line_end": 52,
+          "excerpt": "### PP-2: origem exige evidência compatível\nCom decisão de status ok, resposta contemporânea válida com raw.probabilities informado como objeto válido, choice igual à ação e pesos normalizados iguais aos da decisão, origin é provider_reported. Ausência de raw.probabilities em uma resposta válida gera adapter_choice_fallback somente quando a decisão tem status ok e é o vetor unitário correspondente. Resposta inválida com a decisão canônica malformed/hold, ou falha error/timeout com hold canônico e status correspondente, gera adapter_safety_fallback. Resposta válida exige decisão de status ok; divergência de status gera unknown. Evidência ausente, histórica, malformada ou incompatível gera unknown. Nunca inferir origem apenas pelo vetor.\n\nO contrato de normalização observado é: buy/sell/hold; choice válida; probabilities ausente significa fallback; objeto informado usa peso ausente ou null como zero; pesos finitos não negativos; soma finita positiva; peso bruto da escolha positivo; cada valor dividido pela soma; todos os pesos normalizados finitos e peso normalizado da escolha positivo. Objeto null/array, peso negativo/não finito, soma inválida ou escolha de peso zero antes ou após normalização são respostas inválidas. Não exigir que a ação seja argmax. Comparações de vetores normalizados usam tolerância absoluta de 1e-12 por componente; nenhuma diferença maior é reparada."
+        },
+        {
+          "path": "sources/decide.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/decide.ts",
+          "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+          "line_start": 27,
+          "line_end": 64,
+          "excerpt": "function holdOnly(model: string, latencyMs: number, status: TapeDecision[\"status\"]): TapeDecision {\r\n  return { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, confidence: null, latencyMs, model, status, inputTokens: null };\r\n}\r\n\r\nexport function validateTapeDecision(raw: unknown, model: string): TapeDecision {\r\n  const latency = isRecord(raw) && typeof raw.latencyMs === \"number\" && Number.isFinite(raw.latencyMs) && raw.latencyMs >= 0 ? raw.latencyMs : 0;\r\n  if (!isRecord(raw) || !isAction(raw.choice)) return holdOnly(model, latency, \"malformed\");\r\n  const action = raw.choice;\r\n\r\n  let probabilities: Record<TapeAction, number>;\r\n  if (raw.probabilities === undefined) {\r\n    probabilities = { buy: 0, sell: 0, hold: 0, [action]: 1 } as Record<TapeAction, number>;\r\n  } else {\r\n    if (!isRecord(raw.probabilities)) return holdOnly(model, latency, \"malformed\");\r\n    const weights = {} as Record<TapeAction, number>;\r\n    let total = 0;\r\n    for (const key of TAPE_ACTIONS) {\r\n      const value = raw.probabilities[key] ?? 0;\r\n      if (typeof value !== \"number\" || !Number.isFinite(value) || value < 0) return holdOnly(model, latency, \"malformed\");\r\n      weights[key] = value;\r\n      total += value;\r\n    }\r\n    if (!Number.isFinite(total) || !(total > 0) || !(weights[action] > 0)) return holdOnly(model, latency, \"malformed\");\r\n    probabilities = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };\r\n    if (!TAPE_ACTIONS.every((key) => Number.isFinite(probabilities[key])) || !(probabilities[action] > 0)) return holdOnly(model, latency, \"malformed\");\r\n  }\r\n\r\n  const tokens = raw.inputTokens;\r\n  return {\r\n    action,\r\n    probabilities,\r\n    confidence: probabilities[action],\r\n    latencyMs: latency,\r\n    model,\r\n    status: \"ok\",\r\n    inputTokens: typeof tokens === \"number\" && Number.isSafeInteger(tokens) && tokens >= 0 ? tokens : null,\r\n  };\r\n}"
+        }
+      ],
+      "result": "Both v1 P2 findings resolved: provider requires supplied valid probabilities/status ok; missing probabilities is choice fallback/status ok; valid response with divergent status is unknown. Normalization now includes source's finite normalized values and positive normalized selected-weight check.",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "review_type": "specification_planning",
+      "implementation_status": "not_started",
+      "implementation_certified": false
+    },
+    {
+      "id": "PP-3",
+      "status": "planning_pass",
+      "observed_requirement": "Strict action/status/weight validity, conservative null outputs for non-ok decisions and non-provider origins; no established financial calibration.",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 54,
+          "line_end": 55,
+          "excerpt": "### PP-3: números e estados conservadores\nDecisão válida tem action buy/sell/hold, status ok/error/timeout/malformed, três pesos finitos em [0,1] e soma dentro de 1e-12 de 1. Status ok exige peso selecionado positivo; outro status exige action hold. selectedWeight é o peso da ação apenas para status ok; caso contrário é null. reportedSelectedWeight só é numérico para provider_reported com status ok; todas as outras origens recebem null. financialCalibration é sempre not_established. Texto ou número desconhecido nunca vira zero nem certeza."
+        },
+        {
+          "path": "sources/types.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/types.ts",
+          "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+          "line_start": 156,
+          "line_end": 165,
+          "excerpt": "export interface TapeDecision {\r\n  readonly action: TapeAction;\r\n  readonly probabilities: Readonly<Record<TapeAction, number>>;\r\n  /** The probability of the chosen action. It is a decision weight, not a win rate. */\r\n  readonly confidence: number | null;\r\n  readonly latencyMs: number;\r\n  readonly model: string;\r\n  readonly status: \"ok\" | \"error\" | \"timeout\" | \"malformed\";\r\n  /** null means the provider did not report usage; it is not a zero cost. */\r\n  readonly inputTokens: number | null;"
+        },
+        {
+          "path": "sources/public-view.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/public-view.ts",
+          "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+          "line_start": 61,
+          "line_end": 85,
+          "excerpt": "function projectDecision(raw: unknown): Record<string, unknown> | null {\r\n  if (!isRecord(raw)) return null;\r\n  const action = raw.action;\r\n  if (typeof action !== \"string\" || !(TAPE_ACTIONS as readonly string[]).includes(action)) return null;\r\n  const weights = numbersOf(raw.probabilities, [...TAPE_ACTIONS]);\r\n  if (weights === null || Object.values(weights).some((w) => w < 0 || w > 1)) return null;\r\n  const status = STATUSES.find((s) => s === raw.status);\r\n  if (status === undefined) return null;\r\n  const sum = weights.buy! + weights.sell! + weights.hold!;\r\n  if (!(Math.abs(sum - 1) <= 0.01)) return null;\r\n  if (status === \"ok\" && !(weights[action as TapeAction]! > 0)) return null;\r\n  if (status !== \"ok\" && action !== \"hold\") return null;\r\n  const confidence = finiteOrNull(raw.confidence);\r\n  if (raw.confidence !== null && raw.confidence !== undefined && (confidence === null || confidence < 0 || confidence > 1)) return null;\r\n  if (status === \"ok\" && confidence !== null && Math.abs(confidence - weights[action as TapeAction]!) > 0.01) return null;\r\n  const tokens = raw.inputTokens;\r\n  return {\r\n    action,\r\n    probabilities: weights,\r\n    confidence,\r\n    latencyMs: finite(raw.latencyMs) && raw.latencyMs >= 0 ? raw.latencyMs : null,\r\n    model: typeof raw.model === \"string\" && MODEL_ID.test(raw.model) ? raw.model : \"unknown\",\r\n    status,\r\n    inputTokens: typeof tokens === \"number\" && Number.isSafeInteger(tokens) && tokens >= 0 ? tokens : null,\r\n  };"
+        }
+      ],
+      "result": "New annotation validity and 1e-12 tolerance are explicit. Existing public view uses 0.01, so this is a stricter separate annotation contract, not certification that every accepted historical public-view record qualifies. No existing consumer is changed.",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "review_type": "specification_planning",
+      "implementation_status": "not_started",
+      "implementation_certified": false
+    },
+    {
+      "id": "PP-4",
+      "status": "planning_pass",
+      "observed_requirement": "Valid historical record unknown origin; compatible genuine unit vector can be provider-reported; no raw text output, schema migrations, thresholds or orders.",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 57,
+          "line_end": 58,
+          "excerpt": "### PP-4: compatibilidade histórica e sanitização\nRegistro histórico válido continua anotável sem resposta original: origin unknown, selectedWeight preservado para status ok, reportedSelectedWeight null. Provedor pode reportar um vetor unitário legítimo: esse caso recebe provider_reported somente com prova contemporânea compatível. Campos extras e texto livre nunca atravessam a projeção de saída. Não migrar schema/journal/public-view/dashboard, nem adicionar thresholds ou usar a anotação para ordens."
+        },
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 69,
+          "line_end": 69,
+          "excerpt": "| buy, (1,0,0), ok; historical_record | unknown | 1 | null |"
+        },
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 40,
+          "line_end": 42,
+          "excerpt": "A anotação retorna somente `schemaVersion: 1`, `origin`, `selectedWeight`, `reportedSelectedWeight` e `financialCalibration: \"not_established\"`. Origin tem quatro valores: provider_reported, adapter_choice_fallback, adapter_safety_fallback, unknown. Decisão inválida retorna null. Não copia a decisão, payload bruto, confidence, credenciais ou texto do provedor.\n\nA origem é uma classificação da evidência fornecida, não prova criptográfica de transporte. O chamador será responsável por fornecer a resposta contemporânea correta. Essa integração ainda não existe."
+        },
+        {
+          "path": "sources/public-view.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/public-view.ts",
+          "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+          "line_start": 77,
+          "line_end": 85,
+          "excerpt": "  return {\r\n    action,\r\n    probabilities: weights,\r\n    confidence,\r\n    latencyMs: finite(raw.latencyMs) && raw.latencyMs >= 0 ? raw.latencyMs : null,\r\n    model: typeof raw.model === \"string\" && MODEL_ID.test(raw.model) ? raw.model : \"unknown\",\r\n    status,\r\n    inputTokens: typeof tokens === \"number\" && Number.isSafeInteger(tokens) && tokens >= 0 ? tokens : null,\r\n  };"
+        }
+      ],
+      "result": "Valid historical selected weight preserved; reported weight null without contemporaneous compatible evidence. Genuine provider unit vector distinguished from absent-probabilities fallback. Output allowlist and adoption exclusions explicit.",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "review_type": "specification_planning",
+      "implementation_status": "not_started",
+      "implementation_certified": false
+    },
+    {
+      "id": "PP-5",
+      "status": "planning_pass",
+      "observed_requirement": "Public API synthetic literal fixtures plus invalid/mismatched/malformed weights, tolerance, actions/statuses, immutability and output allowlist; no APIs or real accounts.",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 60,
+          "line_end": 76,
+          "excerpt": "### PP-5: exemplos literais e TDD\nExecutar fixtures sintéticas explícitas pela API pública nova, com resultados literais:\n\n| Decisão e evidência | Origem | selectedWeight | reportedSelectedWeight |\n| --- | --- | --- | --- |\n| buy, (1,0,0), ok; response choice buy sem probabilities | adapter_choice_fallback | 1 | null |\n| buy, (1,0,0), ok; response choice buy com (1,0,0) | provider_reported | 1 | 1 |\n| buy, (0.5,0.25,0.25), ok; response choice buy com (2,1,1) | provider_reported | 0.5 | 0.5 |\n| buy, (0.2,0.8,0), ok; response choice buy com (1,4,0) | provider_reported | 0.2 | 0.2 |\n| buy, (1,0,0), ok; historical_record | unknown | 1 | null |\n| hold, (0,0,1), malformed; response choice buy com pesos todos zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response choice buy com (Number.MIN_VALUE,2,0), cujo peso buy normalizado vira zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response válida choice hold com (0,0,1) | unknown | null | null |\n| hold, (0,0,1), timeout; observed_failure timeout | adapter_safety_fallback | null | null |\n| buy, (1,0,0), ok; response choice sell com (0,1,0) | unknown | 1 | null |\n\nTambém comprovar decisão inválida -> null; evidence inválida -> unknown; error/timeout/status divergente -> unknown; probabilities null/array e pesos negativos/NaN/infinito; todos os tipos de ação/status; limites da tolerância; repetibilidade; entradas imutáveis; saída allowlist sem payload bruto; null no peso selecionado para status não ok. Testes não chamam APIs nem usam contas reais."
+        },
+        {
+          "path": "sources/decide.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/decide.ts",
+          "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+          "line_start": 37,
+          "line_end": 51,
+          "excerpt": "  if (raw.probabilities === undefined) {\r\n    probabilities = { buy: 0, sell: 0, hold: 0, [action]: 1 } as Record<TapeAction, number>;\r\n  } else {\r\n    if (!isRecord(raw.probabilities)) return holdOnly(model, latency, \"malformed\");\r\n    const weights = {} as Record<TapeAction, number>;\r\n    let total = 0;\r\n    for (const key of TAPE_ACTIONS) {\r\n      const value = raw.probabilities[key] ?? 0;\r\n      if (typeof value !== \"number\" || !Number.isFinite(value) || value < 0) return holdOnly(model, latency, \"malformed\");\r\n      weights[key] = value;\r\n      total += value;\r\n    }\r\n    if (!Number.isFinite(total) || !(total > 0) || !(weights[action] > 0)) return holdOnly(model, latency, \"malformed\");\r\n    probabilities = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };\r\n    if (!TAPE_ACTIONS.every((key) => Number.isFinite(probabilities[key])) || !(probabilities[action] > 0)) return holdOnly(model, latency, \"malformed\");"
+        }
+      ],
+      "result": "Ten literal fixtures are coherent with PP-2 and source, including normalized selected-weight underflow -> safety/null/null and valid raw/status malformed -> unknown/null/null. Original eight examples and all boundary requirements retained. No implementation tests executed.",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "review_type": "specification_planning",
+      "implementation_status": "not_started",
+      "implementation_certified": false
+    },
+    {
+      "id": "PP-6",
+      "status": "planning_pass",
+      "observed_requirement": "Exclusive new weights.ts/test and own public documentation; no existing runtime importer edits; revalidate free files/source hashes/own state; Bun without .env, focused types and independent review.",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 78,
+          "line_end": 91,
+          "excerpt": "### PP-6: arquivos, verificação e revisão\nEntrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação.\n\n## Plano mínimo da fase posterior\n\n1. Recuperar estado próprio; revalidar reservas e baseline; criar/renovar lease exclusiva e registrar esta aceitação com hashes.\n2. Produzir teste de regressão negativo pela API nova; guardar erro real; implementar módulo puro mínimo nos dois caminhos exclusivos.\n3. Exercitar todos os exemplos e fronteiras PP-1..PP-5; verificar tipos e pureza; congelar manifesto/patch sem registros internos.\n4. Revisões independentes de Spec e Standards contra PP-1..PP-6; auditoria do patch exato.\n5. Preparar o contrato de adoção em journal/dashboard após liberação dos caminhos reservados. Documentar que o módulo isolado ainda não altera a interface live.\n\n## Dependências e exclusões\n\nA fase atual entrega somente planejamento e revisão. Integração live é dependência posterior de liberação dos caminhos e inspeção dos consumidores. Calibração requer dataset real, target/custos/tempo e ensaio pareado independente; não pertence a este módulo. Não tocar carteira, fundos, prompts, modelos, configurações de risco, budgets, pacotes, cadence 300ms ou contrato Kuru. Não afirmar retorno financeiro ou ativação."
+        }
+      ],
+      "result": "Ownership and preservation are feasible in the proposed isolated new module and gated by fresh lease/reservation/baseline validation. Exact future documentation path and current reservation/preflight assertions were not independently confirmed from these snapshots and must be resolved by the stated pre-implementation gate. Planning approval cannot certify implementation.",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "review_type": "specification_planning",
+      "implementation_status": "not_started",
+      "implementation_certified": false
+    }
+  ],
+  "findings": [],
+  "decision_receipts": {
+    "evidence": [
+      {
+        "path": "decision-receipts.json",
+        "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/decision-receipts.json",
+        "sha256": "109c6341fc595418e4eee650094dbbc6acfe422ab8f9607ba7d12d39b2c442a6",
+        "line_start": 8,
+        "line_end": 45,
+        "excerpt": "      \"status\": \"assessed\",\n      \"receiptId\": \"15aacf80-1dd9-4f16-b11e-edd2fa5931f7\",\n      \"inputDigest\": \"ff72a9428e2151cc7bf686d6b7870686c2a16cf33921992e42d97969f9e6ee67\",\n      \"rubricVersion\": \"batch-2026-09-26.2\",\n      \"model\": \"jev-1.13.0\",\n      \"answers\": {\n        \"next_contract\": {\n          \"type\": \"choice\",\n          \"domain\": \"task\",\n          \"providerChoice\": \"probability_provenance\",\n          \"bestCandidate\": \"probability_provenance\",\n          \"probabilities\": {\n            \"probability_provenance\": 1,\n            \"capital_risk_evidence\": 0,\n            \"real_dataset_readiness\": 0,\n            \"insufficient_evidence\": 0\n          },\n          \"confidence\": 1,\n          \"disposition\": \"recommendation\",\n          \"recommendation\": \"probability_provenance\",\n          \"policy\": {\n            \"version\": \"decision-policy-2026-09-26.1\",\n            \"mode\": \"conservative\",\n            \"minConfidence\": 0.6,\n            \"minProbability\": 0.6,\n            \"calibration\": \"not_locally_calibrated\"\n          }\n        }\n      },\n      \"usage\": {\n        \"input_tokens\": 798,\n        \"output_tokens\": 71\n      },\n      \"receiptPersisted\": true,\n      \"authority\": \"advisory_only\",\n      \"approved_by\": \"jev_delegated\",\n      \"human_response\": false,\n      \"billed_cost_usd\": null"
+      },
+      {
+        "path": "decision-receipts.json",
+        "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/decision-receipts.json",
+        "sha256": "109c6341fc595418e4eee650094dbbc6acfe422ab8f9607ba7d12d39b2c442a6",
+        "line_start": 48,
+        "line_end": 84,
+        "excerpt": "      \"status\": \"assessed\",\n      \"receiptId\": \"9c15eb14-a7b4-47d2-80ef-2e98b4dbfa86\",\n      \"inputDigest\": \"c80b66334be1234bf8cc36a45c12e3c134097d12572f346801461132fd23acad\",\n      \"rubricVersion\": \"batch-2026-09-26.2\",\n      \"model\": \"jev-1.13.0\",\n      \"answers\": {\n        \"contract_seam\": {\n          \"type\": \"choice\",\n          \"domain\": \"strategy\",\n          \"providerChoice\": \"additive_annotation\",\n          \"bestCandidate\": \"additive_annotation\",\n          \"probabilities\": {\n            \"additive_annotation\": 0.98,\n            \"future_schema_migration\": 0,\n            \"insufficient_evidence\": 0.02\n          },\n          \"confidence\": 0.97,\n          \"disposition\": \"recommendation\",\n          \"recommendation\": \"additive_annotation\",\n          \"policy\": {\n            \"version\": \"decision-policy-2026-09-26.1\",\n            \"mode\": \"conservative\",\n            \"minConfidence\": 0.6,\n            \"minProbability\": 0.6,\n            \"calibration\": \"not_locally_calibrated\"\n          }\n        }\n      },\n      \"usage\": {\n        \"input_tokens\": 713,\n        \"output_tokens\": 54\n      },\n      \"receiptPersisted\": true,\n      \"authority\": \"advisory_only\",\n      \"approved_by\": \"jev_delegated\",\n      \"human_response\": false,\n      \"billed_cost_usd\": null"
+      },
+      {
+        "path": "decision-receipts.json",
+        "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/decision-receipts.json",
+        "sha256": "109c6341fc595418e4eee650094dbbc6acfe422ab8f9607ba7d12d39b2c442a6",
+        "line_start": 87,
+        "line_end": 93,
+        "excerpt": "  \"initial_local_validation\": {\n    \"status\": \"skipped\",\n    \"reason\": \"unsafe_candidate_id\",\n    \"provider_request\": false,\n    \"correction\": \"Removed a manually supplied reserved abstention candidate; the installed service adds it.\"\n  },\n  \"applied_scope\": \"Planning only. No authorization for live integration, trading, spending other than the delegated consultations, deployment or model changes.\""
+      }
+    ],
+    "result": "Supplied frozen receipt file records assessed priority probability_provenance and seam additive_annotation; both advisory_only, approved_by jev_delegated, human_response false, billed_cost_usd null. No new model consultation requested or provider receipt independently replayed."
+  },
+  "source_backed_facts": [
+    {
+      "fact": "Missing probabilities creates one-hot vector; malformed returns hold-only; selected confidence is normalized decision weight.",
+      "evidence": [
+        {
+          "path": "sources/decide.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/decide.ts",
+          "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+          "line_start": 27,
+          "line_end": 64,
+          "excerpt": "function holdOnly(model: string, latencyMs: number, status: TapeDecision[\"status\"]): TapeDecision {\r\n  return { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, confidence: null, latencyMs, model, status, inputTokens: null };\r\n}\r\n\r\nexport function validateTapeDecision(raw: unknown, model: string): TapeDecision {\r\n  const latency = isRecord(raw) && typeof raw.latencyMs === \"number\" && Number.isFinite(raw.latencyMs) && raw.latencyMs >= 0 ? raw.latencyMs : 0;\r\n  if (!isRecord(raw) || !isAction(raw.choice)) return holdOnly(model, latency, \"malformed\");\r\n  const action = raw.choice;\r\n\r\n  let probabilities: Record<TapeAction, number>;\r\n  if (raw.probabilities === undefined) {\r\n    probabilities = { buy: 0, sell: 0, hold: 0, [action]: 1 } as Record<TapeAction, number>;\r\n  } else {\r\n    if (!isRecord(raw.probabilities)) return holdOnly(model, latency, \"malformed\");\r\n    const weights = {} as Record<TapeAction, number>;\r\n    let total = 0;\r\n    for (const key of TAPE_ACTIONS) {\r\n      const value = raw.probabilities[key] ?? 0;\r\n      if (typeof value !== \"number\" || !Number.isFinite(value) || value < 0) return holdOnly(model, latency, \"malformed\");\r\n      weights[key] = value;\r\n      total += value;\r\n    }\r\n    if (!Number.isFinite(total) || !(total > 0) || !(weights[action] > 0)) return holdOnly(model, latency, \"malformed\");\r\n    probabilities = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };\r\n    if (!TAPE_ACTIONS.every((key) => Number.isFinite(probabilities[key])) || !(probabilities[action] > 0)) return holdOnly(model, latency, \"malformed\");\r\n  }\r\n\r\n  const tokens = raw.inputTokens;\r\n  return {\r\n    action,\r\n    probabilities,\r\n    confidence: probabilities[action],\r\n    latencyMs: latency,\r\n    model,\r\n    status: \"ok\",\r\n    inputTokens: typeof tokens === \"number\" && Number.isSafeInteger(tokens) && tokens >= 0 ? tokens : null,\r\n  };\r\n}"
+        }
+      ]
+    },
+    {
+      "fact": "Schema remains 1 and confidence is decision weight rather than win rate.",
+      "evidence": [
+        {
+          "path": "sources/types.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/types.ts",
+          "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+          "line_start": 11,
+          "line_end": 14,
+          "excerpt": "export const JEV_READ_SCHEMA_VERSION = 1;\r\n\r\nexport type TapeAction = \"buy\" | \"sell\" | \"hold\";\r\nexport const TAPE_ACTIONS: readonly TapeAction[] = Object.freeze([\"buy\", \"sell\", \"hold\"]);"
+        },
+        {
+          "path": "sources/types.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/types.ts",
+          "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+          "line_start": 156,
+          "line_end": 165,
+          "excerpt": "export interface TapeDecision {\r\n  readonly action: TapeAction;\r\n  readonly probabilities: Readonly<Record<TapeAction, number>>;\r\n  /** The probability of the chosen action. It is a decision weight, not a win rate. */\r\n  readonly confidence: number | null;\r\n  readonly latencyMs: number;\r\n  readonly model: string;\r\n  readonly status: \"ok\" | \"error\" | \"timeout\" | \"malformed\";\r\n  /** null means the provider did not report usage; it is not a zero cost. */\r\n  readonly inputTokens: number | null;"
+        }
+      ]
+    },
+    {
+      "fact": "Existing public projection copies decision weights/confidence/status without provenance.",
+      "evidence": [
+        {
+          "path": "sources/public-view.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/public-view.ts",
+          "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+          "line_start": 61,
+          "line_end": 85,
+          "excerpt": "function projectDecision(raw: unknown): Record<string, unknown> | null {\r\n  if (!isRecord(raw)) return null;\r\n  const action = raw.action;\r\n  if (typeof action !== \"string\" || !(TAPE_ACTIONS as readonly string[]).includes(action)) return null;\r\n  const weights = numbersOf(raw.probabilities, [...TAPE_ACTIONS]);\r\n  if (weights === null || Object.values(weights).some((w) => w < 0 || w > 1)) return null;\r\n  const status = STATUSES.find((s) => s === raw.status);\r\n  if (status === undefined) return null;\r\n  const sum = weights.buy! + weights.sell! + weights.hold!;\r\n  if (!(Math.abs(sum - 1) <= 0.01)) return null;\r\n  if (status === \"ok\" && !(weights[action as TapeAction]! > 0)) return null;\r\n  if (status !== \"ok\" && action !== \"hold\") return null;\r\n  const confidence = finiteOrNull(raw.confidence);\r\n  if (raw.confidence !== null && raw.confidence !== undefined && (confidence === null || confidence < 0 || confidence > 1)) return null;\r\n  if (status === \"ok\" && confidence !== null && Math.abs(confidence - weights[action as TapeAction]!) > 0.01) return null;\r\n  const tokens = raw.inputTokens;\r\n  return {\r\n    action,\r\n    probabilities: weights,\r\n    confidence,\r\n    latencyMs: finite(raw.latencyMs) && raw.latencyMs >= 0 ? raw.latencyMs : null,\r\n    model: typeof raw.model === \"string\" && MODEL_ID.test(raw.model) ? raw.model : \"unknown\",\r\n    status,\r\n    inputTokens: typeof tokens === \"number\" && Number.isSafeInteger(tokens) && tokens >= 0 ? tokens : null,\r\n  };"
+        }
+      ]
+    }
+  ],
+  "ownership_and_scope": {
+    "evidence": [
+      {
+        "path": "NEXT-SPEC.md",
+        "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 19,
+        "line_end": 19,
+        "excerpt": "- `src/decision-evidence` não existe na raiz no preflight. Os três arquivos acima permanecem reservados pelo SDD canônico de carteira."
+      },
+      {
+        "path": "NEXT-SPEC.md",
+        "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 79,
+        "line_end": 91,
+        "excerpt": "Entrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação.\n\n## Plano mínimo da fase posterior\n\n1. Recuperar estado próprio; revalidar reservas e baseline; criar/renovar lease exclusiva e registrar esta aceitação com hashes.\n2. Produzir teste de regressão negativo pela API nova; guardar erro real; implementar módulo puro mínimo nos dois caminhos exclusivos.\n3. Exercitar todos os exemplos e fronteiras PP-1..PP-5; verificar tipos e pureza; congelar manifesto/patch sem registros internos.\n4. Revisões independentes de Spec e Standards contra PP-1..PP-6; auditoria do patch exato.\n5. Preparar o contrato de adoção em journal/dashboard após liberação dos caminhos reservados. Documentar que o módulo isolado ainda não altera a interface live.\n\n## Dependências e exclusões\n\nA fase atual entrega somente planejamento e revisão. Integração live é dependência posterior de liberação dos caminhos e inspeção dos consumidores. Calibração requer dataset real, target/custos/tempo e ensaio pareado independente; não pertence a este módulo. Não tocar carteira, fundos, prompts, modelos, configurações de risco, budgets, pacotes, cadence 300ms ou contrato Kuru. Não afirmar retorno financeiro ou ativação."
+      }
+    ],
+    "result": "Two future new TypeScript files explicit; public documentation path must be finalized in pre-implementation lease. Existing reserved modules and live consumers remain unchanged. Canonical reservation inventory and path absence are assertions supplied by coordinator, not independently observed from isolated source snapshots."
+  },
+  "limitations": [
+    "Specification planning approval only; implementation/TDD/typecheck/live integration/calibration/effectiveness unverified.",
+    "Actual environment danger-full-access; isolated ReadOnly-attribute copy does not prove sandbox enforcement.",
+    "GPT-6.1 Sol/xhigh required configuration; effective model/reasoning/tier not demonstrated.",
+    "External Choice/Confidence webpages not fetched under no-network scope; current external vendor documentation is not independently certified.",
+    "Live source freshness, reservations, baseline and free-file assertions require pre-implementation revalidation already required by PP-6.",
+    "Exporter review files and planning v1 outputs preserved; no other writer's files modified."
+  ],
+  "required_next_step": "Before later implementation, recover own state, revalidate source hashes/reservations/baseline and acquire an exclusive lease per PP-6; then Bun without .env TDD and independent Spec/Standards exact-patch review. No live integration or financial calibration approval.",
+  "recorded_at": "2026-10-13T18:46:55.0880315Z",
+  "resolved_findings": [
+    {
+      "id": "PP-SPEC-1",
+      "prior_severity": "P2",
+      "criteria": [
+        "PP-2",
+        "PP-5"
+      ],
+      "status": "resolved_in_planning",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 50,
+          "line_end": 50,
+          "excerpt": "Com decisão de status ok, resposta contemporânea válida com raw.probabilities informado como objeto válido, choice igual à ação e pesos normalizados iguais aos da decisão, origin é provider_reported. Ausência de raw.probabilities em uma resposta válida gera adapter_choice_fallback somente quando a decisão tem status ok e é o vetor unitário correspondente. Resposta inválida com a decisão canônica malformed/hold, ou falha error/timeout com hold canônico e status correspondente, gera adapter_safety_fallback. Resposta válida exige decisão de status ok; divergência de status gera unknown. Evidência ausente, histórica, malformada ou incompatível gera unknown. Nunca inferir origem apenas pelo vetor."
+        },
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 72,
+          "line_end": 72,
+          "excerpt": "| hold, (0,0,1), malformed; response válida choice hold com (0,0,1) | unknown | null | null |"
+        },
+        {
+          "path": "sources/decide.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/decide.ts",
+          "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+          "line_start": 37,
+          "line_end": 40,
+          "excerpt": "  if (raw.probabilities === undefined) {\r\n    probabilities = { buy: 0, sell: 0, hold: 0, [action]: 1 } as Record<TapeAction, number>;\r\n  } else {\r\n    if (!isRecord(raw.probabilities)) return holdOnly(model, latency, \"malformed\");"
+        },
+        {
+          "path": "sources/decide.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/decide.ts",
+          "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+          "line_start": 61,
+          "line_end": 61,
+          "excerpt": "    status: \"ok\","
+        }
+      ],
+      "result": "Supplied probabilities and status ok eliminate predicate overlap; new valid-raw/status-malformed example explicitly unknown/null/null."
+    },
+    {
+      "id": "PP-SPEC-2",
+      "prior_severity": "P2",
+      "criteria": [
+        "PP-2",
+        "PP-5"
+      ],
+      "status": "resolved_in_planning",
+      "evidence": [
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 52,
+          "line_end": 52,
+          "excerpt": "O contrato de normalização observado é: buy/sell/hold; choice válida; probabilities ausente significa fallback; objeto informado usa peso ausente ou null como zero; pesos finitos não negativos; soma finita positiva; peso bruto da escolha positivo; cada valor dividido pela soma; todos os pesos normalizados finitos e peso normalizado da escolha positivo. Objeto null/array, peso negativo/não finito, soma inválida ou escolha de peso zero antes ou após normalização são respostas inválidas. Não exigir que a ação seja argmax. Comparações de vetores normalizados usam tolerância absoluta de 1e-12 por componente; nenhuma diferença maior é reparada."
+        },
+        {
+          "path": "NEXT-SPEC.md",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/NEXT-SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "line_start": 71,
+          "line_end": 71,
+          "excerpt": "| hold, (0,0,1), malformed; response choice buy com (Number.MIN_VALUE,2,0), cujo peso buy normalizado vira zero | adapter_safety_fallback | null | null |"
+        },
+        {
+          "path": "sources/decide.ts",
+          "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/provenance-spec-review-v2/sources/decide.ts",
+          "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+          "line_start": 50,
+          "line_end": 51,
+          "excerpt": "    probabilities = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };\r\n    if (!TAPE_ACTIONS.every((key) => Number.isFinite(probabilities[key])) || !(probabilities[action] > 0)) return holdOnly(model, latency, \"malformed\");"
+        }
+      ],
+      "result": "Post-normalization selected positivity and finite normalized values now match source; explicit Number.MIN_VALUE underflow expectation safety/null/null."
+    }
+  ]
+}

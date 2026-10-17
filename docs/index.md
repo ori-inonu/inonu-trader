@@ -90,6 +90,7 @@ Comece por [README.md](README.md). Convenções: [SCHEMA.md](SCHEMA.md). Catálo
 - [[_meta/audit|Auditoria documental]].
 - [[_meta/currentness|Atualidade e divergências]].
 - [[raw/README|Política de fontes externas futuras]].
+## Proveniência dos pesos de decisão (2026-10-13)- [Especificação](sdd/decision-weight-provenance/SPEC.md), [requisitos](sdd/decision-weight-provenance/requirements.md), [uso](sdd/decision-weight-provenance/USAGE.md) e [verificação](sdd/decision-weight-provenance/VERIFICATION.md) do módulo `src/decision-evidence` (puro, não ligado ao ciclo). Trabalho do Codex que estava sem commit; integrado aqui com typecheck e 11 testes passando.
 
 ## Interpretação segura
 

@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "recorded_at": "2026-10-13",
+  "conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "phase": "wayfinder_planning",
+  "consultations": [
+    {
+      "status": "assessed",
+      "receiptId": "15aacf80-1dd9-4f16-b11e-edd2fa5931f7",
+      "inputDigest": "ff72a9428e2151cc7bf686d6b7870686c2a16cf33921992e42d97969f9e6ee67",
+      "rubricVersion": "batch-2026-09-26.2",
+      "model": "jev-1.13.0",
+      "answers": {
+        "next_contract": {
+          "type": "choice",
+          "domain": "task",
+          "providerChoice": "probability_provenance",
+          "bestCandidate": "probability_provenance",
+          "probabilities": {
+            "probability_provenance": 1,
+            "capital_risk_evidence": 0,
+            "real_dataset_readiness": 0,
+            "insufficient_evidence": 0
+          },
+          "confidence": 1,
+          "disposition": "recommendation",
+          "recommendation": "probability_provenance",
+          "policy": {
+            "version": "decision-policy-2026-09-26.1",
+            "mode": "conservative",
+            "minConfidence": 0.6,
+            "minProbability": 0.6,
+            "calibration": "not_locally_calibrated"
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 798,
+        "output_tokens": 71
+      },
+      "receiptPersisted": true,
+      "authority": "advisory_only",
+      "approved_by": "jev_delegated",
+      "human_response": false,
+      "billed_cost_usd": null
+    },
+    {
+      "status": "assessed",
+      "receiptId": "9c15eb14-a7b4-47d2-80ef-2e98b4dbfa86",
+      "inputDigest": "c80b66334be1234bf8cc36a45c12e3c134097d12572f346801461132fd23acad",
+      "rubricVersion": "batch-2026-09-26.2",
+      "model": "jev-1.13.0",
+      "answers": {
+        "contract_seam": {
+          "type": "choice",
+          "domain": "strategy",
+          "providerChoice": "additive_annotation",
+          "bestCandidate": "additive_annotation",
+          "probabilities": {
+            "additive_annotation": 0.98,
+            "future_schema_migration": 0,
+            "insufficient_evidence": 0.02
+          },
+          "confidence": 0.97,
+          "disposition": "recommendation",
+          "recommendation": "additive_annotation",
+          "policy": {
+            "version": "decision-policy-2026-09-26.1",
+            "mode": "conservative",
+            "minConfidence": 0.6,
+            "minProbability": 0.6,
+            "calibration": "not_locally_calibrated"
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 713,
+        "output_tokens": 54
+      },
+      "receiptPersisted": true,
+      "authority": "advisory_only",
+      "approved_by": "jev_delegated",
+      "human_response": false,
+      "billed_cost_usd": null
+    }
+  ],
+  "initial_local_validation": {
+    "status": "skipped",
+    "reason": "unsafe_candidate_id",
+    "provider_request": false,
+    "correction": "Removed a manually supplied reserved abstention candidate; the installed service adds it."
+  },
+  "applied_scope": "Planning only. No authorization for live integration, trading, spending other than the delegated consultations, deployment or model changes."
+}

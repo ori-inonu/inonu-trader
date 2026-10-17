@@ -1,0 +1,10 @@
+bun test v1.3.14 (0d9b296a)
+
+src\decision-evidence\weights.test.ts:
+(pass) historical unit weights retain their value without implying provider provenance [0.91ms]
+(pass) invalid decisions return null instead of inventing weights or status [0.39ms]
+
+ 2 pass
+ 0 fail
+ 18 expect() calls
+Ran 2 tests across 1 file. [63.00ms]

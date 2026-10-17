@@ -1,0 +1,34 @@
+bun test v1.3.14 (0d9b296a)
+
+src\decision-evidence\weights.test.ts:
+(pass) historical unit weights retain their value without implying provider provenance [0.65ms]
+26 |   const decision = { action: "buy", probabilities: { buy: 1, sell: 0, hold: 0 }, status: "ok" };
+27 |   expect(annotateDecisionWeights(decision, {
+28 |     kind: "observed_response", raw: { choice: "buy", probabilities: { buy: 1, sell: 0, hold: 0 } },
+29 |   })).toEqual({
+30 |     schemaVersion: 1, origin: "provider_reported", selectedWeight: 1,
+31 |     reportedSelectedWeight: 1, financialCalibration: "not_established",
+           ^
+error: expect(received).toEqual(expected)
+
+  {
+    "financialCalibration": "not_established",
+-   "origin": "provider_reported",
+-   "reportedSelectedWeight": 1,
++   "origin": "unknown",
++   "reportedSelectedWeight": null,
+    "schemaVersion": 1,
+    "selectedWeight": 1,
+  }
+
+- Expected  - 2
++ Received  + 2
+
+      at <anonymous> (C:\Users\gabri\.codex\worktrees\decision-weight-evidence\jev-trader\src\decision-evidence\weights.test.ts:31:7)
+(fail) a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback [0.61ms]
+(pass) invalid decisions return null instead of inventing weights or status [0.26ms]
+
+ 2 pass
+ 1 fail
+ 19 expect() calls
+Ran 3 tests across 1 file. [66.00ms]

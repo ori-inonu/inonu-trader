@@ -1,0 +1,28 @@
+bun test v1.3.14 (0d9b296a)
+
+src\decision-evidence\weights.test.ts:
+(pass) historical unit weights retain their value without implying provider provenance [0.33ms]
+39 |     { ...valid, probabilities: { buy: 0, sell: 1, hold: 0 } },
+40 |     { ...valid, probabilities: { buy: 0.9, sell: 0, hold: 0 } },
+41 |   ]) {
+42 |     expect(annotateDecisionWeights(decision, { kind: "historical_record" })).toBeNull();
+43 |   }
+44 | });
+                                                                                  ^
+error: expect(received).toBeNull()
+
+Received: {
+  schemaVersion: 1,
+  origin: "unknown",
+  selectedWeight: null,
+  reportedSelectedWeight: null,
+  financialCalibration: "not_established",
+}
+
+      at <anonymous> (C:\Users\gabri\.codex\worktrees\decision-weight-evidence\jev-trader\src\decision-evidence\weights.test.ts:44:78)
+(fail) invalid decisions return null instead of inventing weights or status [0.72ms]
+
+ 1 pass
+ 1 fail
+ 8 expect() calls
+Ran 2 tests across 1 file. [68.00ms]

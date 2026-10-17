@@ -1,0 +1,17 @@
+{
+  "status": "assessed",
+  "receiptId": "8c00888a-0426-457e-b1db-1919013b5b5a",
+  "inputDigest": "a14776ab6a641ce4c833b7f8c8cd033196553335f4871a4622e7d19d9d18ddf8",
+  "model": "jev-1.13.0",
+  "question": "execution_boundary",
+  "recommendation": "separate_local_task",
+  "selectedProbability": 0.99,
+  "confidence": 0.98,
+  "usage": {"input_tokens": 663, "output_tokens": 59},
+  "billedCost": null,
+  "authority": "advisory_only",
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "precondition": "Independent specification approval before implementation",
+  "scope": "Local pure module in separate isolated SDD task; no live integration, trades or publication"
+}
