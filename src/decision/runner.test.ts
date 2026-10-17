@@ -139,6 +139,35 @@ describe("runner", () => {
     expect((await runner.step(opportunity("b"))).fill?.status).toBe("filled");
   });
 
+  test("passos simultâneos são serializados: nonces em ordem e uma porta lenta não recebe ordens intercaladas", async () => {
+    const real = createPaperPort({ mode: "paper", priceFor: () => 2, feeBps: 0, gasUsd: 0 });
+    const inFlight: number[] = [];
+    let active = 0;
+    let maxActive = 0;
+    const slow = {
+      mode: real.mode,
+      submit: async (o: Parameters<typeof real.submit>[0]): Promise<Fill> => {
+        active += 1;
+        maxActive = Math.max(maxActive, active);
+        inFlight.push(o.nonce);
+        await new Promise((r) => setTimeout(r, 5));
+        active -= 1;
+        return real.submit(o);
+      },
+    };
+    const { runner } = setup({ deps: { port: slow, guard: createGuard({ mode: "paper", failureThreshold: 99, cooldownMs: 1 }) } });
+    const results = await Promise.all(["a", "b", "c", "d"].map((id) => runner.step(opportunity(id))));
+    expect(results.map((r) => r.fill?.status)).toEqual(["filled", "filled", "filled", "filled"]);
+    expect(inFlight).toEqual([1, 2, 3, 4]);
+    expect(maxActive).toBe(1);
+  });
+
+  test("um passo que lança não trava os seguintes", async () => {
+    const { runner } = setup({ deps: { portfolio: (() => { let n = 0; return () => { if (n++ === 0) throw new Error("fonte caiu"); return portfolio(); }; })() } });
+    await expect(runner.step(opportunity("a"))).rejects.toThrow("fonte caiu");
+    expect((await runner.step(opportunity("b"))).fill?.status).toBe("filled");
+  });
+
   test("guard e porta em modos diferentes não montam", () => {
     expect(() => setup({ deps: { guard: createGuard({ mode: "replay", failureThreshold: 3, cooldownMs: 1 }) } })).toThrow("modos diferentes");
   });

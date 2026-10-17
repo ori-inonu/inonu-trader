@@ -98,12 +98,12 @@ Conclusão operacional: o padrão correto do motor é `NAO_OPERAR`, e uma opera�
 ## Restrições
 
 - Sem dinheiro real, sem segredos em arquivos, sem chamada paga ao Jev por trabalhador. Nenhum consenso do Jev foi executado: a decisão de design (duas pernas e breaker com 3 falhas) foi planejada (13 chamadas, cerca de 11 mil tokens de entrada) e escolhida como a opção mais reversível, tudo por configuração.
-- O ledger de api-budget fica no diretório git comum e é isolado por processo nos testes (`JEV_API_BUDGET_LEDGER`).
+- O ledger de api-budget fica em `<dados do app>/onchain/api-budget-ledger.json` nos três pontos de produção (desktop, nuvem e servidor local); fora deles, o padrão é o diretório git comum, com `data/` do diretório atual quando não há git. Nos testes ele é isolado por processo (`JEV_API_BUDGET_LEDGER`). Ledger corrompido é posto de lado em `.corrupt` e o orçamento recomeça.
 
 ## Bloqueios que dependem do dono
 
 - Concluir o setup do Gas Station da carteira: sem isso nenhuma ordem, de compra ou de venda, sai.
-- Conferir no portal o plano real das chaves Trade e Market e a data de criação da chave Trade. Com `JEV_OKX_PLAN` e `JEV_OKX_KEY_CREATED_AT` o registry passa a usar esses valores.
+- Conferir no portal o plano real das chaves Trade e Market e a data de criação da chave Trade. Com `JEV_OKX_PLAN` e `JEV_OKX_KEY_CREATED_AT` o registry passa a usar esses valores. Se a chave Trade já saiu do Trial, não defina `JEV_OKX_KEY_CREATED_AT`: passados 60 dias o registry nega as cotações como pagamento exigido.
 - Qualquer elevação de plano, uso de pagamento por chamada ou ligação do live.
 
 ## Próximas ações

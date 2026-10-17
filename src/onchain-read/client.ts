@@ -8,6 +8,7 @@
  * request expired") is retried once inside the same queue slot with the just-learned offset before the call
  * reports clock_skew.
  */
+import { join } from "node:path";
 import { signRequest } from "./sign";
 import type { OnchainTier, ProviderRequest } from "./catalog";
 import { createApiBudget, BudgetDenied, type ApiBudget, type BudgetRequest } from "../api-budget/gateway";
@@ -87,6 +88,11 @@ interface Dispatch {
 function planFromEnv(): OkxRegistryOptions {
   const created = Date.parse(process.env.JEV_OKX_KEY_CREATED_AT ?? "");
   return { ...(process.env.JEV_OKX_PLAN ? { plan: process.env.JEV_OKX_PLAN } : {}), ...(Number.isFinite(created) ? { tradeKeyCreatedAtMs: created } : {}) };
+}
+
+/** The OKX budget kept inside an app data directory (next to the monthly usage file), so no caller depends on git or on the working directory. */
+export function okxBudgetIn(dataDir: string, now: () => number, random?: () => number): ApiBudget {
+  return createOkxBudget({ ledgerPath: join(dataDir, "onchain", "api-budget-ledger.json"), now, ...(random === undefined ? {} : { random }) });
 }
 
 export function createOkxBudget(options: { readonly ledgerPath: string; readonly now: () => number; readonly random?: () => number; readonly plan?: OkxRegistryOptions }): ApiBudget {

@@ -20,11 +20,40 @@ export interface LedgerState {
 }
 
 /** Ledger no diretorio git comum (mesmo arquivo para todos os worktrees do repo); JEV_API_BUDGET_LEDGER (caminho completo) sobrepoe; fora do git usa data/ local. */
-export function defaultLedgerPath(): string {
+export function defaultLedgerPath(gitCommonDir: () => string | null = runGit): string {
   if (process.env.JEV_API_BUDGET_LEDGER) return process.env.JEV_API_BUDGET_LEDGER;
-  const out = Bun.spawnSync(["git", "rev-parse", "--git-common-dir"], { stdout: "pipe", stderr: "ignore" });
-  const base = out.exitCode === 0 ? resolve(out.stdout.toString().trim(), "..") : resolve(".");
+  const common = gitCommonDir();
+  const base = common === null ? resolve(".") : resolve(common, "..");
   return resolve(base, "data", "api-budget", "ledger.json");
+}
+
+/** Diretório git comum, ou null quando não há git no PATH (app instalado) ou fora de um repositório. Nunca lança. */
+function runGit(): string | null {
+  try {
+    const out = Bun.spawnSync(["git", "rev-parse", "--git-common-dir"], { stdout: "pipe", stderr: "ignore" });
+    return out.exitCode === 0 ? out.stdout.toString().trim() : null;
+  } catch {
+    return null;
+  }
+}
+
+const emptyState = (): LedgerState => ({ usage: {}, blocked: {}, cooldown: {} });
+
+/** Estado salvo, ou vazio. Arquivo ilegível (truncado por uma queda) é posto de lado em `.corrupt` e o orçamento recomeça. */
+function loadState(path: string): LedgerState {
+  if (!existsSync(path)) return emptyState();
+  try {
+    const raw = JSON.parse(readFileSync(path, "utf8")) as Partial<LedgerState> | null;
+    if (raw === null || typeof raw !== "object") throw new Error("forma inválida");
+    return { ...raw, usage: raw.usage ?? {}, blocked: raw.blocked ?? {}, cooldown: raw.cooldown ?? {} };
+  } catch {
+    try {
+      renameSync(path, `${path}.corrupt`);
+    } catch {
+      /* a gravação seguinte substitui o arquivo de qualquer forma */
+    }
+    return emptyState();
+  }
 }
 
 /**
@@ -45,10 +74,20 @@ export async function updateLedger<T>(path: string, body: (state: LedgerState) =
     }
   }
   try {
-    const state: LedgerState = existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as LedgerState) : { usage: {}, blocked: {}, cooldown: {} };
+    const state = loadState(path);
     const result = body(state);
     writeFileSync(`${path}.tmp`, JSON.stringify(state));
-    renameSync(`${path}.tmp`, path);
+    // No Windows o rename sobre um arquivo aberto por um leitor (o relatório) pode falhar por instantes.
+    for (let attempt = 0; ; attempt++) {
+      try {
+        renameSync(`${path}.tmp`, path);
+        break;
+      } catch (error) {
+        const code = (error as NodeJS.ErrnoException).code;
+        if ((code !== "EPERM" && code !== "EBUSY") || attempt >= 4) throw error;
+        await Bun.sleep(20 * (attempt + 1));
+      }
+    }
     return result;
   } finally {
     rmSync(lock, { recursive: true, force: true });
