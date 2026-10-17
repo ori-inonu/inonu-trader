@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 820,
-  "headHash": "bc253037c3bb8282ff81eff0859f5805b9131a89bf2798236c79f54cfba5d39c",
+  "headSeq": 835,
+  "headHash": "2770f1fff7a0d666cfcc750ea4af28501f26d49506ced010704ec94bb7783d99",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1157,6 +1157,36 @@
       "id": "iter-validade-arestas",
       "type": "iteration",
       "text": "Validade temporal das arestas: JEV sem_consenso com 12 chamadas. A lidera (0.87 a 0.96), mas o trilho violates de A ficou em 0.26, acima de 0.2. Nao implementado. Meu diagnostico anterior de distribuicao invalida estava errado: era teto de chamadas."
+    },
+    {
+      "id": "fato-goal1-baseline",
+      "type": "fact",
+      "text": "Baseline 74,9 h do agente (2026-10-14 a 17): 2335 ciclos, 1531 ordens preparadas, 27 executadas. Desde 15/10 18:38 UTC toda ordem falha com gas_station_pendente (1187 falhas, 84%), 0 execucoes depois. Modelo p50 373 ms, cotacao p50 1034 ms. Decisao local em microssegundos."
+    },
+    {
+      "id": "fato-goal1-limites-okx",
+      "type": "fact",
+      "text": "OKX lido em 17/10: Market Free 100 mil Basic + 100 mil Premium por mes, sem WebSocket, RPS de Market nao publicado, 429 nao descrito; Trade Trial 1 RPS (ate 5 sob aprovacao) por 60 dias da chave. Plano real da chave nao verificado (portal exige login). Basic usa 3810 por dia."
+    },
+    {
+      "id": "fato-goal1-hipotese-030",
+      "type": "fact",
+      "text": "Hipotese 0,3% liquido a cada 80-100 ms: inviavel no plano (11,1 req/s contra 1 RPS; 298x a franquia Basic; cotacao+modelo 1407 ms). 0,3% por operacao seletiva nao demonstrado: impacto cotado mediano 0,23% por perna, 7 vendas reais sem ganho (-0,41%), 12 compras com media -122 bps em 15 min."
+    },
+    {
+      "id": "decisao-goal1-pernas-breaker",
+      "type": "decision",
+      "text": "Custo por perna pago duas vezes numa operacao completa; breaker de executor abre com 3 falhas persistentes iguais, sonda em 15 min dobrando ate 4 h. Reversivel por configuracao, sem consenso do Jev (sem chamada paga). Simulado no ledger real: 96% das tentativas evitadas, 0 sucessos barrados."
+    },
+    {
+      "id": "decisao-goal1-fronteira-motor",
+      "type": "decision",
+      "text": "Motor src/decision puro, so paper e replay, sem rede, assinatura, live nem import da producao (boundary.test). Experimentos entram por Limits, Costs e HealthConfig. Integracao a src/agent/cycle.ts adiada para nao colidir com a sessao Auto Research."
+    },
+    {
+      "id": "iter-goal1-motor-decisao",
+      "type": "iteration",
+      "text": "GOAL 1: orcamento de API por pool com ledger compartilhado, motor de decisao puro com NAO_OPERAR, breaker de executor, porta paper, telemetria por etapa, baseline e analise da hipotese de 0,3%. Pendente: integrar ao ciclo, Gas Station e plano real da chave (dono)."
     }
   ],
   "edges": [
@@ -3514,6 +3544,51 @@
       "from": "decisao-quota-ledger",
       "to": "iter-validade-arestas",
       "seq": 820
+    },
+    {
+      "from": "fato-estado-produto",
+      "to": "fato-goal1-baseline",
+      "seq": 822
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "fato-goal1-limites-okx",
+      "seq": 824
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "fato-goal1-hipotese-030",
+      "seq": 826
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "decisao-goal1-pernas-breaker",
+      "seq": 828
+    },
+    {
+      "from": "decisao-goal1-pernas-breaker",
+      "to": "decisao-goal1-fronteira-motor",
+      "seq": 830
+    },
+    {
+      "from": "iter-validade-arestas",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 832
+    },
+    {
+      "from": "decisao-goal1-fronteira-motor",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 833
+    },
+    {
+      "from": "fato-goal1-hipotese-030",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 834
+    },
+    {
+      "from": "fato-goal1-limites-okx",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 835
     }
   ],
   "retractions": [
