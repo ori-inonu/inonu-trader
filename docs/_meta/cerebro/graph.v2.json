@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 711,
-  "headHash": "4db77f2cfcde0cdc930fe294b8e93f23680d37768d366c3d3dacb17088c8cb09",
+  "headSeq": 716,
+  "headHash": "7b5365bc8303d91a08f262a617519fa201748afdcc195c2a1233798b059bd03d",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -917,6 +917,16 @@
       "id": "iter-specs-congelados",
       "type": "iteration",
       "text": "Consenso JEV freeze_specs: spec.md mantidos e ancorados por ponteiro de arvore git. Resta so hook de sessao do OMP global"
+    },
+    {
+      "id": "jev-cerebro-passo-10",
+      "type": "decision",
+      "text": "JEV consenso lider project_hook; spec 9c8634b705e4c22c; recibo sha256 df64d6fc6df2f2d61d187bde6035aec335089e9962bf72353ce5a467e3918ede. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-hook-omp",
+      "type": "iteration",
+      "text": "Consenso JEV project_hook: .omp/hooks/pre/cerebro.ts (before_agent_start, 1x por sessao) reaproveita .codex/hooks/session_start.ts e injeta ~1,7 KB. Fumaça local ok; carga real no OMP nao testada (exige sessao nova)"
     }
   ],
   "edges": [
@@ -2969,6 +2979,21 @@
       "from": "iter-research-congelado",
       "to": "iter-specs-congelados",
       "seq": 711
+    },
+    {
+      "from": "iter-specs-congelados",
+      "to": "jev-cerebro-passo-10",
+      "seq": 713
+    },
+    {
+      "from": "jev-cerebro-passo-10",
+      "to": "iter-hook-omp",
+      "seq": 715
+    },
+    {
+      "from": "iter-specs-congelados",
+      "to": "iter-hook-omp",
+      "seq": 716
     }
   ],
   "retractions": [
