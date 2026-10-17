@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 669,
-  "headHash": "8faa862686ae7c2cf933ccb6a1da3ab1f93f22000423008d9fca40a8ada02711",
+  "headSeq": 674,
+  "headHash": "f206f04d2d0571ddfd6bb411f35c5e3659640d786499eb2114715701d023727c",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -942,6 +942,16 @@
       "id": "iter-log-congelado",
       "type": "iteration",
       "text": "Consenso JEV keep_log_new_in_graph: log.md nao migrado nem apagado; passa a ser legado e o grafo e o unico registro novo. Gates typecheck, test 7864 pass, lab 647 pass em 19d9ef1"
+    },
+    {
+      "id": "jev-cerebro-passo-6",
+      "type": "decision",
+      "text": "JEV consenso lider forget_report; spec 22beddc74c85b0d9; recibo sha256 3fce86ab5aadb748501a0bfb0228318b205f0181ec0c60d4b47de6926f567cd9. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-esquecer",
+      "type": "iteration",
+      "text": "lint avisa iteracoes antigas sem aresta com os 20 nos recentes (esquecer?); so aviso, retract continua manual (consenso JEV forget_report). Hoje 15 candidatas"
     }
   ],
   "edges": [
@@ -3334,6 +3344,21 @@
       "from": "iter-plano-estrela",
       "to": "iter-log-congelado",
       "seq": 669
+    },
+    {
+      "from": "iter-log-congelado",
+      "to": "jev-cerebro-passo-6",
+      "seq": 671
+    },
+    {
+      "from": "jev-cerebro-passo-6",
+      "to": "iter-esquecer",
+      "seq": 673
+    },
+    {
+      "from": "iter-log-congelado",
+      "to": "iter-esquecer",
+      "seq": 674
     }
   ],
   "retractions": [

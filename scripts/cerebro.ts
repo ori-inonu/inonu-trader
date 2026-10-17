@@ -254,6 +254,13 @@ export async function lint(root: string): Promise<string[]> {
   const keys = graph.nodes.map((node) => /^@(\S+) /.exec(node.text)?.[1]).filter((key): key is string => key !== undefined);
   return [...orphans, ...new Set(keys.filter((key, i) => keys.indexOf(key) !== i))].map((item) => (orphans.includes(item) ? item : `chave:${item}`));
 }
+/** Candidatos a esquecimento: iteracoes fora dos ultimos `recent` nos, sem aresta com os recentes. Aviso, nunca falha. */
+export async function stale(root: string, recent = 20): Promise<string[]> {
+  const { graph } = await load(root, true);
+  const fresh = new Set(graph.nodes.slice(-recent).map((node) => node.id));
+  const touched = new Set(graph.edges.flatMap((e) => (fresh.has(e.from) ? [e.to] : fresh.has(e.to) ? [e.from] : [])));
+  return graph.nodes.filter((node) => node.type === "iteration" && !fresh.has(node.id) && !touched.has(node.id)).map((node) => node.id);
+}
 
 async function main(): Promise<void> {
   const [command, ...args] = process.argv.slice(2);
@@ -274,6 +281,8 @@ async function main(): Promise<void> {
     const orphans = await lint(root);
     console.log(orphans.length ? `orfaos: ${orphans.join(",")}` : "ok sem orfaos");
     if (orphans.length) process.exitCode = 1;
+    const old = await stale(root);
+    if (old.length) console.log(`esquecer? (retract se superado): ${old.join(",")}`);
   } else if (command === "verify" && args.length === 0) {
     const result = await verify(root);
     console.log(`ok seq=${result.seq} hash=${result.hash}`);
