@@ -8,7 +8,8 @@
  *  - Offline by default: a client sends only with valid credentials AND `allowNetwork: true`.
  *  - Credentials live in closures. No error, event, counter or property carries a credential, a signature, a header or a
  *    query string. The original exception of the `fetch` is never attached to an error.
- *  - Retries only for HTTP 429 and 5xx, bounded, with a deterministic exponential backoff. No per call payment is ever made.
+ *  - Retries only for HTTP 429 and 5xx, bounded, with exponential backoff (full jitter when `random` is injected).
+ *    No per call payment is ever made: a 402 blocks further calls until the next UTC month.
  */
 
 import { createHmac } from "node:crypto";
@@ -262,6 +263,7 @@ export interface TransportConfig {
   readonly maxRetries: number;
   readonly backoffBaseMs: number;
   readonly backoffMaxMs: number;
+  readonly random?: (() => number) | undefined;
   readonly maxResponseChars: number;
   readonly onCall?: ((event: CallEvent) => void) | undefined;
 }
@@ -319,7 +321,24 @@ function readProviderInfo(text: string, secrets: readonly string[]): { apiCode: 
   }
 }
 
+/** Start of the next UTC month: the instant a payment demand (402) stops blocking reads. */
+export function nextUtcMonthMs(now: number): number {
+  const date = new Date(now);
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1);
+}
+
+/**
+ * Full jitter backoff: a uniform draw in [0, min(maxMs, baseMs * 2^attempt)], never below the provider's Retry-After.
+ * `rng` yields a value in [0, 1). Without an injected `random` the transport uses the ceiling itself: a deterministic schedule.
+ */
+export function backoffMs(attempt: number, retryAfterMs: number | undefined, rng: () => number, bounds: { baseMs: number; maxMs: number } = { baseMs: DEFAULTS.backoffBaseMs, maxMs: DEFAULTS.backoffMaxMs }): number {
+  const ceiling = Math.min(bounds.maxMs, bounds.baseMs * 2 ** attempt);
+  return Math.max(retryAfterMs ?? 0, Math.floor(rng() * ceiling));
+}
+
 export function createTransport(config: TransportConfig): Transport {
+  // epoch ms until which every read is refused after a 402: a payment demand blocks until the next UTC month
+  const paymentBlocked = new Map<string, number>();
   function emit(event: CallEvent): void {
     if (config.onCall === undefined) return;
     try {
@@ -380,6 +399,7 @@ export function createTransport(config: TransportConfig): Transport {
       const requestPath = `${path}${method === "GET" ? buildQuery(input.query, path) : ""}`;
       const body = method === "POST" ? buildBody(input.body, path) : "";
       if (!config.canSend()) throw new OnchainosError("offline", config.offlineDetail, { endpoint: path });
+      if (config.now() < (paymentBlocked.get(path) ?? 0)) throw new OnchainosError("http", "pagamento exigido pelo provedor: chamadas bloqueadas até o próximo mês UTC", { endpoint: path, httpStatus: 402 });
 
       config.quota.recordCall(endpoint.tier);
       const requestedAtMs = config.now();
@@ -404,10 +424,11 @@ export function createTransport(config: TransportConfig): Transport {
         if (retryable && index < config.maxRetries) {
           emit({ endpoint: pathOnly(path), tier: endpoint.tier, attempt: attempts, status, elapsedMs, outcome: "retry" });
           config.quota.recordRetry();
-          await config.sleep(Math.min(config.backoffMaxMs, config.backoffBaseMs * 2 ** index));
+          await config.sleep(backoffMs(index, undefined, config.random ?? (() => 1), { baseMs: config.backoffBaseMs, maxMs: config.backoffMaxMs }));
           continue;
         }
         if (status < 200 || status >= 300) {
+          if (status === 402) paymentBlocked.set(path, nextUtcMonthMs(config.now()));
           emit({ endpoint: pathOnly(path), tier: endpoint.tier, attempt: attempts, status, elapsedMs, outcome: "error" });
           const info = readProviderInfo(text, secrets);
           const kind: OnchainosErrorKind = status === 429 ? "rate_limited" : "http";
@@ -470,6 +491,8 @@ export interface OnchainosHttpOptions extends HttpTuning {
   fetch: FetchLike;
   now: () => number;
   sleep: (ms: number) => Promise<void>;
+  /** Source of the backoff jitter. Absent: the deterministic ceiling, no randomness. */
+  random?: () => number;
   credentials?: OnchainosCredentials | undefined;
   /** Must be exactly `true`, together with valid credentials, for anything to be sent. */
   allowNetwork?: boolean;
@@ -535,6 +558,7 @@ export function createOnchainosHttp(options: OnchainosHttpOptions): OnchainosHtt
     fetch: options.fetch,
     now: options.now,
     sleep: options.sleep,
+    random: options.random,
     limiter,
     quota,
     canSend: () => ready,

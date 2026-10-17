@@ -80,3 +80,10 @@ Comece por [README.md](README.md). Convenções: [SCHEMA.md](SCHEMA.md). Catálo
 ## Interpretação segura
 
 Mapas e classificações não substituem contratos originais, não autorizam operações e não demonstram estado live. Fontes históricas, propostas e divergências continuam identificadas nos caminhos originais. Consulte [[governanca-e-historico]] e [[seguranca-e-qualificacao]].
+
+## Motor de decisão e orçamento de API do OnchainOS (2026-10-17)
+
+- [Especificação](specs/motor-decisao-onchainos/spec.md): contratos, fronteira com a experimentação, limites verificados da OKX, baseline medido e resultado sobre a hipótese de 0,3% líquido.
+- [Roadmap priorizado do dono](specs/motor-decisao-onchainos/roadmap.md): épicos E0 a E13 em P0, P1 e P2; texto recebido cortado em E8, com a cobertura pelo GOAL 1 anotada no fim.
+- [ADR 0001](adr/0001-motor-de-decisao-puro-sem-live.md): motor puro, só paper e replay.
+- [Glossário](../GLOSSARY.md): perna, pool, executor indisponível, sonda e demais termos.

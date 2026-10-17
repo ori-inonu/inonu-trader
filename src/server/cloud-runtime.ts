@@ -9,7 +9,7 @@ import { createEcosystemSource } from "../inonu/source-ecosystem";
 import { okxNowMs } from "../okx-clock";
 import { createBudget } from "../onchain-read/budget";
 import { createOnchainCache } from "../onchain-read/cache";
-import { createOnchainClient } from "../onchain-read/client";
+import { createOnchainClient, okxBudgetIn } from "../onchain-read/client";
 import { createOnchainGateway } from "../onchain-read/gateway";
 import { createOnchainHandler } from "../onchain-read/http";
 import { createProbeOnchainos } from "../onchain-read/probe";
@@ -71,7 +71,7 @@ export function startCloudRuntime(options: CloudRuntimeOptions) {
   const fetchImpl = options.fetch ?? fetch;
   const { store, dataDir } = options;
   const gateway = createOnchainGateway({
-    client: createOnchainClient({ credentials: () => store.credentials().okx, fetch: fetchImpl, now }),
+    client: createOnchainClient({ credentials: () => store.credentials().okx, fetch: fetchImpl, now, budget: okxBudgetIn(dataDir, now) }),
     cache: createOnchainCache(now),
     budget: createBudget({ dir: dataDir, now, caps: () => ({ basic: store.prefs().onchain.capBasic, premium: store.prefs().onchain.capPremium }) }),
     credentialsState: () => store.status().okx.state,

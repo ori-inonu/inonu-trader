@@ -23,6 +23,9 @@ import { binaryMatches, resolveCliPath, createCliExecutor, createEntryQuoter, cr
 import { configFile, createConfigStore, type ConfigPatch } from "./config";
 import { capRaised, type PolicyMirror } from "./gate";
 import { createCycleRunner, type CycleReport, type Executor } from "./cycle";
+import { createProductionShadow } from "../decision-shadow/shadow";
+import { jsonlEventSink, withExecutorHealth } from "./executor-guard";
+import { jsonlTimingSink, withCliTiming } from "./cli-timing";
 import { cachedEntryQuoteReader, impactOfQuote } from "./entry-cost";
 import { createRecorders } from "./recording";
 import { createFileAgentLedger } from "./ledger";
@@ -336,7 +339,9 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
       return (options.processRunner ?? createProcessRunner({ binary: path, home })).run(args, o);
     },
   };
-  const runner = createGuardedRunner(createVerifiedRunner(lazy, binary));
+  // the time of each command of the tool (swap quote, swap execute, wallet history) goes to cli-timing.jsonl: command name and duration only, never an argument (JEV_CLI_TIMING=0 turns it off)
+  const timedLazy = withCliTiming(lazy, { now: () => Date.now(), sink: jsonlTimingSink(join(dir, "cli-timing.jsonl")), enabled: () => process.env.JEV_CLI_TIMING !== "0" });
+  const runner = createGuardedRunner(createVerifiedRunner(timedLazy, binary));
   // the session of the tool is looked at again before each order, not only once per cycle: a cycle can last minutes and the session keeps running out
   const sessionLeftMs = (): number | null => {
     const text = readTextFile(join(home, "session.json"));
@@ -615,6 +620,21 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
   const macroBridge: MacroBridge | null = macro === null ? null : createMacroBridge({ macro, requestCycle: () => scheduler.requestCycle() });
   if (macroBridge !== null) macroEvents = createContextOpportunityDispatcher({ now: localNow, maxAgeMs: MACRO_EVENT_MAX_AGE_MS, allowed: eventAdmission, request: (batch) => macroBridge.request(batch) });
 
+  // controles do motor de decisão em produção (GOAL 1): o executor para de insistir quando falha por motivo persistente (JEV_EXECUTOR_BREAKER=0 desliga), e o motor avalia ao lado, em sombra, as compras do fechamento (JEV_ENGINE_SHADOW=0 desliga); nenhum dos dois decide ordem
+  const executorEvents = jsonlEventSink(join(dir, "executor-health.jsonl"));
+  const guardedExecutor = withExecutorHealth(executor, {
+    now: localNow,
+    enabled: () => process.env.JEV_EXECUTOR_BREAKER !== "0",
+    onEvent: (event) => {
+      try {
+        executorEvents(event);
+      } catch {
+        // an event that could not be kept costs nothing
+      }
+    },
+  });
+  const engineShadow = createProductionShadow({ dir, now: localNow, executorAvailable: () => guardedExecutor.health().state !== "open", enabled: () => process.env.JEV_ENGINE_SHADOW !== "0", freshPrice });
+
   const cycles = createCycleRunner({
     state: runState,
     ledger,
@@ -622,7 +642,7 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
     scoreboard,
     plans,
     model: modelFor,
-    executor,
+    executor: guardedExecutor,
     now: localNow,
     newId,
     stopFilePresent: () => existsSync(stopPath),
@@ -742,6 +762,8 @@ export function createAgentService(options: AgentServiceOptions): AgentService &
               } catch {
                 // a record that could not be kept costs nothing
               }
+              // the decision engine looks at the same purchase beside the cycle and keeps where it differs (engine-shadow.jsonl); it never touches an order
+              engineShadow.observe(record);
             },
             maxPerCycle: 2,
             timeouts: { quoteMs: 30_000, modelMs: TIMEOUTS.modelMs },

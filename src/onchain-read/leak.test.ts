@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { createSettingsStore } from "../settings/store";
 import { createBudget } from "./budget";
 import { createOnchainCache } from "./cache";
-import { createOnchainClient } from "./client";
+import { createOkxBudget, createOnchainClient } from "./client";
 import { createOnchainGateway } from "./gateway";
 import { createOnchainHandler } from "./http";
 
@@ -47,6 +47,7 @@ describe("sentinel credential sweep", () => {
     const fetchLog: string[] = [];
     const client = createOnchainClient({
       credentials: () => store.credentials().okx,
+      budget: createOkxBudget({ ledgerPath: join(tempDir(), "ledger.json"), now: () => 1_000_000 }),
       fetch: (async (url: string | URL | Request, init?: RequestInit) => {
         // the provider side legitimately receives the signed headers; record only that they exist
         const h = init?.headers as Record<string, string>;

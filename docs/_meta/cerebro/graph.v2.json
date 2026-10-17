@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 985,
-  "headHash": "5364ac5f35ca08616344e6602af9669129742a0b037187202410b89751543323",
+  "headSeq": 1017,
+  "headHash": "0cacfc086df3e7aa9ffd63dcb838a00e6959005603ef70d3c591d14341a184ca",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1512,6 +1512,71 @@
       "id": "rc2-branches",
       "type": "fact",
       "text": "Inventario de branches e worktrees: so autoresearch (merge em andamento, 13 conflitos) e goal1 (10 commits, sessao ativa, 1712 alteracoes) tem trabalho exclusivo; as demais ja estao na main. Revisao no workflow revisao-branches-worktrees; nada removido nem movido."
+    },
+    {
+      "id": "fato-goal1-baseline",
+      "type": "fact",
+      "text": "Baseline 74,9 h do agente (2026-10-14 a 17): 2335 ciclos, 1531 ordens preparadas, 27 executadas. Desde 15/10 18:38 UTC toda ordem falha com gas_station_pendente (1187 falhas, 84%), 0 execucoes depois. Modelo p50 373 ms, cotacao p50 1034 ms. Decisao local em microssegundos."
+    },
+    {
+      "id": "fato-goal1-limites-okx",
+      "type": "fact",
+      "text": "OKX lido em 17/10: Market Free 100 mil Basic + 100 mil Premium por mes, sem WebSocket, RPS de Market nao publicado, 429 nao descrito; Trade Trial 1 RPS (ate 5 sob aprovacao) por 60 dias da chave. Plano real da chave nao verificado (portal exige login). Basic usa 3810 por dia."
+    },
+    {
+      "id": "fato-goal1-hipotese-030",
+      "type": "fact",
+      "text": "Hipotese 0,3% liquido a cada 80-100 ms: inviavel no plano (11,1 req/s contra 1 RPS; 298x a franquia Basic; cotacao+modelo 1407 ms). 0,3% por operacao seletiva nao demonstrado: impacto cotado mediano 0,23% por perna, 7 vendas reais sem ganho (-0,41%), 12 compras com media -122 bps em 15 min."
+    },
+    {
+      "id": "decisao-goal1-pernas-breaker",
+      "type": "decision",
+      "text": "Custo por perna pago duas vezes numa operacao completa; breaker de executor abre com 3 falhas persistentes iguais, sonda em 15 min dobrando ate 4 h. Reversivel por configuracao, sem consenso do Jev (sem chamada paga). Simulado no ledger real: 96% das tentativas evitadas, 0 sucessos barrados."
+    },
+    {
+      "id": "decisao-goal1-fronteira-motor",
+      "type": "decision",
+      "text": "Motor src/decision puro, so paper e replay, sem rede, assinatura, live nem import da producao (boundary.test). Experimentos entram por Limits, Costs e HealthConfig. Integracao a src/agent/cycle.ts adiada para nao colidir com a sessao Auto Research."
+    },
+    {
+      "id": "iter-goal1-motor-decisao",
+      "type": "iteration",
+      "text": "GOAL 1: orcamento de API por pool com ledger compartilhado, motor de decisao puro com NAO_OPERAR, breaker de executor, porta paper, telemetria por etapa, baseline e analise da hipotese de 0,3%. Pendente: integrar ao ciclo, Gas Station e plano real da chave (dono)."
+    },
+    {
+      "id": "fato-goal1-roadmap-dono",
+      "type": "fact",
+      "text": "Roadmap priorizado do dono (2026-10-17): epicos E0 a E13 em P0 a P2, operacao real desabilitada ate os criterios de promocao. Texto recebido cortado em E8; E9 a E13 sem detalhe. Salvo em docs/specs/motor-decisao-onchainos/roadmap.md, com a cobertura pelo GOAL 1 anotada."
+    },
+    {
+      "id": "fato-goal1-ciclo-vida-ordem",
+      "type": "fact",
+      "text": "Ciclo de vida real da ordem (27 executadas): fila p50 5 ms; executor (cotacao, simulacao, assinatura, envio) p50 3,5 s; inclusao no bloco p50 3,9 s; recibo local p50 30,7 s (n=22). Slippage contra a cotacao p50 0 bps, p95 10,6 (15 pares). O recibo e o maior trecho evitavel."
+    },
+    {
+      "id": "fato-goal1-replay-motor",
+      "type": "fact",
+      "text": "Replay do motor sobre 240 fechamentos reais: 108 avaliaveis; a producao pulou os 108 e o motor tambem (106 no_edge, 2 edge_below_min). Custo de duas pernas p50 110 bps; melhor edge liquido +29,8 bps contra o minimo de 30. Probabilidade do modelo usada bruta, nao calibrada."
+    },
+    {
+      "id": "decisao-goal1-ligacao-ciclo",
+      "type": "decision",
+      "text": "Guarda do Executor (JEV_EXECUTOR_BREAKER=0 desliga) e observador do motor em sombra (JEV_ENGINE_SHADOW=0 desliga) ligados em wire.ts, +20 linhas. O motor ainda nao decide ordens: falta pWin calibrado (1 de 108 fechamentos liga ao scoreboard). Conflito esperado com a Auto Research nesses 4 trechos."
+    },
+    {
+      "id": "iter-goal1-ligacao-ciclo",
+      "type": "iteration",
+      "text": "GOAL 1, ligacao ao ciclo: guarda do executor em producao, observador do motor em sombra, ciclo de vida da ordem e slippage medidos, replay sobre fechamentos reais e painel estatico. Pendente: pWin calibrado, tempo de recibo, Gas Station e plano real da chave (dono)."
+    },
+    {
+      "id": "fato-goal1-reconciliacao-real",
+      "type": "fact",
+      "text": "Reconciliacao real: 26 das 27 ordens executadas tem fill (a restante foi resolvida a mao), 0 fills sem ordem, 4 transmitidas sem desfecho; as 9 compras gastaram o valor pretendido. O cronometro da CLI separa cotacao, assinatura com envio e recibo daqui para frente."
+    },
+    {
+      "id": "decisao-goal1-painel-e-papel",
+      "type": "decision",
+      "text": "Painel do motor integrado ao servidor de relatorios em /motor (journals lidos a cada 60 s, so GET, CSP restrita). Perna de papel no observador: decisao, execucao simulada e reconciliacao so quando o motor aprova, com preco do freshPrice do ciclo; grava engine-paper.jsonl."
     }
   ],
   "edges": [
@@ -4274,6 +4339,101 @@
       "from": "iter-wayfinder-lucro-por-ciclo",
       "to": "rc2-branches",
       "seq": 985
+    },
+    {
+      "from": "fato-estado-produto",
+      "to": "fato-goal1-baseline",
+      "seq": 987
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "fato-goal1-limites-okx",
+      "seq": 989
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "fato-goal1-hipotese-030",
+      "seq": 991
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "decisao-goal1-pernas-breaker",
+      "seq": 993
+    },
+    {
+      "from": "decisao-goal1-pernas-breaker",
+      "to": "decisao-goal1-fronteira-motor",
+      "seq": 995
+    },
+    {
+      "from": "iter-validade-arestas",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 997
+    },
+    {
+      "from": "decisao-goal1-fronteira-motor",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 998
+    },
+    {
+      "from": "fato-goal1-hipotese-030",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 999
+    },
+    {
+      "from": "fato-goal1-limites-okx",
+      "to": "iter-goal1-motor-decisao",
+      "seq": 1000
+    },
+    {
+      "from": "iter-goal1-motor-decisao",
+      "to": "fato-goal1-roadmap-dono",
+      "seq": 1002
+    },
+    {
+      "from": "fato-goal1-baseline",
+      "to": "fato-goal1-ciclo-vida-ordem",
+      "seq": 1004
+    },
+    {
+      "from": "fato-goal1-hipotese-030",
+      "to": "fato-goal1-replay-motor",
+      "seq": 1006
+    },
+    {
+      "from": "decisao-goal1-fronteira-motor",
+      "to": "decisao-goal1-ligacao-ciclo",
+      "seq": 1008
+    },
+    {
+      "from": "iter-goal1-motor-decisao",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 1010
+    },
+    {
+      "from": "decisao-goal1-ligacao-ciclo",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 1011
+    },
+    {
+      "from": "fato-goal1-replay-motor",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 1012
+    },
+    {
+      "from": "fato-goal1-ciclo-vida-ordem",
+      "to": "iter-goal1-ligacao-ciclo",
+      "seq": 1013
+    },
+    {
+      "from": "fato-goal1-ciclo-vida-ordem",
+      "to": "fato-goal1-reconciliacao-real",
+      "seq": 1015
+    },
+    {
+      "from": "decisao-goal1-ligacao-ciclo",
+      "to": "decisao-goal1-painel-e-papel",
+      "seq": 1017
     }
   ],
   "retractions": [

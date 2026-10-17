@@ -6,7 +6,7 @@ import { createSettingsStore } from "./settings/store";
 import { createSettingsHandler, isSettingsPath } from "./settings/http";
 import { createBudget } from "./onchain-read/budget";
 import { createOnchainCache } from "./onchain-read/cache";
-import { createOnchainClient } from "./onchain-read/client";
+import { createOnchainClient, okxBudgetIn } from "./onchain-read/client";
 import { createOnchainGateway } from "./onchain-read/gateway";
 import { createOnchainHandler, isOnchainPath } from "./onchain-read/http";
 import { createProbeOnchainos } from "./onchain-read/probe";
@@ -50,7 +50,7 @@ export function startServer(meta: Meta, history: () => BlockEvent[], preview?: H
   const onchainGateway = preview
     ? null
     : createOnchainGateway({
-        client: createOnchainClient({ credentials: () => settingsStore!.credentials().okx, fetch, now: Date.now }),
+        client: createOnchainClient({ credentials: () => settingsStore!.credentials().okx, fetch, now: Date.now, budget: okxBudgetIn(dataDir, Date.now) }),
         cache: createOnchainCache(Date.now),
         budget: createBudget({
           dir: dataDir,

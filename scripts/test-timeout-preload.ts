@@ -14,8 +14,16 @@
  * This file is tracked on purpose: a preload that resolves to a gitignored path makes `bun test`
  * abort with "preload not found" on every fresh clone.
  */
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { plugin } from "bun";
 import { setDefaultTimeout } from "bun:test";
+
+/** Ledger do api-budget isolado por processo de teste: nunca toca data/api-budget do repo nem o ledger real do git comum. */
+const ledgerDir = mkdtempSync(join(tmpdir(), "jev-api-budget-test-"));
+process.env.JEV_API_BUDGET_LEDGER = join(ledgerDir, "ledger.json");
+process.on("exit", () => rmSync(ledgerDir, { recursive: true, force: true }));
 
 /** Must equal the `--timeout` value in the package.json `test` script. */
 export const REPO_TEST_TIMEOUT_MS = 15000;
