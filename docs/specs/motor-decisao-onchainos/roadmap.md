@@ -9,7 +9,7 @@ Contexto de execução: o trabalho já feito no GOAL 1 está na spec ao lado (`s
 
 ## Título original
 
-Roadmap priorizado — JEV | Arquitetura técnica do motor de decisão e OnchainOS
+Roadmap priorizado - JEV | Arquitetura técnica do motor de decisão e OnchainOS
 
 ## Objetivo
 
@@ -42,26 +42,26 @@ A operação real permanecerá desabilitada até que todos os critérios de prom
 
 | Ordem | Épico | Objetivo | Dependências | Entregável principal |
 |---|---|---|---|---|
-| P0 | E0 — Auditoria e baseline | Conhecer o estado atual e os riscos | Nenhuma | Relatório de baseline e plano de remediação |
-| P0 | E1 — Segurança, isolamento e controle operacional | Impedir execução insegura e proteger credenciais | E0 | Ambientes isolados, pausa emergencial e controle de acesso |
-| P0 | E2 — Observabilidade e auditoria | Tornar o ciclo mensurável e explicável | E0, E1 | Métricas, logs, traces, auditoria e alertas |
-| P0 | E3 — Contratos, estado e mensageria | Criar base confiável para evolução incremental | E0, E1 | Schemas versionados, idempotência e máquina de estados |
-| P1 | E4 — Registry e orçamento de APIs | Controlar custo, limites e disponibilidade de provedores | E2, E3 | ApiBudgetRegistry e RateLimiter |
-| P1 | E5 — Ingestão, normalização e qualidade de dados | Garantir dados válidos, frescos e rastreáveis | E3, E4 | Pipeline de dados com classificação de qualidade |
-| P1 | E6 — Descoberta e pipeline de decisão | Separar descoberta, avaliação, risco e decisão | E4, E5 | Decisão OPERATE/DO_NOT_OPERATE/NEEDS_REVALIDATION |
-| P1 | E7 — Gestão de risco e portfólio | Aplicar limites antes e depois da operação | E3, E6 | RiskEngine e circuit breakers |
-| P1 | E8 — Simulação e cotação | Validar se a vantagem persiste antes da assinatura | E5, E6, E7 | QuoteSimulator e validação final |
-| P1 | E9 — Reconciliação e contabilidade | Provar execução, PnL e divergências | E3, E8 | ReconciliationService e PnL realizado |
-| P2 | E10 — Adaptadores OnchainOS, OKX Wallet e redes | Encapsular execução e permissões | E1, E3, E8, E9 | Adaptadores com allowlists e validações |
-| P2 | E11 — Orquestração de execução controlada | Executar somente sob autorização e condições válidas | E7, E8, E9, E10 | ExecutionOrchestrator em rollout restrito |
-| P2 | E12 — Experimentação, replay e promoção | Separar pesquisa de produção e validar mudanças | E2, E3, E5, E6 | Replay determinístico, paper trading e pipeline de promoção |
-| P2 | E13 — Operação, SLOs e melhoria contínua | Sustentar produção com recuperação e governança | Todos os épicos anteriores | Runbooks, SLOs, rollback e relatório executivo |
+| P0 | E0 - Auditoria e baseline | Conhecer o estado atual e os riscos | Nenhuma | Relatório de baseline e plano de remediação |
+| P0 | E1 - Segurança, isolamento e controle operacional | Impedir execução insegura e proteger credenciais | E0 | Ambientes isolados, pausa emergencial e controle de acesso |
+| P0 | E2 - Observabilidade e auditoria | Tornar o ciclo mensurável e explicável | E0, E1 | Métricas, logs, traces, auditoria e alertas |
+| P0 | E3 - Contratos, estado e mensageria | Criar base confiável para evolução incremental | E0, E1 | Schemas versionados, idempotência e máquina de estados |
+| P1 | E4 - Registry e orçamento de APIs | Controlar custo, limites e disponibilidade de provedores | E2, E3 | ApiBudgetRegistry e RateLimiter |
+| P1 | E5 - Ingestão, normalização e qualidade de dados | Garantir dados válidos, frescos e rastreáveis | E3, E4 | Pipeline de dados com classificação de qualidade |
+| P1 | E6 - Descoberta e pipeline de decisão | Separar descoberta, avaliação, risco e decisão | E4, E5 | Decisão OPERATE/DO_NOT_OPERATE/NEEDS_REVALIDATION |
+| P1 | E7 - Gestão de risco e portfólio | Aplicar limites antes e depois da operação | E3, E6 | RiskEngine e circuit breakers |
+| P1 | E8 - Simulação e cotação | Validar se a vantagem persiste antes da assinatura | E5, E6, E7 | QuoteSimulator e validação final |
+| P1 | E9 - Reconciliação e contabilidade | Provar execução, PnL e divergências | E3, E8 | ReconciliationService e PnL realizado |
+| P2 | E10 - Adaptadores OnchainOS, OKX Wallet e redes | Encapsular execução e permissões | E1, E3, E8, E9 | Adaptadores com allowlists e validações |
+| P2 | E11 - Orquestração de execução controlada | Executar somente sob autorização e condições válidas | E7, E8, E9, E10 | ExecutionOrchestrator em rollout restrito |
+| P2 | E12 - Experimentação, replay e promoção | Separar pesquisa de produção e validar mudanças | E2, E3, E5, E6 | Replay determinístico, paper trading e pipeline de promoção |
+| P2 | E13 - Operação, SLOs e melhoria contínua | Sustentar produção com recuperação e governança | Todos os épicos anteriores | Runbooks, SLOs, rollback e relatório executivo |
 
 ---
 
 ## Épicos e tarefas priorizadas
 
-### E0 — Auditoria e baseline
+### E0 - Auditoria e baseline
 
 #### Objetivo
 
@@ -110,7 +110,7 @@ Líder técnico, engenheiro de segurança, engenheiro de plataforma, QA/SRE e Pr
 
 ---
 
-### E1 — Segurança, isolamento e controle operacional
+### E1 - Segurança, isolamento e controle operacional
 
 #### Objetivo
 
@@ -159,7 +159,7 @@ Engenheiro de segurança, engenheiro de plataforma, líder técnico e Operations
 
 ---
 
-### E2 — Observabilidade e auditoria
+### E2 - Observabilidade e auditoria
 
 #### Objetivo
 
@@ -207,7 +207,7 @@ Engenheiro de plataforma, QA/SRE, engenheiro de segurança e líder técnico.
 
 ---
 
-### E3 — Contratos, estado e mensageria
+### E3 - Contratos, estado e mensageria
 
 #### Objetivo
 
@@ -256,7 +256,7 @@ Líder técnico, engenheiro de plataforma e engenheiro de dados.
 
 ---
 
-### E4 — Registry e orçamento de APIs
+### E4 - Registry e orçamento de APIs
 
 #### Objetivo
 
@@ -308,7 +308,7 @@ Engenheiro de plataforma, engenheiro de dados e Operations Owner.
 
 ---
 
-### E5 — Ingestão, normalização e qualidade de dados
+### E5 - Ingestão, normalização e qualidade de dados
 
 #### Objetivo
 
@@ -357,7 +357,7 @@ Engenheiro de dados, engenheiro de plataforma e engenheiro on-chain.
 
 ---
 
-### E6 — Descoberta e pipeline de decisão
+### E6 - Descoberta e pipeline de decisão
 
 #### Objetivo
 
@@ -407,7 +407,7 @@ Engenheiro de dados, engenheiro de risco, engenheiro de estratégia e líder té
 
 ---
 
-### E7 — Gestão de risco e portfólio
+### E7 - Gestão de risco e portfólio
 
 #### Objetivo
 
@@ -456,7 +456,7 @@ Engenheiro de risco, engenheiro de estratégia e QA/SRE.
 
 ---
 
-### E8 — Simulação e cotação
+### E8 - Simulação e cotação
 
 #### Objetivo
 
