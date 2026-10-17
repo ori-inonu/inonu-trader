@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1049,
-  "headHash": "85ec610a1fc2c096b81932ffa62b8664265b546173aaf40adc308a2f2c034b52",
+  "headSeq": 1060,
+  "headHash": "85e5aae51db8d67a4789d5e2ad98f5c271d6fc6063f7c124754aa6707fd82de6",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1652,6 +1652,31 @@
       "id": "rc4-tmp-fora",
       "type": "fact",
       "text": "Logs de verificacao em .tmp/final-verifier (2,3 MB de saida de teste) nao entram na main; .tmp/ foi para o .gitignore."
+    },
+    {
+      "id": "rc5-registro-okx-rotas",
+      "type": "fact",
+      "text": "Revisao achou, ja na main, que budget.run lancava entrada nao cadastrada para os caminhos das rotas de carteira, rastreador, clusters, memepump e trade. Registrados em okx.ts (Trade: cotacao, swap e aprovacao no mesmo pool) e o teste de deriva varre routes."
+    },
+    {
+      "id": "rc5-retry-after-limite",
+      "type": "fact",
+      "text": "Retry-After limitado a 1 hora no ledger do cliente; no transporte http.ts um valor acima de backoffMaxMs devolve o 429 na hora em vez de dormir. Negativo e lixo sao ignorados. Testes novos."
+    },
+    {
+      "id": "rc5-max-calls-invalido",
+      "type": "fact",
+      "text": "max_calls invalido no MCP e --max-calls sem valor no CLI agora sao recusados, em vez de virar sem teto em silencio. O Jev segue sem teto quando o campo nao e informado."
+    },
+    {
+      "id": "rc5-codex-r3-integrada",
+      "type": "fact",
+      "text": "R3 (decision-weight-evidence, 33 arquivos sem commit) integrada na main: modulo puro src/decision-evidence com 11 testes e docs SDD; varredura limpa. O worktree do Codex segue com a copia nao rastreada."
+    },
+    {
+      "id": "rc5-codex-r4-preservada",
+      "type": "fact",
+      "text": "R4 (learning-evidence, 35 arquivos) preservada na branch codex/learning-evidence-wip (12a5bfa) no worktree do Codex, fora da main: src/intel e src/outcomes antigos divergem da main e 2 testes falham sobre ela."
     }
   ],
   "edges": [
@@ -4594,6 +4619,36 @@
       "from": "iter-integracao-autoresearch-20261017",
       "to": "rc4-tmp-fora",
       "seq": 1049
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc5-registro-okx-rotas",
+      "seq": 1051
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc5-retry-after-limite",
+      "seq": 1053
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc5-max-calls-invalido",
+      "seq": 1055
+    },
+    {
+      "from": "rc4-jev-sem-teto",
+      "to": "rc5-max-calls-invalido",
+      "seq": 1056
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc5-codex-r3-integrada",
+      "seq": 1058
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc5-codex-r4-preservada",
+      "seq": 1060
     }
   ],
   "retractions": [

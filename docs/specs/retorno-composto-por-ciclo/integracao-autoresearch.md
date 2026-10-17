@@ -27,6 +27,19 @@ Registro da integração da branch `autoresearch/quero-que-voc-crie-m-tricar-e-c
 9. **Fora da integração**: os logs de verificação em `.tmp/final-verifier-*` (2,3 MB de saída de teste) não entram; `.tmp/` foi para o `.gitignore`.
 10. **Estilo**: nos 12 arquivos em conflito, o recuo de 1 espaço por nível do lado da branch foi normalizado para 2 espaços (o estilo da base e da `main`) antes da fusão, para que o conflito mostrasse só diferenças reais. Os demais arquivos da branch mantêm a formatação deles.
 
+## Revisão independente e correções
+
+Um revisor independente (agente, somente leitura) leu o resultado da fusão e não achou problema bloqueante. Achou uma falha que já existia na `main` e três pontos menores, todos corrigidos com teste:
+
+1. **Importante, já na `main`**: `budget.run` lança `entrada não cadastrada` para os caminhos assinados pelos módulos de rotas (`wallet`, `address-tracker`, `clusters-detail`, `memepump`, `trade`), e o cliente relançava; a leitura rejeitava em vez de devolver o envelope. O registro OKX agora cobre esses caminhos (Trade com cotação, swap e aprovação no mesmo pool e RPS) e o teste de deriva varre os módulos de rotas.
+2. `Retry-After` sem limite: o ledger gravava qualquer valor e o transporte dormia o valor inteiro. O cliente limita a 1 hora (negativo e lixo são ignorados) e o transporte devolve o 429 na hora quando o valor passa de `backoffMaxMs`.
+3. `max_calls` informado e inválido no MCP virava "sem teto" em silêncio; agora é recusado. O CLI recusa `--max-calls` sem valor.
+
+## Trabalho do Codex sem commit
+
+- **R3** (`decision-weight-evidence`, 33 arquivos): módulo puro `src/decision-evidence` com 11 testes e a documentação SDD. Typecheck e testes passam sobre a `main`, a varredura de segredos, endereços e caracteres vedados está limpa; integrado.
+- **R4** (`learning-evidence`, 35 arquivos): as dependências `src/intel` e `src/outcomes` do worktree são versões antigas e divergem da `main` (3 arquivos); sobre a `main`, 2 testes falham. Não integrado; o trabalho foi preservado numa branch própria do worktree (ver o registro no grafo), para reconciliação posterior.
+
 ## Validação
 
 - `bun run typecheck` com saída 0.
