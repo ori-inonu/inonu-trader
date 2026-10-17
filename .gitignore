@@ -19,3 +19,7 @@ web/.smoke-profile/
 /dist/
 .omp/brain-runtime/
 .codegraph/
+
+# Next.js smoke build output and Playwright captures: local only
+web/.next-t18-smoke/
+.playwright-mcp/
