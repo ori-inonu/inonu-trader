@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 232,
-  "headHash": "9fe290ed60a8f9e189899829ccd92558cd7159ecf0b74a9ddce4c768b70e85b9",
+  "headSeq": 236,
+  "headHash": "bd236d3f52180054f97f5dc849ecb764c43a5abaff1ba4f4792a865ef530a3f6",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -192,6 +192,16 @@
       "id": "fato-runtime-estruturado",
       "type": "fact",
       "text": "Correcao: o runtime do agente ja envia ao JEV estado estruturado (brief, vocabulario fixo, JevStateError recusa texto livre), nao prosa. As ocorrencias de prompt em src sao comentarios e estimativas de tokens. Sem prompt de runtime a trocar"
+    },
+    {
+      "id": "jev-cerebro-proximo-passo",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec 3cab060e1db7698c; recibo sha256 3896ac615ffb8095045041b1d62767c07014f5b5fe4773aa537496a8c4ede615. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-proximo-passo",
+      "type": "iteration",
+      "text": "JEV sem consenso sobre o proximo passo; rodadas pendem a hook_export (injetar export do no). Nada implementado; decisao volta ao dono"
     }
   ],
   "edges": [
@@ -1149,6 +1159,16 @@
       "from": "iter-subgrafo",
       "to": "fato-runtime-estruturado",
       "seq": 231
+    },
+    {
+      "from": "fato-runtime-estruturado",
+      "to": "jev-cerebro-proximo-passo",
+      "seq": 234
+    },
+    {
+      "from": "jev-cerebro-proximo-passo",
+      "to": "iter-proximo-passo",
+      "seq": 236
     }
   ],
   "retractions": [
