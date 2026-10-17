@@ -12,7 +12,7 @@
  *   bun scripts/hooks/goal.ts progress "<texto>" | status | check | smoke | pause | resume | ack | clear
  */
 import { appendProgress, goalDir, loadState, progressTail, runShell, saveState, verdictOf } from "../../src/goal/io";
-import { addTask, bearings, blockTask, decide, humanReturned, markPassed, newState, STAGES, type GoalState, type Stage } from "../../src/goal/loop";
+import { addTask, bearings, blockTask, decide, markPassed, newState, STAGES, type GoalState, type Stage } from "../../src/goal/loop";
 
 const project = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
 const [command, ...rest] = process.argv.slice(2);
@@ -74,7 +74,7 @@ switch (command) {
     // changes the words of the goal and its check, and keeps the queue, the decisions and the progress (a goal that was reframed by the owner is not a new goal)
     const s = need();
     const goal = flag("--goal") ?? fail('--goal "<texto>" e obrigatorio');
-    const next: GoalState = { ...s, goal, checkCommand: flag("--check") ?? s.checkCommand, needsHuman: null, loop: { ...s.loop, idleStops: 0 } };
+    const next: GoalState = { ...s, goal, checkCommand: flag("--check") ?? s.checkCommand, loop: { ...s.loop, idleStops: 0 } };
     save(next, `objetivo redefinido pelo dono: ${goal}`);
     console.log("objetivo redefinido; fila, decisoes e progresso mantidos");
     break;
@@ -154,14 +154,10 @@ switch (command) {
     save({ ...need(), paused: false }, "objetivo retomado");
     console.log("retomado");
     break;
-  case "ack":
-    save(humanReturned(need()), "usuario respondeu: laco volta a contar");
-    console.log("ok");
-    break;
   case "clear":
     save({ ...need(), active: false }, "objetivo encerrado");
     console.log("objetivo encerrado: nenhuma sessao e mais segurada");
     break;
   default:
-    fail("uso: goal.ts set|add|pass|blocked|decide|progress|status|check|smoke|pause|resume|ack|clear (veja o cabecalho do arquivo)");
+    fail("uso: goal.ts set|add|pass|blocked|decide|progress|status|check|smoke|pause|resume|clear (veja o cabecalho do arquivo)");
 }

@@ -20,3 +20,5 @@ Faça um commit apenas dos arquivos da sua mudança, envie a branch e abra um pu
 No Windows, `scripts/github.ps1` pode executar a CLI oficial `gh` usando uma credencial GitHub já disponível no Git Credential Manager, apenas durante o processo. Ele não realiza login nem salva uma nova credencial. Se não houver autenticação disponível, configure a CLI oficial antes de usá-lo.
 
 Nunca inclua `.env`, chaves, saldos pessoais ou registros internos de agentes em um PR. A conexão OKX da interface é somente leitura e não ativa operações financeiras. Consulte [CONTRIBUTING.md](../CONTRIBUTING.md) e [OKX-WALLET.md](../web/OKX-WALLET.md).
+
+Memória do projeto: cada mudança relevante vira um nó no cérebro (`bun --no-env-file run scripts/brain.ts add ...`); veja `AGENTS.md`.

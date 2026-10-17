@@ -150,7 +150,7 @@ O vocabulário de critérios tem treze nomes, todos números: `basisBps`, `carry
 
 **Desconhecido nunca vira zero.** Um critério sem valor (`null` no laboratório) não é enviado como zero nem como `null`: fica fora de `values` e seu nome vai em `unknown`, e a instrução diz que um critério em `unknown` é DESCONHECIDO, não é zero e não deve ser adivinhado. Um zero conhecido continua sendo um zero em `values`.
 
-**O que nunca vai:** nome de instrumento, ativo ou venue, endereço, chave, instante de tempo, texto livre de qualquer fonte, a pontuação plantada da fonte sintética. Qualquer coisa fora do vocabulário (modalidade, lado, nome de critério, id, valor que não é número finito) faz o estado ser recusado antes da chamada (`JevStateError`, sem repetir o conteúdo). O texto da pergunta é constante do código: a única parte que varia por candidato é o id, o lado, a modalidade e o horizonte, todos de vocabulário fechado. Cada candidato é descrito como "posição hipotética" e a instrução diz que é uma avaliação de sombra em que nada é executado, assinado ou enviado, que manter (`hold`) é sempre válido e é a resposta preferida sem evidência, e que as probabilidades e a confiança não são calibradas.
+**O que nunca vai:** nome de instrumento, ativo ou venue, endereço, chave, instante de tempo, texto livre de qualquer fonte, a pontuação plantada da fonte sintética. Qualquer coisa fora do vocabulário (modalidade, lado, nome de critério, id, valor que não é número finito) faz o estado ser recusado antes da chamada (`JevStateError`, sem repetir o conteúdo). O texto fixo da pergunta e das instruções vem do nó `p-lab-chooser` do grafo; a única parte que varia por candidato é o id, o lado, a modalidade e o horizonte, todos de vocabulário fechado. Cada candidato é descrito como "posição hipotética" e a instrução diz que é uma avaliação de sombra em que nada é executado, assinado ou enviado, que manter (`hold`) é sempre válido e é a resposta preferida sem evidência, e que as probabilidades e a confiança não são calibradas.
 
 **Versão da instrução.** O nome do seletor é o modelo mais a versão do texto (`jev-latest@p1`). Um teste fixa um hash do texto: mudar uma palavra sem subir a versão falha, e subir a versão faz o diário antigo parar com `mismatch` em vez de misturar duas instruções.
 
@@ -198,7 +198,7 @@ Nenhum teste chama o Jev real, lê um `.env` ou usa a rede: a função de avalia
 
 | Arquivo | Conteúdo |
 | --- | --- |
-| `src/lab-jev/jev-chooser.ts` | `JevLabChooser`, `buildJevLabPayload`, `estimateInputTokens`, `JevStateError`, `JevBudgetExhaustedError`, `JevCircuitOpenError`, `JevCallError`, `JEV_LAB_CRITERIA`, `JEV_LAB_PROMPT_VERSION`, `JEV_LAB_SHADOW_NOTICE` |
+| `src/lab-jev/jev-chooser.ts` | `JevLabChooser`, `buildJevLabPayload`, `estimateInputTokens`, `JevStateError`, `JevBudgetExhaustedError`, `JevCircuitOpenError`, `JevCallError`, `JEV_LAB_CRITERIA`, `JEV_LAB_PROMPT_VERSION`, `JEV_LAB_QUESTION_ID` |
 | `src/lab-jev/plan-chooser.ts` | `PlanChooser` |
 | `scripts/jev-lab-real.ts` | `main`, `HARD_MAX_USD`, `HARD_MAX_CALLS`, `DEFAULT_TIMEOUT_MS`, `ABORT_MARGIN_MS` |
 | `scripts/jev-lab.ts` | `main`, `parse`, `prepareRun`, `UsageError`, `leverageAllowanceLines`, `inferenceLines` |

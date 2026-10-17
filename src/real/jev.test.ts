@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { realDecisionFromEvaluation, sanitizedDecisionState } from './jev';
+import { realDecisionFromEvaluation, realQuestions, sanitizedDecisionState } from './jev';
 
 test('real Jev decisions preserve unknown usage/cost and reject invented choices or invalid weights', () => {
  const valid = { answers: { allocation: { choice: 'hold', probabilities: { hold: 0.8, insufficient_evidence: 0.2 } } } };
@@ -19,4 +19,21 @@ test('the decision prompt contains no private inventory amount, aggregate, cover
  const text = JSON.stringify(state);
  for (const privateValue of ['123456789', '987654321', '777', 'completeValueUsd', 'observedKnownValueUsd', 'coverage', 'assets']) expect(text).not.toContain(privateValue);
  expect(state).not.toHaveProperty('inventory');
+});
+
+test('real questions sent to the model keep the original shape and text', () => {
+ expect(JSON.stringify(realQuestions())).toBe(JSON.stringify({
+  allocation: {
+   type: 'choice',
+   instructions: {
+    question: 'Should this paper cycle hold, or is the observed evidence insufficient to assess even its current readiness?',
+    goal: 'Preserve capital and describe the current evidence honestly. No candidate is financially qualified and execution is disabled.',
+    inputs: 'State is a sanitized summary. Values may be unknown. Source freshness does not establish economic eligibility. Do not infer address, private balances, profit, or permission.',
+   },
+   criteria: {
+    hold: 'The observed data supports a paper hold decision; commit no capital because no financially qualified candidate exists.',
+    insufficient_evidence: 'The source evidence is inconsistent or insufficient to assess readiness; commit no capital and request better observations.',
+   },
+  },
+ }));
 });

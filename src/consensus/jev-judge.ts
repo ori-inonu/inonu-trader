@@ -1,6 +1,6 @@
 /**
  * The Jev as the judge of the sequential decisions (engine.ts): one System One Choice question per call, through the same SDK path the lab and the agent already use (`experimental_evaluate`, no retries, a timeout that
- * aborts the connection). Hard cap on the calls of one run, and every failure (a refused budget, a timeout, an exception, an answer that is not a distribution over the keys) is a null answer, never a guess and never an
+ * aborts the connection). No ceiling on the calls of a run: the owner pays for the Jev and asked for no cap, so a decision may take as many questions as it needs. Every failure (a refused budget, a timeout, an exception, an answer that is not a distribution over the keys) is a null answer, never a guess and never an
  * exception into the procedure. The key reaches only the provider constructor: it is not kept in the result, not in the meter and not in any message. What is sent is what the spec holds, which `sanitizeSpec` has cleared
  * of addresses, keys and secrets. Nothing here executes, signs or sends anything but the question.
  */
@@ -8,7 +8,6 @@ import { createTypeSafeAi } from "@ai-sdk/typesafe-ai";
 import { experimental_evaluate } from "ai";
 import type { Judge, JudgeAnswer, JudgeQuestion } from "./engine";
 
-export const JEV_JUDGE_HARD_MAX_CALLS = 40;
 export const JEV_JUDGE_DEFAULT_TIMEOUT_MS = 20_000;
 
 export type EvaluateFn = (args: { model: unknown; state: unknown; questions: unknown; maxRetries: number; abortSignal: AbortSignal }) => Promise<unknown>;
@@ -19,8 +18,8 @@ export interface JevJudgeOptions {
   /** The provider key. Handed only to the provider constructor. */
   readonly apiKey: string;
   readonly modelId?: string;
-  /** The most questions this judge will send, at most `JEV_JUDGE_HARD_MAX_CALLS`. */
-  readonly maxCalls: number;
+  /** Optional. Left out means no ceiling; given, it is the most questions this judge will send. */
+  readonly maxCalls?: number;
   readonly timeoutMs?: number;
   /** Tests inject a fake; the default is the SDK. */
   readonly evaluate?: EvaluateFn;
@@ -29,9 +28,8 @@ export interface JevJudgeOptions {
 }
 
 export interface JevJudgeMeter {
-  readonly maxCalls: number;
+  readonly maxCalls: number | null;
   readonly sent: number;
-  readonly refusedByCap: number;
   readonly failed: number;
   /** Input tokens the provider reported, summed; calls without a report are counted apart, never as zero tokens. */
   readonly inputTokens: number;
@@ -41,20 +39,16 @@ export interface JevJudgeMeter {
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v);
 
 export function createJevJudge(opts: JevJudgeOptions): Judge & { meter(): JevJudgeMeter } {
-  if (!Number.isSafeInteger(opts.maxCalls) || opts.maxCalls < 1 || opts.maxCalls > JEV_JUDGE_HARD_MAX_CALLS) throw new Error(`maxCalls deve ser inteiro de 1 a ${JEV_JUDGE_HARD_MAX_CALLS}`);
+  if (opts.maxCalls !== undefined && (!Number.isSafeInteger(opts.maxCalls) || opts.maxCalls < 1)) throw new Error("maxCalls deve ser inteiro positivo, ou omitido");
   const evaluate = opts.evaluate ?? sdkEvaluate;
   let model: unknown = opts.model;
   let sent = 0;
-  let refusedByCap = 0;
   let failed = 0;
   let inputTokens = 0;
   let callsWithoutUsage = 0;
   return {
     async ask(q: JudgeQuestion): Promise<JudgeAnswer | null> {
-      if (sent >= opts.maxCalls) {
-        refusedByCap++;
-        return null;
-      }
+      if (opts.maxCalls !== undefined && sent >= opts.maxCalls) return null;
       sent++;
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), opts.timeoutMs ?? JEV_JUDGE_DEFAULT_TIMEOUT_MS);
@@ -80,6 +74,6 @@ export function createJevJudge(opts: JevJudgeOptions): Judge & { meter(): JevJud
         clearTimeout(timer);
       }
     },
-    meter: () => ({ maxCalls: opts.maxCalls, sent, refusedByCap, failed, inputTokens, callsWithoutUsage }),
+    meter: () => ({ maxCalls: opts.maxCalls ?? null, sent, failed, inputTokens, callsWithoutUsage }),
   };
 }

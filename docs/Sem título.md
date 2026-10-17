@@ -9,3 +9,4 @@ Regras para o projeto
 7. Foque em substituir toda injeção de prompts e prompts por grafos, estude sobre a engenharia de grafos e aplique isso em tudo no projeto, a cada iteração, a cada novo fato e acontecimento, a cada implementação, tudo deve estar na memória. 
 8. A memória do agente jamais deverá se perder. 
 9. A cada iteração deve ser criado novos nós e novas associações e correlações, você deve pensar em termos de estrutura de dados para substituir o prompt para o grafo, a injeção do prompt para o grafo, os arquivos que são injetados no sistema e nas sessões devem conter apenas no máximo 100 linhas com todas as instruções de como usar o grafo de conhecimento e como substituir o prompt pelo grafo de conhecimento, pesquise tudo sobre engenharia de grafo, engenharia de harness, engenharia de loop, e continue melhorando o harness, a estrutura de dados dos grafos e os loops. 
+10. 

@@ -3,7 +3,7 @@ import { buildQuantAnnex, type QuantAnnex } from "../quant/annex";
 import { simulateCandles } from "../quant/test-support";
 import { buildLeverageBrief } from "./brief";
 import { runSystemOneCycle } from "./cycle";
-import { buildSystemOneState, inputsText, MockSystemOneModel } from "./decide";
+import { buildSystemOneState, inputsText, MockSystemOneModel, systemOneQuestions } from "./decide";
 import { publicSystemOneView } from "./public-view";
 import { syntheticReadings } from "./readings";
 import { LEVERAGE_LADDER, SIDES } from "./types";
@@ -30,6 +30,27 @@ describe("model inputs text", () => {
   test("without the annex the text is exactly the original", () => {
     const brief = buildLeverageBrief({ ...phase2(), nowMs: NOW });
     expect(inputsText(brief)).toBe(ORIGINAL_INPUTS);
+  });
+  test("the effective choice prompt payload matches the original literal", () => {
+    const brief = buildLeverageBrief({ ...phase2(), nowMs: NOW });
+    const eligible = brief.candidates.filter((candidate) => candidate.eligible);
+    expect(systemOneQuestions(brief, eligible)).toEqual({
+      leverage: {
+        type: "choice",
+        instructions: {
+          question: "Which single leverage candidate should System One open now, or should it hold?",
+          goal: "Act as the fast decision layer of the wallet. Grow median wealth over the horizon while keeping the probability of touching liquidation low. Never exceed the listed caps; prefer hold when carry and basis are small relative to drag and liquidation risk.",
+          inputs: ORIGINAL_INPUTS,
+        },
+        criteria: {
+          hold: "Do not open or add to a position now. Choose this when the funding carry, the basis and the realized volatility do not justify the liquidation risk inside the horizon, or when any input is missing.",
+          "long-1x": "Open a long position at 1x with margin 20 USD (notional 20 USD). Choose this only when the expected funding carry and basis over the horizon outweigh the volatility drag and the probability of touching liquidation listed for it.",
+          "long-2x": "Open a long position at 2x with margin 20 USD (notional 40 USD). Choose this only when the expected funding carry and basis over the horizon outweigh the volatility drag and the probability of touching liquidation listed for it.",
+          "short-1x": "Open a short position at 1x with margin 20 USD (notional 20 USD). Choose this only when the expected funding carry and basis over the horizon outweigh the volatility drag and the probability of touching liquidation listed for it.",
+          "short-2x": "Open a short position at 2x with margin 20 USD (notional 40 USD). Choose this only when the expected funding carry and basis over the horizon outweigh the volatility drag and the probability of touching liquidation listed for it.",
+        },
+      },
+    });
   });
   test("with the annex the original text is kept and the new figures are explained", () => {
     const brief = { ...buildLeverageBrief({ ...phase2(), nowMs: NOW }), quant: annexFor(NOW) };

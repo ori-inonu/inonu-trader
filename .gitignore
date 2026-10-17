@@ -17,3 +17,5 @@ web/.smoke-profile/
 
 # desktop build output (scripts/build-desktop.ts)
 /dist/
+.omp/brain-runtime/
+.codegraph/

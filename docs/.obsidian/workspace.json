@@ -11,10 +11,14 @@
             "id": "ec9dbd858a142236",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Visualização em gráfico"
+              "type": "markdown",
+              "state": {
+                "file": "Sem título.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Sem título"
             }
           }
         ]
@@ -79,7 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 298.5
+    "width": 296.5
   },
   "right": {
     "id": "c0799be573a179be",
@@ -183,6 +187,9 @@
   },
   "active": "ec9dbd858a142236",
   "lastOpenFiles": [
+    "_meta/cerebro/graph.v2.json",
+    "_meta/cerebro/events.jsonl",
+    "_meta/cerebro",
     "Sem título.md",
     "specs/painel-dev-somente-leitura/spec.md",
     "_meta/evolucao/pacotes/config-onchain-smartmoney-fase-2.md",
@@ -199,8 +206,6 @@
     "sdd/backend-audit-20261013/evidence/onchain-interval-final-live.json",
     "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-global-types.metrics.json",
     "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-global-types.log",
-    "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-types.metrics.json",
-    "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-types.log",
     "sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
     "sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
     "sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-VERIFICATION.md",
@@ -227,7 +232,6 @@
     "sdd/mesa-decisao-20261013/review-spec.md",
     "sdd/inteligencia-decisao/CHECKPOINT.md",
     "sdd/inonu-desktop-v1/evidence/T3.12-rotas-da-carteira.md",
-    "sdd/mesa-decisao-20261013/verification.md",
-    "sdd/backend-audit-20261013/PORTFOLIO-INTEGRATION.md"
+    "sdd/mesa-decisao-20261013/verification.md"
   ]
 }

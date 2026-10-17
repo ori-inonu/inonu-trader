@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import * as realScript from "../../scripts/jev-lab-real.ts";
 import * as labScript from "../../scripts/jev-lab.ts";
 import * as chooser from "./jev-chooser.ts";
+import { PROMPTS } from "../generated/prompts";
 import * as plan from "./plan-chooser.ts";
 
 // Spec: docs/JEV-LAB-JEV-REAL.md sections 0, 2 and 11. Titles start with the acceptance id (LJ27 to LJ29).
@@ -33,8 +34,10 @@ const P = {
   realTest: join(SCRIPTS, "jev-lab-real.test.ts"),
   labTest: join(SCRIPTS, "jev-lab.test.ts"),
   depsTest: join(SCRIPTS, "jev-lab.deps.test.ts"),
+  generatedPrompts: join(ROOT, "src", "generated", "prompts.ts"),
   purityTest: join(DIR, "purity.test.ts"),
 };
+const LAB_SHADOW_NOTICE = PROMPTS["p-lab-chooser"].shadowNotice;
 
 const LAB_JEV_PATHS = LAB_JEV_MODULES.map((name) => join(DIR, name));
 const LAB_PATHS = LAB_MODULES.map((name) => join(LAB_DIR, name));
@@ -134,7 +137,7 @@ describe("LJ27 static purity of the real Jev adapter", () => {
   });
 
   test("LJ27 imports: each file only imports what the architecture allows, and nothing executable of the repository", () => {
-    expect(specifiers(P.chooser)).toEqual(["../lab/policies.ts", "../lab/types.ts", "@ai-sdk/typesafe-ai", "ai"]);
+    expect(specifiers(P.chooser)).toEqual(["../generated/prompts", "../lab/policies.ts", "../lab/types.ts", "@ai-sdk/typesafe-ai", "ai"]);
     expect(specifiers(P.plan)).toEqual(["../lab/policies.ts", "../lab/types.ts", "./jev-chooser.ts"]);
     expect(specifiers(P.real)).toEqual(["../src/lab-jev/jev-chooser.ts", "../src/lab-jev/plan-chooser.ts", "../src/lab/journal.ts", "../src/lab/policies.ts", "../src/lab/run.ts", "./jev-lab.ts"]);
     const forbidden = /^(?:ethers|@kuru-labs\/.*|typescript|\.\.\/(?:\.\.\/src\/)?(?:operator|okx-wallet|okx-market|okx-signals|okx-defi|okx-evidence|okx-derivatives|public-market-capture|system-one|jev-read|onchainos|paper-[a-z-]+)(?:\/.*)?|\.\.\/(?:\.\.\/src\/)?(?:market|trader|config|index|model|server|okx-api|book|chain|trades)(?:\.ts)?)$/;
@@ -160,7 +163,7 @@ function bannedBytesIn(path: string): string[] {
 }
 
 /** The phrases that name the words of execution only to say that they do not happen. */
-const NEGATIONS = [chooser.JEV_LAB_SHADOW_NOTICE, "nada é executado, assinado ou enviado"];
+const NEGATIONS = [LAB_SHADOW_NOTICE, "nada é executado, assinado ou enviado"];
 
 const EXECUTION_WORDS = new RegExp(
   `\\b(?:execute[sd]?|executing|execution|sign(?:ed|s|ing)?|signature|send(?:s|ing)?|sent|order(?:s|ed)?|swap(?:s|ped)?|trade[sd]?|trading|buy(?:s|ing)?|bought|sell(?:s|ing)?|sold|approve[sd]?|transfer(?:s|red)?|broadcast|submit(?:s|ted)?|wallet|mnemonic|executa(?:r|do|da|m)?|assina(?:r|do|da|tura)?|envia(?:r|do|da)?|ordem|ordens|comprar|vender|negociar|transferir|aprovar|carteira)\\b`,
@@ -196,9 +199,9 @@ describe("LJ28 text hygiene and the words of execution", () => {
   });
 
   test("LJ28 the sentences that are allowed to name those words are really there, once each where they belong", () => {
-    expect(codeOf(P.chooser)).toContain(chooser.JEV_LAB_SHADOW_NOTICE);
+    expect(codeOf(P.generatedPrompts)).toContain(LAB_SHADOW_NOTICE);
     expect(codeOf(P.real)).toContain("nada é executado, assinado ou enviado");
-    expect(chooser.JEV_LAB_SHADOW_NOTICE).toContain("nothing is executed, signed or sent");
+    expect(LAB_SHADOW_NOTICE).toContain("nothing is executed, signed or sent");
   });
 
   test("LJ28 the text that the model receives, built for a real shape of state, has no word of execution outside the shadow notice", () => {
@@ -210,7 +213,7 @@ describe("LJ28 text hygiene and the words of execution", () => {
         { key: "c3", modality: "funding-carry", side: "neutral", horizonHours: 24, criteria: { carryNetBps: 3 } },
       ],
     });
-    const text = JSON.stringify(payload.questions).replaceAll(chooser.JEV_LAB_SHADOW_NOTICE, " ");
+    const text = JSON.stringify(payload.questions).replaceAll(LAB_SHADOW_NOTICE, " ");
     expect(EXECUTION_WORDS.exec(text)).toBeNull();
   });
 
