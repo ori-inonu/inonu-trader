@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 835,
-  "headHash": "2770f1fff7a0d666cfcc750ea4af28501f26d49506ced010704ec94bb7783d99",
+  "headSeq": 837,
+  "headHash": "8095d88756d4a5955177e6891ce93523e3cd6015384a7338bfa0f53e38c2e928",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1187,6 +1187,11 @@
       "id": "iter-goal1-motor-decisao",
       "type": "iteration",
       "text": "GOAL 1: orcamento de API por pool com ledger compartilhado, motor de decisao puro com NAO_OPERAR, breaker de executor, porta paper, telemetria por etapa, baseline e analise da hipotese de 0,3%. Pendente: integrar ao ciclo, Gas Station e plano real da chave (dono)."
+    },
+    {
+      "id": "fato-goal1-roadmap-dono",
+      "type": "fact",
+      "text": "Roadmap priorizado do dono (2026-10-17): epicos E0 a E13 em P0 a P2, operacao real desabilitada ate os criterios de promocao. Texto recebido cortado em E8; E9 a E13 sem detalhe. Salvo em docs/specs/motor-decisao-onchainos/roadmap.md, com a cobertura pelo GOAL 1 anotada."
     }
   ],
   "edges": [
@@ -3589,6 +3594,11 @@
       "from": "fato-goal1-limites-okx",
       "to": "iter-goal1-motor-decisao",
       "seq": 835
+    },
+    {
+      "from": "iter-goal1-motor-decisao",
+      "to": "fato-goal1-roadmap-dono",
+      "seq": 837
     }
   ],
   "retractions": [
