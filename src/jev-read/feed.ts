@@ -78,7 +78,7 @@ interface Memory {
   fundingLastSourceTsMs: number | null;
 }
 
-const DEFAULT_WS = "wss://ws.okx.com:8443/ws/v5/public";
+const DEFAULT_WS = "wss://ws.okx.com/ws/v5/public";
 const DEFAULT_REST = "https://www.okx.com";
 /** Local policy, not an exchange freshness guarantee. */
 export const DEFAULT_FUNDING_MAX_AGE_MS = 120_000;

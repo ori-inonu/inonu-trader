@@ -207,7 +207,7 @@ describe("the live feed of the flow engine", () => {
     expect(result.kind).toBe("started");
     await Bun.sleep(60);
     expect(Socket.all).toHaveLength(1);
-    expect(Socket.all[0]!.url).toBe("wss://ws.okx.com:8443/ws/v5/public");
+    expect(Socket.all[0]!.url).toBe("wss://ws.okx.com/ws/v5/public");
     result.stop();
     expect(Socket.all[0]!.closed).toBe(true);
   });

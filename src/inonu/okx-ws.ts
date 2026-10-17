@@ -10,7 +10,7 @@ import { parseDec } from "../intel/decimal";
 import type { RateMeter, Trade } from "../intel/ingest";
 import { instTypeOf } from "./okx-public";
 
-export const OKX_PUBLIC_WS_URL = "wss://ws.okx.com:8443/ws/v5/public";
+export const OKX_PUBLIC_WS_URL = "wss://ws.okx.com/ws/v5/public";
 
 /** The part of a WebSocket the feed uses. */
 export interface SocketLike {

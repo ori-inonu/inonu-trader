@@ -347,7 +347,7 @@ describe("OkxTapeFeed socket", () => {
     const feed = makeFeed();
     feed.start();
     const socket = FakeSocket.instances[0]!;
-    expect(socket.url).toBe("wss://ws.okx.com:8443/ws/v5/public");
+    expect(socket.url).toBe("wss://ws.okx.com/ws/v5/public");
     socket.open();
     const message = JSON.parse(socket.sent[0]!) as { op: string; args: Array<{ channel: string; instId: string }> };
     expect(message.op).toBe("subscribe");

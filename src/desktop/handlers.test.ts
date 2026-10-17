@@ -618,7 +618,7 @@ describe("the live engine through the core", () => {
     const handlers = start({ liveFeed: true, pulse: true });
     await settle();
     expect(FakeSocket.all).toHaveLength(2);
-    expect(FakeSocket.all.every(socket => socket.url === "wss://ws.okx.com:8443/ws/v5/public")).toBe(true);
+    expect(FakeSocket.all.every(socket => socket.url === "wss://ws.okx.com/ws/v5/public")).toBe(true);
     for (const socket of FakeSocket.all) socket.onopen?.();
     const subscribed = FakeSocket.all.map((s) => (JSON.parse(s.sent[0]!) as { args: { instId: string }[] }).args.map((a) => a.instId).sort());
     expect(subscribed).toContainEqual(["BTC-USDT", "SOL-USDT"]);
@@ -634,7 +634,7 @@ describe("the live engine through the core", () => {
       handlers = start({ liveFeed: true, pulse: false });
       await settle();
       expect(FakeSocket.all).toHaveLength(1);
-      expect(FakeSocket.all[0]!.url).toBe("wss://ws.okx.com:8443/ws/v5/public");
+      expect(FakeSocket.all[0]!.url).toBe("wss://ws.okx.com/ws/v5/public");
     } finally {
       handlers?.current?.close();
       if (previous === undefined) delete process.env.INONU_AGENT_PULSE;
