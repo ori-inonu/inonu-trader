@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 766,
-  "headHash": "f2065cd8bebfa087ca4eeff79959a420fd7ad21c83b4514e819f731febf88977",
+  "headSeq": 770,
+  "headHash": "8a749269ddc7637e47c8eb5bd96055bf8d33191245fe8bd0a49703cf97096ff5",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1032,6 +1032,16 @@
       "id": "iter-manter-index",
       "type": "decision",
       "text": "Consenso JEV keep_index (passo 16, binario apos sem_consenso do 15): docs/index.md e conventions.md ficam como arquivos; nada migrado"
+    },
+    {
+      "id": "fato-auditoria-prompts",
+      "type": "fact",
+      "text": "Auditoria grep em src/: sem systemPrompt; estado vai ao modelo como JSON de vocabulario fechado (lab-jev, real/jev, onchainos); resta texto fixo ANALYSIS_INPUTS_TEXT em jev-read, fixado por hash. Prompt em texto livre nao encontrado"
+    },
+    {
+      "id": "iter-auditoria-prompts",
+      "type": "iteration",
+      "text": "Regra 7 auditada no runtime do trader: injecao ja e estado estruturado, com 1 texto fixo residual em jev-read; nao foi tocado, mudar exigiria nova versao de prompt e decisao do JEV"
     }
   ],
   "edges": [
@@ -3244,6 +3254,16 @@
       "from": "iter-sem-consenso-index",
       "to": "iter-manter-index",
       "seq": 766
+    },
+    {
+      "from": "iter-manter-index",
+      "to": "fato-auditoria-prompts",
+      "seq": 768
+    },
+    {
+      "from": "fato-auditoria-prompts",
+      "to": "iter-auditoria-prompts",
+      "seq": 770
     }
   ],
   "retractions": [
