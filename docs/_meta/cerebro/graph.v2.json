@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 814,
-  "headHash": "671f70dbecee04e6d29b63fd9c679bdbe6587bfdc35957e6ff85a9b6ffba5529",
+  "headSeq": 816,
+  "headHash": "de1ec6c459258521a3d7b60d9028be7a91b0bbdaed36c8ad5b56c56283054d4d",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1142,6 +1142,11 @@
       "id": "decisao-quota-diaria",
       "type": "decision",
       "text": "Dono autorizou limite acumulado: teto de 200 chamadas pagas ao Jev por dia UTC em data/jev-quota.json (src/consensus/quota.ts), aplicado em scripts/jev-consensus.ts; --max-calls segue por execucao. Rota MCP ainda sem o teto."
+    },
+    {
+      "id": "decisao-quota-ledger",
+      "type": "decision",
+      "text": "Teto diario virou ledger compartilhado no git-common-dir (todos os worktrees), reserva antes de enviar com trava mkdir e devolve o nao gasto (src/consensus/quota.ts). CLI e MCP usam o mesmo caminho. Dados de data/jev-quota.json antigo nao sao lidos."
     }
   ],
   "edges": [
@@ -3484,6 +3489,11 @@
       "from": "iter-search-ponderada",
       "to": "decisao-quota-diaria",
       "seq": 814
+    },
+    {
+      "from": "decisao-quota-diaria",
+      "to": "decisao-quota-ledger",
+      "seq": 816
     }
   ],
   "retractions": [

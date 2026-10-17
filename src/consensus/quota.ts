@@ -1,19 +1,53 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
+import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 
-/** Teto diario de chamadas pagas ao Jev, somado entre execucoes (o teto por execucao continua em --max-calls). */
+/** Teto diario de chamadas pagas ao Jev, somado entre execucoes e worktrees (o teto por execucao continua em --max-calls). */
 export const JEV_DAILY_CALLS = 200;
+
+/** Ledger no diretorio git comum: todos os worktrees do repo compartilham o mesmo arquivo. */
+export const quotaPath = (): string => {
+  const out = Bun.spawnSync(["git", "rev-parse", "--git-common-dir"], { stdout: "pipe", stderr: "ignore" });
+  return resolve(out.exitCode === 0 ? out.stdout.toString().trim() : "data", "jev-quota.json");
+};
 
 const read = (path: string): Record<string, number> => (existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as Record<string, number>) : {});
 
-/** Chamadas ainda permitidas hoje (UTC). */
-export function remainingToday(path: string, now = new Date(), limit = JEV_DAILY_CALLS): number {
-  return Math.max(0, limit - (read(path)[now.toISOString().slice(0, 10)] ?? 0));
+/** Exclusao mutua por diretorio (mkdir e atomico); trava com mais de 10 s e considerada de processo morto. */
+async function locked<T>(path: string, body: () => T): Promise<T> {
+  const lock = `${path}.lock`;
+  for (let i = 0; ; i++) {
+    try {
+      mkdirSync(lock);
+      break;
+    } catch {
+      if (existsSync(lock) && Date.now() - statSync(lock).mtimeMs > 10_000) rmSync(lock, { recursive: true, force: true });
+      else if (i > 600) throw new Error("ledger de chamadas ao Jev travado");
+      else await Bun.sleep(25);
+    }
+  }
+  try {
+    return body();
+  } finally {
+    rmSync(lock, { recursive: true, force: true });
+  }
 }
 
-/** Soma `sent` ao dia de hoje; guarda so o dia corrente. */
-export function spend(path: string, sent: number, now = new Date()): void {
+const adjust = (path: string, delta: number, day: string): number => {
+  const ledger = read(path);
+  writeFileSync(path, JSON.stringify({ [day]: Math.max(0, (ledger[day] ?? 0) + delta) }));
+  return ledger[day] ?? 0;
+};
+
+/** Reserva ANTES de enviar: devolve quantas chamadas (ate `want`) o dia ainda permite, ja descontadas. Queda do processo mantem a reserva. */
+export function reserve(path: string, want: number, now = new Date(), limit = JEV_DAILY_CALLS): Promise<number> {
   const day = now.toISOString().slice(0, 10);
-  mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, JSON.stringify({ [day]: (read(path)[day] ?? 0) + sent }));
+  return locked(path, () => {
+    const granted = Math.min(want, Math.max(0, limit - (read(path)[day] ?? 0)));
+    if (granted > 0) adjust(path, granted, day);
+    return granted;
+  });
 }
+
+/** Devolve o que a reserva nao gastou. */
+export const refund = (path: string, unused: number, now = new Date()): Promise<void> =>
+  unused > 0 ? locked(path, () => void adjust(path, -unused, now.toISOString().slice(0, 10))) : Promise.resolve();

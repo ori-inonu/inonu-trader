@@ -5,6 +5,7 @@
  */
 import { decide } from "../src/consensus/engine";
 import { createJevJudge } from "../src/consensus/jev-judge";
+import { JEV_DAILY_CALLS, quotaPath, refund, reserve } from "../src/consensus/quota";
 import { handleMessage, type McpDeps } from "../src/consensus/mcp";
 
 const keyOf = (): string | undefined => process.env.TYPESAFE_AI_API_KEY ?? process.env.TYPESAFE_API_KEY;
@@ -12,9 +13,15 @@ const keyOf = (): string | undefined => process.env.TYPESAFE_AI_API_KEY ?? proce
 const deps: McpDeps = {
   hasKey: () => typeof keyOf() === "string" && keyOf() !== "",
   run: async (spec, maxCalls) => {
-    const judge = createJevJudge({ apiKey: keyOf()!, maxCalls });
-    const receipt = await decide(spec, judge);
-    return { receipt, meter: judge.meter() };
+    const path = quotaPath();
+    const granted = await reserve(path, maxCalls);
+    if (granted === 0) throw new Error(`teto diario de ${JEV_DAILY_CALLS} chamadas ao Jev esgotado`);
+    const judge = createJevJudge({ apiKey: keyOf()!, maxCalls: granted });
+    try {
+      return { receipt: await decide(spec, judge), meter: judge.meter() };
+    } finally {
+      await refund(path, granted - judge.meter().sent);
+    }
   },
 };
 
