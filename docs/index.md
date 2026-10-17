@@ -15,6 +15,18 @@ confidence: medium
 - [Especificação do autoresearch offline](specs/autoresearch-decisoes/spec.md): métricas, alvo financeiro não comprovado e separação entre dados reais, sintéticos e ausentes.
 - [Plano e execução canônica](specs/autoresearch-decisoes/plan.md), [grafo de tarefas](specs/autoresearch-decisoes/tasks.md) e [estado e verificação](specs/autoresearch-decisoes/status.md).
 
+## Inteligência e revisão por ciclo (2026-10-16)
+
+- [Especificação de inteligência e revisão dos ciclos JEV](specs/inteligencia-ciclos-jev/spec.md).
+- [Plano](specs/inteligencia-ciclos-jev/plan.md), [tarefas](specs/inteligencia-ciclos-jev/tasks.md), [status e verificação](specs/inteligencia-ciclos-jev/status.md) e [pesquisa/inventário](specs/inteligencia-ciclos-jev/research.md).
+
+- [Inventário e contratos oficiais por recurso](specs/inteligencia-ciclos-jev/inventory.md), [matriz de contratos de API](specs/inteligencia-ciclos-jev/api-contracts.md) e [observações read-only dos ciclos disponíveis](specs/inteligencia-ciclos-jev/observations.md).
+- [Captura da HUD ativa com revisão expandida](specs/inteligencia-ciclos-jev/agentview-page10-expanded.webp).
+
+## Cerebro documental
+
+- [Grafo documental v2](specs/cerebro-grafo/spec.md), [plano](specs/cerebro-grafo/plan.md), [tarefas](specs/cerebro-grafo/tasks.md) e [estado](specs/cerebro-grafo/status.md): fonte de eventos append-only, grafo derivado e preservacao de v1.
+
 ## Evolução e consulta rápida (2026-10-15)
 
 - [[evolucao-do-projeto|Versão/milestone, pacote, fase e tarefa]]: 17 pacotes, 41 agrupamentos e 331 tarefas com IDs originais e fonte/linha.

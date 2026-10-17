@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "284ad059032b11af",
+        "id": "7162f537c9516521",
         "type": "tabs",
         "children": [
           {
-            "id": "fa41efbee9a65661",
+            "id": "ec9dbd858a142236",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -79,7 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 298.5
   },
   "right": {
     "id": "c0799be573a179be",
@@ -181,8 +181,11 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "fa41efbee9a65661",
+  "active": "ec9dbd858a142236",
   "lastOpenFiles": [
+    "Sem título.md",
+    "specs/painel-dev-somente-leitura/spec.md",
+    "_meta/evolucao/pacotes/config-onchain-smartmoney-fase-2.md",
     "sdd/backend-audit-20261013/onchain-interval-final-integration-audit-inspect.py",
     "sdd/backend-audit-20261013/onchain-interval-final-integration-audit-after-hashes.json",
     "sdd/backend-audit-20261013/onchain-interval-final-integration-audit-before-hashes.json",
@@ -198,7 +201,6 @@
     "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-global-types.log",
     "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-types.metrics.json",
     "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-types.log",
-    "sdd/backend-audit-20261013/evidence/onchain-interval-final-live-tests.metrics.json",
     "sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
     "sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
     "sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-VERIFICATION.md",
@@ -226,8 +228,6 @@
     "sdd/inteligencia-decisao/CHECKPOINT.md",
     "sdd/inonu-desktop-v1/evidence/T3.12-rotas-da-carteira.md",
     "sdd/mesa-decisao-20261013/verification.md",
-    "sdd/backend-audit-20261013/PORTFOLIO-INTEGRATION.md",
-    "sdd/backend-audit-20261013/PORTFOLIO-FINAL-AUDIT.md",
-    "sdd/backend-audit-20261013/ONCHAIN-VERIFICATION.md"
+    "sdd/backend-audit-20261013/PORTFOLIO-INTEGRATION.md"
   ]
 }

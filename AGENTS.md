@@ -68,6 +68,14 @@ Prioridade imediata: operação contínua no computador Windows local, com estad
 
 Especificação vigente: `docs/sdd/agente-autonomo/`. Antes de editar caminhos concorrentes, siga os contratos de dono de sessão e de evidência.
 
+## Regras do cerebro documental
+
+- `docs/_meta/cerebro/events.jsonl` e a fonte autoritativa append-only; `graph.v2.json` e derivado regeneravel.
+- Encaminhe cada decisao de design ao JEV antes de implementa-la. Trabalhador nao faz chamada paga ao JEV.
+- Use `retract` em vez de apagar nos ou vinculos. Nunca remova eventos anteriores.
+- Limite `export` ao pacote compacto aprovado para JEV; nao exporte o repositorio sem limite nem inclua segredos.
+- Preserve byte a byte `graph.json` v1, curadoria, fontes e `outputs.json`. Este grafo documental nao altera operacao live ou risco.
+
 ## Workflow padrão
 
 - Feature não trivial: use a skill `sdd-feature` (`.agents/skills/sdd-feature/SKILL.md`). Spec, plan, tasks, depois implementação.

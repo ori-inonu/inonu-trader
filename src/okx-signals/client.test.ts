@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test, vi } from 'bun:test';
 import { createSignalsClient } from './client';
 import { collectSignals } from './report';
 
@@ -8,10 +8,12 @@ const query = { chainIndex: '56', walletTypes: ['1', '2', '3'], limit: 10 };
 describe('OKX Signals HTTP boundary', () => {
   test('signs the exact fixed GET and object POST once each and accepts the documented envelope without msg', async () => {
     const calls: { url: string; init: RequestInit }[] = [];
-    const client = createSignalsClient({ credentials, now, fetch: async (url, init) => {
-      calls.push({ url, init });
-      return Response.json({ code: '0', data: calls.length === 1 ? [{ chainIndex: '56' }] : [] });
-    } });
+    const client = createSignalsClient({
+      credentials, now, fetch: async (url, init) => {
+        calls.push({ url, init });
+        return Response.json({ code: '0', data: calls.length === 1 ? [{ chainIndex: '56' }] : [] });
+      }
+    });
     const report = await collectSignals({ client, query, now, source: 'okx_authenticated' });
     expect(report.signals).toEqual([]);
     expect(calls).toHaveLength(2);
@@ -40,20 +42,60 @@ describe('OKX Signals HTTP boundary', () => {
     for (const mode of ['headers', 'body', 'combined']) {
       let signal: AbortSignal | null = null;
       let calls = 0;
-      const client = createSignalsClient({ credentials, now, timeoutMs: 30, fetch: async (_url, init) => {
-        calls++; signal = init.signal ?? null;
-        if (mode === 'headers') return new Promise<Response>(() => {});
-        if (mode === 'combined') await Bun.sleep(20);
-        return { ok: true, json: async () => {
-          if (mode === 'body') return new Promise(() => {});
-          await Bun.sleep(20); return { code: '0', data: [] };
-        } } as Response;
-      } });
-      const started = performance.now();
+      const client = createSignalsClient({
+        credentials, now, timeoutMs: 30, fetch: async (_url, init) => {
+          calls++; signal = init.signal ?? null;
+          if (mode === 'headers') return new Promise<Response>(() => { });
+          if (mode === 'combined') await Bun.sleep(20);
+          return {
+            ok: true, json: async () => {
+              if (mode === 'body') return new Promise(() => { });
+              await Bun.sleep(20); return { code: '0', data: [] };
+            }
+          } as Response;
+        }
+      });
       await expect(client.supportedChains()).rejects.toThrow('OKX Signals: deadline');
-      expect(performance.now() - started).toBeLessThan(250);
       expect((signal as AbortSignal | null)?.aborted).toBe(true);
       expect(calls).toBe(1);
+    }
+  });
+
+  test.each(['fetch', 'json'] as const)('rejects a %s result after the monotonic deadline', async (phase) => {
+    vi.useFakeTimers();
+    const timeoutMs = 30;
+    const startedAt = 1_000;
+    let monotonicNow = startedAt;
+    let signal: AbortSignal | null = null;
+    let calls = 0;
+    const nowSpy = vi.spyOn(performance, 'now').mockImplementation(() => monotonicNow);
+    try {
+      const client = createSignalsClient({
+        credentials, now, timeoutMs, fetch: async (_url, init) => {
+          calls += 1;
+          signal = init.signal ?? null;
+          const response = Response.json({ code: '0', data: [] });
+          if (phase === 'fetch') {
+            monotonicNow = startedAt + timeoutMs + 1;
+            return response;
+          }
+          const readJson = response.json.bind(response);
+          Object.defineProperty(response, 'json', {
+            value: async () => {
+              const value = await readJson();
+              monotonicNow = startedAt + timeoutMs + 1;
+              return value;
+            }
+          });
+          return response;
+        }
+      });
+      await expect(client.supportedChains()).rejects.toMatchObject({ code: 'deadline' });
+      expect((signal as AbortSignal | null)?.aborted).toBe(true);
+      expect(calls).toBe(1);
+    } finally {
+      nowSpy.mockRestore();
+      vi.useRealTimers();
     }
   });
   test('validates credentials, query, deadline and clock before fetch and snapshots test credentials', async () => {
@@ -68,10 +110,12 @@ describe('OKX Signals HTTP boundary', () => {
     await expect(createSignalsClient({ credentials, fetch: send, now: () => NaN }).supportedChains()).rejects.toThrow('invalid_input');
     expect(calls).toBe(0);
     const mutable = { ...credentials };
-    const snapshotted = createSignalsClient({ credentials: mutable, now, fetch: async (_url, init) => {
-      expect(new Headers(init.headers).get('OK-ACCESS-KEY')).toBe('test-key');
-      return Response.json({ code: '0', data: [] });
-    } });
+    const snapshotted = createSignalsClient({
+      credentials: mutable, now, fetch: async (_url, init) => {
+        expect(new Headers(init.headers).get('OK-ACCESS-KEY')).toBe('test-key');
+        return Response.json({ code: '0', data: [] });
+      }
+    });
     mutable.apiKey = 'changed';
     await snapshotted.supportedChains();
   });

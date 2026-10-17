@@ -1,0 +1,3 @@
+$ bun --no-env-file run typecheck && bun --no-env-file run --cwd web typecheck
+$ tsc --noEmit -p tsconfig.verification.json
+$ tsc --noEmit

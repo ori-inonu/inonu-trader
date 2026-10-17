@@ -132,3 +132,65 @@ describe("how the orders ended and what went out today", () => {
     expect(a.orders.spentToday).toEqual({ buy: 11, sell: 40.46 });
   });
 });
+describe("cycle review decision windows", () => {
+  const key = "cy-1:buy:a";
+  const decision = { kind: "decision", key, cycleId: "cy-1", candidateId: "buy:a", atMs: T0, side: "buy", stance: "buy_full", entryPriceUsd: 10 };
+  const review = (nowMs: number, scoreboard: unknown[] = [decision]) => {
+    const analysis = buildAnalysis(base({ nowMs, briefs: [consult(1)], scoreboard }));
+    return analysis.cycleReviews[0]!.items[0]!;
+  };
+  const windows = ["15m", "1h", "4h", "24h"] as const;
+
+  test("retains valid epoch-millisecond timestamps in the frozen macro context", () => {
+    const contexto = { btc_1m: 0.25, btc_age_ms: 12_000, btc_asof_ms: T0, btc_fh: "a".repeat(64) };
+    const analysis = buildAnalysis(base({ briefs: [consult(1, { contexto })], scoreboard: [decision] }));
+    expect(analysis.cycleReviews[0]!.frozen.context).toEqual(contexto);
+  });
+
+  test("returns every window while pending and does not report pending outcomes as unmeasured", () => {
+    const inactionKey = `${key}|inacao`;
+    const item = review(T0 + 10 * 60_000, [decision, { ...decision, key: inactionKey, side: "sell", stance: "skip" }]);
+    expect(item.decision.inaction).toMatchObject({ key: inactionKey, side: "sell", stance: "skip" });
+    expect(item.results.postDecisionOnly).toBe(true);
+    expect(item.results.action.map((result) => [result.window, result.status])).toEqual([["15m", "pending"], ["1h", "pending"], ["4h", "pending"], ["24h", "pending"]]);
+    expect(item.results.inaction.map((result) => [result.window, result.status])).toEqual([["15m", "pending"], ["1h", "pending"], ["4h", "pending"], ["24h", "pending"]]);
+    expect(item.findings.filter((finding) => finding.code === "outcome_unmeasured")).toEqual([]);
+  });
+
+  test("recognizes a holding's keep decision by candidate kind, not by the counterfactual side", () => {
+    const candidateId = "hold:a";
+    const holdingConsult = consult(1, {
+      candidates: [{ id: candidateId, kind: "holding", stances: ["hold", "sell"] }],
+      brief: { posicoes: { [candidateId]: { s: "AAA" } } },
+      requested: { [candidateId]: "hold" },
+      stances: { [candidateId]: "hold" },
+    });
+    const holdingDecision = { kind: "decision", key: `cy-1:${candidateId}|inacao`, cycleId: "cy-1", candidateId, atMs: T0, side: "buy", stance: "hold", entryPriceUsd: 10 };
+    const analysis = buildAnalysis(base({ briefs: [holdingConsult], scoreboard: [holdingDecision] }));
+    expect(analysis.cycleReviews[0]!.items[0]!.decision.inaction).toMatchObject({ side: "buy", stance: "hold" });
+  });
+
+  test("the exact horizon boundary is due, not pending", () => {
+    const item = review(T0 + 15 * 60_000);
+    expect(item.results.action.map((result) => [result.window, result.status])).toEqual([["15m", "unmeasured"], ["1h", "pending"], ["4h", "pending"], ["24h", "pending"]]);
+    expect(item.findings.filter((finding) => finding.code === "outcome_unmeasured").map((finding) => finding.window)).toEqual(["15m"]);
+  });
+
+  test("due windows without settlement are unmeasured and reported", () => {
+    const item = review(T0 + 24 * 60 * 60_000);
+    expect(item.results.action.map((result) => [result.window, result.status])).toEqual([["15m", "unmeasured"], ["1h", "unmeasured"], ["4h", "unmeasured"], ["24h", "unmeasured"]]);
+    expect(item.findings.filter((finding) => finding.code === "outcome_unmeasured").map((finding) => finding.window)).toEqual([...windows]);
+  });
+
+  test("null-price and early settlements remain unknown and are reported; an in-window price is measured", () => {
+    const scoreboard = [
+      decision,
+      { kind: "settlement", key, window: "15m", settledAtMs: T0 + 15 * 60_000, priceUsd: 11, reason: null },
+      { kind: "settlement", key, window: "1h", settledAtMs: T0 + 60 * 60_000, priceUsd: null, reason: "sem_preco" },
+      { kind: "settlement", key, window: "4h", settledAtMs: T0 + 4 * 60 * 60_000 - 1, priceUsd: 12, reason: "antecipado" },
+    ];
+    const item = review(T0 + 24 * 60 * 60_000, scoreboard);
+    expect(item.results.action.find((result) => result.window === "15m")).toMatchObject({ settledAtMs: T0 + 15 * 60_000, priceUsd: 11, movePct: 10 });
+    expect(item.results.action.map((result) => [result.window, result.status])).toEqual([["15m", "measured"], ["1h", "unknown"], ["4h", "unknown"], ["24h", "unmeasured"]]);
+  });
+});

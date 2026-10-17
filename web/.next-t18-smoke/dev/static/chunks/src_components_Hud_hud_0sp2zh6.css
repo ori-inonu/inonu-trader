@@ -1,0 +1,704 @@
+/* [project]/src/components/Hud/hud.css [app-client] (css) */
+.hud-root {
+  --bg: #02070d;
+  --cy: #2ee6ff;
+  --cy-soft: #7df3ff;
+  --mute: #5fa3b5;
+  --amber: #ffb23e;
+  --green: #38ffb4;
+  --text: #bfefff;
+  --white: #e9fbff;
+  z-index: 40;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Bahnschrift, "Segoe UI", var(--font-inter), system-ui, sans-serif;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hud-root.hud-tall {
+  scrollbar-width: thin;
+  scrollbar-color: #17687f #02070d;
+  overflow: hidden auto;
+}
+
+.hud-root .sticky-plate {
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.hud-root svg.stuck .sticky-plate {
+  opacity: .96;
+}
+
+.hud-root svg.hud-svg {
+  outline: none;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+.hud-root.hud-tall svg.hud-svg {
+  height: auto;
+  position: relative;
+}
+
+.hud-root.hud-gate > :not(.hud-rain) {
+  z-index: 1;
+  position: relative;
+}
+
+.hud-root .hud-readonly-banner {
+  z-index: 3;
+  color: #ffe0a3;
+  letter-spacing: .08em;
+  text-align: center;
+  background: #2d1d05f0;
+  border: 1px solid #ffb23e;
+  margin: 0;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+}
+
+.hud-root .hud-wallet-status {
+  z-index: 3;
+  border: 1px solid var(--amber);
+  color: #ffe0a3;
+  text-align: center;
+  background: #2d1d05f0;
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+}
+
+.hud-root.hud-gate > .hud-modal-scrim {
+  z-index: 5;
+  position: fixed;
+}
+
+.hud-root text {
+  fill: var(--text);
+  letter-spacing: .06em;
+}
+
+.hud-root .t-title {
+  fill: var(--cy-soft);
+  letter-spacing: .26em;
+  font-size: 14px;
+}
+
+.hud-root .t-sub {
+  fill: var(--mute);
+  letter-spacing: .14em;
+  font-size: 11.5px;
+}
+
+.hud-root .t-big {
+  fill: var(--white);
+  letter-spacing: .02em;
+  font-size: 38px;
+  font-weight: 600;
+}
+
+.hud-root .t-num {
+  fill: var(--white);
+  letter-spacing: .02em;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.hud-root .t-mono {
+  font-family: Consolas, "Cascadia Mono", var(--font-geist-mono), monospace;
+  letter-spacing: .02em;
+  font-size: 12.5px;
+}
+
+.hud-root .glow {
+  filter: url("#glow");
+}
+
+.hud-root .glow2 {
+  filter: url("#glow2");
+}
+
+@keyframes hud-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hud-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes hud-flow {
+  to {
+    stroke-dashoffset: -200px;
+  }
+}
+
+@keyframes hud-flow-rev {
+  to {
+    stroke-dashoffset: 200px;
+  }
+}
+
+@keyframes hud-drift {
+  to {
+    transform: translate(-96px, -96px);
+  }
+}
+
+@keyframes hud-scan {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(var(--w));
+  }
+}
+
+@keyframes hud-scany {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(var(--h));
+  }
+}
+
+@keyframes hud-rise {
+  to {
+    transform: translateY(var(--h));
+  }
+}
+
+@keyframes hud-bob {
+  from {
+    transform: scaleY(.35);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes hud-wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hud-drawin {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hud-growy {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes hud-growx {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes hud-enter {
+  from {
+    transform: translateY(18px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hud-slide {
+  from {
+    transform: translateX(-18px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hud-sweep {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(var(--w));
+  }
+}
+
+@keyframes hud-tabrun {
+  to {
+    stroke-dashoffset: -100px;
+  }
+}
+
+@keyframes hud-shine {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(var(--w));
+  }
+}
+
+@keyframes hud-rain {
+  from {
+    transform: translateY(-100%);
+  }
+
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+.hud-root .spin-b {
+  animation: 140s linear infinite hud-spin-rev;
+}
+
+.hud-root .spin-c {
+  animation: 38s linear infinite hud-spin;
+}
+
+.hud-root .spin-d {
+  animation: 24s linear infinite hud-spin-rev;
+}
+
+.hud-root .spin-e {
+  animation: 14s linear infinite hud-spin;
+}
+
+.hud-root .spin-f {
+  animation: 220s linear infinite hud-spin;
+}
+
+.hud-root .flow {
+  stroke-dasharray: 6 14;
+  animation: 6s linear infinite hud-flow;
+}
+
+.hud-root .flow-fast {
+  stroke-dasharray: 4 10;
+  animation: 3s linear infinite hud-flow;
+}
+
+.hud-root .flow-rev {
+  stroke-dasharray: 6 14;
+  animation: 9s linear infinite hud-flow-rev;
+}
+
+.hud-root .flow-slow {
+  animation: 9s linear infinite hud-flow;
+}
+
+.hud-root .bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: 1.8s ease-in-out infinite alternate hud-bob;
+}
+
+.hud-root .drift {
+  animation: 30s linear infinite hud-drift;
+}
+
+.hud-root .wave {
+  transform-box: fill-box;
+  animation: 4.2s ease-in-out infinite hud-wave;
+}
+
+.hud-root .draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1px;
+  animation: 1.6s ease-out forwards hud-drawin;
+}
+
+.hud-root .grow-y {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: .9s ease-out both hud-growy;
+}
+
+.hud-root .grow-x {
+  transform-box: fill-box;
+  transform-origin: 0;
+  animation: .9s ease-out both hud-growx;
+}
+
+.hud-root .enter {
+  animation: .7s cubic-bezier(.2, .8, .2, 1) both hud-enter;
+}
+
+.hud-root .slide {
+  animation: .6s cubic-bezier(.2, .8, .2, 1) both hud-slide;
+}
+
+.hud-root .boot-sweep {
+  animation: 1.2s ease-out both hud-sweep;
+}
+
+.hud-root .blip {
+  cursor: pointer;
+  transition: r .6s, stroke-width .6s;
+}
+
+.hud-root .hexfill {
+  transition: opacity .8s, fill .8s;
+}
+
+.hud-root .tab {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  outline: none;
+  transition: transform .25s;
+}
+
+.hud-root .tab text {
+  fill: var(--cy-soft);
+  transition: fill .25s;
+}
+
+.hud-root .tab path.plate {
+  transition: fill .25s, stroke .25s;
+}
+
+.hud-root .tab .tab-flow {
+  stroke: #bff6ff;
+  stroke-dasharray: 14 86;
+  stroke-opacity: 0;
+  pointer-events: none;
+  transition: stroke-opacity .3s;
+  animation: 4s linear infinite hud-tabrun;
+}
+
+.hud-root .tab:hover {
+  transform: translateY(-2px);
+}
+
+.hud-root .tab:active {
+  transform: translateY(0)scale(.97);
+}
+
+.hud-root .tab:hover text, .hud-root .tab:focus-visible text, .hud-root .tab[aria-selected="true"] text {
+  fill: var(--white);
+}
+
+.hud-root .tab:hover path.plate, .hud-root .tab:focus-visible path.plate {
+  stroke: var(--cy-soft);
+  fill: #08303c;
+}
+
+.hud-root .tab:focus-visible path.plate {
+  stroke-width: 3px;
+}
+
+.hud-root .tab:hover .tab-flow, .hud-root .tab:focus-visible .tab-flow, .hud-root .tab[aria-selected="true"] .tab-flow {
+  stroke-opacity: .95;
+}
+
+.hud-root .tab .tab-icon {
+  stroke: var(--cy-soft);
+  fill: none;
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke .25s;
+}
+
+.hud-root .tab:hover .tab-icon, .hud-root .tab[aria-selected="true"] .tab-icon {
+  stroke: var(--white);
+}
+
+.hud-root .btn {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  outline: none;
+  transition: transform .2s;
+}
+
+.hud-root .btn path.plate {
+  transition: stroke .3s, fill .3s;
+}
+
+.hud-root .btn .btn-flow {
+  stroke-dasharray: 12 88;
+  stroke-opacity: .3;
+  pointer-events: none;
+  transition: stroke-opacity .3s;
+  animation: 3.2s linear infinite hud-tabrun;
+}
+
+.hud-root .btn .btn-shine {
+  pointer-events: none;
+  transform: translateX(-90px);
+}
+
+.hud-root .btn:hover {
+  transform: translateY(-1px);
+}
+
+.hud-root .btn:active {
+  transform: translateY(0)scale(.985);
+}
+
+.hud-root .btn:hover path.plate, .hud-root .btn:focus-visible path.plate {
+  stroke: var(--white);
+  fill: #07303c;
+}
+
+.hud-root .btn:hover .btn-flow, .hud-root .btn:focus-visible .btn-flow {
+  stroke-opacity: 1;
+}
+
+.hud-root .btn:hover .btn-shine, .hud-root .btn:focus-visible .btn-shine {
+  animation: .9s ease-out hud-shine;
+}
+
+.hud-root .btn.off {
+  cursor: default;
+}
+
+.hud-root .btn.off .btn-flow, .hud-root .btn.off .btn-shine {
+  display: none;
+}
+
+.hud-root .btn.off:hover {
+  transform: none;
+}
+
+.hud-root .btn.off:hover path.plate {
+  stroke: #2c5563;
+  fill: #041a23;
+}
+
+.hud-root .hud-rain {
+  z-index: 0;
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask-image: radial-gradient(at 50% 46%, #0000004d 0, #0000008c 32%, #000 78%);
+  mask-image: radial-gradient(at 50% 46%, #0000004d 0, #0000008c 32%, #000 78%);
+}
+
+.hud-root .hud-rain-col {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  white-space: nowrap;
+  font-family: Consolas, "Cascadia Mono", var(--font-geist-mono), monospace;
+  letter-spacing: .3em;
+  color: #0000;
+  background: linear-gradient(#2ee6ff00 0%, #2ee6ff8c 70%, #bff6ff 100%);
+  opacity: var(--o, .1);
+  animation-name: hud-rain;
+  animation-duration: var(--d, 24s);
+  animation-delay: var(--delay, 0s);
+  will-change: transform;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-weight: 600;
+  line-height: 1;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  position: absolute;
+  top: 0;
+}
+
+.hud-root svg.hud-svg {
+  z-index: 1;
+}
+
+.hud-root.hud-gate {
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 42%, #06222e 0%, #03111a 55%, #02070d 100%),
+    var(--bg);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 20px;
+  display: flex;
+  overflow-y: auto;
+}
+
+.hud-root .hud-ring {
+  flex: none;
+  width: min(60vw, 340px);
+  height: auto;
+}
+
+.hud-root .hud-gate-brand {
+  letter-spacing: .4em;
+  color: var(--mute);
+  margin: 0;
+  font-size: 12px;
+}
+
+.hud-root .hud-gate-headline {
+  letter-spacing: .12em;
+  max-width: 760px;
+  color: var(--white);
+  margin: 0;
+  font-size: clamp(20px, 3.4vw, 34px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.hud-root .hud-gate-lead {
+  max-width: 640px;
+  color: var(--text);
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.hud-root .hud-gate-notice {
+  max-width: 640px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.hud-root .hud-gate-notice.ok {
+  color: var(--green);
+}
+
+.hud-root .hud-gate-notice.bad {
+  color: var(--amber);
+}
+
+.hud-root .hud-cta {
+  letter-spacing: .2em;
+  color: var(--white);
+  border: 1px solid var(--cy);
+  cursor: pointer;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  background: #0b4252;
+  padding: 15px 26px;
+  font: 600 13px / 1 Bahnschrift, Segoe UI, system-ui, sans-serif;
+  transition: background .3s, border-color .3s;
+}
+
+.hud-root .hud-cta:hover:not(:disabled), .hud-root .hud-cta:focus-visible {
+  background: #0f6279;
+  outline: none;
+}
+
+.hud-root .hud-cta:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.hud-root .hud-cta.quiet {
+  color: var(--cy-soft);
+  background: #041a23;
+  border-color: #17687f;
+}
+
+.hud-root .hud-modal-scrim {
+  z-index: 5;
+  background: #02070de0;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  display: flex;
+  position: fixed;
+  inset: 0;
+}
+
+.hud-root .hud-modal {
+  text-align: left;
+  background: #041a23;
+  border: 1px solid #17687f;
+  max-width: 640px;
+  max-height: 100%;
+  padding: 26px 28px;
+  overflow-y: auto;
+}
+
+.hud-root .hud-modal h2 {
+  letter-spacing: .22em;
+  color: var(--cy-soft);
+  margin: 0 0 14px;
+  font-size: 15px;
+}
+
+.hud-root .hud-modal p {
+  color: var(--text);
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.hud-root .hud-modal p.warn {
+  color: var(--amber);
+}
+
+.hud-root .hud-modal-actions {
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+  display: flex;
+}
+
+.hud-root .hud-sr {
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-root .hud-rain {
+    display: none;
+  }
+
+  .hud-root *, .hud-root :before, .hud-root :after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .hud-root .draw {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/*# sourceMappingURL=src_components_Hud_hud_0sp2zh6.css.map*/

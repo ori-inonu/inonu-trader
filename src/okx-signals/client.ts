@@ -23,18 +23,28 @@ export function createSignalsClient(options: {
     const timestamp = new Date(time).toISOString();
     const signature = createHmac('sha256', credentials.secret).update(timestamp + method + path + (body ?? '')).digest('base64');
     const controller = new AbortController();
+    const deadlineAt = performance.now() + timeoutMs;
+    const assertBeforeDeadline = () => {
+      if (!controller.signal.aborted && performance.now() < deadlineAt) return;
+      controller.abort();
+      throw new SignalsError('deadline');
+    };
     let timer: ReturnType<typeof setTimeout> | undefined;
     const deadline = new Promise<never>((_resolve, reject) => {
       timer = setTimeout(() => { controller.abort(); reject(new SignalsError('deadline')); }, timeoutMs);
     });
     try {
       const work = (async () => {
-        const response = await send(HOST + path, { method, body, redirect: 'error', signal: controller.signal, headers: {
-          'Content-Type': 'application/json', 'OK-ACCESS-KEY': credentials.apiKey,
-          'OK-ACCESS-SIGN': signature, 'OK-ACCESS-TIMESTAMP': timestamp, 'OK-ACCESS-PASSPHRASE': credentials.passphrase,
-        } });
+        const response = await send(HOST + path, {
+          method, body, redirect: 'error', signal: controller.signal, headers: {
+            'Content-Type': 'application/json', 'OK-ACCESS-KEY': credentials.apiKey,
+            'OK-ACCESS-SIGN': signature, 'OK-ACCESS-TIMESTAMP': timestamp, 'OK-ACCESS-PASSPHRASE': credentials.passphrase,
+          }
+        });
+        assertBeforeDeadline();
         if (!response.ok) throw new SignalsError('request_failed');
         const envelope: unknown = await response.json();
+        assertBeforeDeadline();
         if (envelope === null || typeof envelope !== 'object' || Array.isArray(envelope)) throw new SignalsError('invalid_response');
         const data = envelope as Record<string, unknown>;
         if (data.code !== '0' || !Array.isArray(data.data)) throw new SignalsError('invalid_response');

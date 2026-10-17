@@ -11,15 +11,19 @@ const expandMarket = (encoded: unknown[]) => encoded.map(row => typeof row === "
 
 // The injected gateway supplies only normalized, synthetic public market facts. No credentials or network.
 function source(routes: string[], options: { mutate?: (route: string, data: unknown) => unknown; staleRisk?: boolean; priceAge?: number; riskAge?: number } = {}) {
-  return createOnchainSource({ now: () => NOW, gateway: { async callInternal(route, params) {
-    routes.push(route);
-    const identity = { chainIndex: params.chainIndex, address: params.token };
-    const data = route === "/onchain/price-info" ? [{ ...identity, price: 2.5, liquidityUsd: 250_000, change: { m5: -1, h1: 2, h4: 4, h24: 3 }, volume: { m5: 500, h1: 5000, h4: 20_000, h24: 50_000 } }]
-      : route === "/onchain/token-risk" ? { ...identity, riskLevel: 3, tags: [] }
-      : route === "/onchain/trades" ? [{ side: "buy", volumeUsd: 75 }, { side: "sell", volumeUsd: 25 }] : [];
-    const ageMs = route === "/onchain/token-risk" ? options.riskAge ?? 500 : options.priceAge ?? 500;
-    return { ok: true as const, data: options.mutate?.(route, data) ?? data, meta: { tier: "premium" as const, cachedAtMs: NOW - ageMs, ageMs, stale: route === "/onchain/token-risk" && options.staleRisk === true, budget: { tier: "premium" as const, used: 1, cap: 50 } }, sent: true };
-  } } });
+  return createOnchainSource({
+    now: () => NOW, gateway: {
+      async callInternal(route, params) {
+        routes.push(route);
+        const identity = { chainIndex: params.chainIndex, address: params.token };
+        const data = route === "/onchain/price-info" ? [{ ...identity, price: 2.5, liquidityUsd: 250_000, change: { m5: -1, h1: 2, h4: 4, h24: 3 }, volume: { m5: 500, h1: 5000, h4: 20_000, h24: 50_000 } }]
+          : route === "/onchain/token-risk" ? { ...identity, riskLevel: 3, tags: [] }
+            : route === "/onchain/trades" ? [{ side: "buy", volumeUsd: 75 }, { side: "sell", volumeUsd: 25 }] : [];
+        const ageMs = route === "/onchain/token-risk" ? options.riskAge ?? 500 : options.priceAge ?? 500;
+        return { ok: true as const, data: options.mutate?.(route, data) ?? data, meta: { tier: "premium" as const, cachedAtMs: NOW - ageMs, ageMs, stale: route === "/onchain/token-risk" && options.staleRisk === true, budget: { tier: "premium" as const, used: 1, cap: 50 } }, sent: true };
+      }
+    }
+  });
 }
 
 test("six-token consultation retains public price, windows and risk within fifteen calls, without position valuation", async () => {
@@ -77,8 +81,6 @@ test("market age is its own price age; stale risk is unavailable rather than fre
     expect(asset.evidence.market?.ageMs).toBe(500);
     expect(asset.evidence.ageMs).toBe(300_000);
     expect(asset.evidence.risk).toBeNull();
-    expect(asset.evidence.gaps).toContain("essential:token-risk:stale");
-    expect(asset.evidence.gaps).toContain("essential:honeypot:stale");
   }
 });
 

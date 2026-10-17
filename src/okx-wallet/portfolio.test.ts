@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { createOkxPortfolioClient, normalizeInventory, OkxPortfolioError, syntheticInventory, type PortfolioFetch, type PortfolioFetchInit, type RawTokenAsset } from "./portfolio";
+import { bookFromAssets } from "../agent/book";
 import { isAddressForChain, validateChainList, chainByIndex } from "./chains";
 
 const credentials = { apiKey: "key", secretKey: "secret", passphrase: "pass" };
@@ -50,6 +51,49 @@ test("signs the exact balance request across several chains and validates assets
   expect(call.init.headers.get("OK-ACCESS-TIMESTAMP")).toBe("2026-10-10T12:00:00.000Z");
   expect(call.init.headers.get("OK-ACCESS-SIGN")).toMatch(/^[A-Za-z0-9+/]+=*$/);
   expect(call.init.credentials).toBe("omit");
+});
+
+test("wallet response identity matches requested chain and address with network-specific casing", async () => {
+  const token = (chainIndex: string, address: string, contract = "0x2222222222222222222222222222222222222222"): RawTokenAsset => ({
+    chainIndex, tokenContractAddress: contract, address, symbol: "TST", balance: "1", rawBalance: "1", tokenPrice: "2", isRiskToken: false,
+  });
+  const clientFor = (asset: RawTokenAsset) => createOkxPortfolioClient({
+    credentials,
+    fetcher: async () => envelope([{ tokenAssets: [asset] }]),
+    now: () => timestamp,
+    allowLiveRequests: true,
+  });
+
+  const walletB = "0x1111111111111111111111111111111111111111";
+  expect(isAddressForChain("8453", evm) && isAddressForChain("1", evm)).toBe(true);
+  await expect(clientFor(token("1", evm)).allTokenBalances(evm, ["8453"]))
+    .rejects.toMatchObject({ kind: "schema" });
+  expect(isAddressForChain("8453", walletB)).toBe(true);
+  await expect(clientFor(token("8453", walletB)).allTokenBalances(evm, ["8453"]))
+    .rejects.toMatchObject({ kind: "schema" });
+
+  const evmCaseResult = await clientFor(token("8453", evm.toLowerCase())).allTokenBalances(evm, ["8453"]);
+  const evmCaseBook = bookFromAssets([{ wallet: "agente", assets: evmCaseResult }], 1).book;
+  expect(evmCaseBook.agentUsd).toBe(2);
+
+  const solWallet = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+  const solOtherCase = "ePjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+  expect(isAddressForChain("501", solWallet)).toBe(true);
+  expect(isAddressForChain("501", solOtherCase)).toBe(true);
+  await expect(clientFor(token("501", solOtherCase, "So11111111111111111111111111111111111111112")).allTokenBalances(solWallet, ["501"]))
+    .rejects.toMatchObject({ kind: "schema" });
+
+  const emptyAddress = await clientFor(token("8453", "")).allTokenBalances(evm, ["8453"]);
+  const emptyAddressBook = bookFromAssets([{ wallet: "agente", assets: emptyAddress }], 1).book;
+  expect(emptyAddressBook.agentUsd).toBe(2);
+  const mixedClient = createOkxPortfolioClient({
+    credentials,
+    fetcher: async () => envelope([{ tokenAssets: [token("8453", evm), token("8453", walletB)] }]),
+    now: () => timestamp,
+    allowLiveRequests: true,
+  });
+  const mixedBook = async () => bookFromAssets([{ wallet: "agente", assets: await mixedClient.allTokenBalances(evm, ["8453"]) }], 1).book;
+  await expect(mixedBook()).rejects.toMatchObject({ kind: "schema" });
 });
 
 test("rejects an address that matches no requested chain family", async () => {

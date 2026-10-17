@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { cachedImpactReader, ENTRY_COST_CLOSED, ENTRY_COST_NARROWED, ENTRY_PROBE, entryCostFits, impactOfQuote, narrowBuysByEntryCost, narrowByEntryCost, recentBuyImpacts, recentSaleRefusals, SALE_REFUSED_TRIGGER, smallestOrderOf, withoutRefusedSales } from "./entry-cost";
+import { cachedEntryQuoteReader, ENTRY_COST_CLOSED, ENTRY_COST_NARROWED, ENTRY_PROBE, entryCostFits, impactOfQuote, narrowBuysByEntryCost, narrowByEntryCost, recentBuyImpacts, recentSaleRefusals, SALE_REFUSED_TRIGGER, smallestOrderOf, withoutRefusedSales, type EntryQuoteObservation, type EntryQuoteReader } from "./entry-cost";
 import type { Candidate } from "./types";
 
 const MINT = "BCdwQBAn8dYB5YjTsoB6TdHAWokxv28k2oZUodERpump";
@@ -94,24 +94,41 @@ describe("a sale the executor refused for price impact is not asked again at tha
 });
 
 describe("the quote taken before the Jev is asked is small, one at a time, and never fatal", () => {
-  const costs = (impact: Record<string, number | null>) => async (order: { address: string }) => impact[order.address] ?? null;
   const token = (n: number, quality: number): Candidate & { q: number } => ({ ...buy({ id: `buy:token:501:T${n}`, address: `T${n}`, symbol: `T${n}` }), q: quality });
-  const run = (buys: Candidate[], probe: ((o: never, s: AbortSignal) => Promise<number | null>) | null) => narrowBuysByEntryCost({ buys, quality: (c) => (c as Candidate & { q: number }).q ?? 0, records: [], nowMs: NOW, probe: probe as never, clock: () => NOW });
+  const run = (buys: Candidate[], probe: EntryQuoteReader | null) => narrowBuysByEntryCost({ buys, quality: (c) => (c as Candidate & { q: number }).q ?? 0, records: [], nowMs: NOW, probe, clock: () => NOW });
 
-  test("a quote narrows the purchase it was taken for", async () => {
-    const out = await run([token(1, 0)], costs({ T1: -1 }) as never);
+  test("a finite quote narrows the purchase it was taken for", async () => {
+    const out = await run([token(1, 0)], async (order) => ({ impactPct: order.address === "T1" ? -1 : null, refusal: null }));
     expect(out[0]!.profiles).toEqual(["alvo_5", "alvo_10", "alvo_20"]);
+  });
+
+  test("an explicit gas-station refusal closes and marks only its purchase; a generic absence leaves another purchase open", async () => {
+    const marked = token(1, 1);
+    const alreadyMarked = { ...marked, marks: [...marked.marks, "gas_station_pendente"], triggers: ["prior_observation"] };
+    const refused = token(2, 2);
+    const unknown = token(3, 3);
+    const out = await run([alreadyMarked, refused, unknown], async (order) => order.address === "T1" || order.address === "T2"
+      ? { impactPct: null, refusal: "gas_station_pendente" }
+      : { impactPct: null, refusal: null });
+    const first = out.find((c) => c.id === alreadyMarked.id)!;
+    const second = out.find((c) => c.id === refused.id)!;
+    expect(first).toMatchObject({ stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {} });
+    expect(first.marks.filter((mark) => mark === "gas_station_pendente")).toHaveLength(1);
+    expect(first.triggers).toEqual(["prior_observation"]);
+    expect(second).toMatchObject({ stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {} });
+    expect(second.marks.filter((mark) => mark === "gas_station_pendente")).toHaveLength(1);
+    expect(out[2]).toBe(unknown);
   });
 
   test("no more than the best few open purchases are quoted in a cycle", async () => {
     const asked: string[] = [];
-    await run([token(1, 1), token(2, 2), token(3, 3), token(4, 4), token(5, 5)], (async (o: { address: string }) => (asked.push(o.address), null)) as never);
+    await run([token(1, 1), token(2, 2), token(3, 3), token(4, 4), token(5, 5)], async (order) => (asked.push(order.address), { impactPct: null, refusal: null }));
     expect(asked).toEqual(["T5", "T4", "T3"]);
   });
 
   test("a quote that throws leaves the purchase as it was", async () => {
     const c = token(1, 0);
-    const out = await run([c], (async () => { throw new Error("tool down"); }) as never);
+    const out = await run([c], async () => { throw new Error("tool down"); });
     expect(out[0]).toBe(c);
   });
 
@@ -122,7 +139,7 @@ describe("the quote taken before the Jev is asked is small, one at a time, and n
 
   test("a purchase already closed is never quoted", async () => {
     let asked = 0;
-    await run([{ ...token(1, 0), stances: ["skip"] }], (async () => (asked++, null)) as never);
+    await run([{ ...token(1, 0), stances: ["skip"] }], async () => (asked++, { impactPct: null, refusal: null }));
     expect(asked).toBe(0);
   });
 
@@ -130,18 +147,48 @@ describe("the quote taken before the Jev is asked is small, one at a time, and n
     expect(smallestOrderOf(buy())).toMatchObject({ stance: "buy_tenth", usd: 10.84, side: "buy", wallet: "agente", profile: "alvo_2" });
   });
 
-  test("the same token and size is not quoted again inside the memory, a failed quote is retried sooner", async () => {
-    let clock = NOW;
-    let calls = 0;
-    const read = cachedImpactReader(async () => (calls++ === 0 ? null : -1), () => clock);
+  test("unknown and gas-station refusal observations use the short cache TTL", async () => {
+    const observations: EntryQuoteObservation[] = [
+      { impactPct: null, refusal: null },
+      { impactPct: null, refusal: "gas_station_pendente" },
+    ];
     const order = smallestOrderOf(buy())!;
     const signal = new AbortController().signal;
-    await read(order, signal);
+    for (const observation of observations) {
+      let clock = NOW;
+      let calls = 0;
+      const read = cachedEntryQuoteReader(async () => (calls++, observation), () => clock);
+      expect(await read(order, signal)).toEqual(observation);
+      clock += ENTRY_PROBE.failTtlMs - 1;
+      expect(await read(order, signal)).toEqual(observation);
+      expect(calls).toBe(1);
+      clock += 2;
+      expect(await read(order, signal)).toEqual(observation);
+      expect(calls).toBe(2);
+    }
+  });
+
+  test("a gas-station refusal closes only until its short TTL; recovery applies the finite impact for the longer TTL", async () => {
+    let clock = NOW;
+    let calls = 0;
+    const refusal: EntryQuoteObservation = { impactPct: null, refusal: "gas_station_pendente" };
+    const impact: EntryQuoteObservation = { impactPct: -0.2, refusal: null };
+    const read = cachedEntryQuoteReader(async () => (calls++ === 0 ? refusal : impact), () => clock);
+    const c = token(1, 0);
+    const inspect = () => run([c], read);
+    expect((await inspect())[0]).toMatchObject({ stances: ["skip"], marks: expect.arrayContaining(["gas_station_pendente"]) });
     clock += ENTRY_PROBE.failTtlMs - 1;
-    await read(order, signal);
+    expect((await inspect())[0]!.stances).toEqual(["skip"]);
+    expect(calls).toBe(1);
     clock += 2;
-    await read(order, signal);
+    expect((await inspect())[0]).toBe(c);
     expect(calls).toBe(2);
+    clock += ENTRY_PROBE.ttlMs - 1;
+    expect((await inspect())[0]).toBe(c);
+    expect(calls).toBe(2);
+    clock += 2;
+    expect((await inspect())[0]).toBe(c);
+    expect(calls).toBe(3);
   });
 
   test("the impact of a quote is read from the number or the string the provider writes", () => {

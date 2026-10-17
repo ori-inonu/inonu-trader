@@ -175,6 +175,66 @@ describe("createOnchainSource, token mode (F2-DIG-4, F2-DIG-5)", () => {
     expect(fake.calls.map((c) => c.route)).not.toContain("/onchain/quote");
     expect(built.brief.nulos.quote).toBe("nao_consultado:nao_pedido");
   });
+  test("stale digest answers preserve source metadata but contribute no Brief evidence", async () => {
+    const staleRoutes = ["/onchain/price-info", "/onchain/trades", "/onchain/signals", "/onchain/top-traders", "/onchain/token-risk", "/onchain/pools", "/onchain/clusters", "/onchain/sentiment", "/onchain/quote"];
+    const overrides: Record<string, InternalGatewayResult> = {};
+    for (const route of staleRoutes) {
+      overrides[route] = { ok: true, data: fixtureData(route), meta: { tier: "basic", cachedAtMs: 0, ageMs: 7_200_000, stale: true, budget: { tier: "basic", used: 1, cap: 50 } }, sent: true };
+    }
+    const fake = fakeGateway(overrides);
+    const built = await createOnchainSource(deps(fake.gateway)).build(REQUEST, CONTEXT());
+
+    expect(fake.calls).toHaveLength(12);
+    expect(built.onchainosCalls).toBe(12);
+    expect(built.brief.trilha!.componentes).toMatchObject({ compra: null, carteiras: null, naoVendida: null, qualidade: null, concentracao: null, risco: null, liquidez: null, fluxo: null, sentimento: null });
+    expect(built.brief.trilha!.nota).toBeNull();
+    expect(built.brief.risco).toBeNull();
+    expect(built.brief.fluxo).toMatchObject({ buyShare: null, smartBuyShare: null, custo: null, janelas: null });
+    const keys = ["price-info", "trades", "trades-smart", "signals", "top-traders", "token-risk", "pools", "clusters", "sentiment", "quote"];
+    for (const key of keys) {
+      expect(built.brief.idades[key]).toBe(7_200_000);
+      expect(built.brief.origens[key]).toBe("onchainos");
+      expect(built.brief.nulos[key]).toBe("dado_stale");
+    }
+    expect(built.brief.nulos.risco).toBe("dado_stale");
+  });
+
+  test("each digest source is independently excluded when its response is stale", async () => {
+    const staleSourceRoutes = [
+      ["/onchain/price-info", ["price-info"]],
+      ["/onchain/trades", ["trades", "trades-smart"]],
+      ["/onchain/signals", ["signals"]],
+      ["/onchain/top-traders", ["top-traders"]],
+      ["/onchain/token-risk", ["token-risk"]],
+      ["/onchain/pools", ["pools"]],
+      ["/onchain/clusters", ["clusters"]],
+      ["/onchain/sentiment", ["sentiment"]],
+      ["/onchain/quote", ["quote"]],
+    ] as const;
+    for (const [staleRoute, keys] of staleSourceRoutes) {
+      const calls: string[] = [];
+      const gateway: OnchainSourceDeps["gateway"] = {
+        async callInternal(route) {
+          calls.push(route);
+          return route === staleRoute
+            ? { ok: true, data: fixtureData(route), meta: { tier: "basic", cachedAtMs: 0, ageMs: 90_000, stale: true, budget: { tier: "basic", used: 1, cap: 50 } }, sent: true }
+            : { ok: false, error: "provider_error", sent: true };
+        }
+      };
+      const built = await createOnchainSource(deps(gateway)).build(REQUEST, CONTEXT());
+      expect(calls).toHaveLength(12);
+      expect(built.onchainosCalls).toBe(12);
+      expect(built.brief.trilha!.componentes).toMatchObject({ compra: null, carteiras: null, naoVendida: null, qualidade: null, concentracao: null, risco: null, liquidez: null, fluxo: null, sentimento: null });
+      expect(built.brief.risco).toBeNull();
+      expect(built.brief.fluxo).toMatchObject({ buyShare: null, smartBuyShare: null, custo: null, janelas: null });
+      for (const key of keys) {
+        expect(built.brief.idades[key]).toBe(90_000);
+        expect(built.brief.origens[key]).toBe("onchainos");
+        expect(built.brief.nulos[key]).toBe("dado_stale");
+      }
+    }
+  });
+
 });
 
 describe("routeByMode", () => {
@@ -196,15 +256,18 @@ describe("SH02: bounded wallet evidence", () => {
     if (!normalized.ok) throw new Error("synthetic risk fixture does not normalize");
     return normalized.data;
   };
-  function walletGateway(riskData: unknown, riskAge: number | null, riskStale = false, poolData: unknown = [{ liquidityUsd: 20 }, { liquidityUsd: 10 }], poolAge: number | null = 70) {
+  function walletGateway(riskData: unknown, riskAge: number | null, riskStale = false, poolData: unknown = [{ liquidityUsd: 20 }, { liquidityUsd: 10 }], poolAge: number | null = 70, priceStale = false, poolStale = false) {
     const calls: string[] = [];
-    const gateway: OnchainSourceDeps["gateway"] = { async callInternal(route) {
-      calls.push(route);
-      const data = route === "/onchain/price-info" ? [{ chainIndex: "1", address: WETH, price: 1, liquidityUsd: 100 }]
-        : route === "/onchain/token-risk" ? riskData : poolData;
-      // Deliberately inject malformed null age metadata to prove fail-closed handling.
-      return { ok: true, data, meta: meta(route === "/onchain/token-risk" ? riskAge : route === "/onchain/pools" ? poolAge : 50, route === "/onchain/token-risk" && riskStale), sent: true } as unknown as Awaited<ReturnType<OnchainSourceDeps["gateway"]["callInternal"]>>;
-    } };
+    const gateway: OnchainSourceDeps["gateway"] = {
+      async callInternal(route) {
+        calls.push(route);
+        const data = route === "/onchain/price-info" ? [{ chainIndex: "1", address: WETH, price: 1, liquidityUsd: 100, change: { m5: 1, h1: 2, h4: 3, h24: 4 }, volume: { m5: 5, h1: 6, h4: 7, h24: 8 } }]
+          : route === "/onchain/token-risk" ? riskData : poolData;
+        // Deliberately inject malformed null age metadata to prove fail-closed handling.
+        const stale = route === "/onchain/token-risk" ? riskStale : route === "/onchain/price-info" ? priceStale : route === "/onchain/pools" && poolStale;
+        return { ok: true, data, meta: meta(route === "/onchain/token-risk" ? riskAge : route === "/onchain/pools" ? poolAge : 50, stale), sent: true } as unknown as InternalGatewayResult;
+      }
+    };
     return { calls, gateway };
   }
 
@@ -213,6 +276,7 @@ describe("SH02: bounded wallet evidence", () => {
     const built = await createOnchainSource(deps(fake.gateway)).build(request, CONTEXT(3));
     expect(fake.calls).toEqual(["/onchain/price-info", "/onchain/token-risk", "/onchain/pools"]);
     expect(built.brief.fluxo!.riskDetails).toEqual({ level: null, tags: ["devAddLiquidity"], lpBurnedPct: 90, devCreateCount: 12, devLaunchedCount: 4, devRugCount: 0, origin: "onchainos", ageMs: 60, stale: false });
+    expect(built.brief.fluxo!.market).toEqual({ priceUsd: 1, liquidityUsd: 100, changePct: { m5: 1, h1: 2, h4: 3, h24: 4 }, volumeUsd: { m5: 5, h1: 6, h4: 7, h24: 8 }, ageMs: 50, stale: false });
     expect(built.brief.fluxo!.concentration).toEqual({ top10HoldPct: 25, devHoldPct: null, bundleHoldPct: null, sniperHoldPct: null, suspiciousHoldPct: null, origin: "onchainos", ageMs: 60, stale: false });
     expect(built.brief.fluxo!.poolLiquidity).toMatchObject({ poolCount: 2, topPoolsLiquidityUsd: 30, largestPoolSharePct: 200 / 3, partial: true, ageMs: 70, stale: false });
     expect(built.brief.nulos.concentration).toBe("scale_ambiguous");
@@ -220,16 +284,48 @@ describe("SH02: bounded wallet evidence", () => {
     expect(built.onchainosCalls).toBe(3);
   });
 
-  test("stale and unknown-age advanced sources retain history metadata but cannot become current risk", async () => {
+  test("stale and unknown-age advanced sources retain metadata but expose no current risk values", async () => {
     for (const [age, stale] of [[90_000, true], [null, false]] as const) {
       const fake = walletGateway(risk({ riskControlLevel: "3" }), age, stale, [{ liquidityUsd: 20 }], null);
       const built = await createOnchainSource(deps(fake.gateway)).build(request, CONTEXT(3));
       expect(built.brief.risco).toBeNull();
-      expect(built.brief.fluxo!.riskDetails).toMatchObject({ level: null, tags: ["devAddLiquidity"], ageMs: age, stale: true });
-      expect(built.brief.fluxo!.concentration).toMatchObject({ top10HoldPct: 25, ageMs: age, stale: true });
-      expect(built.brief.fluxo!.poolLiquidity).toMatchObject({ ageMs: null, stale: true, partial: true });
-      expect(built.brief.nulos["token-risk"]).toBe("stale");
+      expect(built.brief.fluxo!.riskDetails).toEqual({ level: null, tags: [], lpBurnedPct: null, devCreateCount: null, devLaunchedCount: null, devRugCount: null, origin: "onchainos", ageMs: age, stale: true });
+      expect(built.brief.fluxo!.concentration).toEqual({ top10HoldPct: null, devHoldPct: null, bundleHoldPct: null, sniperHoldPct: null, suspiciousHoldPct: null, origin: "onchainos", ageMs: age, stale: true });
+      expect(built.brief.fluxo!.poolLiquidity).toMatchObject({ poolCount: null, topPoolsLiquidityUsd: null, largestPoolSharePct: null, ageMs: null, stale: true, partial: true });
+      expect(built.brief.nulos["token-risk"]).toBe("dado_stale");
+      expect(built.brief.nulos.risco).toBe("dado_stale");
+      expect(built.brief.nulos.concentration).toBe("dado_stale");
     }
+  });
+
+  test("stale wallet market and pool sources retain age but expose no metrics", async () => {
+    const staleMarket = walletGateway(risk(), 60, false, undefined, 70, true);
+    const market = await createOnchainSource(deps(staleMarket.gateway)).build(request, CONTEXT(3));
+    expect(market.brief.fluxo!.market).toEqual({ priceUsd: null, liquidityUsd: null, changePct: { m5: null, h1: null, h4: null, h24: null }, volumeUsd: { m5: null, h1: null, h4: null, h24: null }, ageMs: 50, stale: true });
+    expect(market.brief.nulos["price-info"]).toBe("dado_stale");
+    expect(market.onchainosCalls).toBe(3);
+
+    const stalePools = walletGateway(risk(), 60, false, [{ liquidityUsd: 20 }, { liquidityUsd: 10 }], 70, false, true);
+    const pools = await createOnchainSource(deps(stalePools.gateway)).build(request, CONTEXT(3));
+    expect(pools.brief.fluxo!.poolLiquidity).toEqual({ poolCount: null, topPoolsLiquidityUsd: null, largestPoolSharePct: null, partial: true, origin: "onchainos", ageMs: 70, stale: true });
+    expect(pools.brief.nulos.pools).toBe("dado_stale");
+    expect(pools.onchainosCalls).toBe(3);
+  });
+
+  test("a stale wallet trade response is observed but gives neither flow nor trade count", async () => {
+    const fake = walletGateway(risk(), 60);
+    const gateway: OnchainSourceDeps["gateway"] = {
+      async callInternal(route, params, intent) {
+        const result = await fake.gateway.callInternal(route, params, intent);
+        return route === "/onchain/trades" && result.ok
+          ? { ...result, data: [{ side: "buy", volumeUsd: 100 }, { side: "sell", volumeUsd: 50 }], meta: { ...result.meta, stale: true } }
+          : result;
+      }
+    };
+    const built = await createOnchainSource(deps(gateway)).build(request, CONTEXT(4));
+    expect(built.brief.fluxo).toMatchObject({ buyShare: null, tradeCount: null });
+    expect(built.brief.nulos.trades).toBe("dado_stale");
+    expect(built.onchainosCalls).toBe(4);
   });
 
   test("another token's advanced data is never projected into this identity", async () => {
@@ -257,11 +353,13 @@ describe("SH02: bounded wallet evidence", () => {
   test("cancelling during the final pool read retires the build and preserves its known call count", async () => {
     const controller = new AbortController();
     const fake = walletGateway(risk(), 60);
-    const gateway: OnchainSourceDeps["gateway"] = { async callInternal(route, params, intent) {
-      const result = await fake.gateway.callInternal(route, params, intent);
-      if (route === "/onchain/pools") controller.abort();
-      return result;
-    } };
+    const gateway: OnchainSourceDeps["gateway"] = {
+      async callInternal(route, params, intent) {
+        const result = await fake.gateway.callInternal(route, params, intent);
+        if (route === "/onchain/pools") controller.abort();
+        return result;
+      }
+    };
     await expect(createOnchainSource(deps(gateway)).build(request, CONTEXT(3, controller.signal))).rejects.toMatchObject({ code: "cancelado", onchainosCalls: 3 });
     expect(fake.calls).toHaveLength(3);
   });

@@ -15,7 +15,14 @@ function fakeService(): AgentService {
 function fake() {
   const calls: unknown[][] = [];
   const service: AgentService = {
-    status: () => ({ state: { version: 3, connected: true, connectedAtMs: 1, disclosure: "x", pausedUntilMs: null, pauseReason: null, changedAtMs: 1, events: [] }, stopFile: false, config: DEFAULT_CONFIG } as unknown as AgentStatus),
+    status: () => {
+      calls.push(["status"]);
+      return { state: { version: 3, connected: true, connectedAtMs: 1, disclosure: "x", pausedUntilMs: null, pauseReason: null, changedAtMs: 1, events: [] }, stopFile: false, config: DEFAULT_CONFIG } as unknown as AgentStatus;
+    },
+    devStatus: () => {
+      calls.push(["devStatus"]);
+      return { atMs: 123, connected: true, book: { atMs: 123, observedAtMs: null, quality: "unavailable", totalUsd: null, agentUsd: null, cashUsd: null } };
+    },
     connect: (input) => {
       calls.push(["connect", input]);
       if (input.disclosure !== DISCLOSURE) return { ok: false, reason: "aviso_desatualizado" };
@@ -43,7 +50,7 @@ function fake() {
       calls.push(["resolve", orderKey, outcome]);
       return orderKey === "c1:hold:x@agente" ? { ok: true } : { ok: false, reason: "nao_esta_em_voo" };
     },
-    close: async () => {},
+    close: async () => { },
   };
   const handler = createAgentHandler({ service, origins: [ORIGIN] });
   const call = (method: string, path: string, body?: unknown, headers: Record<string, string> = {}) =>
@@ -86,6 +93,18 @@ describe("status and ledger", () => {
     expect(res.headers.get("cache-control")).toBe("no-store");
     expect(await res.json()).toMatchObject({ ok: true, status: { state: { connected: true } } });
     expect((await call("POST", "/agent/status", {})).status).toBe(405);
+  });
+  test("dev status is a separate GET-only projection with no query", async () => {
+    const { call, calls } = fake();
+    const res = await call("GET", "/agent/dev-status");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("cache-control")).toBe("no-store");
+    expect(await res.json()).toEqual({ ok: true, status: { atMs: 123, connected: true, book: { atMs: 123, observedAtMs: null, quality: "unavailable", totalUsd: null, agentUsd: null, cashUsd: null } } });
+    expect(calls).toEqual([["devStatus"]]);
+    expect(calls.some(([method]) => method === "status")).toBe(false);
+    expect((await call("POST", "/agent/dev-status", {})).status).toBe(405);
+    expect((await call("GET", "/agent/dev-status?unused=1")).status).toBe(400);
+    expect(calls).toEqual([["devStatus"]]);
   });
 
   test("the ledger tail is bounded", async () => {

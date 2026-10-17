@@ -1,7 +1,7 @@
 ---
 title: "Mercado e dados: contratos de leitura, captura e histórico"
 created: 2026-10-13
-updated: 2026-10-13
+updated: 2026-10-16
 type: concept
 tags: ["dados", "onchainos", "integracao", "evidencia", "seguranca", "risco"]
 sources: [
@@ -55,7 +55,7 @@ confidence: medium
 
 # Mercado e dados: Exchange pública, DEX, captura e histórico
 
-Esta página separa contratos que usam nomes parecidos, mas têm origens, unidades e gates diferentes. Estado de referência: código local observado em 13 de outubro de 2026; auditoria estática, sem chamada a API, WebSocket, RPC, modelo ou download de arquivo. Os links apontam para a linha do working tree inspecionada. ^[docs/_meta/project-state-20261013.json]
+Esta página separa contratos que usam nomes parecidos, mas têm origens, unidades e gates diferentes. O estado de referência geral é o código observado em 13 de outubro de 2026; a nota do leitor do mecanismo de oportunidades registra apenas a validação sintática adicionada em 16 de outubro de 2026. A auditoria é estática, sem chamada a API, WebSocket, RPC, modelo ou download de arquivo. Os links apontam para as linhas do working tree inspecionadas. ^[docs/_meta/project-state-20261013.json]
 
 ## Mapa de superfícies
 
@@ -72,6 +72,8 @@ Esta página separa contratos que usam nomes parecidos, mas têm origens, unidad
 `marketInputsFor` escolhe uma única origem para cabeçalho e gráfico. Quando há seleção on-chain, valores ausentes permanecem ausentes, os derivados de exchange ficam nulos e a UI usa o rótulo "Aguardando dados on-chain"; não há fallback implícito para uma cotação OKX. `MesaView` passa as mesmas fatias selecionadas a `InstrumentHeader` e `PriceChart`, evitando que o preço principal e o desenho usem fontes diferentes. A auditoria visual relata estados vazios sem anúncio falso de dados ao vivo; isso não qualifica frescor nem disponibilidade de um feed real nesta sessão. ^[web/src/lib/mesa/market-inputs.ts] ^[web/src/components/Desk/MesaView.tsx] ^[web/src/components/Desk/InstrumentHeader.tsx] ^[docs/sdd/ui-audit-20261013/REPORT.md] ^[docs/sdd/ui-audit-20261013/browser-matrix.md]
 
 ## Exchange pública V5 e captura
+
+O leitor do mecanismo de oportunidades (`src/opportunity/okx-daily.ts`) consome tickers e candles diários da API pública V5. Campos numéricos em texto usam a gramática estrita de `parseDecimal`; campos obrigatórios malformados fazem a linha ser contabilizada como rejeitada, enquanto métricas opcionais de ticker permanecem indisponíveis. A validação de forma não atesta frescor dos dados.
 
 `public-market-capture` é o gravador finito de `books` e, opcionalmente, `funding-rate`; ele mantém bytes recebidos, unidades de metadados, identidades e sequência, sem reconstruir livro, estimar fills ou qualificar estratégia. O plano fixa schema e endpoints, aceita um ou dois instrumentos e no máximo três streams; os limites incluem 300.000 ms, 10.000 mensagens, 1 MiB por payload, 32 MiB persistidos e 8 MiB de ingress. [Plano e limites](../../src/public-market-capture/plan.ts#L3-L29) [observações e sequência](../../src/public-market-capture/observations.ts#L36-L50) ^[docs/PUBLIC-MARKET-CAPTURE.md]
 

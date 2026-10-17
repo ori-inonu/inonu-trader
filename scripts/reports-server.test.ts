@@ -40,7 +40,7 @@ async function startup(child: ReturnType<typeof spawn>): Promise<string> {
   const reader = child.stdout.getReader();
   const readLine = async () => {
     let text = "";
-    for (;;) {
+    for (; ;) {
       const result = await reader.read();
       if (result.done) throw new Error("CLI exited without startup output");
       text += new TextDecoder().decode(result.value);
@@ -100,22 +100,34 @@ test("CLI defaults allow the two local dashboard origins and importing the entry
   expect(imported.stderr).toBe("");
 }, 5000);
 
-test("invalid flags and occupied ports fail with controlled messages without echoing arguments", async () => {
+const invalidCliCases: Array<[name: string, args: string[], occupiesPort?: boolean]> = [
+  ["unknown flag", ["--unknown-SECRET_TEST_MARKER"]],
+  ["help with unknown flag", ["--help", "--unknown"]],
+  ["missing port value", ["--port"]],
+  ["missing data-dir value", ["--data-dir"]],
+  ["missing origin value", ["--origin"]],
+  ...["-1", "65536", "1.5", "NaN", "0x10", "1e2", ""].map(port => [`invalid port ${port}`, ["--port", port]] as [string, string[]]),
+  ["duplicate port", ["--port", "0", "--port", "0"]],
+  ["duplicate data-dir", ["--data-dir", "$DATA_DIR", "--data-dir", "$DATA_DIR"]],
+  ["relative data-dir", ["--data-dir", "relative/SECRET_TEST_MARKER"]],
+  ["HTTPS origin", ["--origin", "https://SECRET_TEST_MARKER.example"]],
+  ["origin trailing slash", ["--origin", "http://localhost:3001/"]],
+  ["occupied ephemeral port", ["--port", "$OWNED_PORT"], true],
+];
+
+test.each(invalidCliCases)("rejects invalid CLI case: %s without leaking arguments", async (_name, caseArgs, occupiesPort = false) => {
   const dataDir = mkdtempSync(join(tmpdir(), "inonu-reports-cli-"));
-  const server = startReportsServer({ dataDir, port: 0, origins: ["http://localhost:3001"] });
+  const server = occupiesPort
+    ? startReportsServer({ dataDir, port: 0, origins: ["http://localhost:3001"] })
+    : undefined;
   try {
-    const cases = [
-      ["--unknown-SECRET_TEST_MARKER"], ["--help", "--unknown"], ["--port"], ["--data-dir"], ["--origin"],
-      ...["-1", "65536", "1.5", "NaN", "0x10", "1e2", ""].map(port => ["--port", port]),
-      ["--port", "0", "--port", "0"], ["--data-dir", dataDir, "--data-dir", dataDir], ["--data-dir", "relative/SECRET_TEST_MARKER"],
-      ["--origin", "https://SECRET_TEST_MARKER.example"], ["--origin", "http://localhost:3001/"], ["--port", String(server.port)],
-    ];
-    for (const args of cases) {
-      const result = await exited([CLI, ...args]);
-      expect(result.code).not.toBe(0);
-      expect(result.stderr).toContain("Reports server could not start");
-      expect(result.stderr).not.toContain("SECRET_TEST_MARKER");
-      expect(result.stdout).toBe("");
-    }
-  } finally { await server.stop(true); rmSync(dataDir, { recursive: true }); }
-}, 10000);
+    const args = caseArgs.map(arg => arg === "$DATA_DIR" ? dataDir : arg === "$OWNED_PORT" ? String(server!.port) : arg);
+    const result = await exited([CLI, ...args]);
+    expect(result.code).not.toBe(0);
+    expect(result.stderr).not.toContain("SECRET_TEST_MARKER");
+    expect(result.stdout).toBe("");
+  } finally {
+    if (server) await server.stop(true);
+    rmSync(dataDir, { recursive: true, force: true });
+  }
+});

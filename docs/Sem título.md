@@ -1,0 +1,11 @@
+Regras para o projeto
+
+1. Ao invés de criar mais linhas de código e novos arquivos, tente diminuir a quantidade de código e de arquivos sem perder a qualidade, se você puder escolher entre escrever um código de 50 linhas que entrega o mesmo resultado que um código que tenha 1000 linhas faça isso.
+2. Procure colocar em todas as instruções e regras do agente e do projeto para substituir os prompts por grafos, faça a engenharia de grafos, a cada nova iteração um novo nó deve ser criado e associado ao segundo cérebro que está presente na pasta /docs para jamais perder o contexto e a memória do projeto. 
+3. Use todos os nós e associações como uma memória que sempre se atualiza e entende o que precisa ser lembrado e o que precisa ser esquecido. isso serve para o cérebro também, ao inves de manter vários arquivos você irá organizar todas as informações que realmente importam, reunir especificações, fatos, acontecimentos, registros, tudo que foi feito no projeto, e tudo que deixou de ser feito você não precisa se lembrar mais. 
+4. Com isso você ira usar todos esses grafos para pensar e integrar o JEV a este cérebro e delegar todas as perguntas para o JEV tomar decisões. 
+5. Todas as perguntas e decisões deverão ser enviadas para o JEV. 
+6. Essa configuração serve tanto para o projeto quanto para a configuração global do OMP (oh-my-pi).
+7. Foque em substituir toda injeção de prompts e prompts por grafos, estude sobre a engenharia de grafos e aplique isso em tudo no projeto, a cada iteração, a cada novo fato e acontecimento, a cada implementação, tudo deve estar na memória. 
+8. A memória do agente jamais deverá se perder. 
+9. A cada iteração deve ser criado novos nós e novas associações e correlações, você deve pensar em termos de estrutura de dados para substituir o prompt para o grafo, a injeção do prompt para o grafo, os arquivos que são injetados no sistema e nas sessões devem conter apenas no máximo 100 linhas com todas as instruções de como usar o grafo de conhecimento e como substituir o prompt pelo grafo de conhecimento, pesquise tudo sobre engenharia de grafo, engenharia de harness, engenharia de loop, e continue melhorando o harness, a estrutura de dados dos grafos e os loops. 

@@ -6,8 +6,8 @@
  * Nothing here loosens a guard: the executor's rule (cli.ts) is unchanged and checked again when an order is sent. This only stops OFFERING what that same rule is certain to refuse, so the Jev chooses among plans that
  * can be carried out. The rule is the executor's own, imported, so the two can never drift apart: a purchase pays at most `buyCostCapPct(profile, IMPACT_CAP_PCT.buy)` of price impact, in absolute value. The quote is read at
  * the SMALLEST size offered, which is a lower bound for every larger one: a profile that fails there fails at every size, and one that passes may still be refused at a larger size by the executor. Nothing is hidden: a
- * purchase left with no profile is shown to the Jev closed (`skip` only) with a mark that says why; a profile removed from the list is a fact the mark states. A quote that could not be read changes nothing (unknown is not
- * a danger and not a safety). Pure but for the probe handed in: no clock, no storage.
+ * purchase left with no profile is shown to the Jev closed (`skip` only) with a mark that says why; an explicit `gas_station_pendente` refusal closes just that purchase with its mark.
+ * An unknown quote changes nothing (unknown is neither danger nor safety). Pure but for the probe handed in: no clock, no storage.
  */
 import { IMPACT_CAP_PCT } from "./cli";
 import type { OrderRecord } from "./ledger";
@@ -31,12 +31,12 @@ export const ENTRY_PROBE = { maxPerCycle: 3, perMs: 8_000, totalMs: 15_000, ttlM
 
 /** The smallest purchase on offer (by dollars): the quote of it is the lower bound of the entry cost of every size offered. Null when none is offered. */
 export function smallestOffered(c: Candidate): { readonly stance: string; readonly usd: number } | null {
-  let best: { stance: string; usd: number } | null = null;
-  for (const stance of AGENT_BUY_SIZES) {
-    const usd = c.usdByStance[stance];
-    if (c.stances.includes(stance) && usd !== undefined && usd > 0 && (best === null || usd < best.usd)) best = { stance, usd };
-  }
-  return best;
+ let best: { stance: string; usd: number } | null = null;
+ for (const stance of AGENT_BUY_SIZES) {
+  const usd = c.usdByStance[stance];
+  if (c.stances.includes(stance) && usd !== undefined && usd > 0 && (best === null || usd < best.usd)) best = { stance, usd };
+ }
+ return best;
 }
 
 /** The same rule the executor applies (cli.ts): a purchase accepts at most `buyCostCapPct` of price impact for its profile, whichever way the price moves. */
@@ -46,11 +46,11 @@ const withMark = (marks: readonly string[], mark: string): string[] => (marks.in
 
 /** The purchase as the Jev should see it once the entry cost is known: the profiles that can pay it, or closed when none can. Null, or a cost every profile pays, leaves it exactly as it was. */
 export function narrowByEntryCost(c: Candidate, impactPct: number | null): Candidate {
-  if (c.kind !== "buy" || impactPct === null || !Number.isFinite(impactPct) || c.profiles.length === 0) return c;
-  const kept = c.profiles.filter((p) => entryCostFits(p, impactPct));
-  if (kept.length === c.profiles.length) return c;
-  if (kept.length === 0) return { ...c, stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {}, marks: withMark(c.marks, ENTRY_COST_CLOSED) };
-  return { ...c, profiles: kept, capByProfile: Object.fromEntries(Object.entries(c.capByProfile ?? {}).filter(([p]) => kept.includes(p))), marks: withMark(c.marks, ENTRY_COST_NARROWED) };
+ if (c.kind !== "buy" || impactPct === null || !Number.isFinite(impactPct) || c.profiles.length === 0) return c;
+ const kept = c.profiles.filter((p) => entryCostFits(p, impactPct));
+ if (kept.length === c.profiles.length) return c;
+ if (kept.length === 0) return { ...c, stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {}, marks: withMark(c.marks, ENTRY_COST_CLOSED) };
+ return { ...c, profiles: kept, capByProfile: Object.fromEntries(Object.entries(c.capByProfile ?? {}).filter(([p]) => kept.includes(p))), marks: withMark(c.marks, ENTRY_COST_NARROWED) };
 }
 
 type RefusalRecord = Pick<OrderRecord, "atMs" | "side" | "stage" | "reason" | "chainIndex" | "address" | "stance" | "usd" | "wallet" | "source" | "quote">;
@@ -60,16 +60,16 @@ type RefusalRecord = Pick<OrderRecord, "atMs" | "side" | "stage" | "reason" | "c
  * again and a restart forgets nothing. It says something about the sizes on offer only when it was for the smallest of them or less (a larger one failing says nothing about a smaller one): see `narrowBuysByEntryCost`.
  */
 export function recentBuyImpacts(records: readonly RefusalRecord[], nowMs: number, windowMs: number = IMPACT_BACKOFF_MS): Map<string, { readonly impactPct: number; readonly usd: number }> {
-  const latest = new Map<string, { atMs: number; impactPct: number; usd: number }>();
-  for (const r of records) {
-    if (r.side !== "buy" || r.wallet !== "agente" || r.stage !== "falhou" || r.reason !== "impacto_alto") continue;
-    const impact = r.quote?.impactPct;
-    if (impact === null || impact === undefined || !Number.isFinite(impact) || nowMs - r.atMs >= windowMs || r.atMs > nowMs) continue;
-    const key = planKey(r.chainIndex, r.address);
-    const seen = latest.get(key);
-    if (seen === undefined || r.atMs >= seen.atMs) latest.set(key, { atMs: r.atMs, impactPct: impact, usd: r.usd });
-  }
-  return new Map([...latest].map(([k, v]) => [k, { impactPct: v.impactPct, usd: v.usd }]));
+ const latest = new Map<string, { atMs: number; impactPct: number; usd: number }>();
+ for (const r of records) {
+  if (r.side !== "buy" || r.wallet !== "agente" || r.stage !== "falhou" || r.reason !== "impacto_alto") continue;
+  const impact = r.quote?.impactPct;
+  if (impact === null || impact === undefined || !Number.isFinite(impact) || nowMs - r.atMs >= windowMs || r.atMs > nowMs) continue;
+  const key = planKey(r.chainIndex, r.address);
+  const seen = latest.get(key);
+  if (seen === undefined || r.atMs >= seen.atMs) latest.set(key, { atMs: r.atMs, impactPct: impact, usd: r.usd });
+ }
+ return new Map([...latest].map(([k, v]) => [k, { impactPct: v.impactPct, usd: v.usd }]));
 }
 
 const SALE_RANK: Readonly<Record<string, number>> = { trim_third: 1, trim_half: 2, exit_all: 3 };
@@ -79,99 +79,115 @@ const SALE_RANK: Readonly<Record<string, number>> = { trim_third: 1, trim_half: 
  * would. A stop or any exit a plan demands (`source: protecao`) is never counted: those are carried out by the code and never wait.
  */
 export function recentSaleRefusals(records: readonly RefusalRecord[], nowMs: number, windowMs: number = IMPACT_BACKOFF_MS): Map<string, number> {
-  const out = new Map<string, number>();
-  for (const r of records) {
-    if (r.side !== "sell" || r.wallet !== "agente" || r.source !== "modelo" || r.stage !== "falhou" || r.reason !== "impacto_alto") continue;
-    const rank = SALE_RANK[r.stance];
-    if (rank === undefined || nowMs - r.atMs >= windowMs || r.atMs > nowMs) continue;
-    const key = planKey(r.chainIndex, r.address);
-    out.set(key, Math.min(out.get(key) ?? rank, rank));
-  }
-  return out;
+ const out = new Map<string, number>();
+ for (const r of records) {
+  if (r.side !== "sell" || r.wallet !== "agente" || r.source !== "modelo" || r.stage !== "falhou" || r.reason !== "impacto_alto") continue;
+  const rank = SALE_RANK[r.stance];
+  if (rank === undefined || nowMs - r.atMs >= windowMs || r.atMs > nowMs) continue;
+  const key = planKey(r.chainIndex, r.address);
+  out.set(key, Math.min(out.get(key) ?? rank, rank));
+ }
+ return out;
 }
 
 /** The holding without the sales the executor just refused for price impact (the one refused and every larger): keep it, or a smaller slice. The model is told why. */
 export function withoutRefusedSales(c: Candidate, refusedFromRank: number | undefined): Candidate {
-  if (c.kind !== "holding" || refusedFromRank === undefined) return c;
-  const stances = c.stances.filter((s) => (SALE_RANK[s] ?? 0) < refusedFromRank || SALE_RANK[s] === undefined);
-  if (stances.length === c.stances.length) return c;
-  return { ...c, stances, usdByStance: Object.fromEntries(Object.entries(c.usdByStance).filter(([s]) => stances.includes(s))), triggers: c.triggers.includes(SALE_REFUSED_TRIGGER) ? c.triggers : [...c.triggers, SALE_REFUSED_TRIGGER] };
+ if (c.kind !== "holding" || refusedFromRank === undefined) return c;
+ const stances = c.stances.filter((s) => (SALE_RANK[s] ?? 0) < refusedFromRank || SALE_RANK[s] === undefined);
+ if (stances.length === c.stances.length) return c;
+ return { ...c, stances, usdByStance: Object.fromEntries(Object.entries(c.usdByStance).filter(([s]) => stances.includes(s))), triggers: c.triggers.includes(SALE_REFUSED_TRIGGER) ? c.triggers : [...c.triggers, SALE_REFUSED_TRIGGER] };
 }
 
 /** The hypothetical order of the smallest size of a purchase, for the quote only: it is never sent. Null when the purchase has no size to quote. */
 export function smallestOrderOf(c: Candidate): PlannedOrder | null {
-  const smallest = c.kind === "buy" ? smallestOffered(c) : null;
-  if (smallest === null) return null;
-  return { candidateId: c.id, side: "buy", stance: smallest.stance, chainIndex: c.chainIndex, symbol: c.symbol, address: c.address, usd: smallest.usd, amountMinor: null, wallet: "agente", profile: c.profiles[0] ?? null, source: "modelo" };
+ const smallest = c.kind === "buy" ? smallestOffered(c) : null;
+ if (smallest === null) return null;
+ return { candidateId: c.id, side: "buy", stance: smallest.stance, chainIndex: c.chainIndex, symbol: c.symbol, address: c.address, usd: smallest.usd, amountMinor: null, wallet: "agente", profile: c.profiles[0] ?? null, source: "modelo" };
 }
 
 /** The price impact a quote says, as a signed percent (the provider writes a number or a string); null when it is not a finite number, which is unknown and changes nothing. */
 export function impactOfQuote(raw: Readonly<Record<string, unknown>>): number | null {
-  const v = raw.priceImpactPercent;
-  const n = typeof v === "number" ? v : typeof v === "string" && v.trim() !== "" ? Number(v) : Number.NaN;
-  return Number.isFinite(n) ? n : null;
+ const v = raw.priceImpactPercent;
+ const n = typeof v === "number" ? v : typeof v === "string" && v.trim() !== "" ? Number(v) : Number.NaN;
+ return Number.isFinite(n) ? n : null;
 }
 
-/** Reads the price impact of the quote of an order, null when it could not be read. Read only: it never signs and never sends. */
-export type EntryImpactReader = (order: PlannedOrder, signal: AbortSignal) => Promise<number | null>;
-
-/** The reader with a short memory per token and size, so a purchase that stays on the list is not quoted again every cycle. A failure is remembered for less. */
-export function cachedImpactReader(read: EntryImpactReader, now: () => number): EntryImpactReader {
-  const memory = new Map<string, { atMs: number; impactPct: number | null }>();
-  return async (order, signal) => {
-    const key = `${planKey(order.chainIndex, order.address)}:${order.usd}`;
-    const seen = memory.get(key);
-    if (seen !== undefined && now() - seen.atMs < (seen.impactPct === null ? ENTRY_PROBE.failTtlMs : ENTRY_PROBE.ttlMs)) return seen.impactPct;
-    let impactPct: number | null;
-    try {
-      impactPct = await read(order, signal);
-    } catch {
-      impactPct = null;
-    }
-    memory.set(key, { atMs: now(), impactPct });
-    return impactPct;
-  };
+/** A finite impact to narrow the entry plans, an explicit gas-station refusal, or an unknown quote. */
+export interface EntryQuoteObservation {
+ readonly impactPct: number | null;
+ readonly refusal: "gas_station_pendente" | null;
 }
+
+/** Reads the price impact and explicit refusal of an entry quote. Read only: it never signs and never sends. */
+export type EntryQuoteReader = (order: PlannedOrder, signal: AbortSignal) => Promise<EntryQuoteObservation>;
+
+/** Caches a finite impact for five minutes, or an unknown/refusal for one minute, so a purchase that stays on the list is not quoted again every cycle. */
+export function cachedEntryQuoteReader(read: EntryQuoteReader, now: () => number): EntryQuoteReader {
+ const memory = new Map<string, { atMs: number; observation: EntryQuoteObservation }>();
+ return async (order, signal) => {
+  const key = `${planKey(order.chainIndex, order.address)}:${order.usd}`;
+  const seen = memory.get(key);
+  if (seen !== undefined) {
+   const ttlMs = seen.observation.refusal === null && Number.isFinite(seen.observation.impactPct) ? ENTRY_PROBE.ttlMs : ENTRY_PROBE.failTtlMs;
+   if (now() - seen.atMs < ttlMs) return seen.observation;
+  }
+  let observation: EntryQuoteObservation;
+  try {
+   observation = await read(order, signal);
+  } catch {
+   observation = UNKNOWN_ENTRY_QUOTE;
+  }
+  memory.set(key, { atMs: now(), observation });
+  return observation;
+ };
+}
+
+const UNKNOWN_ENTRY_QUOTE: EntryQuoteObservation = { impactPct: null, refusal: null };
 
 /**
  * The purchases of a cycle as the Jev should see them: first what the executor itself quoted when it refused the same token within the window, then, for the best open ones still unknown (at most `maxPerCycle`, in the order
- * `quality` ranks them), a quote read one at a time. A purchase already closed is never quoted. Never throws and never waits past its own time limit: whatever could not be read is left as it was.
+ * `quality` ranks them), a quote read one at a time. An explicit gas-station refusal closes only that purchase; other unknown quotes leave it as it was. A purchase already closed is never quoted. Never throws and never waits past its own time limit.
  */
 export async function narrowBuysByEntryCost(input: {
-  readonly buys: readonly Candidate[];
-  readonly quality: (c: Candidate) => number;
-  readonly records: readonly RefusalRecord[];
-  readonly nowMs: number;
-  /** Null: no quote is taken (shadow mode, buying paused, a stop file, no reader wired). The ledger part still applies. */
-  readonly probe: EntryImpactReader | null;
-  readonly clock: () => number;
+ readonly buys: readonly Candidate[];
+ readonly quality: (c: Candidate) => number;
+ readonly records: readonly RefusalRecord[];
+ readonly nowMs: number;
+ /** Null: no quote is taken (shadow mode, buying paused, a stop file, no reader wired). The ledger part still applies. */
+ readonly probe: EntryQuoteReader | null;
+ readonly clock: () => number;
 }): Promise<Candidate[]> {
-  const recent = recentBuyImpacts(input.records, input.nowMs);
-  const out = new Map<string, Candidate>();
-  const known = new Set<string>();
-  for (const c of input.buys) {
-    // a refusal at a size no larger than the smallest on offer now is a lower bound for every size on offer: the cost cannot be less than it was
-    const seen = recent.get(planKey(c.chainIndex, c.address));
-    const smallest = smallestOffered(c);
-    const applies = seen !== undefined && smallest !== null && seen.usd <= smallest.usd;
-    if (applies) known.add(c.id);
-    out.set(c.id, narrowByEntryCost(c, applies ? seen.impactPct : null));
+ const recent = recentBuyImpacts(input.records, input.nowMs);
+ const out = new Map<string, Candidate>();
+ const known = new Set<string>();
+ for (const c of input.buys) {
+  // a refusal at a size no larger than the smallest on offer now is a lower bound for every size on offer: the cost cannot be less than it was
+  const seen = recent.get(planKey(c.chainIndex, c.address));
+  const smallest = smallestOffered(c);
+  const applies = seen !== undefined && smallest !== null && seen.usd <= smallest.usd;
+  if (applies) known.add(c.id);
+  out.set(c.id, narrowByEntryCost(c, applies ? seen.impactPct : null));
+ }
+ if (input.probe === null) return input.buys.map((c) => out.get(c.id)!);
+ const unknown = [...out.values()]
+  .filter((c) => c.stances.length > 1 && !known.has(c.id))
+  .sort((a, b) => input.quality(b) - input.quality(a))
+  .slice(0, ENTRY_PROBE.maxPerCycle);
+ const started = input.clock();
+ for (const c of unknown) {
+  if (input.clock() - started >= ENTRY_PROBE.totalMs) break;
+  const order = smallestOrderOf(c);
+  if (order === null) continue;
+  try {
+   const observation = await input.probe(order, AbortSignal.timeout(ENTRY_PROBE.perMs));
+   if (observation.refusal === "gas_station_pendente") {
+    out.set(c.id, { ...c, stances: ["skip"], usdByStance: { skip: 0 }, profiles: [], capByProfile: {}, marks: withMark(c.marks, "gas_station_pendente") });
+   } else {
+    out.set(c.id, narrowByEntryCost(c, observation.impactPct));
+   }
+  } catch {
+   // the quote is lost, the cycle is not
   }
-  if (input.probe === null) return input.buys.map((c) => out.get(c.id)!);
-  const unknown = [...out.values()]
-    .filter((c) => c.stances.length > 1 && !known.has(c.id))
-    .sort((a, b) => input.quality(b) - input.quality(a))
-    .slice(0, ENTRY_PROBE.maxPerCycle);
-  const started = input.clock();
-  for (const c of unknown) {
-    if (input.clock() - started >= ENTRY_PROBE.totalMs) break;
-    const order = smallestOrderOf(c);
-    if (order === null) continue;
-    try {
-      out.set(c.id, narrowByEntryCost(c, await input.probe(order, AbortSignal.timeout(ENTRY_PROBE.perMs))));
-    } catch {
-      // the quote is lost, the cycle is not
-    }
-  }
-  return input.buys.map((c) => out.get(c.id)!);
+ }
+ return input.buys.map((c) => out.get(c.id)!);
 }

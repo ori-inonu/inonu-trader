@@ -92,6 +92,24 @@ describe("the prices the cycle already reads become a path, with no new read", (
     const eco = { observedAtMs: NOW - 30_000, saldo: null, excluded: {}, candidates: [{ facts: { chainIndex: "501", address: MINT, priceUsd: 0.0033 } }, { facts: { chainIndex: "501", address: "NOPRICE", priceUsd: null } }] } as unknown as EcoContext;
     expect(priceRowFromEco(eco, NOW)!.prices).toEqual({ [`501:${MINT}`]: 0.0033 });
   });
+
+  test("stale and unavailable ecosystem scans produce no price row or current-time recording", () => {
+    const eco = { observedAtMs: NOW - 30_000, saldo: null, excluded: {}, candidates: [{ facts: { chainIndex: "501", address: MINT, priceUsd: 0.0033 } }] } as unknown as EcoContext;
+    const fresh = { ...eco, sourceQuality: { state: "fresh" as const, ageMs: 30_000 } };
+    const stale = { ...eco, sourceQuality: { state: "stale" as const, ageMs: 31 * 60_000 } };
+    const unavailable = { ...eco, sourceQuality: { state: "unavailable" as const, ageMs: null } };
+    expect(priceRowFromEco(fresh, NOW)!.prices).toEqual({ [`501:${MINT}`]: 0.0033 });
+    const freshDir = tmp();
+    createRecorders({ dir: freshDir, now: () => NOW }).recordEco(fresh);
+    expect(JSON.parse(readFileSync(join(freshDir, "prices.jsonl"), "utf8")).atMs).toBe(NOW);
+    expect(priceRowFromEco(stale, NOW)).toBeNull();
+    expect(priceRowFromEco(unavailable, NOW)).toBeNull();
+    const dir = tmp();
+    const recorders = createRecorders({ dir, now: () => NOW });
+    recorders.recordEco(stale);
+    recorders.recordEco(unavailable);
+    expect(existsSync(join(dir, "prices.jsonl"))).toBe(false);
+  });
 });
 
 describe("the journal is append only, rotates by size, and never throws into the cycle", () => {

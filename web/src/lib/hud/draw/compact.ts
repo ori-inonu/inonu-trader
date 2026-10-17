@@ -201,9 +201,10 @@ export function createCompact(D: HudModel) {
     const unread = D.wallet.cash === null || !(total > 0);
     const cashShare = unread ? 0 : (D.wallet.cash as number) / total;
     const known = D.analysisOk;
+    // A placeholder zero is not a reported spend; ceilings still come from core status.
     const gauges: [string, number | null, string, string, string?][] = [
-      ["COMPRAS HOJE", capUse(sp.buy, cap.maxDailyBuyUsd), known ? `US$ ${fmt(sp.buy, 0)} DE ${capText(cap.maxDailyBuyUsd)}` : "SEM DADOS DO NUCLEO", COL.cy],
-      ["VENDAS HOJE", capUse(sp.sell, cap.maxDailySellUsd), known ? `US$ ${fmt(sp.sell, 0)} DE ${capText(cap.maxDailySellUsd)}` : "SEM DADOS DO NUCLEO", COL.soft],
+      ["COMPRAS HOJE", known ? capUse(sp.buy, cap.maxDailyBuyUsd) : null, known ? `US$ ${fmt(sp.buy, 0)} DE ${capText(cap.maxDailyBuyUsd)}` : `SEM DADO DO NUCLEO, LIMITE ${capText(cap.maxDailyBuyUsd)}`, COL.cy, known ? undefined : "SEM DADO"],
+      ["VENDAS HOJE", known ? capUse(sp.sell, cap.maxDailySellUsd) : null, known ? `US$ ${fmt(sp.sell, 0)} DE ${capText(cap.maxDailySellUsd)}` : `SEM DADO DO NUCLEO, LIMITE ${capText(cap.maxDailySellUsd)}`, COL.soft, known ? undefined : "SEM DADO"],
       ["CONSULTAS", D.budget.max > 0 ? D.budget.consults / D.budget.max : 0, `${D.budget.consults} DE ${D.budget.max}`, COL.cy],
       ["CAIXA LIVRE", cashShare, unread ? "SEM LEITURA DA CARTEIRA" : `${Math.round(cashShare * 100)}% DA CARTEIRA`, COL.green, unread ? "-" : undefined],
     ];

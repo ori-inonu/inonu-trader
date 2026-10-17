@@ -40,14 +40,14 @@ Cada critério é um comportamento observável. Os testes carregam o identificad
 | LB8 | Desconhecido nunca vira zero: feature `null` fica `null` (a regra de momento segura em vez de tratar como 0), candidato com qualquer custo desconhecido é inelegível e não aparece para nenhuma política, funding desconhecido torna o carry inelegível, custo de inferência desconhecido fica `null` e o relatório o declara | `candidates.test.ts`, `policies.test.ts`, `run.test.ts` |
 | LB9 | Retorno líquido: `net = gross + funding - custos - custo de oportunidade`, com a tabela única de padrões conservadores (`COST_TABLE`); exemplos numéricos exatos para long, short e carry; mudar a tabela muda o resultado | `outcomes.test.ts` |
 | LB10 | Funding: sinal correto para long, short e carry; só entram liquidações dentro da janela; fronteira assimétrica (na saída só conta pagamento); a taxa usada é o último registro daquela liquidação; liquidação não observada torna o resultado incompleto | `outcomes.test.ts` |
-| LB11 | Resultado incompleto (`complete: false`) carrega a razão e campos numéricos `null`; nas estatísticas esses epochs saem da série daquela política e são contados, nunca somados como zero | `outcomes.test.ts`, `run.test.ts` |
+| LB11 | Resultado incompleto (`complete: false`) carrega a razão e campos numéricos `null`; nas estatísticas esses epochs não entram na média nem na contagem de observações, mas sua posição temporal é preservada para HAC; nunca são somados como zero nem aproximados como epochs adjacentes | `outcomes.test.ts`, `run.test.ts`, `stats.test.ts` |
 | LB12 | Contrafactual de alavancagem para L em {1, 2, 3, 5, 10}: múltiplo de patrimônio, flag de liquidação por L, preço de liquidação igual ao de `src/okx-derivatives/margin.ts`, funding pago deslocando o preço de liquidação, liquidação monotônica em L, long a 1x nunca liquidado | `outcomes.test.ts` |
 | LB13 | O contrafactual é consistente com `src/policy/envelope.ts`: a frequência empírica de toque bate com a fórmula exata do movimento browniano geométrico e fica na faixa declarada da aproximação de `touchLiquidationProbability`; a riqueza mediana sem vantagem concorda em média logarítmica com `medianWealthNoEdge` | `outcomes.test.ts`, `stats.test.ts` |
 | LB14 | Curva de patrimônio por política (tranches de 1/K do patrimônio): números exatos, drawdown máximo, bootstrap em blocos com semente fixa reprodutível, mediana, probabilidade de liquidação e de ruína | `stats.test.ts` |
 | LB15 | Linhas de base: `hold` sempre segura; `random` é reprodutível por (semente, época) e uniforme; `buy-and-hold` é passivo; `momentum-rule` e `carry-rule` seguem a regra e seguram diante de `null`; desempate determinístico por id | `policies.test.ts` |
 | LB16 | `JevPolicy` valida a resposta: id desconhecido, resposta malformada, tempo esgotado e exceção viram `hold` com status próprio; abstenção é `hold` com status `ok`; o estado enviado ao seletor só tem chaves opacas, enumerações fechadas e números | `policies.test.ts` |
 | LB17 | `MockJevChooser` é determinístico e offline; é o seletor padrão da CLI e a saída diz isso em voz alta | `policies.test.ts`, `jev-lab.test.ts` |
-| LB18 | Média: Newey-West com a regra de lag e a inflação documentadas, p-valor com t de Student, IC de 95%; a distribuição t, o estimador e o bootstrap batem com referências numéricas | `stats.test.ts` |
+| LB18 | Média: Newey-West com a regra de lag e a inflação documentadas, covariâncias respeitam a distância original entre epochs com lacunas, p-valor com t de Student, IC de 95%; série densa preserva a referência numérica existente | `stats.test.ts` |
 | LB19 | Potência e tamanho, medidos (seção 7.6): com vantagem plantada de tamanho detectável para o N usado o relatório a sinaliza na grande maioria das sementes; sem vantagem a taxa de sinalização, por política testada e na família de Holm, fica perto do nível nominal e nunca muito acima, nas estatísticas e no pipeline completo, em dezenas de sementes | `stats.test.ts`, `lab.integration.test.ts` |
 | LB20 | Comparação pareada contra baselines (união-interseção), correção de Holm, Brier e tabela de confiabilidade, Sharpe anualizado com a ressalva e dias necessários para detectar um Sharpe (valores de R3) | `stats.test.ts` |
 | LB21 | `promotionGate` só recomenda `fase-0`; lista critérios atendidos, reprovados e desconhecidos; todo texto de promoção diz que não concede nada e remete ao `qualify:live`; dados sintéticos nunca passam; o limite de alavancagem vem de `kellyLowerBound` | `stats.test.ts` |
@@ -231,7 +231,7 @@ Ida e volta no carry: 4 pernas, taxas `2*(10+5) = 30 bps`, igual ao cenário tak
 
 ### 5.4 Resultados incompletos
 
-Razões fechadas: `horizon-beyond-data`, `entry-bar-missing`, `exit-bar-missing`, `candle-gap`, `funding-unobserved`, `costs-unknown`, `modality-unsupported`. Campos numéricos ficam `null`. Nas estatísticas o epoch sai da série daquela política (e da comparação pareada com qualquer outra) e entra na contagem de incompletos; o portão exige completude de pelo menos 95%.
+Razões fechadas: `horizon-beyond-data`, `entry-bar-missing`, `exit-bar-missing`, `candle-gap`, `funding-unobserved`, `costs-unknown`, `modality-unsupported`. Campos numéricos ficam `null`. Nas estatísticas o epoch sai da média daquela política (e da comparação pareada com qualquer outra) e entra na contagem de incompletos; sua posição permanece na sequência temporal usada pelo HAC, sem comprimir a lacuna. O portão exige completude de pelo menos 95%.
 
 ## 6. Contrafactual de alavancagem
 
@@ -272,8 +272,9 @@ Com passo menor que o horizonte, retornos de épocas vizinhas compartilham o mes
 **Escolha: Newey-West (kernel de Bartlett) para a média e para as diferenças pareadas.** Não usamos o bootstrap de blocos para o veredito porque, medido, ele subcobre sob sobreposição (limite inferior positivo em 4,1% a 6,7% das amostras nulas contra 2,5% nominal), enquanto Newey-West com a correção abaixo ficou entre 5,4% e 6,1% para um teste unilateral de 5%. O bootstrap em blocos móveis, com semente fixa, é usado só para simular caminhos de patrimônio (seção 6.2).
 
 ```
-u_i      = x_i - media
-gamma_j  = (1/n) * soma_{i=j+1..n} u_i * u_{i-j}
+O        = conjunto dos epochs com observação completa
+n        = |O|                         u_t = x_t - media, t em O
+gamma_j  = (1/n) * soma_{t em O, t-j em O} u_t * u_{t-j}
 lag      = min(n - 2, max(3K, floor(4 * (n/100)^(2/9))))
 LRV      = (n / (n - lag)) * ( gamma_0 + 2 * soma_{j=1..lag} (1 - j/(lag+1)) * gamma_j )
 SE       = sqrt(LRV / n)          t = media / SE
@@ -281,7 +282,7 @@ gl       = max(1, floor(n/(lag+1)) - 1)
 p (unilateral) = 1 - T_gl(t)      IC95 = media +- T_gl^-1(0,975) * SE
 ```
 
-A inflação `n/(n - lag)` e o t de Student com `gl` graus de liberdade corrigem amostras curtas relativas à sobreposição. O tamanho do teste foi medido por simulação (4000 repetições por célula, retornos sobrepostos de incrementos normais): 4,8% a 6,1% de rejeição para nível unilateral nominal de 5%, com `K` de 1, 4 e 8 e `n` de 200 a 1000. Série com variância de longo prazo zero (por exemplo `hold`) tem `t`, p-valor e IC `null`. A seção 7.6 traz o tamanho e o poder medidos, também no pipeline completo.
+Em série densa, a fórmula coincide com a soma consecutiva usual. Com lacunas, as médias e `n` consideram apenas observações completas, mas `gamma_j` só inclui pares separados por `j` epochs na sequência original: não se tornam vizinhos observações que estavam afastadas. A inflação `n/(n - lag)` e o t de Student com `gl` graus de liberdade corrigem amostras curtas relativas à sobreposição. Essa correção preserva a distância temporal, mas não remove possível viés de seleção se a ausência de resultados for informativa. O tamanho do teste foi medido por simulação (4000 repetições por célula, retornos sobrepostos de incrementos normais): 4,8% a 6,1% de rejeição para nível unilateral nominal de 5%, com `K` de 1, 4 e 8 e `n` de 200 a 1000. Série com variância de longo prazo zero (por exemplo `hold`) tem `t`, p-valor e IC `null`. A seção 7.6 traz o tamanho e o poder medidos, também no pipeline completo.
 
 ### 7.3 Várias políticas e várias modalidades: correção de Holm
 

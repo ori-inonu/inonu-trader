@@ -383,6 +383,9 @@ describe("LJ23 the cap stops the run BEFORE a call that would not fit, and the s
     const whole = freshDir();
     const single = fakeJev();
     const one = await run(REAL(whole), { env: GOOD_ENV, evaluate: single.evaluate, now: steady() });
+    expect(one.code, one.stderr).toBe(0);
+    const oneReport = JSON.parse(one.stdout) as LabReport;
+    expect(oneReport.run.pendingEpochs, one.stderr).toBe(0);
     expect(readFileSync(join(stopped, "journal.jsonl"), "utf8")).toBe(readFileSync(join(whole, "journal.jsonl"), "utf8"));
     expect(finished.stdout).toBe(one.stdout);
   });

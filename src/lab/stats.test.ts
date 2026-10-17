@@ -522,6 +522,53 @@ function inputsOf(id: string, results: Array<EpochResult | null>, over: Partial<
     ...over,
   };
 }
+function sparseLrv(values: ReadonlyArray<number | null>, overlap: number): number {
+  const observed = values.filter((value): value is number => value !== null);
+  const n = observed.length;
+  const center = observed.reduce((sum, value) => sum + value, 0) / n;
+  const lag = defaultLag(n, overlap);
+  let total = 0;
+  for (let j = 0; j <= lag; j += 1) {
+    let gamma = 0;
+    for (let t = j; t < values.length; t += 1) {
+      const current = values[t];
+      const prior = values[t - j];
+      if (current !== null && current !== undefined && prior !== null && prior !== undefined) gamma += (current - center) * (prior - center);
+    }
+    gamma /= n;
+    total += j === 0 ? gamma : 2 * (1 - j / (lag + 1)) * gamma;
+  }
+  return (total * n) / (n - lag);
+}
+
+function sparseT(values: ReadonlyArray<number | null>, overlap: number): number {
+  const observed = values.filter((value): value is number => value !== null);
+  const mean = observed.reduce((sum, value) => sum + value, 0) / observed.length;
+  return mean / Math.sqrt(sparseLrv(values, overlap) / observed.length);
+}
+
+test("LB20 sparse HAC oracle preserves original epoch distances", () => {
+  const returns = [0.03, -0.01, 0.02, -0.02, 0.03, -0.01, 0.02, -0.02];
+  const results: Array<EpochResult | null> = Array.from({ length: returns.length * 2 }, (_, i) =>
+    i % 2 === 0 ? trade(returns[i / 2] as number, i % 4 === 0 ? "perp-directional" : "funding-carry") : null,
+  );
+  const sparse = returns.flatMap((value) => [value, null]);
+  const denseReport = buildPolicyReport(inputsOf("dense", returns.map((value) => trade(value))), CTX);
+  expect(denseReport.mean).toEqual(meanReport(meanTest(returns, 4)));
+  const report = buildPolicyReport(inputsOf("jev", results), CTX);
+  expect(report.mean?.n).toBe(returns.length);
+  expect(report.mean?.t as number).toBeCloseTo(sparseT(sparse, 4), 8);
+
+  for (const modality of ["perp-directional", "funding-carry"] as const) {
+    const entry = report.byModality.find((item) => item.modality === modality);
+    const contribution = results.map((result) => (result === null ? null : result.modality === modality ? result.returnOnCapital : 0));
+    expect(entry?.mean?.t as number).toBeCloseTo(sparseT(contribution, 4), 8);
+  }
+
+  const paired = buildPairedReport(inputsOf("jev", results), inputsOf("hold", new Array<EpochResult>(results.length).fill(HOLD_RESULT)), CTX);
+  expect(paired.n).toBe(returns.length);
+  expect(paired.mean?.t).toBeCloseTo(sparseT(sparse, 4), 8);
+});
 
 describe("LB14 policy statistics", () => {
   const rng = new Rng(31, "policy");
@@ -545,17 +592,23 @@ describe("LB14 policy statistics", () => {
     expect(report.statuses.ok).toBe(200);
   });
 
-  test("LB14 mean test is on the usable series in basis points; hit rate is the share of winning trades", () => {
-    const series = (results.filter((r) => r !== null) as EpochResult[]).map((r) => r.returnOnCapital);
-    const raw = meanTest(series, 4);
-    expect(report.mean).toEqual(meanReport(raw));
-    const trades = (results.filter((r) => r !== null) as EpochResult[]).filter((r) => r.trade);
+  test("LB14 mean inference excludes incomplete epochs without changing their temporal distance", () => {
+    const usable = results.filter((r) => r !== null) as EpochResult[];
+    const raw = meanTest(usable.map((r) => r.returnOnCapital), 4);
+    expect(report.mean?.n).toBe(raw.n);
+    expect(report.mean?.meanBps).toBeCloseTo(raw.mean * 1e4, 6);
+    expect(report.mean?.sdBps).toBeCloseTo(raw.sd * 1e4, 6);
+    expect(report.mean?.lag).toBe(raw.lag);
+    expect(report.mean?.t as number).toBeCloseTo(sparseT(results.map((r) => r?.returnOnCapital ?? null), 4), 8);
+    const trades = usable.filter((r) => r.trade);
     expect(report.hitRate).toBeCloseTo(trades.filter((r) => r.returnOnCapital > 0).length / trades.length, 12);
   });
 
-  test("LB20 the Sharpe and the days to detect come from the long-run variance and are consistent with the t statistic", () => {
-    const raw = meanTest((results.filter((r) => r !== null) as EpochResult[]).map((r) => r.returnOnCapital), 4);
-    const expected = sharpeAnnualized(raw.mean, raw.lrv as number, 4 * 365);
+  test("LB20 Sharpe uses long-run variance with original epoch gaps", () => {
+    const usable = results.filter((r) => r !== null) as EpochResult[];
+    const mean = meanTest(usable.map((r) => r.returnOnCapital), 4).mean;
+    const lrv = sparseLrv(results.map((r) => r?.returnOnCapital ?? null), 4);
+    const expected = sharpeAnnualized(mean, lrv, 4 * 365);
     expect(report.sharpe.annualized).toBeCloseTo(expected as number, 9);
     if ((expected as number) > 0) expect(report.sharpe.daysToDetect).toBeCloseTo(daysToDetectSharpe(expected as number) as number, 6);
     expect(report.sharpe.caveat).toContain("não");
@@ -563,8 +616,10 @@ describe("LB14 policy statistics", () => {
   });
 
   test("LB21 the Kelly lower bound and the phase 2 cap come from envelope.ts applied to the tranche portfolio", () => {
-    const raw = meanTest((results.filter((r) => r !== null) as EpochResult[]).map((r) => r.returnOnCapital), 4);
-    const daily = portfolioDaily(raw.mean, raw.lrv as number, 4, 4);
+    const usable = results.filter((r) => r !== null) as EpochResult[];
+    const mean = meanTest(usable.map((r) => r.returnOnCapital), 4).mean;
+    const lrv = sparseLrv(results.map((r) => r?.returnOnCapital ?? null), 4);
+    const daily = portfolioDaily(mean, lrv, 4, 4);
     expect(report.portfolio.dailyMean).toBeCloseTo(daily.dailyMean, 12);
     expect(report.portfolio.dailySd).toBeCloseTo(daily.dailySd, 12);
     const spanDays = (200 * CTX.stepMs) / DAY_MS;
@@ -601,13 +656,16 @@ describe("LB14 policy statistics", () => {
     for (const row of noSigma.leverage) expect(row.reference).toBeNull();
   });
 
-  test("LB14 by modality: trades and the contribution test of each modality the policy used", () => {
+  test("LB14 by modality: counts and contribution inference preserve gaps", () => {
     expect(report.byModality.map((m) => m.modality).sort()).toEqual(["funding-carry", "perp-directional"]);
     const usable = results.filter((r) => r !== null) as EpochResult[];
     for (const entry of report.byModality) {
       expect(entry.trades).toBe(usable.filter((r) => r.modality === entry.modality).length);
-      const contribution = usable.map((r) => (r.modality === entry.modality ? r.returnOnCapital : 0));
-      expect(entry.mean).toEqual(meanReport(meanTest(contribution, 4)));
+      const contribution = results.map((r) => (r === null ? null : r.modality === entry.modality ? r.returnOnCapital : 0));
+      const dense = meanTest(contribution.filter((value): value is number => value !== null), 4);
+      expect(entry.mean?.n).toBe(dense.n);
+      expect(entry.mean?.meanBps).toBeCloseTo(dense.mean * 1e4, 6);
+      expect(entry.mean?.t).toBeCloseTo(sparseT(contribution, 4), 8);
     }
   });
 
@@ -678,9 +736,13 @@ describe("LB20 paired comparison and Holm family", () => {
     }
     const paired = buildPairedReport(inputsOf("jev", a), inputsOf("random", b), CTX);
     expect(paired).toMatchObject({ policy: "jev", baseline: "random", n: 238 });
-    const diff: number[] = [];
-    for (let i = 0; i < 240; i += 1) if (a[i] !== null && b[i] !== null) diff.push((a[i] as EpochResult).returnOnCapital - (b[i] as EpochResult).returnOnCapital);
-    expect(paired.mean).toEqual(meanReport(meanTest(diff, 4)));
+    const diff: Array<number | null> = [];
+    for (let i = 0; i < 240; i += 1) diff.push(a[i] !== null && b[i] !== null ? (a[i] as EpochResult).returnOnCapital - (b[i] as EpochResult).returnOnCapital : null);
+    const usableDiff = diff.filter((value): value is number => value !== null);
+    const dense = meanTest(usableDiff, 4);
+    expect(paired.mean?.n).toBe(dense.n);
+    expect(paired.mean?.meanBps).toBeCloseTo(dense.mean * 1e4, 6);
+    expect(paired.mean?.t).toBeCloseTo(sparseT(diff, 4), 8);
     expect(paired.significantlyBetter).toBe(true);
     const flipped = buildPairedReport(inputsOf("random", b), inputsOf("jev", a), CTX);
     expect(flipped.significantlyBetter).toBe(false);

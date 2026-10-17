@@ -1,10 +1,10 @@
-import { afterEach, describe, expect, test } from "bun:test";
+import { afterEach, describe, expect, test, vi } from "bun:test";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createBudget } from "./budget";
 import { createOnchainCache } from "./cache";
-import { createOnchainClient, type ClientResult, type OnchainClient } from "./client";
+import { createOnchainClient, type ClientResult, type OkxCredentials, type OnchainClient } from "./client";
 import { createOnchainGateway } from "./gateway";
 
 const dirs: string[] = [];
@@ -18,14 +18,25 @@ afterEach(() => {
 });
 
 const OK_DATA = [{ chainIndex: "1", chainName: "Ethereum", chainSymbol: "ETH" }];
+const TEST_CREDS: OkxCredentials = { apiKey: "TEST-KEY", secret: "TEST-SECRET", passphrase: "TEST-PASS" };
 
 function setup(opts: { state?: "absent" | "incomplete" | "complete"; next?: () => ClientResult | Promise<ClientResult>; cap?: number | (() => number); now?: () => number } = {}) {
   let t = opts.now ? opts.now() : 1_000_000;
   const calls: string[] = [];
   const client: OnchainClient = {
-    call: async (req) => {
+    call: async (req, _tier, admitDispatch) => {
       calls.push(req.path);
-      return opts.next ? opts.next() : { ok: true, data: OK_DATA, sent: true };
+      const next: ClientResult | Promise<ClientResult> = opts.next ? opts.next() : { ok: true, data: OK_DATA, sent: true };
+      if (next instanceof Promise) {
+        const admitted = admitDispatch();
+        if (!admitted.ok) return { ok: false, error: admitted.reason, sent: false };
+        return next;
+      }
+      if (next.sent) {
+        const admitted = admitDispatch();
+        if (!admitted.ok) return { ok: false, error: admitted.reason, sent: false };
+      }
+      return next;
     },
     status: () => ({ lastCallMs: t, lastCode: 0, cooldownUntilMs: null, clockOffsetMs: null }),
   };
@@ -41,36 +52,44 @@ function setup(opts: { state?: "absent" | "incomplete" | "complete"; next?: () =
   return { gateway, budget, calls, tick: (ms: number) => (t += ms) };
 }
 
+
 describe("onchain gateway", () => {
-  test.each(["fetch", "body"])("late %s success does not populate gateway cache", async (phase) => {
-    let release!: (response: Response) => void;
-    let releaseBody!: (text: string) => void;
-    const lateFetch = new Promise<Response>((resolve) => (release = resolve));
-    const lateBody = new Promise<string>((resolve) => (releaseBody = resolve));
-    const payload = JSON.stringify({ code: "0", data: OK_DATA });
-    const slowResponse = new Response("");
-    Object.defineProperty(slowResponse, "text", { value: () => lateBody });
+  test("an expired result is not cached and a default-deadline follow-up dispatches fresh data", async () => {
+    vi.useFakeTimers();
+    const startedAt = 1_000;
+    let monotonicNow = startedAt;
+    const nowSpy = vi.spyOn(performance, "now").mockImplementation(() => monotonicNow);
+    const lateData = [{ chainIndex: "1", chainName: "Ethereum", chainSymbol: "ETH" }];
+    const freshData = [{ chainIndex: "8453", chainName: "Base", chainSymbol: "ETH" }];
+    const freshResult = [{ chainIndex: "8453", name: "Base", symbol: "ETH" }];
     let sends = 0;
+    const fetcher = Object.assign(async () => {
+      sends += 1;
+      if (sends === 1) {
+        monotonicNow = startedAt + 60_000;
+        return new Response(JSON.stringify({ code: "0", data: lateData }));
+      }
+      return new Response(JSON.stringify({ code: "0", data: freshData }));
+    }, { preconnect: async () => { } });
     const client = createOnchainClient({
-      credentials: () => ({ apiKey: "TEST", secret: "TEST", passphrase: "TEST" }),
-      fetch: (async () => {
-        sends += 1;
-        return sends === 1 ? phase === "fetch" ? lateFetch : slowResponse : new Response(payload);
-      }) as unknown as typeof fetch,
-      now: Date.now, minIntervalMs: 0, timeoutMs: 20,
+      credentials: () => TEST_CREDS,
+      fetch: fetcher,
+      now: Date.now, minIntervalMs: 0,
     });
     const budget = createBudget({ dir: tempDir(), now: Date.now, caps: () => ({ basic: 1, premium: 1 }) });
     const gateway = createOnchainGateway({ client, budget, cache: createOnchainCache(Date.now), credentialsState: () => "complete", now: Date.now });
     try {
       expect(await gateway.callInternal("/onchain/chains", {}, "user")).toEqual({ ok: false, error: "provider_error", sent: true });
-      release(new Response(payload)); releaseBody(payload);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      const next = await gateway.callInternal("/onchain/chains", {}, "user");
-      expect(next.ok).toBe(true);
-      expect(next.sent).toBe(true);
+      expect(gateway.budget().tiers.free.used).toBe(1);
+      monotonicNow = startedAt;
+      expect(await gateway.callInternal("/onchain/chains", {}, "user")).toMatchObject({ ok: true, data: freshResult, sent: true });
       expect(sends).toBe(2);
       expect(gateway.budget().tiers.free.used).toBe(2);
-    } finally { release(new Response(payload)); releaseBody(payload); budget.flush(); }
+    } finally {
+      nowSpy.mockRestore();
+      vi.useRealTimers();
+      budget.flush();
+    }
   });
   test.each([true, false])("coalesced followers record once only when sent=%s", async (sent) => {
     const { gateway, calls } = setup({ cap: 1, next: () => ({ ok: false, error: "provider_error", sent }) });
@@ -80,6 +99,42 @@ describe("onchain gateway", () => {
     expect(results.map((r) => r.sent)).toEqual([sent, false, false]);
     expect(gateway.budget().tiers.basic.used).toBe(sent ? 1 : 0);
   });
+  test("a late identical follower joins after a real dispatch consumes the cap", async () => {
+    let release!: (response: Response) => void;
+    let started!: () => void;
+    const pendingFetch = new Promise<Response>((resolve) => (release = resolve));
+    const fetchStarted = new Promise<void>((resolve) => (started = resolve));
+    const raw = [{ chainIndex: "66", tokenContractAddress: "0xab", time: "1", price: "2.5" }];
+    const payload = JSON.stringify({ code: "0", data: raw });
+    let sends = 0;
+    const client = createOnchainClient({
+      credentials: () => TEST_CREDS,
+      fetch: (async () => { sends += 1; started(); return pendingFetch; }) as unknown as typeof fetch,
+      now: () => 1_700_000_000_000,
+      minIntervalMs: 0,
+    });
+    const budget = createBudget({ dir: tempDir(), now: () => 1_700_000_000_000, caps: () => ({ basic: 1, premium: 1 }) });
+    const gateway = createOnchainGateway({ client, cache: createOnchainCache(() => 1_700_000_000_000), budget, credentialsState: () => "complete", now: () => 1_700_000_000_000 });
+    try {
+      const leaderPromise = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
+      await fetchStarted;
+      expect(budget.snapshot().tiers.basic.used).toBe(1);
+      const followerPromise = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
+      release(new Response(payload));
+      const [leader, follower] = await Promise.all([leaderPromise, followerPromise]);
+      expect(leader.ok && leader.sent).toBe(true);
+      expect(follower.ok && follower.sent).toBe(false);
+      expect(sends).toBe(1);
+      expect(budget.snapshot().tiers.basic.used).toBe(1);
+      const cached = await gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
+      expect(cached.ok && cached.sent).toBe(false);
+      expect(budget.snapshot().tiers.basic.used).toBe(1);
+    } finally {
+      release(new Response(payload));
+      budget.flush();
+    }
+  });
+
 
   test("unsent failures leave allowance for other keys", async () => {
     const { gateway, calls } = setup({ cap: 1, next: () => ({ ok: false, error: "no_credentials", sent: false }) });
@@ -96,9 +151,11 @@ describe("onchain gateway", () => {
     let started!: () => void;
     const first = new Promise<ClientResult>((resolve) => (release = resolve));
     const entered = new Promise<void>((resolve) => (started = resolve));
-    const { gateway, budget, calls, tick } = setup({ cap: () => cap, now: () => Date.UTC(2026, 0, 31, 23, 59, 59), next: () => {
-      started(); return first;
-    } });
+    const { gateway, budget, calls, tick } = setup({
+      cap: () => cap, now: () => Date.UTC(2026, 0, 31, 23, 59, 59), next: () => {
+        started(); return first;
+      }
+    });
     if (rollover) budget.record("basic");
     const leader = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
     await entered;
@@ -107,14 +164,16 @@ describe("onchain gateway", () => {
     if (rollover) tick(2_000);
     release({ ok: false, error: "provider_error", sent: true });
     await leader;
-    expect(await waiting).toEqual({ ok: false, error: "budget_exhausted", sent: false });
-    expect(calls).toHaveLength(1);
+    expect(await waiting).toEqual(rollover
+      ? { ok: false, error: "provider_error", sent: true }
+      : { ok: false, error: "budget_exhausted", sent: false });
+    expect(calls).toHaveLength(rollover ? 2 : 1);
     expect(gateway.budget().tiers.basic.used).toBe(1);
     expect(gateway.budget().month).toBe(rollover ? "2026-02" : "2026-01");
     budget.flush();
     if (rollover) {
       tick(-2_000);
-      expect(gateway.budget().tiers.basic.used).toBe(1); // previous month's ledger is retained
+      expect(gateway.budget().tiers.basic.used).toBe(2); // previous month's preseed and dispatch remain recorded
     }
   });
 
@@ -141,6 +200,33 @@ describe("onchain gateway", () => {
     expect(calls).toHaveLength(1);
     expect(gateway.budget().tiers.basic.used).toBe(1);
   });
+  test("cached signals reapply the inclusive six-hour age bound without another dispatch", async () => {
+    const nowMs = Date.UTC(2026, 9, 16);
+    const eventMs = nowMs - 6 * 60 * 60 * 1_000;
+    const { gateway, calls, tick } = setup({
+      now: () => nowMs,
+      next: () => ({
+        ok: true,
+        data: [{
+          timestamp: String(eventMs), amountUsd: "10", price: "1", triggerWalletCount: "1",
+          walletType: "1", chainIndex: "66",
+          token: { tokenAddress: "0xab", symbol: "TOK", marketCapUsd: "100", holders: "5", top10HolderPercent: "20" },
+        }],
+        sent: true,
+      }),
+    });
+    const params = { chainIndex: "66" };
+    const first = await gateway.call("/onchain/signals", params, "user");
+    expect(first).toMatchObject({ ok: true, data: [{ tsMs: eventMs }] });
+    const cachedAtMs = first.ok ? first.meta.cachedAtMs : null;
+    const used = gateway.budget().tiers.premium.used;
+    tick(1);
+    const second = await gateway.call("/onchain/signals", params, "user");
+    expect(second).toMatchObject({ ok: true, data: [], meta: { cachedAtMs, stale: false } });
+    expect(calls).toHaveLength(1);
+    expect(gateway.budget().tiers.premium.used).toBe(used);
+  });
+
 
   test("exhausted cap serves a marked stale entry without another send", async () => {
     const { gateway, calls, tick } = setup({ cap: 1, next: () => ({ ok: true, data: [{ chainIndex: "66", tokenContractAddress: "0xab", time: "1", price: "2.5" }], sent: true }) });
@@ -158,11 +244,13 @@ describe("onchain gateway", () => {
     const first = new Promise<ClientResult>((resolve) => (release = resolve));
     const entered = new Promise<void>((resolve) => (started = resolve));
     let sends = 0;
-    const { gateway, calls } = setup({ cap: 31, now: () => Date.UTC(2026, 0, 1), next: () => {
-      sends += 1;
-      if (sends === 2) { started(); return first; }
-      return { ok: false, error: "provider_error", sent: true };
-    } });
+    const { gateway, calls } = setup({
+      cap: 31, now: () => Date.UTC(2026, 0, 1), next: () => {
+        sends += 1;
+        if (sends === 2) { started(); return first; }
+        return { ok: false, error: "provider_error", sent: true };
+      }
+    });
     await gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xaa" }, "user");
     const leader = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
     await entered;
@@ -211,11 +299,42 @@ describe("onchain gateway", () => {
     expect(snap.tiers.free.used).toBe(1);
   });
 
-  test("a call that took a second physical request (the clock retry) is counted twice: every request that went out spends the quota", async () => {
-    const { gateway, calls } = setup({ next: () => ({ ok: true, data: OK_DATA, sent: true, extraDispatches: 1 }) });
-    await gateway.call("/onchain/chains", {}, "user");
-    expect(calls).toHaveLength(1);
-    expect(gateway.budget().tiers.free.used).toBe(2);
+  test.each([0, 1, 2])("physical clock-retry dispatches respect a cap of %i", async (cap) => {
+    const minIntervalMs = 40;
+    const dispatchTimes: number[] = [];
+    const syntheticFetch = (async () => {
+      dispatchTimes.push(performance.now());
+      if (dispatchTimes.length === 1) {
+        return new Response(JSON.stringify({ code: "50102", msg: "clock" }), {
+          status: 401,
+          headers: { date: new Date(Date.now() + 76_000).toUTCString() },
+        });
+      }
+      return new Response(JSON.stringify({ code: "0", data: [{ chainIndex: "66", tokenContractAddress: "0xab", time: "1", price: "2.5" }] }), { status: 200 });
+    }) as unknown as typeof fetch;
+    const client = createOnchainClient({
+      credentials: () => TEST_CREDS,
+      fetch: syntheticFetch,
+      now: Date.now,
+      minIntervalMs,
+    });
+    const budget = createBudget({ dir: tempDir(), now: Date.now, caps: () => ({ basic: cap, premium: cap }) });
+    const gateway = createOnchainGateway({ client, cache: createOnchainCache(Date.now), budget, credentialsState: () => "complete", now: Date.now });
+    try {
+      const result = await gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
+      const dispatchCount = Math.min(cap, 2);
+      expect(dispatchTimes).toHaveLength(dispatchCount);
+      expect(budget.snapshot().tiers.basic.used).toBe(dispatchCount);
+      expect(result.sent).toBe(cap > 0);
+      if (cap === 0) expect(result).toEqual({ ok: false, error: "budget_exhausted", sent: false });
+      if (cap === 1) expect(result).toEqual({ ok: false, error: "budget_exhausted", sent: true });
+      if (cap === 2) {
+        expect(result.ok).toBe(true);
+        expect(dispatchTimes[1]! - dispatchTimes[0]!).toBeGreaterThanOrEqual(minIntervalMs);
+      }
+    } finally {
+      budget.flush();
+    }
   });
 
   test("unknown route and bad params are refused before any call", async () => {
@@ -263,9 +382,11 @@ describe("onchain gateway", () => {
     const budget = createBudget({ dir, now: () => t, caps: () => ({ basic: 1, premium: 1 }) });
     const gateway = createOnchainGateway({
       client: {
-        call: async () => {
+        call: async (_request, _tier, admitDispatch) => {
+          const admission = admitDispatch();
+          if (!admission.ok) return { ok: false, error: admission.reason, sent: false };
           calls.push("x");
-          return { ok: false, error: "provider_error", sent: true } as ClientResult;
+          return { ok: false, error: "provider_error", sent: true };
         },
         status: () => ({ lastCallMs: null, lastCode: null, cooldownUntilMs: null, clockOffsetMs: null }),
       },

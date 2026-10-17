@@ -157,8 +157,13 @@ export function createAnalysis(D: HudModel) {
   function allocation(): string {
     const ps = D.wallet.positions.filter((p) => p.usd !== null && p.usd > 0).sort((a, b) => (b.usd ?? 0) - (a.usd ?? 0));
     const total = D.wallet.total ?? ps.reduce((a, p) => a + (p.usd ?? 0), 0);
-    let s = title(900, "A CARTEIRA, ATIVO POR ATIVO", total > 0 ? `US$ ${fmt(total)} NA CARTEIRA GERIDA, SO O QUE TEM PRECO` : readNote(D.wallet.lastReadMs));
-    if (!(total > 0)) return s + text(0, 100, "SEM LEITURA DA CARTEIRA", "t-sub", "font-size:10px");
+    const valid = D.wallet.quality === "current" || D.wallet.quality === "partial" || D.wallet.quality === "stale";
+    const subtitle = valid
+      ? `US$ ${fmt(total)} NA CARTEIRA GERIDA, SO O QUE TEM PRECO`
+      : readNote(D.wallet.lastReadMs);
+    let s = title(900, "A CARTEIRA, ATIVO POR ATIVO", subtitle);
+    if (!valid) return s + text(0, 100, "SEM LEITURA DA CARTEIRA", "t-sub", "font-size:10px");
+    if (!(total > 0)) return s + text(0, 100, D.wallet.quality === "partial" ? "LEITURA PARCIAL: TOTAL VALORADO EM ZERO" : "TOTAL VALORADO EM ZERO", "t-sub", "font-size:10px");
     const cx = 190, cy = 275, R = 128;
     let acc = 0;
     let donut = "";
@@ -237,10 +242,10 @@ export function createAnalysis(D: HudModel) {
     const unread = D.wallet.cash === null || !(total > 0);
     const cashShare = unread ? 0 : (D.wallet.cash as number) / total;
     const known = D.analysisOk;
-    // a day with no ceiling has no share of it to draw: the ring stays empty and says "LIVRE"
+    // A placeholder zero is not a reported spend; ceilings still come from core status.
     const gauges: [string, number | null, string, string, string?][] = [
-      ["COMPRAS HOJE", capUse(sp.buy, cap.maxDailyBuyUsd), known ? `US$ ${fmt(sp.buy, 0)} DE ${capText(cap.maxDailyBuyUsd)}` : "SEM DADOS DO NUCLEO", COL.cy],
-      ["VENDAS HOJE", capUse(sp.sell, cap.maxDailySellUsd), known ? `US$ ${fmt(sp.sell, 0)} DE ${capText(cap.maxDailySellUsd)}` : "SEM DADOS DO NUCLEO", COL.soft],
+      ["COMPRAS HOJE", known ? capUse(sp.buy, cap.maxDailyBuyUsd) : null, known ? `US$ ${fmt(sp.buy, 0)} DE ${capText(cap.maxDailyBuyUsd)}` : `SEM DADO DO NUCLEO, LIMITE ${capText(cap.maxDailyBuyUsd)}`, COL.cy, known ? undefined : "SEM DADO"],
+      ["VENDAS HOJE", known ? capUse(sp.sell, cap.maxDailySellUsd) : null, known ? `US$ ${fmt(sp.sell, 0)} DE ${capText(cap.maxDailySellUsd)}` : `SEM DADO DO NUCLEO, LIMITE ${capText(cap.maxDailySellUsd)}`, COL.soft, known ? undefined : "SEM DADO"],
       ["CONSULTAS DO MODELO", D.budget.max > 0 ? D.budget.consults / D.budget.max : 0, `${D.budget.consults} DE ${D.budget.max}`, COL.cy],
       ["CAIXA LIVRE", cashShare, unread ? "SEM LEITURA DA CARTEIRA" : `${Math.round(cashShare * 100)}% DA CARTEIRA`, COL.green, unread ? "-" : undefined],
     ];
@@ -288,7 +293,7 @@ export function createAnalysis(D: HudModel) {
     const pts: [number, number, string][] = [[0, 0, "INICIO"]];
     tr.forEach((t) => { cum += t.out - t.in; pts.push([t.sellAt, cum, t.s]); });
     const vmin = Math.min(0, ...pts.map((p) => p[1])) - 0.05, vmax = Math.max(0, ...pts.map((p) => p[1])) + 0.05;
-        // one step per round trip, evenly spaced: trips that closed minutes apart would otherwise sit on top of each other
+    // one step per round trip, evenly spaced: trips that closed minutes apart would otherwise sit on top of each other
     const px = (_t: number, i: number): number => x0 + (i * (x1 - x0 - 40)) / Math.max(1, pts.length - 1);
     const py = (v: number): number => y1 - ((v - vmin) / (vmax - vmin)) * (y1 - y0);
     let s = title(900, "CAIXA ACUMULADO DAS VOLTAS", "SOMA DO QUE SAIU MENOS O QUE ENTROU, EM USDC, ANTES DA TAXA EM SOL");
