@@ -220,7 +220,7 @@ export async function supersedeNode(root: string, oldId: string, newId: string):
   if (oldId === newId || !graph.nodes.some((node) => node.id === newId)) throw new Error("substituto invalido");
   await retractNode(root, oldId, `substituido por ${newId}`);
 }
-export async function recordReceipt(root: string, receiptPath: string): Promise<string> {
+export async function recordReceipt(root: string, receiptPath: string, links?: string[]): Promise<string> {
   const raw = await readFile(receiptPath);
   const parsed = JSON.parse(raw.toString("utf8")) as { receipt?: { v?: number; specId?: unknown; specHash?: unknown; status?: unknown; leader?: unknown } };
   const r = parsed.receipt;
@@ -229,14 +229,18 @@ export async function recordReceipt(root: string, receiptPath: string): Promise<
   const id = `jev-${r.specId}`;
   const { graph } = await load(root);
   const text = `JEV ${r.status} lider ${typeof r.leader === "string" ? r.leader : "nenhum"}; spec ${r.specHash.slice(0, 16)}; recibo sha256 ${sha}. Recomendacao, nao autoriza nada.`;
-  await addNode(root, { id, type: "decision", text }, graph.nodes.map((node) => node.id));
+  await addNode(root, { id, type: "decision", text }, links ?? graph.nodes.slice(-1).map((node) => node.id));
   await mkdir(join(root, "receipts"), { recursive: true });
   await writeFile(join(root, "receipts", `${r.specId}.json`), raw);
   return id;
 }
-export async function exportCompact(root: string): Promise<string> {
+export async function exportCompact(root: string, focus?: string, depth = 1): Promise<string> {
   const { graph } = await load(root);
-  return JSON.stringify(specFor(graph.nodes, graph.edges));
+  if (focus === undefined) return JSON.stringify(specFor(graph.nodes, graph.edges));
+  if (!graph.nodes.some((node) => node.id === focus)) throw new Error(`no inexistente: ${focus}`);
+  const keep = new Set([focus]);
+  for (let i = 0; i < depth; i++) for (const { from, to } of graph.edges.filter((e) => keep.has(e.from) !== keep.has(e.to))) keep.add(from).add(to);
+  return JSON.stringify(specFor(graph.nodes.filter((node) => keep.has(node.id)), graph.edges.filter((edge) => keep.has(edge.from) && keep.has(edge.to))));
 }
 export async function verify(root: string): Promise<{ seq: number; hash: string }> {
   await verifyV1();
@@ -262,10 +266,10 @@ async function main(): Promise<void> {
     await retractNode(root, args[0]!, args[1]!);
   } else if (command === "supersede" && args.length === 2) {
     await supersedeNode(root, args[0]!, args[1]!);
-  } else if (command === "export" && args.length === 0) {
-    console.log(await exportCompact(root));
-  } else if (command === "record" && args.length === 1) {
-    console.log(await recordReceipt(root, args[0]!));
+  } else if (command === "export" && args.length <= 2) {
+    console.log(await exportCompact(root, args[0], args[1] ? Number(args[1]) : undefined));
+  } else if (command === "record" && (args.length === 1 || args.length === 2)) {
+    console.log(await recordReceipt(root, args[0]!, args[1]?.split(",")));
   } else if (command === "lint" && args.length === 0) {
     const orphans = await lint(root);
     console.log(orphans.length ? `orfaos: ${orphans.join(",")}` : "ok sem orfaos");

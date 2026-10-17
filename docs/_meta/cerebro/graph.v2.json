@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 188,
-  "headHash": "30a3b1d32de5324dd169a438f544bf48abe9303811acfd41c86f661c1b245b6b",
+  "headSeq": 227,
+  "headHash": "53d9f61274596d27cffc5987e0d5913a4b37490e9298559e166f93672ce28fe5",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -177,6 +177,16 @@
       "id": "retro-regra-global",
       "type": "event",
       "text": "Consulta retroativa ao JEV sobre a regra global de ponteiro git: sem_consenso. Regra mantida ate o dono decidir; nao vale como aprovacao previa, a mudanca foi feita antes da consulta"
+    },
+    {
+      "id": "jev-cerebro-subgrafo",
+      "type": "decision",
+      "text": "JEV consenso lider export_neighborhood; spec 0f347a58df4b918d; recibo sha256 a6df8336a04d59c8950585928d10c0eef3b82a19b790d325b45f0cf4f5bcd18b. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-subgrafo",
+      "type": "iteration",
+      "text": "export aceita no e profundidade e devolve so a vizinhanca (opcao do JEV); record liga o recibo so aos nos pedidos, por padrao ao ultimo, pois antes ligava a todos e tornava arestas sem sentido"
     }
   ],
   "edges": [
@@ -944,6 +954,191 @@
       "from": "iter-global-ponteiro",
       "to": "retro-regra-global",
       "seq": 188
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 190
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 191
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 192
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 193
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 194
+    },
+    {
+      "from": "regra-dura-injetada",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 195
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 196
+    },
+    {
+      "from": "jev-cerebro-regras-no-grafo",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 197
+    },
+    {
+      "from": "iter-regras-inline",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 198
+    },
+    {
+      "from": "dono-aceitou-jev",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 199
+    },
+    {
+      "from": "iter-lint",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 200
+    },
+    {
+      "from": "jev-autoresearch-proxima-hipotese",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 201
+    },
+    {
+      "from": "iter-autoresearch-encerrada",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 202
+    },
+    {
+      "from": "jev-cerebro-substituicao",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 203
+    },
+    {
+      "from": "iter-supersede",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 204
+    },
+    {
+      "from": "iter-ordem-chaves",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 205
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 206
+    },
+    {
+      "from": "spec-decisao-executavel-jev",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 207
+    },
+    {
+      "from": "spec-autoresearch-real-online",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 208
+    },
+    {
+      "from": "spec-autoresearch-decisoes",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 209
+    },
+    {
+      "from": "spec-cerebro-grafo",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 210
+    },
+    {
+      "from": "iter-migrar-specs",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 211
+    },
+    {
+      "from": "src-cerebro-grafo",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 212
+    },
+    {
+      "from": "regra-excluir-so-com-ponteiro",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 213
+    },
+    {
+      "from": "src-decisao-executavel-jev",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 214
+    },
+    {
+      "from": "src-decisao-runtime",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 215
+    },
+    {
+      "from": "src-real-online",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 216
+    },
+    {
+      "from": "src-autoresearch-decisoes",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 217
+    },
+    {
+      "from": "src-decisoes-evidencia",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 218
+    },
+    {
+      "from": "src-real-online-limites",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 219
+    },
+    {
+      "from": "iter-global-ponteiro",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 220
+    },
+    {
+      "from": "jev-cerebro-contradicoes",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 221
+    },
+    {
+      "from": "jev-cerebro-regra-global",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 222
+    },
+    {
+      "from": "iter-contradicoes",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 223
+    },
+    {
+      "from": "retro-regra-global",
+      "to": "jev-cerebro-subgrafo",
+      "seq": 224
+    },
+    {
+      "from": "jev-cerebro-subgrafo",
+      "to": "iter-subgrafo",
+      "seq": 226
+    },
+    {
+      "from": "iter-contradicoes",
+      "to": "iter-subgrafo",
+      "seq": 227
     }
   ],
   "retractions": []

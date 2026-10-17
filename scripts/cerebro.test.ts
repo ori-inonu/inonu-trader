@@ -110,19 +110,21 @@ test("verifies a CRLF checkout of the materialized graph", async () => {
   expect(await verify(root)).toMatchObject({ seq: 1 });
 });
 
-test("record links a JEV receipt to active nodes and rejects malformed receipts", async () => {
+test("record links a JEV receipt to the given nodes (default: the latest one) and rejects malformed receipts", async () => {
   const root = tempRoot();
   await addNode(root, { id: "ctx", type: "fact", text: "Contexto." });
+  await addNode(root, { id: "other", type: "fact", text: "Outro." }, ["ctx"]);
   const file = join(root, "r.json");
   writeFileSync(file, JSON.stringify({ receipt: { v: 1, specId: "s1", specHash: "a".repeat(64), status: "consenso", leader: "x" } }));
   expect(await recordReceipt(root, file)).toBe("jev-s1");
-  expect(await verify(root)).toMatchObject({ seq: 3 });
+  expect(await verify(root)).toMatchObject({ seq: 5 });
+  expect((await exportCompact(root, "ctx", 1)).includes("jev-s1")).toBe(false);
   const copy = readFileSync(join(root, "receipts", "s1.json"));
   expect(copy.equals(readFileSync(file))).toBe(true);
   expect(readFileSync(join(root, "events.jsonl"), "utf8")).toContain(createHash("sha256").update(copy).digest("hex"));
   writeFileSync(file, JSON.stringify({ receipt: { v: 1, specId: "s2", specHash: "zz", status: "consenso" } }));
   await expect(recordReceipt(root, file)).rejects.toThrow("recibo invalido");
-  expect(await verify(root)).toMatchObject({ seq: 3 });
+  expect(await verify(root)).toMatchObject({ seq: 5 });
 });
 
 test("injected instruction files stay within 100 lines", () => {
@@ -139,6 +141,21 @@ test("lint reports active nodes without links and ignores retracted ones", async
   expect(await lint(root)).toEqual(["c"]);
   await retractNode(root, "c", "obsoleto");
   expect(await lint(root)).toEqual([]);
+});
+
+test("export with a focus returns only nodes within the given depth and rejects unknown ids", async () => {
+  const root = tempRoot();
+  await addNode(root, { id: "a", type: "fact", text: "Alfa." });
+  await addNode(root, { id: "b", type: "fact", text: "Beta." }, ["a"]);
+  await addNode(root, { id: "c", type: "fact", text: "Gama." }, ["b"]);
+  await addNode(root, { id: "d", type: "fact", text: "Delta." }, ["c"]);
+  const present = async (depth: number) => {
+    const out = await exportCompact(root, "a", depth);
+    return ["Alfa.", "Beta.", "Gama.", "Delta."].map((t) => out.includes(t));
+  };
+  expect(await present(1)).toEqual([true, true, false, false]);
+  expect(await present(2)).toEqual([true, true, true, false]);
+  await expect(exportCompact(root, "ghost")).rejects.toThrow();
 });
 
 test("lint reports two active nodes that claim the same @key until one is superseded", async () => {
