@@ -16,6 +16,7 @@ confidence: medium
 - [Plano e execucao canonica](specs/autoresearch-real-online/plan.md), [grafo de tarefas](specs/autoresearch-real-online/tasks.md) e [estado e verificacao](specs/autoresearch-real-online/status.md).
 - [Benchmark offline anterior](specs/autoresearch-decisoes/spec.md): historico superado por instrucao do usuario, nao e mais o procedimento de execucao.
 - [Decisão executável do JEV](specs/decisao-executavel-jev/spec.md): sonda, causa em `report.view`, alertas no Brief e estado da entrega local.
+- [Grafo documental v2](specs/cerebro-grafo/spec.md): eventos append-only, exportacao limitada para JEV e preservacao byte a byte do v1.
 
 ## Evolução e consulta rápida (2026-10-15)
 

@@ -176,3 +176,19 @@ Registro append-only dos lotes desta wiki. Consulte [[manutencao-da-documentacao
 - A captura fresca nao foi confundida com decisao nova: as duas observacoes viram a mesma consulta antiga. Ordens incertas e ausencia de resultado liquido conciliado seguem lacunas, nao zero ou lucro. Nenhuma otimizacao financeira foi qualificada e a meta 10x/24h nao foi demonstrada.
 - Revisao independente sem achados restantes. Gate integrado final verde no Bun 1.3.14: typecheck exit 0, global 7851 pass/2 skip/0 fail em 481 arquivos, laboratorio 647 pass/0 fail em 16 arquivos. O status preserva uma falha EPERM anterior no filesystem e seu diagnostico, sem alegar causa corrigida.
 - Nenhuma inferencia JEV nova foi solicitada pelo autoresearch; nao houve assinatura, ordem, mudanca de risco/cadencia/credencial, migracao ou atualizacao/reinicio do processo instalado.
+
+## [2026-10-16] docs | Especificacao do grafo documental v2
+
+- Criados spec, plano, tarefas e estado para a evolucao aditiva do cerebro: `events.jsonl` autoritativo, `graph.v2.json` regeneravel e comandos `add-node`, `link`, `retract`, `export` e `verify`.
+- Regras registram decisao de design via JEV, retratacao em vez de exclusao, exportacao compacta e preservacao byte a byte dos artefatos v1. Nenhuma implementacao ou verificacao e declarada nesta entrada.
+
+## [2026-10-17] feat | Grafo documental v2 implementado
+
+- O script unico `scripts/cerebro.ts` mantem `events.jsonl` append-only, materializa `graph.v2.json` nas mutacoes e exporta `DecisionSpec` compacto por `parseSpec`.
+- Seed: 3 nos reais, sobre autoresearch online `c5c7d34`, preferencia por menos codigo e este grafo, com 2 vinculos e head seq 5.
+- Verificacao: `bun --no-env-file run typecheck` exit 0; `bun --no-env-file test scripts/cerebro.test.ts` 6 pass, 0 fail; `bun --no-env-file scripts/cerebro.ts verify` retornou `ok seq=5 hash=f52dc9008a0d66e67b5f480d83e4b34d38964e1e6d021c1ac7f2ce914e77a105`. Sem chamada paga ao JEV ou suite global.
+
+## [2026-10-17] fix | Portabilidade do derivado v2
+
+- `verify` normaliza CRLF de checkout Git antes de comparar `graph.v2.json` com o derivado, preservando o restante da serializacao.
+- Typecheck exit 0; teste focado 7 pass, 0 fail; `verify` permanece em `ok seq=5 hash=f52dc9008a0d66e67b5f480d83e4b34d38964e1e6d021c1ac7f2ce914e77a105`.

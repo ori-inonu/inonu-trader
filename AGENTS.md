@@ -75,6 +75,14 @@ Especificação vigente: `docs/sdd/agente-autonomo/`. Antes de editar caminhos c
 - Tarefas com três ou mais passos dependentes: use o grafo de tarefas descrito em `docs/specs/_template.md`.
 - Antes de commitar ou abrir PR: `ship-pr`. Para revisar um diff: `review-diff`.
 
+## Regras do cerebro documental
+
+- Use o grafo v2 como contexto de projeto, nao como autoridade factual ou autorizacao operacional.
+- Encaminhe toda decisao de design ao JEV.
+- Retrate fatos obsoletos com um evento tombstone append-only; nunca apague eventos para esquecer.
+- Exporte somente fatos primitivos compactos, com strings de ate 300 caracteres e sem enderecos ou segredos.
+- A verificacao detecta adulteracao ou truncamento frente ao derivado conhecido, sem prometer que nada sera perdido.
+
 ## Pointers
 
 - Índice completo de docs: `docs/index.md`.
