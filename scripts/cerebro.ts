@@ -215,6 +215,11 @@ export async function retractNode(root: string, id: string, reason: string): Pro
   specFor([{ id: "retraction", type: "event", text: reason }], []);
   await append(root, [{ kind: "retract", id, reason }]);
 }
+export async function supersedeNode(root: string, oldId: string, newId: string): Promise<void> {
+  const { graph } = await load(root);
+  if (oldId === newId || !graph.nodes.some((node) => node.id === newId)) throw new Error("substituto invalido");
+  await retractNode(root, oldId, `substituido por ${newId}`);
+}
 export async function recordReceipt(root: string, receiptPath: string): Promise<string> {
   const raw = await readFile(receiptPath);
   const parsed = JSON.parse(raw.toString("utf8")) as { receipt?: { v?: number; specId?: unknown; specHash?: unknown; status?: unknown; leader?: unknown } };
@@ -253,6 +258,8 @@ async function main(): Promise<void> {
     await linkNodes(root, args[0]!, args[1]!);
   } else if (command === "retract" && args.length === 2) {
     await retractNode(root, args[0]!, args[1]!);
+  } else if (command === "supersede" && args.length === 2) {
+    await supersedeNode(root, args[0]!, args[1]!);
   } else if (command === "export" && args.length === 0) {
     console.log(await exportCompact(root));
   } else if (command === "record" && args.length === 1) {
@@ -265,7 +272,7 @@ async function main(): Promise<void> {
     const result = await verify(root);
     console.log(`ok seq=${result.seq} hash=${result.hash}`);
   } else {
-    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, record <recibo.json>, export, lint, verify");
+    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, supersede <velho> <novo>, record <recibo.json>, export, lint, verify");
   }
 }
 

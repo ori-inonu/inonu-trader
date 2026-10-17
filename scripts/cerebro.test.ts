@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { addNode, exportCompact, linkNodes, lint, recordReceipt, retractNode, verify } from "./cerebro";
+import { addNode, exportCompact, linkNodes, lint, recordReceipt, retractNode, supersedeNode, verify } from "./cerebro";
 
 const roots: string[] = [];
 afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
@@ -139,4 +139,16 @@ test("lint reports active nodes without links and ignores retracted ones", async
   expect(await lint(root)).toEqual(["c"]);
   await retractNode(root, "c", "obsoleto");
   expect(await lint(root)).toEqual([]);
+});
+
+test("supersede retracts the old node pointing at a live replacement and rejects bad targets", async () => {
+  const root = tempRoot();
+  await addNode(root, { id: "old", type: "fact", text: "Antigo." });
+  await addNode(root, { id: "new", type: "fact", text: "Novo." }, ["old"]);
+  await expect(supersedeNode(root, "old", "ghost")).rejects.toThrow();
+  await expect(supersedeNode(root, "old", "old")).rejects.toThrow();
+  await supersedeNode(root, "old", "new");
+  const graph = JSON.parse(readFileSync(join(root, "graph.v2.json"), "utf8")) as { nodes: { id: string }[]; retractions: { id: string; reason: string }[] };
+  expect(graph.nodes.map((node) => node.id)).toEqual(["new"]);
+  expect(graph.retractions[0]).toMatchObject({ id: "old", reason: "substituido por new" });
 });

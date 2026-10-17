@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 45,
-  "headHash": "9f7c559559c6fdd639d3ed100a9a774c48b4d973970e6aaa2caa9bcb27939ddd",
+  "headSeq": 62,
+  "headHash": "c0c56b1afd3ff00b6bcc1d2e5cdd719fdd9a05ca6baf6afb1495a950e793c158",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -67,6 +67,16 @@
       "id": "iter-autoresearch-encerrada",
       "type": "iteration",
       "text": "Seg4: H12 basis empatou H5 (+3.17 bps sintetico); JEV consenso stop_campaign; meta 10x nao demonstrada"
+    },
+    {
+      "id": "jev-cerebro-substituicao",
+      "type": "decision",
+      "text": "JEV consenso lider supersede_command; spec 194e2f70d2a49453; recibo sha256 05e19a5b27824d0f5f8a2d796d1f7fbe8e6d9e386df97bc5acdb99f9dc9af1d0. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-supersede",
+      "type": "iteration",
+      "text": "Comando supersede: aposenta no obsoleto apontando o substituto; escolha do JEV (supersede_command, margem ~0.88)"
     }
   ],
   "edges": [
@@ -229,6 +239,81 @@
       "from": "iter-lint",
       "to": "iter-autoresearch-encerrada",
       "seq": 45
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-cerebro-substituicao",
+      "seq": 47
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-cerebro-substituicao",
+      "seq": 48
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-cerebro-substituicao",
+      "seq": 49
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "jev-cerebro-substituicao",
+      "seq": 50
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "jev-cerebro-substituicao",
+      "seq": 51
+    },
+    {
+      "from": "regra-dura-injetada",
+      "to": "jev-cerebro-substituicao",
+      "seq": 52
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "jev-cerebro-substituicao",
+      "seq": 53
+    },
+    {
+      "from": "jev-cerebro-regras-no-grafo",
+      "to": "jev-cerebro-substituicao",
+      "seq": 54
+    },
+    {
+      "from": "iter-regras-inline",
+      "to": "jev-cerebro-substituicao",
+      "seq": 55
+    },
+    {
+      "from": "dono-aceitou-jev",
+      "to": "jev-cerebro-substituicao",
+      "seq": 56
+    },
+    {
+      "from": "iter-lint",
+      "to": "jev-cerebro-substituicao",
+      "seq": 57
+    },
+    {
+      "from": "jev-autoresearch-proxima-hipotese",
+      "to": "jev-cerebro-substituicao",
+      "seq": 58
+    },
+    {
+      "from": "iter-autoresearch-encerrada",
+      "to": "jev-cerebro-substituicao",
+      "seq": 59
+    },
+    {
+      "from": "jev-cerebro-substituicao",
+      "to": "iter-supersede",
+      "seq": 61
+    },
+    {
+      "from": "iter-autoresearch-encerrada",
+      "to": "iter-supersede",
+      "seq": 62
     }
   ],
   "retractions": []
