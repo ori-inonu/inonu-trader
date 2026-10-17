@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 726,
-  "headHash": "6455dfc7035b7dd3f789ba55140b88813ef09fc211ce34906dd5d98d8531ee06",
+  "headSeq": 731,
+  "headHash": "ee607d9209ed71b249535830209846070e0d64182a30b16423937c35433edcc2",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -947,6 +947,16 @@
       "id": "iter-encolher-agents",
       "type": "iteration",
       "text": "Consenso JEV shrink_agents: estado do produto e como rodar saem do AGENTS.md para nos; regras duras e Pare e pergunte ficam inline"
+    },
+    {
+      "id": "jev-cerebro-passo-12",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec 4f7e1a9d41a2b571; recibo sha256 c395b485191077e69c25ada1d53d7e676f391fdab8c5cdad50525dfb6fcec3b1. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-sem-consenso-busca",
+      "type": "iteration",
+      "text": "Consenso JEV cerebro-passo-12 sem_consenso (search_command lidera, sem maioria estavel): comando search NAO implementado; decisao fica com o dono"
     }
   ],
   "edges": [
@@ -3044,6 +3054,21 @@
       "from": "jev-cerebro-passo-11",
       "to": "iter-encolher-agents",
       "seq": 726
+    },
+    {
+      "from": "iter-encolher-agents",
+      "to": "jev-cerebro-passo-12",
+      "seq": 728
+    },
+    {
+      "from": "jev-cerebro-passo-12",
+      "to": "iter-sem-consenso-busca",
+      "seq": 730
+    },
+    {
+      "from": "iter-encolher-agents",
+      "to": "iter-sem-consenso-busca",
+      "seq": 731
     }
   ],
   "retractions": [
