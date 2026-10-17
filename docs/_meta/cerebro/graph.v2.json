@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 227,
-  "headHash": "53d9f61274596d27cffc5987e0d5913a4b37490e9298559e166f93672ce28fe5",
+  "headSeq": 229,
+  "headHash": "7580a0d3cd596180cc97062a404cf366feb5b2210fb31f0b0c71938066ff2af6",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -187,6 +187,11 @@
       "id": "iter-subgrafo",
       "type": "iteration",
       "text": "export aceita no e profundidade e devolve so a vizinhanca (opcao do JEV); record liga o recibo so aos nos pedidos, por padrao ao ultimo, pois antes ligava a todos e tornava arestas sem sentido"
+    },
+    {
+      "id": "lacuna-prompts-runtime",
+      "type": "fact",
+      "text": "Prompts ainda em codigo de runtime: src/jev-read/decide.ts, src/inonu/ask.ts, src/lab-jev/jev-chooser.ts, src/agent/book.ts. Trocar por grafo muda a entrada da inferencia do JEV; exige decisao do dono e do JEV antes. Goal segue aberto"
     }
   ],
   "edges": [
@@ -1139,6 +1144,11 @@
       "from": "iter-contradicoes",
       "to": "iter-subgrafo",
       "seq": 227
+    },
+    {
+      "from": "iter-subgrafo",
+      "to": "lacuna-prompts-runtime",
+      "seq": 229
     }
   ],
   "retractions": []
