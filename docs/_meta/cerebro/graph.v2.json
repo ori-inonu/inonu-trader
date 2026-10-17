@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 116,
-  "headHash": "5db0c4cf541f66f7a07f72ae28af71a99af202f79611e5152fc9e1bd7a480e0a",
+  "headSeq": 118,
+  "headHash": "ea90170034a9fb63a8b7bde92da9a68911dd40c664c68f54a6a3fe2f53a96982",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -152,6 +152,11 @@
       "id": "src-real-online-limites",
       "type": "fact",
       "text": "Limites: 15s por leitura, 4MiB por resposta, idade maxima 120s, relogio futuro 30s. Hashes cobrem projecao sanitizada, nao autenticidade. 11 invocacoes, 3 health timeout, 1 okx_time_invalid. Ordens incertas nao sao encerradas pelo pesquisador."
+    },
+    {
+      "id": "iter-global-ponteiro",
+      "type": "iteration",
+      "text": "AGENTS global do OMP (8 linhas) ganhou a regra de apagar arquivo com ponteiro git no no; mudanca fora do repo, sem decisao do JEV, escopo de uma frase"
     }
   ],
   "edges": [
@@ -584,6 +589,11 @@
       "from": "src-real-online",
       "to": "src-real-online-limites",
       "seq": 116
+    },
+    {
+      "from": "regra-excluir-so-com-ponteiro",
+      "to": "iter-global-ponteiro",
+      "seq": 118
     }
   ],
   "retractions": []
