@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 695,
-  "headHash": "4e0b391950dcf5648a8632b7004beca538458f3835179fc488535944e7391703",
+  "headSeq": 703,
+  "headHash": "19c57058492101a4031627e4761f800fb3e709692b98fe7d3070e1a3ea080666",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -887,6 +887,21 @@
       "id": "iter-retratar-antigas",
       "type": "iteration",
       "text": "15 iteracoes antigas retratadas (consenso JEV retract_stale); trilha integral em events.jsonl. Efeito: jev-cerebro-passo-2 ficou orfao e foi religado a iter-esquecer"
+    },
+    {
+      "id": "jev-cerebro-passo-8",
+      "type": "decision",
+      "text": "JEV consenso lider freeze_research; spec 297e83c1d2cce311; recibo sha256 1114575d28c4a2de07200db56e45278532a3ede430adac94b32a97f151d03d10. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "fato-research-congelado",
+      "type": "fact",
+      "text": "docs/research (69 arquivos versionados, pesquisas OKX, onchain e operador ate 2026-10-11) fica congelado como legado; git f96f55f tree 87903b52a38be5a7487078272e7a219071a87d26. Nao editar: manifesto de hashes o verifica. Achados novos so no grafo"
+    },
+    {
+      "id": "iter-research-congelado",
+      "type": "iteration",
+      "text": "Consenso JEV freeze_research: docs/research nao migrado nem apagado; legado com ponteiro de arvore git, como log.md. Restam spec.md e hook do OMP"
     }
   ],
   "edges": [
@@ -2889,6 +2904,31 @@
       "from": "iter-esquecer",
       "to": "iter-retratar-antigas",
       "seq": 695
+    },
+    {
+      "from": "iter-retratar-antigas",
+      "to": "jev-cerebro-passo-8",
+      "seq": 697
+    },
+    {
+      "from": "jev-cerebro-passo-8",
+      "to": "fato-research-congelado",
+      "seq": 699
+    },
+    {
+      "from": "fato-log-congelado",
+      "to": "fato-research-congelado",
+      "seq": 700
+    },
+    {
+      "from": "fato-research-congelado",
+      "to": "iter-research-congelado",
+      "seq": 702
+    },
+    {
+      "from": "iter-retratar-antigas",
+      "to": "iter-research-congelado",
+      "seq": 703
     }
   ],
   "retractions": [

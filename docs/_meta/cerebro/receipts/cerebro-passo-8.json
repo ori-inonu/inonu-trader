@@ -1,0 +1,185 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-8",
+    "specHash": "297e83c1d2cce3111db81863f99f7277345e21481f26223c26cd215d6504b6e1",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "freeze_research",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "migrate_specs",
+          "freeze_research",
+          "find_omp_hook",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_specs",
+              "freeze_research",
+              "find_omp_hook",
+              "stop"
+            ],
+            "probs": {
+              "migrate_specs": 0.3,
+              "freeze_research": 0.57,
+              "find_omp_hook": 0.07,
+              "stop": 0.05,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "freeze_research",
+              "find_omp_hook",
+              "stop",
+              "migrate_specs"
+            ],
+            "probs": {
+              "freeze_research": 0.55,
+              "find_omp_hook": 0.07,
+              "stop": 0.04,
+              "migrate_specs": 0.33,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "find_omp_hook",
+              "stop",
+              "migrate_specs",
+              "freeze_research"
+            ],
+            "probs": {
+              "find_omp_hook": 0.11,
+              "stop": 0.06,
+              "migrate_specs": 0.33,
+              "freeze_research": 0.48,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "migrate_specs": 0.32,
+          "freeze_research": 0.5333,
+          "find_omp_hook": 0.0833,
+          "stop": 0.05
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.2133,
+        "leader": "freeze_research",
+        "railProb": {
+          "migrate_specs": 0.17,
+          "freeze_research": 0.19,
+          "find_omp_hook": 0.16,
+          "stop": 0.01
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "migrate_specs",
+          "freeze_research",
+          "find_omp_hook",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_specs",
+              "freeze_research",
+              "find_omp_hook",
+              "stop"
+            ],
+            "probs": {
+              "migrate_specs": 0.3,
+              "freeze_research": 0.59,
+              "find_omp_hook": 0.06,
+              "stop": 0.04,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "freeze_research",
+              "find_omp_hook",
+              "stop",
+              "migrate_specs"
+            ],
+            "probs": {
+              "freeze_research": 0.6,
+              "find_omp_hook": 0.06,
+              "stop": 0.03,
+              "migrate_specs": 0.3,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "find_omp_hook",
+              "stop",
+              "migrate_specs",
+              "freeze_research"
+            ],
+            "probs": {
+              "find_omp_hook": 0.11,
+              "stop": 0.06,
+              "migrate_specs": 0.37,
+              "freeze_research": 0.44,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "migrate_specs": 0.3233,
+          "freeze_research": 0.5433,
+          "find_omp_hook": 0.0767,
+          "stop": 0.0433
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.22,
+        "leader": "freeze_research",
+        "railProb": {
+          "migrate_specs": 0.17,
+          "freeze_research": 0.19,
+          "find_omp_hook": 0.16,
+          "stop": 0.01
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 10,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 10,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 9103,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}
