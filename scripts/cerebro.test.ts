@@ -1,7 +1,7 @@
 import { afterEach, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { addNode, exportCompact, linkNodes, recordReceipt, retractNode, verify } from "./cerebro";
 
@@ -123,4 +123,10 @@ test("record links a JEV receipt to active nodes and rejects malformed receipts"
   writeFileSync(file, JSON.stringify({ receipt: { v: 1, specId: "s2", specHash: "zz", status: "consenso" } }));
   await expect(recordReceipt(root, file)).rejects.toThrow("recibo invalido");
   expect(await verify(root)).toMatchObject({ seq: 3 });
+});
+
+test("injected instruction files stay within 100 lines", () => {
+  const files = [resolve(import.meta.dir, "../AGENTS.md"), join(homedir(), ".omp", "agent", "AGENTS.md")].filter(existsSync);
+  expect(files.length).toBeGreaterThan(0);
+  for (const file of files) expect(readFileSync(file, "utf8").trimEnd().split(/\r?\n/).length).toBeLessThanOrEqual(100);
 });

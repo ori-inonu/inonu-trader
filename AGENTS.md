@@ -82,6 +82,7 @@ Especificação vigente: `docs/sdd/agente-autonomo/`. Antes de editar caminhos c
 - Retrate fatos obsoletos com um evento tombstone append-only; nunca apague eventos para esquecer.
 - Exporte somente fatos primitivos compactos, com strings de ate 300 caracteres e sem enderecos ou segredos.
 - A verificacao detecta adulteracao ou truncamento frente ao derivado conhecido, sem prometer que nada sera perdido.
+- Comandos: `bun scripts/cerebro.ts export` (consultar), `add-node`, `link`, `retract`, `record <recibo.json>` (atualizar), `verify` (checar). Cada iteracao cria um no ligado ao anterior.
 
 ## Pointers
 

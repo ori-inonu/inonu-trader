@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 9,
-  "headHash": "9a63749d2dc814a45da54393c2b766e62a747932c43266ebd9024ea5425e77ce",
+  "headSeq": 26,
+  "headHash": "a3c4b73596109ab125f129a8b88bb02a09bd2bc901d6e324b4e286b41e42450b",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -22,6 +22,31 @@
       "id": "jev-cerebro-recibo-jev",
       "type": "decision",
       "text": "JEV consenso lider record_node; spec 5e7118e62bdf8c75; recibo sha256 7c101630f56808d7f3b857c485acd5c6b20ddb1e7e2a28afbac01dfbe6e34089. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-limite-100",
+      "type": "iteration",
+      "text": "Teste limita AGENTS.md do repo e global a 100 linhas"
+    },
+    {
+      "id": "regra-dura-injetada",
+      "type": "fact",
+      "text": "Regras de seguranca (live, segredos, schema, historico) continuam no AGENTS.md injetado; contexto e historico vivem no grafo"
+    },
+    {
+      "id": "iter-comandos-agents",
+      "type": "iteration",
+      "text": "AGENTS.md lista os comandos do grafo; teste de 100 linhas; verify exit 0"
+    },
+    {
+      "id": "jev-cerebro-regras-no-grafo",
+      "type": "decision",
+      "text": "JEV consenso lider keep_safety_inline; spec 950f78e67f6ac451; recibo sha256 044a51898b0347cf8814fb62e585f35424062152e8b1dc3c0c45304ce9bfdf79. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-regras-inline",
+      "type": "iteration",
+      "text": "JEV consenso keep_safety_inline: regras duras ficam no AGENTS.md injetado, historico e fatos no grafo"
     }
   ],
   "edges": [
@@ -49,6 +74,66 @@
       "from": "cerebro-grafo-v2",
       "to": "jev-cerebro-recibo-jev",
       "seq": 9
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "iter-limite-100",
+      "seq": 11
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "regra-dura-injetada",
+      "seq": 13
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "iter-comandos-agents",
+      "seq": 15
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-cerebro-regras-no-grafo",
+      "seq": 17
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-cerebro-regras-no-grafo",
+      "seq": 18
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-cerebro-regras-no-grafo",
+      "seq": 19
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "jev-cerebro-regras-no-grafo",
+      "seq": 20
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "jev-cerebro-regras-no-grafo",
+      "seq": 21
+    },
+    {
+      "from": "regra-dura-injetada",
+      "to": "jev-cerebro-regras-no-grafo",
+      "seq": 22
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "jev-cerebro-regras-no-grafo",
+      "seq": 23
+    },
+    {
+      "from": "jev-cerebro-regras-no-grafo",
+      "to": "iter-regras-inline",
+      "seq": 25
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "iter-regras-inline",
+      "seq": 26
     }
   ],
   "retractions": []
