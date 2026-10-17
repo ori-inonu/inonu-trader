@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 820,
-  "headHash": "bc253037c3bb8282ff81eff0859f5805b9131a89bf2798236c79f54cfba5d39c",
+  "headSeq": 985,
+  "headHash": "5364ac5f35ca08616344e6602af9669129742a0b037187202410b89751543323",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1139,11 +1139,6 @@
       "text": "search ordena por palavras achadas, ligacao entre achados (+0.5) e recencia; varias palavras valem OU. Teste cobre ordem. Substitui busca por substring unica."
     },
     {
-      "id": "decisao-quota-diaria",
-      "type": "decision",
-      "text": "Dono autorizou limite acumulado: teto de 200 chamadas pagas ao Jev por dia UTC em data/jev-quota.json (src/consensus/quota.ts), aplicado em scripts/jev-consensus.ts; --max-calls segue por execucao. Rota MCP ainda sem o teto."
-    },
-    {
       "id": "decisao-quota-ledger",
       "type": "decision",
       "text": "Teto diario virou ledger compartilhado no git-common-dir (todos os worktrees), reserva antes de enviar com trava mkdir e devolve o nao gasto (src/consensus/quota.ts). CLI e MCP usam o mesmo caminho. Dados de data/jev-quota.json antigo nao sao lidos."
@@ -1157,6 +1152,366 @@
       "id": "iter-validade-arestas",
       "type": "iteration",
       "text": "Validade temporal das arestas: JEV sem_consenso com 12 chamadas. A lidera (0.87 a 0.96), mas o trilho violates de A ficou em 0.26, acima de 0.2. Nao implementado. Meu diagnostico anterior de distribuicao invalida estava errado: era teto de chamadas."
+    },
+    {
+      "id": "iter-pesquisa-retorno-composto",
+      "type": "iteration",
+      "text": "Pesquisa de retorno composto por ciclo de 1 min (2026-10-17): 35 agentes Haiku 5.5, 170 afirmacoes reverificadas (84 ok, 70 parciais, 6 refutadas, 10 nao verificaveis). Docs em docs/specs/retorno-composto-por-ciclo. Meta tratada como hipotese, sem promessa."
+    },
+    {
+      "id": "rc-meta-composicao",
+      "type": "fact",
+      "text": "Meta 0,5% por ciclo de 1 min composta: x1,349 por hora e x1316 por dia; 1%: x1,82 por hora e x1,67 milhao por dia. 10x em 24 h exige 0,16% liquido por ciclo. Calculo, nao previsao nem promessa."
+    },
+    {
+      "id": "rc-meta-escada",
+      "type": "fact",
+      "text": "Escada de metas por ciclo liquido: 0,02%, 0,05%, 0,16%, 0,25%, 0,5%, 1%. Cada degrau e criterio de saida de sombra com custo medido; a pesquisa nao poe teto. Estado atual abaixo do primeiro degrau."
+    },
+    {
+      "id": "rc-meta-janelas",
+      "type": "fact",
+      "text": "Retorno por minuto = janelas capturadas por minuto x retorno liquido medio por janela. 0,5% por minuto equivale a uma janela de 5% liquido a cada 10 minutos. Medir frequencia e retorno por janela, nao ganhar todo minuto."
+    },
+    {
+      "id": "rc-meta-requisito",
+      "type": "fact",
+      "text": "Movimento bruto minimo g = c + t/k (c custo de ida e volta, k giro). Com c=0,42% e t=0,5%: k=1 exige 0,92%, k=2 exige 0,67%. Girar o capital todo a cada minuto custaria 605% ao dia so de atrito."
+    },
+    {
+      "id": "rc-meta-capacidade",
+      "type": "fact",
+      "text": "Impacto medio em pool de produto constante ~ 2 x tamanho / TVL: 0,1% pede TVL ~2000x o trade (US$ 242 mil para US$ 121). Acima disso a composicao vira linear. Correcao minha sobre a formula do agente."
+    },
+    {
+      "id": "rc-meta-amostra",
+      "type": "fact",
+      "text": "Falsificacao: 32 ciclos independentes (sigma 1%) a 126 (sigma 2%) detectam media de 0,5%; efeito de 0,1% pede 784 a 3136 ciclos. Piso com independencia e normalidade e custos reais descontados."
+    },
+    {
+      "id": "rc-kelly",
+      "type": "fact",
+      "text": "Kelly f*=mu/sigma^2 maior que 1 so diz que, se o edge fosse real e conhecido, o otimo seria alavancado. O risco e o erro de estimacao de mu. Limites de risco e dimensionamento sao do dono: so opcoes."
+    },
+    {
+      "id": "rc-base-voltas",
+      "type": "fact",
+      "text": "Linha de base: 7 voltas completas (STONK 6, HOTBOT 1), 0 positivas, -0,316 USDC sobre ~US$ 78 (-0,41%; ~-0,62% com rede). Amostra minima; patrimonio nao avaliado (valueComplete false)."
+    },
+    {
+      "id": "rc-base-atrito",
+      "type": "fact",
+      "text": "Atrito de ida e volta medido: 0,17% a 0,56% (media 0,42%) em ativo liquido (6 pares de um ativo); 1,82% em intermediario (1 par); pelo menos 2,1% so na entrada em raso, igual para 2, 5 e 10 USDC (sugere custo fixo percentual)."
+    },
+    {
+      "id": "rc-base-movimento",
+      "type": "fact",
+      "text": "Movimento absoluto mediano: 0,38% em 1 min, 0,63% em 5, 1,03% em 15, 2,23% em 60 (16 tokens, amostras sobrepostas, sem direcao). 43% dos movimentos de 1 min passam de 0,5%."
+    },
+    {
+      "id": "rc-base-funil",
+      "type": "fact",
+      "text": "Funil de compra: 717 candidatos, 411 (57%) fechados antes do Jev, 268 pulados pelo modelo, 38 pedidos. Modelo escolhe compra em 14 de 752 linhas de model_choice (1,86%)."
+    },
+    {
+      "id": "rc-base-jev",
+      "type": "fact",
+      "text": "Jev: mediana 0,371 s, p90 0,406 s, p99 1,57 s (120 consultas; arquivo bruto ausente). Teto local 720 consultas por dia (config, nao contrato). Entrada US$ 0,042 por milhao de tokens: US$ 0,44 a 0,94 por dia a 1440 consultas."
+    },
+    {
+      "id": "rc-base-ciclo",
+      "type": "fact",
+      "text": "Ciclo: pior caso antes do modelo 170 s por soma de tetos (grupos sequenciais); 37,5 s num ciclo medido; mediana 2,9 s em 15 ciclos que consultaram; o codigo so grava durationMs do ciclo, sem carimbo por etapa."
+    },
+    {
+      "id": "rc-base-taxa-rede",
+      "type": "fact",
+      "text": "Taxa de rede cotada US$ 0,0005 contra US$ 0,0103 no recibo (~20x), sem decomposicao em base, prioridade e assinaturas. No capital de US$ 121 a rede e 0,017% da ida e volta; o atrito percentual decide."
+    },
+    {
+      "id": "rc-base-capital",
+      "type": "fact",
+      "text": "Capital-base diverge: US$ 100 (estado), 118 (medido 15/10: 118,17 a 118,80), 121 e 126 em outros docs. Conciliar antes de medir retorno."
+    },
+    {
+      "id": "rc-onchainos-planos",
+      "type": "fact",
+      "text": "OnchainOS Market: Free 100 mil Basic e 100 mil Premium por mes sem WebSocket; Starter US$ 99 (2M/600k), Growth 199 (5M/2M), Scale 399 (20M/10M), Pro 599 (50M/20M); x402 US$ 0,0001 e 0,0002 por chamada."
+    },
+    {
+      "id": "rc-onchainos-rps",
+      "type": "fact",
+      "text": "RPS: Market nao publica limite; Trade publica trial 1 RPS (ate 5 com aprovacao, 60 dias) e Start-up 2 a 50, ajuste por volume. Erro de limite 50011 com HTTP 429. Unidade (chave, IP, conta) nao publicada."
+    },
+    {
+      "id": "rc-onchainos-ws",
+      "type": "fact",
+      "text": "WebSocket OnchainOS so em plano pago: 3 requisicoes por segundo por API key e 480 subscribe/unsubscribe/login por conexao por hora; catalogo de canais e latencia nao publicados. Bloqueado por cobranca."
+    },
+    {
+      "id": "rc-cota-basic",
+      "type": "fact",
+      "text": "Cota Basic projeta acima do teto: 109,5 mil por mes (15/10) e ~158 mil (17/10), projecao linear de dia parcial. Premium a 1 min passaria de 100 mil (133 mil). Falta contador por rota."
+    },
+    {
+      "id": "rc-bolsa-universo",
+      "type": "fact",
+      "text": "Bolsa OKX publica sem chave: 1965 instrumentos vivos (1184 spot, 509 swap, 272 futuros), 445 bases spot. Uma conexao WebSocket aceitou todos; tickers 3870 a 4100 msg/s. Cobre so a bolsa, nao tokens Solana fora dela."
+    },
+    {
+      "id": "rc-bolsa-limites",
+      "type": "fact",
+      "text": "WS publico da bolsa: 3 requisicoes de conexao por segundo por IP, 480 inscricoes por hora por conexao, 64 KB por requisicao, queda apos 30 s de silencio. Limite de REST por endpoint nao verificado."
+    },
+    {
+      "id": "rc-solana-fontes",
+      "type": "fact",
+      "text": "Fontes Solana: RPC publico 100 req/10 s por IP; Helius Free 10 req/s e Developer US$ 49; QuickNode Build US$ 49; Triton pre-pago US$ 125; Jupiter Free 60/min; PumpPortal trades pagos em SOL. Leitura de pools por WS e viavel, IDLs oficiais nao lidos."
+    },
+    {
+      "id": "rc-jev-quota",
+      "type": "fact",
+      "text": "TypeSafe nao publica cota diaria; limites por segundo por organizacao no console. 144, 288, 720 e 1440 consultas por dia sao tetos locais. Perfil arrojado fica em 720: a consulta 721 e recusada."
+    },
+    {
+      "id": "rc-raspagem-termos",
+      "type": "fact",
+      "text": "OKX API Agreement 9.4: proibe scripts, bots e raspadores para extrair Market Data, inclusive de endpoints publicos; alto volume exige licenca. Build API Terms sem clausula de scraping. Ausencia nao e permissao. Nao e parecer juridico."
+    },
+    {
+      "id": "rc-raspagem-rec",
+      "type": "fact",
+      "text": "Raspagem do site OKX nao recomendada: risco de termos sobre carteira e conta, fragilidade tecnica, sem evidencia de ser mais rapida que o WS oficial. Aceitar o risco e decisao do dono (bloqueio)."
+    },
+    {
+      "id": "rc-arq-camadas",
+      "type": "fact",
+      "text": "Camadas: ingestao (WS bolsa, RPC de pools, OnchainOS so para decisao e execucao), normalizacao com identidade, estado em memoria, materialidade, Brief por delta, Jev por evento, executor unico. src/pulse/facts.ts ja tem identidade e materialidade."
+    },
+    {
+      "id": "rc-arq-candidatos",
+      "type": "fact",
+      "text": "Candidatos: A hub unico em memoria (primeiro, em sombra), B workers com escritor SQLite, C hibrido com OnchainOS seletiva, D estado de pools Solana por RPC. A e C reaproveitam pulse, ingest e facts; D cobre tokens fora da bolsa."
+    },
+    {
+      "id": "rc-arq-velocidade",
+      "type": "fact",
+      "text": "Degraus de velocidade: S1 carimbo e pre-modelo em paralelo, S2 ciclo por evento com prova de consumo, S3 microjulgamentos (E5), S4 entradas armadas (E4). O modelo nao e o gargalo; relogio, teto e coleta sequencial sao."
+    },
+    {
+      "id": "rc-exec-custos",
+      "type": "fact",
+      "text": "Execucao: base 5000 lamports por assinatura; Jito gorjeta minima 1000 lamports e 1 req/s por IP; teto de 6 trades por ciclo (4 vendas, 2 compras); cliente a 1,1 s por requisicao (~27 tentativas por minuto teorico)."
+    },
+    {
+      "id": "rc-edge-evidencia",
+      "type": "fact",
+      "text": "Nenhuma fonte lida sustenta retorno liquido continuo de 0,5% por minuto para carteira pequena spot Solana. Regimes proximos sao episodicos: lancamentos, deslocamentos entre venues, liquidacoes."
+    },
+    {
+      "id": "rc-edge-cexdex",
+      "type": "fact",
+      "text": "CEX-DEX: evidencia primaria so em Ethereum (AFT 2025, US$ 233,8 milhoes por 19 searchers em 19 meses); nenhum estudo em Solana. Em majors o desvio medio (~0,06% a 0,08%) e menor que o custo executavel."
+    },
+    {
+      "id": "rc-edge-fraude",
+      "type": "fact",
+      "text": "Fraude: 76469 de 100063 tokens rotulados rug pull (arXiv 2603.24625, falso positivo 0,26% em 382); Solidus: 98,7% dos tokens pump.fun com perfil de pump-and-dump. Entrada indiscriminada tem expectativa muito negativa."
+    },
+    {
+      "id": "rc-val-portoes",
+      "type": "fact",
+      "text": "Portoes: G0 auditoria de dados, G1 replay contabil, G2 sombra com custo real, G3 DSR/PBO/walk-forward/holdout, G4 decisao escrita do dono. Nada em G0 a G3 autoriza operacao."
+    },
+    {
+      "id": "rc-val-gargalos",
+      "type": "fact",
+      "text": "Gargalos ate a meta: G1 funil, G2 edge nao comprovado, G3 atrito, G4 precisao direcional (~90% em 5 min), G5 cadencia, G6 dados com ate 30 min, G7 piso de ordem, G8 custos nao precificados, G9 cota, G10 divergencias documentais."
+    },
+    {
+      "id": "rc-bloq-pagos",
+      "type": "fact",
+      "text": "Bloqueio do dono: plano pago de qualquer provedor (OnchainOS Starter US$ 99 por mes e acima, RPC, dados). Starter equivale a ~82% do capital de US$ 121."
+    },
+    {
+      "id": "rc-bloq-termos",
+      "type": "fact",
+      "text": "Bloqueio do dono: aceitar risco de termos para raspar paginas da OKX (API Agreement 9.4)."
+    },
+    {
+      "id": "rc-bloq-cotas",
+      "type": "fact",
+      "text": "Bloqueio do dono: ler a cota real da organizacao no console da TypeSafe e pedir o RPS vigente a OKX; capacidade de consultas acima de 720 por dia."
+    },
+    {
+      "id": "rc-bloq-ordens",
+      "type": "fact",
+      "text": "Bloqueio do dono: ordens reais de calibracao de custo; estender fills.jsonl ou outro journal (migracao de schema); limites de risco e dimensionamento; liberar live."
+    },
+    {
+      "id": "rc-correcoes-docs",
+      "type": "fact",
+      "text": "Correcoes pendentes em docs existentes: onchainos-coverage.md linhas 33 e 37 (402 e conexoes por segundo), api-budget.ts PAID_PLANS sem Scale e Pro, AGENTS.md cita scripts/brain.ts inexistente (o comando e cerebro.ts)."
+    },
+    {
+      "id": "decisao-quota-removida",
+      "type": "decision",
+      "text": "Dono removeu em 2026-10-17 o teto diario de 200 chamadas pagas ao Jev: JEV_DAILY_CALLS passou a Infinity em src/consensus/quota.ts; o ledger segue contando o uso; --max-calls por execucao continua; MCP sem max_calls nao tem teto. Servidor MCP em execucao precisa reconectar."
+    },
+    {
+      "id": "jev-rc-primeira-etapa",
+      "type": "decision",
+      "text": "JEV consenso lider medir_primeiro; spec 8735f4ca24ce7f66; recibo sha256 3bb984b7d7da4acfdc078006665a18597b9c665b7446ad1d544ce3bd5d983de6. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-wayfinder-lucro-por-ciclo",
+      "type": "iteration",
+      "text": "Ciclo 2 Wayfinder (2026-10-17): 59 agentes Haiku, 8 cartografos, 20 tickets resolvidos e verificados (108 ok, 57 parciais, 8 refutadas, 3 nao verificaveis), 12 decisoes consolidadas levadas ao Jev sem teto: 9 consensos e 3 sem consenso. Detalhe em docs/specs/retorno-composto-por-ciclo/wayfinder.md."
+    },
+    {
+      "id": "jev-rc-dec-01-qual-base-de-capital-e-q",
+      "type": "decision",
+      "text": "JEV consenso lider medir-sem-base; spec 0382b738893c6736; recibo sha256 05e88eea2ca944fe7e692457b91e0a57e49dfbcd6b48318a19d6476d9b25ff51. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-02-qual-regra-de-promocao-e",
+      "type": "decision",
+      "text": "JEV consenso lider calibrar-antes; spec 44027effd34a70f6; recibo sha256 e709dd0d29bf4d4e2f8eb625e3e38eedf4b922019284cd70e5de568fde6dacb9. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-03-qual-fonte-e-qual-horizo",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec d675312826a335ce; recibo sha256 463fa98cea68d839abc97270b356fb51a374b513ab826f04e7cc171b6383e4f5. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-04-como-medir-a-causa-dos-4",
+      "type": "decision",
+      "text": "JEV consenso lider contador-em-memoria; spec a1624d241d245c1f; recibo sha256 3989fd77054265373e90ec2522c1a1b5fc8505cece82f39635c2b0367fc23f63. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-05-qual-universo-e-qual-ide",
+      "type": "decision",
+      "text": "JEV consenso lider adiar-identidade; spec 1a7f2e5382234f7d; recibo sha256 8c1531df44da27049b5e27237b1547950e85709c7d9fab70e5dac60e9d50a55a. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-06-qual-regime-e-qual-limia",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec 391099aa5f5eb8c9; recibo sha256 f02d80b2c9a5bd25caf80048511a1c7a470a3c942ff3edfa63142abd307c3061. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-07-como-medir-o-atrito-e-o",
+      "type": "decision",
+      "text": "JEV consenso lider medir-sem-mudar-codigo; spec 0cf4bc6ea575210a; recibo sha256 771b6238a0ddcaf9043641a3f55afc3167fe4adf6dc835fcc495808a8f7dc381. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-08-como-carimbar-as-etapas",
+      "type": "decision",
+      "text": "JEV consenso lider campo-relatorio-memoria; spec 46b5c39c187d1557; recibo sha256 d2ef9ae5e28bad98e6aa82c9194d35dd65fecd2673c006f602720ec0693d1ef7. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-09-na-sombra-qual-cadencia",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec 7d0957b54479c70a; recibo sha256 b67d32a1e2ba0985a44f170d4e9673922b98aae0e21efff7df756bd9bcdfbd9b. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-10-como-ler-uma-ordem-sem-r",
+      "type": "decision",
+      "text": "JEV consenso lider adiar-so-medir; spec 10e6a2b0ea26c167; recibo sha256 90de5be21b72ed9a0c24e9cf99a3b8b9e9ed071804a6a5636524b8ce2a6b823a. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-11-como-o-cliente-onchainos",
+      "type": "decision",
+      "text": "JEV consenso lider medir-codigos-sombra; spec b8bdc8ae900f190b; recibo sha256 db1e9b93f5df98d6b78dff865fab722307f3c593b0389923a0c0c25336d21529. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-rc-dec-12-quais-limiares-de-ping-s",
+      "type": "decision",
+      "text": "JEV consenso lider teste-2h-canal-quieto; spec f5f37ebfc6c486d0; recibo sha256 2d2ac6af199a704dcaa12538b66dc920543cd15c756771f0a37130a903cf4b23. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "rc2-d01-capital",
+      "type": "fact",
+      "text": "D1 base de capital e retorno: Jev consenso medir-sem-base (media 0,54): agregados por perna, sem percentual composto e sem base fixa ate conciliar 100, 118, 121, 126 e 155. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "rc2-d02-promocao",
+      "type": "fact",
+      "text": "D2 regra de promocao E1: Jev consenso calibrar-antes (media 0,86): log de sombra de 48 h mede sigma, rho e cadencia antes de fixar H e N; regra gravada em commit antes da coleta final."
+    },
+    {
+      "id": "rc2-d03-markout",
+      "type": "fact",
+      "text": "D3 fonte do markout: Jev SEM consenso (placar-existente 0,41; adiar com risco 0,47). Adotado por regra o mais reversivel: placar existente de 15 min, 1 h, 4 h e 24 h, sem coleta nova. Registrado sem-jev."
+    },
+    {
+      "id": "rc2-d04-fechados",
+      "type": "fact",
+      "text": "D4 causa dos 411 candidatos fechados antes do Jev: Jev consenso contador-em-memoria (media 0,69): contador por causa em janela de auditoria em sombra, sem gravar no journal."
+    },
+    {
+      "id": "rc2-d05-identidade",
+      "type": "fact",
+      "text": "D5 universo e identidade por mint: Jev consenso adiar-identidade (media 0,83): medir so dado da bolsa, sem cruzar mint nesta fase; a contagem de 54 simbolos nao foi reproduzida."
+    },
+    {
+      "id": "rc2-d06-regime",
+      "type": "fact",
+      "text": "D6 regime e limiar de janela: Jev SEM consenso (nenhuma opcao serve, noneFits 0,49). Adotado por regra medir-sem-limiar: rotular janelas de 1, 5 e 15 min com markout, sem gate. Registrado sem-jev."
+    },
+    {
+      "id": "rc2-d07-atrito",
+      "type": "fact",
+      "text": "D7 atrito e custo por tamanho: Jev consenso medir-sem-mudar-codigo (media 0,59): distribuicao da taxa de rede nas ordens com taxa ja gravada, separando compra e venda, sem piso nem gate."
+    },
+    {
+      "id": "rc2-d08-carimbo",
+      "type": "fact",
+      "text": "D8 carimbo de etapas do ciclo: Jev consenso campo-relatorio-memoria (media 0,54, acordo 0,67): campo opcional de etapas no CycleReport em memoria, sem tocar o journal. Integracao em cycle.ts e wire.ts so apos o merge."
+    },
+    {
+      "id": "rc2-d09-cadencia",
+      "type": "fact",
+      "text": "D9 cadencia do Jev na sombra: Jev SEM consenso (empate 0,48 contra 0,49). Adotado por regra o status quo manter-relogio-2min, sem nenhuma mudanca. Registrado sem-jev."
+    },
+    {
+      "id": "rc2-d10-sem-recibo",
+      "type": "fact",
+      "text": "D10 ordem sem recibo: Jev consenso adiar-so-medir (media 0,79): contar por semana ordens enviando ou incertas sem recibo, com idade mediana e maxima, sem mudar tela nem fluxo."
+    },
+    {
+      "id": "rc2-d11-codigos",
+      "type": "fact",
+      "text": "D11 codigos 402 e 50011 do cliente OnchainOS: Jev consenso medir-codigos-sombra (media 0,89): relatorio diario de status dos eventos ja emitidos; apiCode so com aprovacao por ser mudanca de codigo."
+    },
+    {
+      "id": "rc2-d12-ws-ping",
+      "type": "fact",
+      "text": "D12 ping e silencio do WS da bolsa: Jev consenso teste-2h-canal-quieto (media 0,72): medir se o pong renova o prazo antes de qualquer constante nova; a migracao de porta e trabalho separado."
+    },
+    {
+      "id": "rc2-porta-8443",
+      "type": "fact",
+      "text": "OKX deixa de aceitar WebSocket na porta 8443 em 2026-10-31 (changelog oficial de 2026-10-16); a 443 ja funciona (testado). Feed vivo migrado no codigo (okx-ws.ts, feed.ts). public-market-capture usa recibos com a URL exata e fica para seu mantenedor."
+    },
+    {
+      "id": "rc2-fatias",
+      "type": "fact",
+      "text": "Fatias em sombra: S1 carimbo de etapas e S3 custo em lote aprovadas com ressalvas; S2 contador de rotas reprovada (planos Growth, Scale e Pro nulos tratados como sem teto, porStatus vulneravel, NaN). Escritas sobre base antiga b587759, sem os arquivos vizinhos."
+    },
+    {
+      "id": "rc2-prompts-ausente",
+      "type": "fact",
+      "text": "src/generated/prompts nao existe neste checkout: feed.test.ts e outros nao carregam; testes de desktop falham por marcadores de merge. Validar sempre contra a base em worktree limpo da main, nunca no checkout em merge."
+    },
+    {
+      "id": "rc2-live-recusado",
+      "type": "fact",
+      "text": "Pedido de modo real, producao e operacoes reais NAO atendido: executar trades e mudar Market.init sao vedados ao agente e pela regra do projeto; so o dono autoriza, pela qualificacao. Bloqueio do dono. A main local rastreia upstream de terceiros: nunca push."
+    },
+    {
+      "id": "rc2-branches",
+      "type": "fact",
+      "text": "Inventario de branches e worktrees: so autoresearch (merge em andamento, 13 conflitos) e goal1 (10 commits, sessao ativa, 1712 alteracoes) tem trabalho exclusivo; as demais ja estao na main. Revisao no workflow revisao-branches-worktrees; nada removido nem movido."
     }
   ],
   "edges": [
@@ -3496,16 +3851,6 @@
       "seq": 812
     },
     {
-      "from": "iter-search-ponderada",
-      "to": "decisao-quota-diaria",
-      "seq": 814
-    },
-    {
-      "from": "decisao-quota-diaria",
-      "to": "decisao-quota-ledger",
-      "seq": 816
-    },
-    {
       "from": "decisao-quota-ledger",
       "to": "jev-cerebro-validade-arestas",
       "seq": 818
@@ -3514,6 +3859,421 @@
       "from": "decisao-quota-ledger",
       "to": "iter-validade-arestas",
       "seq": 820
+    },
+    {
+      "from": "iter-validade-arestas",
+      "to": "iter-pesquisa-retorno-composto",
+      "seq": 822
+    },
+    {
+      "from": "fato-estado-produto",
+      "to": "iter-pesquisa-retorno-composto",
+      "seq": 823
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-meta-composicao",
+      "seq": 825
+    },
+    {
+      "from": "rc-meta-composicao",
+      "to": "rc-meta-escada",
+      "seq": 827
+    },
+    {
+      "from": "rc-meta-composicao",
+      "to": "rc-meta-janelas",
+      "seq": 829
+    },
+    {
+      "from": "rc-meta-janelas",
+      "to": "rc-meta-requisito",
+      "seq": 831
+    },
+    {
+      "from": "rc-meta-composicao",
+      "to": "rc-meta-capacidade",
+      "seq": 833
+    },
+    {
+      "from": "rc-meta-janelas",
+      "to": "rc-meta-amostra",
+      "seq": 835
+    },
+    {
+      "from": "rc-meta-amostra",
+      "to": "rc-kelly",
+      "seq": 837
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-base-voltas",
+      "seq": 839
+    },
+    {
+      "from": "rc-base-voltas",
+      "to": "rc-base-atrito",
+      "seq": 841
+    },
+    {
+      "from": "rc-base-atrito",
+      "to": "rc-base-movimento",
+      "seq": 843
+    },
+    {
+      "from": "rc-base-voltas",
+      "to": "rc-base-funil",
+      "seq": 845
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-base-jev",
+      "seq": 847
+    },
+    {
+      "from": "rc-base-jev",
+      "to": "rc-base-ciclo",
+      "seq": 849
+    },
+    {
+      "from": "rc-base-atrito",
+      "to": "rc-base-taxa-rede",
+      "seq": 851
+    },
+    {
+      "from": "rc-base-voltas",
+      "to": "rc-base-capital",
+      "seq": 853
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-onchainos-planos",
+      "seq": 855
+    },
+    {
+      "from": "rc-onchainos-planos",
+      "to": "rc-onchainos-rps",
+      "seq": 857
+    },
+    {
+      "from": "rc-onchainos-planos",
+      "to": "rc-onchainos-ws",
+      "seq": 859
+    },
+    {
+      "from": "rc-onchainos-planos",
+      "to": "rc-cota-basic",
+      "seq": 861
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-bolsa-universo",
+      "seq": 863
+    },
+    {
+      "from": "rc-bolsa-universo",
+      "to": "rc-bolsa-limites",
+      "seq": 865
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-solana-fontes",
+      "seq": 867
+    },
+    {
+      "from": "rc-base-jev",
+      "to": "rc-jev-quota",
+      "seq": 869
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-raspagem-termos",
+      "seq": 871
+    },
+    {
+      "from": "rc-raspagem-termos",
+      "to": "rc-raspagem-rec",
+      "seq": 873
+    },
+    {
+      "from": "rc-bolsa-universo",
+      "to": "rc-raspagem-rec",
+      "seq": 874
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-arq-camadas",
+      "seq": 876
+    },
+    {
+      "from": "rc-arq-camadas",
+      "to": "rc-arq-candidatos",
+      "seq": 878
+    },
+    {
+      "from": "rc-arq-camadas",
+      "to": "rc-arq-velocidade",
+      "seq": 880
+    },
+    {
+      "from": "rc-base-ciclo",
+      "to": "rc-arq-velocidade",
+      "seq": 881
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-exec-custos",
+      "seq": 883
+    },
+    {
+      "from": "rc-meta-janelas",
+      "to": "rc-edge-evidencia",
+      "seq": 885
+    },
+    {
+      "from": "rc-edge-evidencia",
+      "to": "rc-edge-cexdex",
+      "seq": 887
+    },
+    {
+      "from": "rc-edge-evidencia",
+      "to": "rc-edge-fraude",
+      "seq": 889
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-val-portoes",
+      "seq": 891
+    },
+    {
+      "from": "rc-base-funil",
+      "to": "rc-val-gargalos",
+      "seq": 893
+    },
+    {
+      "from": "rc-base-atrito",
+      "to": "rc-val-gargalos",
+      "seq": 894
+    },
+    {
+      "from": "rc-val-portoes",
+      "to": "rc-val-gargalos",
+      "seq": 895
+    },
+    {
+      "from": "rc-onchainos-ws",
+      "to": "rc-bloq-pagos",
+      "seq": 900
+    },
+    {
+      "from": "rc-raspagem-rec",
+      "to": "rc-bloq-termos",
+      "seq": 902
+    },
+    {
+      "from": "rc-jev-quota",
+      "to": "rc-bloq-cotas",
+      "seq": 904
+    },
+    {
+      "from": "rc-onchainos-rps",
+      "to": "rc-bloq-cotas",
+      "seq": 905
+    },
+    {
+      "from": "rc-base-taxa-rede",
+      "to": "rc-bloq-ordens",
+      "seq": 907
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "rc-correcoes-docs",
+      "seq": 912
+    },
+    {
+      "from": "decisao-quota-ledger",
+      "to": "decisao-quota-removida",
+      "seq": 914
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "decisao-quota-removida",
+      "seq": 915
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "jev-rc-primeira-etapa",
+      "seq": 920
+    },
+    {
+      "from": "iter-pesquisa-retorno-composto",
+      "to": "iter-wayfinder-lucro-por-ciclo",
+      "seq": 923
+    },
+    {
+      "from": "jev-rc-primeira-etapa",
+      "to": "iter-wayfinder-lucro-por-ciclo",
+      "seq": 924
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-01-qual-base-de-capital-e-q",
+      "seq": 926
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-02-qual-regra-de-promocao-e",
+      "seq": 928
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-03-qual-fonte-e-qual-horizo",
+      "seq": 930
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-04-como-medir-a-causa-dos-4",
+      "seq": 932
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-05-qual-universo-e-qual-ide",
+      "seq": 934
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-06-qual-regime-e-qual-limia",
+      "seq": 936
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-07-como-medir-o-atrito-e-o",
+      "seq": 938
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-08-como-carimbar-as-etapas",
+      "seq": 940
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-09-na-sombra-qual-cadencia",
+      "seq": 942
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-10-como-ler-uma-ordem-sem-r",
+      "seq": 944
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-11-como-o-cliente-onchainos",
+      "seq": 946
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "jev-rc-dec-12-quais-limiares-de-ping-s",
+      "seq": 948
+    },
+    {
+      "from": "jev-rc-dec-01-qual-base-de-capital-e-q",
+      "to": "rc2-d01-capital",
+      "seq": 950
+    },
+    {
+      "from": "jev-rc-dec-02-qual-regra-de-promocao-e",
+      "to": "rc2-d02-promocao",
+      "seq": 952
+    },
+    {
+      "from": "jev-rc-dec-03-qual-fonte-e-qual-horizo",
+      "to": "rc2-d03-markout",
+      "seq": 954
+    },
+    {
+      "from": "jev-rc-dec-04-como-medir-a-causa-dos-4",
+      "to": "rc2-d04-fechados",
+      "seq": 956
+    },
+    {
+      "from": "jev-rc-dec-05-qual-universo-e-qual-ide",
+      "to": "rc2-d05-identidade",
+      "seq": 958
+    },
+    {
+      "from": "jev-rc-dec-06-qual-regime-e-qual-limia",
+      "to": "rc2-d06-regime",
+      "seq": 960
+    },
+    {
+      "from": "jev-rc-dec-07-como-medir-o-atrito-e-o",
+      "to": "rc2-d07-atrito",
+      "seq": 962
+    },
+    {
+      "from": "jev-rc-dec-08-como-carimbar-as-etapas",
+      "to": "rc2-d08-carimbo",
+      "seq": 964
+    },
+    {
+      "from": "jev-rc-dec-09-na-sombra-qual-cadencia",
+      "to": "rc2-d09-cadencia",
+      "seq": 966
+    },
+    {
+      "from": "jev-rc-dec-10-como-ler-uma-ordem-sem-r",
+      "to": "rc2-d10-sem-recibo",
+      "seq": 968
+    },
+    {
+      "from": "jev-rc-dec-11-como-o-cliente-onchainos",
+      "to": "rc2-d11-codigos",
+      "seq": 970
+    },
+    {
+      "from": "jev-rc-dec-12-quais-limiares-de-ping-s",
+      "to": "rc2-d12-ws-ping",
+      "seq": 972
+    },
+    {
+      "from": "rc-bolsa-limites",
+      "to": "rc2-porta-8443",
+      "seq": 974
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "rc2-porta-8443",
+      "seq": 975
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "rc2-fatias",
+      "seq": 977
+    },
+    {
+      "from": "rc-arq-velocidade",
+      "to": "rc2-fatias",
+      "seq": 978
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "rc2-prompts-ausente",
+      "seq": 980
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "rc2-live-recusado",
+      "seq": 982
+    },
+    {
+      "from": "rc-bloq-ordens",
+      "to": "rc2-live-recusado",
+      "seq": 983
+    },
+    {
+      "from": "iter-wayfinder-lucro-por-ciclo",
+      "to": "rc2-branches",
+      "seq": 985
     }
   ],
   "retractions": [
@@ -3596,6 +4356,21 @@
       "id": "iter-hook-export",
       "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
       "seq": 691
+    },
+    {
+      "id": "decisao-quota-diaria",
+      "reason": "substituido por decisao-quota-removida",
+      "seq": 916
+    },
+    {
+      "id": "rc-restr-teto-jev",
+      "reason": "substituido por decisao-quota-removida",
+      "seq": 917
+    },
+    {
+      "id": "rc-decisao-sem-jev",
+      "reason": "substituido por jev-rc-primeira-etapa",
+      "seq": 921
     }
   ]
 }

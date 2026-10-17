@@ -1,0 +1,221 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-06-qual-regime-e-qual-limia",
+    "specHash": "391099aa5f5eb8c9ef31a1564a2940544df8f69d3acf6a4adc28ab9e20a17065",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "sem_consenso",
+    "leader": null,
+    "implement": false,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "medir-sem-limiar",
+          "limiar-2x-atrito",
+          "momentum-5-15-sombra",
+          "adiar-regime"
+        ],
+        "framings": [
+          {
+            "order": [
+              "medir-sem-limiar",
+              "limiar-2x-atrito",
+              "momentum-5-15-sombra",
+              "adiar-regime"
+            ],
+            "probs": {
+              "medir-sem-limiar": 0.26,
+              "limiar-2x-atrito": 0.08,
+              "momentum-5-15-sombra": 0.06,
+              "adiar-regime": 0.37,
+              "none_fits": 0.23
+            }
+          },
+          {
+            "order": [
+              "limiar-2x-atrito",
+              "momentum-5-15-sombra",
+              "adiar-regime",
+              "medir-sem-limiar"
+            ],
+            "probs": {
+              "limiar-2x-atrito": 0.13,
+              "momentum-5-15-sombra": 0.09,
+              "adiar-regime": 0.19,
+              "medir-sem-limiar": 0.34,
+              "none_fits": 0.25
+            }
+          },
+          {
+            "order": [
+              "momentum-5-15-sombra",
+              "adiar-regime",
+              "medir-sem-limiar",
+              "limiar-2x-atrito"
+            ],
+            "probs": {
+              "momentum-5-15-sombra": 0.12,
+              "adiar-regime": 0.31,
+              "medir-sem-limiar": 0.25,
+              "limiar-2x-atrito": 0.04,
+              "none_fits": 0.28
+            }
+          }
+        ],
+        "means": {
+          "medir-sem-limiar": 0.2833,
+          "limiar-2x-atrito": 0.0833,
+          "momentum-5-15-sombra": 0.09,
+          "adiar-regime": 0.29
+        },
+        "noneFits": 0.2533,
+        "agreement": 0.6667,
+        "margin": 0.0067,
+        "leader": "adiar-regime",
+        "railProb": {
+          "medir-sem-limiar": 0.09,
+          "limiar-2x-atrito": 0.31,
+          "momentum-5-15-sombra": 0.04,
+          "adiar-regime": 0.16
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 2,
+        "options": [
+          "medir-sem-limiar",
+          "adiar-regime"
+        ],
+        "framings": [
+          {
+            "order": [
+              "medir-sem-limiar",
+              "adiar-regime"
+            ],
+            "probs": {
+              "medir-sem-limiar": 0.27,
+              "adiar-regime": 0.19,
+              "none_fits": 0.54
+            }
+          },
+          {
+            "order": [
+              "adiar-regime",
+              "medir-sem-limiar"
+            ],
+            "probs": {
+              "adiar-regime": 0.36,
+              "medir-sem-limiar": 0.2,
+              "none_fits": 0.44
+            }
+          },
+          {
+            "order": [
+              "medir-sem-limiar",
+              "adiar-regime"
+            ],
+            "probs": {
+              "medir-sem-limiar": 0.23,
+              "adiar-regime": 0.2,
+              "none_fits": 0.56
+            }
+          }
+        ],
+        "means": {
+          "medir-sem-limiar": 0.2333,
+          "adiar-regime": 0.25
+        },
+        "noneFits": 0.5133,
+        "agreement": 0.3333,
+        "margin": 0.0167,
+        "leader": "adiar-regime",
+        "railProb": {
+          "medir-sem-limiar": 0.09,
+          "adiar-regime": 0.16
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 3,
+        "options": [
+          "medir-sem-limiar",
+          "adiar-regime"
+        ],
+        "framings": [
+          {
+            "order": [
+              "medir-sem-limiar",
+              "adiar-regime"
+            ],
+            "probs": {
+              "medir-sem-limiar": 0.27,
+              "adiar-regime": 0.18,
+              "none_fits": 0.55
+            }
+          },
+          {
+            "order": [
+              "adiar-regime",
+              "medir-sem-limiar"
+            ],
+            "probs": {
+              "adiar-regime": 0.41,
+              "medir-sem-limiar": 0.22,
+              "none_fits": 0.37
+            }
+          },
+          {
+            "order": [
+              "medir-sem-limiar",
+              "adiar-regime"
+            ],
+            "probs": {
+              "medir-sem-limiar": 0.23,
+              "adiar-regime": 0.23,
+              "none_fits": 0.54
+            }
+          }
+        ],
+        "means": {
+          "medir-sem-limiar": 0.24,
+          "adiar-regime": 0.2733
+        },
+        "noneFits": 0.4867,
+        "agreement": 0.6667,
+        "margin": 0.0333,
+        "leader": "adiar-regime",
+        "railProb": {
+          "medir-sem-limiar": 0.09,
+          "adiar-regime": 0.16
+        },
+        "consensusHere": false
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 13,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 13,
+    "failed": 0,
+    "inputTokens": 17613,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

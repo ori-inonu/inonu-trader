@@ -1,0 +1,212 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-09-na-sombra-qual-cadencia",
+    "specHash": "7d0957b54479c70a966b066a9b6f2753291661712a5828350218e5ea8a6fc12e",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "sem_consenso",
+    "leader": null,
+    "implement": false,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "sem-consulta-sombra",
+          "manter-relogio-2min",
+          "evento-com-prova-consumo"
+        ],
+        "framings": [
+          {
+            "order": [
+              "sem-consulta-sombra",
+              "manter-relogio-2min",
+              "evento-com-prova-consumo"
+            ],
+            "probs": {
+              "sem-consulta-sombra": 0.43,
+              "manter-relogio-2min": 0.48,
+              "evento-com-prova-consumo": 0.07,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "manter-relogio-2min",
+              "evento-com-prova-consumo",
+              "sem-consulta-sombra"
+            ],
+            "probs": {
+              "manter-relogio-2min": 0.54,
+              "evento-com-prova-consumo": 0.04,
+              "sem-consulta-sombra": 0.41,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "evento-com-prova-consumo",
+              "sem-consulta-sombra",
+              "manter-relogio-2min"
+            ],
+            "probs": {
+              "evento-com-prova-consumo": 0.04,
+              "sem-consulta-sombra": 0.58,
+              "manter-relogio-2min": 0.36,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "sem-consulta-sombra": 0.4733,
+          "manter-relogio-2min": 0.46,
+          "evento-com-prova-consumo": 0.05
+        },
+        "noneFits": 0.0167,
+        "agreement": 0.3333,
+        "margin": 0.0133,
+        "leader": "sem-consulta-sombra",
+        "railProb": {
+          "sem-consulta-sombra": 0.01,
+          "manter-relogio-2min": 0,
+          "evento-com-prova-consumo": 0.34
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 2,
+        "options": [
+          "sem-consulta-sombra",
+          "manter-relogio-2min"
+        ],
+        "framings": [
+          {
+            "order": [
+              "sem-consulta-sombra",
+              "manter-relogio-2min"
+            ],
+            "probs": {
+              "sem-consulta-sombra": 0.46,
+              "manter-relogio-2min": 0.51,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "manter-relogio-2min",
+              "sem-consulta-sombra"
+            ],
+            "probs": {
+              "manter-relogio-2min": 0.38,
+              "sem-consulta-sombra": 0.6,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "sem-consulta-sombra",
+              "manter-relogio-2min"
+            ],
+            "probs": {
+              "sem-consulta-sombra": 0.43,
+              "manter-relogio-2min": 0.54,
+              "none_fits": 0.03
+            }
+          }
+        ],
+        "means": {
+          "sem-consulta-sombra": 0.4967,
+          "manter-relogio-2min": 0.4767
+        },
+        "noneFits": 0.0267,
+        "agreement": 0.3333,
+        "margin": 0.02,
+        "leader": "sem-consulta-sombra",
+        "railProb": {
+          "sem-consulta-sombra": 0.01,
+          "manter-relogio-2min": 0
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 3,
+        "options": [
+          "sem-consulta-sombra",
+          "manter-relogio-2min"
+        ],
+        "framings": [
+          {
+            "order": [
+              "sem-consulta-sombra",
+              "manter-relogio-2min"
+            ],
+            "probs": {
+              "sem-consulta-sombra": 0.41,
+              "manter-relogio-2min": 0.55,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "manter-relogio-2min",
+              "sem-consulta-sombra"
+            ],
+            "probs": {
+              "manter-relogio-2min": 0.4,
+              "sem-consulta-sombra": 0.58,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "sem-consulta-sombra",
+              "manter-relogio-2min"
+            ],
+            "probs": {
+              "sem-consulta-sombra": 0.45,
+              "manter-relogio-2min": 0.52,
+              "none_fits": 0.03
+            }
+          }
+        ],
+        "means": {
+          "sem-consulta-sombra": 0.48,
+          "manter-relogio-2min": 0.49
+        },
+        "noneFits": 0.03,
+        "agreement": 0.6667,
+        "margin": 0.01,
+        "leader": "manter-relogio-2min",
+        "railProb": {
+          "sem-consulta-sombra": 0.01,
+          "manter-relogio-2min": 0
+        },
+        "consensusHere": false
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 12,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 12,
+    "failed": 0,
+    "inputTokens": 14467,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

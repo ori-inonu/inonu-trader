@@ -1,0 +1,166 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-01-qual-base-de-capital-e-q",
+    "specHash": "0382b738893c673675943cf474688a456113377c63cb1f0a86e98531cd446b6d",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "medir-sem-base",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "medir-sem-base",
+          "base-118-rotulada",
+          "duas-series-arquivo-novo"
+        ],
+        "framings": [
+          {
+            "order": [
+              "medir-sem-base",
+              "base-118-rotulada",
+              "duas-series-arquivo-novo"
+            ],
+            "probs": {
+              "medir-sem-base": 0.65,
+              "base-118-rotulada": 0.15,
+              "duas-series-arquivo-novo": 0.19,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "base-118-rotulada",
+              "duas-series-arquivo-novo",
+              "medir-sem-base"
+            ],
+            "probs": {
+              "base-118-rotulada": 0.41,
+              "duas-series-arquivo-novo": 0.21,
+              "medir-sem-base": 0.36,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "duas-series-arquivo-novo",
+              "medir-sem-base",
+              "base-118-rotulada"
+            ],
+            "probs": {
+              "duas-series-arquivo-novo": 0.23,
+              "medir-sem-base": 0.54,
+              "base-118-rotulada": 0.22,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "medir-sem-base": 0.5167,
+          "base-118-rotulada": 0.26,
+          "duas-series-arquivo-novo": 0.21
+        },
+        "noneFits": 0.0133,
+        "agreement": 0.6667,
+        "margin": 0.2567,
+        "leader": "medir-sem-base",
+        "railProb": {
+          "medir-sem-base": 0.06,
+          "base-118-rotulada": 0.16,
+          "duas-series-arquivo-novo": 0.12
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "medir-sem-base",
+          "base-118-rotulada",
+          "duas-series-arquivo-novo"
+        ],
+        "framings": [
+          {
+            "order": [
+              "medir-sem-base",
+              "base-118-rotulada",
+              "duas-series-arquivo-novo"
+            ],
+            "probs": {
+              "medir-sem-base": 0.64,
+              "base-118-rotulada": 0.13,
+              "duas-series-arquivo-novo": 0.22,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "base-118-rotulada",
+              "duas-series-arquivo-novo",
+              "medir-sem-base"
+            ],
+            "probs": {
+              "base-118-rotulada": 0.36,
+              "duas-series-arquivo-novo": 0.23,
+              "medir-sem-base": 0.4,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "duas-series-arquivo-novo",
+              "medir-sem-base",
+              "base-118-rotulada"
+            ],
+            "probs": {
+              "duas-series-arquivo-novo": 0.25,
+              "medir-sem-base": 0.57,
+              "base-118-rotulada": 0.17,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "medir-sem-base": 0.5367,
+          "base-118-rotulada": 0.22,
+          "duas-series-arquivo-novo": 0.2333
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.3034,
+        "leader": "medir-sem-base",
+        "railProb": {
+          "medir-sem-base": 0.06,
+          "base-118-rotulada": 0.16,
+          "duas-series-arquivo-novo": 0.12
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 9,
+    "failed": 0,
+    "inputTokens": 12555,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}
