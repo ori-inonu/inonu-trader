@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 754,
-  "headHash": "b923f11fd13777b5cf77f902d0037d1a93b12f15f1623a90429f1c269fa7f06c",
+  "headSeq": 756,
+  "headHash": "b63422d7616b4ca85f5ae61b634028ded23a7ba84b8556442a24a93195d8956a",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1007,6 +1007,11 @@
       "id": "iter-skills-gates",
       "type": "iteration",
       "text": "Correcao apontada em revisao: a migracao das skills tinha perdido o gate de aprovacao de spec e plan e a regra de escalar so ao dono em temas de risco; restaurados no no skill-sdd-feature-gates, SKILL.md exportam profundidade 1"
+    },
+    {
+      "id": "iter-skills-equivalencia",
+      "type": "iteration",
+      "text": "Auditoria linha a linha dos 3 SKILL.md originais (arvore f8f68f7) contra os nos skill-*: sdd-feature tinha 2 perdas ja restauradas; ship-pr e review-diff sem perda de regra, so passo Envie a branch resumido em gh pr create"
     }
   ],
   "edges": [
@@ -3184,6 +3189,11 @@
       "from": "iter-skills-nos",
       "to": "iter-skills-gates",
       "seq": 754
+    },
+    {
+      "from": "iter-skills-gates",
+      "to": "iter-skills-equivalencia",
+      "seq": 756
     }
   ],
   "retractions": [
