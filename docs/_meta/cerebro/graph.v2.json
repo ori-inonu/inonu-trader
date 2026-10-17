@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 761,
-  "headHash": "14f024229ea5ccfd7600ca0788f1b5a7eb2ceb2ed7bcacba71800facf9467221",
+  "headSeq": 766,
+  "headHash": "f2065cd8bebfa087ca4eeff79959a420fd7ad21c83b4514e819f731febf88977",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1022,6 +1022,16 @@
       "id": "iter-sem-consenso-index",
       "type": "iteration",
       "text": "Consenso JEV passo 15 sem_consenso (migrate_index_only lidera): index.md e conventions.md ficam como estao; nada migrado"
+    },
+    {
+      "id": "jev-cerebro-passo-16",
+      "type": "decision",
+      "text": "JEV consenso lider keep_index; spec f38e6763455974f0; recibo sha256 dde7c2a4a342ae3d149028b1e7555a10d65976fab7663c7a365b04a0483fe903. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-manter-index",
+      "type": "decision",
+      "text": "Consenso JEV keep_index (passo 16, binario apos sem_consenso do 15): docs/index.md e conventions.md ficam como arquivos; nada migrado"
     }
   ],
   "edges": [
@@ -3219,6 +3229,21 @@
       "from": "iter-skills-equivalencia",
       "to": "iter-sem-consenso-index",
       "seq": 761
+    },
+    {
+      "from": "iter-sem-consenso-index",
+      "to": "jev-cerebro-passo-16",
+      "seq": 763
+    },
+    {
+      "from": "jev-cerebro-passo-16",
+      "to": "iter-manter-index",
+      "seq": 765
+    },
+    {
+      "from": "iter-sem-consenso-index",
+      "to": "iter-manter-index",
+      "seq": 766
     }
   ],
   "retractions": [
