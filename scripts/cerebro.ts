@@ -215,6 +215,20 @@ export async function retractNode(root: string, id: string, reason: string): Pro
   specFor([{ id: "retraction", type: "event", text: reason }], []);
   await append(root, [{ kind: "retract", id, reason }]);
 }
+export async function recordReceipt(root: string, receiptPath: string): Promise<string> {
+  const raw = await readFile(receiptPath);
+  const parsed = JSON.parse(raw.toString("utf8")) as { receipt?: { v?: number; specId?: unknown; specHash?: unknown; status?: unknown; leader?: unknown } };
+  const r = parsed.receipt;
+  if (r?.v !== 1 || typeof r.specId !== "string" || typeof r.specHash !== "string" || !/^[0-9a-f]{64}$/.test(r.specHash) || typeof r.status !== "string") throw new Error("recibo invalido");
+  const sha = createHash("sha256").update(raw).digest("hex");
+  const id = `jev-${r.specId}`;
+  const { graph } = await load(root);
+  const text = `JEV ${r.status} lider ${typeof r.leader === "string" ? r.leader : "nenhum"}; spec ${r.specHash.slice(0, 16)}; recibo sha256 ${sha}. Recomendacao, nao autoriza nada.`;
+  await addNode(root, { id, type: "decision", text }, graph.nodes.map((node) => node.id));
+  await mkdir(join(root, "receipts"), { recursive: true });
+  await writeFile(join(root, "receipts", `${r.specId}.json`), raw);
+  return id;
+}
 export async function exportCompact(root: string): Promise<string> {
   const { graph } = await load(root);
   return JSON.stringify(specFor(graph.nodes, graph.edges));
@@ -236,11 +250,13 @@ async function main(): Promise<void> {
     await retractNode(root, args[0]!, args[1]!);
   } else if (command === "export" && args.length === 0) {
     console.log(await exportCompact(root));
+  } else if (command === "record" && args.length === 1) {
+    console.log(await recordReceipt(root, args[0]!));
   } else if (command === "verify" && args.length === 0) {
     const result = await verify(root);
     console.log(`ok seq=${result.seq} hash=${result.hash}`);
   } else {
-    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, export, verify");
+    throw new Error("uso: add-node <tipo> <id> <texto> [links], link <origem> <destino>, retract <id> <motivo>, record <recibo.json>, export, verify");
   }
 }
 

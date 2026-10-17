@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { addNode, exportCompact, linkNodes, retractNode, verify } from "./cerebro";
+import { addNode, exportCompact, linkNodes, recordReceipt, retractNode, verify } from "./cerebro";
 
 const roots: string[] = [];
 afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
@@ -108,4 +108,17 @@ test("verifies a CRLF checkout of the materialized graph", async () => {
   const graphPath = join(root, "graph.v2.json");
   writeFileSync(graphPath, readFileSync(graphPath, "utf8").replace(/\n/g, "\r\n"));
   expect(await verify(root)).toMatchObject({ seq: 1 });
+});
+
+test("record links a JEV receipt to active nodes and rejects malformed receipts", async () => {
+  const root = tempRoot();
+  await addNode(root, { id: "ctx", type: "fact", text: "Contexto." });
+  const file = join(root, "r.json");
+  writeFileSync(file, JSON.stringify({ receipt: { v: 1, specId: "s1", specHash: "a".repeat(64), status: "consenso", leader: "x" } }));
+  expect(await recordReceipt(root, file)).toBe("jev-s1");
+  expect(await verify(root)).toMatchObject({ seq: 3 });
+  expect(readFileSync(join(root, "receipts", "s1.json"), "utf8")).toContain("consenso");
+  writeFileSync(file, JSON.stringify({ receipt: { v: 1, specId: "s2", specHash: "zz", status: "consenso" } }));
+  await expect(recordReceipt(root, file)).rejects.toThrow("recibo invalido");
+  expect(await verify(root)).toMatchObject({ seq: 3 });
 });

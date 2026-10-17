@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 5,
-  "headHash": "f52dc9008a0d66e67b5f480d83e4b34d38964e1e6d021c1ac7f2ce914e77a105",
+  "headSeq": 9,
+  "headHash": "9a63749d2dc814a45da54393c2b766e62a747932c43266ebd9024ea5425e77ce",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -17,6 +17,11 @@
       "id": "cerebro-grafo-v2",
       "type": "decision",
       "text": "Implementar este grafo documental v2 aditivo com log append-only"
+    },
+    {
+      "id": "jev-cerebro-recibo-jev",
+      "type": "decision",
+      "text": "JEV consenso lider record_node; spec 5e7118e62bdf8c75; recibo sha256 7c101630f56808d7f3b857c485acd5c6b20ddb1e7e2a28afbac01dfbe6e34089. Recomendacao, nao autoriza nada."
     }
   ],
   "edges": [
@@ -29,6 +34,21 @@
       "from": "rule-less-code",
       "to": "cerebro-grafo-v2",
       "seq": 5
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-cerebro-recibo-jev",
+      "seq": 7
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-cerebro-recibo-jev",
+      "seq": 8
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-cerebro-recibo-jev",
+      "seq": 9
     }
   ],
   "retractions": []
