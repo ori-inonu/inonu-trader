@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 816,
-  "headHash": "de1ec6c459258521a3d7b60d9028be7a91b0bbdaed36c8ad5b56c56283054d4d",
+  "headSeq": 820,
+  "headHash": "bc253037c3bb8282ff81eff0859f5805b9131a89bf2798236c79f54cfba5d39c",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1147,6 +1147,16 @@
       "id": "decisao-quota-ledger",
       "type": "decision",
       "text": "Teto diario virou ledger compartilhado no git-common-dir (todos os worktrees), reserva antes de enviar com trava mkdir e devolve o nao gasto (src/consensus/quota.ts). CLI e MCP usam o mesmo caminho. Dados de data/jev-quota.json antigo nao sao lidos."
+    },
+    {
+      "id": "jev-cerebro-validade-arestas",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec 03cb427d5556f691; recibo sha256 c2bec7c407913d6406cf7528d2f05e8dfd1a0cc1ad590527d8023b8372ffb1a9. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-validade-arestas",
+      "type": "iteration",
+      "text": "Validade temporal das arestas: JEV sem_consenso com 12 chamadas. A lidera (0.87 a 0.96), mas o trilho violates de A ficou em 0.26, acima de 0.2. Nao implementado. Meu diagnostico anterior de distribuicao invalida estava errado: era teto de chamadas."
     }
   ],
   "edges": [
@@ -3494,6 +3504,16 @@
       "from": "decisao-quota-diaria",
       "to": "decisao-quota-ledger",
       "seq": 816
+    },
+    {
+      "from": "decisao-quota-ledger",
+      "to": "jev-cerebro-validade-arestas",
+      "seq": 818
+    },
+    {
+      "from": "decisao-quota-ledger",
+      "to": "iter-validade-arestas",
+      "seq": 820
     }
   ],
   "retractions": [
