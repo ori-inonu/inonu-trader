@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1036,
-  "headHash": "a9aa902d5238f41edd1dc29106b874a2066ab1ecd2ebb8ff7593415cf9819553",
+  "headSeq": 1049,
+  "headHash": "85ec610a1fc2c096b81932ffa62b8664265b546173aaf40adc308a2f2c034b52",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1622,6 +1622,36 @@
       "id": "rc3-goal1-dirty",
       "type": "fact",
       "text": "Bloqueio do dono: 1712 alteracoes nao commitadas da goal1 (1062 delecoes de docs, 9 de codigo, devDependency fallow e bun.lock) pertencem a sessao ativa; R3 (33) e R4 (35) arquivos unicos so no backup."
+    },
+    {
+      "id": "iter-integracao-autoresearch-20261017",
+      "type": "iteration",
+      "text": "Integracao da branch autoresearch (3 commits, ponta d513d60) na main em worktree descartavel; 18 conflitos resolvidos a mao; checkout principal em merge, modo real e producao intocados; sem push."
+    },
+    {
+      "id": "rc4-autoresearch-integrada",
+      "type": "fact",
+      "text": "autoresearch integrada na main: typecheck 0, suite por bloco igual a base salvo src/real (2) e src/settings (1, ambiente), test:lab 649, cerebro verify ok. Docs em docs/specs/retorno-composto-por-ciclo/integracao-autoresearch.md."
+    },
+    {
+      "id": "rc4-cliente-onchainos-unificado",
+      "type": "fact",
+      "text": "Cliente OnchainOS unido: ledger api-budget da main (402 ate o mes UTC, 429 com jitter) e porteiro admitDispatch por requisicao da autoresearch; admitDispatch obrigatorio; Retry-After lido em http.ts; extraDispatches removido."
+    },
+    {
+      "id": "rc4-prompts-adiados",
+      "type": "fact",
+      "text": "Extracao de prompts do commit 0147547 adiada: src/generated/prompts e o gerador nao existem em nenhum commit, a branch sozinha nao compila. 13 arquivos ficam como na main; reaplicar quando o dono commitar o gerador."
+    },
+    {
+      "id": "rc4-jev-sem-teto",
+      "type": "fact",
+      "text": "Jev sem teto na integracao: --max-calls opcional e sem --allow-paid-inference (lado do dono); o ledger da main segue contando o uso; teto diario infinito."
+    },
+    {
+      "id": "rc4-tmp-fora",
+      "type": "fact",
+      "text": "Logs de verificacao em .tmp/final-verifier (2,3 MB de saida de teste) nao entram na main; .tmp/ foi para o .gitignore."
     }
   ],
   "edges": [
@@ -4529,6 +4559,41 @@
       "from": "iter-integracao-main-20261017",
       "to": "rc3-goal1-dirty",
       "seq": 1036
+    },
+    {
+      "from": "iter-integracao-main-20261017",
+      "to": "iter-integracao-autoresearch-20261017",
+      "seq": 1038
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc4-autoresearch-integrada",
+      "seq": 1040
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc4-cliente-onchainos-unificado",
+      "seq": 1042
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc4-prompts-adiados",
+      "seq": 1044
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc4-jev-sem-teto",
+      "seq": 1046
+    },
+    {
+      "from": "decisao-quota-removida",
+      "to": "rc4-jev-sem-teto",
+      "seq": 1047
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "rc4-tmp-fora",
+      "seq": 1049
     }
   ],
   "retractions": [
