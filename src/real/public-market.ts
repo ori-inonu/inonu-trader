@@ -58,6 +58,7 @@ export function createPublicMarket(options: PublicMarketOptions = {}) {
     fetch: (url, init) => globalThis.fetch(url, init),
     now,
     sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+    random: Math.random,
     allowNetwork: true,
     timeoutMs: 8_000,
     maxRetries: 0,

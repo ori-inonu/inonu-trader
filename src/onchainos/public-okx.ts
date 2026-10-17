@@ -50,6 +50,8 @@ export interface PublicOkxHttpOptions extends HttpTuning {
   /** Must be exactly `true` for anything to be sent. */
   allowNetwork?: boolean;
   origin?: string;
+  /** Source of the backoff jitter. Absent: the deterministic ceiling, no randomness. */
+  random?: () => number;
 }
 
 export interface PublicHttp extends GetPort {
@@ -70,6 +72,7 @@ export function createPublicOkxHttp(options: PublicOkxHttpOptions): PublicHttp {
     fetch: options.fetch,
     now: options.now,
     sleep: options.sleep,
+    random: options.random,
     limiter,
     quota,
     canSend: () => ready,

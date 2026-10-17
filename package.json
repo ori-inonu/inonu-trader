@@ -32,6 +32,7 @@
     "onchainos:capture:env": "bun --no-env-file --env-file=data/onchainos.env run scripts/onchainos-capture.ts",
     "capture": "bun run scripts/capture.ts",
     "backtest": "bun run scripts/backtest.ts",
+    "api:budget": "bun --no-env-file scripts/api-budget-report.ts",
     "test": "bun --no-env-file test --parallel=1 --timeout 15000 ./src ./scripts",
     "test:all": "bun --no-env-file run test && bun --no-env-file run --cwd web test",
     "typecheck": "tsc --noEmit -p tsconfig.verification.json",

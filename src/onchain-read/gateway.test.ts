@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createBudget } from "./budget";
 import { createOnchainCache } from "./cache";
-import { createOnchainClient, type ClientResult, type OnchainClient } from "./client";
+import { createOkxBudget, createOnchainClient, type ClientResult, type OnchainClient } from "./client";
 import { createOnchainGateway } from "./gateway";
 
 const dirs: string[] = [];
@@ -53,6 +53,7 @@ describe("onchain gateway", () => {
     let sends = 0;
     const client = createOnchainClient({
       credentials: () => ({ apiKey: "TEST", secret: "TEST", passphrase: "TEST" }),
+      budget: createOkxBudget({ ledgerPath: join(tempDir(), "ledger.json"), now: Date.now }),
       fetch: (async () => {
         sends += 1;
         return sends === 1 ? phase === "fetch" ? lateFetch : slowResponse : new Response(payload);
@@ -96,9 +97,11 @@ describe("onchain gateway", () => {
     let started!: () => void;
     const first = new Promise<ClientResult>((resolve) => (release = resolve));
     const entered = new Promise<void>((resolve) => (started = resolve));
-    const { gateway, budget, calls, tick } = setup({ cap: () => cap, now: () => Date.UTC(2026, 0, 31, 23, 59, 59), next: () => {
-      started(); return first;
-    } });
+    const { gateway, budget, calls, tick } = setup({
+      cap: () => cap, now: () => Date.UTC(2026, 0, 31, 23, 59, 59), next: () => {
+        started(); return first;
+      }
+    });
     if (rollover) budget.record("basic");
     const leader = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
     await entered;
@@ -158,11 +161,13 @@ describe("onchain gateway", () => {
     const first = new Promise<ClientResult>((resolve) => (release = resolve));
     const entered = new Promise<void>((resolve) => (started = resolve));
     let sends = 0;
-    const { gateway, calls } = setup({ cap: 31, now: () => Date.UTC(2026, 0, 1), next: () => {
-      sends += 1;
-      if (sends === 2) { started(); return first; }
-      return { ok: false, error: "provider_error", sent: true };
-    } });
+    const { gateway, calls } = setup({
+      cap: 31, now: () => Date.UTC(2026, 0, 1), next: () => {
+        sends += 1;
+        if (sends === 2) { started(); return first; }
+        return { ok: false, error: "provider_error", sent: true };
+      }
+    });
     await gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xaa" }, "user");
     const leader = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xab" }, "user");
     await entered;

@@ -1,14 +1,20 @@
 /**
  * Signed read-only OKX OnchainOS client (ONC-1, gateway doc §2 and §5). One global queue sends at most one
- * request per minIntervalMs; the provider message is never forwarded. Errors map to the closed ONC-5 set.
- * A 402 answer blocks that fee tier in memory for one hour (the system never pays) and a 429/50011 opens a
- * 30 s global cooldown; the gateway then serves stale cache. The Date header of every response measures the
- * local clock skew; a skew of 10 s or more is applied to the signature timestamp, and a 50102 ("Timestamp
+ * request per minIntervalMs (measured at dispatch); the provider message is never forwarded. Errors map to the
+ * closed ONC-5 set. The api-budget ledger keeps the provider's verdicts across restarts: a 402 blocks the endpoint
+ * until the next UTC month (the system never pays), and a 429/50011 cools it down with exponential backoff and
+ * full jitter, never below Retry-After; the gateway then serves stale cache. The Date header of every response
+ * measures the local clock skew; a skew of 10 s or more is applied to the signature timestamp, and a 50102 ("Timestamp
  * request expired") is retried once inside the same queue slot with the just-learned offset before the call
  * reports clock_skew.
  */
 import { signRequest } from "./sign";
 import type { OnchainTier, ProviderRequest } from "./catalog";
+import { createApiBudget, BudgetDenied, type ApiBudget, type BudgetRequest } from "../api-budget/gateway";
+import { createBudgetRegistry } from "../api-budget/registry";
+import { OKX_KEY_ENV, okxEntries, type OkxRegistryOptions } from "../api-budget/okx";
+import type { DenyReason } from "../api-budget/limiter";
+import { defaultLedgerPath } from "../api-budget/ledger";
 
 export interface OkxCredentials {
   readonly apiKey: string;
@@ -32,6 +38,10 @@ export interface OnchainClientDeps {
   readonly minIntervalMs?: number;
   readonly timeoutMs?: number;
   readonly maxBytes?: number;
+  /** Shared 402/429 state. Default: the api-budget ledger under the repo data directory. */
+  readonly budget?: ApiBudget;
+  /** Jitter source for the 429 backoff. Default Math.random. */
+  readonly random?: () => number;
 }
 
 export interface ClientStatus {
@@ -46,12 +56,43 @@ const BASE = "https://web3.okx.com";
 /** Provider codes: missing/invalid key, signature or passphrase, and the documented equivalents. */
 const AUTH_CODES = new Set(["50103", "50104", "50105", "50111", "50112", "50113", "50114"]);
 /** "Timestamp request expired": a local clock problem, not a credential problem. */
+/** Client side pacing floor between two signed requests: a local policy, not a provider limit (the provider publishes no RPS for Market). */
+export const DEFAULT_MIN_INTERVAL_MS = 1100;
 const CLOCK_CODE = "50102";
 /** HTTP 200 body code for a chain the endpoint does not serve. */
 const UNSUPPORTED_CHAIN_CODE = "50038";
 const RATE_CODES = new Set(["50011"]);
-const PAYMENT_BLOCK_MS = 3_600_000;
-const RATE_COOLDOWN_MS = 30_000;
+const OKX_KEY = OKX_KEY_ENV;
+const DENIED: Record<DenyReason, ClientErrorCode> = { blocked_402: "provider_payment_required", expired: "provider_payment_required", cooldown_429: "rate_limited", budget: "rate_limited", reserved: "rate_limited" };
+
+function sleep(ms: number): Promise<void> {
+  const { promise, resolve } = Promise.withResolvers<void>();
+  setTimeout(resolve, ms);
+  return promise;
+}
+
+/** Retry-After (delta seconds) as ms; absent or unparsable is undefined. */
+function retryAfterMs(res: Response): number | undefined {
+  const raw = res.headers.get("retry-after");
+  return raw !== null && Number.isFinite(Number(raw)) ? Number(raw) * 1000 : undefined;
+}
+
+interface Dispatch {
+  n: number;
+  retryAfterMs?: number;
+}
+
+/** The OKX budget: 402 blocks an endpoint until the next UTC month; 429/50011 cool it down with jittered backoff. Persisted in the ledger, so both survive restarts. */
+/** Plan facts the owner can state without code: JEV_OKX_PLAN (free, starter, ...) and JEV_OKX_KEY_CREATED_AT (ISO date of the Trade key, which starts its 60 day Trial). Unset: Free plan, no known expiry. */
+function planFromEnv(): OkxRegistryOptions {
+  const created = Date.parse(process.env.JEV_OKX_KEY_CREATED_AT ?? "");
+  return { ...(process.env.JEV_OKX_PLAN ? { plan: process.env.JEV_OKX_PLAN } : {}), ...(Number.isFinite(created) ? { tradeKeyCreatedAtMs: created } : {}) };
+}
+
+export function createOkxBudget(options: { readonly ledgerPath: string; readonly now: () => number; readonly random?: () => number; readonly plan?: OkxRegistryOptions }): ApiBudget {
+  const registry = createBudgetRegistry(okxEntries(options.plan ?? planFromEnv()));
+  return createApiBudget({ registry, ledgerPath: options.ledgerPath, now: options.now, sleep, random: options.random });
+}
 
 export interface OnchainClient {
   call(request: ProviderRequest, tier: OnchainTier): Promise<ClientResult>;
@@ -59,22 +100,20 @@ export interface OnchainClient {
 }
 
 export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
-  const minIntervalMs = deps.minIntervalMs ?? 1100;
+  const minIntervalMs = deps.minIntervalMs ?? DEFAULT_MIN_INTERVAL_MS;
   const timeoutMs = deps.timeoutMs ?? 8000;
   const maxBytes = deps.maxBytes ?? 2_000_000;
+  const budget = deps.budget ?? createOkxBudget({ ledgerPath: defaultLedgerPath(), now: deps.now, random: deps.random });
   let lastSentMs = -Infinity;
   let lastCallMs: number | null = null;
   let lastCode: number | null = null;
   let cooldownUntilMs = 0;
-  const tierBlockedUntil = new Map<OnchainTier, number>();
+  /** Consecutive 429/50011 answers per endpoint: the backoff exponent. A success clears it. */
+  const rateStreak = new Map<string, number>();
   /** Signing offset learned from response Date headers (server minus local). Only applied when the skew is real. */
   let offsetMs = 0;
   let clockOffsetMs: number | null = null;
   let queue: Promise<unknown> = Promise.resolve();
-
-  function sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   /** The `code` field of a JSON error body, when the body parses. 401/403 answers carry it outside the data envelope. */
   function bodyCode(raw: string | null): string | null {
@@ -88,7 +127,7 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
   }
 
   /** One deadline covers fetch, body consumption and the optional clock retry. */
-  async function send(request: ProviderRequest, cred: OkxCredentials, dispatched: { n: number }): Promise<ClientResult> {
+  async function send(request: ProviderRequest, cred: OkxCredentials, dispatched: Dispatch): Promise<ClientResult> {
     const controller = new AbortController();
     let timer!: ReturnType<typeof setTimeout>;
     const deadline = new Promise<ClientResult>((resolve) => {
@@ -105,7 +144,7 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
     }
   }
 
-  async function sendBeforeDeadline(request: ProviderRequest, cred: OkxCredentials, signal: AbortSignal, dispatched: { n: number }): Promise<ClientResult> {
+  async function sendBeforeDeadline(request: ProviderRequest, cred: OkxCredentials, signal: AbortSignal, dispatched: Dispatch): Promise<ClientResult> {
     const expired = (): ClientResult => ({ ok: false, error: "provider_error", sent: true });
     // A 50102 is retried exactly once, inside this queue slot, when the response itself teaches a new offset.
     for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -177,7 +216,7 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
       }
       if (res.status === 402) return { ok: false, error: "provider_payment_required", sent: true };
       if (res.status === 429) {
-        cooldownUntilMs = deps.now() + RATE_COOLDOWN_MS;
+        dispatched.retryAfterMs = retryAfterMs(res);
         return { ok: false, error: "rate_limited", sent: true };
       }
       if (res.status >= 500 || !res.ok) return { ok: false, error: "provider_error", sent: true };
@@ -203,44 +242,47 @@ export function createOnchainClient(deps: OnchainClientDeps): OnchainClient {
       if (env.code === "0") return { ok: true, data: env.data, sent: true };
       if (env.code === UNSUPPORTED_CHAIN_CODE) return { ok: false, error: "unsupported_chain", sent: true };
       if (AUTH_CODES.has(env.code)) return { ok: false, error: "provider_unauthorized", sent: true };
-      if (RATE_CODES.has(env.code)) {
-        cooldownUntilMs = deps.now() + RATE_COOLDOWN_MS;
-        return { ok: false, error: "rate_limited", sent: true };
-      }
+      if (RATE_CODES.has(env.code)) return { ok: false, error: "rate_limited", sent: true };
       return { ok: false, error: "provider_error", sent: true };
     }
     return { ok: false, error: "clock_skew", sent: true }; // unreachable: the second attempt never falls through
   }
 
-  function refusal(tier: OnchainTier): ClientResult | null {
-    const blocked = tierBlockedUntil.get(tier);
-    if (blocked !== undefined && deps.now() < blocked) return { ok: false, error: "provider_payment_required", sent: false };
-    if (deps.now() < cooldownUntilMs) return { ok: false, error: "rate_limited", sent: false };
-    return null;
+  /** Persists the verdict of a call that reached the provider: 402 blocks the endpoint until the next UTC month; 429/50011 cool it down. */
+  async function settle(target: BudgetRequest, r: ClientResult, dispatched: Dispatch): Promise<void> {
+    if (r.ok) {
+      rateStreak.delete(target.endpoint);
+      return;
+    }
+    if (r.error === "provider_payment_required") {
+      await budget.reject(target, 402);
+    } else if (r.error === "rate_limited") {
+      const attempt = rateStreak.get(target.endpoint) ?? 0;
+      rateStreak.set(target.endpoint, attempt + 1);
+      cooldownUntilMs = await budget.reject(target, 429, attempt, dispatched.retryAfterMs);
+    }
   }
 
-  function call(request: ProviderRequest, tier: OnchainTier): Promise<ClientResult> {
-    const initial = refusal(tier);
-    if (initial) return Promise.resolve(initial);
+  function call(request: ProviderRequest): Promise<ClientResult> {
+    const target: BudgetRequest = { module: "okx", endpoint: request.path.split("?")[0] ?? request.path, key: OKX_KEY };
     const result = queue.then(async (): Promise<ClientResult> => {
-      const queued = refusal(tier);
-      if (queued) return queued;
-      const wait = Math.max(0, lastSentMs + minIntervalMs - deps.now());
-      if (wait > 0) await sleep(wait);
-      const beforeSend = refusal(tier);
-      if (beforeSend) return beforeSend;
-      const cred = deps.credentials();
-      if (cred === null) return { ok: false, error: "no_credentials", sent: false };
-      const dispatched = { n: 0 };
-      const sentResult = await send(request, cred, dispatched);
-      const r: ClientResult = dispatched.n > 1 ? { ...sentResult, extraDispatches: dispatched.n - 1 } : sentResult;
-      if (r.ok === false && r.error === "provider_payment_required") tierBlockedUntil.set(tier, deps.now() + PAYMENT_BLOCK_MS);
-      return r;
+      const dispatched: Dispatch = { n: 0 };
+      try {
+        return await budget.run<ClientResult>(target, async () => {
+          const wait = Math.max(0, lastSentMs + minIntervalMs / budget.scale(target) - deps.now());
+          if (wait > 0) await sleep(wait);
+          const cred = deps.credentials();
+          if (cred === null) return { ok: false, error: "no_credentials", sent: false };
+          const sent = await send(request, cred, dispatched);
+          await settle(target, sent, dispatched);
+          return dispatched.n > 1 ? { ...sent, extraDispatches: dispatched.n - 1 } : sent;
+        });
+      } catch (error) {
+        if (error instanceof BudgetDenied) return { ok: false, error: DENIED[error.reason], sent: false };
+        throw error;
+      }
     });
-    queue = result.then(
-      () => undefined,
-      () => undefined,
-    );
+    queue = result.then(() => undefined, () => undefined);
     return result;
   }
 

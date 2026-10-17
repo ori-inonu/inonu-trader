@@ -13,7 +13,7 @@ export const quotaPath = (): string => {
 const read = (path: string): Record<string, number> => (existsSync(path) ? (JSON.parse(readFileSync(path, "utf8")) as Record<string, number>) : {});
 
 /** Exclusao mutua por diretorio (mkdir e atomico); trava com mais de 10 s e considerada de processo morto. */
-async function locked<T>(path: string, body: () => T): Promise<T> {
+export async function locked<T>(path: string, body: () => T): Promise<T> {
   const lock = `${path}.lock`;
   for (let i = 0; ; i++) {
     try {
