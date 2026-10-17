@@ -1,13 +1,8 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 674,
-  "headHash": "f206f04d2d0571ddfd6bb411f35c5e3659640d786499eb2114715701d023727c",
+  "headSeq": 695,
+  "headHash": "4e0b391950dcf5648a8632b7004beca538458f3835179fc488535944e7391703",
   "nodes": [
-    {
-      "id": "autoresearch-c5c7d34",
-      "type": "iteration",
-      "text": "Autoresearch real online, commit c5c7d34"
-    },
     {
       "id": "rule-less-code",
       "type": "decision",
@@ -24,19 +19,9 @@
       "text": "JEV consenso lider record_node; spec 5e7118e62bdf8c75; recibo sha256 7c101630f56808d7f3b857c485acd5c6b20ddb1e7e2a28afbac01dfbe6e34089. Recomendacao, nao autoriza nada."
     },
     {
-      "id": "iter-limite-100",
-      "type": "iteration",
-      "text": "Teste limita AGENTS.md do repo e global a 100 linhas"
-    },
-    {
       "id": "regra-dura-injetada",
       "type": "fact",
       "text": "Regras de seguranca (live, segredos, schema, historico) continuam no AGENTS.md injetado; contexto e historico vivem no grafo"
-    },
-    {
-      "id": "iter-comandos-agents",
-      "type": "iteration",
-      "text": "AGENTS.md lista os comandos do grafo; teste de 100 linhas; verify exit 0"
     },
     {
       "id": "jev-cerebro-regras-no-grafo",
@@ -44,19 +29,9 @@
       "text": "JEV consenso lider keep_safety_inline; spec 950f78e67f6ac451; recibo sha256 044a51898b0347cf8814fb62e585f35424062152e8b1dc3c0c45304ce9bfdf79. Recomendacao, nao autoriza nada."
     },
     {
-      "id": "iter-regras-inline",
-      "type": "iteration",
-      "text": "JEV consenso keep_safety_inline: regras duras ficam no AGENTS.md injetado, historico e fatos no grafo"
-    },
-    {
       "id": "dono-aceitou-jev",
       "type": "event",
       "text": "Dono alterou criterio 2: regras de seguranca inline no AGENTS.md, historico e fatos no grafo (recomendacao do JEV aceita)"
-    },
-    {
-      "id": "iter-lint",
-      "type": "iteration",
-      "text": "Comando lint lista nos ativos sem vinculo; exit 1 se houver; teste cobre retratados"
     },
     {
       "id": "jev-autoresearch-proxima-hipotese",
@@ -64,24 +39,9 @@
       "text": "JEV consenso lider stop_campaign; spec e27759c1c5df02cb; recibo sha256 2a6175fc99c761be99894c0864ebc71f89bda06781ef37d4dd2102294b28071f. Recomendacao, nao autoriza nada."
     },
     {
-      "id": "iter-autoresearch-encerrada",
-      "type": "iteration",
-      "text": "Seg4: H12 basis empatou H5 (+3.17 bps sintetico); JEV consenso stop_campaign; meta 10x nao demonstrada"
-    },
-    {
       "id": "jev-cerebro-substituicao",
       "type": "decision",
       "text": "JEV consenso lider supersede_command; spec 194e2f70d2a49453; recibo sha256 05e19a5b27824d0f5f8a2d796d1f7fbe8e6d9e386df97bc5acdb99f9dc9af1d0. Recomendacao, nao autoriza nada."
-    },
-    {
-      "id": "iter-supersede",
-      "type": "iteration",
-      "text": "Comando supersede: aposenta no obsoleto apontando o substituto; escolha do JEV (supersede_command, margem ~0.88)"
-    },
-    {
-      "id": "iter-ordem-chaves",
-      "type": "iteration",
-      "text": "jev-consensus.ts le TYPESAFE_API_KEY antes de TYPESAFE_AI_API_KEY (a segunda esta invalida no ambiente); autorizado pelo dono; sem trocar o app"
     },
     {
       "id": "jev-cerebro-migrar-specs",
@@ -107,11 +67,6 @@
       "id": "spec-cerebro-grafo",
       "type": "fact",
       "text": "cerebro-grafo concluida: add-node, link, retract, verify, export; log append-only com hash-chain; limite: nao recupera perda simultanea de log e derivado; 401 era chave AI invalida e 402 sem creditos"
-    },
-    {
-      "id": "iter-migrar-specs",
-      "type": "iteration",
-      "text": "status.md e tasks.md de 4 specs migrados para nos spec-*; 8 arquivos e 351 linhas removidos; git guarda o texto antigo; decisao do JEV migrate_status_delete"
     },
     {
       "id": "src-cerebro-grafo",
@@ -154,11 +109,6 @@
       "text": "Limites: 15s por leitura, 4MiB por resposta, idade maxima 120s, relogio futuro 30s. Hashes cobrem projecao sanitizada, nao autenticidade. 11 invocacoes, 3 health timeout, 1 okx_time_invalid. Ordens incertas nao sao encerradas pelo pesquisador."
     },
     {
-      "id": "iter-global-ponteiro",
-      "type": "iteration",
-      "text": "AGENTS global do OMP (8 linhas) ganhou a regra de apagar arquivo com ponteiro git no no; mudanca fora do repo, sem decisao do JEV, escopo de uma frase"
-    },
-    {
       "id": "jev-cerebro-contradicoes",
       "type": "decision",
       "text": "JEV consenso lider lint_dup_key; spec eafb63b1cb8add06; recibo sha256 9a736973adcf4755e9988924e81affc090c4a6f64f45386ef4821b4140fadcae. Recomendacao, nao autoriza nada."
@@ -167,11 +117,6 @@
       "id": "jev-cerebro-regra-global",
       "type": "decision",
       "text": "JEV sem_consenso lider nenhum; spec 20ba52979a796ac5; recibo sha256 a523e1fe5f4311fd1abe2eaa3b88eb695a78d197cf960e8311bcd07758220554. Recomendacao, nao autoriza nada."
-    },
-    {
-      "id": "iter-contradicoes",
-      "type": "iteration",
-      "text": "lint acusa dois nos ativos com a mesma chave @chave no inicio do texto; resolver com supersede. Opcao lint_dup_key escolhida pelo JEV, sem mudar o formato do no, 3 linhas de codigo"
     },
     {
       "id": "retro-regra-global",
@@ -184,11 +129,6 @@
       "text": "JEV consenso lider export_neighborhood; spec 0f347a58df4b918d; recibo sha256 a6df8336a04d59c8950585928d10c0eef3b82a19b790d325b45f0cf4f5bcd18b. Recomendacao, nao autoriza nada."
     },
     {
-      "id": "iter-subgrafo",
-      "type": "iteration",
-      "text": "export aceita no e profundidade e devolve so a vizinhanca (opcao do JEV); record liga o recibo so aos nos pedidos, por padrao ao ultimo, pois antes ligava a todos e tornava arestas sem sentido"
-    },
-    {
       "id": "fato-runtime-estruturado",
       "type": "fact",
       "text": "Correcao: o runtime do agente ja envia ao JEV estado estruturado (brief, vocabulario fixo, JevStateError recusa texto livre), nao prosa. As ocorrencias de prompt em src sao comentarios e estimativas de tokens. Sem prompt de runtime a trocar"
@@ -199,24 +139,9 @@
       "text": "JEV sem_consenso lider nenhum; spec 3cab060e1db7698c; recibo sha256 3896ac615ffb8095045041b1d62767c07014f5b5fe4773aa537496a8c4ede615. Recomendacao, nao autoriza nada."
     },
     {
-      "id": "iter-proximo-passo",
-      "type": "iteration",
-      "text": "JEV sem consenso sobre o proximo passo; rodadas pendem a hook_export (injetar export do no). Nada implementado; decisao volta ao dono"
-    },
-    {
-      "id": "iter-lint-obsoleto",
-      "type": "iteration",
-      "text": "Testado lint de no sem iteracao vizinha: acusou 8 de 40 nos, todos legitimos (src-* e regra). Sem sinal util, nao implementado. Passo restante com mais valor: hook_export ou migrate_docs"
-    },
-    {
       "id": "jev-cerebro-passo-2",
       "type": "decision",
       "text": "JEV consenso lider hook_export; spec 269f890b842e8947; recibo sha256 c110413c8d4c96c7f662b18df91c0e2f1cbe4bb505bfee42621ff1b7e03b8da9. Recomendacao, nao autoriza nada."
-    },
-    {
-      "id": "iter-hook-export",
-      "type": "iteration",
-      "text": "SessionStart do Codex injeta o export da ultima iteracao (cerca de 1,7 KB) em vez de arquivos fixos; escolha do JEV, dono autorizou. OMP global ainda nao usa o export"
     },
     {
       "id": "iter-global-export",
@@ -952,23 +877,23 @@
       "id": "iter-esquecer",
       "type": "iteration",
       "text": "lint avisa iteracoes antigas sem aresta com os 20 nos recentes (esquecer?); so aviso, retract continua manual (consenso JEV forget_report). Hoje 15 candidatas"
+    },
+    {
+      "id": "jev-cerebro-passo-7",
+      "type": "decision",
+      "text": "JEV consenso lider retract_stale; spec 23fa945bc7564461; recibo sha256 75e4b549addb99aaf9244952b051314686e3f71ce6ee69470c2735def058163e. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-retratar-antigas",
+      "type": "iteration",
+      "text": "15 iteracoes antigas retratadas (consenso JEV retract_stale); trilha integral em events.jsonl. Efeito: jev-cerebro-passo-2 ficou orfao e foi religado a iter-esquecer"
     }
   ],
   "edges": [
     {
-      "from": "autoresearch-c5c7d34",
-      "to": "cerebro-grafo-v2",
-      "seq": 4
-    },
-    {
       "from": "rule-less-code",
       "to": "cerebro-grafo-v2",
       "seq": 5
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-cerebro-recibo-jev",
-      "seq": 7
     },
     {
       "from": "rule-less-code",
@@ -979,26 +904,6 @@
       "from": "cerebro-grafo-v2",
       "to": "jev-cerebro-recibo-jev",
       "seq": 9
-    },
-    {
-      "from": "jev-cerebro-recibo-jev",
-      "to": "iter-limite-100",
-      "seq": 11
-    },
-    {
-      "from": "iter-limite-100",
-      "to": "regra-dura-injetada",
-      "seq": 13
-    },
-    {
-      "from": "iter-limite-100",
-      "to": "iter-comandos-agents",
-      "seq": 15
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-cerebro-regras-no-grafo",
-      "seq": 17
     },
     {
       "from": "rule-less-code",
@@ -1016,44 +921,9 @@
       "seq": 20
     },
     {
-      "from": "iter-limite-100",
-      "to": "jev-cerebro-regras-no-grafo",
-      "seq": 21
-    },
-    {
       "from": "regra-dura-injetada",
       "to": "jev-cerebro-regras-no-grafo",
       "seq": 22
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "jev-cerebro-regras-no-grafo",
-      "seq": 23
-    },
-    {
-      "from": "jev-cerebro-regras-no-grafo",
-      "to": "iter-regras-inline",
-      "seq": 25
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "iter-regras-inline",
-      "seq": 26
-    },
-    {
-      "from": "iter-regras-inline",
-      "to": "dono-aceitou-jev",
-      "seq": 28
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "iter-lint",
-      "seq": 30
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-autoresearch-proxima-hipotese",
-      "seq": 32
     },
     {
       "from": "rule-less-code",
@@ -1071,19 +941,9 @@
       "seq": 35
     },
     {
-      "from": "iter-limite-100",
-      "to": "jev-autoresearch-proxima-hipotese",
-      "seq": 36
-    },
-    {
       "from": "regra-dura-injetada",
       "to": "jev-autoresearch-proxima-hipotese",
       "seq": 37
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "jev-autoresearch-proxima-hipotese",
-      "seq": 38
     },
     {
       "from": "jev-cerebro-regras-no-grafo",
@@ -1091,34 +951,9 @@
       "seq": 39
     },
     {
-      "from": "iter-regras-inline",
-      "to": "jev-autoresearch-proxima-hipotese",
-      "seq": 40
-    },
-    {
       "from": "dono-aceitou-jev",
       "to": "jev-autoresearch-proxima-hipotese",
       "seq": 41
-    },
-    {
-      "from": "iter-lint",
-      "to": "jev-autoresearch-proxima-hipotese",
-      "seq": 42
-    },
-    {
-      "from": "jev-autoresearch-proxima-hipotese",
-      "to": "iter-autoresearch-encerrada",
-      "seq": 44
-    },
-    {
-      "from": "iter-lint",
-      "to": "iter-autoresearch-encerrada",
-      "seq": 45
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-cerebro-substituicao",
-      "seq": 47
     },
     {
       "from": "rule-less-code",
@@ -1136,19 +971,9 @@
       "seq": 50
     },
     {
-      "from": "iter-limite-100",
-      "to": "jev-cerebro-substituicao",
-      "seq": 51
-    },
-    {
       "from": "regra-dura-injetada",
       "to": "jev-cerebro-substituicao",
       "seq": 52
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "jev-cerebro-substituicao",
-      "seq": 53
     },
     {
       "from": "jev-cerebro-regras-no-grafo",
@@ -1156,49 +981,14 @@
       "seq": 54
     },
     {
-      "from": "iter-regras-inline",
-      "to": "jev-cerebro-substituicao",
-      "seq": 55
-    },
-    {
       "from": "dono-aceitou-jev",
       "to": "jev-cerebro-substituicao",
       "seq": 56
     },
     {
-      "from": "iter-lint",
-      "to": "jev-cerebro-substituicao",
-      "seq": 57
-    },
-    {
       "from": "jev-autoresearch-proxima-hipotese",
       "to": "jev-cerebro-substituicao",
       "seq": 58
-    },
-    {
-      "from": "iter-autoresearch-encerrada",
-      "to": "jev-cerebro-substituicao",
-      "seq": 59
-    },
-    {
-      "from": "jev-cerebro-substituicao",
-      "to": "iter-supersede",
-      "seq": 61
-    },
-    {
-      "from": "iter-autoresearch-encerrada",
-      "to": "iter-supersede",
-      "seq": 62
-    },
-    {
-      "from": "iter-supersede",
-      "to": "iter-ordem-chaves",
-      "seq": 64
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 66
     },
     {
       "from": "rule-less-code",
@@ -1216,19 +1006,9 @@
       "seq": 69
     },
     {
-      "from": "iter-limite-100",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 70
-    },
-    {
       "from": "regra-dura-injetada",
       "to": "jev-cerebro-migrar-specs",
       "seq": 71
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 72
     },
     {
       "from": "jev-cerebro-regras-no-grafo",
@@ -1236,19 +1016,9 @@
       "seq": 73
     },
     {
-      "from": "iter-regras-inline",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 74
-    },
-    {
       "from": "dono-aceitou-jev",
       "to": "jev-cerebro-migrar-specs",
       "seq": 75
-    },
-    {
-      "from": "iter-lint",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 76
     },
     {
       "from": "jev-autoresearch-proxima-hipotese",
@@ -1256,24 +1026,9 @@
       "seq": 77
     },
     {
-      "from": "iter-autoresearch-encerrada",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 78
-    },
-    {
       "from": "jev-cerebro-substituicao",
       "to": "jev-cerebro-migrar-specs",
       "seq": 79
-    },
-    {
-      "from": "iter-supersede",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 80
-    },
-    {
-      "from": "iter-ordem-chaves",
-      "to": "jev-cerebro-migrar-specs",
-      "seq": 81
     },
     {
       "from": "jev-cerebro-migrar-specs",
@@ -1301,31 +1056,6 @@
       "seq": 90
     },
     {
-      "from": "jev-cerebro-migrar-specs",
-      "to": "iter-migrar-specs",
-      "seq": 92
-    },
-    {
-      "from": "spec-cerebro-grafo",
-      "to": "iter-migrar-specs",
-      "seq": 93
-    },
-    {
-      "from": "spec-decisao-executavel-jev",
-      "to": "iter-migrar-specs",
-      "seq": 94
-    },
-    {
-      "from": "spec-autoresearch-real-online",
-      "to": "iter-migrar-specs",
-      "seq": 95
-    },
-    {
-      "from": "spec-autoresearch-decisoes",
-      "to": "iter-migrar-specs",
-      "seq": 96
-    },
-    {
       "from": "spec-cerebro-grafo",
       "to": "src-cerebro-grafo",
       "seq": 98
@@ -1334,11 +1064,6 @@
       "from": "jev-cerebro-migrar-specs",
       "to": "src-cerebro-grafo",
       "seq": 99
-    },
-    {
-      "from": "iter-migrar-specs",
-      "to": "regra-excluir-so-com-ponteiro",
-      "seq": 101
     },
     {
       "from": "spec-decisao-executavel-jev",
@@ -1386,16 +1111,6 @@
       "seq": 116
     },
     {
-      "from": "regra-excluir-so-com-ponteiro",
-      "to": "iter-global-ponteiro",
-      "seq": 118
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 120
-    },
-    {
       "from": "rule-less-code",
       "to": "jev-cerebro-contradicoes",
       "seq": 121
@@ -1411,19 +1126,9 @@
       "seq": 123
     },
     {
-      "from": "iter-limite-100",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 124
-    },
-    {
       "from": "regra-dura-injetada",
       "to": "jev-cerebro-contradicoes",
       "seq": 125
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 126
     },
     {
       "from": "jev-cerebro-regras-no-grafo",
@@ -1431,19 +1136,9 @@
       "seq": 127
     },
     {
-      "from": "iter-regras-inline",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 128
-    },
-    {
       "from": "dono-aceitou-jev",
       "to": "jev-cerebro-contradicoes",
       "seq": 129
-    },
-    {
-      "from": "iter-lint",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 130
     },
     {
       "from": "jev-autoresearch-proxima-hipotese",
@@ -1451,24 +1146,9 @@
       "seq": 131
     },
     {
-      "from": "iter-autoresearch-encerrada",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 132
-    },
-    {
       "from": "jev-cerebro-substituicao",
       "to": "jev-cerebro-contradicoes",
       "seq": 133
-    },
-    {
-      "from": "iter-supersede",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 134
-    },
-    {
-      "from": "iter-ordem-chaves",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 135
     },
     {
       "from": "jev-cerebro-migrar-specs",
@@ -1494,11 +1174,6 @@
       "from": "spec-cerebro-grafo",
       "to": "jev-cerebro-contradicoes",
       "seq": 140
-    },
-    {
-      "from": "iter-migrar-specs",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 141
     },
     {
       "from": "src-cerebro-grafo",
@@ -1541,16 +1216,6 @@
       "seq": 149
     },
     {
-      "from": "iter-global-ponteiro",
-      "to": "jev-cerebro-contradicoes",
-      "seq": 150
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-cerebro-regra-global",
-      "seq": 152
-    },
-    {
       "from": "rule-less-code",
       "to": "jev-cerebro-regra-global",
       "seq": 153
@@ -1566,19 +1231,9 @@
       "seq": 155
     },
     {
-      "from": "iter-limite-100",
-      "to": "jev-cerebro-regra-global",
-      "seq": 156
-    },
-    {
       "from": "regra-dura-injetada",
       "to": "jev-cerebro-regra-global",
       "seq": 157
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "jev-cerebro-regra-global",
-      "seq": 158
     },
     {
       "from": "jev-cerebro-regras-no-grafo",
@@ -1586,19 +1241,9 @@
       "seq": 159
     },
     {
-      "from": "iter-regras-inline",
-      "to": "jev-cerebro-regra-global",
-      "seq": 160
-    },
-    {
       "from": "dono-aceitou-jev",
       "to": "jev-cerebro-regra-global",
       "seq": 161
-    },
-    {
-      "from": "iter-lint",
-      "to": "jev-cerebro-regra-global",
-      "seq": 162
     },
     {
       "from": "jev-autoresearch-proxima-hipotese",
@@ -1606,24 +1251,9 @@
       "seq": 163
     },
     {
-      "from": "iter-autoresearch-encerrada",
-      "to": "jev-cerebro-regra-global",
-      "seq": 164
-    },
-    {
       "from": "jev-cerebro-substituicao",
       "to": "jev-cerebro-regra-global",
       "seq": 165
-    },
-    {
-      "from": "iter-supersede",
-      "to": "jev-cerebro-regra-global",
-      "seq": 166
-    },
-    {
-      "from": "iter-ordem-chaves",
-      "to": "jev-cerebro-regra-global",
-      "seq": 167
     },
     {
       "from": "jev-cerebro-migrar-specs",
@@ -1649,11 +1279,6 @@
       "from": "spec-cerebro-grafo",
       "to": "jev-cerebro-regra-global",
       "seq": 172
-    },
-    {
-      "from": "iter-migrar-specs",
-      "to": "jev-cerebro-regra-global",
-      "seq": 173
     },
     {
       "from": "src-cerebro-grafo",
@@ -1696,34 +1321,14 @@
       "seq": 181
     },
     {
-      "from": "iter-global-ponteiro",
-      "to": "jev-cerebro-regra-global",
-      "seq": 182
-    },
-    {
       "from": "jev-cerebro-contradicoes",
       "to": "jev-cerebro-regra-global",
       "seq": 183
     },
     {
-      "from": "jev-cerebro-contradicoes",
-      "to": "iter-contradicoes",
-      "seq": 185
-    },
-    {
       "from": "jev-cerebro-regra-global",
       "to": "retro-regra-global",
       "seq": 187
-    },
-    {
-      "from": "iter-global-ponteiro",
-      "to": "retro-regra-global",
-      "seq": 188
-    },
-    {
-      "from": "autoresearch-c5c7d34",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 190
     },
     {
       "from": "rule-less-code",
@@ -1741,19 +1346,9 @@
       "seq": 193
     },
     {
-      "from": "iter-limite-100",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 194
-    },
-    {
       "from": "regra-dura-injetada",
       "to": "jev-cerebro-subgrafo",
       "seq": 195
-    },
-    {
-      "from": "iter-comandos-agents",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 196
     },
     {
       "from": "jev-cerebro-regras-no-grafo",
@@ -1761,19 +1356,9 @@
       "seq": 197
     },
     {
-      "from": "iter-regras-inline",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 198
-    },
-    {
       "from": "dono-aceitou-jev",
       "to": "jev-cerebro-subgrafo",
       "seq": 199
-    },
-    {
-      "from": "iter-lint",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 200
     },
     {
       "from": "jev-autoresearch-proxima-hipotese",
@@ -1781,24 +1366,9 @@
       "seq": 201
     },
     {
-      "from": "iter-autoresearch-encerrada",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 202
-    },
-    {
       "from": "jev-cerebro-substituicao",
       "to": "jev-cerebro-subgrafo",
       "seq": 203
-    },
-    {
-      "from": "iter-supersede",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 204
-    },
-    {
-      "from": "iter-ordem-chaves",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 205
     },
     {
       "from": "jev-cerebro-migrar-specs",
@@ -1824,11 +1394,6 @@
       "from": "spec-cerebro-grafo",
       "to": "jev-cerebro-subgrafo",
       "seq": 210
-    },
-    {
-      "from": "iter-migrar-specs",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 211
     },
     {
       "from": "src-cerebro-grafo",
@@ -1871,11 +1436,6 @@
       "seq": 219
     },
     {
-      "from": "iter-global-ponteiro",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 220
-    },
-    {
       "from": "jev-cerebro-contradicoes",
       "to": "jev-cerebro-subgrafo",
       "seq": 221
@@ -1886,64 +1446,14 @@
       "seq": 222
     },
     {
-      "from": "iter-contradicoes",
-      "to": "jev-cerebro-subgrafo",
-      "seq": 223
-    },
-    {
       "from": "retro-regra-global",
       "to": "jev-cerebro-subgrafo",
       "seq": 224
     },
     {
-      "from": "jev-cerebro-subgrafo",
-      "to": "iter-subgrafo",
-      "seq": 226
-    },
-    {
-      "from": "iter-contradicoes",
-      "to": "iter-subgrafo",
-      "seq": 227
-    },
-    {
-      "from": "iter-subgrafo",
-      "to": "fato-runtime-estruturado",
-      "seq": 231
-    },
-    {
       "from": "fato-runtime-estruturado",
       "to": "jev-cerebro-proximo-passo",
       "seq": 234
-    },
-    {
-      "from": "jev-cerebro-proximo-passo",
-      "to": "iter-proximo-passo",
-      "seq": 236
-    },
-    {
-      "from": "iter-proximo-passo",
-      "to": "iter-lint-obsoleto",
-      "seq": 238
-    },
-    {
-      "from": "iter-lint-obsoleto",
-      "to": "jev-cerebro-passo-2",
-      "seq": 240
-    },
-    {
-      "from": "jev-cerebro-passo-2",
-      "to": "iter-hook-export",
-      "seq": 242
-    },
-    {
-      "from": "iter-lint-obsoleto",
-      "to": "iter-hook-export",
-      "seq": 243
-    },
-    {
-      "from": "iter-hook-export",
-      "to": "iter-global-export",
-      "seq": 245
     },
     {
       "from": "iter-global-export",
@@ -3359,6 +2869,26 @@
       "from": "iter-log-congelado",
       "to": "iter-esquecer",
       "seq": 674
+    },
+    {
+      "from": "iter-esquecer",
+      "to": "jev-cerebro-passo-7",
+      "seq": 676
+    },
+    {
+      "from": "iter-esquecer",
+      "to": "jev-cerebro-passo-2",
+      "seq": 692
+    },
+    {
+      "from": "jev-cerebro-passo-7",
+      "to": "iter-retratar-antigas",
+      "seq": 694
+    },
+    {
+      "from": "iter-esquecer",
+      "to": "iter-retratar-antigas",
+      "seq": 695
     }
   ],
   "retractions": [
@@ -3366,6 +2896,81 @@
       "id": "lacuna-prompts-runtime",
       "reason": "substituido por fato-runtime-estruturado",
       "seq": 232
+    },
+    {
+      "id": "autoresearch-c5c7d34",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 677
+    },
+    {
+      "id": "iter-limite-100",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 678
+    },
+    {
+      "id": "iter-comandos-agents",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 679
+    },
+    {
+      "id": "iter-regras-inline",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 680
+    },
+    {
+      "id": "iter-lint",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 681
+    },
+    {
+      "id": "iter-autoresearch-encerrada",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 682
+    },
+    {
+      "id": "iter-supersede",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 683
+    },
+    {
+      "id": "iter-ordem-chaves",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 684
+    },
+    {
+      "id": "iter-migrar-specs",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 685
+    },
+    {
+      "id": "iter-global-ponteiro",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 686
+    },
+    {
+      "id": "iter-contradicoes",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 687
+    },
+    {
+      "id": "iter-subgrafo",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 688
+    },
+    {
+      "id": "iter-proximo-passo",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 689
+    },
+    {
+      "id": "iter-lint-obsoleto",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 690
+    },
+    {
+      "id": "iter-hook-export",
+      "reason": "esquecido por consenso JEV retract_stale; texto integral preservado em docs/_meta/cerebro/events.jsonl e o efeito vive no codigo, AGENTS e testes",
+      "seq": 691
     }
   ]
 }
