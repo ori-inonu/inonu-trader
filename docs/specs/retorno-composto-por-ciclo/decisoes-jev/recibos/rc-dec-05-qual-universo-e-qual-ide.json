@@ -1,0 +1,166 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-05-qual-universo-e-qual-ide",
+    "specHash": "1a7f2e5382234f7d09c3fe84e4b4b4db06f631943ad55b2d74046dfdda18ed5c",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "adiar-identidade",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "adiar-identidade",
+          "unico-strict-proxy",
+          "jupiter-free-54"
+        ],
+        "framings": [
+          {
+            "order": [
+              "adiar-identidade",
+              "unico-strict-proxy",
+              "jupiter-free-54"
+            ],
+            "probs": {
+              "adiar-identidade": 0.77,
+              "unico-strict-proxy": 0.12,
+              "jupiter-free-54": 0.1,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "unico-strict-proxy",
+              "jupiter-free-54",
+              "adiar-identidade"
+            ],
+            "probs": {
+              "unico-strict-proxy": 0.08,
+              "jupiter-free-54": 0.04,
+              "adiar-identidade": 0.88,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "jupiter-free-54",
+              "adiar-identidade",
+              "unico-strict-proxy"
+            ],
+            "probs": {
+              "jupiter-free-54": 0.06,
+              "adiar-identidade": 0.82,
+              "unico-strict-proxy": 0.11,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "adiar-identidade": 0.8233,
+          "unico-strict-proxy": 0.1033,
+          "jupiter-free-54": 0.0667
+        },
+        "noneFits": 0.0067,
+        "agreement": 1,
+        "margin": 0.72,
+        "leader": "adiar-identidade",
+        "railProb": {
+          "adiar-identidade": 0.01,
+          "unico-strict-proxy": 0.26,
+          "jupiter-free-54": 0.15
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "adiar-identidade",
+          "unico-strict-proxy",
+          "jupiter-free-54"
+        ],
+        "framings": [
+          {
+            "order": [
+              "adiar-identidade",
+              "unico-strict-proxy",
+              "jupiter-free-54"
+            ],
+            "probs": {
+              "adiar-identidade": 0.81,
+              "unico-strict-proxy": 0.09,
+              "jupiter-free-54": 0.08,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "unico-strict-proxy",
+              "jupiter-free-54",
+              "adiar-identidade"
+            ],
+            "probs": {
+              "unico-strict-proxy": 0.09,
+              "jupiter-free-54": 0.03,
+              "adiar-identidade": 0.88,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "jupiter-free-54",
+              "adiar-identidade",
+              "unico-strict-proxy"
+            ],
+            "probs": {
+              "jupiter-free-54": 0.06,
+              "adiar-identidade": 0.8,
+              "unico-strict-proxy": 0.13,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "adiar-identidade": 0.83,
+          "unico-strict-proxy": 0.1033,
+          "jupiter-free-54": 0.0567
+        },
+        "noneFits": 0.0067,
+        "agreement": 1,
+        "margin": 0.7267,
+        "leader": "adiar-identidade",
+        "railProb": {
+          "adiar-identidade": 0.01,
+          "unico-strict-proxy": 0.26,
+          "jupiter-free-54": 0.15
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 9,
+    "failed": 0,
+    "inputTokens": 11845,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

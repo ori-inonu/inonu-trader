@@ -1,0 +1,77 @@
+{
+  "id": "rc-t16-reconciliacao-de-ordem-em-voo-apo",
+  "goal": "Como ler uma ordem sem recibo (enviando ou incerta sem hash) enquanto ela esta em voo? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "ordem_com_hash": "liquida por recibo: SUCCESS executa; ERROR ou CANCELLED falha; PENDING espera (receipt.ts:10-16)",
+    "janela_sem_hash": "de enviando (fsync antes do envio) ate a resposta: ate 120 s (quote 30 s mais execute 90 s, wire.ts:419)",
+    "teto_de_consulta": "1 consulta por ordem a cada 60 s e 5 por passagem (reconcile.ts:30-31)",
+    "executada_direta": "nenhum caminho real grava executada sem recibo ou palavra da pessoa; a ferramenta devolve transmitida (cli.ts:597)",
+    "lock": "lido so na partida; release zera held; arquivo ilegivel e velho apos 5 s (lock.ts:34, 52-96)",
+    "reconcile_saldo": "deps.reconcile nao e passado ao criador do ciclo; cycle.ts:552 soma zero em producao",
+    "merge": "wire.ts tem marcadores (linhas 825, 832, 1228) e blocos duplicados de watch e before (911 e 1267)",
+    "estado_ilegivel": "vira desconectado (state.ts:121-122); escrita sem fsync (state.ts:185-190)"
+  },
+  "rails": [
+    "Sem chave, endereco, saldo ou valor de carteira. Nenhuma opcao altera schema, journal, caixa, token ou envio de ordem: esses itens sao bloqueios do dono.",
+    "Ordem com hash liquida apenas por recibo da ferramenta (cli.ts:326); sem hash, so Solana tem recuperacao, e exige exatamente uma correspondencia (wire.ts:473-479).",
+    "Reenvio de ordem incerta e vedado pelo codigo; nenhuma consulta de recibo pode mudar isso (cycle.ts:762-767; ledger.ts:72-78).",
+    "wire.ts e cycle.ts estao em merge nao resolvido: nenhuma alteracao de reconciliacao antes de resolver os marcadores de conflito.",
+    "Recibo nao e saldo: saldo e relogio nunca liberam ordem em voo (reconcile.test.ts:44)."
+  ],
+  "options": [
+    {
+      "id": "adiar_so_medir",
+      "label": "Adiar e so medir",
+      "what": "Nenhuma mudanca no caixa, no token nem na liquidacao. Em sombra, contar ordens sem recibo, a idade delas e quantas tem hash, para dimensionar o bloqueio antes de decidir qualquer regra. Evidencia: ledger.ts:196-207 e cycle.ts:555, 557 mostram o efeito; sem contagem medida"
+    },
+    {
+      "id": "ler_em_voo_com_painel",
+      "label": "Manter em voo e mostrar no painel",
+      "what": "A regra atual fica: sem recibo ou palavra da pessoa, token e caixa seguem bloqueados e nunca ha reenvio. Acrescenta-se so a leitura visivel de idade e contagem no status do agente. Evidencia: cycle.ts:762-767 (sem reenvio); wire.ts:1115 (inFlight exposto ao status)"
+    },
+    {
+      "id": "revalidar_lock_por_ciclo",
+      "label": "Revalidar o LOCK a cada ciclo",
+      "what": "Hoje o lock e lido uma vez, na partida. Reler o arquivo antes de cada ciclo impede dois processos operando a mesma carteira se o LOCK for apagado com este processo vivo. Nao muda ordem nem liquidacao. Evidencia: lock.ts:52-96 (held so na aquisicao); wire.ts:686 (canRun usa held)"
+    },
+    {
+      "id": "pesquisar_recibo_evm",
+      "label": "Pesquisar recuperacao EVM sem hash",
+      "what": "Somente pesquisa: verificar se a ferramenta de carteira consulta historico por janela e rede sem --tx-hash, e como um recibo PENDING evolui. Nada e implementado nem liquida ordem. Evidencia: cli.ts:43 veda a lista; receipt.ts:6-7 exige hash; cli.ts:326"
+    },
+    {
+      "id": "resolver_merge_antes",
+      "label": "Resolver o merge antes",
+      "what": "Concluir a resolucao de wire.ts e cycle.ts (estado UU com marcadores) e rodar os testes de lock, ledger-tail e reconcile antes de tratar qualquer outro item deste ticket. Evidencia: wire.ts:825, 832, 1228 com marcadores; tsc TS1185"
+    },
+    {
+      "id": "bloquear_compras_sem_recibo",
+      "label": "Pausar compras enquanto houver ordem sem recibo",
+      "what": "Enquanto alguma ordem estiver em enviando ou incerta sem recibo, nenhuma compra nova entra. Venda de protecao e stop seguem como hoje. Reversível e sem mudar valores de limite; confirmar antes do Jev que não é limite de risco. Evidencia: cycle.ts:555, 804 e 868 bloqueiam só o token em voo; cycle.ts:557 e pending-buys.ts:41 reservam o caixa de compras enviadas; ledger.ts:196-207 soma o gasto em voo"
+    },
+    {
+      "id": "alerta_por_idade",
+      "label": "Alertar o dono após 15 min sem recibo",
+      "what": "Aviso visível no status do agente quando uma ordem sem recibo passa de 15 min, usando o mesmo teto já existente. Não altera caixa, token nem liquidação. Hoje só há contagem, sem limiar de tempo. Evidencia: cycle.ts:302 (PENDING_SETTLE_MS = 15 min); wire.ts:1115 (inFlight exposto ao status); cycle.ts:762-767 (ordem presa sem prazo nem reenvio). Existência de alerta por idade: não verificado por bus"
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "hash_pending_quanto",
+      "ask": "Quanto tempo uma transacao Solana fica PENDING no historico da ferramenta, e ela vira ERROR quando a rede a descarta? Nao verificado."
+    },
+    {
+      "id": "ordens_sem_hash_reais",
+      "ask": "Quantas ordens em enviando ou incerta sem hash existem no journal real, e ha alguma sem resolucao ha mais de uma hora? So o dono ou a leitura local revela."
+    },
+    {
+      "id": "evm_historico_janela",
+      "ask": "A ferramenta de carteira aceita historico por janela de tempo e rede sem --tx-hash? Documentacao da ferramenta nao lida."
+    },
+    {
+      "id": "versao_wire_no_merge",
+      "ask": "Qual versao de wire.ts (HEAD ou main) vence o merge, e a reconciliacao por recibo muda nela?"
+    }
+  ]
+}

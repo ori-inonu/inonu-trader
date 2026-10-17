@@ -1,0 +1,84 @@
+{
+  "id": "rc-t11-limiar-lambda-x-r-por-classe-de-l",
+  "goal": "Qual limiar de sombra separa janela de oportunidade (movimento previsto liquido de atrito maior que o atrito) por classe de liquidez e horizonte K de 1, 5 ou 15 min, antes de entrar no protocolo de sombra? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "atrito_liquido_ida_volta": "0,42% media (6 pares, faixa 0,17% a 0,56%)",
+    "atrito_raso": "1,8% a 2,1%; so entrada medida",
+    "mediana_abs_1_5_15_min": "0,38% / 0,63% / 1,03%",
+    "acerto_equilibrio_mediana": "1 min impossivel; 5 min 83,3%; 15 min 70,4%",
+    "raso_equilibrio_mediana": "1, 5 e 15 min impossivel; 60 min 97%",
+    "feed_ao_vivo_janela_fluxo": "60 s (FLOW_WINDOW_MS)",
+    "candles_cache": "fora do repo; nao reproduzido",
+    "lambda_R_5min_premissas": "cerca de 0,009% por minuto, 57 vezes abaixo de 0,5% (calculo com premissas)"
+  },
+  "rails": [
+    "Limiar so de sombra: nenhuma opcao vira regra de ordem, tamanho ou stop; isso e liberacao de live do dono.",
+    "Atrito de referencia: 0,42% ida e volta em liquido (6 pares), 1,8% a 2,1% em raso (so entrada medida).",
+    "Movimento e magnitude, nao direcao: qualquer gate precisa do acerto direcional do Jev medido antes de ser usado como criterio de entrada.",
+    "Janelas de 5 e 15 min sao sobrepostas; lambda usa fracao dividida por K, nao contagem bruta.",
+    "1 min nao fecha com mediana (0,38% contra 0,42%); 1 min so entra como medida, nunca como gate."
+  ],
+  "options": [
+    {
+      "id": "medir-sem-limiar",
+      "label": "Medir todas as janelas sem limiar e fixar depois",
+      "what": "Registra markout de 1, 5 e 15 min de toda janela, sem gate, e fixa o limiar depois, com a distribuicao condicional de retorno liquido por classe. Evidencia: Sem E|m| condicional medido; 57% dos candidatos ja fecham antes do Jev (validacao G1)."
+    },
+    {
+      "id": "limiar-2x-atrito-rotulo",
+      "label": "Rotulo de 2 x atrito em 5 e 15 min, sem filtro",
+      "what": "Marca janelas de 5 e 15 min elegiveis se o movimento previsto passar de 2 x atrito (0,84% liquido). Rotula e nao bloqueia nada nem envia ordem. Evidencia: Atrito 0,42% (validacao-e-baseline.md:19); mediana 5 min 0,63%, 15 min 1,03% (research.md:29)."
+    },
+    {
+      "id": "limiar-por-classe-cotado",
+      "label": "Limiar por classe com atrito cotado por par",
+      "what": "Troca o atrito fixo por cotacao sintetica de ida e volta em lote por par e classe, com margem de 2 x. Somente sombra, sem ordem. Evidencia: Atrito fixo em 6 pares; raso so com entrada medida (validacao-e-baseline.md:19); round-trip.ts e hipotetico."
+    },
+    {
+      "id": "expectativa-liquida-p-hat",
+      "label": "Entrar so com expectativa liquida positiva estimada",
+      "what": "Em sombra, entra so se (2p-1) x movimento esperado menos atrito der margem, com p calibrado pelo Jev contra o futuro. Exige calibracao ainda nao medida. Evidencia: Acerto do Jev nao medido (G4); equilibrio 70,4% em 15 min e 83,3% em 5 min (calculo)."
+    },
+    {
+      "id": "quantil-historico-token",
+      "label": "Limiar pelo percentil 75 de cada token",
+      "what": "Gate por token: movimento acima do percentil 75 dos movimentos absolutos de K minutos do proprio token, mais o atrito da classe. Evidencia: move-vs-friction.ts:12 exige cache externo; nenhum candle no repo (data/)."
+    },
+    {
+      "id": "gate-como-regra-de-ordem",
+      "label": "Usar o limiar como regra de compra real",
+      "what": "Dispararia ordem quando o limiar passa. Vedada: o limiar e so de sombra e ordem real depende de autorizacao do dono. Evidencia: Ticket T11: vale como limiar de sombra, nao como regra de ordem."
+    },
+    {
+      "id": "definir-classes-liquidez",
+      "label": "Definir classes de liquidez antes do limiar",
+      "what": "Fixa cortes de classe por TVL e volume diario com dado de pool, antes de medir o limiar por classe. Somente sombra, sem ordem. Evidencia: Nenhuma definicao de classe em src (grep de 'liquidity class' e 'classe de liquidez' sem resultado). src/opportunity/sizing.ts:36 (liquidityShare) e um teto por ordem, nao uma classe. validacao-e-baseline.md:19 tem so 3 grupos, com n de 6, 1 e 1 pares."
+    },
+    {
+      "id": "reaproveitar-move-to-cost",
+      "label": "Usar cost.moveToCost1h como rotulo em sombra",
+      "what": "Rotula em sombra as janelas em que a razao ATR 1h sobre custo de ida e volta passa de 1, reaproveitando o que o repo ja calcula por instrumento. Nao bloqueia nada. Evidencia: src/intel/features/compute.ts:224-226 (roundTrip = taxa + slippage + spread; moveToCost1h = atrBps1h / roundTrip); src/outcomes/wire.ts:66 (22 bps em spot, wire.test.ts:40)."
+    }
+  ],
+  "forbidden": [
+    "gate-como-regra-de-ordem"
+  ],
+  "unknowns": [
+    {
+      "id": "candles-1-5-15-interseccao",
+      "ask": "Serie de candles de 1 min por token da interseção bolsa x Solana, com o cache que o dono guarda fora do repo."
+    },
+    {
+      "id": "emc-condicional",
+      "ask": "Movimento absoluto medio condicional a passar 0,84%, por classe e K (nao existe no repo)."
+    },
+    {
+      "id": "saida-raso",
+      "ask": "Custo de saida em token raso, nao medido (so entrada tem 2,1%)."
+    },
+    {
+      "id": "fonte-s-g4",
+      "ask": "Qual movimento de 5 min gerou o 90% de G4 (implica cerca de 1,15%, nao a mediana de 0,63%)."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "rc-t12-universo-que-o-ciclo-de-sombra-ob",
+  "goal": "Qual universo a sombra observa primeiro: os 1965 da bolsa, a interseção por mint verified (54 ou 104 símbolos), só pools Solana por RPC, ou adiar a escolha e medir etapas? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "instrumentos_okx_vivos": "1965 (spot 1184, swap 509, futuros 272); 445 bases spot",
+    "verified_jupiter_T05": "111 exatos; 104 com mint único; 7 ambíguos; 54 com tag strict, major ou moonshot",
+    "jupiter_free": "60 por minuto por organização, janela de 60 s",
+    "teto_jev_local": "720 consultas por dia, 30 por hora (configuração, não contrato)",
+    "atrito_liquido": "0,42% em média, 6 pares de um ativo, n pequeno",
+    "movimento_mediano_1min": "0,38%, sem direção, 16 tokens, origem fora do repo",
+    "voltas_do_projeto": "0 de 7 positivas, -0,41% bruto",
+    "ws_publico_bolsa": "3 conexões por s por IP, 480 inscrições por hora, queda após 30 s"
+  },
+  "rails": [
+    "Escopo do dono: só spot e só Solana (2026-10-15). A bolsa é observável, não negociável pela carteira.",
+    "Teto local de 720 consultas ao Jev por dia: universo maior não aumenta decisões por hora, só o funil.",
+    "Jupiter Free: 60 requisições por janela de 60 s por organização; 54 a 1 por minuto usam 90%, 104 usam 173%, sem lote verificado.",
+    "Identidade: 54 e 104 são casamento por símbolo; a OKX não traz endereço; nenhum mint confirmado pelo emissor.",
+    "Sem plano pago, sem raspagem do site da OKX (OKX API Agreement 9.4) e sem nova dependência de produção: são bloqueios do dono."
+  ],
+  "options": [
+    {
+      "id": "a-bolsa-1965",
+      "label": "Os 1965 da bolsa, só observação em sombra",
+      "what": "A sombra acompanha os 1965 instrumentos pelo WebSocket público para regime e fluxo. Não há token Solana e nada é executado; serve de proxy, não de universo de carteira. Evidencia: 1965 em uma conexão, 3870 a 4100 msg/s (api-limites §2)"
+    },
+    {
+      "id": "b-strict-54",
+      "label": "54 símbolos com mint verified e tag strict",
+      "what": "Conta só os 54 símbolos com mint único verified e tag strict, major ou moonshot. Exclui os 7 ambíguos. Identidade por símbolo, a confirmar por endereço antes de contar janelas. Evidencia: Premissa T05: 54 de 104 únicos; 7 ambíguos fora; Jupiter Free absorve 90%"
+    },
+    {
+      "id": "b-verified-104",
+      "label": "104 símbolos com mint único verified",
+      "what": "Amplia para os 104 mints únicos, sem exigir tag strict. Cobre mais, com identidade mais frouxa, e excede a janela Free da Jupiter a uma consulta por minuto (173%) sem lote. Evidencia: Premissa T05; Jupiter Free 60 por minuto (173% a 1 por minuto)"
+    },
+    {
+      "id": "c-pools-rpc",
+      "label": "Só pools Solana assinados por RPC, dezenas",
+      "what": "Ignora a bolsa e lê por RPC poucos pools do conjunto negociado, com decodificadores validados contra IDL. Cobre preço Solana real, mas o decodificador ainda não é confiável. Evidencia: RPC público 100 por 10 s, não é produção; IDL oficial não lido (api-limites §3)"
+    },
+    {
+      "id": "d-adiar-medir-etapas",
+      "label": "Adiar a escolha e só carimbar etapas",
+      "what": "Não escolhe universo agora. Mede latência por etapa, idade dos fatos e cobertura do feed, o que vale para qualquer opção. É a opção mais conservadora e não avança a meta. Evidencia: Pior caso de 170 s antes do modelo; ciclo medido de 37,5 s (arquitetura §4)"
+    },
+    {
+      "id": "e-lote-onchainos",
+      "label": "Consultar a OnchainOS em lote (price-info até 100 tokens por chamada)",
+      "what": "Cobre os 97 a 103 tokens com 2 chamadas por minuto, sem tocar o balde da Jupiter. Só é viável se a cota Basic do plano Free aguentar. A spec projeta o consumo atual em 109,5 mil a 158 mil por mês, acima dos 100 mil do plano Free, então a opção depende de decisão de plano, que é bloqueio do dono. Evidencia: api-limites-e-fontes.md:11 (Free 100 mil Basic por mês), :38 (price-info até 100 tokens por "
+    },
+    {
+      "id": "e-piloto-2-pares",
+      "label": "Piloto de sombra com os 2 pares que o pulso já assina",
+      "what": "Começar com BTC-USDT e SOL-USDT, que o pulso já assina em barras de 1 min, para medir latência por etapa e cobertura do feed antes de escolher o universo. Não cria dependência nova, mas o pulso está desligado por padrão e a ligação ao ciclo é zona do Codex. Evidencia: api-limites-e-fontes.md:58 (src/pulse/pulse.ts, BTC-USDT e SOL-USDT, barras de 1 min, desligado por padrão); arquitetura-e-decisao."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "cota-typesafe-console",
+      "ask": "Qual a cota real por segundo e por dia da organização TypeSafe no console?"
+    },
+    {
+      "id": "plano-chave-jupiter",
+      "ask": "Em qual plano a chave Jupiter do dono está e qual a janela efetiva dela?"
+    },
+    {
+      "id": "rps-okx-conta",
+      "ask": "Qual o RPS vigente da conta OKX do dono no portal (Trade e Market)?"
+    },
+    {
+      "id": "lista-jupiter-completa",
+      "ask": "A lista verified completa da Jupiter responde hoje e quantos mints por símbolo ela traz (217 ou 104)?"
+    }
+  ]
+}

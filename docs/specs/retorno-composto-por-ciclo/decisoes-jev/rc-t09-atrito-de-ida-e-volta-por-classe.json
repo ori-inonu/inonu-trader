@@ -1,0 +1,82 @@
+{
+  "id": "rc-t09-atrito-de-ida-e-volta-por-classe",
+  "goal": "Qual amostra e cadencia de cotacao de ida e volta usar para medir o atrito por classe de liquidez, sem tirar cota das decisoes do Jev? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "cotacoes_por_ida_e_volta": "2 (perna 1 e volta, round-trip.ts:157)",
+    "cota_basic_mes": "100.000; projecao 160.451 no ritmo de 17/10",
+    "sustentavel_basic_dia": "5.953 por dia nas rotas todas (api-budget 17/10)",
+    "intervalo_cliente": "1.100 ms (okx-dex.ts:8)",
+    "pares_interseccao": "104 unicos, 54 com tag estrita, 7 ambiguos fora",
+    "atrito_liquido": "0,17% a 0,56%, media 0,42%, n=6 de um ativo",
+    "atrito_intermediario_raso": "1,82% (n=1); pelo menos 2,1% (n=1)",
+    "impacto_nulo": "bloqueado como desconhecido (round-trip.ts:107); taxa nao medida"
+  },
+  "rails": [
+    "Cotacao usa cota Basic, classe nao confirmada (onchain-plan.ts:88-92); consumo de cotacao deve ser medido antes de ampliar.",
+    "Atrito por cotacao exclui taxa de rede, prioridade e conta de token; numeros sao piso do custo total.",
+    "Protecao de impacto: repo envia percentual 0 a 100 em v6, pagina v5 descreve fracao 0 a 1,0; resolver antes de lote.",
+    "Nenhuma ordem, assinatura, transferencia ou chamada de Jev nesta pesquisa; somente leitura e cotacao sintetica planejada.",
+    "Taxas de cota publicadas do Trade (Trial 1 RPS) podem nao valer para o quote; limite por segundo do quote nao publicado."
+  ],
+  "options": [
+    {
+      "id": "so-medir-10-pares",
+      "label": "Medir 10 pares, 24 rodadas por dia",
+      "what": "Cotar ida e volta de 10 pares escolhidos por classe, 24 vezes ao dia, sem decisao e sem execucao. Cerca de 480 cotacoes por dia, perto de 8% do sustentavel. Evidencia: 480 por dia = 2 x 10 x 24; sustentavel 5.953 por dia"
+    },
+    {
+      "id": "estrat-54-por-hora",
+      "label": "54 pares estritos a cada hora",
+      "what": "Cotar os 54 pares com tag estrita de hora em hora, sem decisao. Cerca de 2.592 cotacoes por dia, perto de 44% do sustentavel, que pode disputar com o Jev. Evidencia: 2.592 por dia = 2 x 54 x 24; 44% de 5.953"
+    },
+    {
+      "id": "104-pares-a-cada-3-4h",
+      "label": "104 pares a cada 3,4 horas",
+      "what": "Cobrir o conjunto inteiro de candidatos a cada 3,4 h, cerca de 1.470 cotacoes por dia, perto de 25% do sustentavel, com parada se o consumo passar do sustentavel. Evidencia: 1.470 por dia = 2 x 104 x 24 / 3,4; 25% de 5.953"
+    },
+    {
+      "id": "adiar-ate-contador-por-rota",
+      "label": "Adiar a medicao ate o contador por rota",
+      "what": "Nao cotar em lote ate existir contagem por rota de quote e a protecao estar confirmada. Mantem os 6, 1 e 1 pares ja medidos como hipotese, sem gastar cota. Evidencia: api-budget so tem totais por tier; A9 e A10 sem confirmacao"
+    },
+    {
+      "id": "medir-sem-cota-okx",
+      "label": "Medir atrito sem gastar cota OKX",
+      "what": "Estimar o atrito por simulacao de pool Solana (leitura de estado por RPC, limite publico de 100 requisicoes por 10 s) e pelos recibos ja gravados (25 taxas em execution-latest.json), sem chamar a rota de cotacao. Reversivel, sem dinheiro, sem ordem. Evidencia: docs/specs/retorno-composto-por-ciclo/api-limites-e-fontes.md (RPC publico 100 req/10 s); pesquisa-t01 e fontes-de-edge.md:40 (leitura de p"
+    },
+    {
+      "id": "corrigir-instrumento-antes",
+      "label": "Corrigir o medidor antes de cotar",
+      "what": "Ajustar quoteRoundTrip para emitir um status com unidade verificada e para a segunda perna da volta, testar com fixture, e so depois gastar cota em 1 par. Nao gasta cota OKX. Evidencia: src/okx-market/round-trip.ts:133, :157-162 (status sempre unknown; legs vazio); src/operator/candidates.ts:158-159 (ja faz duas cotacoes)."
+    },
+    {
+      "id": "reduzir-consumo-atual",
+      "label": "Reduzir o consumo Basic atual primeiro",
+      "what": "Antes de ampliar a amostra, cortar o uso Basic diario ate ficar abaixo do sustentavel de 5.953, medindo por rota quanto e cotacao e quanto e leitura de mercado. Evidencia: scripts/api-budget.ts (projecao 160.451 contra 100.000); usage-2026-10.json (4.753, 4.934, 4.694 por dia Basic); decisao sem contador por rota (A6)."
+    },
+    {
+      "id": "piloto-teto-duro",
+      "label": "Piloto de 1 par com teto duro",
+      "what": "Um par, intervalo de pelo menos 1,1 s e teto diario fixo em numero baixo de cotacoes, com parada dura no teto (nunca so aviso), antes de qualquer lote. Reversivel. Evidencia: src/okx-market/okx-dex.ts:8 (1.100 ms); 1 RPS do trial no ticket; api-budget.ts (sustentavel por dia)."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "classe-cota-quote",
+      "ask": "No console OKX ou no portal, em qual classe de cota (Basic ou Premium) o endpoint /dex/aggregator/quote conta, e qual o RPS vigente da conta?"
+    },
+    {
+      "id": "formato-protecao-v6",
+      "ask": "O endpoint v6 aceita priceImpactProtectionPercent em percentual de 0 a 100 ou em fracao de 0 a 1,0?"
+    },
+    {
+      "id": "parcela-cotacao-basic",
+      "ask": "Qual parcela da cota Basic de 16.165 usadas em 17/10 foi de cotacao, e qual a classe de liquidez de cada um dos 104 pares?"
+    },
+    {
+      "id": "taxa-impacto-nulo",
+      "ask": "Qual percentual de cotacoes de 10 pares volta com impacto nulo, e o cliente deve bloquear, rodar sem protecao ou tratar como classe rasa?"
+    }
+  ]
+}

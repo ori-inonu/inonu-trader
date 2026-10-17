@@ -1,0 +1,58 @@
+{
+  "id": "rc-t07-decomposicao-da-taxa-de-rede-e-ca",
+  "goal": "Como medir a decomposicao da taxa de 97.859 lamports antes de qualquer mudanca no limite de unidades? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {},
+  "rails": [
+    "Nenhuma ordem, assinatura ou envio nesta decisao; dinheiro real e live ficam com o dono.",
+    "Migracao de journal ou de schema, inclusive campos novos em fills.ts gravados no journal, e decisao do dono e nao entra nas opcoes.",
+    "fills.ts nao guarda prioridade nem limite de unidades: a decomposicao exige leitura da transacao final.",
+    "Somente fontes publicas e RPC publico, com limite de 100 requisicoes por 10 segundos."
+  ],
+  "options": [
+    {
+      "id": "medir-sem-mudar-codigo",
+      "label": "Adiar e so medir o que existe",
+      "what": "Agregar a taxa ja gravada em arquivo local git-ignored, sem tocar src nem o journal. Decompor so depois. Evidencia: fills.ts:30-32 ja guarda a taxa total e a parcela da carteira"
+    },
+    {
+      "id": "ler-transacao-por-assinatura",
+      "label": "Ler a transacao final por assinatura",
+      "what": "Reler por RPC publico, sem gravar no journal, a transacao de cada ordem com taxa e separar base, prioridade e residuo pelas instrucoes ComputeBudget. Evidencia: solana-receipts.ts:52 le meta.fee; ComputeBudget nao e lido no repo"
+    },
+    {
+      "id": "simular-limite-unidades",
+      "label": "Simular limite de unidades em sombra",
+      "what": "Simular a mesma transacao com limites menores e comparar unidades consumidas com o limite pedido. Nada e assinado nem enviado. Evidencia: Prioridade = preco x limite pedido, nao consumido (pesquisa-t08 a1 e a2)"
+    },
+    {
+      "id": "conciliar-cotacao",
+      "label": "Conciliar cotacao com recibo",
+      "what": "Comparar, nas mesmas ordens, a taxa cotada de US$ 0,0005144 com a taxa do recibo, para ver se a cotacao cobre so a taxa base. Evidencia: Cotacao em VIABILIDADE-CICLO-1MIN-E-COTAS-20261015.md:47"
+    },
+    {
+      "id": "reconciliar-ledger-antes",
+      "label": "Reconciliar o ledger antes de decompor",
+      "what": "Fixar no ledger deduplicado por orderKey a contagem de ordens com taxa de carteira (17), a mediana (78.724), o p25 (50.143) e o p75 (168.390), e retirar da linha de base as 132 linhas repetidas antes de qualquer decomposição. Evidencia: execution-audits.jsonl deduplicado por orderKey (cálculo deste ceticismo); docs/specs/retorno-composto-por-ciclo/validacao-e-baseline.md:18"
+    },
+    {
+      "id": "aceitar-custo-medido",
+      "label": "Aceitar a taxa medida e focar no atrito",
+      "what": "Registrar a taxa de rede como custo medido, sem decompor, e priorizar a medição de spread e impacto por tamanho, porque a taxa de rede é pequena frente ao atrito percentual medido de 0,42% a 1,82%. Evidencia: docs/specs/retorno-composto-por-ciclo/api-limites-e-fontes.md:102 (rede de cerca de 0,017% de US$ 121, cálculo não verificado no repo); docs/specs/retorno-composto-por-ciclo/validacao-e-basel"
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "assinaturas-do-recibo",
+      "ask": "Quantas assinaturas, qual preco por CU e qual limite de unidades tem o recibo de 97.859 lamports? So a transacao final mostra."
+    },
+    {
+      "id": "base-da-cotacao",
+      "ask": "A cotacao de US$ 0,0005144 cobre so a taxa base ou tambem a prioridade?"
+    },
+    {
+      "id": "aluguel-de-conta",
+      "ask": "Quanto de aluguel de conta de token foi debitado nas duas compras com saida extra de cerca de 1,49 milhao a 1,51 milhao de lamports?"
+    }
+  ]
+}

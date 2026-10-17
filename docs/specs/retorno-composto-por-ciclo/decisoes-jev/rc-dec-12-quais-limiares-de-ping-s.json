@@ -1,0 +1,44 @@
+{
+  "id": "rc-dec-12-quais-limiares-de-ping-s",
+  "goal": "Quais limiares de ping, silencio e frescor adotar para o feed da bolsa, sabendo que o servidor fecha apos 30 s sem dado? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "livro_limite": "5 000 ms (src/jev-read/types.ts:193)",
+    "ticker_limite": "15 000 ms (src/jev-read/types.ts:194)",
+    "offset_erro_max": "1 250 ms pela regra de RTT 2 500 ms (src/system-one/clock.ts:17)",
+    "t03_a7_amostra": "primeiras 2000 mensagens por canal, com 1965 inscritos (pesquisa-t03:31)",
+    "trades_lag": "121 ms de mediana (pesquisa-t03:30)",
+    "rtt_http_medido": "380 a 450 ms (pesquisa-t03:14, endpoint de tickers)",
+    "ts_semantica": "nao verificada em fonte primaria",
+    "p99_atraso": "nao medido em 24 h",
+    "regra_servidor": "conexao cai sem inscricao ou dado por mais de 30 s",
+    "pong_como_dado": "nao documentado"
+  },
+  "rails": [
+    "Migrar porta 8443 para 443 antes de 31/10/2026 em plan.ts:4, node-adapter.ts:70, providers.json:15, okx-ws.ts e feed.ts: mudanca de codigo obrigatoria, fora desta escolha.",
+    "Ping nao protege contra corte do servidor se o pong nao renovar prazo.",
+    "Frescor decide entrada no Brief; se o dono o tratar como limite de risco, vira bloqueio.",
+    "Aceite de termos da OKX fica com o dono."
+  ],
+  "options": [
+    {
+      "id": "teste-2h-canal-quieto",
+      "label": "Teste de 2 h em canal quieto",
+      "what": "Antes de qualquer constante nova, rodar teste de duas horas em canal quieto para medir se o pong renova o prazo. Evidencia: Pong como dado nao documentado; leitura parcial de 100 mil de 406 mil caracteres (T20)."
+    },
+    {
+      "id": "ping15-corte25",
+      "label": "Ping de 15 s e corte de 25 s",
+      "what": "Ping de 15 s e corte de 25 s sem frame de dado em okx-ws.ts e feed.ts. Evidencia: okx-ws.ts usa 20/45 s e feed.ts 25/60 s, ambos acima do limite de 30 s (T20)."
+    },
+    {
+      "id": "medir-24h-manter-limites",
+      "label": "Medir 24 h e manter limites",
+      "what": "Manter 5 s para livro, 15 s para ticker e as constantes atuais, medindo p99 por canal antes de mudar. Evidencia: types.ts:193-194 sem medida que os justifique; 1,3 s e erro de RTT, nao latencia (T14)."
+    },
+    {
+      "id": "idade-pela-incerteza",
+      "label": "Idade pela incerteza do offset",
+      "what": "Limite de idade derivado da incerteza do offset, depois do p99 medido. Evidencia: Incerteza de metade do RTT, ate 1,25 s (clock.ts); RTT de 380 a 450 ms medido uma vez."
+    }
+  ]
+}

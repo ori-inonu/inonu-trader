@@ -1,0 +1,74 @@
+{
+  "id": "rc-t05-identidade-solana-por-endereco-do",
+  "goal": "Qual regra de identidade por mint vale para cruzar simbolos da bolsa com a DEX na medicao em sombra? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "instrumentos_SPOT_OKX_live": "1184; 445 bases unicas; 443 com USDT",
+    "OKX_sem_endereco_de_contrato": "sim, nenhum campo de mint",
+    "Jupiter_verified": "4003 entradas; 3901 simbolos; 93 com mais de um mint",
+    "cruzamento_OKX_x_Jupiter_verified": "111 bases; 109 com USDT",
+    "mint_unico": "104; ambiguos 7 (AI, BABY, LUNA, MEGA, PEPE, SHIB, UNI)",
+    "mint_unico_com_tag_forte": "54 (strict, major ou moonshot-verified)",
+    "217_do_repo": "nao reproduzido; token.jup.ag/all sem resposta",
+    "confirmacao_por_emissor": "nenhuma nesta pesquisa"
+  },
+  "rails": [
+    "Identidade por simbolo sem mint nao pode ser usada em sinal, medida de desalinhamento ou decisao (fato: fontes-de-edge.md:40).",
+    "A tag verified da Jupiter nao prova identidade: ha simbolos com dois mints verified (fato a7).",
+    "Nenhuma operacao real, ordem, carteira ou chave e tocada por esta decisao; e so regra de medicao em sombra.",
+    "Mint ambiguo (mais de um verified) fica excluido ate desambiguacao por fonte oficial ou contagem de pools."
+  ],
+  "options": [
+    {
+      "id": "adiar-so-medir",
+      "label": "Adiar a identidade e medir so bolsa",
+      "what": "Nao cruzar com DEX ate existir identidade confirmada. Medir movimento e atrito apenas na bolsa, sem mint nem sinal. Evidencia: Atrito 0,42 por cento e movimento 0,38 por cento ja medidos (validacao-e-baseline.md)."
+    },
+    {
+      "id": "unico-verified-104",
+      "label": "Mint unico verified, 104 simbolos",
+      "what": "Aceitar os 104 simbolos com um unico mint verified da Jupiter, excluir os 7 ambiguos, gravar mint em cada evento. Sem confirmacao de emissor. Evidencia: Calculo a5: 104 unicos, 7 ambiguos (a5)."
+    },
+    {
+      "id": "unico-strict-54",
+      "label": "Mint unico com tag forte, 54 simbolos",
+      "what": "Aceitar so os 54 de mint unico com tag strict, major ou moonshot-verified. Gravar mint e fonte. Reversivel por configuracao. Evidencia: Calculo a6: 54 de 104 unicos tem tag forte."
+    },
+    {
+      "id": "emissor-confirma",
+      "label": "Mint so com fonte oficial do emissor",
+      "what": "Aceitar somente simbolos com mint confirmado por pagina oficial do emissor ou lista curada pelo dono. Hoje o conjunto e zero. Evidencia: Nenhuma confirmacao de emissor nesta pesquisa (a10)."
+    },
+    {
+      "id": "simbolo-puro",
+      "label": "Identidade so pelo simbolo da bolsa",
+      "what": "Usar o simbolo da OKX como identidade do token na DEX, sem mint. Vedada pelo proprio ticket. Evidencia: Ticket T05 e fontes-de-edge.md:40 (a2, a7)."
+    },
+    {
+      "id": "pool-onchain",
+      "label": "Mint unico verified com confirmacao on-chain",
+      "what": "Aceitar o mint unico do registro verified somente se houver pool com esse mint lido por RPC, com liquidez e metadados batendo. Nao depende de emissor e nao altera schema, so leitura de dados. Serve para separar identidade plausivel de simbolo reutilizado. Evidencia: fontes-de-edge.md:40 e research.md:12 citam leitura de pools por RPC como fonte possivel. O ponto d3 esta em aberto e nao foi consult"
+    },
+    {
+      "id": "dupla-fonte",
+      "label": "Cruzar registro verified com a lista completa da Jupiter",
+      "what": "Aceitar um simbolo so se o mint unico verified coincidir com o mint do registro completo https://cache.jup.ag/tokens. Isso rejeita casos em que o registro verified esconde um segundo mint. Ainda nao foi medido quantos dos 104 passam no cruzamento. Evidencia: Consulta de 2026-10-17: cache.jup.ag/tokens respondeu 200 com 287.863 entradas e 234 casamentos com bases OKX, contra 111 no registro verifie"
+    }
+  ],
+  "forbidden": [
+    "simbolo-puro"
+  ],
+  "unknowns": [
+    {
+      "id": "d1",
+      "ask": "O dono aceita a tag verified da Jupiter como fonte de identidade ou exige pagina oficial do emissor?"
+    },
+    {
+      "id": "d2",
+      "ask": "Qual fonte publica oficial deve valer para a lista completa de mints (o 217 do repo)?"
+    },
+    {
+      "id": "d3",
+      "ask": "Qual o numero de pools e liquidez por mint nos 7 ambiguos (leitura on-chain)? Nao consultado."
+    }
+  ]
+}

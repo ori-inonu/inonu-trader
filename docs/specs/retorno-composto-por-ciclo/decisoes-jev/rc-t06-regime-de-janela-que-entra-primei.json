@@ -1,0 +1,72 @@
+{
+  "id": "rc-t06-regime-de-janela-que-entra-primei",
+  "goal": "Qual regime de janela entra primeiro em sombra: deslocamento bolsa x DEX, migração pump.fun, momentum de 5 a 15 min, ou adiar e só coletar dados? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "atrito_ida_volta_liquido": "0,42%, média de 6 pares de um ativo (n pequeno)",
+    "movimento_mediano": "0,38% em 1 min; 1,03% em 15 min (16 tokens)",
+    "ras7_momentum_7d": "+0,47% no olhar, -0,47% na confirmação; nenhum grupo passou nas duas partes",
+    "graduacao_pumpfun": "0,63% a 6,7% conforme janela e fonte; sem registro do emissor",
+    "preditor_graduacao": "AUROC 0,464 na validação (arXiv 2607.02823 v4)",
+    "pumpportal_dados": "subscribeNewToken e subscribeMigration gratuitos; subscribeTokenTrade 0,01 SOL por 10.000 trades",
+    "mapd_bolsa_dex": "0,06% a 0,08% em BTC, ETH e SOL (working paper não revisado)",
+    "sanduiche_ambiente": "6,85 milhões de sanduíches de out/25 a out/26 (fornecedor)"
+  },
+  "rails": [
+    "Sombra apenas: sem ordem, sem assinatura, sem capital e sem chamada paga nesta decisão. Dinheiro real só com autorização do dono.",
+    "Escopo fixo: spot, Solana, sem alavancagem, caixa não vai a empréstimo (decisão do dono de 2026-10-15).",
+    "Identidade por endereço é pré-requisito para qualquer par bolsa x Solana; símbolo igual não prova o mesmo contrato.",
+    "Toda métrica sai com atrito de 0,42% ida e volta descontado; sinal que não supera o atrito não é lucro.",
+    "Não prometer lucro: a meta composta de 0,5% a 1% por minuto é hipótese a medir."
+  ],
+  "options": [
+    {
+      "id": "c-momentum-minuto-sombra",
+      "label": "Momentum de 5 a 15 min em sombra (c)",
+      "what": "Sinal de momentum na interseção com feed público OKX, sem ordem, com markout de 1, 5 e 15 min e atrito de 0,42% descontado. Custo de dado zero e sem chave. Evidencia: Atrito 0,42% contra mediana de 0,38% em 1 min; 15 min exige acerto de ~95%"
+    },
+    {
+      "id": "b-migracao-pumpfun-sombra",
+      "label": "Migração pump.fun em sombra (b)",
+      "what": "Registrar eventos subscribeMigration sem comprar, medindo latência e taxa diária, depois retorno líquido simulado com sanduíche e tip. Exige confirmar chave e schema. Evidencia: Taxa de 0,63% a 6,7% por janela; preditor AUROC 0,464 fora da amostra"
+    },
+    {
+      "id": "a-desloc-bolsa-dex-majors",
+      "label": "Deslocamento bolsa x DEX em majors (a)",
+      "what": "Mapear identidade por endereço dos 217 símbolos e medir spread executável em sombra só nos pares com profundidade, em duas pernas. Evidencia: Desvio 0,06% a 0,08% abaixo do atrito 0,42%; SOL lidera na DEX; sem estudo CEX-DEX em Solana"
+    },
+    {
+      "id": "adiar-so-coletar",
+      "label": "Adiar e só coletar dados brutos",
+      "what": "Não escolher regime: gravar feed público OKX e eventos PumpPortal por duas semanas, sem sinal, para medir cobertura, latência e taxa antes de decidir. Evidencia: Sem identidade por endereço e sem dado de minuto de memecoin com licença no repo"
+    },
+    {
+      "id": "validar-atrito-antes",
+      "label": "Validar atrito com fonte primaria antes do regime",
+      "what": "Localizar ou reconstituir o registro de execucoes que sustenta 0,42% e 1,82% (fills.jsonl ausente em data/) e medir atrito por operacao com fonte primaria, antes de escolher qualquer regime. Nao altera codigo nem envia ordem; le dados ja gravados. Evidencia: data/fills.jsonl nao existe (checado); pesquisa t07 linhas 44 e 47 marca atrito como VERIF=parcial; .gitignore ignora data/."
+    },
+    {
+      "id": "momentum-solana-sem-okx",
+      "label": "Momentum so com dado Solana em sombra",
+      "what": "Sinal de momentum de 5 a 15 min lido apenas de pools Solana (RPC) e de agregador de preco, sem feed OKX, evitando a questao da clausula 9.4. Sombra, sem ordem, com markout de 1, 5 e 15 min e atrito descontado. Evidencia: research.md linha 12 (pools lidos por RPC); api-limites-e-fontes.md traz limites de RPC e Jupiter; a decisao nao considera esta rota."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "chave_pumpportal",
+      "ask": "A inscrição em subscribeMigration exige chave de API e carteira com 0,02 SOL? Só a conta PumpPortal confirma."
+    },
+    {
+      "id": "schema_migracao",
+      "ask": "Quais campos o evento de migração traz (mint, pool, assinatura)? Só um teste ao vivo revela."
+    },
+    {
+      "id": "identidade_217",
+      "ask": "Quantos dos 217 símbolos da interseção têm o mesmo contrato nos dois lados?"
+    },
+    {
+      "id": "custo_sanduiche",
+      "ask": "Qual o custo real de sanduíche e tip numa compra de US$ 10 a US$ 30 de memecoin?"
+    }
+  ]
+}

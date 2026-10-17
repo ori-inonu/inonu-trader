@@ -1,0 +1,184 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-11-como-o-cliente-onchainos",
+    "specHash": "b8bdc8ae900f190bd366c71835794e87f97eaf0bc41023d0dc1c1e6a7998cb71",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "medir-codigos-sombra",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "corrigir-doc-cobertura",
+          "medir-codigos-sombra",
+          "contador-por-rota-sombra",
+          "manter-402-bloqueio"
+        ],
+        "framings": [
+          {
+            "order": [
+              "corrigir-doc-cobertura",
+              "medir-codigos-sombra",
+              "contador-por-rota-sombra",
+              "manter-402-bloqueio"
+            ],
+            "probs": {
+              "corrigir-doc-cobertura": 0.12,
+              "medir-codigos-sombra": 0.86,
+              "contador-por-rota-sombra": 0.01,
+              "manter-402-bloqueio": 0,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "medir-codigos-sombra",
+              "contador-por-rota-sombra",
+              "manter-402-bloqueio",
+              "corrigir-doc-cobertura"
+            ],
+            "probs": {
+              "medir-codigos-sombra": 0.91,
+              "contador-por-rota-sombra": 0.02,
+              "manter-402-bloqueio": 0,
+              "corrigir-doc-cobertura": 0.06,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "contador-por-rota-sombra",
+              "manter-402-bloqueio",
+              "corrigir-doc-cobertura",
+              "medir-codigos-sombra"
+            ],
+            "probs": {
+              "contador-por-rota-sombra": 0.04,
+              "manter-402-bloqueio": 0,
+              "corrigir-doc-cobertura": 0.07,
+              "medir-codigos-sombra": 0.88,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "corrigir-doc-cobertura": 0.0833,
+          "medir-codigos-sombra": 0.8833,
+          "contador-por-rota-sombra": 0.0233,
+          "manter-402-bloqueio": 0
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.8,
+        "leader": "medir-codigos-sombra",
+        "railProb": {
+          "corrigir-doc-cobertura": 0.13,
+          "medir-codigos-sombra": 0.08,
+          "contador-por-rota-sombra": 0.28,
+          "manter-402-bloqueio": 0.02
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "corrigir-doc-cobertura",
+          "medir-codigos-sombra",
+          "contador-por-rota-sombra",
+          "manter-402-bloqueio"
+        ],
+        "framings": [
+          {
+            "order": [
+              "corrigir-doc-cobertura",
+              "medir-codigos-sombra",
+              "contador-por-rota-sombra",
+              "manter-402-bloqueio"
+            ],
+            "probs": {
+              "corrigir-doc-cobertura": 0.14,
+              "medir-codigos-sombra": 0.84,
+              "contador-por-rota-sombra": 0.01,
+              "manter-402-bloqueio": 0,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "medir-codigos-sombra",
+              "contador-por-rota-sombra",
+              "manter-402-bloqueio",
+              "corrigir-doc-cobertura"
+            ],
+            "probs": {
+              "medir-codigos-sombra": 0.93,
+              "contador-por-rota-sombra": 0.01,
+              "manter-402-bloqueio": 0,
+              "corrigir-doc-cobertura": 0.06,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "contador-por-rota-sombra",
+              "manter-402-bloqueio",
+              "corrigir-doc-cobertura",
+              "medir-codigos-sombra"
+            ],
+            "probs": {
+              "contador-por-rota-sombra": 0.03,
+              "manter-402-bloqueio": 0,
+              "corrigir-doc-cobertura": 0.07,
+              "medir-codigos-sombra": 0.9,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "corrigir-doc-cobertura": 0.09,
+          "medir-codigos-sombra": 0.89,
+          "contador-por-rota-sombra": 0.0167,
+          "manter-402-bloqueio": 0
+        },
+        "noneFits": 0.0033,
+        "agreement": 1,
+        "margin": 0.8,
+        "leader": "medir-codigos-sombra",
+        "railProb": {
+          "corrigir-doc-cobertura": 0.13,
+          "medir-codigos-sombra": 0.08,
+          "contador-por-rota-sombra": 0.28,
+          "manter-402-bloqueio": 0.02
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 10,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 10,
+    "failed": 0,
+    "inputTokens": 14584,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

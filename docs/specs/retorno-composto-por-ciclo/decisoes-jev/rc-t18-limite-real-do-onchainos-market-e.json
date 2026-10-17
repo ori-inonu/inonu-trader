@@ -1,0 +1,75 @@
+{
+  "id": "rc-t18-limite-real-do-onchainos-market-e",
+  "goal": "Como o cliente do OnchainOS Market deve tratar HTTP 402 e 50011 enquanto o código de cota esgotada não for medido? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "limite_market_rps": "não publicado; só 'RPS adjustments' e contato BD",
+    "codigo_limite": "50011 com HTTP 429, 'Rate limit reached' (páginas de erro Market)",
+    "codigo_402": "pagamento exigido em endpoint pago (x402); sem código de cota publicado",
+    "cota_free": "100 mil Basic e 100 mil Premium por mês, reset no dia 1",
+    "trade_rps": "Trial 1 RPS (até 5 sob aprovação); Start-up 2 a 50; é o Trade, não o Market",
+    "piso_local": "requestsPerSecond 1 e burst 1 por padrão (http.ts:508)",
+    "bloqueio_402": "http.ts:427 bloqueia até o reset do mês UTC"
+  },
+  "rails": [
+    "O cliente não faz pagamento x402 (http.ts:406, errors.ts:55): 402 é tratado como pagamento exigido, não como cota.",
+    "O limite por segundo do Market não é publicado; o piso de 1 RPS é configuração local (http.ts:508).",
+    "O reset de cota cai no dia 1 sem fuso informado; o bloqueio atual vai ao próximo mês UTC (http.ts:332, 427).",
+    "Pagamento x402, assinatura paga e upgrade de plano são decisões do dono e ficam fora desta escolha."
+  ],
+  "options": [
+    {
+      "id": "manter_bloqueio_402",
+      "label": "Manter o código: 402 bloqueia até o reset UTC",
+      "what": "Sem mudança em http.ts. 402 segue como pagamento exigido com bloqueio até o próximo mês; 429 e 50011 seguem com retry limitado. Só o documento muda. Evidencia: http.ts:427, 406; market-api-fee: 'After receiving 402 response'"
+    },
+    {
+      "id": "alinhar_doc_e_medir",
+      "label": "Corrigir o documento e medir códigos em sombra",
+      "what": "Código igual. onchainos-coverage.md:33 passa a dizer 402 = pagamento exigido. Conta status e apiCode por rota a partir dos eventos já emitidos, para ver o código de cota real antes de mudar o cliente. Evidencia: coverage.md:33 contradiz http.ts:438-439; eventos em http.ts:419-467"
+    },
+    {
+      "id": "governador_rps_medido",
+      "label": "Ajustar RPS e burst só depois de medir",
+      "what": "Antes de mudar o código, medir 50011 com endpoints Free em 1 e 2 RPS. Só então ajustar burst e RPS. Nenhum valor novo é gravado sem medição. Evidencia: Trade: Trial 1 RPS (trade/api-fee); Market não publicado (market-api-fee)"
+    },
+    {
+      "id": "402_transitorio",
+      "label": "Tratar 402 como erro transitório com retry",
+      "what": "Retentar 402 com backoff, como 429, até maxRetries, em vez de bloquear até o reset. Pode gastar tentativas sem resultado. Reversível em um commit. Evidencia: http.ts:425 retenta só 429 e 5xx; sem código de cota publicado"
+    },
+    {
+      "id": "adiar_so_medir",
+      "label": "Adiar: nenhuma mudança até o BD ou o console responder",
+      "what": "Não altera documento nem código. Espera a resposta do BD (dexapi@okx.com) ou o painel da conta sobre RPS, unidade e código de cota. Opção conservadora. Evidencia: RPS e unidade não publicados (market-api-fee, A1)"
+    },
+    {
+      "id": "teto_mensal_local",
+      "label": "Teto mensal local por camada antes da cota do provedor",
+      "what": "Usar o QuotaCounters já existente para contar chamadas por camada no mês e parar em um teto local abaixo de 100 mil por camada, para não cair em 402 sem aviso. Não muda a resposta a 402 nem paga nada. Evidencia: http.ts:408 (recordCall), http.ts:548 (QuotaCounters); market-api-fee: 'Includes 100,000 free API calls per month' para Basic e para Premium"
+    },
+    {
+      "id": "retry_50011_http200",
+      "label": "Retentar 50011 quando vier em HTTP 200",
+      "what": "Tratar code 50011 no corpo com HTTP 200 como limite de taxa retentável com backoff, como o 429. Hoje cai em erro 'api' sem retry. Mudança pequena e reversível em http.ts. Evidencia: http.ts:462-466 (code diferente de '0' vira 'api' sem retry), http.ts:425 (só 429 e 5xx retentam); market-price-error-code documenta 50011 só com HTTP 429, então o caso HTTP 200 é nao verificado"
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "unidade_limite",
+      "ask": "O RPS vale por chave, IP ou conta? Só o BD ou o painel da conta revelam."
+    },
+    {
+      "id": "codigo_cota",
+      "ask": "Cota esgotada devolve 402 ou 50011? Só conta com cota zerada ou resposta do BD."
+    },
+    {
+      "id": "rps_conta",
+      "ask": "Qual o RPS vigente da conta do dono? Só o painel do portal."
+    },
+    {
+      "id": "fuso_reset",
+      "ask": "O reset mensal vale em UTC ou no fuso do provedor? Não está publicado."
+    }
+  ]
+}

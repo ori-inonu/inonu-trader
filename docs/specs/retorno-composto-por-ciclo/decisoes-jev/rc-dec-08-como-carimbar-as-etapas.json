@@ -1,0 +1,42 @@
+{
+  "id": "rc-dec-08-como-carimbar-as-etapas",
+  "goal": "Como carimbar as etapas do ciclo para medir p50, p95 e p99 antes de decidir cadencia ou paralelizacao? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "timeout_modelo": "90 s (wire.ts:146); medido: mediana 371 ms, p99 1,57 s (n=120)",
+    "durationMs_escopo": "de cycle.ts:421 a cycle.ts:440; exclui before (teto 60 s) e after (teto 120 s)",
+    "ciclos_distintos_runtime": "21 cycleIds com durationMs em runtime-observations.jsonl (33 linhas, 2026-10-14)",
+    "total_p50_p95_p99": "4,1 s, 34,6 s, 38,0 s (n=21, posto mais proximo, calculo local)",
+    "sem_consulta": "7 ciclos; 5 entre 33,5 e 33,65 s (padrao observado, causa nao verificada)",
+    "teto_pre_modelo": "170 s pelo codigo, somando grupos sequenciais (cycle.ts:479 a 837)",
+    "carimbo_por_etapa": "inexistente: so durationMs e atMs no journal",
+    "cadencia_nominal": "2 min quente e 5 min frio; intervalMin observado 5 em 2026-10-14"
+  },
+  "rails": [
+    "Nenhuma etapa entra no registro kind cycle do journal.",
+    "Leitura de dados ja gravados nao consome cota.",
+    "Nenhum p95 entra em decisao antes de 1000 ciclos com etapas carimbadas.",
+    "Espera interna sem carimbo se o wrapper nao cobrir."
+  ],
+  "options": [
+    {
+      "id": "decisions-meta-existente",
+      "label": "Usar decisions-meta existente",
+      "what": "Usar askedAtMs e answeredAtMs de decisions-meta.jsonl para p50, p95 e p99 do modelo, em relatorio de leitura. Evidencia: Gravado em cycle.ts:1076 e wire.ts:803 (T13)."
+    },
+    {
+      "id": "wrapper-deps-sombra",
+      "label": "Wrapper de dependencias em sombra",
+      "what": "Wrapper externo que carimba cada dependencia sem chamar o Jev e sem consumir cota paga ou limitada. Evidencia: ANALISE-10X projeta 109,5 mil chamadas por mes no Basic (T13); cycle.ts nao muda."
+    },
+    {
+      "id": "campo-relatorio-memoria",
+      "label": "Campo de etapas no relatorio em memoria",
+      "what": "Campo opcional de etapas no CycleReport, sem tocar o journal. Evidencia: CycleReport em cycle.ts:245; durationMs em cycle.ts:440."
+    },
+    {
+      "id": "adiar-carimbo",
+      "label": "Nao instrumentar",
+      "what": "Decidir cadencia so com o total do ciclo. Evidencia: 21 ciclos com total; p95 total de 34,6 s (T13)."
+    }
+  ]
+}

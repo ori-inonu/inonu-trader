@@ -1,7 +1,7 @@
 ---
 title: "Índice da documentação"
 created: 2026-10-13
-updated: 2026-10-16
+updated: 2026-10-17
 type: summary
 tags: ["documentacao", "governanca"]
 sources: ["docs/SCHEMA.md", "docs/_meta/catalog.json", "docs/_meta/topic-map.md"]
@@ -9,6 +9,20 @@ confidence: medium
 ---
 
 # Índice da documentação
+
+## Retorno composto por ciclo de 1 minuto (2026-10-17)
+
+Pesquisa (somente leitura), mapa Wayfinder e rascunhos de spec, plano e tarefas. A meta de 0,5% a 1% por ciclo é tratada como hipótese a medir; nada aqui promete lucro nem autoriza operação.
+
+- [Pesquisa e síntese](specs/retorno-composto-por-ciclo/research.md): resposta curta, medidas, raspagem, ranking, correções e bloqueios do dono.
+- [Matemática da meta](specs/retorno-composto-por-ciclo/matematica-da-meta.md): escada de metas, janelas, capacidade, amostra.
+- [Limites de API, fontes de dados e raspagem](specs/retorno-composto-por-ciclo/api-limites-e-fontes.md).
+- [Arquitetura de dados, velocidade de decisão e execução](specs/retorno-composto-por-ciclo/arquitetura-e-decisao.md).
+- [Fontes de vantagem](specs/retorno-composto-por-ciclo/fontes-de-edge.md) e [linha de base e validação](specs/retorno-composto-por-ciclo/validacao-e-baseline.md).
+- [Ciclo 2: mapa Wayfinder, 12 decisões do Jev, fatias em sombra e entrada do planejamento](specs/retorno-composto-por-ciclo/wayfinder.md); [especificações das fatias](specs/retorno-composto-por-ciclo/specs/) e [decisões e recibos do Jev](specs/retorno-composto-por-ciclo/decisoes-jev/).
+- [Spec](specs/retorno-composto-por-ciclo/spec.md), [plano](specs/retorno-composto-por-ciclo/plan.md), [tarefas](specs/retorno-composto-por-ciclo/tasks.md) e [status](specs/retorno-composto-por-ciclo/status.md) (rascunhos).
+- [Evidência bruta dos agentes](specs/retorno-composto-por-ciclo/evidence/) com o veredito do cético por afirmação.
+
 
 ## Autoresearch real online (2026-10-16)
 

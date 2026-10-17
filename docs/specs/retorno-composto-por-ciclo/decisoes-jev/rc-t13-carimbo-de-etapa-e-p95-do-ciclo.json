@@ -1,0 +1,72 @@
+{
+  "id": "rc-t13-carimbo-de-etapa-e-p95-do-ciclo",
+  "goal": "Como medir o p50, p95 e p99 de cada etapa do ciclo antes de decidir cadencia ou paralelizacao? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "timeout_modelo": "90 s (wire.ts:146); medido: mediana 371 ms, p99 1,57 s (n=120)",
+    "durationMs_escopo": "de cycle.ts:421 a cycle.ts:440; exclui before (teto 60 s) e after (teto 120 s)",
+    "ciclos_distintos_runtime": "21 cycleIds com durationMs em runtime-observations.jsonl (33 linhas, 2026-10-14)",
+    "total_p50_p95_p99": "4,1 s, 34,6 s, 38,0 s (n=21, posto mais proximo, calculo local)",
+    "sem_consulta": "7 ciclos; 5 entre 33,5 e 33,65 s (padrao observado, causa nao verificada)",
+    "teto_pre_modelo": "170 s pelo codigo, somando grupos sequenciais (cycle.ts:479 a 837)",
+    "carimbo_por_etapa": "inexistente: so durationMs e atMs no journal",
+    "cadencia_nominal": "2 min quente e 5 min frio; intervalMin observado 5 em 2026-10-14"
+  },
+  "rails": [
+    "Nao alterar o registro kind cycle do journal nem o schema de journal: decisao do dono.",
+    "Nao chamar o Jev: o tempo do modelo entra fixo (0,37 s) ou ja medido (mediana 371 ms).",
+    "Nao mudar intervalMin, TIMEOUTS nem a cota local de 720 consultas sem o dono: impacta servico pago e cota.",
+    "Medir 1000 ciclos leva 33,3 h a 2 min, 16,7 h a 1 min e 83,3 h a 5 min.",
+    "Nenhuma ordem, assinatura ou liberacao de live faz parte desta medicao."
+  ],
+  "options": [
+    {
+      "id": "adiar_sem_carimbo",
+      "label": "Adiar: nao instrumentar agora",
+      "what": "Nao muda codigo. Usa durationMs e o relatorio deduplicado para intervalos; cadencia segue 2 min quente e 5 min frio ate existir p95 medido por etapa. Evidencia: cycle.ts:440 so durationMs; VIABILIDADE secao 7 (dedupeCycles)"
+    },
+    {
+      "id": "wrapper_de_deps",
+      "label": "Carimbo por fora, em script de sombra",
+      "what": "Script envolve as dependencias com cronometro e roda sombra com modelo fixo em 0,37 s. Nao altera cycle.ts nem o journal. Mede 1000 ciclos. Evidencia: cycle.ts:479,505,793,800,813,837,1005,1180 sao os pontos de chamada"
+    },
+    {
+      "id": "carimbo_em_memoria",
+      "label": "Campo de etapas no relatorio do ciclo",
+      "what": "Campo opcional de etapas no CycleReport, exposto so em memoria e runtime-latest, sem tocar o registro kind cycle do journal. Mede dentro do ciclo. Evidencia: cycle.ts:245 tipo CycleReport; journal cycle.ts:460 fica de fora"
+    },
+    {
+      "id": "paralelizar_apos_medir",
+      "label": "Paralelizar leituras pos-livro, depois de medir",
+      "what": "Rodar timing das posicoes junto com ecossistema, trocando o reuso em cycle.ts:813. Teto pre-modelo cai de 170 s para 145 s no pior caso. So depois do p95 medido. Evidencia: cycle.ts:793-837 grupos sequenciais; teto 170 s (pesquisa-t07 a3)"
+    },
+    {
+      "id": "usar_decisions_meta_existente",
+      "label": "Ler tempo do modelo em decisions-meta existente",
+      "what": "Calcular p50, p95 e p99 do tempo do modelo (answeredAtMs menos askedAtMs) a partir do decisions-meta.jsonl que o dono ja tem, com o relatorio observe-24h, sem codigo novo e sem chamar o Jev. Etapas sem carimbo continuam sem medida; a opcao responde so o modelo. Evidencia: src/agent/cycle.ts:1004-1016 e 1076; src/agent/decision-metadata.ts:33-34; src/agent/wire.ts:803 e 847; scripts/observe-24h.ts:"
+    },
+    {
+      "id": "medir_em_testes_com_deps_falsas",
+      "label": "Medir codigo puro no harness de teste",
+      "what": "Cronometrar as etapas com dependencias falsas no harness de cycle.test.ts, sem rede, sem quota e sem alterar o journal. Mede o custo do codigo e do agendamento, nao a latencia de rede; serve para separar overhead de espera. Evidencia: src/agent/cycle.test.ts:1915 (createCycleRunner com timeouts injetados); cycle.ts:421 e 440 (escopo de durationMs). Viabilidade do cronometro nao verificada em execu"
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "p95_real_por_etapa",
+      "ask": "p50, p95 e p99 por etapa so existem com carimbo; o dono ve o journal real fora do repo."
+    },
+    {
+      "id": "intervalo_efetivo",
+      "ask": "Cadencia efetiva em producao (intervalos entre inicios) so pelo relatorio observe-24h com o journal do dono."
+    },
+    {
+      "id": "causa_33s",
+      "ask": "Causa dos 5 ciclos de 33,5 s sem consulta: precisa de log do processo ou carimbo."
+    },
+    {
+      "id": "cota_jev",
+      "ask": "Cota real da conta TypeSafe: so o dono le no console; o 720 e teto local, nao contrato."
+    }
+  ]
+}

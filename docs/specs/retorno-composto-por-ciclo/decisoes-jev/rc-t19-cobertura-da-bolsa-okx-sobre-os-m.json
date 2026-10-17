@@ -1,0 +1,67 @@
+{
+  "id": "rc-t19-cobertura-da-bolsa-okx-sobre-os-m",
+  "goal": "Como a bolsa OKX entra no agente, dado que a cobertura por mint dos tokens negociados nao foi medida? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "bases_spot_okx": "445 distintas (1184 instrumentos live, 2026-10-17)",
+    "quote_usdt": "443 bases com par USDT",
+    "endereco_okx": "nao existe campo de endereco nos instrumentos nem nos tickers spot",
+    "registro_jupiter": "287863 entradas, nenhuma com tag verified",
+    "bases_simbolo_unico": "55 de 445 (12,4%) tem nome unico no registro",
+    "mints_locais": "10 distintos em execution-audits.jsonl; 1 no registro (stablecoin)",
+    "teto_estrutural": "445 / 287863 = 0,15% do registro",
+    "universo_runtime": "hot-tokens limit 100 por rede, ate 4 redes (source-ecosystem.ts:293, :32)"
+  },
+  "rails": [
+    "Nenhuma decisao de compra ou venda pode depender de cruzamento por simbolo sem confirmacao de endereco.",
+    "O universo negociado e lido em tempo de execucao (source-ecosystem.ts:293), nao ha lista fixa para medir a fracao exata.",
+    "Leituras da OnchainOS consomem cota e nao devem ser ampliadas para esta medicao sem decisao do dono.",
+    "Nenhum endereco de carteira, chave ou saldo entra no relatorio ou em arquivos do repo."
+  ],
+  "options": [
+    {
+      "id": "adiar_medir_sombra",
+      "label": "Adiar e medir a cobertura em sombra",
+      "what": "Por 7 dias, gravar os mints do hot-tokens nas 4 redes e cruzar com os pares OKX por simbolo e por endereco quando houver. Nada entra na decisao de compra. Evidencia: Cobertura por mint nao medida; 9 de 10 mints locais sem simbolo (a8)"
+    },
+    {
+      "id": "regime_de_mercado",
+      "label": "Usar a bolsa so como regime",
+      "what": "A mediana de variacao das 443 bases USDT indica regime agregado do mercado, sem ligar a token. Nao depende da ponte mint-simbolo. Evidencia: 445 bases spot e 443 com USDT no snapshot (a2)"
+    },
+    {
+      "id": "ponte_simbolo_unico",
+      "label": "Cruzar por simbolo de nome unico",
+      "what": "Sinal da bolsa so para os 55 simbolos com uma unica entrada no registro. Os 162 simbolos que colidem ficam de fora. A precisao do cruzamento nao e medida. Evidencia: 55 de 445 com nome unico; 162 colisoes (a6)"
+    },
+    {
+      "id": "sinal_por_mint_fonte_oficial",
+      "label": "Sinal por mint so com fonte oficial",
+      "what": "Antes de qualquer sinal por mint, achar fonte primaria que ligue simbolo OKX a endereco Solana. Hoje nenhuma fonte foi encontrada. Evidencia: OKX spot sem campo de endereco de contrato (a3)"
+    },
+    {
+      "id": "pools_onchain_sem_ponte",
+      "label": "Medir com pools on-chain sem ponte OKX",
+      "what": "Medir o movimento e o atrito de sombra apenas com estado de pools Solana lido por RPC, que traz os dois mints do par. Nao usa simbolo nem a OKX para decidir mint. Exige validar layouts contra IDL oficial antes de decodificar. Evidencia: docs/specs/retorno-composto-por-ciclo/api-limites-e-fontes.md:74-79 (leitura de pools por RPC, layouts de comunidade, IDLs oficiais nao lidos), :127 (RPC unico que"
+    },
+    {
+      "id": "descartar_ponte_okx_nesta_fase",
+      "label": "Nao usar a OKX como ponte de mint nesta fase",
+      "what": "Registrar a cobertura por mint como nao medida, manter a OKX apenas como referencia de regime sem sinal por token, e seguir com as leituras que ja existem. Reabre-se a ponte so com fonte primaria que ligue simbolo a endereco. Evidencia: OKX spot sem campo de endereco (a3); 217 ou 234 de 445 bases com simbolo no registro e 162 ou 176 colisoes (a6); simbolo USDC com 91 entradas no registro"
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "d1",
+      "ask": "Qual campo e o formato dos registros de compra que guardam o mint, em data/, para fechar o denominador local?"
+    },
+    {
+      "id": "d2",
+      "ask": "Quantos mints distintos o hot-tokens devolve por dia nas 4 redes, com a cota OnchainOS real?"
+    },
+    {
+      "id": "d3",
+      "ask": "O registro Jupiter cache.jup.ag/tokens cobre os tokens que o agente negocia, ou e lista parcial?"
+    }
+  ]
+}

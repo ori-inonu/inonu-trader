@@ -1,0 +1,76 @@
+{
+  "id": "rc-t08-definicao-do-retorno-por-ciclo-so",
+  "goal": "Qual definicao de retorno por ciclo o registro de sombra adota para a meta de juros compostos e para a medicao da hipotese de edge: A (volta fechada com custos), B (variacao marcada a mercado do patrimonio) ou C (A para o edge e B para a curva)? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "patrimonio_medido": "US$ 118,17 a 118,80 em 15/10/2026; caixa em stablecoin de 90 a 91 por cento",
+    "valueComplete_atual": "falso; knownValueUsd 0 (data/quant/so-latest.json:25)",
+    "fills_moeda": "caixa em stablecoin sem preco USD do token nem do SOL (src/agent/fills.ts:13)",
+    "netUsd": "nulo em todo relatorio de execucao (src/decision-review/executions.ts:96,116)",
+    "inventario_por_ciclo": "uma leitura antes da decisao e uma apos execucao (src/operator/cycle.ts:157,190)",
+    "realizado_no_ciclo": "realizedUsd nulo com resultBasis inventory_only (src/operator/cycle.ts:187)",
+    "schema_bloqueado": "estender fills.jsonl ou journal em data/ e decisao do dono (spec.md:50)",
+    "teto_local": "720 consultas por dia (configuracao, nao contrato)"
+  },
+  "rails": [
+    "Nenhuma medida nova altera journals em data/ ou fills.jsonl (spec.md:50); extensao de schema e decisao do dono.",
+    "Nao declarar retorno composto em USD enquanto valueComplete for falso ou a base de capital nao estiver conciliada (G0, G8).",
+    "Retorno por ciclo nao e promessa de lucro; a meta de 0,5% a 1% por ciclo e hipotese a medir em sombra.",
+    "Toda leitura de inventario por ciclo deve respeitar o teto local de 720 consultas ao dia e a cota da OnchainOS, ainda nao verificada por rota."
+  ],
+  "options": [
+    {
+      "id": "a_realizado_volta",
+      "label": "A: realizado por volta fechada",
+      "what": "Retorno so de voltas fechadas, em USD, com taxa de rede, impacto e imposto. Ignora posicao aberta e nao serve de curva de patrimonio. Evidencia: fills.ts:108 mede caixa por volta sem USD; netUsd nulo"
+    },
+    {
+      "id": "b_marcado_patrimonio",
+      "label": "B: variacao marcada a mercado do patrimonio",
+      "what": "Variacao do patrimonio total a cada ciclo. Serve a curva e a meta composta, mas mistura oscilacao de preco de posicao aberta com resultado operacional. Evidencia: knownValueUsd e valueComplete por ciclo em insights.ts:109-110; valueComplete falso hoje"
+    },
+    {
+      "id": "c_hibrido_base_provisoria",
+      "label": "C com base provisoria de 118",
+      "what": "A para o edge e B para a curva, usando 118,17 a 118,80 como base provisoria rotulada. Risco: a base nao esta conciliada e pode enviesar o percentual. Evidencia: medicao de 15/10 em EVIDENCIA-OPERACAO:45; capital divergente em 4 documentos"
+    },
+    {
+      "id": "c_hibrido_sem_base",
+      "label": "C sem base fixa",
+      "what": "A para o edge e B para a curva, gravados em campos separados e sem percentual composto ate valueComplete verdadeiro e base unica (G0). Evidencia: validacao-e-baseline.md G0 e G8 exigem patrimonio completo e base unica"
+    },
+    {
+      "id": "adiar_so_medir",
+      "label": "Adiar e so medir",
+      "what": "Gravar as duas series lado a lado em arquivo novo, sem declarar retorno nem base, e decidir a definicao quando G0 estiver aprovado. Opcao conservadora e mais reversivel. Evidencia: spec.md:50 manda medidas novas em arquivo novo e aditivo; status.md bloqueios B5"
+    },
+    {
+      "id": "d_marcado_com_fluxos",
+      "label": "B com registro aditivo de fluxos e preço público independente",
+      "what": "Curva de patrimonio com um arquivo novo que registra depósitos e saques, e valoriza SOL e stablecoins por fonte pública independente da OnchainOS. Isso fecha valueComplete sem consumir a cota da OnchainOS, e o retorno só é declarado depois de G0. Evidencia: EVIDENCIA-OPERACAO-20261015.md:47 (sem registro de fluxos); data/quant/so-latest.json:20 (source okx_public_v5, preço público já usado); spec."
+    },
+    {
+      "id": "e_a_com_taxa_do_recibo",
+      "label": "A com taxa de rede do recibo, não da cotação",
+      "what": "Volta fechada em stablecoin medida com a taxa real do recibo (walletFeeLamports), porque a taxa cotada que o Jev lê é cerca de 20 vezes menor. Mede o edge sem depender de patrimônio completo. Evidencia: docs/specs/retorno-composto-por-ciclo/evidence/pesquisa-lacuna-g2.md:23 (taxa cotada 0,0005211 contra recibo 97.859 lamports, razão ~20x); src/agent/fills.ts:31 (walletFeeLamports já registrado por"
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "capital_base",
+      "ask": "Qual capital-base o dono reconhece como oficial (100, 118, 121 ou 126) para dimensionamento? Decisao de risco, fora do Jev."
+    },
+    {
+      "id": "cota_inventario",
+      "ask": "O inventario por ciclo (okx_balance_api) consome a mesma cota de 100 mil chamadas da OnchainOS ou tem limite proprio? Nao verificado nesta pesquisa."
+    },
+    {
+      "id": "sol_no_inventario",
+      "ask": "O inventario do agente sempre traz o SOL com tokenPrice? Precisa de leitura ao vivo do console, sem expor carteira."
+    },
+    {
+      "id": "fills_contagem",
+      "ask": "Qual das capturas de 16/10 esta correta, 25 ou 26 preenchimentos? Precisa do arquivo bruto, que nao foi lido."
+    }
+  ]
+}

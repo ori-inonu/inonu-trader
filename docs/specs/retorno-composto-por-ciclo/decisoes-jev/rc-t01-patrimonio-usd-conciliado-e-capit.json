@@ -1,0 +1,71 @@
+{
+  "id": "rc-t01-patrimonio-usd-conciliado-e-capit",
+  "goal": "Qual base de capital (denominador do retorno composto) o sistema usa nesta fase de sombra? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "capital_configurado": "US$ 100, source configured (data/quant/so-latest.json:24)",
+    "medido_15_10": "US$ 118,17 a 118,80 (EVIDENCIA-OPERACAO-20261015.md:45)",
+    "citado_14_10": "US$ 121 (ALAVANCAGEM-VIABILIDADE-20261014.md:118) e cerca de US$ 126 (design.md:193)",
+    "valueComplete": "false no snapshot de sombra (so-latest.json:26); falso se algum ativo sem preco (portfolio.ts:301)",
+    "knownValueUsd_operator": "155 com valueComplete false, sem data verificada (operator/latest.json:121-122)",
+    "agentUsd": "nulo sem ultimo livro (wire.ts:302)",
+    "initialUsd_script": "118 fixo em scripts/autoresearch.ts:60, status not_proven",
+    "sem_ordens": "nenhuma ordem enviada nem leitura de carteira feita nesta pesquisa"
+  },
+  "rails": [
+    "Patrimonio conciliado exige valueComplete verdadeiro em todas as pernas; hoje o total e um piso (portfolio.ts:301-312).",
+    "O capital base alimenta limites de ordem e dimensionamento (deriveLimits); mudar esse numero ou o teto e decisao do dono, nao do Jev.",
+    "Leitura de saldo e preco para conciliacao e somente leitura, sem ordem; respeitar a cota de API e o limite de RPS do plano.",
+    "Nenhum endereco, chave ou saldo individual entra na decisao; so agregados por data."
+  ],
+  "options": [
+    {
+      "id": "medir-sem-base",
+      "label": "So medir, sem base fixa",
+      "what": "Conservadora. Gravar snapshots agregados por perna com valueComplete e knownValueUsd, sem reportar retorno em USD ate a conciliacao. Evidencia: so-latest.json:26 valueComplete false; portfolio.ts:301"
+    },
+    {
+      "id": "base-118-provisoria",
+      "label": "Base provisoria de 118",
+      "what": "Usar 118,17 a 118,80 como denominador provisorio, com rotulo explicito de provisorio e faixa de erro em todo relatorio, ate conciliar. Evidencia: EVIDENCIA-OPERACAO-20261015.md:45; api-limites-e-fontes.md:151"
+    },
+    {
+      "id": "base-agentusd",
+      "label": "Base viva pelo agentUsd",
+      "what": "Denominador recalculado a cada ciclo a partir do agentUsd do ultimo livro. Ciclos sem livro ficam sem base e nao entram no retorno. Evidencia: wire.ts:302 agentUsd nulo sem livro"
+    },
+    {
+      "id": "base-configurada-100",
+      "label": "Base configurada de 100",
+      "what": "Usar o capitalUsd configurado de 100. Nao e medido e nao bate com as medicoes de 14 e 15/10, por isso so serve como teste de sensibilidade. Evidencia: so-latest.json:24 source configured"
+    },
+    {
+      "id": "conciliar-antes-de-medir",
+      "label": "Snapshot conciliado somente leitura antes de medir",
+      "what": "Gravar, por data, um agregado de patrimonio por perna com valueComplete true em todas as pernas e sem endereco. Enquanto nao houver snapshot assim, a base e nula e o retorno nao e reportado em USD. Usa so leitura de saldo e preco, sem ordem. Evidencia: portfolio.ts:301-312 (valueComplete exige todas as pernas com preco); EVIDENCIA-OPERACAO-20261015.md:40 (ativos sem preco ficam a parte, nunca zero"
+    },
+    {
+      "id": "duas-bases-separadas",
+      "label": "Duas bases: medicao e limite separados",
+      "what": "Separar o denominador do retorno (medicao, sem efeito em limite) do capital que alimenta deriveSettings (limite, continua no dono). Relatorios usam a base medida; os limites seguem o capitalUsd configurado ou o que o dono definir. Evidencia: so-latest.json:24 (capitalUsd configurado 100) e wire.ts:302 (agentUsd alimenta deriveSettings); autoresearch.ts:60 usa 118 so como constante de relatorio."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "d1",
+      "ask": "Qual o saldo real avaliado da carteira hoje, por perna, com valueComplete verdadeiro (so o dono ou um snapshot de leitura revela)."
+    },
+    {
+      "id": "d2",
+      "ask": "Qual a data e o escopo do total de 155 em data/operator/latest.json."
+    },
+    {
+      "id": "d3",
+      "ask": "De onde saiu a base de 126 (design.md:193) e 121 (ALAVANCAGEM-VIABILIDADE:118): data e fonte de leitura."
+    },
+    {
+      "id": "d4",
+      "ask": "Quais ativos sao poeira e se devem ser excluidos do denominador ou precificados."
+    }
+  ]
+}

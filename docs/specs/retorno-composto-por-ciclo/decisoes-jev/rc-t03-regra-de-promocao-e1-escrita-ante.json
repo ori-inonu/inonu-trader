@@ -1,0 +1,81 @@
+{
+  "id": "rc-t03-regra-de-promocao-e1-escrita-ante",
+  "goal": "Qual regra de promocao E1 fixar antes da coleta: unidade de amostra, N minimo, IC, holdout e falha de amostra? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "delta_E1": "0,1% por ciclo liquido, efeito minimo que a regra E1 pretende detectar",
+    "n_iid": "784 unidades para 0,1% com sigma 1%; 32 para 0,5%",
+    "cadencia_medida": "135,6 s de mediana; 120 s nominal e 300 s frio",
+    "horas_784": "29,5 h a 135,6 s; 13 h so se fosse 1 min",
+    "fator_rho": "rho lag 1 de 0,3 multiplica N por 1,86",
+    "linha_base": "7 voltas, 0 positivas, -0,41% bruto",
+    "sigma_medido": "nao medido; 1% por ciclo e premissa"
+  },
+  "rails": [
+    "Promocao a live, risco e operacao real ficam com o dono; a regra so define o veredito de sombra E1 e nao autoriza nenhuma ordem (validacao-e-baseline.md:53, G4).",
+    "Amostra nao sobreposta exige unidade com horizonte H fixo; com cadencia medida de 135,6 s, o ciclo de 1 min nao e o ritmo atual (validacao-e-baseline.md:21).",
+    "Falha de amostra e veredito INCONCLUSIVO, nunca confirmacao nem refutacao da hipotese.",
+    "O numero de variantes testadas precisa ser registrado antes do holdout para o DSR ser calculavel (validacao-e-baseline.md:55).",
+    "Holdout cronologico final de 30% congelado antes da coleta e avaliado uma unica vez."
+  ],
+  "options": [
+    {
+      "id": "regra_hac_n800",
+      "label": "Regra com IC HAC e N de 800 unidades",
+      "what": "Unidade: retorno liquido de janela nao sobreposta de H min, com H fixado antes. N = teto(784 x (1+rho)/(1-rho)), piso 800. IC 95% por Newey-West; E1 so se o limite inferior for maior que zero com custos reais. Evidencia: Formula n=((1,96+0,84) sigma/delta)^2 em matematica-da-meta.md:91; fator AR(1) calculo"
+    },
+    {
+      "id": "bootstrap_blocos_n800",
+      "label": "Mesma regra com IC por bootstrap de blocos",
+      "what": "Mesma unidade e mesmo N, mas IC por bootstrap estacionario de blocos (Politis e Romano 1994), que nao assume normalidade e respeita dependencia. E1 se o limite inferior de 95% for maior que zero. Evidencia: Politis e Romano 1994, JASA 89(428) (citacao verificada, texto nao lido)"
+    },
+    {
+      "id": "calibrar_antes",
+      "label": "Calibrar sigma e rho antes de fixar N",
+      "what": "Antes de fixar N: 2 dias de sombra so de medicao (sigma, rho lag 1, cadencia, custo) em bloco disjunto e congelado. A regra e escrita depois desse bloco e antes do holdout. Nenhuma promocao nesse periodo. Evidencia: Sigma e cadencia nao medidos; cadencia 135,6 s em validacao-e-baseline.md:21"
+    },
+    {
+      "id": "n126_efeito_grande",
+      "label": "N de 126 para efeito grande de 0,5%",
+      "what": "N de 126 unidades para efeito de 0,5% com sigma 2%. Serve so para confirmar ou refutar o degrau E5. Nao testa E1, que pede efeito de 0,1% ou menos, e por isso nao serve como regra de promocao E1. Evidencia: Conta correta: n=126 para sigma 2% (pesquisa-t11-validacao-e-risco.md:50)"
+    },
+    {
+      "id": "adiar_so_medir",
+      "label": "Adiar a regra e so medir em sombra",
+      "what": "Conservadora: nenhuma regra de promocao agora. Apenas registrar retorno liquido por ciclo, custo e cadencia em sombra, sem decidir E1, ate a regra ser revisada no proximo ciclo de pesquisa. Evidencia: G4 exige decisao escrita do dono; nenhum degrau medido (validacao-e-baseline.md:43-53)"
+    },
+    {
+      "id": "unidade_por_janela",
+      "label": "Unidade por janela de oportunidade (lambda e R)",
+      "what": "E1 medido por janela de H min com expectativa positiva: retorno liquido por janela (R) e frequencia de janelas (lambda). H fixado antes da coleta, por exemplo 5 min ou 15 min, alinhado a cadencia medida de 135,6 s. Mantem a decomposicao da pesquisa e serve a hipotese H2. Evidencia: matematica-da-meta.md:56-65 (decomposicao em janelas, secao 4); matematica-da-meta.md:108 (H2 mede lambda e R); valid"
+    },
+    {
+      "id": "familia_corrigida",
+      "label": "Alfa dividido entre os degraus E1 a E5",
+      "what": "Correcao de multiplicidade (Holm ou Bonferroni) entre os cinco degraus da escada, com o numero de variantes registrado antes do holdout, para que o DSR seja calculavel. Evidencia: matematica-da-meta.md:29-33 (escada de cinco degraus); validacao-e-baseline.md:52-55 (DSR exige contar todas as variantes; registrar antes)."
+    },
+    {
+      "id": "parada_sequencial",
+      "label": "Teste sequencial com limite de derrota pre-registrado",
+      "what": "Refutar cedo se o limite superior do IC ficar abaixo de zero com custo real; confirmar E1 so ao atingir o N minimo. Evita esperar 784 ciclos para uma hipotese claramente falsa. Evidencia: matematica-da-meta.md:99 (refutacao em poucas horas de sombra com custos reais); validacao-e-baseline.md:51 (N minimo por efeito)."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "sigma_real",
+      "ask": "Qual o desvio padrao do retorno liquido por unidade em sombra, com custo real? So a medicao em sombra revela."
+    },
+    {
+      "id": "rho_real",
+      "ask": "Qual a autocorrelacao lag 1 e lag 2 dos retornos por unidade, com custo real?"
+    },
+    {
+      "id": "variantes",
+      "ask": "Quantas variantes de estrategia ja foram testadas (N de tentativas para o DSR)?"
+    },
+    {
+      "id": "cadencia",
+      "ask": "A cadencia de 135,6 s e o ritmo real esperado do ciclo, ou o ciclo de 1 min sera restaurado?"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "rc-dec-03-qual-fonte-e-qual-horizo",
+  "goal": "Qual fonte e qual horizonte de markout a sombra usa para candidatos de compra? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "atrito_ida_volta_liquido": "0,42%, média de 6 pares de um ativo (n pequeno)",
+    "movimento_mediano": "0,38% em 1 min; 1,03% em 15 min (16 tokens)",
+    "ras7_momentum_7d": "+0,47% no olhar, -0,47% na confirmação; nenhum grupo passou nas duas partes",
+    "graduacao_pumpfun": "0,63% a 6,7% conforme janela e fonte; sem registro do emissor",
+    "preditor_graduacao": "AUROC 0,464 na validação (arXiv 2607.02823 v4)",
+    "pumpportal_dados": "subscribeNewToken e subscribeMigration gratuitos; subscribeTokenTrade 0,01 SOL por 10.000 trades",
+    "mapd_bolsa_dex": "0,06% a 0,08% em BTC, ETH e SOL (working paper não revisado)",
+    "sanduiche_ambiente": "6,85 milhões de sanduíches de out/25 a out/26 (fornecedor)",
+    "atrito_liquido_ida_volta": "0,42% media (6 pares, faixa 0,17% a 0,56%)",
+    "atrito_raso": "1,8% a 2,1%; so entrada medida"
+  },
+  "rails": [
+    "Qualquer fonte da OKX fica condicionada ao aceite de risco de termos pelo dono (bloqueio).",
+    "Sem alteracao de journal para gravar markout de 5 e 15 min (B5).",
+    "Nenhuma opcao envia ordem nem consulta paga."
+  ],
+  "options": [
+    {
+      "id": "placar-existente",
+      "label": "Placar existente",
+      "what": "Usar o placar atual (15 min, 1 h, 4 h e 24 h) para candidatos de compra, sem coleta nova, reportando n por token. Evidencia: scoreboard.jsonl ja traz 648 linhas de 112 candidatos; calculo bruto do verificador: mediana de -0,23% em 15 min (n=647), nao resultado (T02)."
+    },
+    {
+      "id": "cotacao-rota-gratuita",
+      "label": "Cotacao em rota gratuita com teto",
+      "what": "Cotar 3 a 10 tokens em 4 instantes via Jupiter Free, com teto fixo abaixo de 60 por minuto e sem chave paga. Evidencia: Jupiter Free 60 por minuto; RPC publico 100 req por 10 s (T02, T09)."
+    },
+    {
+      "id": "janela-1min-fonte-fixada",
+      "label": "Janela de 1 min com fonte fixada",
+      "what": "Corrigir a tolerancia para 60 s somente depois de fixar a fonte de preco de 1 min e verificar que ela existe. Evidencia: O lookup le so barras de 5 min e 1 h (live.ts createPriceLookup); fonte de 1 min nao verificada (T02)."
+    },
+    {
+      "id": "adiar-markout",
+      "label": "Adiar markout novo",
+      "what": "Nao medir markout novo ate o placar ter n por token. Evidencia: 38 tokens e 8 pedidos na amostra de compra, nao independente (T02)."
+    }
+  ]
+}

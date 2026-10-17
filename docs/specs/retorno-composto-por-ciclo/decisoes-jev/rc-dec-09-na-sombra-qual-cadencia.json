@@ -1,0 +1,36 @@
+{
+  "id": "rc-dec-09-na-sombra-qual-cadencia",
+  "goal": "Na sombra, qual cadencia de consulta ao Jev adotar sob o teto local de 720 consultas por dia? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "402": "bloqueia o tier ate o proximo mes UTC, onchainos/http.ts:427",
+    "trial_trade_rps": "1 RPS por padrao, ate 5 sob aprovacao, 60 dias (trade/api-fee)",
+    "market_rps": "nao publicado; cota mensal 100 mil Basic e Premium no Free",
+    "piso_trade_ms": "1100 ms entre inicios, okx-dex.ts:8, 55 inicios por janela de 60 s",
+    "piso_market": "1 RPS, burst 1, retry com limiter, onchainos/http.ts:508 e :411",
+    "retry_50102": "espera desde o ultimo envio antes da tentativa, onchain-read/client.ts:150",
+    "consultas_dia": "144 default (budget.ts:18); capacidade 720 do autopilot (autopilot.ts:51)",
+    "contador_rota": "inexistente; usage guarda totais por tier (api-budget.ts:3)"
+  },
+  "rails": [
+    "Teto e cota real do Jev sao bloqueio do dono.",
+    "Nenhuma opcao aumenta o teto de 720 por dia.",
+    "Nenhuma consulta de gatilho que leve a ordem (vedado)."
+  ],
+  "options": [
+    {
+      "id": "sem-consulta-sombra",
+      "label": "Sem consulta ao Jev na sombra",
+      "what": "Gravar eventos e candidatos sem consultar o Jev; reabrir consulta so por decisao do dono. Evidencia: Relogio de 2 min consome o teto de 720; intervalo de 1 min pede 1440, fora da faixa de config.ts:97 (maximo 1000) e config.ts:98 (5 a 240)."
+    },
+    {
+      "id": "manter-relogio-2min",
+      "label": "Manter relogio de 2 min",
+      "what": "Manter a cadencia atual como conciliacao, sem mudanca. Evidencia: Teto de 720 por dia com reserva de 5 por cento (budget.ts:101-107); T15 nao mediu markout."
+    },
+    {
+      "id": "evento-com-prova-consumo",
+      "label": "Evento com prova de consumo",
+      "what": "Consulta por evento com prova de consumo, depois do teste de lote do Codex. Evidencia: Zona src/decision-review/** do Codex (events.ts:29-31); aceitacao E3 nao verificada."
+    }
+  ]
+}

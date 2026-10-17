@@ -1,0 +1,44 @@
+{
+  "id": "rc-dec-11-como-o-cliente-onchainos",
+  "goal": "Como o cliente OnchainOS trata HTTP 402 e o codigo 50011 enquanto o codigo de cota esgotada nao e medido? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "402": "bloqueia o tier ate o proximo mes UTC, onchainos/http.ts:427",
+    "trial_trade_rps": "1 RPS por padrao, ate 5 sob aprovacao, 60 dias (trade/api-fee)",
+    "market_rps": "nao publicado; cota mensal 100 mil Basic e Premium no Free",
+    "piso_trade_ms": "1100 ms entre inicios, okx-dex.ts:8, 55 inicios por janela de 60 s",
+    "piso_market": "1 RPS, burst 1, retry com limiter, onchainos/http.ts:508 e :411",
+    "retry_50102": "espera desde o ultimo envio antes da tentativa, onchain-read/client.ts:150",
+    "consultas_dia": "144 default (budget.ts:18); capacidade 720 do autopilot (autopilot.ts:51)",
+    "contador_rota": "inexistente; usage guarda totais por tier (api-budget.ts:3)",
+    "limite_market_rps": "não publicado; só 'RPS adjustments' e contato BD",
+    "codigo_limite": "50011 com HTTP 429, 'Rate limit reached' (páginas de erro Market)"
+  },
+  "rails": [
+    "RPS do Market nao publicado; qualquer valor e configuracao, nao contrato.",
+    "Nenhum plano pago, x402 ou assinatura (dono).",
+    "Chamadas de teste consomem cota gratuita e usam chave do dono; so com aprovacao.",
+    "Mudar o formato de onchain/usage-YYYY-MM.json e migracao: bloqueio."
+  ],
+  "options": [
+    {
+      "id": "corrigir-doc-cobertura",
+      "label": "Corrigir o documento de cobertura",
+      "what": "Trocar em onchainos-coverage.md:33 a frase de 402 como cota esgotada por pagamento exigido, e 50011 como limite de taxa. Evidencia: Paginas oficiais: 50011 vem com HTTP 429; o guia x402 define 402 como pagamento exigido (T18)."
+    },
+    {
+      "id": "medir-codigos-sombra",
+      "label": "Medir codigos em sombra",
+      "what": "Relatorio diario de status dos eventos ja emitidos, sem chamadas extras; apiCode so entra com aprovacao, por ser mudanca de codigo. Evidencia: http.ts:419-467 nao grava apiCode; ele so existe no OnchainosError (http.ts:439, 465)."
+    },
+    {
+      "id": "contador-por-rota-sombra",
+      "label": "Contador por rota em arquivo novo",
+      "what": "Contador por rota em arquivo novo, com recusa local antes do envio, sem mudar o comportamento de 402. Evidencia: admitDispatch existe so no leitor (src/onchain-read/client.ts); http.ts nao tem gate."
+    },
+    {
+      "id": "manter-402-bloqueio",
+      "label": "Manter bloqueio de 402 ate o reset",
+      "what": "Manter o bloqueio de 402 ate o reset UTC do mes. Evidencia: http.ts:427; o bloqueio do onchain-read dura 1 h (client.ts:56), por isso separar por cliente."
+    }
+  ]
+}
