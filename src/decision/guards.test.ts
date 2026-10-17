@@ -81,6 +81,14 @@ describe("qualidade do dado", () => {
     expect(invalidFields({ ...base, costs: undefined as unknown as Costs })).toContain("costs");
   });
 
+  test("preço de referência é opcional para decidir, mas presente tem de ser positivo", () => {
+    const { priceUsd: _omit, ...withoutPrice } = base;
+    expect(invalidFields(withoutPrice as Opportunity)).toEqual([]);
+    expect(evaluate(withoutPrice as Opportunity, port, limits, clock).action).toBe("COMPRAR");
+    expect(invalidFields({ ...base, priceUsd: 0 })).toEqual(["priceUsd"]);
+    expect(invalidFields({ ...base, priceUsd: Number.NaN })).toEqual(["priceUsd"]);
+  });
+
   test("cotação do futuro além da tolerância é dado ruim; dentro da tolerância passa", () => {
     expect(invalidFields({ ...base, quoteAtMs: NOW + 5000 })).toEqual(["quoteAtMs"]);
     expect(invalidFields({ ...base, quoteAtMs: NOW + 500 })).toEqual([]);

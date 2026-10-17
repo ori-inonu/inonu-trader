@@ -24,7 +24,7 @@ export function invalidFields(opp: Opportunity): string[] {
     ["legs", opp.legs === undefined || opp.legs === 1 || opp.legs === 2],
     ["atMs", finite(opp.atMs)],
     ["quoteAtMs", finite(opp.quoteAtMs) && (!finite(opp.atMs) || opp.quoteAtMs <= opp.atMs + MAX_QUOTE_FUTURE_MS)],
-    ["priceUsd", finite(opp.priceUsd) && opp.priceUsd > 0],
+    ["priceUsd", opp.priceUsd === undefined || (finite(opp.priceUsd) && opp.priceUsd > 0)],
     ["upBps", nonNeg(opp.upBps)],
     ["downBps", nonNeg(opp.downBps)],
     ["pWin", prob(opp.pWin)],

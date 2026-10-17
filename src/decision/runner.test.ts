@@ -186,6 +186,17 @@ describe("runner", () => {
     expect(() => setup({ deps: { guard: createGuard({ mode: "replay", failureThreshold: 3, cooldownMs: 1 }) } })).toThrow("modos diferentes");
   });
 
+  test("sem preço de referência a decisão vale mas nenhuma ordem sai, e a sonda do breaker não é tomada", async () => {
+    const { runner, port, health, records } = setup();
+    const { priceUsd: _omit, ...withoutPrice } = opportunity("sem-preco");
+    const result = await runner.step(withoutPrice);
+    expect(result.decision.reasons).toEqual(["bad_data"]);
+    expect(result.fill).toBeUndefined();
+    expect(port.fills()).toHaveLength(0);
+    expect(health.snapshot().probing).toBe(false);
+    expect(records).toHaveLength(1);
+  });
+
   test("dado ruim é recusado com bad_data e não chega à porta", async () => {
     const { runner, port } = setup();
     const result = await runner.step(opportunity("o-1", { pWin: 3 }));

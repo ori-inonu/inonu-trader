@@ -74,6 +74,12 @@ export function createRunner(deps: RunnerDeps): Runner {
       return { decision };
     }
 
+    // Sem preço de referência não há preço-limite: a decisão vale, mas nenhuma ordem sai.
+    if (opp.priceUsd === undefined) {
+      decision = refused(decision, "bad_data", 0);
+      await writeRefusal(opp, decision);
+      return { decision };
+    }
     // Última verificação antes do envio: pega a sonda do breaker de executor, se este envio for uma.
     const allowed = deps.health.allow(now);
     if (!allowed.ok) {

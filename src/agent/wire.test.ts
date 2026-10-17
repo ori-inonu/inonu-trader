@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, setSystemTime, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -1451,5 +1451,109 @@ describe("the default clock sync of a cycle goes through the fetch the service w
       expect(seen.filter((u) => u.includes(TIME))).toEqual([]);
       expect(leaked.filter((u) => u.includes(TIME))).toEqual([]);
     });
+  });
+});
+
+describe("the production controls of the decision engine, end to end (GOAL 1)", () => {
+  /** Quotes fine, but the swap itself is refused by the tool as the account's gas station is pending: the failure the real journal shows. */
+  const gasStationOnExecute: CliRunner = {
+    run: async (args, options) => (`${args[0]} ${args[1]}` === "swap execute" ? (cliCalls.push([...args]), { exitCode: 2, stdout: "Gas station required", stderr: "", timedOut: false }) : fakeCli.run(args, options)),
+  };
+  const executes = () => cliCalls.filter((c) => c[0] === "swap" && c[1] === "execute").length;
+  const live = async (svc: ReturnType<typeof make>) => {
+    expect(svc.updateConfig({ auto: false, managed: { kind: "agentica", evm: WALLET, solana: null }, riskPct: 0.1, refreshMin: 10, cli: { path: "C:\\agent\\onchainos.exe", sha256: SHA } })).toMatchObject({ ok: true });
+    connect(svc);
+    mkdirSync(join(dir, "agent", "onchainos-home"), { recursive: true });
+    writeFileSync(join(dir, "agent", "onchainos-home", "session.json"), JSON.stringify({ sessionKeyExpireAt: Date.now() + 100 * 24 * HOUR }));
+  };
+  const MIN = 60_000;
+  const savedBreaker = process.env.JEV_EXECUTOR_BREAKER;
+  afterEach(() => {
+    if (savedBreaker === undefined) delete process.env.JEV_EXECUTOR_BREAKER;
+    else process.env.JEV_EXECUTOR_BREAKER = savedBreaker;
+  });
+
+  test("after refusals for the same persistent cause the guard opens, stops calling the tool and the order says why", async () => {
+    delete process.env.JEV_EXECUTOR_BREAKER;
+    cliCalls.length = 0;
+    // the look of the model is not repeated while the Brief is the same (refreshMin): the system clock moves 11 minutes between looks (refreshMin is 10) so each one tries again
+    const start = Date.now();
+    const svc = make({ processRunner: gasStationOnExecute });
+    await live(svc);
+    const reasons: Array<string | null> = [];
+    try {
+      for (let i = 0; i < 7; i++) {
+        setSystemTime(start + i * 11 * MIN);
+        const report = await svc.runNow();
+        reasons.push(...report.orders.map((o) => o.reason));
+      }
+    } finally {
+      setSystemTime();
+    }
+    await svc.close();
+    // the first three taught the guard; the rest are probes (one at a time, after the wait) or refusals that never reached the tool
+    expect(reasons.slice(0, 3)).toEqual(["gas_station_pendente", "gas_station_pendente", "gas_station_pendente"]);
+    expect(reasons.filter((r) => r === "executor_indisponivel").length).toBeGreaterThanOrEqual(1);
+    expect(reasons).toHaveLength(7);
+    expect(executes()).toBe(reasons.filter((r) => r === "gas_station_pendente").length);
+    expect(executes()).toBeLessThan(7);
+    const events = readFileSync(join(dir, "agent", "executor-health.jsonl"), "utf8").trim().split("\n").map((l) => JSON.parse(l));
+    expect(events[0]).toMatchObject({ kind: "aberto", blockedBy: "gas_station_pendente" });
+    expect(events.map((e: { kind: string }) => e.kind)).toContain("sonda");
+  });
+
+  test("with the breaker off (JEV_EXECUTOR_BREAKER=0) the tool is asked every time, as before", async () => {
+    process.env.JEV_EXECUTOR_BREAKER = "0";
+    cliCalls.length = 0;
+    const start = Date.now();
+    const svc = make({ processRunner: gasStationOnExecute });
+    await live(svc);
+    try {
+      for (let i = 0; i < 5; i++) {
+        setSystemTime(start + i * 11 * MIN);
+        await svc.runNow();
+      }
+    } finally {
+      setSystemTime();
+    }
+    await svc.close();
+    expect(executes()).toBe(5);
+    expect(existsSync(join(dir, "agent", "executor-health.jsonl"))).toBe(false);
+  });
+
+  test("the engine looks at the purchases of the closing beside the cycle and keeps where it differs; it never touches the order", async () => {
+    delete process.env.JEV_ENGINE_SHADOW;
+    cliCalls.length = 0;
+    const svc = make();
+    await live(svc);
+    const report = await svc.runNow();
+    await svc.close();
+    // the order is the cycle's own, exactly as without the engine
+    expect(report.orders.map((o) => [o.stage, o.reason])).toEqual([["incerta", "transmitida"]]);
+    const closings = existsSync(join(dir, "agent", "closings.jsonl")) ? readFileSync(join(dir, "agent", "closings.jsonl"), "utf8").trim().split("\n").filter(Boolean) : [];
+    const shadowPath = join(dir, "agent", "engine-shadow.jsonl");
+    // one engine line per closing the cycle kept (none when the model made no closing in this look)
+    const shadow = existsSync(shadowPath) ? readFileSync(shadowPath, "utf8").trim().split("\n").filter(Boolean).map((l) => JSON.parse(l)) : [];
+    expect(shadow).toHaveLength(closings.length);
+    for (const line of shadow) {
+      expect(line).toMatchObject({ v: 1, production: expect.objectContaining({ applied: expect.any(String) }), pWin: expect.objectContaining({ mode: expect.any(String) }) });
+      // an engine verdict exists only when every input was there; otherwise the line says exactly what was missing
+      expect(line.engine !== null || line.missing.length > 0).toBe(true);
+    }
+  });
+
+  test("JEV_ENGINE_SHADOW=0 turns the engine's look off and nothing else changes", async () => {
+    process.env.JEV_ENGINE_SHADOW = "0";
+    try {
+      cliCalls.length = 0;
+      const svc = make();
+      await live(svc);
+      const report = await svc.runNow();
+      await svc.close();
+      expect(report.orders.map((o) => [o.stage, o.reason])).toEqual([["incerta", "transmitida"]]);
+      expect(existsSync(join(dir, "agent", "engine-shadow.jsonl"))).toBe(false);
+    } finally {
+      delete process.env.JEV_ENGINE_SHADOW;
+    }
   });
 });

@@ -42,7 +42,11 @@ export interface Opportunity {
   readonly atMs: number;
   /** Instante da cotação; a validade se mede contra `atMs`. */
   readonly quoteAtMs: number;
-  readonly priceUsd: number;
+  /**
+   * Preço de referência em USD. A decisão NÃO o usa; só o envio (preço-limite da ordem). Ausente é permitido para
+   * decidir sem enviar (modo sombra); o runner recusa com bad_data uma ordem sem preço. Presente, tem de ser > 0.
+   */
+  readonly priceUsd?: number;
   /** Movimento favorável esperado se acertar, e adverso se errar, ambos em bps positivos. */
   readonly upBps: number;
   readonly downBps: number;
