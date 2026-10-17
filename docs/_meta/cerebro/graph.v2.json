@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 749,
-  "headHash": "b400b7188dab692835ddf421c4f5610327536e9bcda09ccbc811eec3f9a3e38a",
+  "headSeq": 754,
+  "headHash": "b923f11fd13777b5cf77f902d0037d1a93b12f15f1623a90429f1c269fa7f06c",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -997,6 +997,16 @@
       "id": "iter-skills-nos",
       "type": "iteration",
       "text": "Consenso JEV skills_to_nodes (passo 14): procedimentos das 3 skills migrados para nos skill-ship-pr, skill-review-diff e skill-sdd-feature; SKILL.md viram ponteiros"
+    },
+    {
+      "id": "skill-sdd-feature-gates",
+      "type": "fact",
+      "text": "Gates SDD: em mudancas grandes NAO implementar antes de spec e plan aprovados. Perguntas em aberto vao ao Jev (ask-jev.ts); so voltar ao dono para segredos, dinheiro, migracoes ou autorizacoes. Trivial (typo, rename local, um arquivo) pula SDD mas roda a verificacao"
+    },
+    {
+      "id": "iter-skills-gates",
+      "type": "iteration",
+      "text": "Correcao apontada em revisao: a migracao das skills tinha perdido o gate de aprovacao de spec e plan e a regra de escalar so ao dono em temas de risco; restaurados no no skill-sdd-feature-gates, SKILL.md exportam profundidade 1"
     }
   ],
   "edges": [
@@ -3159,6 +3169,21 @@
       "from": "iter-search",
       "to": "iter-skills-nos",
       "seq": 749
+    },
+    {
+      "from": "skill-sdd-feature",
+      "to": "skill-sdd-feature-gates",
+      "seq": 751
+    },
+    {
+      "from": "skill-sdd-feature-gates",
+      "to": "iter-skills-gates",
+      "seq": 753
+    },
+    {
+      "from": "iter-skills-nos",
+      "to": "iter-skills-gates",
+      "seq": 754
     }
   ],
   "retractions": [
