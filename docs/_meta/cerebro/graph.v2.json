@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 703,
-  "headHash": "19c57058492101a4031627e4761f800fb3e709692b98fe7d3070e1a3ea080666",
+  "headSeq": 711,
+  "headHash": "4db77f2cfcde0cdc930fe294b8e93f23680d37768d366c3d3dacb17088c8cb09",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -902,6 +902,21 @@
       "id": "iter-research-congelado",
       "type": "iteration",
       "text": "Consenso JEV freeze_research: docs/research nao migrado nem apagado; legado com ponteiro de arvore git, como log.md. Restam spec.md e hook do OMP"
+    },
+    {
+      "id": "jev-cerebro-passo-9",
+      "type": "decision",
+      "text": "JEV consenso lider freeze_specs; spec 820dd9cebe7c35bf; recibo sha256 82b4124469662e6244bda1f411cbe0240af3d8d278d1c3d01e42d56ce3add2c8. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "fato-specs-congelados",
+      "type": "fact",
+      "text": "Os spec.md em docs/specs (4 contratos humanos, 41 a 61 linhas) ficam como contrato congelado, nao migrado; arvore git docs/specs cdc25f785be35b58e4d02c7a1d2597cd82c66f25 em a9e46d6. Mudanca de contrato: novo spec ou supersede no grafo"
+    },
+    {
+      "id": "iter-specs-congelados",
+      "type": "iteration",
+      "text": "Consenso JEV freeze_specs: spec.md mantidos e ancorados por ponteiro de arvore git. Resta so hook de sessao do OMP global"
     }
   ],
   "edges": [
@@ -2929,6 +2944,31 @@
       "from": "iter-retratar-antigas",
       "to": "iter-research-congelado",
       "seq": 703
+    },
+    {
+      "from": "iter-research-congelado",
+      "to": "jev-cerebro-passo-9",
+      "seq": 705
+    },
+    {
+      "from": "jev-cerebro-passo-9",
+      "to": "fato-specs-congelados",
+      "seq": 707
+    },
+    {
+      "from": "fato-research-congelado",
+      "to": "fato-specs-congelados",
+      "seq": 708
+    },
+    {
+      "from": "fato-specs-congelados",
+      "to": "iter-specs-congelados",
+      "seq": 710
+    },
+    {
+      "from": "iter-research-congelado",
+      "to": "iter-specs-congelados",
+      "seq": 711
     }
   ],
   "retractions": [
