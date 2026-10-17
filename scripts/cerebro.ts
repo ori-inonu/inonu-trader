@@ -246,7 +246,9 @@ export async function verify(root: string): Promise<{ seq: number; hash: string 
 export async function lint(root: string): Promise<string[]> {
   const { graph } = await load(root, true);
   const linked = new Set(graph.edges.flatMap((edge) => [edge.from, edge.to]));
-  return graph.nodes.filter((node) => !linked.has(node.id)).map((node) => node.id);
+  const orphans = graph.nodes.filter((node) => !linked.has(node.id)).map((node) => node.id);
+  const keys = graph.nodes.map((node) => /^@(\S+) /.exec(node.text)?.[1]).filter((key): key is string => key !== undefined);
+  return [...orphans, ...new Set(keys.filter((key, i) => keys.indexOf(key) !== i))].map((item) => (orphans.includes(item) ? item : `chave:${item}`));
 }
 
 async function main(): Promise<void> {

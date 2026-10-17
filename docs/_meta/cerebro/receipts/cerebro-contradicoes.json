@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-contradicoes",
+    "specHash": "eafb63b1cb8add06586cce76e1fe85c2b37380cc973eac2726390d27e3cd8d35",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "lint_dup_key",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "lint_dup_key",
+          "lint_only_links",
+          "defer"
+        ],
+        "framings": [
+          {
+            "order": [
+              "lint_dup_key",
+              "lint_only_links",
+              "defer"
+            ],
+            "probs": {
+              "lint_dup_key": 0.92,
+              "lint_only_links": 0.07,
+              "defer": 0.01,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "lint_only_links",
+              "defer",
+              "lint_dup_key"
+            ],
+            "probs": {
+              "lint_only_links": 0.45,
+              "defer": 0.02,
+              "lint_dup_key": 0.52,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "defer",
+              "lint_dup_key",
+              "lint_only_links"
+            ],
+            "probs": {
+              "defer": 0.03,
+              "lint_dup_key": 0.76,
+              "lint_only_links": 0.2,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "lint_dup_key": 0.7333,
+          "lint_only_links": 0.24,
+          "defer": 0.02
+        },
+        "noneFits": 0.0067,
+        "agreement": 1,
+        "margin": 0.4933,
+        "leader": "lint_dup_key",
+        "railProb": {
+          "lint_dup_key": 0.02,
+          "lint_only_links": 0.03,
+          "defer": 0.01
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "lint_dup_key",
+          "lint_only_links",
+          "defer"
+        ],
+        "framings": [
+          {
+            "order": [
+              "lint_dup_key",
+              "lint_only_links",
+              "defer"
+            ],
+            "probs": {
+              "lint_dup_key": 0.9,
+              "lint_only_links": 0.09,
+              "defer": 0.01,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "lint_only_links",
+              "defer",
+              "lint_dup_key"
+            ],
+            "probs": {
+              "lint_only_links": 0.46,
+              "defer": 0.04,
+              "lint_dup_key": 0.49,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "defer",
+              "lint_dup_key",
+              "lint_only_links"
+            ],
+            "probs": {
+              "defer": 0.03,
+              "lint_dup_key": 0.8099999999999999,
+              "lint_only_links": 0.15,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "lint_dup_key": 0.7333,
+          "lint_only_links": 0.2333,
+          "defer": 0.0267
+        },
+        "noneFits": 0.0067,
+        "agreement": 1,
+        "margin": 0.5,
+        "leader": "lint_dup_key",
+        "railProb": {
+          "lint_dup_key": 0.02,
+          "lint_only_links": 0.03,
+          "defer": 0.01
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 7190,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

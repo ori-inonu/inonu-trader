@@ -141,6 +141,16 @@ test("lint reports active nodes without links and ignores retracted ones", async
   expect(await lint(root)).toEqual([]);
 });
 
+test("lint reports two active nodes that claim the same @key until one is superseded", async () => {
+  const root = tempRoot();
+  await addNode(root, { id: "a", type: "fact", text: "@estado Antes." });
+  await addNode(root, { id: "r", type: "fact", text: "Raiz." }, ["a"]);
+  await addNode(root, { id: "b", type: "fact", text: "@estado Depois." }, ["a", "r"]);
+  expect(await lint(root)).toEqual(["chave:estado"]);
+  await supersedeNode(root, "a", "b");
+  expect(await lint(root)).toEqual([]);
+});
+
 test("supersede retracts the old node pointing at a live replacement and rejects bad targets", async () => {
   const root = tempRoot();
   await addNode(root, { id: "old", type: "fact", text: "Antigo." });

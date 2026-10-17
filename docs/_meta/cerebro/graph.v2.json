@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 118,
-  "headHash": "ea90170034a9fb63a8b7bde92da9a68911dd40c664c68f54a6a3fe2f53a96982",
+  "headSeq": 188,
+  "headHash": "30a3b1d32de5324dd169a438f544bf48abe9303811acfd41c86f661c1b245b6b",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -157,6 +157,26 @@
       "id": "iter-global-ponteiro",
       "type": "iteration",
       "text": "AGENTS global do OMP (8 linhas) ganhou a regra de apagar arquivo com ponteiro git no no; mudanca fora do repo, sem decisao do JEV, escopo de uma frase"
+    },
+    {
+      "id": "jev-cerebro-contradicoes",
+      "type": "decision",
+      "text": "JEV consenso lider lint_dup_key; spec eafb63b1cb8add06; recibo sha256 9a736973adcf4755e9988924e81affc090c4a6f64f45386ef4821b4140fadcae. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "jev-cerebro-regra-global",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec 20ba52979a796ac5; recibo sha256 a523e1fe5f4311fd1abe2eaa3b88eb695a78d197cf960e8311bcd07758220554. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-contradicoes",
+      "type": "iteration",
+      "text": "lint acusa dois nos ativos com a mesma chave @chave no inicio do texto; resolver com supersede. Opcao lint_dup_key escolhida pelo JEV, sem mudar o formato do no, 3 linhas de codigo"
+    },
+    {
+      "id": "retro-regra-global",
+      "type": "event",
+      "text": "Consulta retroativa ao JEV sobre a regra global de ponteiro git: sem_consenso. Regra mantida ate o dono decidir; nao vale como aprovacao previa, a mudanca foi feita antes da consulta"
     }
   ],
   "edges": [
@@ -594,6 +614,336 @@
       "from": "regra-excluir-so-com-ponteiro",
       "to": "iter-global-ponteiro",
       "seq": 118
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 120
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 121
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 122
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 123
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 124
+    },
+    {
+      "from": "regra-dura-injetada",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 125
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 126
+    },
+    {
+      "from": "jev-cerebro-regras-no-grafo",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 127
+    },
+    {
+      "from": "iter-regras-inline",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 128
+    },
+    {
+      "from": "dono-aceitou-jev",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 129
+    },
+    {
+      "from": "iter-lint",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 130
+    },
+    {
+      "from": "jev-autoresearch-proxima-hipotese",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 131
+    },
+    {
+      "from": "iter-autoresearch-encerrada",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 132
+    },
+    {
+      "from": "jev-cerebro-substituicao",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 133
+    },
+    {
+      "from": "iter-supersede",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 134
+    },
+    {
+      "from": "iter-ordem-chaves",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 135
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 136
+    },
+    {
+      "from": "spec-decisao-executavel-jev",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 137
+    },
+    {
+      "from": "spec-autoresearch-real-online",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 138
+    },
+    {
+      "from": "spec-autoresearch-decisoes",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 139
+    },
+    {
+      "from": "spec-cerebro-grafo",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 140
+    },
+    {
+      "from": "iter-migrar-specs",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 141
+    },
+    {
+      "from": "src-cerebro-grafo",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 142
+    },
+    {
+      "from": "regra-excluir-so-com-ponteiro",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 143
+    },
+    {
+      "from": "src-decisao-executavel-jev",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 144
+    },
+    {
+      "from": "src-decisao-runtime",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 145
+    },
+    {
+      "from": "src-real-online",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 146
+    },
+    {
+      "from": "src-autoresearch-decisoes",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 147
+    },
+    {
+      "from": "src-decisoes-evidencia",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 148
+    },
+    {
+      "from": "src-real-online-limites",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 149
+    },
+    {
+      "from": "iter-global-ponteiro",
+      "to": "jev-cerebro-contradicoes",
+      "seq": 150
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-cerebro-regra-global",
+      "seq": 152
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-cerebro-regra-global",
+      "seq": 153
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-cerebro-regra-global",
+      "seq": 154
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "jev-cerebro-regra-global",
+      "seq": 155
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "jev-cerebro-regra-global",
+      "seq": 156
+    },
+    {
+      "from": "regra-dura-injetada",
+      "to": "jev-cerebro-regra-global",
+      "seq": 157
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "jev-cerebro-regra-global",
+      "seq": 158
+    },
+    {
+      "from": "jev-cerebro-regras-no-grafo",
+      "to": "jev-cerebro-regra-global",
+      "seq": 159
+    },
+    {
+      "from": "iter-regras-inline",
+      "to": "jev-cerebro-regra-global",
+      "seq": 160
+    },
+    {
+      "from": "dono-aceitou-jev",
+      "to": "jev-cerebro-regra-global",
+      "seq": 161
+    },
+    {
+      "from": "iter-lint",
+      "to": "jev-cerebro-regra-global",
+      "seq": 162
+    },
+    {
+      "from": "jev-autoresearch-proxima-hipotese",
+      "to": "jev-cerebro-regra-global",
+      "seq": 163
+    },
+    {
+      "from": "iter-autoresearch-encerrada",
+      "to": "jev-cerebro-regra-global",
+      "seq": 164
+    },
+    {
+      "from": "jev-cerebro-substituicao",
+      "to": "jev-cerebro-regra-global",
+      "seq": 165
+    },
+    {
+      "from": "iter-supersede",
+      "to": "jev-cerebro-regra-global",
+      "seq": 166
+    },
+    {
+      "from": "iter-ordem-chaves",
+      "to": "jev-cerebro-regra-global",
+      "seq": 167
+    },
+    {
+      "from": "jev-cerebro-migrar-specs",
+      "to": "jev-cerebro-regra-global",
+      "seq": 168
+    },
+    {
+      "from": "spec-decisao-executavel-jev",
+      "to": "jev-cerebro-regra-global",
+      "seq": 169
+    },
+    {
+      "from": "spec-autoresearch-real-online",
+      "to": "jev-cerebro-regra-global",
+      "seq": 170
+    },
+    {
+      "from": "spec-autoresearch-decisoes",
+      "to": "jev-cerebro-regra-global",
+      "seq": 171
+    },
+    {
+      "from": "spec-cerebro-grafo",
+      "to": "jev-cerebro-regra-global",
+      "seq": 172
+    },
+    {
+      "from": "iter-migrar-specs",
+      "to": "jev-cerebro-regra-global",
+      "seq": 173
+    },
+    {
+      "from": "src-cerebro-grafo",
+      "to": "jev-cerebro-regra-global",
+      "seq": 174
+    },
+    {
+      "from": "regra-excluir-so-com-ponteiro",
+      "to": "jev-cerebro-regra-global",
+      "seq": 175
+    },
+    {
+      "from": "src-decisao-executavel-jev",
+      "to": "jev-cerebro-regra-global",
+      "seq": 176
+    },
+    {
+      "from": "src-decisao-runtime",
+      "to": "jev-cerebro-regra-global",
+      "seq": 177
+    },
+    {
+      "from": "src-real-online",
+      "to": "jev-cerebro-regra-global",
+      "seq": 178
+    },
+    {
+      "from": "src-autoresearch-decisoes",
+      "to": "jev-cerebro-regra-global",
+      "seq": 179
+    },
+    {
+      "from": "src-decisoes-evidencia",
+      "to": "jev-cerebro-regra-global",
+      "seq": 180
+    },
+    {
+      "from": "src-real-online-limites",
+      "to": "jev-cerebro-regra-global",
+      "seq": 181
+    },
+    {
+      "from": "iter-global-ponteiro",
+      "to": "jev-cerebro-regra-global",
+      "seq": 182
+    },
+    {
+      "from": "jev-cerebro-contradicoes",
+      "to": "jev-cerebro-regra-global",
+      "seq": 183
+    },
+    {
+      "from": "jev-cerebro-contradicoes",
+      "to": "iter-contradicoes",
+      "seq": 185
+    },
+    {
+      "from": "jev-cerebro-regra-global",
+      "to": "retro-regra-global",
+      "seq": 187
+    },
+    {
+      "from": "iter-global-ponteiro",
+      "to": "retro-regra-global",
+      "seq": 188
     }
   ],
   "retractions": []
