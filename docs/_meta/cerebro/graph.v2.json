@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 26,
-  "headHash": "a3c4b73596109ab125f129a8b88bb02a09bd2bc901d6e324b4e286b41e42450b",
+  "headSeq": 28,
+  "headHash": "6409da00001744db56ceee3debfdd2ccafea6253141a88d582237b9938382f53",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -47,6 +47,11 @@
       "id": "iter-regras-inline",
       "type": "iteration",
       "text": "JEV consenso keep_safety_inline: regras duras ficam no AGENTS.md injetado, historico e fatos no grafo"
+    },
+    {
+      "id": "dono-aceitou-jev",
+      "type": "event",
+      "text": "Dono alterou criterio 2: regras de seguranca inline no AGENTS.md, historico e fatos no grafo (recomendacao do JEV aceita)"
     }
   ],
   "edges": [
@@ -134,6 +139,11 @@
       "from": "iter-comandos-agents",
       "to": "iter-regras-inline",
       "seq": 26
+    },
+    {
+      "from": "iter-regras-inline",
+      "to": "dono-aceitou-jev",
+      "seq": 28
     }
   ],
   "retractions": []
