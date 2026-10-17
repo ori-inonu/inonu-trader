@@ -10,6 +10,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { decide, DISCLAIMER } from "../src/consensus/engine";
 import { createJevJudge, JEV_JUDGE_HARD_MAX_CALLS } from "../src/consensus/jev-judge";
+import { JEV_DAILY_CALLS, remainingToday, spend } from "../src/consensus/quota";
 import { parseSpec, planOf } from "../src/consensus/spec";
 
 const [command, file, ...rest] = process.argv.slice(2);
@@ -42,8 +43,11 @@ if (!Number.isInteger(cap) || cap < 1 || cap > JEV_JUDGE_HARD_MAX_CALLS) refuse(
 const apiKey = process.env.TYPESAFE_API_KEY ?? process.env.TYPESAFE_AI_API_KEY;
 if (apiKey === undefined || apiKey === "") refuse("recusado: chave do provedor ausente no ambiente (TYPESAFE_API_KEY ou TYPESAFE_AI_API_KEY)");
 
+const QUOTA = "data/jev-quota.json";
+const left = remainingToday(QUOTA);
+if (left === 0) refuse(`recusado: teto diario de ${JEV_DAILY_CALLS} chamadas ao Jev esgotado (UTC); amanha libera`);
+const judge = createJevJudge({ apiKey: apiKey!, maxCalls: Math.min(cap, left) });
 try {
- const judge = createJevJudge({ apiKey: apiKey!, maxCalls: cap });
  const receipt = await decide(spec!, judge);
  const out = { receipt, meter: judge.meter(), disclaimer: DISCLAIMER };
  const out_path = flag("--out");
@@ -51,5 +55,7 @@ try {
  console.log(JSON.stringify(out, null, 2));
 } catch (error) {
  console.error(`erro: ${error instanceof Error ? error.message.slice(0, 200) : "desconhecido"}`);
- process.exit(3);
+ process.exitCode = 3;
+} finally {
+ spend(QUOTA, judge.meter().sent);
 }
