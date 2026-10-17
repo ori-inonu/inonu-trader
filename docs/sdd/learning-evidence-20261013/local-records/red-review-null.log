@@ -1,0 +1,74 @@
+bun test v1.3.14 (0d9b296a)
+
+src\learning-evidence\dataset.test.ts:
+(pass) exports hypothetical net spot long target, preserving unknown features and input objects [53.40ms]
+(pass) purges training outcomes at the cutoff and groups simultaneous instruments [70.18ms]
+(pass) excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts [6.90ms]
+(pass) rejects conflicting duplicates and makes replay independent of input order [6.49ms]
+(pass) checks feature provenance and projects only the fixed schema [6.37ms]
+(pass) validates options and fails malformed records before producing a partial dataset [2.86ms]
+130 | test("rejects explicit null options while keeping defaults for omitted or undefined options", () => {
+131 |   const opts = { horizon: "15m" as const, asOfMs: 900_000 };
+132 |   for (const field of ["minTrainGroups", "testGroups", "embargoMs"]) {
+133 |     expect(() => buildLearningDataset([], [], { ...opts, [field]: null })).toThrow("invalid_options");
+134 |   }
+135 |   expect(buildLearningDataset([], [], { ...opts, minTrainGroups: undefined, testGroups: undefined,
+                                                                                 ^
+error: expect(received).toThrow(expected)
+
+Expected substring: "invalid_options"
+
+Received function did not throw
+Received value: {
+  version: 1,
+  targetKind: "hypothetical_spot_long_after_recorded_cost",
+  horizon: "15m",
+  asOfMs: 900000,
+  settings: {
+    minTrainGroups: 30,
+    testGroups: 12,
+    embargoMs: 0,
+  },
+  rows: [],
+  folds: [],
+  status: "insufficient_data",
+  diagnostics: {
+    inputSnapshots: 0,
+    inputLabels: 0,
+    excluded: {
+      sampling: 0,
+      cost: 0,
+      features: 0,
+      timestamp: 0,
+      missingLabel: 0,
+      incompleteLabel: 0,
+      immatureLabel: 0,
+      inconsistentReturn: 0,
+    },
+    duplicateSnapshots: 0,
+    duplicateLabels: 0,
+    rows: 0,
+    timestampGroups: 0,
+    folds: 0,
+    skippedBlocks: 0,
+    tailGroups: 0,
+  },
+}
+
+      at <anonymous> (C:\Users\gabri\.codex\worktrees\learning-evidence\jev-trader\src\learning-evidence\dataset.test.ts:135:76)
+(fail) rejects explicit null options while keeping defaults for omitted or undefined options [19.07ms]
+(pass) accounts for skipped test blocks and incomplete tails with literal chronological boundaries [3.84ms]
+(pass) enforces input and fold output resource limits [886.06ms]
+(pass) excludes historical backfill supported by the updated recorder contract [1.38ms]
+
+scripts\learning-dataset.test.ts:
+(pass) CLI exports real recorder files without altering them or reading decisions [749.53ms]
+(pass) CLI reports empty evidence and rejects duplicate or invalid options without source content [2182.06ms]
+(pass) CLI fails malformed recorder records and UTF-8 with filename and line only [1466.53ms]
+(pass) CLI rejects nonregular files and directory links before reading [1007.39ms]
+(pass) CLI enforces a combined byte cap before parsing the oversized file [711.48ms]
+
+ 14 pass
+ 1 fail
+ 93 expect() calls
+Ran 15 tests across 2 files. [7.53s]

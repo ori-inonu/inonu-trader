@@ -1,0 +1,80 @@
+{
+  "version": 2,
+  "baseline": "00a593bcabe25dbb6d83795268533551098f645b",
+  "implementer_id": "root-01a1362a",
+  "conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "authored": [
+    {
+      "path": "src/learning-evidence/dataset.ts",
+      "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+      "bytes": 8795
+    },
+    {
+      "path": "src/learning-evidence/dataset.test.ts",
+      "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+      "bytes": 9130
+    },
+    {
+      "path": "scripts/learning-dataset.ts",
+      "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+      "bytes": 5154
+    },
+    {
+      "path": "scripts/learning-dataset.test.ts",
+      "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+      "bytes": 6460
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/requirements.md",
+      "sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+      "bytes": 4885
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/RESEARCH.md",
+      "sha256": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2",
+      "bytes": 19976
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+      "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+      "bytes": 2821
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+      "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+      "bytes": 1635
+    }
+  ],
+  "readonly_dependencies": [
+    {
+      "path": "src/intel/features/types.ts",
+      "sha256": "583208c64c99f60aa761e5742bf7a5139d885e6963859006196e892669101bb6",
+      "bytes": 4673
+    },
+    {
+      "path": "src/outcomes/types.ts",
+      "sha256": "0faa225908aa0a917a74c9a94f532559f770bc90c3d568b198f601472c5a99c3",
+      "bytes": 4364
+    },
+    {
+      "path": "src/outcomes/store.ts",
+      "sha256": "f5ccb266976012f83a113589fa4ed638c0ae2a2db3e7eaf42048aa0c4ffc3bf0",
+      "bytes": 12188
+    }
+  ],
+  "frozen_specification": {
+    "path": "frozen/SPEC.md",
+    "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+    "acceptance_sha256": "7a5951dc5212297db0c80218fde78b60f421dfd7de531a2d60235b7eac9e4926"
+  },
+  "excluded_local_records": [
+    "docs/sdd/learning-evidence-20261013/SPEC.md",
+    "docs/sdd/learning-evidence-20261013/PLAN.md",
+    "docs/sdd/learning-evidence-20261013/decision.json"
+  ],
+  "delivery_patch": {
+    "path": "DELIVERY.patch",
+    "sha256": "8430c928edfe8d5e9b4dc1f8b125a219ecc4a98b04da8c73f180798eb9d6a64f"
+  },
+  "commits": []
+}

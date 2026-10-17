@@ -1,0 +1,990 @@
+{
+  "review_axis": "Spec",
+  "version": 2,
+  "decision": "approved",
+  "status": "approved",
+  "approval_scope": "Frozen LE-1 through LE-8 for this exact v2 candidate; Standards and final audit remain separate.",
+  "reviewer": "/root/spec_review",
+  "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+  "implementer_id": "root-01a1362a",
+  "independent_reviewer": true,
+  "conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "baseline": "00a593bcabe25dbb6d83795268533551098f645b",
+  "candidate_root": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+  "candidate_manifest": {
+    "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2/CANDIDATE.json",
+    "sha256": "1020e399d1dc4610fd0aad7004fe9e49b74ec28ef73f5a75200529c1762546ff",
+    "outside_delivery_patch": true
+  },
+  "delivery_patch": {
+    "read_path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2/DELIVERY.patch",
+    "sha256": "8430c928edfe8d5e9b4dc1f8b125a219ecc4a98b04da8c73f180798eb9d6a64f"
+  },
+  "immutable_spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+  "public_acceptance_sha256": "7a5951dc5212297db0c80218fde78b60f421dfd7de531a2d60235b7eac9e4926",
+  "acceptance_identical": true,
+  "execution_environment": {
+    "sandbox": "danger-full-access",
+    "isolation": "Separate frozen v2 copy distinct from implementer workspace; observed ReadOnly attributes and existing node_modules junction are not process read-only enforcement.",
+    "candidate_modified": false,
+    "network_or_paid_calls": false,
+    "own_writes": "REPORT-v2.md and coverage-v2.json only; v1 preserved.",
+    "model_configuration": "GPT-6.1 Sol/xhigh reviewer role; effective tier not independently established."
+  },
+  "verification": [
+    {
+      "id": "behavior-initial",
+      "status": "failed_timeout",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+      "result": "14 pass, 1 fail, 96 expects; 5000ms timeout in CLI empty/invalid options test. Run overlapped typecheck; cause unestablished.",
+      "command": "& 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py' run --cwd 'C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2' --timeout 120 --profile test --rtk 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe' --headroom-python 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' --store 'C:/Users/gabri/.codex/rtk-headroom-data' -- bun --no-env-file test ./src/learning-evidence ./scripts/learning-dataset.test.ts",
+      "chunk_id": "a908b1",
+      "wall_time_seconds": 2.6e-05,
+      "original_token_count": 412,
+      "output": "\nsrc\\learning-evidence\\dataset.test.ts:\n(pass) exports hypothetical net spot long target, preserving unknown features and input objects [292.80ms]\n(pass) purges training outcomes at the cutoff and groups simultaneous instruments [29.85ms]\n(pass) excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts [5.75ms]\n(pass) rejects conflicting duplicates and makes replay independent of input order [8.89ms]\n(pass) checks feature provenance and projects only the fixed schema [4.03ms]\n(pass) validates options and fails malformed records before producing a partial dataset [3.32ms]\n(pass) rejects explicit null options while keeping defaults for omitted or undefined options [0.77ms]\n(pass) accounts for skipped test blocks and incomplete tails with literal chronological boundaries [5.09ms]\n(pass) enforces input and fold output resource limits [1349.81ms]\n(pass) excludes historical backfill supported by the updated recorder contract [1.47ms]\n\nscripts\\learning-dataset.test.ts:\n(pass) CLI exports real recorder files without altering them or reading decisions [3934.03ms]\nkilled 1 dangling process\n(fail) CLI reports empty evidence and rejects duplicate or invalid options without source content [5045.40ms]\n  ^ this test timed out after 5000ms.\n(pass) CLI fails malformed recorder records and UTF-8 with filename and line only [4073.40ms]\n(pass) CLI rejects nonregular files and directory links before reading [1219.76ms]\n(pass) CLI enforces a combined byte cap before parsing the oversized file [349.24ms]\n\n 14 pass\n 1 fail\n 96 expect() calls\nRan 15 tests across 2 files. [18.03s]\nbun test v1.3.14 (0d9b296a)\n",
+      "exit_code": 1
+    },
+    {
+      "id": "behavior-final",
+      "status": "pass",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+      "result": "15 pass, 0 fail, 96 expects [8.99s]; exact same command replayed sequentially after typecheck completed.",
+      "command": "& 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py' run --cwd 'C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2' --timeout 120 --profile test --rtk 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe' --headroom-python 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' --store 'C:/Users/gabri/.codex/rtk-headroom-data' -- bun --no-env-file test ./src/learning-evidence ./scripts/learning-dataset.test.ts",
+      "chunk_id": "590238",
+      "wall_time_seconds": 2.11e-05,
+      "original_token_count": 395,
+      "output": "bun test v1.3.14 (0d9b296a)\n\nsrc\\learning-evidence\\dataset.test.ts:\n(pass) exports hypothetical net spot long target, preserving unknown features and input objects [141.01ms]\n(pass) purges training outcomes at the cutoff and groups simultaneous instruments [50.91ms]\n(pass) excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts [8.78ms]\n(pass) rejects conflicting duplicates and makes replay independent of input order [5.97ms]\n(pass) checks feature provenance and projects only the fixed schema [3.48ms]\n(pass) validates options and fails malformed records before producing a partial dataset [2.95ms]\n(pass) rejects explicit null options while keeping defaults for omitted or undefined options [0.97ms]\n(pass) accounts for skipped test blocks and incomplete tails with literal chronological boundaries [3.67ms]\n(pass) enforces input and fold output resource limits [993.91ms]\n(pass) excludes historical backfill supported by the updated recorder contract [3.13ms]\n\nscripts\\learning-dataset.test.ts:\n(pass) CLI exports real recorder files without altering them or reading decisions [1253.81ms]\n(pass) CLI reports empty evidence and rejects duplicate or invalid options without source content [3031.16ms]\n(pass) CLI fails malformed recorder records and UTF-8 with filename and line only [1799.46ms]\n(pass) CLI rejects nonregular files and directory links before reading [775.77ms]\n(pass) CLI enforces a combined byte cap before parsing the oversized file [437.53ms]\n\n 15 pass\n 0 fail\n 96 expect() calls\nRan 15 tests across 2 files. [8.99s]\n",
+      "exit_code": 0
+    },
+    {
+      "id": "types",
+      "status": "pass",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+      "result": "Exit 0; no diagnostics; focused new-source and imported-contract scope.",
+      "command": "bun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/learning-evidence/dataset.ts src/learning-evidence/dataset.test.ts scripts/learning-dataset.ts scripts/learning-dataset.test.ts",
+      "chunk_id": "664acf",
+      "wall_time_seconds": 3.03e-05,
+      "original_token_count": 0,
+      "output": "",
+      "exit_code": 0
+    },
+    {
+      "id": "null-probe",
+      "status": "pass",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+      "result": "All three explicit null options rejected with invalid_options; omitted and undefined options retain defaults.",
+      "command": "$probeSource = @'\nimport { buildLearningDataset } from \"./src/learning-evidence/dataset.ts\";\nconst base = { horizon: \"15m\", asOfMs: 900000 };\nconst observations = [];\nfor (const field of [\"minTrainGroups\",\"testGroups\",\"embargoMs\"]) {\n  try {\n    const result = buildLearningDataset([], [], { ...base, [field]: null });\n    observations.push({field,value:null,result:\"accepted\",settings:result.settings});\n  } catch(error) {\n    observations.push({field,value:null,result:\"rejected\",error:error instanceof Error ? error.message : \"unknown\"});\n  }\n}\nfor (const options of [base,{...base,minTrainGroups:undefined,testGroups:undefined,embargoMs:undefined}]) {\n  const result = buildLearningDataset([], [], options);\n  observations.push({kind:options===base?\"omitted\":\"undefined\",result:\"accepted\",settings:result.settings});\n}\nconsole.log(JSON.stringify(observations));\nif (observations.slice(0,3).some(x => x.result!==\"rejected\" || x.error!==\"invalid_options\")) throw new Error(\"null_validation_failed\");\nif (observations.slice(3).some(x => JSON.stringify(x.settings)!==JSON.stringify({minTrainGroups:30,testGroups:12,embargoMs:0}))) throw new Error(\"defaults_changed\");\n'@\nbun --no-env-file --eval $probeSource",
+      "chunk_id": "58892b",
+      "wall_time_seconds": 2.3402463,
+      "exit_code": 0,
+      "original_token_count": 115,
+      "output": "[{\"field\":\"minTrainGroups\",\"value\":null,\"result\":\"rejected\",\"error\":\"invalid_options\"},{\"field\":\"testGroups\",\"value\":null,\"result\":\"rejected\",\"error\":\"invalid_options\"},{\"field\":\"embargoMs\",\"value\":null,\"result\":\"rejected\",\"error\":\"invalid_options\"},{\"kind\":\"omitted\",\"result\":\"accepted\",\"settings\":{\"minTrainGroups\":30,\"testGroups\":12,\"embargoMs\":0}},{\"kind\":\"undefined\",\"result\":\"accepted\",\"settings\":{\"minTrainGroups\":30,\"testGroups\":12,\"embargoMs\":0}}]\n"
+    }
+  ],
+  "checks": {
+    "integrity": {
+      "status": "pass",
+      "before": {
+        "candidate_sha256": "1020e399d1dc4610fd0aad7004fe9e49b74ec28ef73f5a75200529c1762546ff",
+        "frozen_spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "acceptance_sha256": "7a5951dc5212297db0c80218fde78b60f421dfd7de531a2d60235b7eac9e4926",
+        "acceptance_identical": true,
+        "patch_sha256": "8430c928edfe8d5e9b4dc1f8b125a219ecc4a98b04da8c73f180798eb9d6a64f",
+        "patch_source_matches": {
+          "src/learning-evidence/dataset.ts": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "src/learning-evidence/dataset.test.ts": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "scripts/learning-dataset.ts": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+          "scripts/learning-dataset.test.ts": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "docs/sdd/learning-evidence-20261013/requirements.md": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+          "docs/sdd/learning-evidence-20261013/RESEARCH.md": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2",
+          "docs/sdd/learning-evidence-20261013/USAGE.md": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "docs/sdd/learning-evidence-20261013/VERIFICATION.md": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64"
+        },
+        "hash_checks": [
+          {
+            "path": "src/learning-evidence/dataset.ts",
+            "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+            "bytes": 8795,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/learning-evidence/dataset.test.ts",
+            "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+            "bytes": 9130,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "scripts/learning-dataset.ts",
+            "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+            "bytes": 5154,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "scripts/learning-dataset.test.ts",
+            "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+            "bytes": 6460,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/requirements.md",
+            "sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+            "bytes": 4885,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/RESEARCH.md",
+            "sha256": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2",
+            "bytes": 19976,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+            "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+            "bytes": 2821,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+            "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+            "bytes": 1635,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/intel/features/types.ts",
+            "sha256": "583208c64c99f60aa761e5742bf7a5139d885e6963859006196e892669101bb6",
+            "bytes": 4673,
+            "group": "readonly_dependencies",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/outcomes/types.ts",
+            "sha256": "0faa225908aa0a917a74c9a94f532559f770bc90c3d568b198f601472c5a99c3",
+            "bytes": 4364,
+            "group": "readonly_dependencies",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/outcomes/store.ts",
+            "sha256": "f5ccb266976012f83a113589fa4ed638c0ae2a2db3e7eaf42048aa0c4ffc3bf0",
+            "bytes": 12188,
+            "group": "readonly_dependencies",
+            "readonly": true,
+            "status": "match"
+          }
+        ]
+      },
+      "after": {
+        "candidate_sha256": "1020e399d1dc4610fd0aad7004fe9e49b74ec28ef73f5a75200529c1762546ff",
+        "frozen_spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "acceptance_sha256": "7a5951dc5212297db0c80218fde78b60f421dfd7de531a2d60235b7eac9e4926",
+        "acceptance_identical": true,
+        "patch_sha256": "8430c928edfe8d5e9b4dc1f8b125a219ecc4a98b04da8c73f180798eb9d6a64f",
+        "patch_source_matches": {
+          "src/learning-evidence/dataset.ts": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "src/learning-evidence/dataset.test.ts": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "scripts/learning-dataset.ts": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+          "scripts/learning-dataset.test.ts": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "docs/sdd/learning-evidence-20261013/requirements.md": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+          "docs/sdd/learning-evidence-20261013/RESEARCH.md": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2",
+          "docs/sdd/learning-evidence-20261013/USAGE.md": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "docs/sdd/learning-evidence-20261013/VERIFICATION.md": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64"
+        },
+        "hash_checks": [
+          {
+            "path": "src/learning-evidence/dataset.ts",
+            "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+            "bytes": 8795,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/learning-evidence/dataset.test.ts",
+            "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+            "bytes": 9130,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "scripts/learning-dataset.ts",
+            "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+            "bytes": 5154,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "scripts/learning-dataset.test.ts",
+            "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+            "bytes": 6460,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/requirements.md",
+            "sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+            "bytes": 4885,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/RESEARCH.md",
+            "sha256": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2",
+            "bytes": 19976,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+            "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+            "bytes": 2821,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+            "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+            "bytes": 1635,
+            "group": "authored",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/intel/features/types.ts",
+            "sha256": "583208c64c99f60aa761e5742bf7a5139d885e6963859006196e892669101bb6",
+            "bytes": 4673,
+            "group": "readonly_dependencies",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/outcomes/types.ts",
+            "sha256": "0faa225908aa0a917a74c9a94f532559f770bc90c3d568b198f601472c5a99c3",
+            "bytes": 4364,
+            "group": "readonly_dependencies",
+            "readonly": true,
+            "status": "match"
+          },
+          {
+            "path": "src/outcomes/store.ts",
+            "sha256": "f5ccb266976012f83a113589fa4ed638c0ae2a2db3e7eaf42048aa0c4ffc3bf0",
+            "bytes": 12188,
+            "group": "readonly_dependencies",
+            "readonly": true,
+            "status": "match"
+          }
+        ]
+      },
+      "result": "All 8 authored and 3 readonly dependency hashes/byte sizes match manifest before and after verification; frozen SPEC, public acceptance block and patch hashes unchanged; patch bytes reconstruct all 8 authored files exactly."
+    },
+    "new-file-diffs": {
+      "status": "pass",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+      "observations": [
+        {
+          "command": "git diff --no-index -- NUL src/learning-evidence/dataset.ts",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "stderr_literal": "warning: in the working copy of 'src/learning-evidence/dataset.ts', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        },
+        {
+          "command": "git diff --no-index -- NUL src/learning-evidence/dataset.test.ts",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "stderr_literal": "warning: in the working copy of 'src/learning-evidence/dataset.test.ts', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        },
+        {
+          "command": "git diff --no-index -- NUL scripts/learning-dataset.ts",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+          "stderr_literal": "warning: in the working copy of 'scripts/learning-dataset.ts', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        },
+        {
+          "command": "git diff --no-index -- NUL scripts/learning-dataset.test.ts",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "stderr_literal": "warning: in the working copy of 'scripts/learning-dataset.test.ts', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        },
+        {
+          "command": "git diff --no-index -- NUL docs/sdd/learning-evidence-20261013/requirements.md",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+          "stderr_literal": "warning: in the working copy of 'docs/sdd/learning-evidence-20261013/requirements.md', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        },
+        {
+          "command": "git diff --no-index -- NUL docs/sdd/learning-evidence-20261013/RESEARCH.md",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2",
+          "stderr_literal": "warning: in the working copy of 'docs/sdd/learning-evidence-20261013/RESEARCH.md', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        },
+        {
+          "command": "git diff --no-index -- NUL docs/sdd/learning-evidence-20261013/USAGE.md",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "stderr_literal": "warning: in the working copy of 'docs/sdd/learning-evidence-20261013/USAGE.md', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        },
+        {
+          "command": "git diff --no-index -- NUL docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+          "exit_code": 1,
+          "new_file": true,
+          "content_sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+          "stderr_literal": "warning: in the working copy of 'docs/sdd/learning-evidence-20261013/VERIFICATION.md', LF will be replaced by CRLF the next time Git touches it\n",
+          "result": "new-file diff content matches candidate bytes"
+        }
+      ]
+    },
+    "baseline": {
+      "status": "pass",
+      "cwd": "C:/Users/gabri/.codex/worktrees/learning-evidence/jev-trader",
+      "observations": [
+        {
+          "command": "git rev-parse 00a593bcabe25dbb6d83795268533551098f645b",
+          "status": "fulfilled",
+          "value": {
+            "chunk_id": "44a9c4",
+            "wall_time_seconds": 3.4406553,
+            "exit_code": 0,
+            "original_token_count": 11,
+            "output": "00a593bcabe25dbb6d83795268533551098f645b\n"
+          }
+        },
+        {
+          "command": "git log --oneline 00a593bcabe25dbb6d83795268533551098f645b..HEAD",
+          "status": "fulfilled",
+          "value": {
+            "chunk_id": "d74f22",
+            "wall_time_seconds": 3.2689244,
+            "exit_code": 0,
+            "original_token_count": 0,
+            "output": ""
+          }
+        },
+        {
+          "command": "git diff --name-status 00a593bcabe25dbb6d83795268533551098f645b",
+          "status": "fulfilled",
+          "value": {
+            "chunk_id": "28903e",
+            "wall_time_seconds": 3.6134836,
+            "exit_code": 0,
+            "original_token_count": 0,
+            "output": ""
+          }
+        }
+      ]
+    }
+  },
+  "requirements": [
+    {
+      "id": "LE-1",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 13,
+        "line_end": 13,
+        "excerpt": "LE-1: buildLearningDataset e CLI somente leem registros. CLI exige --dir, --horizon e --as-of-ms explícitos; imprime um JSON em stdout, erro fixo com contexto sem conteúdo bruto em stderr e exit 1 em falha. Não carrega .env, rede, decisões, chaves ou carteira. Apenas snapshots-YYYY-MM-DD.jsonl e labels-YYYY-MM-DD.jsonl, arquivos regulares sem links; recusa dados malformados, mais de 64 MiB ou 100000 registros. Diretório vazio produz evidência insuficiente.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "API em memória e CLI sem escrita, rede ou serviços de trading. CLI valida flags explícitas, filtra arquivos regulares sem links, limita bytes/registros, projeta hashes dos bytes e sanitiza erros; comando documentado e subprocessos usam --no-env-file.",
+      "result": "CLI com arquivos reais preservou conteúdo e lista de arquivos; diretório vazio retornou insufficient_data. JSON/UTF-8 inválidos, arquivos não regulares, links, limites e flags inválidas recusados.",
+      "evidence": [
+        {
+          "path": "scripts/learning-dataset.ts",
+          "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+          "line_start": 1,
+          "line_end": 38,
+          "excerpt": "import { lstat, readdir } from \"node:fs/promises\";\nimport { join } from \"node:path\";\nimport { buildLearningDataset, MAX_RECORDS, type DatasetOptions } from \"../src/learning-evidence/dataset\";\nimport { parseLabel, parseSnapshot } from \"../src/outcomes/store\";\nimport { HORIZONS, type Horizon } from \"../src/outcomes/types\";\n\nconst MAX_BYTES = 64 * 1024 * 1024;\nconst FILE_NAME = /^(snapshots|labels)-\\d{4}-\\d{2}-\\d{2}\\.jsonl$/;\nconst FLAGS = new Set([\"--dir\", \"--horizon\", \"--as-of-ms\", \"--min-train-groups\", \"--test-groups\", \"--embargo-ms\"]);\nconst DATASET_ERRORS = new Set([\"invalid_options\", \"record_limit\", \"invalid_snapshot\", \"invalid_label\",\n  \"conflicting_snapshot\", \"conflicting_label\", \"duplicate_observation\", \"fold_index_limit\"]);\n\nclass InputError extends Error {}\n\nfunction argumentsFor(args: readonly string[]) {\n  const values = new Map<string, string>();\n  for (let i = 0; i < args.length; i += 2) {\n    const flag = args[i]!, value = args[i + 1];\n    if (!FLAGS.has(flag) || values.has(flag) || !value || value.startsWith(\"--\")) throw new InputError(\"invalid_arguments\");\n    values.set(flag, value);\n  }\n  const dir = values.get(\"--dir\"), horizon = values.get(\"--horizon\"), asOf = values.get(\"--as-of-ms\");\n  if (!dir || !horizon || !asOf || !(HORIZONS as readonly string[]).includes(horizon)) throw new InputError(\"invalid_arguments\");\n  const numberFor = (flag: string, fallback?: number): number => {\n    const value = values.get(flag);\n    if (value === undefined && fallback !== undefined) return fallback;\n    if (value === undefined || !/^\\d+$/.test(value)) throw new InputError(\"invalid_arguments\");\n    const parsed = Number(value);\n    if (!Number.isSafeInteger(parsed)) throw new InputError(\"invalid_arguments\");\n    return parsed;\n  };\n  const options: DatasetOptions = { horizon: horizon as Horizon, asOfMs: numberFor(\"--as-of-ms\"),\n    minTrainGroups: numberFor(\"--min-train-groups\", 30), testGroups: numberFor(\"--test-groups\", 12),\n    embargoMs: numberFor(\"--embargo-ms\", 0) };\n  // Validate even when the directory has no records.\n  buildLearningDataset([], [], options);\n  return { dir, options };\n}\n",
+          "literal": true
+        },
+        {
+          "path": "scripts/learning-dataset.ts",
+          "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+          "line_start": 40,
+          "line_end": 95,
+          "excerpt": "async function readRecorder(dir: string) {\n  const names = (await readdir(dir)).filter((name) => FILE_NAME.test(name)).sort();\n  const snapshots: unknown[] = [], labels: unknown[] = [];\n  const sources: { name: string; bytes: number; sha256: string }[] = [];\n  let totalBytes = 0;\n  for (const name of names) {\n    const path = join(dir, name), stat = await lstat(path);\n    if (!stat.isFile() || stat.isSymbolicLink()) throw new InputError(\"non_regular_file: \" + name);\n    if (stat.size > MAX_BYTES - totalBytes) throw new InputError(\"byte_limit: \" + name);\n    // Bound the actual read too, in case a recorder appends after lstat.\n    const bytes = await Bun.file(path).slice(0, MAX_BYTES - totalBytes + 1).arrayBuffer();\n    if (bytes.byteLength > MAX_BYTES - totalBytes) throw new InputError(\"byte_limit: \" + name);\n    const after = await lstat(path);\n    if (!after.isFile() || after.isSymbolicLink() || stat.size !== bytes.byteLength ||\n      stat.size !== after.size || stat.mtimeMs !== after.mtimeMs || stat.ino !== after.ino) {\n      throw new InputError(\"source_changed: \" + name);\n    }\n    totalBytes += bytes.byteLength;\n    let contents: string;\n    try { contents = new TextDecoder(\"utf-8\", { fatal: true }).decode(bytes); }\n    catch { throw new InputError(\"invalid_utf8: \" + name); }\n    const destination = name.startsWith(\"snapshots-\") ? snapshots : labels;\n    const parse = name.startsWith(\"snapshots-\") ? parseSnapshot : parseLabel;\n    const lines = contents.split(\"\\n\");\n    for (let i = 0; i < lines.length; i++) {\n      const line = lines[i]!;\n      if (line.trim().length === 0) continue;\n      if (snapshots.length + labels.length >= MAX_RECORDS) throw new InputError(\"record_limit: \" + name + \":\" + (i + 1));\n      let raw: unknown;\n      try { raw = JSON.parse(line); }\n      catch { throw new InputError(\"invalid_json: \" + name + \":\" + (i + 1)); }\n      if (!parse(raw)) throw new InputError(\"invalid_record: \" + name + \":\" + (i + 1));\n      destination.push(raw);\n    }\n    sources.push({ name, bytes: bytes.byteLength, sha256: new Bun.CryptoHasher(\"sha256\").update(bytes).digest(\"hex\") });\n  }\n  return { snapshots, labels, sources };\n}\n\nif (import.meta.main) {\n  try {\n    if (Bun.argv.slice(2).length === 1 && Bun.argv[2] === \"--help\") {\n      console.log(\"bun --no-env-file scripts/learning-dataset.ts --dir <recorder> --horizon <15m|1h|4h> --as-of-ms <integer> [--min-train-groups 30] [--test-groups 12] [--embargo-ms 0]\");\n    } else {\n      const { dir, options } = argumentsFor(Bun.argv.slice(2));\n      const input = await readRecorder(dir);\n      const dataset = buildLearningDataset(input.snapshots, input.labels, options);\n      console.log(JSON.stringify({ ...dataset, sources: input.sources }));\n    }\n  } catch (error) {\n    const code = error instanceof InputError ? error.message :\n      error instanceof Error && DATASET_ERRORS.has(error.message) ? error.message : \"input_unavailable\";\n    console.error(\"learning_dataset: \" + code);\n    process.exitCode = 1;\n  }\n}\n",
+          "literal": true
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 7,
+          "line_end": 15,
+          "excerpt": "async function cli(dir: string, args: string[] = []) {\n  const proc = Bun.spawn([process.execPath, \"--no-env-file\", join(import.meta.dir, \"learning-dataset.ts\"),\n    \"--dir\", dir, \"--horizon\", \"15m\", \"--as-of-ms\", \"2400000\",\n    \"--min-train-groups\", \"1\", \"--test-groups\", \"1\", ...args],\n    { stdout: \"pipe\", stderr: \"pipe\" });\n  const [stdout, stderr, exit] = await Promise.all([\n    new Response(proc.stdout).text(), new Response(proc.stderr).text(), proc.exited,\n  ]);\n  return { stdout, stderr, exit };\n",
+          "literal": true
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 17,
+          "line_end": 55,
+          "excerpt": "test(\"CLI exports real recorder files without altering them or reading decisions\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const snaps = [0, 1_200_000, 1_500_000].map((asOfMs, i) => ({\n      id: String(i), asOfMs, instId: \"BTC-USDT\", market: \"spot\", price: 100,\n      costRoundTripBps: 20, atr15m: null, zones: { demanda: null, oferta: null }, origem: \"relogio\",\n      features: { v: 1, instId: \"BTC-USDT\", asOfMs,\n        values: Object.fromEntries(FEATURE_NAMES.map((name) => [name, null])), nulos: {}, idades: {} },\n    }));\n    const labels = snaps.map((s) => ({\n      snapshotId: s.id, horizonte: \"15m\", completo: true, motivoIncompleto: null,\n      brutoLongBps: 30, liquidoLongBps: 10, liquidoShortBps: -50,\n      maxAltaBps: 50, maxQuedaBps: 0, barreiraLong: null, barreiraShort: null,\n      zonaDemanda: null, zonaOferta: null,\n    }));\n    const snapPath = join(dir, \"snapshots-2026-10-13.jsonl\"), labPath = join(dir, \"labels-2026-10-13.jsonl\");\n    await Bun.write(snapPath, snaps.map((s) => JSON.stringify(s)).join(\"\\n\") + \"\\n\");\n    await Bun.write(labPath, labels.map((l) => JSON.stringify(l)).join(\"\\n\") + \"\\n\");\n    await Bun.write(join(dir, \"decisions.jsonl\"), \"PRIVATE_MALFORMED_DO_NOT_READ\");\n    await Bun.write(join(dir, \".env\"), \"SECRET_TEST_VALUE=not-exported\");\n    const before = await Promise.all([Bun.file(snapPath).arrayBuffer(), Bun.file(labPath).arrayBuffer()]);\n    const hash = (bytes: ArrayBuffer) => new Bun.CryptoHasher(\"sha256\").update(bytes).digest(\"hex\");\n    const hashes = before.map(hash);\n    const files = (await readdir(dir)).sort();\n    const result = await cli(dir);\n    expect(result.exit).toBe(0);\n    const dataset = JSON.parse(result.stdout);\n    expect(dataset.status).toBe(\"ready_for_evaluation\");\n    expect(dataset.rows).toHaveLength(3);\n    expect(dataset.folds[0].train).toEqual([0]);\n    expect(dataset.folds[0].test).toEqual([1]);\n    expect(dataset.sources.map((source: { name: string }) => source.name)).toEqual([\"labels-2026-10-13.jsonl\", \"snapshots-2026-10-13.jsonl\"]);\n    expect(dataset.sources.map((source: { sha256: string }) => source.sha256)).toEqual([hashes[1], hashes[0]]);\n    expect(result.stdout).not.toContain(\"PRIVATE_MALFORMED\");\n    expect(result.stdout).not.toContain(\"SECRET_TEST_VALUE\");\n    expect((await readdir(dir)).sort()).toEqual(files);\n    const after = await Promise.all([Bun.file(snapPath).arrayBuffer(), Bun.file(labPath).arrayBuffer()]);\n    expect(after.map(hash)).toEqual(hashes);\n  } finally { await rm(dir, { recursive: true, force: true }); }\n",
+          "literal": true
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 58,
+          "line_end": 120,
+          "excerpt": "test(\"CLI reports empty evidence and rejects duplicate or invalid options without source content\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const empty = await cli(dir);\n    expect(empty.exit).toBe(0);\n    expect(JSON.parse(empty.stdout).status).toBe(\"insufficient_data\");\n    expect(JSON.parse(empty.stdout).sources).toEqual([]);\n    for (const args of [[\"--as-of-ms\", \"NaN\"], [\"--embargo-ms\", \"-1\"], [\"--min-train-groups\", \"0\"], [\"--unknown\", \"PRIVATE\"]]) {\n      const result = await cli(dir, args);\n      expect(result.exit).toBe(1);\n      expect(result.stdout).toBe(\"\");\n      expect(result.stderr).toMatch(/^learning_dataset: (invalid_arguments|invalid_options)\\r?\\n$/);\n      expect(result.stderr).not.toContain(\"PRIVATE\");\n    }\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n\ntest(\"CLI fails malformed recorder records and UTF-8 with filename and line only\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const path = join(dir, \"snapshots-2026-10-13.jsonl\");\n    for (const [contents, error] of [\n      [\"\\nPRIVATE_BAD_JSON\", \"invalid_json: snapshots-2026-10-13.jsonl:2\"],\n      ['{\"PRIVATE_SECRET\":\"not-a-snapshot\"}', \"invalid_record: snapshots-2026-10-13.jsonl:1\"],\n      [new Uint8Array([0xff]), \"invalid_utf8: snapshots-2026-10-13.jsonl\"],\n    ] as const) {\n      await Bun.write(path, contents);\n      const result = await cli(dir);\n      expect(result.exit).toBe(1);\n      expect(result.stdout).toBe(\"\");\n      expect(result.stderr.trim()).toBe(\"learning_dataset: \" + error);\n      expect(result.stderr).not.toContain(\"PRIVATE\");\n    }\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n\ntest(\"CLI rejects nonregular files and directory links before reading\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    await mkdir(join(dir, \"snapshots-2026-10-13.jsonl\"));\n    const regular = await cli(dir);\n    expect(regular.exit).toBe(1);\n    expect(regular.stderr.trim()).toBe(\"learning_dataset: non_regular_file: snapshots-2026-10-13.jsonl\");\n    await mkdir(join(dir, \"owned-target\"));\n    await symlink(join(dir, \"owned-target\"), join(dir, \"labels-2026-10-13.jsonl\"), process.platform === \"win32\" ? \"junction\" : \"dir\");\n    const link = await cli(dir);\n    expect(link.exit).toBe(1);\n    expect(link.stderr.trim()).toBe(\"learning_dataset: non_regular_file: labels-2026-10-13.jsonl\");\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n\ntest(\"CLI enforces a combined byte cap before parsing the oversized file\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const path = join(dir, \"snapshots-2026-10-13.jsonl\");\n    await Bun.write(path, \"\");\n    await truncate(path, 64 * 1024 * 1024 + 1);\n    const result = await cli(dir);\n    expect(result.exit).toBe(1);\n    expect(result.stdout).toBe(\"\");\n    expect(result.stderr.trim()).toBe(\"learning_dataset: byte_limit: snapshots-2026-10-13.jsonl\");\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 3,
+          "line_end": 9,
+          "excerpt": "Execute a partir do checkout que contém o recorder e estas fontes, usando Bun sem carregar arquivos de ambiente:\n\n```powershell\nbun --no-env-file scripts/learning-dataset.ts --dir <diretorio-do-recorder> --horizon 15m --as-of-ms <instante-em-ms>\n```\n\nO instante é explícito e deve permanecer fixo para reproduzir a avaliação. O comando somente lê arquivos regulares snapshots-YYYY-MM-DD.jsonl e labels-YYYY-MM-DD.jsonl. Não lê decisions.jsonl. Não faz chamadas de rede ou operações de carteira. Em falha, stdout permanece vazio; stderr contém o código e, quando disponível, arquivo e linha, sem conteúdo bruto. Use uma cópia estável do recorder se houver escrita concorrente. Um arquivo alterado durante a leitura é recusado.\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "integrity"
+      ],
+      "finding_ids": []
+    },
+    {
+      "id": "LE-2",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 14,
+        "line_end": 14,
+        "excerpt": "LE-2: Para o horizonte escolhido, exportar apenas snapshots spot de origem relogio com custo finito não negativo, features v1 completas da whitelist, identidade de instrumento consistente, instante das features <= snapshot, timestamps inteiros seguros não negativos e idades não negativas. Preservar null e projetar somente FEATURE_NAMES. Excluir e contar registros inelegíveis; não imputar nem substituir null por zero.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "Só spot/relogio elegível; custo conhecido não negativo, tempos seguros, identidade/as-of/idades e whitelist completa. FEATURE_NAMES projetado, null preservado e exclusões contadas.",
+      "result": "Testes verificaram null em features sem imputação, custo null, origem manual/perp/historico, feature futura/estrangeira, idade negativa, chave ausente e timestamp negativo.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 120,
+          "line_end": 134,
+          "excerpt": "  const excluded = { sampling: 0, cost: 0, features: 0, timestamp: 0, missingLabel: 0,\n    incompleteLabel: 0, immatureLabel: 0, inconsistentReturn: 0 };\n  for (const snap of snapshotSet.records.values()) {\n    if (snap.market !== \"spot\" || snap.origem !== \"relogio\") { excluded.sampling++; continue; }\n    if (snap.costRoundTripBps === null || snap.costRoundTripBps < 0) { excluded.cost++; continue; }\n    const labelEndMs = snap.asOfMs + HORIZON_MS[options.horizon];\n    if (!safeTime(snap.asOfMs) || !safeTime(snap.features.asOfMs) || !safeTime(labelEndMs)) {\n      excluded.timestamp++; continue;\n    }\n    if (!snap.id || !snap.instId || snap.features.instId !== snap.instId ||\n      snap.features.asOfMs > snap.asOfMs ||\n      Object.values(snap.features.idades).some((age) => age < 0) ||\n      FEATURE_NAMES.some((name) => !Object.hasOwn(snap.features.values, name))) {\n      excluded.features++; continue;\n    }\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 143,
+          "line_end": 149,
+          "excerpt": "    rows.push({\n      snapshotId: snap.id, instId: snap.instId, asOfMs: snap.asOfMs,\n      labelEndMs, costRoundTripBps: snap.costRoundTripBps,\n      features: { v: FEATURE_VERSION, asOfMs: snap.features.asOfMs,\n        values: Object.fromEntries(FEATURE_NAMES.map((name) => [name, snap.features.values[name] ?? null])) },\n      target: { hypotheticalNetLongBps: outcome.liquidoLongBps, positiveNetLong: outcome.liquidoLongBps > 0 },\n    });\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 35,
+          "excerpt": "test(\"exports hypothetical net spot long target, preserving unknown features and input objects\", () => {\n  const snaps = [snapshot(\"loss\", 0), snapshot(\"win\", 300_000)];\n  const labels = [label(\"loss\", -5), label(\"win\", 10)];\n  const before = JSON.stringify({ snaps, labels });\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 1_200_000, minTrainGroups: 1, testGroups: 1 });\n  expect(result.rows.map((row) => row.target)).toEqual([\n    { hypotheticalNetLongBps: -5, positiveNetLong: false },\n    { hypotheticalNetLongBps: 10, positiveNetLong: true },\n  ]);\n  expect(result.rows[0]!.features.values[\"mom.rsi5m\"]).toBe(55);\n  expect(result.rows[0]!.features.values[\"drv.fundingBps\"]).toBeNull();\n  expect(result.targetKind).toBe(\"hypothetical_spot_long_after_recorded_cost\");\n  expect(JSON.stringify({ snaps, labels })).toBe(before);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 80,
+          "excerpt": "test(\"excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts\", () => {\n  const base = snapshot(\"ok\", 0);\n  const snaps = [\n    base, { ...snapshot(\"cost\", 1), costRoundTripBps: null },\n    { ...snapshot(\"manual\", 2), origem: \"pedido\" },\n    { ...snapshot(\"perp\", 3), market: \"perp\" },\n    snapshot(\"immature\", 300_000), snapshot(\"incomplete\", 4), snapshot(\"badnet\", 5),\n  ];\n  const labels = [\n    label(\"ok\", 0), label(\"cost\"), label(\"manual\"), label(\"perp\"), label(\"immature\"),\n    { ...label(\"incomplete\"), completo: false, motivoIncompleto: \"lacuna_de_velas\" },\n    { ...label(\"badnet\"), liquidoLongBps: 31 },\n  ];\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 900_010 });\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"ok\"]);\n  expect(result.rows[0]!.target.positiveNetLong).toBe(false);\n  expect(result.diagnostics.excluded).toEqual({\n    sampling: 2, cost: 1, features: 0, timestamp: 0, missingLabel: 0,\n    incompleteLabel: 1, immatureLabel: 1, inconsistentReturn: 1,\n  });\n  expect(result.status).toBe(\"insufficient_data\");\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 96,
+          "line_end": 117,
+          "excerpt": "test(\"checks feature provenance and projects only the fixed schema\", () => {\n  const extra = snapshot(\"extra\", 0);\n  const future = snapshot(\"future\", 1);\n  const foreign = snapshot(\"foreign\", 2);\n  const negativeAge = snapshot(\"age\", 3);\n  const missing = snapshot(\"missing\", 4);\n  const missingValues = { ...missing.features.values };\n  delete missingValues[\"mom.rsi5m\"];\n  const snaps = [\n    { ...extra, features: { ...extra.features, values: { ...extra.features.values, futureProfit: 99 } } },\n    { ...future, features: { ...future.features, asOfMs: 5 } },\n    { ...foreign, features: { ...foreign.features, instId: \"ETH-USDT\" } },\n    { ...negativeAge, features: { ...negativeAge.features, idades: { \"5m\": -1 } } },\n    { ...missing, features: { ...missing.features, values: missingValues } },\n    snapshot(\"timestamp\", -1),\n  ];\n  const result = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), { horizon: \"15m\", asOfMs: 900_010 });\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"extra\"]);\n  expect(Object.keys(result.rows[0]!.features.values)).toEqual([...FEATURE_NAMES]);\n  expect(result.diagnostics.excluded.features).toBe(4);\n  expect(result.diagnostics.excluded.timestamp).toBe(1);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 159,
+          "line_end": 165,
+          "excerpt": "test(\"excludes historical backfill supported by the updated recorder contract\", () => {\n  const result = buildLearningDataset([{ ...snapshot(\"historical\", 0), origem: \"historico\" }], [label(\"historical\")], {\n    horizon: \"15m\", asOfMs: 900_000,\n  });\n  expect(result.rows).toHaveLength(0);\n  expect(result.diagnostics.excluded.sampling).toBe(1);\n});\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "types"
+      ],
+      "finding_ids": []
+    },
+    {
+      "id": "LE-3",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 15,
+        "line_end": 15,
+        "excerpt": "LE-3: Exigir label completo, motivo null, retorno bruto/líquido long finito, maturação snapshot+horizonte <= as-of e líquido consistente com bruto menos custo (tolerância absoluta 0.000001 bps). Exportar features e target em campos distintos; target positivo equivale a líquido > 0. Identificar alvo como hipotético spot long com custo registrado, nunca lucro executado ou probabilidade calibrada.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "Alvo exige label completo com motivo null e retornos finitos nos contratos copiados; maturação explícita e net=gross-custo com tolerância absoluta. Alvo separado das features e identificado hipotético long spot.",
+      "result": "API verificou maturação no limite literal, exclusão de labels imaturos/incompletos e líquido inconsistente; net negativo/zero/positivo classificam >0 corretamente. Nenhuma alegação de lucro executado ou calibração.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 135,
+          "line_end": 149,
+          "excerpt": "    const outcome = labelSet.records.get(JSON.stringify([snap.id, options.horizon]));\n    if (!outcome) { excluded.missingLabel++; continue; }\n    if (!outcome.completo || outcome.motivoIncompleto !== null ||\n      outcome.brutoLongBps === null || outcome.liquidoLongBps === null) { excluded.incompleteLabel++; continue; }\n    if (labelEndMs > options.asOfMs) { excluded.immatureLabel++; continue; }\n    if (Math.abs(outcome.liquidoLongBps - (outcome.brutoLongBps - snap.costRoundTripBps)) > 0.000001) {\n      excluded.inconsistentReturn++; continue;\n    }\n    rows.push({\n      snapshotId: snap.id, instId: snap.instId, asOfMs: snap.asOfMs,\n      labelEndMs, costRoundTripBps: snap.costRoundTripBps,\n      features: { v: FEATURE_VERSION, asOfMs: snap.features.asOfMs,\n        values: Object.fromEntries(FEATURE_NAMES.map((name) => [name, snap.features.values[name] ?? null])) },\n      target: { hypotheticalNetLongBps: outcome.liquidoLongBps, positiveNetLong: outcome.liquidoLongBps > 0 },\n    });\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 153,
+          "line_end": 160,
+          "excerpt": "  return { version: 1 as const, targetKind: \"hypothetical_spot_long_after_recorded_cost\" as const,\n    horizon: options.horizon, asOfMs: options.asOfMs,\n    settings: { minTrainGroups: options.minTrainGroups ?? 30, testGroups: options.testGroups ?? 12, embargoMs: options.embargoMs ?? 0 },\n    rows, folds: partition.folds, status: partition.folds.length ? \"ready_for_evaluation\" : \"insufficient_data\",\n    diagnostics: { inputSnapshots: snapshots.length, inputLabels: labels.length, excluded,\n      duplicateSnapshots: snapshotSet.duplicates, duplicateLabels: labelSet.duplicates,\n      rows: rows.length, timestampGroups: partition.timestampGroups, folds: partition.folds.length,\n      skippedBlocks: partition.skippedBlocks, tailGroups: partition.tailGroups } };\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 35,
+          "excerpt": "test(\"exports hypothetical net spot long target, preserving unknown features and input objects\", () => {\n  const snaps = [snapshot(\"loss\", 0), snapshot(\"win\", 300_000)];\n  const labels = [label(\"loss\", -5), label(\"win\", 10)];\n  const before = JSON.stringify({ snaps, labels });\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 1_200_000, minTrainGroups: 1, testGroups: 1 });\n  expect(result.rows.map((row) => row.target)).toEqual([\n    { hypotheticalNetLongBps: -5, positiveNetLong: false },\n    { hypotheticalNetLongBps: 10, positiveNetLong: true },\n  ]);\n  expect(result.rows[0]!.features.values[\"mom.rsi5m\"]).toBe(55);\n  expect(result.rows[0]!.features.values[\"drv.fundingBps\"]).toBeNull();\n  expect(result.targetKind).toBe(\"hypothetical_spot_long_after_recorded_cost\");\n  expect(JSON.stringify({ snaps, labels })).toBe(before);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 80,
+          "excerpt": "test(\"excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts\", () => {\n  const base = snapshot(\"ok\", 0);\n  const snaps = [\n    base, { ...snapshot(\"cost\", 1), costRoundTripBps: null },\n    { ...snapshot(\"manual\", 2), origem: \"pedido\" },\n    { ...snapshot(\"perp\", 3), market: \"perp\" },\n    snapshot(\"immature\", 300_000), snapshot(\"incomplete\", 4), snapshot(\"badnet\", 5),\n  ];\n  const labels = [\n    label(\"ok\", 0), label(\"cost\"), label(\"manual\"), label(\"perp\"), label(\"immature\"),\n    { ...label(\"incomplete\"), completo: false, motivoIncompleto: \"lacuna_de_velas\" },\n    { ...label(\"badnet\"), liquidoLongBps: 31 },\n  ];\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 900_010 });\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"ok\"]);\n  expect(result.rows[0]!.target.positiveNetLong).toBe(false);\n  expect(result.diagnostics.excluded).toEqual({\n    sampling: 2, cost: 1, features: 0, timestamp: 0, missingLabel: 0,\n    incompleteLabel: 1, immatureLabel: 1, inconsistentReturn: 1,\n  });\n  expect(result.status).toBe(\"insufficient_data\");\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 13,
+          "line_end": 17,
+          "excerpt": "O alvo é retorno long spot hipotético líquido do custo round trip registrado. Não é PnL realizado, probabilidade de lucro ou recomendação de negociação. Campos desconhecidos permanecem null. Perp, cliques manuais, custos ausentes, observações com features futuras e labels inconsistentes não entram na avaliação. Os campos do alvo permanecem separados das features.\n\nCada fold usa timestamps inteiros, agrupando ativos simultâneos. Uma observação de treino só entra quando seu horizonte termina estritamente antes do começo do teste menos embargoMs. Blocos sem treino suficiente são omitidos, e uma cauda incompleta não vira teste. Os testes podem ter durações diferentes e alvos sobrepostos dentro do bloco. Não presumir independência estatística ou comparar durações sem considerar os intervalos.\n\nOs padrões são minTrainGroups=30, testGroups=12 e embargoMs=0. São parâmetros operacionais, não critérios de suficiência estatística. Zero folds produz insufficient_data; ready_for_evaluation indica apenas que existem folds. Qualquer normalização, imputação, seleção, ajuste ou calibração posterior deve ser aprendida exclusivamente no treino de cada fold. A promoção ao uso real exige avaliação independente de custos, risco e baselines.\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "types"
+      ],
+      "finding_ids": []
+    },
+    {
+      "id": "LE-4",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 16,
+        "line_end": 16,
+        "excerpt": "LE-4: Snapshot id e label (snapshotId,horizonte) repetidos idênticos são deduplicados. Conflitos abortam. Dois ids para mesmo instrumento/instante abortam. Resultado determinístico independentemente da ordem de entrada; não altera objetos de entrada.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "Registros normalizados são deduplicados por snapshot id e (snapshotId,horizonte); conflitos e dois ids no mesmo instrumento/instante abortam. Ordenação canônica e temporal sem mutação dos inputs.",
+      "result": "Replay invertido gerou resultado igual, duplicatas foram contadas, os três conflitos falharam e objetos originais mantiveram JSON idêntico.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 34,
+          "line_end": 65,
+          "excerpt": "function canonical(value: unknown): string {\n  return JSON.stringify(value, (_key, item) =>\n    item !== null && typeof item === \"object\" && !Array.isArray(item)\n      ? Object.fromEntries(Object.keys(item).sort().map((key) => [key, item[key]])) : item);\n}\n\nfunction documentedLabel(item: Label): Label {\n  const reaction = (value: Label[\"zonaDemanda\"]) => value === null ? null : { tocou: value.tocou, reagiu: value.reagiu };\n  return { snapshotId: item.snapshotId, horizonte: item.horizonte, completo: item.completo,\n    motivoIncompleto: item.motivoIncompleto, brutoLongBps: item.brutoLongBps,\n    liquidoLongBps: item.liquidoLongBps, liquidoShortBps: item.liquidoShortBps,\n    maxAltaBps: item.maxAltaBps, maxQuedaBps: item.maxQuedaBps,\n    barreiraLong: item.barreiraLong, barreiraShort: item.barreiraShort,\n    zonaDemanda: reaction(item.zonaDemanda), zonaOferta: reaction(item.zonaOferta) };\n}\n\nfunction uniqueRecords<T>(raw: readonly unknown[], parse: (value: unknown) => T | null,\n  key: (item: T) => string, kind: string) {\n  const records = new Map<string, T>();\n  const signatures = new Map<string, string>();\n  let duplicates = 0;\n  for (const value of raw) {\n    const item = parse(value);\n    if (!item) throw new Error(\"invalid_\" + kind);\n    const id = key(item), signature = canonical(item);\n    if (signatures.has(id)) {\n      if (signatures.get(id) !== signature) throw new Error(\"conflicting_\" + kind);\n      duplicates++;\n    } else { records.set(id, item); signatures.set(id, signature); }\n  }\n  return { records, duplicates };\n}\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 108,
+          "line_end": 118,
+          "excerpt": "  const snapshotSet = uniqueRecords<Snapshot>(snapshots, parseSnapshot, (s) => s.id, \"snapshot\");\n  const labelSet = uniqueRecords<Label>(labels, (raw) => {\n    const parsed = parseLabel(raw);\n    return parsed ? documentedLabel(parsed) : null;\n  }, (item) => JSON.stringify([item.snapshotId, item.horizonte]), \"label\");\n  const observations = new Set<string>();\n  for (const s of snapshotSet.records.values()) {\n    const key = JSON.stringify([s.instId, s.asOfMs]);\n    if (observations.has(key)) throw new Error(\"duplicate_observation\");\n    observations.add(key);\n  }\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 151,
+          "line_end": 151,
+          "excerpt": "  rows.sort((a, b) => a.asOfMs - b.asOfMs || (a.instId < b.instId ? -1 : a.instId > b.instId ? 1 : 0));\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 35,
+          "excerpt": "test(\"exports hypothetical net spot long target, preserving unknown features and input objects\", () => {\n  const snaps = [snapshot(\"loss\", 0), snapshot(\"win\", 300_000)];\n  const labels = [label(\"loss\", -5), label(\"win\", 10)];\n  const before = JSON.stringify({ snaps, labels });\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 1_200_000, minTrainGroups: 1, testGroups: 1 });\n  expect(result.rows.map((row) => row.target)).toEqual([\n    { hypotheticalNetLongBps: -5, positiveNetLong: false },\n    { hypotheticalNetLongBps: 10, positiveNetLong: true },\n  ]);\n  expect(result.rows[0]!.features.values[\"mom.rsi5m\"]).toBe(55);\n  expect(result.rows[0]!.features.values[\"drv.fundingBps\"]).toBeNull();\n  expect(result.targetKind).toBe(\"hypothetical_spot_long_after_recorded_cost\");\n  expect(JSON.stringify({ snaps, labels })).toBe(before);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 83,
+          "line_end": 94,
+          "excerpt": "test(\"rejects conflicting duplicates and makes replay independent of input order\", () => {\n  const a = snapshot(\"a\", 0), b = snapshot(\"b\", 300_000);\n  const options = { horizon: \"15m\" as const, asOfMs: 1_200_000 };\n  const result = buildLearningDataset([b, a, a], [label(\"b\"), label(\"a\"), label(\"a\")], options);\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"a\", \"b\"]);\n  expect(result.diagnostics.duplicateSnapshots).toBe(1);\n  expect(result.diagnostics.duplicateLabels).toBe(1);\n  expect(result).toEqual(buildLearningDataset([a, a, b], [label(\"a\"), label(\"a\"), label(\"b\")], options));\n  expect(() => buildLearningDataset([a, { ...a, price: 101 }], [], options)).toThrow(\"conflicting_snapshot\");\n  expect(() => buildLearningDataset([a], [label(\"a\"), label(\"a\", 11)], options)).toThrow(\"conflicting_label\");\n  expect(() => buildLearningDataset([a, { ...a, id: \"another\" }], [], options)).toThrow(\"duplicate_observation\");\n});\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "behavior-final"
+      ],
+      "finding_ids": []
+    },
+    {
+      "id": "LE-5",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 17,
+        "line_end": 17,
+        "excerpt": "LE-5: Folds walk-forward expansivos agrupam todos os instrumentos pelo timestamp, com blocos de teste de testGroups timestamps completos e disjuntos. Treino é estritamente anterior e remove cada linha cujo labelEndMs >= testStartMs - embargoMs. minTrainGroups conta timestamps após a remoção. Blocos insuficientes são contados e omitidos; cauda incompleta não vira fold.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "Folds expansivos agrupam todos os ativos por timestamp. Blocos de teste completos e disjuntos; labelEndMs deve ser estritamente menor que testStartMs-embargoMs. Contagem mínima pós-purga, skips e cauda explícitos.",
+      "result": "Cortes literais confirmaram exclusão na igualdade, embargo adicional, inclusão simultânea BTC/ETH, treino purgado, bloco insuficiente omitido e cauda sem fold.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 67,
+          "line_end": 101,
+          "excerpt": "function chronologicalFolds(rows: readonly LearningRow[], options: DatasetOptions) {\n  const minTrain = options.minTrainGroups ?? 30;\n  const testSize = options.testGroups ?? 12;\n  const embargo = options.embargoMs ?? 0;\n  const groups: number[] = [], groupStarts: number[] = [];\n  for (let index = 0; index < rows.length; index++) {\n    const timestamp = rows[index]!.asOfMs;\n    if (groups.at(-1) !== timestamp) { groups.push(timestamp); groupStarts.push(index); }\n  }\n  const folds: LearningFold[] = [];\n  let skippedBlocks = 0;\n  let indexCount = 0;\n  let trainEnd = 0, trainGroupCount = 0;\n  for (let start = minTrain; start + testSize <= groups.length; start += testSize) {\n    const testStartMs = groups[start]!;\n    const testEndMs = groups[start + testSize - 1]!;\n    const cutoff = testStartMs - embargo;\n    // All rows use one horizon: sorted timestamps imply sorted label ends.\n    // Advance once even when many test blocks have insufficient training.\n    while (trainEnd < rows.length && rows[trainEnd]!.labelEndMs < cutoff) {\n      if (trainEnd === 0 || rows[trainEnd]!.asOfMs !== rows[trainEnd - 1]!.asOfMs) trainGroupCount++;\n      trainEnd++;\n    }\n    if (trainGroupCount < minTrain) { skippedBlocks++; continue; }\n    const testBegin = groupStarts[start]!, testEnd = groupStarts[start + testSize] ?? rows.length;\n    indexCount += trainEnd + testEnd - testBegin;\n    if (indexCount > 2_000_000) throw new Error(\"fold_index_limit\");\n    const train = Array.from({ length: trainEnd }, (_, index) => index);\n    const test = Array.from({ length: testEnd - testBegin }, (_, index) => testBegin + index);\n    const purgedRows = testBegin - trainEnd;\n    folds.push({ train, test, testStartMs, testEndMs, trainLabelCutoffMs: cutoff, purgedRows });\n  }\n  return { folds, skippedBlocks, timestampGroups: groups.length,\n    tailGroups: groups.length <= minTrain ? 0 : (groups.length - minTrain) % testSize };\n}\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 37,
+          "line_end": 58,
+          "excerpt": "test(\"purges training outcomes at the cutoff and groups simultaneous instruments\", () => {\n  const snaps = [\n    snapshot(\"a\", 0), snapshot(\"b\", 300_000), snapshot(\"c\", 600_000),\n    snapshot(\"d\", 900_000), snapshot(\"e\", 1_200_000), snapshot(\"f\", 1_500_000),\n    snapshot(\"eth\", 1_500_000, \"ETH-USDT\"), snapshot(\"g\", 1_800_000),\n  ];\n  const result = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), {\n    horizon: \"15m\", asOfMs: 2_700_000, minTrainGroups: 2, testGroups: 1,\n  });\n  expect(result.folds[0]).toEqual({\n    train: [0, 1], test: [5, 6], testStartMs: 1_500_000, testEndMs: 1_500_000,\n    trainLabelCutoffMs: 1_500_000, purgedRows: 3,\n  });\n  expect(result.folds[1]!.train).toEqual([0, 1, 2]);\n  expect(result.folds[1]!.test).toEqual([7]);\n  const embargo = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), {\n    horizon: \"15m\", asOfMs: 2_700_000, minTrainGroups: 2, testGroups: 1, embargoMs: 300_000,\n  });\n  expect(embargo.folds[0]!.train).toEqual([0, 1]);\n  expect(embargo.folds[0]!.test).toEqual([7]);\n  expect(embargo.folds[0]!.trainLabelCutoffMs).toBe(1_500_000);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 139,
+          "line_end": 150,
+          "excerpt": "test(\"accounts for skipped test blocks and incomplete tails with literal chronological boundaries\", () => {\n  const snaps = [0, 300_000, 600_000, 1_200_000, 1_500_000, 1_800_000, 2_100_000].map((at, i) => snapshot(String(i), at));\n  const result = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), {\n    horizon: \"15m\", asOfMs: 3_000_000, minTrainGroups: 2, testGroups: 2,\n  });\n  expect(result.diagnostics.skippedBlocks).toBe(1);\n  expect(result.diagnostics.tailGroups).toBe(1);\n  expect(result.folds).toEqual([{\n    train: [0, 1], test: [4, 5], testStartMs: 1_500_000, testEndMs: 1_800_000,\n    trainLabelCutoffMs: 1_500_000, purgedRows: 2,\n  }]);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 15,
+          "line_end": 15,
+          "excerpt": "Cada fold usa timestamps inteiros, agrupando ativos simultâneos. Uma observação de treino só entra quando seu horizonte termina estritamente antes do começo do teste menos embargoMs. Blocos sem treino suficiente são omitidos, e uma cauda incompleta não vira teste. Os testes podem ter durações diferentes e alvos sobrepostos dentro do bloco. Não presumir independência estatística ou comparar durações sem considerar os intervalos.\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "behavior-final"
+      ],
+      "finding_ids": []
+    },
+    {
+      "id": "LE-6",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 18,
+        "line_end": 18,
+        "excerpt": "LE-6: Opções minTrainGroups/testGroups inteiras positivas, embargoMs inteiro não negativo, horizonte válido e as-of seguro são obrigatoriamente validadas. Relatório inclui contagens de entrada, deduplicação, motivos de exclusão, linhas, grupos temporais, folds, blocos omitidos e cauda. Zero folds significa insufficient_data; folds existentes significam ready_for_evaluation, sem alegar qualidade financeira ou independência entre alvos dentro de um teste.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "Validação ocorre antes de aplicar padrões: controles inteiros seguros, positivos ou não negativos; horizonte e as-of válidos. Diagnósticos completos e status derivado da existência de folds.",
+      "result": "Probe real rejeitou null explícito nos três controles; omissão/undefined mantiveram 30/12/0. Casos numéricos inválidos recusados; testes conferiram contagens, skips, cauda e os dois estados.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 5,
+          "line_end": 7,
+          "excerpt": "export const MAX_RECORDS = 100_000;\nconst safeTime = (value: number) => Number.isSafeInteger(value) && value >= 0;\nconst positiveInteger = (value: number) => Number.isSafeInteger(value) && value > 0;\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 103,
+          "line_end": 107,
+          "excerpt": "  if (!(HORIZONS as readonly string[]).includes(options.horizon) || !safeTime(options.asOfMs) ||\n    (options.minTrainGroups !== undefined && !positiveInteger(options.minTrainGroups)) ||\n    (options.testGroups !== undefined && !positiveInteger(options.testGroups)) ||\n    (options.embargoMs !== undefined && !safeTime(options.embargoMs))) throw new Error(\"invalid_options\");\n  if (snapshots.length + labels.length > MAX_RECORDS) throw new Error(\"record_limit\");\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 153,
+          "line_end": 160,
+          "excerpt": "  return { version: 1 as const, targetKind: \"hypothetical_spot_long_after_recorded_cost\" as const,\n    horizon: options.horizon, asOfMs: options.asOfMs,\n    settings: { minTrainGroups: options.minTrainGroups ?? 30, testGroups: options.testGroups ?? 12, embargoMs: options.embargoMs ?? 0 },\n    rows, folds: partition.folds, status: partition.folds.length ? \"ready_for_evaluation\" : \"insufficient_data\",\n    diagnostics: { inputSnapshots: snapshots.length, inputLabels: labels.length, excluded,\n      duplicateSnapshots: snapshotSet.duplicates, duplicateLabels: labelSet.duplicates,\n      rows: rows.length, timestampGroups: partition.timestampGroups, folds: partition.folds.length,\n      skippedBlocks: partition.skippedBlocks, tailGroups: partition.tailGroups } };\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 119,
+          "line_end": 150,
+          "excerpt": "test(\"validates options and fails malformed records before producing a partial dataset\", () => {\n  const opts = { horizon: \"15m\" as const, asOfMs: 900_000 };\n  for (const override of [{ asOfMs: NaN }, { asOfMs: -1 }, { asOfMs: 1.5 },\n    { minTrainGroups: 0 }, { testGroups: 0 }, { testGroups: 1.5 }, { embargoMs: -1 }]) {\n    expect(() => buildLearningDataset([], [], { ...opts, ...override })).toThrow(\"invalid_options\");\n  }\n  expect(() => buildLearningDataset([], [], { ...opts, horizon: \"bad\" as \"15m\" })).toThrow(\"invalid_options\");\n  expect(() => buildLearningDataset([snapshot(\"a\", 0), {}], [], opts)).toThrow(\"invalid_snapshot\");\n  expect(() => buildLearningDataset([], [{}], opts)).toThrow(\"invalid_label\");\n});\n\ntest(\"rejects explicit null options while keeping defaults for omitted or undefined options\", () => {\n  const opts = { horizon: \"15m\" as const, asOfMs: 900_000 };\n  for (const field of [\"minTrainGroups\", \"testGroups\", \"embargoMs\"]) {\n    expect(() => buildLearningDataset([], [], { ...opts, [field]: null })).toThrow(\"invalid_options\");\n  }\n  expect(buildLearningDataset([], [], { ...opts, minTrainGroups: undefined, testGroups: undefined,\n    embargoMs: undefined }).settings).toEqual({ minTrainGroups: 30, testGroups: 12, embargoMs: 0 });\n});\n\ntest(\"accounts for skipped test blocks and incomplete tails with literal chronological boundaries\", () => {\n  const snaps = [0, 300_000, 600_000, 1_200_000, 1_500_000, 1_800_000, 2_100_000].map((at, i) => snapshot(String(i), at));\n  const result = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), {\n    horizon: \"15m\", asOfMs: 3_000_000, minTrainGroups: 2, testGroups: 2,\n  });\n  expect(result.diagnostics.skippedBlocks).toBe(1);\n  expect(result.diagnostics.tailGroups).toBe(1);\n  expect(result.folds).toEqual([{\n    train: [0, 1], test: [4, 5], testStartMs: 1_500_000, testEndMs: 1_800_000,\n    trainLabelCutoffMs: 1_500_000, purgedRows: 2,\n  }]);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 80,
+          "excerpt": "test(\"excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts\", () => {\n  const base = snapshot(\"ok\", 0);\n  const snaps = [\n    base, { ...snapshot(\"cost\", 1), costRoundTripBps: null },\n    { ...snapshot(\"manual\", 2), origem: \"pedido\" },\n    { ...snapshot(\"perp\", 3), market: \"perp\" },\n    snapshot(\"immature\", 300_000), snapshot(\"incomplete\", 4), snapshot(\"badnet\", 5),\n  ];\n  const labels = [\n    label(\"ok\", 0), label(\"cost\"), label(\"manual\"), label(\"perp\"), label(\"immature\"),\n    { ...label(\"incomplete\"), completo: false, motivoIncompleto: \"lacuna_de_velas\" },\n    { ...label(\"badnet\"), liquidoLongBps: 31 },\n  ];\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 900_010 });\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"ok\"]);\n  expect(result.rows[0]!.target.positiveNetLong).toBe(false);\n  expect(result.diagnostics.excluded).toEqual({\n    sampling: 2, cost: 1, features: 0, timestamp: 0, missingLabel: 0,\n    incompleteLabel: 1, immatureLabel: 1, inconsistentReturn: 1,\n  });\n  expect(result.status).toBe(\"insufficient_data\");\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 17,
+          "line_end": 21,
+          "excerpt": "Os padrões são minTrainGroups=30, testGroups=12 e embargoMs=0. São parâmetros operacionais, não critérios de suficiência estatística. Zero folds produz insufficient_data; ready_for_evaluation indica apenas que existem folds. Qualquer normalização, imputação, seleção, ajuste ou calibração posterior deve ser aprendida exclusivamente no treino de cada fold. A promoção ao uso real exige avaliação independente de custos, risco e baselines.\n\nOs limites são 64 MiB totais de entrada, 100000 registros e 2000000 índices de folds. Se os folds ultrapassarem o limite, reduza a janela de entrada ou aumente testGroups mantendo os critérios de avaliação. Não aumente exposição a partir deste exportador.\n\nOpções omitidas ou undefined na API recebem os padrões documentados. null explícito, frações, negativos e valores fora dos limites inteiros seguros são recusados.\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "null-probe"
+      ],
+      "finding_ids": []
+    },
+    {
+      "id": "LE-7",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 19,
+        "line_end": 19,
+        "excerpt": "LE-7: Testes exercitam a API pública e CLI com arquivos reais temporários, valores de corte literais e hashes antes/depois. Cobrem custos/null, futuros/incompletos, whitelist/proveniência, conflitos, igualdade no corte temporal, embargo e agrupamento de ativos. Typecheck das novas fontes e contratos copiados passa. Revisão independente com baseline e SPEC.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "Testes usam API pública, CLI real em arquivos temporários, limites literais e hashes antes/depois. Fontes novas e contratos importados passam typecheck; revisão independente vinculada ao baseline e SPEC congelada.",
+      "result": "Replay sequencial: 15 pass/0 fail/96 expects, exit 0; typecheck exit 0. A primeira execução, simultânea ao typecheck, teve timeout de um teste aos 5000ms: 14 pass/1 fail. Ambas preservadas, sem atribuir causa não comprovada.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 1,
+          "line_end": 4,
+          "excerpt": "import { expect, test } from \"bun:test\";\nimport { FEATURE_NAMES, FEATURE_VERSION } from \"../intel/features/types\";\nimport type { Snapshot, Label } from \"../outcomes/types\";\nimport { buildLearningDataset } from \"./dataset\";\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 58,
+          "excerpt": "test(\"exports hypothetical net spot long target, preserving unknown features and input objects\", () => {\n  const snaps = [snapshot(\"loss\", 0), snapshot(\"win\", 300_000)];\n  const labels = [label(\"loss\", -5), label(\"win\", 10)];\n  const before = JSON.stringify({ snaps, labels });\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 1_200_000, minTrainGroups: 1, testGroups: 1 });\n  expect(result.rows.map((row) => row.target)).toEqual([\n    { hypotheticalNetLongBps: -5, positiveNetLong: false },\n    { hypotheticalNetLongBps: 10, positiveNetLong: true },\n  ]);\n  expect(result.rows[0]!.features.values[\"mom.rsi5m\"]).toBe(55);\n  expect(result.rows[0]!.features.values[\"drv.fundingBps\"]).toBeNull();\n  expect(result.targetKind).toBe(\"hypothetical_spot_long_after_recorded_cost\");\n  expect(JSON.stringify({ snaps, labels })).toBe(before);\n});\n\ntest(\"purges training outcomes at the cutoff and groups simultaneous instruments\", () => {\n  const snaps = [\n    snapshot(\"a\", 0), snapshot(\"b\", 300_000), snapshot(\"c\", 600_000),\n    snapshot(\"d\", 900_000), snapshot(\"e\", 1_200_000), snapshot(\"f\", 1_500_000),\n    snapshot(\"eth\", 1_500_000, \"ETH-USDT\"), snapshot(\"g\", 1_800_000),\n  ];\n  const result = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), {\n    horizon: \"15m\", asOfMs: 2_700_000, minTrainGroups: 2, testGroups: 1,\n  });\n  expect(result.folds[0]).toEqual({\n    train: [0, 1], test: [5, 6], testStartMs: 1_500_000, testEndMs: 1_500_000,\n    trainLabelCutoffMs: 1_500_000, purgedRows: 3,\n  });\n  expect(result.folds[1]!.train).toEqual([0, 1, 2]);\n  expect(result.folds[1]!.test).toEqual([7]);\n  const embargo = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), {\n    horizon: \"15m\", asOfMs: 2_700_000, minTrainGroups: 2, testGroups: 1, embargoMs: 300_000,\n  });\n  expect(embargo.folds[0]!.train).toEqual([0, 1]);\n  expect(embargo.folds[0]!.test).toEqual([7]);\n  expect(embargo.folds[0]!.trainLabelCutoffMs).toBe(1_500_000);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 138,
+          "excerpt": "test(\"excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts\", () => {\n  const base = snapshot(\"ok\", 0);\n  const snaps = [\n    base, { ...snapshot(\"cost\", 1), costRoundTripBps: null },\n    { ...snapshot(\"manual\", 2), origem: \"pedido\" },\n    { ...snapshot(\"perp\", 3), market: \"perp\" },\n    snapshot(\"immature\", 300_000), snapshot(\"incomplete\", 4), snapshot(\"badnet\", 5),\n  ];\n  const labels = [\n    label(\"ok\", 0), label(\"cost\"), label(\"manual\"), label(\"perp\"), label(\"immature\"),\n    { ...label(\"incomplete\"), completo: false, motivoIncompleto: \"lacuna_de_velas\" },\n    { ...label(\"badnet\"), liquidoLongBps: 31 },\n  ];\n  const result = buildLearningDataset(snaps, labels, { horizon: \"15m\", asOfMs: 900_010 });\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"ok\"]);\n  expect(result.rows[0]!.target.positiveNetLong).toBe(false);\n  expect(result.diagnostics.excluded).toEqual({\n    sampling: 2, cost: 1, features: 0, timestamp: 0, missingLabel: 0,\n    incompleteLabel: 1, immatureLabel: 1, inconsistentReturn: 1,\n  });\n  expect(result.status).toBe(\"insufficient_data\");\n});\n\ntest(\"rejects conflicting duplicates and makes replay independent of input order\", () => {\n  const a = snapshot(\"a\", 0), b = snapshot(\"b\", 300_000);\n  const options = { horizon: \"15m\" as const, asOfMs: 1_200_000 };\n  const result = buildLearningDataset([b, a, a], [label(\"b\"), label(\"a\"), label(\"a\")], options);\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"a\", \"b\"]);\n  expect(result.diagnostics.duplicateSnapshots).toBe(1);\n  expect(result.diagnostics.duplicateLabels).toBe(1);\n  expect(result).toEqual(buildLearningDataset([a, a, b], [label(\"a\"), label(\"a\"), label(\"b\")], options));\n  expect(() => buildLearningDataset([a, { ...a, price: 101 }], [], options)).toThrow(\"conflicting_snapshot\");\n  expect(() => buildLearningDataset([a], [label(\"a\"), label(\"a\", 11)], options)).toThrow(\"conflicting_label\");\n  expect(() => buildLearningDataset([a, { ...a, id: \"another\" }], [], options)).toThrow(\"duplicate_observation\");\n});\n\ntest(\"checks feature provenance and projects only the fixed schema\", () => {\n  const extra = snapshot(\"extra\", 0);\n  const future = snapshot(\"future\", 1);\n  const foreign = snapshot(\"foreign\", 2);\n  const negativeAge = snapshot(\"age\", 3);\n  const missing = snapshot(\"missing\", 4);\n  const missingValues = { ...missing.features.values };\n  delete missingValues[\"mom.rsi5m\"];\n  const snaps = [\n    { ...extra, features: { ...extra.features, values: { ...extra.features.values, futureProfit: 99 } } },\n    { ...future, features: { ...future.features, asOfMs: 5 } },\n    { ...foreign, features: { ...foreign.features, instId: \"ETH-USDT\" } },\n    { ...negativeAge, features: { ...negativeAge.features, idades: { \"5m\": -1 } } },\n    { ...missing, features: { ...missing.features, values: missingValues } },\n    snapshot(\"timestamp\", -1),\n  ];\n  const result = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), { horizon: \"15m\", asOfMs: 900_010 });\n  expect(result.rows.map((r) => r.snapshotId)).toEqual([\"extra\"]);\n  expect(Object.keys(result.rows[0]!.features.values)).toEqual([...FEATURE_NAMES]);\n  expect(result.diagnostics.excluded.features).toBe(4);\n  expect(result.diagnostics.excluded.timestamp).toBe(1);\n});\n\ntest(\"validates options and fails malformed records before producing a partial dataset\", () => {\n  const opts = { horizon: \"15m\" as const, asOfMs: 900_000 };\n  for (const override of [{ asOfMs: NaN }, { asOfMs: -1 }, { asOfMs: 1.5 },\n    { minTrainGroups: 0 }, { testGroups: 0 }, { testGroups: 1.5 }, { embargoMs: -1 }]) {\n    expect(() => buildLearningDataset([], [], { ...opts, ...override })).toThrow(\"invalid_options\");\n  }\n  expect(() => buildLearningDataset([], [], { ...opts, horizon: \"bad\" as \"15m\" })).toThrow(\"invalid_options\");\n  expect(() => buildLearningDataset([snapshot(\"a\", 0), {}], [], opts)).toThrow(\"invalid_snapshot\");\n  expect(() => buildLearningDataset([], [{}], opts)).toThrow(\"invalid_label\");\n});\n\ntest(\"rejects explicit null options while keeping defaults for omitted or undefined options\", () => {\n  const opts = { horizon: \"15m\" as const, asOfMs: 900_000 };\n  for (const field of [\"minTrainGroups\", \"testGroups\", \"embargoMs\"]) {\n    expect(() => buildLearningDataset([], [], { ...opts, [field]: null })).toThrow(\"invalid_options\");\n  }\n  expect(buildLearningDataset([], [], { ...opts, minTrainGroups: undefined, testGroups: undefined,\n    embargoMs: undefined }).settings).toEqual({ minTrainGroups: 30, testGroups: 12, embargoMs: 0 });\n});\n\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 139,
+          "line_end": 165,
+          "excerpt": "test(\"accounts for skipped test blocks and incomplete tails with literal chronological boundaries\", () => {\n  const snaps = [0, 300_000, 600_000, 1_200_000, 1_500_000, 1_800_000, 2_100_000].map((at, i) => snapshot(String(i), at));\n  const result = buildLearningDataset(snaps, snaps.map((s) => label(s.id)), {\n    horizon: \"15m\", asOfMs: 3_000_000, minTrainGroups: 2, testGroups: 2,\n  });\n  expect(result.diagnostics.skippedBlocks).toBe(1);\n  expect(result.diagnostics.tailGroups).toBe(1);\n  expect(result.folds).toEqual([{\n    train: [0, 1], test: [4, 5], testStartMs: 1_500_000, testEndMs: 1_800_000,\n    trainLabelCutoffMs: 1_500_000, purgedRows: 2,\n  }]);\n});\n\ntest(\"enforces input and fold output resource limits\", () => {\n  const options = { horizon: \"15m\" as const, asOfMs: 3_000_000_000, minTrainGroups: 1, testGroups: 1 };\n  expect(() => buildLearningDataset(new Array(100_001), [], options)).toThrow(\"record_limit\");\n  const snaps = Array.from({ length: 2_100 }, (_, i) => snapshot(String(i), i * 1_200_000));\n  expect(() => buildLearningDataset(snaps, snaps.map((s) => label(s.id)), options)).toThrow(\"fold_index_limit\");\n});\n\ntest(\"excludes historical backfill supported by the updated recorder contract\", () => {\n  const result = buildLearningDataset([{ ...snapshot(\"historical\", 0), origem: \"historico\" }], [label(\"historical\")], {\n    horizon: \"15m\", asOfMs: 900_000,\n  });\n  expect(result.rows).toHaveLength(0);\n  expect(result.diagnostics.excluded.sampling).toBe(1);\n});\n",
+          "literal": true
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 7,
+          "line_end": 55,
+          "excerpt": "async function cli(dir: string, args: string[] = []) {\n  const proc = Bun.spawn([process.execPath, \"--no-env-file\", join(import.meta.dir, \"learning-dataset.ts\"),\n    \"--dir\", dir, \"--horizon\", \"15m\", \"--as-of-ms\", \"2400000\",\n    \"--min-train-groups\", \"1\", \"--test-groups\", \"1\", ...args],\n    { stdout: \"pipe\", stderr: \"pipe\" });\n  const [stdout, stderr, exit] = await Promise.all([\n    new Response(proc.stdout).text(), new Response(proc.stderr).text(), proc.exited,\n  ]);\n  return { stdout, stderr, exit };\n}\ntest(\"CLI exports real recorder files without altering them or reading decisions\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const snaps = [0, 1_200_000, 1_500_000].map((asOfMs, i) => ({\n      id: String(i), asOfMs, instId: \"BTC-USDT\", market: \"spot\", price: 100,\n      costRoundTripBps: 20, atr15m: null, zones: { demanda: null, oferta: null }, origem: \"relogio\",\n      features: { v: 1, instId: \"BTC-USDT\", asOfMs,\n        values: Object.fromEntries(FEATURE_NAMES.map((name) => [name, null])), nulos: {}, idades: {} },\n    }));\n    const labels = snaps.map((s) => ({\n      snapshotId: s.id, horizonte: \"15m\", completo: true, motivoIncompleto: null,\n      brutoLongBps: 30, liquidoLongBps: 10, liquidoShortBps: -50,\n      maxAltaBps: 50, maxQuedaBps: 0, barreiraLong: null, barreiraShort: null,\n      zonaDemanda: null, zonaOferta: null,\n    }));\n    const snapPath = join(dir, \"snapshots-2026-10-13.jsonl\"), labPath = join(dir, \"labels-2026-10-13.jsonl\");\n    await Bun.write(snapPath, snaps.map((s) => JSON.stringify(s)).join(\"\\n\") + \"\\n\");\n    await Bun.write(labPath, labels.map((l) => JSON.stringify(l)).join(\"\\n\") + \"\\n\");\n    await Bun.write(join(dir, \"decisions.jsonl\"), \"PRIVATE_MALFORMED_DO_NOT_READ\");\n    await Bun.write(join(dir, \".env\"), \"SECRET_TEST_VALUE=not-exported\");\n    const before = await Promise.all([Bun.file(snapPath).arrayBuffer(), Bun.file(labPath).arrayBuffer()]);\n    const hash = (bytes: ArrayBuffer) => new Bun.CryptoHasher(\"sha256\").update(bytes).digest(\"hex\");\n    const hashes = before.map(hash);\n    const files = (await readdir(dir)).sort();\n    const result = await cli(dir);\n    expect(result.exit).toBe(0);\n    const dataset = JSON.parse(result.stdout);\n    expect(dataset.status).toBe(\"ready_for_evaluation\");\n    expect(dataset.rows).toHaveLength(3);\n    expect(dataset.folds[0].train).toEqual([0]);\n    expect(dataset.folds[0].test).toEqual([1]);\n    expect(dataset.sources.map((source: { name: string }) => source.name)).toEqual([\"labels-2026-10-13.jsonl\", \"snapshots-2026-10-13.jsonl\"]);\n    expect(dataset.sources.map((source: { sha256: string }) => source.sha256)).toEqual([hashes[1], hashes[0]]);\n    expect(result.stdout).not.toContain(\"PRIVATE_MALFORMED\");\n    expect(result.stdout).not.toContain(\"SECRET_TEST_VALUE\");\n    expect((await readdir(dir)).sort()).toEqual(files);\n    const after = await Promise.all([Bun.file(snapPath).arrayBuffer(), Bun.file(labPath).arrayBuffer()]);\n    expect(after.map(hash)).toEqual(hashes);\n  } finally { await rm(dir, { recursive: true, force: true }); }\n",
+          "literal": true
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 58,
+          "line_end": 120,
+          "excerpt": "test(\"CLI reports empty evidence and rejects duplicate or invalid options without source content\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const empty = await cli(dir);\n    expect(empty.exit).toBe(0);\n    expect(JSON.parse(empty.stdout).status).toBe(\"insufficient_data\");\n    expect(JSON.parse(empty.stdout).sources).toEqual([]);\n    for (const args of [[\"--as-of-ms\", \"NaN\"], [\"--embargo-ms\", \"-1\"], [\"--min-train-groups\", \"0\"], [\"--unknown\", \"PRIVATE\"]]) {\n      const result = await cli(dir, args);\n      expect(result.exit).toBe(1);\n      expect(result.stdout).toBe(\"\");\n      expect(result.stderr).toMatch(/^learning_dataset: (invalid_arguments|invalid_options)\\r?\\n$/);\n      expect(result.stderr).not.toContain(\"PRIVATE\");\n    }\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n\ntest(\"CLI fails malformed recorder records and UTF-8 with filename and line only\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const path = join(dir, \"snapshots-2026-10-13.jsonl\");\n    for (const [contents, error] of [\n      [\"\\nPRIVATE_BAD_JSON\", \"invalid_json: snapshots-2026-10-13.jsonl:2\"],\n      ['{\"PRIVATE_SECRET\":\"not-a-snapshot\"}', \"invalid_record: snapshots-2026-10-13.jsonl:1\"],\n      [new Uint8Array([0xff]), \"invalid_utf8: snapshots-2026-10-13.jsonl\"],\n    ] as const) {\n      await Bun.write(path, contents);\n      const result = await cli(dir);\n      expect(result.exit).toBe(1);\n      expect(result.stdout).toBe(\"\");\n      expect(result.stderr.trim()).toBe(\"learning_dataset: \" + error);\n      expect(result.stderr).not.toContain(\"PRIVATE\");\n    }\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n\ntest(\"CLI rejects nonregular files and directory links before reading\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    await mkdir(join(dir, \"snapshots-2026-10-13.jsonl\"));\n    const regular = await cli(dir);\n    expect(regular.exit).toBe(1);\n    expect(regular.stderr.trim()).toBe(\"learning_dataset: non_regular_file: snapshots-2026-10-13.jsonl\");\n    await mkdir(join(dir, \"owned-target\"));\n    await symlink(join(dir, \"owned-target\"), join(dir, \"labels-2026-10-13.jsonl\"), process.platform === \"win32\" ? \"junction\" : \"dir\");\n    const link = await cli(dir);\n    expect(link.exit).toBe(1);\n    expect(link.stderr.trim()).toBe(\"learning_dataset: non_regular_file: labels-2026-10-13.jsonl\");\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n\ntest(\"CLI enforces a combined byte cap before parsing the oversized file\", async () => {\n  const dir = await mkdtemp(join(tmpdir(), \"learning-cli-\"));\n  try {\n    const path = join(dir, \"snapshots-2026-10-13.jsonl\");\n    await Bun.write(path, \"\");\n    await truncate(path, 64 * 1024 * 1024 + 1);\n    const result = await cli(dir);\n    expect(result.exit).toBe(1);\n    expect(result.stdout).toBe(\"\");\n    expect(result.stderr.trim()).toBe(\"learning_dataset: byte_limit: snapshots-2026-10-13.jsonl\");\n  } finally { await rm(dir, { recursive: true, force: true }); }\n});\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+          "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+          "line_start": 5,
+          "line_end": 25,
+          "excerpt": "Comando de comportamento:\n\n```powershell\nbun --no-env-file test ./src/learning-evidence ./scripts/learning-dataset.test.ts\n```\n\nResultado observado: exit 0, 15 pass, 0 fail, 96 expect() calls. Casos sintéticos exercitam custos/null, whitelist, proveniência, maturação, conflitos, imutabilidade, cortes temporais literais, igualdade, embargo, múltiplos ativos, cauda e limites. A CLI foi exercitada com arquivos temporários reais, links, JSON/UTF-8 inválidos e hashes antes/depois.\n\nComando de tipos:\n\n```powershell\nbun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/learning-evidence/dataset.ts src/learning-evidence/dataset.test.ts scripts/learning-dataset.ts scripts/learning-dataset.test.ts\n```\n\nResultado observado: exit 0. Inclui os contratos importados de features e outcomes; não certifica o restante do projeto.\n\nA regressão de null explícito falhou antes da correção: 14 pass, 1 fail, 93 expects. Depois, os três controles rejeitam null com invalid_options; opções omitidas ou undefined preservam os padrões.\n\nObservações de origem historico são aceitas pelo contrato atualizado do recorder e excluídas do dataset. Só origem relogio spot é elegível.\n\nEsta verificação não utilizou feed real, inferência de provedor, ordens ou carteira. Os testes verificam o comportamento local, sem demonstrar lucro, calibração, qualidade dos dados ou operação em produção.\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "behavior-initial",
+        "behavior-final",
+        "types",
+        "null-probe",
+        "integrity",
+        "baseline"
+      ],
+      "finding_ids": []
+    },
+    {
+      "id": "LE-8",
+      "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "status": "pass",
+      "spec": {
+        "path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+        "sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+        "line_start": 20,
+        "line_end": 20,
+        "excerpt": "LE-8: Somente novos caminhos src/learning-evidence/**, scripts/learning-dataset.ts, scripts/learning-dataset.test.ts e docs/sdd/learning-evidence-20261013/**. Contratos preexistentes copiados apenas para a worktree e verificados por hash. Nenhuma alteração de Jev, trades, Kuru/Monad, cadence 300ms, wallet evidence, pacote ou módulos concorrentes.\n",
+        "literal": true,
+        "review_copy_read_path": "frozen/SPEC.md"
+      },
+      "observed_requirement": "Patch de entrega contém exatamente oito novos caminhos permitidos. Três contratos copiados permanecem dependências excluídas do patch, verificados por hash. SPEC/PLAN/recibo internos ficam fora da entrega.",
+      "result": "Diff --no-index NUL executado nos oito authored paths com exit 1 esperado, new file mode e bytes reconstruídos iguais; patch reconstruído igual. Baseline resolvido, sem commits novos ou diff tracked. Nenhuma mudança observada em trading, carteira, cadence, pacote ou árvores concorrentes dentro da entrega.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 1,
+          "line_end": 3,
+          "excerpt": "import { FEATURE_NAMES, FEATURE_VERSION } from \"../intel/features/types\";\nimport { parseLabel, parseSnapshot } from \"../outcomes/store\";\nimport { HORIZONS, HORIZON_MS, type Horizon, type Label, type Snapshot } from \"../outcomes/types\";\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/requirements.md",
+          "sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+          "line_start": 1,
+          "line_end": 22,
+          "excerpt": "# Evidência para aprendizado: requisitos\nData: 2026-10-13.\nObjetivo observado: pesquisar e implementar melhorias verificáveis do Inonu Trader usando Jev, ML/dados e OKX Wallet/Onchain OS. Esta entrega prepara dados para avaliação local; não treina nem promove modelo.\n\n## Fontes e estado\nO contrato FeatureVector v1 admite números finitos e null, usa barras fechadas no instante observado e possui FEATURE_NAMES fixo. Snapshot/Label do recorder associam horizonte, custo round trip e retorno hipotético. O lab existente já contém custos, baselines pareados e testes estatísticos. Evitar duplicá-lo.\nFreqAI exige prevenção explícita de lookahead nas features calculadas sobre a janela: https://www.freqtrade.io/en/stable/freqai-running/\nTimeSeriesSplit preserva ordem temporal e admite gap; amostras igualmente espaçadas são necessárias para comparar durações: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html\nA regra abaixo de purgar pela maturação do alvo é uma decisão de projeto baseada nesses riscos, não uma certificação dessas bibliotecas.\n\n## Aceitação imutável\nLE-1: buildLearningDataset e CLI somente leem registros. CLI exige --dir, --horizon e --as-of-ms explícitos; imprime um JSON em stdout, erro fixo com contexto sem conteúdo bruto em stderr e exit 1 em falha. Não carrega .env, rede, decisões, chaves ou carteira. Apenas snapshots-YYYY-MM-DD.jsonl e labels-YYYY-MM-DD.jsonl, arquivos regulares sem links; recusa dados malformados, mais de 64 MiB ou 100000 registros. Diretório vazio produz evidência insuficiente.\nLE-2: Para o horizonte escolhido, exportar apenas snapshots spot de origem relogio com custo finito não negativo, features v1 completas da whitelist, identidade de instrumento consistente, instante das features <= snapshot, timestamps inteiros seguros não negativos e idades não negativas. Preservar null e projetar somente FEATURE_NAMES. Excluir e contar registros inelegíveis; não imputar nem substituir null por zero.\nLE-3: Exigir label completo, motivo null, retorno bruto/líquido long finito, maturação snapshot+horizonte <= as-of e líquido consistente com bruto menos custo (tolerância absoluta 0.000001 bps). Exportar features e target em campos distintos; target positivo equivale a líquido > 0. Identificar alvo como hipotético spot long com custo registrado, nunca lucro executado ou probabilidade calibrada.\nLE-4: Snapshot id e label (snapshotId,horizonte) repetidos idênticos são deduplicados. Conflitos abortam. Dois ids para mesmo instrumento/instante abortam. Resultado determinístico independentemente da ordem de entrada; não altera objetos de entrada.\nLE-5: Folds walk-forward expansivos agrupam todos os instrumentos pelo timestamp, com blocos de teste de testGroups timestamps completos e disjuntos. Treino é estritamente anterior e remove cada linha cujo labelEndMs >= testStartMs - embargoMs. minTrainGroups conta timestamps após a remoção. Blocos insuficientes são contados e omitidos; cauda incompleta não vira fold.\nLE-6: Opções minTrainGroups/testGroups inteiras positivas, embargoMs inteiro não negativo, horizonte válido e as-of seguro são obrigatoriamente validadas. Relatório inclui contagens de entrada, deduplicação, motivos de exclusão, linhas, grupos temporais, folds, blocos omitidos e cauda. Zero folds significa insufficient_data; folds existentes significam ready_for_evaluation, sem alegar qualidade financeira ou independência entre alvos dentro de um teste.\nLE-7: Testes exercitam a API pública e CLI com arquivos reais temporários, valores de corte literais e hashes antes/depois. Cobrem custos/null, futuros/incompletos, whitelist/proveniência, conflitos, igualdade no corte temporal, embargo e agrupamento de ativos. Typecheck das novas fontes e contratos copiados passa. Revisão independente com baseline e SPEC.\nLE-8: Somente novos caminhos src/learning-evidence/**, scripts/learning-dataset.ts, scripts/learning-dataset.test.ts e docs/sdd/learning-evidence-20261013/**. Contratos preexistentes copiados apenas para a worktree e verificados por hash. Nenhuma alteração de Jev, trades, Kuru/Monad, cadence 300ms, wallet evidence, pacote ou módulos concorrentes.\n\n## Limites e riscos\nNão comprova a fidelidade point-in-time das fontes, qualidade histórica, liquidez, fills, funding, borrow, efeito causal ou retorno financeiro. O custo é uma estimativa registrada. Transações de wallet não são candles de mercado. Não preparar perp/short sem contratos completos de funding/borrow/liquidação. Durações dos testes podem diferir com falhas do recorder; comparar métricas com esses intervalos explícitos. Qualquer normalização, imputação, seleção, ajuste e calibração futura deve aprender somente no treino de cada fold. Não usar estes targets como probabilidades do Jev.\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+          "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+          "line_start": 3,
+          "line_end": 3,
+          "excerpt": "Baseline: 00a593bcabe25dbb6d83795268533551098f645b.\n",
+          "literal": true
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+          "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+          "line_start": 23,
+          "line_end": 25,
+          "excerpt": "Observações de origem historico são aceitas pelo contrato atualizado do recorder e excluídas do dataset. Só origem relogio spot é elegível.\n\nEsta verificação não utilizou feed real, inferência de provedor, ordens ou carteira. Os testes verificam o comportamento local, sem demonstrar lucro, calibração, qualidade dos dados ou operação em produção.\n",
+          "literal": true
+        }
+      ],
+      "verification_refs": [
+        "integrity",
+        "new-file-diffs",
+        "baseline"
+      ],
+      "finding_ids": []
+    }
+  ],
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "SPEC-1",
+      "priority": "P2",
+      "requirement": "LE-6",
+      "spec_line": 18,
+      "source_path": "src/learning-evidence/dataset.ts",
+      "source_lines": [
+        103,
+        104,
+        105,
+        106
+      ],
+      "status": "resolved",
+      "result": "Validation distinguishes undefined from explicit null before defaults; public regression and independent --eval probe confirm all three controls.",
+      "evidence": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 103,
+          "line_end": 106,
+          "excerpt": "  if (!(HORIZONS as readonly string[]).includes(options.horizon) || !safeTime(options.asOfMs) ||\n    (options.minTrainGroups !== undefined && !positiveInteger(options.minTrainGroups)) ||\n    (options.testGroups !== undefined && !positiveInteger(options.testGroups)) ||\n    (options.embargoMs !== undefined && !safeTime(options.embargoMs))) throw new Error(\"invalid_options\");\n",
+          "literal": true
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 130,
+          "line_end": 137,
+          "excerpt": "test(\"rejects explicit null options while keeping defaults for omitted or undefined options\", () => {\n  const opts = { horizon: \"15m\" as const, asOfMs: 900_000 };\n  for (const field of [\"minTrainGroups\", \"testGroups\", \"embargoMs\"]) {\n    expect(() => buildLearningDataset([], [], { ...opts, [field]: null })).toThrow(\"invalid_options\");\n  }\n  expect(buildLearningDataset([], [], { ...opts, minTrainGroups: undefined, testGroups: undefined,\n    embargoMs: undefined }).settings).toEqual({ minTrainGroups: 30, testGroups: 12, embargoMs: 0 });\n});\n",
+          "literal": true
+        }
+      ],
+      "verification_ref": "null-probe"
+    }
+  ],
+  "scope_creep": "None observed in the delivery patch. Readonly dependency copies and original internal records are excluded.",
+  "limitations": [
+    "First verification run timed out one CLI test at 5000ms; exact sequential replay passed. Cause and reliability under concurrent load remain unestablished.",
+    "Danger-full-access remains real; source isolation is an independent copy, not a sandbox enforcement claim.",
+    "Synthetic inputs in real local files establish behavior and source hashes, not data quality, production activation, model efficacy, financial gain, calibration or statistical independence.",
+    "The full concurrent main checkout was not typechecked or integrated. No live network/trading/wallet action was performed."
+  ]
+}
