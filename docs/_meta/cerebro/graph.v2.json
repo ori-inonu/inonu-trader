@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 30,
-  "headHash": "3a472480250352cf9cb7069e9612ac661ee50c0e12d90231f55d3151a0f20acc",
+  "headSeq": 45,
+  "headHash": "9f7c559559c6fdd639d3ed100a9a774c48b4d973970e6aaa2caa9bcb27939ddd",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -57,6 +57,16 @@
       "id": "iter-lint",
       "type": "iteration",
       "text": "Comando lint lista nos ativos sem vinculo; exit 1 se houver; teste cobre retratados"
+    },
+    {
+      "id": "jev-autoresearch-proxima-hipotese",
+      "type": "decision",
+      "text": "JEV consenso lider stop_campaign; spec e27759c1c5df02cb; recibo sha256 2a6175fc99c761be99894c0864ebc71f89bda06781ef37d4dd2102294b28071f. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-autoresearch-encerrada",
+      "type": "iteration",
+      "text": "Seg4: H12 basis empatou H5 (+3.17 bps sintetico); JEV consenso stop_campaign; meta 10x nao demonstrada"
     }
   ],
   "edges": [
@@ -154,6 +164,71 @@
       "from": "iter-comandos-agents",
       "to": "iter-lint",
       "seq": 30
+    },
+    {
+      "from": "autoresearch-c5c7d34",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 32
+    },
+    {
+      "from": "rule-less-code",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 33
+    },
+    {
+      "from": "cerebro-grafo-v2",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 34
+    },
+    {
+      "from": "jev-cerebro-recibo-jev",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 35
+    },
+    {
+      "from": "iter-limite-100",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 36
+    },
+    {
+      "from": "regra-dura-injetada",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 37
+    },
+    {
+      "from": "iter-comandos-agents",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 38
+    },
+    {
+      "from": "jev-cerebro-regras-no-grafo",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 39
+    },
+    {
+      "from": "iter-regras-inline",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 40
+    },
+    {
+      "from": "dono-aceitou-jev",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 41
+    },
+    {
+      "from": "iter-lint",
+      "to": "jev-autoresearch-proxima-hipotese",
+      "seq": 42
+    },
+    {
+      "from": "jev-autoresearch-proxima-hipotese",
+      "to": "iter-autoresearch-encerrada",
+      "seq": 44
+    },
+    {
+      "from": "iter-lint",
+      "to": "iter-autoresearch-encerrada",
+      "seq": 45
     }
   ],
   "retractions": []
