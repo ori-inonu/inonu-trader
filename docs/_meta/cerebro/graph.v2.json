@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 756,
-  "headHash": "b63422d7616b4ca85f5ae61b634028ded23a7ba84b8556442a24a93195d8956a",
+  "headSeq": 761,
+  "headHash": "14f024229ea5ccfd7600ca0788f1b5a7eb2ceb2ed7bcacba71800facf9467221",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1012,6 +1012,16 @@
       "id": "iter-skills-equivalencia",
       "type": "iteration",
       "text": "Auditoria linha a linha dos 3 SKILL.md originais (arvore f8f68f7) contra os nos skill-*: sdd-feature tinha 2 perdas ja restauradas; ship-pr e review-diff sem perda de regra, so passo Envie a branch resumido em gh pr create"
+    },
+    {
+      "id": "jev-cerebro-passo-15",
+      "type": "decision",
+      "text": "JEV sem_consenso lider nenhum; spec f91daa8bfa179278; recibo sha256 eca0d81bab66f7a0c888c25d006a976f37eedb0d578a07f6d2cf1ce0ab4a921e. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-sem-consenso-index",
+      "type": "iteration",
+      "text": "Consenso JEV passo 15 sem_consenso (migrate_index_only lidera): index.md e conventions.md ficam como estao; nada migrado"
     }
   ],
   "edges": [
@@ -3194,6 +3204,21 @@
       "from": "iter-skills-gates",
       "to": "iter-skills-equivalencia",
       "seq": 756
+    },
+    {
+      "from": "iter-skills-equivalencia",
+      "to": "jev-cerebro-passo-15",
+      "seq": 758
+    },
+    {
+      "from": "jev-cerebro-passo-15",
+      "to": "iter-sem-consenso-index",
+      "seq": 760
+    },
+    {
+      "from": "iter-skills-equivalencia",
+      "to": "iter-sem-consenso-index",
+      "seq": 761
     }
   ],
   "retractions": [
