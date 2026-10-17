@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 770,
-  "headHash": "8a749269ddc7637e47c8eb5bd96055bf8d33191245fe8bd0a49703cf97096ff5",
+  "headSeq": 775,
+  "headHash": "09d9f359f39b64b6481522db7b47bad2a53791093b49c7aeccc6f0006f4306b0",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1042,6 +1042,16 @@
       "id": "iter-auditoria-prompts",
       "type": "iteration",
       "text": "Regra 7 auditada no runtime do trader: injecao ja e estado estruturado, com 1 texto fixo residual em jev-read; nao foi tocado, mudar exigiria nova versao de prompt e decisao do JEV"
+    },
+    {
+      "id": "jev-cerebro-passo-17",
+      "type": "decision",
+      "text": "JEV consenso lider stop_warn; spec 8a1e9468f244a0e4; recibo sha256 beae68f182e32a80a9b96d7e7fe4e51b1c0063d7b6d864230fc51e9d85a87aee. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "iter-stop-aviso",
+      "type": "iteration",
+      "text": "Consenso JEV stop_warn (passo 17): stop_verify.ts avisa no stderr se working tree ou ultimo commit mudou sem tocar events.jsonl; nunca bloqueia. Limite: um commit com grafo mascara o aviso do anterior"
     }
   ],
   "edges": [
@@ -3264,6 +3274,21 @@
       "from": "fato-auditoria-prompts",
       "to": "iter-auditoria-prompts",
       "seq": 770
+    },
+    {
+      "from": "iter-auditoria-prompts",
+      "to": "jev-cerebro-passo-17",
+      "seq": 772
+    },
+    {
+      "from": "jev-cerebro-passo-17",
+      "to": "iter-stop-aviso",
+      "seq": 774
+    },
+    {
+      "from": "iter-auditoria-prompts",
+      "to": "iter-stop-aviso",
+      "seq": 775
     }
   ],
   "retractions": [
