@@ -20,6 +20,7 @@ Pesquisa (somente leitura), mapa Wayfinder e rascunhos de spec, plano e tarefas.
 - [Arquitetura de dados, velocidade de decisão e execução](specs/retorno-composto-por-ciclo/arquitetura-e-decisao.md).
 - [Fontes de vantagem](specs/retorno-composto-por-ciclo/fontes-de-edge.md) e [linha de base e validação](specs/retorno-composto-por-ciclo/validacao-e-baseline.md).
 - [Ciclo 2: mapa Wayfinder, 12 decisões do Jev, fatias em sombra e entrada do planejamento](specs/retorno-composto-por-ciclo/wayfinder.md); [especificações das fatias](specs/retorno-composto-por-ciclo/specs/) e [decisões e recibos do Jev](specs/retorno-composto-por-ciclo/decisoes-jev/).
+- [Revisão de branches e worktrees e integração na main](specs/retorno-composto-por-ciclo/revisao-branches-worktrees.md): inventário, o que foi feito, correções e o que fica para o dono.
 - [Spec](specs/retorno-composto-por-ciclo/spec.md), [plano](specs/retorno-composto-por-ciclo/plan.md), [tarefas](specs/retorno-composto-por-ciclo/tasks.md) e [status](specs/retorno-composto-por-ciclo/status.md) (rascunhos).
 - [Evidência bruta dos agentes](specs/retorno-composto-por-ciclo/evidence/) com o veredito do cético por afirmação.
 

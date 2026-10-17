@@ -92,6 +92,8 @@ Autorizadas pelo consenso `medir_primeiro`: módulos puros, injetáveis e **não
 
 Ressalva estrutural: os implementadores rodaram sobre um commit antigo (`b587759`, era Kuru e Monad), sem `AGENTS.md`, sem `src/okx-market`, sem `src/agent` e sem `package.json` com `typecheck`. O código é puro, mas só vale depois de **montado na `main` e validado contra a base** (fase Validar). S4 e S5 não foram executadas. S2 precisa ser refeita com a tabela de planos que eu verifiquei e os achados do revisor.
 
+**Resultado da fase Validar e do que foi commitado.** O gate de validação por agentes reprovou (um erro de tipo real meu, não das fatias, e um critério do reprodutor que não se aplicava). Na retomada os agentes das fatias foram reexecutados e **mudaram de veredito** (S1 passou a reprovada, S2 a aprovada com ressalvas, S3 falhou por esquema), o que mostra que a revisão por Haiku não é estável. Por isso decidi pelas versões da primeira execução (S1 e S3 aprovadas com ressalvas, S2 reprovada) e as revalidei **diretamente num worktree limpo da `main`**: `bun run typecheck` com saída 0 e os testes das duas fatias passam junto com 978 testes das áreas tocadas. **S1 e S3 foram commitadas na `main`** (módulos puros, não ligados a nada); a S2 ficou de fora.
+
 ## 7. Bloqueios do dono (nada decidido)
 
 Planos pagos (OnchainOS Starter, Growth, Pro, x402, RPC, agregadores); aceitar o risco de termos da OKX (cláusula 9.4) para qualquer raspagem ou uso do feed público em escala; ler a cota real da TypeSafe e o RPS da conta na OKX; ordens, assinaturas ou transferências, inclusive para calibrar custo; estender journals (`fills.jsonl`, `audits.jsonl`, `decisions-meta`) ou gravar markout novo; base de dimensionamento, limites de risco e capital-base; liberar live ou promover sombra para real (portão G4); reiniciar ou trocar o agente vivo, release de produção e mudar `intervalMin`, `TIMEOUTS` e as esperas internas; dependência de produção nova; mensagens a terceiros (suporte da OKX); migração da porta 8443 do `public-market-capture` (recibos).
@@ -110,8 +112,8 @@ Riscos principais: termos da OKX (9.4); **porta 8443 em 14 dias**; cota Basic ac
 
 ## 10. Próximos passos
 
-1. Validar S1 e S3 contra a base `c67b39e` (typecheck, `test:lab`, suíte por blocos com comparação com a base, auditoria de regras, reprodução independente) e só então aplicar ao projeto: workflow em andamento (fases Validar e Atualizar).
+1. (Feito) Validar S1 e S3 contra a base e commitar; ver [revisao-branches-worktrees.md](revisao-branches-worktrees.md) e [status.md](status.md). Integrar S1 em `cycle.ts` e `wire.ts` só depois da F0.
 2. Refazer a S2 corrigindo os achados do revisor.
-3. Executar F0: resolver o merge em andamento (decisão do dono; o ensaio de resolução está no workflow `revisao-branches-worktrees`).
+3. Executar F0: resolver o merge em andamento (decisão do dono; o ensaio de resolução está em [revisao-branches-worktrees.md](revisao-branches-worktrees.md)).
 4. Reenviar D6 ao Jev depois de D2 e D3.
 5. Migrar `public-market-capture` para a porta 443 antes de 2026-10-31, com novos recibos (dono).
