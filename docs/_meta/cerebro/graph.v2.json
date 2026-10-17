@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 662,
-  "headHash": "cdac88f187d4fcbc7442e3bbd75df551a4cc946b9471da36c52b8521cbf07436",
+  "headSeq": 669,
+  "headHash": "8faa862686ae7c2cf933ccb6a1da3ab1f93f22000423008d9fca40a8ada02711",
   "nodes": [
     {
       "id": "autoresearch-c5c7d34",
@@ -927,6 +927,21 @@
       "id": "iter-plano-estrela",
       "type": "iteration",
       "text": "Nos plan-<spec>-N ligados tambem a raiz (consenso JEV star): export da raiz com profundidade 1 devolve o plano inteiro, de 6 KB a 19 KB"
+    },
+    {
+      "id": "jev-cerebro-passo-5",
+      "type": "decision",
+      "text": "JEV consenso lider keep_log_new_in_graph; spec db47fb45ac70f589; recibo sha256 e05f97e5ff40fc1dac15bb8bd148406619e911940bc3b0c6ff57c070d6524cca. Recomendacao, nao autoriza nada."
+    },
+    {
+      "id": "fato-log-congelado",
+      "type": "fact",
+      "text": "docs/log.md (194 linhas, 16 entradas ate 2026-10-16) fica congelado como historico legado; git 19d9ef1 blob 3a91ddb6f7da63f12da63df0bd12be85c3427a2f. Novas entradas so no grafo. Nao editar: manifesto de hashes o verifica"
+    },
+    {
+      "id": "iter-log-congelado",
+      "type": "iteration",
+      "text": "Consenso JEV keep_log_new_in_graph: log.md nao migrado nem apagado; passa a ser legado e o grafo e o unico registro novo. Gates typecheck, test 7864 pass, lab 647 pass em 19d9ef1"
     }
   ],
   "edges": [
@@ -3299,6 +3314,26 @@
       "from": "iter-migrar-plans",
       "to": "iter-plano-estrela",
       "seq": 662
+    },
+    {
+      "from": "iter-plano-estrela",
+      "to": "jev-cerebro-passo-5",
+      "seq": 664
+    },
+    {
+      "from": "jev-cerebro-passo-5",
+      "to": "fato-log-congelado",
+      "seq": 666
+    },
+    {
+      "from": "fato-log-congelado",
+      "to": "iter-log-congelado",
+      "seq": 668
+    },
+    {
+      "from": "iter-plano-estrela",
+      "to": "iter-log-congelado",
+      "seq": 669
     }
   ],
   "retractions": [
