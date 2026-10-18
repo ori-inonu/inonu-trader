@@ -5,7 +5,8 @@
  * so a refusal carries that count. Asking is single flight, so one counter per gateway serves every click.
  */
 import type { InternalGatewayResult, OnchainGatewayInternal } from "../onchain-read/gateway";
-import { SourceError, type BriefSource } from "./ask";
+import { SourceError } from "./source-error";
+import type { BriefSource } from "./ask";
 
 export function countSentCalls(gateway: Pick<OnchainGatewayInternal, "callInternal">) {
   let sent = 0;

@@ -1,6 +1,7 @@
 /** Manual, address-free portfolio consultation. No valuation or action is inferred here. */
 import { BriefTooLarge, buildBrief, type BriefCandidate, type Json } from "../intel/brief";
-import { SourceError, type BriefSource } from "./ask";
+import { SourceError } from "./source-error";
+import type { BriefSource } from "./ask";
 import { sanitizeTags } from "../intel/onchain-risk";
 
 export const PORTFOLIO_OBSERVATION_MAX_AGE_MS = 60_000;

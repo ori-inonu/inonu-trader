@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1078,
-  "headHash": "edaf694734e2589d7865a8238a6c96d64233902a0bac1bc0bbc70e27df6c97cb",
+  "headSeq": 1080,
+  "headHash": "49fedd9aea4da07f62b93887246332ec926dce4888f2f1721a343e33369b8bd7",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1722,6 +1722,11 @@
       "id": "iter-prob-offline-20261018",
       "type": "iteration",
       "text": "Biblioteca prob e CLI offline revisados. Passam 146 testes focados, 8539 core, 650 lab e tipos. Destino canonico, arquivo exclusivo e idade ausente preservada. Retorno bruto exploratorio; sem journals reais ou mudanca operacional."
+    },
+    {
+      "id": "iter-source-error-20261018",
+      "type": "iteration",
+      "text": "SourceError extraida para modulo puro, export legado preservado e sete consumidores atualizados. Tipos, testes de inonu, core e lab passam. Origem preservada. Sem mudanca de cadencia, limite, dependencias ou operacao."
     }
   ],
   "edges": [
@@ -4739,6 +4744,11 @@
       "from": "iter-main-integracao-20261017",
       "to": "iter-prob-offline-20261018",
       "seq": 1078
+    },
+    {
+      "from": "iter-prob-offline-20261018",
+      "to": "iter-source-error-20261018",
+      "seq": 1080
     }
   ],
   "retractions": [

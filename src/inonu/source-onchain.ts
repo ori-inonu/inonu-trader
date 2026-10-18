@@ -17,7 +17,8 @@ import { sanitizeTags } from "../intel/onchain-risk";
 import { qualityFromWallets, type WalletWin } from "../intel/onchain-quality";
 import type { SymbolKind } from "../intel/onchain-components";
 import type { OnchainGatewayInternal } from "../onchain-read/gateway";
-import { SourceError, type AskMode, type AskRequest, type BriefSource, type BuiltBrief } from "./ask";
+import { SourceError } from "./source-error";
+import type { AskMode, AskRequest, BriefSource, BuiltBrief } from "./ask";
 import { MAX_ONCHAIN_CALLS, cutPlan, planPortfolioToken, planTokenMode } from "./onchain-plan";
 
 export interface TokenIdentity {
