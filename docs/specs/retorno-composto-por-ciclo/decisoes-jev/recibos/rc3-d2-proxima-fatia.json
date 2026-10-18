@@ -1,0 +1,257 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc3-d2-proxima-fatia",
+    "specHash": "c80e96f8eb3200bd5e4a313e826c6873e9388c9f82bc8a196fcb0fc46c96c3da",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "sem_consenso",
+    "leader": null,
+    "implement": false,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "ligar_carimbo_s1",
+          "classificar_fechamentos",
+          "refazer_contador_s2",
+          "markout_1_5_min",
+          "teste_ws_canal_quieto"
+        ],
+        "framings": [
+          {
+            "order": [
+              "ligar_carimbo_s1",
+              "classificar_fechamentos",
+              "refazer_contador_s2",
+              "markout_1_5_min",
+              "teste_ws_canal_quieto"
+            ],
+            "probs": {
+              "ligar_carimbo_s1": 0.03,
+              "classificar_fechamentos": 0.31,
+              "refazer_contador_s2": 0.02,
+              "markout_1_5_min": 0.64,
+              "teste_ws_canal_quieto": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "classificar_fechamentos",
+              "refazer_contador_s2",
+              "markout_1_5_min",
+              "teste_ws_canal_quieto",
+              "ligar_carimbo_s1"
+            ],
+            "probs": {
+              "classificar_fechamentos": 0.41,
+              "refazer_contador_s2": 0.04,
+              "markout_1_5_min": 0.5,
+              "teste_ws_canal_quieto": 0,
+              "ligar_carimbo_s1": 0.05,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "refazer_contador_s2",
+              "markout_1_5_min",
+              "teste_ws_canal_quieto",
+              "ligar_carimbo_s1",
+              "classificar_fechamentos"
+            ],
+            "probs": {
+              "refazer_contador_s2": 0.02,
+              "markout_1_5_min": 0.64,
+              "teste_ws_canal_quieto": 0,
+              "ligar_carimbo_s1": 0.02,
+              "classificar_fechamentos": 0.32,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "ligar_carimbo_s1": 0.0333,
+          "classificar_fechamentos": 0.3467,
+          "refazer_contador_s2": 0.0267,
+          "markout_1_5_min": 0.5933,
+          "teste_ws_canal_quieto": 0
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.2466,
+        "leader": "markout_1_5_min",
+        "railProb": {
+          "ligar_carimbo_s1": 0,
+          "classificar_fechamentos": 0,
+          "refazer_contador_s2": 0.03,
+          "markout_1_5_min": 0,
+          "teste_ws_canal_quieto": 0.03
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "ligar_carimbo_s1",
+          "classificar_fechamentos",
+          "refazer_contador_s2",
+          "markout_1_5_min",
+          "teste_ws_canal_quieto"
+        ],
+        "framings": [
+          {
+            "order": [
+              "ligar_carimbo_s1",
+              "classificar_fechamentos",
+              "refazer_contador_s2",
+              "markout_1_5_min",
+              "teste_ws_canal_quieto"
+            ],
+            "probs": {
+              "ligar_carimbo_s1": 0.03,
+              "classificar_fechamentos": 0.44,
+              "refazer_contador_s2": 0.02,
+              "markout_1_5_min": 0.51,
+              "teste_ws_canal_quieto": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "classificar_fechamentos",
+              "refazer_contador_s2",
+              "markout_1_5_min",
+              "teste_ws_canal_quieto",
+              "ligar_carimbo_s1"
+            ],
+            "probs": {
+              "classificar_fechamentos": 0.4,
+              "refazer_contador_s2": 0.03,
+              "markout_1_5_min": 0.53,
+              "teste_ws_canal_quieto": 0,
+              "ligar_carimbo_s1": 0.04,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "refazer_contador_s2",
+              "markout_1_5_min",
+              "teste_ws_canal_quieto",
+              "ligar_carimbo_s1",
+              "classificar_fechamentos"
+            ],
+            "probs": {
+              "refazer_contador_s2": 0.02,
+              "markout_1_5_min": 0.64,
+              "teste_ws_canal_quieto": 0.01,
+              "ligar_carimbo_s1": 0.01,
+              "classificar_fechamentos": 0.32,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "ligar_carimbo_s1": 0.0267,
+          "classificar_fechamentos": 0.3867,
+          "refazer_contador_s2": 0.0233,
+          "markout_1_5_min": 0.56,
+          "teste_ws_canal_quieto": 0.0033
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.1733,
+        "leader": "markout_1_5_min",
+        "railProb": {
+          "ligar_carimbo_s1": 0,
+          "classificar_fechamentos": 0,
+          "refazer_contador_s2": 0.03,
+          "markout_1_5_min": 0,
+          "teste_ws_canal_quieto": 0.03
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 3,
+        "options": [
+          "classificar_fechamentos",
+          "markout_1_5_min"
+        ],
+        "framings": [
+          {
+            "order": [
+              "classificar_fechamentos",
+              "markout_1_5_min"
+            ],
+            "probs": {
+              "classificar_fechamentos": 0.4,
+              "markout_1_5_min": 0.6,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "markout_1_5_min",
+              "classificar_fechamentos"
+            ],
+            "probs": {
+              "markout_1_5_min": 0.6,
+              "classificar_fechamentos": 0.4,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "classificar_fechamentos",
+              "markout_1_5_min"
+            ],
+            "probs": {
+              "classificar_fechamentos": 0.45,
+              "markout_1_5_min": 0.55,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "classificar_fechamentos": 0.4167,
+          "markout_1_5_min": 0.5833
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.1666,
+        "leader": "markout_1_5_min",
+        "railProb": {
+          "classificar_fechamentos": 0,
+          "markout_1_5_min": 0
+        },
+        "consensusHere": false
+      }
+    ],
+    "askUser": "Qual e o custo all-in medido por ida e volta com pelo menos 30 execucoes por classe de liquidez?",
+    "calls": {
+      "asked": 15,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 15,
+    "failed": 0,
+    "inputTokens": 21014,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

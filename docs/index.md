@@ -22,6 +22,7 @@ Pesquisa (somente leitura), mapa Wayfinder e rascunhos de spec, plano e tarefas.
 - [Ciclo 2: mapa Wayfinder, 12 decisões do Jev, fatias em sombra e entrada do planejamento](specs/retorno-composto-por-ciclo/wayfinder.md); [especificações das fatias](specs/retorno-composto-por-ciclo/specs/) e [decisões e recibos do Jev](specs/retorno-composto-por-ciclo/decisoes-jev/).
 - [Revisão de branches e worktrees e integração na main](specs/retorno-composto-por-ciclo/revisao-branches-worktrees.md): inventário, o que foi feito, correções e o que fica para o dono.
 - [Integração da branch autoresearch na main](specs/retorno-composto-por-ciclo/integracao-autoresearch.md): decisões de cada conflito, o que ficou de fora e o que fica para o dono.
+- [Decisões da rodada 3 (Jev)](specs/retorno-composto-por-ciclo/decisoes-rodada-3.md) e [roteiro para o checkout principal](specs/retorno-composto-por-ciclo/roteiro-checkout-do-dono.md): prompts, markout de 1 e 5 minutos, porta 443, learning-evidence e o checkout do dono.
 - [Spec](specs/retorno-composto-por-ciclo/spec.md), [plano](specs/retorno-composto-por-ciclo/plan.md), [tarefas](specs/retorno-composto-por-ciclo/tasks.md) e [status](specs/retorno-composto-por-ciclo/status.md) (rascunhos).
 - [Evidência bruta dos agentes](specs/retorno-composto-por-ciclo/evidence/) com o veredito do cético por afirmação.
 

@@ -1,0 +1,166 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc3-d4-learning-evidence",
+    "specHash": "d23e4946964da721711f79cbd69c29d08deb43ebd2d915ece5b7a5073982e43e",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "reconciliar_agora",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "manter_wip",
+          "reconciliar_agora",
+          "descartar"
+        ],
+        "framings": [
+          {
+            "order": [
+              "manter_wip",
+              "reconciliar_agora",
+              "descartar"
+            ],
+            "probs": {
+              "manter_wip": 0.17,
+              "reconciliar_agora": 0.83,
+              "descartar": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "reconciliar_agora",
+              "descartar",
+              "manter_wip"
+            ],
+            "probs": {
+              "reconciliar_agora": 0.79,
+              "descartar": 0,
+              "manter_wip": 0.21,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "descartar",
+              "manter_wip",
+              "reconciliar_agora"
+            ],
+            "probs": {
+              "descartar": 0,
+              "manter_wip": 0.24,
+              "reconciliar_agora": 0.76,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "manter_wip": 0.2067,
+          "reconciliar_agora": 0.7933,
+          "descartar": 0
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.5866,
+        "leader": "reconciliar_agora",
+        "railProb": {
+          "manter_wip": 0,
+          "reconciliar_agora": 0.04,
+          "descartar": 0.26
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "manter_wip",
+          "reconciliar_agora",
+          "descartar"
+        ],
+        "framings": [
+          {
+            "order": [
+              "manter_wip",
+              "reconciliar_agora",
+              "descartar"
+            ],
+            "probs": {
+              "manter_wip": 0.15,
+              "reconciliar_agora": 0.85,
+              "descartar": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "reconciliar_agora",
+              "descartar",
+              "manter_wip"
+            ],
+            "probs": {
+              "reconciliar_agora": 0.79,
+              "descartar": 0,
+              "manter_wip": 0.21,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "descartar",
+              "manter_wip",
+              "reconciliar_agora"
+            ],
+            "probs": {
+              "descartar": 0,
+              "manter_wip": 0.2,
+              "reconciliar_agora": 0.8,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "manter_wip": 0.1867,
+          "reconciliar_agora": 0.8133,
+          "descartar": 0
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.6266,
+        "leader": "reconciliar_agora",
+        "railProb": {
+          "manter_wip": 0,
+          "reconciliar_agora": 0.04,
+          "descartar": 0.26
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 9,
+    "failed": 0,
+    "inputTokens": 9377,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

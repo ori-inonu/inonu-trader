@@ -21,7 +21,7 @@ Registro da integração da branch `autoresearch/quero-que-voc-crie-m-tricar-e-c
    - `http.ts`: `Retry-After` em segundos inteiros lido do cabeçalho e passado ao `backoffMs`; o bloqueio de 402 segue por caminho (mapa da `main`).
    - Os testes que criam cliente ganharam um orçamento isolado (`testBudget`), para não compartilharem o ledger do repositório.
 5. **Sonda de custo de entrada** (`entry-cost.ts`, `cycle.ts`, `wire.ts`, testes): a recusa `gas_station_pendente` existia nos dois lados (a `main` a portou da branch). Fica a implementação da `main`, já revisada. Os testes extras da branch foram mantidos ao lado dos da `main`.
-6. **Extração de prompts adiada** (13 arquivos voltados à versão da `main`): o commit `0147547` troca os textos de prompt de `jev-model`, `jev-read/decide`, `lab-jev/jev-chooser`, `operator/jev-selector`, `real/jev` e `system-one/decide` por `PROMPTS[...]` importado de `src/generated/prompts`. Esse módulo e o gerador não existem em nenhum commit, worktree ou histórico; a branch sozinha não compila. Em vez de inventar o arquivo gerado (e arriscar mudar texto de prompt do Jev), esses arquivos e seus testes ficam como na `main`. Reversível: depois que o dono commitar o gerador e o módulo, o commit `0147547` pode ser reaplicado.
+6. **Extração de prompts adiada** (13 arquivos voltados à versão da `main`): o commit `0147547` troca os textos de prompt de `jev-model`, `jev-read/decide`, `lab-jev/jev-chooser`, `operator/jev-selector`, `real/jev` e `system-one/decide` por `PROMPTS[...]` importado de `src/generated/prompts`. Esse módulo e o gerador não existem em nenhum commit, worktree ou histórico; a branch sozinha não compila. Em vez de inventar o arquivo gerado (e arriscar mudar texto de prompt do Jev), esses arquivos e seus testes ficam como na `main`. Reversível: depois que o dono commitar o gerador e o módulo, o commit `0147547` pode ser reaplicado. **Atualização da rodada 3:** o Jev decidiu por consenso reconstruir o módulo (média 0,84) e isso foi feito, com igualdade provada e texto fixado por hash; ver [decisoes-rodada-3.md](decisoes-rodada-3.md).
 7. **Documentos de regras**: seção duplicada "Regras do cerebro documental" removida do `AGENTS.md`; as referências ao `scripts/brain.ts` (inexistente) em `AGENTS.md`, `CLAUDE.md` e `docs/CONTRIBUICAO.md` apontam agora para `scripts/cerebro.ts`.
 8. **Ajustes de compilação**: a fixture `analysisView` do teste do relatório de autoresearch ganhou `cycleReviewPage` e `cycleReviews`; o `describe` do teste do Brief em `model.test.ts` foi restaurado.
 9. **Fora da integração**: os logs de verificação em `.tmp/final-verifier-*` (2,3 MB de saída de teste) não entram; `.tmp/` foi para o `.gitignore`.
@@ -38,7 +38,7 @@ Um revisor independente (agente, somente leitura) leu o resultado da fusão e n�
 ## Trabalho do Codex sem commit
 
 - **R3** (`decision-weight-evidence`, 33 arquivos): módulo puro `src/decision-evidence` com 11 testes e a documentação SDD. Typecheck e testes passam sobre a `main`, a varredura de segredos, endereços e caracteres vedados está limpa; integrado.
-- **R4** (`learning-evidence`, 35 arquivos): as dependências `src/intel` e `src/outcomes` do worktree são versões antigas e divergem da `main` (3 arquivos); sobre a `main`, 2 testes falham. Não integrado; o trabalho foi preservado numa branch própria do worktree (ver o registro no grafo), para reconciliação posterior.
+- **R4** (`learning-evidence`, 35 arquivos): as dependências `src/intel` e `src/outcomes` do worktree são versões antigas e divergem da `main` (3 arquivos). Ficou preservada na branch `codex/learning-evidence-wip` e, na rodada 3, o Jev decidiu por consenso reconciliá-la e integrá-la (módulo puro, não ligado ao ciclo); ver [decisoes-rodada-3.md](decisoes-rodada-3.md).
 
 ## Validação
 
@@ -51,7 +51,7 @@ Um revisor independente (agente, somente leitura) leu o resultado da fusão e n�
 
 | Item | Por quê |
 | --- | --- |
-| Commitar o gerador de prompts e `src/generated/prompts.ts` (ou os nós `p-*` do grafo) | A extração de prompts do commit `0147547` ficou de fora; sem o gerador ela não compila. Depois, reaplicar `0147547` sobre a `main` |
+| Gerador de prompts do dono (nós `p-*` do grafo) | O módulo `src/generated/prompts.ts` foi reconstruído dos literais originais (rodada 3). Quando o gerador do dono existir, ele deve reproduzir o mesmo texto; os hashes em `src/generated/prompts.test.ts` só mudam por decisão registrada |
 | Merge em andamento do checkout principal | Continua intocado. Com esta integração na `main`, refazer o merge contra a `main` nova deve ter bem menos conflitos |
 | `docs/Sem título.md` e arquivos de `docs/.obsidian` | Vieram junto da branch (anotação solta e estado do Obsidian); decidir se ficam |
 | Modo real, produção e limites de risco | Não tocados. O `AGENTS.md` mantém o live bloqueado até qualificação e autorização do dono |

@@ -1,0 +1,166 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc3-d3-captura-443",
+    "specHash": "88804ad3907fb9e02d5929e9e5ec07f8096c0657cd02285bd419923631fa5dbf",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "migrar_codigo_recibos_pendentes",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "migrar_codigo_recibos_pendentes",
+          "esperar_dono",
+          "migrar_e_recapturar"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrar_codigo_recibos_pendentes",
+              "esperar_dono",
+              "migrar_e_recapturar"
+            ],
+            "probs": {
+              "migrar_codigo_recibos_pendentes": 0.75,
+              "esperar_dono": 0,
+              "migrar_e_recapturar": 0.24,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "esperar_dono",
+              "migrar_e_recapturar",
+              "migrar_codigo_recibos_pendentes"
+            ],
+            "probs": {
+              "esperar_dono": 0,
+              "migrar_e_recapturar": 0.28,
+              "migrar_codigo_recibos_pendentes": 0.72,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "migrar_e_recapturar",
+              "migrar_codigo_recibos_pendentes",
+              "esperar_dono"
+            ],
+            "probs": {
+              "migrar_e_recapturar": 0.35,
+              "migrar_codigo_recibos_pendentes": 0.65,
+              "esperar_dono": 0,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "migrar_codigo_recibos_pendentes": 0.7067,
+          "esperar_dono": 0,
+          "migrar_e_recapturar": 0.29
+        },
+        "noneFits": 0.0033,
+        "agreement": 1,
+        "margin": 0.4167,
+        "leader": "migrar_codigo_recibos_pendentes",
+        "railProb": {
+          "migrar_codigo_recibos_pendentes": 0.04,
+          "esperar_dono": 0.02,
+          "migrar_e_recapturar": 0.24
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "migrar_codigo_recibos_pendentes",
+          "esperar_dono",
+          "migrar_e_recapturar"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrar_codigo_recibos_pendentes",
+              "esperar_dono",
+              "migrar_e_recapturar"
+            ],
+            "probs": {
+              "migrar_codigo_recibos_pendentes": 0.79,
+              "esperar_dono": 0,
+              "migrar_e_recapturar": 0.21,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "esperar_dono",
+              "migrar_e_recapturar",
+              "migrar_codigo_recibos_pendentes"
+            ],
+            "probs": {
+              "esperar_dono": 0,
+              "migrar_e_recapturar": 0.27,
+              "migrar_codigo_recibos_pendentes": 0.73,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "migrar_e_recapturar",
+              "migrar_codigo_recibos_pendentes",
+              "esperar_dono"
+            ],
+            "probs": {
+              "migrar_e_recapturar": 0.29,
+              "migrar_codigo_recibos_pendentes": 0.71,
+              "esperar_dono": 0,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "migrar_codigo_recibos_pendentes": 0.7433,
+          "esperar_dono": 0,
+          "migrar_e_recapturar": 0.2567
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.4866,
+        "leader": "migrar_codigo_recibos_pendentes",
+        "railProb": {
+          "migrar_codigo_recibos_pendentes": 0.04,
+          "esperar_dono": 0.02,
+          "migrar_e_recapturar": 0.24
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 9,
+    "failed": 0,
+    "inputTokens": 10123,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}
