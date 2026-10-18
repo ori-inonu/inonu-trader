@@ -264,7 +264,7 @@ export function logReturns(prices: readonly number[]): number[] {
   return out;
 }
 
-export function mean(x: readonly number[]): number {
+function mean(x: readonly number[]): number {
   if (x.length === 0) throw new RangeError("empty");
   return fsum(x) / x.length;
 }

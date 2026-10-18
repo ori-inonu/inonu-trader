@@ -17,7 +17,7 @@ export const RETRY_AFTER_ERROR_MS = 30_000;
 const LIQUIDITY_RULES = { minVolQuote24h: 1_000_000, maxSpreadBps: 15, maxPairs: 90 } as const;
 
 /** Bases that are a dollar, or close to one: a pair of one against USDT is a price, not an opportunity. */
-export const STABLE_BASES: ReadonlySet<string> = new Set(["USDC", "DAI", "TUSD", "FDUSD", "USDE", "PYUSD", "USDG", "USDD", "BUSD", "USDP", "EURT", "EUR", "USDT"]);
+const STABLE_BASES: ReadonlySet<string> = new Set(["USDC", "DAI", "TUSD", "FDUSD", "USDE", "PYUSD", "USDG", "USDD", "BUSD", "USDP", "EURT", "EUR", "USDT"]);
 
 export interface OpportunityPair {
   readonly instId: string;

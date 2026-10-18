@@ -6,7 +6,9 @@ A continuacao aplicou, verificou e revisou mais 133 remocoes literais de export 
 
 A inversao das substituicoes reproduziu os hashes originais de todos os arquivos, byte a byte. Diff check e cerebro verify passaram em seq 1090, com dois eventos novos e historico anterior intacto. Nenhum achado bloqueante no diff desta coorte; a migracao documental integral, autenticacao e a observacao operacional do agente continuam separadas e abertas.
 
-## Saida dos checks
+Na continuacao baseada em 4fa7282, os 17 casos lexicais/indiretos foram examinados com o parser Babel existente em 1798 fontes, sem falhas de parse. Dezesseis marcadores export foram retirados em 14 arquivos; assertByteEventCapacity permaneceu por seu importador atual. A inversao reproduziu os bytes originais. A verificacao inteira foi repetida: tipos core/web exit 0, core 8544 pass e 2 skip, lab 650 pass e web 3821 pass, sem falhas e com hashes intactos. Total do PR: 159 marcadores retirados. Os 28 casos de runtime, 33 reservados e dois contratos documentais continuam separados. Ver ../export-consumer-alignment/.
+
+## Saida dos checks da coorte anterior de 133 exports
 
 ```
 bun --no-env-file run typecheck
@@ -56,6 +58,8 @@ Goal1: 59 arquivos de comentarios/tipos, 113 de superficie de export, 53 de runt
 O inventario anterior do checkout original encontrou 25 de 37 deltas com o mesmo texto de main apos normalizar CRLF/LF. O comparador corrigido esta em .scratch/remaining-doc-root-audit-20261018-v2/result.json; o primeiro resultado misturava blobs Git com conversao de fim de linha e tem erratum explicito. Depois desse inventario, o ultimo conflito de scripts/jev-consensus.ts foi resolvido e as dependencias de main ausentes foram repostas. Tipos, core (8160 pass, 2 skip, 0 fail), lab (650 pass, 0 fail), tipos web e testes web (3821 pass, 0 fail) passaram na raiz. O merge local permanece aberto, sem commit ou alteracao de main. Ver bootstrap-root.md.
 
 Os oito artefatos v1 congelados permanecem byte-identicos na origem e sem exclusao rastreada. As 1146 exclusoes documentais exigem revisao dos destinos por pasta e anexos. document-contract-review.md registra os defeitos da proposta original; C2a corrige os dois leitores no candidato e preserva os contratos atuais. Ausencia de blob identico entre arquivos novos de ate 1 MiB nao demonstra perda de conteudo transformado.
+
+A nova conferencia dos 535 arquivos auxiliares encontrou nove equivalentes na worktree proposta, sete deles logs vazios. O arquivo legado local foi lido em memoria: todos os 1146 caminhos excluidos estao presentes uma vez, 171 com bytes exatos e 974 equivalentes apos CRLF. O catalogo R6-onchain-os-catalogo.json diverge inclusive como JSON. Nenhum arquivo foi extraido, migrado ou publicado; o arquivo continua local e ignorado. Ver document-asset-review.md e os recibos locais document-asset-audit-20261018 e legacy-document-archive-v3-20261018. Isso nao prova preservacao dos caminhos, links ou contratos novos de main.
 
 A auditoria complementar leu 694 Markdown novos/alterados e o grafo de 4,38 MB. Dos 611 Markdown excluidos, 15 corpos integrais foram encontrados apos normalizacao; tres sao anteriores a atualizacoes de main. Dois ja foram corrigidos no candidato C2a; o terceiro e o contrato AUT-3 do agente, que deve preservar a admissao previa de fallback. Os 596 nao encontrados integralmente exigem revisao semantica, sem inferir perda automatica.
 

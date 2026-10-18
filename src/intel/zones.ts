@@ -16,7 +16,7 @@
 import { createHash } from "node:crypto";
 
 export type Family = "E1" | "E2" | "E3" | "E4" | "E5" | "E6";
-export const FAMILIES: readonly Family[] = ["E1", "E2", "E3", "E4", "E5", "E6"];
+const FAMILIES: readonly Family[] = ["E1", "E2", "E3", "E4", "E5", "E6"];
 
 /** Priors, configurable and recorded in the journal. They do not claim any performance. */
 export const DEFAULT_WEIGHTS: Readonly<Record<Family, number>> = { E1: 1.0, E2: 1.0, E3: 0.8, E4: 0.6, E5: 0.5, E6: 1.2 };

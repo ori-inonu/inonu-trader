@@ -358,7 +358,7 @@ export function parseMarkPrice(data: unknown, instId: string): MarkPriceRow {
   return { instId, markPx: readPositiveText(field(record, "markPx")), tsMs: readEpochMs(field(record, "ts")) };
 }
 
-export function parseTicker(data: unknown, instId: string): TickerRow {
+function parseTicker(data: unknown, instId: string): TickerRow {
   const record = rowFor(data, instId, "ticker");
   return {
     instId,

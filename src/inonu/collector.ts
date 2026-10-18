@@ -50,7 +50,7 @@ export type WatchResult = { readonly ok: true } | { readonly ok: false; readonly
  * learned minutes and (with the live feed) a subscription and a file. Past this a new instrument is not followed: its reading comes from
  * the exchange on each click, the same engine on less memory.
  */
-export const MAX_INSTRUMENTS = 24;
+const MAX_INSTRUMENTS = 24;
 
 export interface Collector {
   watch(instId: string, signal?: AbortSignal): Promise<WatchResult>;

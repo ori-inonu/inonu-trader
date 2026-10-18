@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1095,
-  "headHash": "94eadaa3bedc4b935f204d06af63318331e6c5e589912c1ecb925196a7a59e7a",
+  "headSeq": 1100,
+  "headHash": "8e60c944536810e9f2ae071fdb606bdc5ed2220dc330950033b36b7d0d11ff00",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1762,6 +1762,16 @@
       "id": "fato-porta-desktop-20261018",
       "type": "fact",
       "text": "Desktop: core.ts fixa loopback em 47321 e launcher.ts serve export e handlers na mesma origem. package.json start ainda chama src/index.ts legado. Diagnostico de perfil vazio em 2026-10-18 nao executou o agente. Ver docs/specs/core-browser-validation."
+    },
+    {
+      "id": "iter-export-consumer-alignment-20261018",
+      "type": "iteration",
+      "text": "Mais 16 exports em 14 arquivos, imports e corpos intactos; tipos/core/lab/web passam. Um export com consumidor foi preservado. Legado: 1145 de 1146 equivalentes apos CRLF; catalogo JSON diverge. Main e agente completo pendentes; fallback sem-jev."
+    },
+    {
+      "id": "fato-legado-conferido-20261018",
+      "type": "fact",
+      "text": "Legado local da origem a4a9ef5: 1146 caminhos presentes, 171 com bytes exatos e 974 equivalentes apos CRLF. Catalogo R6 diverge como JSON. Nada extraido ou publicado. Ver docs/specs/remaining-system-alignment/document-asset-review.md."
     }
   ],
   "edges": [
@@ -4824,6 +4834,21 @@
       "from": "fato-como-rodar",
       "to": "fato-porta-desktop-20261018",
       "seq": 1095
+    },
+    {
+      "from": "iter-core-browser-validation-20261018",
+      "to": "iter-export-consumer-alignment-20261018",
+      "seq": 1097
+    },
+    {
+      "from": "iter-export-consumer-alignment-20261018",
+      "to": "fato-legado-conferido-20261018",
+      "seq": 1099
+    },
+    {
+      "from": "iter-doc-provenance-audit-20261018",
+      "to": "fato-legado-conferido-20261018",
+      "seq": 1100
     }
   ],
   "retractions": [

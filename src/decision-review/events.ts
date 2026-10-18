@@ -1,4 +1,4 @@
-export const OPPORTUNITY_EVENT_KINDS = ["new_candidate", "price_changed", "liquidity_changed", "risk_changed", "fill_confirmed"] as const;
+const OPPORTUNITY_EVENT_KINDS = ["new_candidate", "price_changed", "liquidity_changed", "risk_changed", "fill_confirmed"] as const;
 export interface OpportunityEvent {
   readonly assetKey: string;
   readonly source: string;

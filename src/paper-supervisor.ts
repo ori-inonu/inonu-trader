@@ -111,7 +111,7 @@ export class PaperSupervisorError extends Error {
   }
 }
 
-export function cloneSupervisorValue<T>(value: T): T {
+function cloneSupervisorValue<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
@@ -135,7 +135,7 @@ function envelopeBody(envelope: Omit<PaperSupervisorEnvelope, "sha256">): string
   return canonicalJson(envelope, true);
 }
 
-export function configSha256(config: PaperCapitalConfig): string {
+function configSha256(config: PaperCapitalConfig): string {
   return sha256(canonicalJson(config));
 }
 

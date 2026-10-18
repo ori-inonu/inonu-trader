@@ -1,0 +1,355 @@
+{
+  "base": "4fa7282a83c3722b2c7ea9835768f163cc2eb60b",
+  "symbols": 16,
+  "files": 14,
+  "edits": [
+    {
+      "path": "src/decision-review/events.ts",
+      "beforeSha256": "357795a5e49a908b0d274da30e50b82fcb44df44100575a72dbcef2271f4552d",
+      "afterSha256": "ebeb6cbe0d337fef4e8c02f83f0bae82189383633eea3072e7cbe4d94c5debc0",
+      "replacements": [
+        {
+          "symbol": "OPPORTUNITY_EVENT_KINDS",
+          "before": "export const OPPORTUNITY_EVENT_KINDS",
+          "after": "const OPPORTUNITY_EVENT_KINDS",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "path": "src/decision/testing.ts",
+      "beforeSha256": "8ced37b9d6abd353c58c7430094f15c3f1f0d00b258f3e33ca987ffd809be355",
+      "afterSha256": "156d7880a309e416c15f53139c5db5f38794e1cbf070c9c65290ac76a7dcebe9",
+      "replacements": [
+        {
+          "symbol": "costs",
+          "before": "export const costs",
+          "after": "const costs",
+          "line": 7
+        }
+      ]
+    },
+    {
+      "path": "src/desktop/core.ts",
+      "beforeSha256": "28ecb986459b24a2a5c3366ac415a6823f934a593cee2b10d50b4132b16bf26e",
+      "afterSha256": "74c81e95f1ccecc35ca53bbb084d8984deeb9701c205d5da9087cd0102b6082f",
+      "replacements": [
+        {
+          "symbol": "DOCTOR_PATH",
+          "before": "export const DOCTOR_PATH",
+          "after": "const DOCTOR_PATH",
+          "line": 30
+        }
+      ]
+    },
+    {
+      "path": "src/inonu/collector.ts",
+      "beforeSha256": "b74e87fde90e8e047b9be6c9ba396fd662752af1b9024a2639c32dd6a798a9c5",
+      "afterSha256": "527859177843a27cc03530a5a37fcdecf2e9fa6be1e9d79ea2f355286c559ea7",
+      "replacements": [
+        {
+          "symbol": "MAX_INSTRUMENTS",
+          "before": "export const MAX_INSTRUMENTS",
+          "after": "const MAX_INSTRUMENTS",
+          "line": 53
+        }
+      ]
+    },
+    {
+      "path": "src/intel/ta/indicators.ts",
+      "beforeSha256": "cc2a1858649afb935b16d4e8e90bcc89c3367cab8f0aed7adaa825a934d65d0b",
+      "afterSha256": "3d29360767f971b3c323767dae1c2599b6e2c7c3c97ce7cde07038c0962342ad",
+      "replacements": [
+        {
+          "symbol": "mean",
+          "before": "export function mean",
+          "after": "function mean",
+          "line": 267
+        }
+      ]
+    },
+    {
+      "path": "src/intel/zones.ts",
+      "beforeSha256": "89b35c77012ded7deb96c767cc48e68b6a8c050f54317558fc856ae439de6a74",
+      "afterSha256": "d0402fdc0734c7c34f1092e25d119057e194d442cc39b6de7ffb39603ea126ff",
+      "replacements": [
+        {
+          "symbol": "FAMILIES",
+          "before": "export const FAMILIES",
+          "after": "const FAMILIES",
+          "line": 19
+        }
+      ]
+    },
+    {
+      "path": "src/model.ts",
+      "beforeSha256": "2c076f42e33261619a7e791479fe9200ed6865213406314344ea0772a657185d",
+      "afterSha256": "3a25ff8c7bb4a8fbd5bc0cc6dc8558afc15913256b2a09f10a1fad4a0adbc22f",
+      "replacements": [
+        {
+          "symbol": "MockModel",
+          "before": "export class MockModel",
+          "after": "class MockModel",
+          "line": 92
+        }
+      ]
+    },
+    {
+      "path": "src/okx-derivatives/decimal.ts",
+      "beforeSha256": "011b509364951c79976091e81e396dd3d072e4c4ba9506d9b6c7d36003cedf85",
+      "afterSha256": "ebff91b6ab18dd17639564bb82057d9b4b81d8a48d4afa5fae7ef85ee9eab83f",
+      "replacements": [
+        {
+          "symbol": "MICRO",
+          "before": "export const MICRO",
+          "after": "const MICRO",
+          "line": 13
+        }
+      ]
+    },
+    {
+      "path": "src/onchainos/archive-discovery.ts",
+      "beforeSha256": "6a710156bf2ef1526e8f2744697c2bd8fc807bf7f8bf2e7883648055e158d898",
+      "afterSha256": "ed10f3ce4cc38a3330a48c1bae6e7e5cbf021b19c0a99655dd683bafdee355d6",
+      "replacements": [
+        {
+          "symbol": "ARCHIVE_ENDPOINT",
+          "before": "export const ARCHIVE_ENDPOINT",
+          "after": "const ARCHIVE_ENDPOINT",
+          "line": 6
+        }
+      ]
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "beforeSha256": "be972635490d0a92d68e99edd9db02adf66c654b6630a6989ec1bd490724a411",
+      "afterSha256": "72b26bc6f3cd6d725c3cdf220454388df8a75291bb6d8dfb9a73671d1a6516d5",
+      "replacements": [
+        {
+          "symbol": "parseTicker",
+          "before": "export function parseTicker",
+          "after": "function parseTicker",
+          "line": 361
+        }
+      ]
+    },
+    {
+      "path": "src/opportunity/scan.ts",
+      "beforeSha256": "f38fee3346cccc784c707cc6e910adbdc12e61cb7606ff7b267f7731fa65d21c",
+      "afterSha256": "1f8f84e9034e6883d8df996f2bd692e5c36c37206f84081fea00482eb91e6ca5",
+      "replacements": [
+        {
+          "symbol": "STABLE_BASES",
+          "before": "export const STABLE_BASES",
+          "after": "const STABLE_BASES",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "path": "src/paper-supervisor.ts",
+      "beforeSha256": "6c204fdba201faf0e2298a8ebc0f18aca6554a693c5d13e88cedf75bf0bccd24",
+      "afterSha256": "76df686f76f6f6527ad208cf10704f0ff4075fd47ab824615d19ce04f5a64c1c",
+      "replacements": [
+        {
+          "symbol": "cloneSupervisorValue",
+          "before": "export function cloneSupervisorValue",
+          "after": "function cloneSupervisorValue",
+          "line": 114
+        },
+        {
+          "symbol": "configSha256",
+          "before": "export function configSha256",
+          "after": "function configSha256",
+          "line": 138
+        }
+      ]
+    },
+    {
+      "path": "src/system-one/clock.ts",
+      "beforeSha256": "c84dc640ff3b38da1af0ee0e4eecb76dbb1ad43fbfca388c9da711b4238c6366",
+      "afterSha256": "5cfe7d58983beab1455b997983c4973c4a817ec44fe9ed63c393444e7147c784",
+      "replacements": [
+        {
+          "symbol": "DEFAULT_CLOCK_SAMPLES",
+          "before": "export const DEFAULT_CLOCK_SAMPLES",
+          "after": "const DEFAULT_CLOCK_SAMPLES",
+          "line": 18
+        },
+        {
+          "symbol": "MAX_TRUSTED_ROUND_TRIP_MS",
+          "before": "export const MAX_TRUSTED_ROUND_TRIP_MS",
+          "after": "const MAX_TRUSTED_ROUND_TRIP_MS",
+          "line": 17
+        }
+      ]
+    },
+    {
+      "path": "src/system-one/cycle.ts",
+      "beforeSha256": "e964ff5a44472d99a0abf2162e737fcaf51444e8617bcedc89d579b85e4564df",
+      "afterSha256": "d966d76f9f8866d60db30303c2570d2e1730dc587257c959eb36695c615296f4",
+      "replacements": [
+        {
+          "symbol": "redactCycle",
+          "before": "export function redactCycle",
+          "after": "function redactCycle",
+          "line": 96
+        }
+      ]
+    }
+  ],
+  "preserved": [
+    {
+      "path": "src/paper-supervisor.ts",
+      "symbol": "assertByteEventCapacity",
+      "priorReason": "external_lexical_occurrence_needs_review",
+      "classification": "preserve_current_consumer",
+      "consumers": [
+        {
+          "from": "src/paper-supervisor-store.ts",
+          "target": "src/paper-supervisor.ts",
+          "kind": "named_import",
+          "line": 5,
+          "names": [
+            "PaperSupervisorError",
+            "assertByteEventCapacity",
+            "assertRecoveryCapacity",
+            "assertOwnedCapacity",
+            "canonicalJson",
+            "canonicalEnvelope",
+            "createInitialEnvelope",
+            "sealEnvelope",
+            "validateEnvelope",
+            "PaperSupervisorEnvelope",
+            "PaperSupervisorOwner",
+            "PaperSupervisorStore"
+          ],
+          "namespace": null,
+          "members": [],
+          "unknownNamespaceUses": 0
+        }
+      ],
+      "imports": [
+        {
+          "from": "src/paper-supervisor-runner.test.ts",
+          "target": "src/paper-supervisor.ts",
+          "kind": "named_import",
+          "line": 10,
+          "names": [
+            "PaperSupervisor",
+            "assertFreshIntakeCapacity",
+            "canonicalEnvelope",
+            "mandatoryGenerationBudget",
+            "sealEnvelope",
+            "validateEnvelope",
+            "PaperSupervisorAdapter",
+            "PaperSupervisorEnvelope",
+            "PaperSupervisorStage"
+          ],
+          "namespace": null,
+          "members": [],
+          "unknownNamespaceUses": 0
+        },
+        {
+          "from": "src/paper-supervisor-runner.ts",
+          "target": "src/paper-supervisor.ts",
+          "kind": "named_import",
+          "line": 5,
+          "names": [
+            "PaperSupervisor",
+            "PaperSupervisorError",
+            "canonicalJson",
+            "PaperSupervisorAdapter",
+            "PaperSupervisorAdapterRequest",
+            "PaperSupervisorCloseResult",
+            "PaperSupervisorEnvelope",
+            "PaperSupervisorLimits",
+            "PaperSupervisorOptions",
+            "PaperSupervisorStage"
+          ],
+          "namespace": null,
+          "members": [],
+          "unknownNamespaceUses": 0
+        },
+        {
+          "from": "src/paper-supervisor-store.test.ts",
+          "target": "src/paper-supervisor.ts",
+          "kind": "named_import",
+          "line": 8,
+          "names": [
+            "canonicalEnvelope",
+            "createInitialEnvelope",
+            "sealEnvelope",
+            "PaperSupervisorEnvelope",
+            "PaperSupervisorOwner"
+          ],
+          "namespace": null,
+          "members": [],
+          "unknownNamespaceUses": 0
+        },
+        {
+          "from": "src/paper-supervisor-store.ts",
+          "target": "src/paper-supervisor.ts",
+          "kind": "named_import",
+          "line": 5,
+          "names": [
+            "PaperSupervisorError",
+            "assertByteEventCapacity",
+            "assertRecoveryCapacity",
+            "assertOwnedCapacity",
+            "canonicalJson",
+            "canonicalEnvelope",
+            "createInitialEnvelope",
+            "sealEnvelope",
+            "validateEnvelope",
+            "PaperSupervisorEnvelope",
+            "PaperSupervisorOwner",
+            "PaperSupervisorStore"
+          ],
+          "namespace": null,
+          "members": [],
+          "unknownNamespaceUses": 0
+        },
+        {
+          "from": "src/paper-supervisor.test.ts",
+          "target": "src/paper-supervisor.ts",
+          "kind": "named_import",
+          "line": 13,
+          "names": [
+            "PaperSupervisorError",
+            "PaperSupervisor",
+            "PaperAdapterResult",
+            "canonicalJson",
+            "canonicalEnvelope",
+            "createInitialEnvelope",
+            "sealEnvelope",
+            "validateEnvelope",
+            "PaperSupervisorAdapter",
+            "PaperSupervisorEnvelope",
+            "PaperSupervisorStore",
+            "PaperSupervisorTickResult"
+          ],
+          "namespace": null,
+          "members": [],
+          "unknownNamespaceUses": 0
+        },
+        {
+          "from": "src/paper-supervisor.test.ts",
+          "target": "src/paper-supervisor.ts",
+          "kind": "type_import",
+          "line": 633,
+          "names": [
+            "PaperSupervisorLimits"
+          ],
+          "namespace": null,
+          "members": [],
+          "unknownNamespaceUses": 0
+        }
+      ],
+      "externalLexicalFiles": [
+        "src/paper-supervisor-store.ts"
+      ]
+    }
+  ],
+  "inverseMatchesOriginalBytes": true
+}

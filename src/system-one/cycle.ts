@@ -93,6 +93,6 @@ export async function runSystemOneCycle(input: CycleInput, deps: CycleDeps): Pro
 }
 
 /** Local journal compatibility only. HTTP publication must use publicSystemOneView. */
-export function redactCycle(cycle: SystemOneCycle): SystemOneCycle {
+function redactCycle(cycle: SystemOneCycle): SystemOneCycle {
   return cycle;
 }

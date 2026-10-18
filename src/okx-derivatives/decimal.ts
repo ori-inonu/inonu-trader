@@ -10,7 +10,7 @@ export type Rat = { readonly n: bigint; readonly d: bigint };
 export type Rounding = "floor" | "ceil";
 
 /** 1e6 micro units per unit of the quote currency. */
-export const MICRO = 1_000_000n;
+const MICRO = 1_000_000n;
 /** 1e6 parts per million per unit ratio. */
 export const PPM = 1_000_000n;
 

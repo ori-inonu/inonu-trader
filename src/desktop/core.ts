@@ -27,7 +27,7 @@ const HEARTBEAT_PATH = "/__inonu/heartbeat.js";
 const RETIRED_ROUTES: readonly string[] = ["/console"];
 const LIVE_PATH = "/__inonu/live";
 /** The Doctor report (T1.8). The page itself is /doctor; this is its data, in the core's own namespace. */
-export const DOCTOR_PATH = "/__inonu/doctor";
+const DOCTOR_PATH = "/__inonu/doctor";
 
 export type ApiHandler = (request: Request, remoteIp: string | null) => Response | Promise<Response>;
 
