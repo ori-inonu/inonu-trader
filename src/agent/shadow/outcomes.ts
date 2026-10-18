@@ -10,14 +10,20 @@
 import { planKey } from "../plans";
 import type { AnswerRecord, PriceRow } from "../recording";
 
-export const WINDOWS_MS = { "15m": 15 * 60_000, "1h": 60 * 60_000, "4h": 4 * 60 * 60_000 } as const;
+/** 1 and 5 minutes are the scale of the cycle (the goal is a return per 1 minute cycle); 15 minutes, 1 hour and 4 hours are the older windows. */
+export const WINDOWS_MS = { "1m": 60_000, "5m": 5 * 60_000, "15m": 15 * 60_000, "1h": 60 * 60_000, "4h": 4 * 60 * 60_000 } as const;
 export type WindowName = keyof typeof WINDOWS_MS;
 const WINDOW_NAMES = Object.keys(WINDOWS_MS) as WindowName[];
 
-/** How far from the decision the entry price may have been read, in ms. A CHOICE of this code, not calibrated. */
+/** Windows shorter than this are read close to the two instants: a price read 5 minutes away is not a 1 minute return. */
+const SHORT_WINDOW_MS = 15 * 60_000;
+/** For a short window the entry and the exit reads may be at most this far from the instants: about one cycle. A CHOICE of this code, not calibrated. */
+export const SHORT_TOLERANCE_MS = 2 * 60_000;
+/** How far from the decision the entry price may have been read, in ms, for the windows of 15 minutes or more. A CHOICE of this code, not calibrated. */
 export const ENTRY_TOLERANCE_MS = 5 * 60_000;
-/** How late after the end of a window the exit price may have been read: a quarter of the window, at least five minutes. */
-export const exitToleranceMs = (windowMs: number): number => Math.max(5 * 60_000, Math.floor(windowMs / 4));
+export const entryToleranceMs = (windowMs: number): number => (windowMs < SHORT_WINDOW_MS ? SHORT_TOLERANCE_MS : ENTRY_TOLERANCE_MS);
+/** How late after the end of a window the exit price may have been read: one cycle for a short window, else a quarter of the window, at least five minutes. */
+export const exitToleranceMs = (windowMs: number): number => (windowMs < SHORT_WINDOW_MS ? SHORT_TOLERANCE_MS : Math.max(5 * 60_000, Math.floor(windowMs / 4)));
 
 export interface PricePoint {
   readonly atMs: number;
@@ -55,7 +61,7 @@ export function forwardReturn(path: readonly PricePoint[] | undefined, decisionA
     if (p.atMs > decisionAtMs) break;
     entry = p;
   }
-  if (entry === null || decisionAtMs - entry.atMs > ENTRY_TOLERANCE_MS) return { ret: null, lagMs: null };
+  if (entry === null || decisionAtMs - entry.atMs > entryToleranceMs(windowMs)) return { ret: null, lagMs: null };
   const due = decisionAtMs + windowMs;
   const exit = path.find((p) => p.atMs >= due);
   if (exit === undefined || exit.atMs - due > exitToleranceMs(windowMs)) return { ret: null, lagMs: null };

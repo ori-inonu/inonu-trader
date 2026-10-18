@@ -1,6 +1,6 @@
 /**
- * The outcome of EVERY purchase the Jev was asked about, from the durable journals the producer writes from the next release on (`answers.jsonl` and `prices.jsonl`, src/agent/recording.ts): gross forward return at 15
- * minutes, 1 hour and 4 hours by how much the Jev preferred each purchase and by what it asked for. READ ONLY: it reads the journals of a folder, writes nothing, calls no model and no network, and prints one JSON object.
+ * The outcome of EVERY purchase the Jev was asked about, from the durable journals the producer writes from the next release on (`answers.jsonl` and `prices.jsonl`, src/agent/recording.ts): gross forward return at
+ * 1 and 5 minutes (the scale of the cycle), 15 minutes, 1 hour and 4 hours by how much the Jev preferred each purchase and by what it asked for. READ ONLY: it reads the journals of a folder, writes nothing, calls no model and no network, and prints one JSON object.
  * The return is a counterfactual before cost and impact, never a result and never advice; a return that could not be measured is counted apart, never averaged in. The same token appears in many looks, so the
  * observations are NOT independent: this describes, it does not test (the plan of the test is ADENDO-G).
  * Usage: bun scripts/answers-outcomes.ts [dataDir]
@@ -41,7 +41,7 @@ const groups: Group[] = [
   { name: "skipped, preference unknown", pick: (o) => !asked(o) && o.preference === null },
   { name: "asked to buy", pick: asked },
 ];
-const windows: WindowName[] = ["15m", "1h", "4h"];
+const windows: WindowName[] = ["1m", "5m", "15m", "1h", "4h"];
 console.log(
   JSON.stringify(
     {

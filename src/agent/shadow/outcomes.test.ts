@@ -50,6 +50,42 @@ describe("the return after a window comes only from prices that were really read
   });
 });
 
+describe("the windows of the cycle: 1 and 5 minutes, read close to the two instants", () => {
+  const price = (list: Array<[number, number]>) => buildPathIndex(list.map(([at, p]) => row(at, p))).get(KEY);
+
+  test("1 and 5 minutes are windows of their own", () => {
+    expect([WINDOWS_MS["1m"], WINDOWS_MS["5m"]]).toEqual([MIN, 5 * MIN]);
+    expect(Object.keys(WINDOWS_MS)).toEqual(["1m", "5m", "15m", "1h", "4h"]);
+  });
+
+  test("a 1 minute return needs an exit read within one cycle (2 minutes) after the window, and reports the lag", () => {
+    const path = price([[T0 - 20_000, 1], [T0 + MIN + 30_000, 1.01]]);
+    expect(forwardReturn(path, T0, WINDOWS_MS["1m"])).toEqual({ ret: 1.01 / 1 - 1, lagMs: 30_000 });
+  });
+
+  test("an exit read 3 minutes late is not a 1 minute return (it stays unknown), though a 15 minute window still accepts the same lateness", () => {
+    const late1m = price([[T0, 1], [T0 + MIN + 3 * MIN, 1.01]]);
+    expect(forwardReturn(late1m, T0, WINDOWS_MS["1m"]).ret).toBeNull();
+    const late15m = price([[T0, 1], [T0 + 15 * MIN + 3 * MIN, 1.01]]);
+    expect(forwardReturn(late15m, T0, WINDOWS_MS["15m"]).ret).not.toBeNull();
+  });
+
+  test("an entry read 3 minutes before the decision is too old for a short window, but fine for a long one", () => {
+    const old = price([[T0 - 3 * MIN, 1], [T0 + MIN, 1.01], [T0 + 60 * MIN, 1.02]]);
+    expect(forwardReturn(old, T0, WINDOWS_MS["1m"]).ret).toBeNull();
+    expect(forwardReturn(old, T0, WINDOWS_MS["5m"]).ret).toBeNull();
+    expect(forwardReturn(old, T0, WINDOWS_MS["1h"]).ret).not.toBeNull();
+  });
+
+  test("outcomes carry the 1 and 5 minute returns from the same entry, unknown when no read lands near them", () => {
+    const index = buildPathIndex([row(T0 - 10_000, 1), row(T0 + MIN + 20_000, 1.002), row(T0 + 16 * MIN, 1.05)]);
+    const o = outcomesOf([answer()], index)[0]!;
+    expect(o.returns["1m"]!.toFixed(3)).toBe("0.002");
+    expect(o.returns["5m"]).toBeNull();
+    expect(o.returns["15m"]!.toFixed(2)).toBe("0.05");
+  });
+});
+
 describe("every purchase the Jev was asked about gets an outcome, skipped or not, with its preference", () => {
   const index = buildPathIndex([row(T0 - 10_000, 1), row(T0 + 16 * MIN, 1.05), row(T0 + 61 * MIN, 1.1)]);
 
