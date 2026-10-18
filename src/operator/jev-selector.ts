@@ -1,5 +1,6 @@
 import { experimental_evaluate } from "ai";
 import { typeSafeAi } from "@ai-sdk/typesafe-ai";
+import { PROMPTS } from "../generated/prompts";
 import type { InventorySnapshot } from "../okx-wallet/portfolio";
 import { safeText } from "./candidates";
 import type { OperatorDecision, OpportunityCandidate } from "./types";
@@ -115,23 +116,21 @@ export function decisionFromEvaluation(result: unknown, eligible: OpportunityCan
   }, eligible);
 }
 
-function criteriaFor(eligible: OpportunityCandidate[]): Record<string, string> {
-  const criteria: Record<string, string> = {
-    hold: "Commit no capital this cycle: no candidate clears costs with adequate certainty, or the inventory evidence is incomplete.",
-  };
-  const byKind: Record<string, string> = {
-    dex_round_trip: "Swap the base asset to the counter asset and back on the same chain",
-    cross_chain_rebalance: "Bridge the base asset to the home chain",
-    kuru_spot_maker: "Keep inventory allocated to the every-block Kuru maker",
-    defi_yield: "Subscribe the base asset to a DeFi product for the stated horizon",
-    perp_funding_carry: "Research only",
-    memepump_research: "Research only",
-  };
+export function operatorQuestions(eligible: OpportunityCandidate[]) {
+  const { instructions, criteria: promptCriteria } = PROMPTS["p-operator"];
+  const criteria: Record<string, string> = { hold: promptCriteria.hold };
+  const byKind: Record<string, string> = promptCriteria.byKind;
   for (const candidate of eligible) {
-    // Fixed wording per kind plus sanitized symbols; provider-supplied titles never reach the criteria (R5 M5).
-    criteria[candidate.id] = `${byKind[candidate.kind] ?? "Candidate"} (${safeText(candidate.from.symbol, 12)} to ${safeText(candidate.to.symbol, 12)}, chain ${candidate.chainIndex}). Commit the listed size now because its conservative net result after every listed cost is the best realizable gain among the candidates.`;
+    const kindText = byKind[candidate.kind] ?? promptCriteria.fallback;
+    criteria[candidate.id] = `${promptCriteria.candidateFormat.replace("{kindText}", kindText).replace("{from}", safeText(candidate.from.symbol, 12)).replace("{to}", safeText(candidate.to.symbol, 12)).replace("{chain}", candidate.chainIndex)}${promptCriteria.candidateSuffix}`;
   }
-  return criteria;
+  return {
+    allocation: {
+      type: "choice" as const,
+      instructions,
+      criteria,
+    },
+  };
 }
 
 /** Real Jev through the AI SDK TypeSafe provider; one choice question per cycle. */
@@ -147,21 +146,12 @@ export class JevOperatorModel implements OperatorModel {
   async choose(state: OperatorState, eligible: OpportunityCandidate[], options?: { signal?: AbortSignal }): Promise<OperatorDecision> {
     if (eligible.length > 254) throw new Error("Too many candidates for one choice question");
     const t0 = performance.now();
-    const questions = {
-      allocation: {
-        type: "choice",
-        instructions: {
-          question: "Which single candidate should the operator commit capital to now, or should it hold?",
-          goal: "Act as the wallet's financial operator. Grow realized net equity across the chains listed. Preserve capital; never borrow. Prefer hold when costs, staleness or incomplete evidence make the net gain doubtful.",
-          inputs: "Every candidate already passed deterministic gates for balance, gas reserve, size, freshness and costs. netUsd is a conservative estimate after fees, gas and inference; it is not a forecast. Probabilities are decision weights, not win rates.",
-        },
-        criteria: criteriaFor(eligible),
-      },
-    } as const;
+    const questions = operatorQuestions(eligible);
     const result = await experimental_evaluate({ model: this.model, state: state as any, questions: questions as any, maxRetries: 0, abortSignal: options?.signal });
     return decisionFromEvaluation(result, eligible, performance.now() - t0, this.name);
   }
 }
+
 
 /** Deterministic stand-in: largest conservative net among eligible candidates, else hold. */
 export class MockOperatorModel implements OperatorModel {

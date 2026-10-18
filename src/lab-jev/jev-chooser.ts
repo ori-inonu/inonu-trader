@@ -23,6 +23,7 @@
 
 import { experimental_evaluate } from "ai";
 import { typeSafeAi } from "@ai-sdk/typesafe-ai";
+import { PROMPTS } from "../generated/prompts";
 import { validateChooserAnswer, type ChooserAnswer, type ChooserState, type LabChooser } from "../lab/policies.ts";
 import { HOLD, LAB_MODALITIES, LAB_SIDES, type LabModality, type LabSide } from "../lab/types.ts";
 
@@ -69,18 +70,9 @@ export const JEV_LAB_CRITERIA: readonly string[] = Object.freeze([
 // What the model is told
 // ---------------------------------------------------------------------------
 
-/** The single sentence that says nothing is executed. The static tests allow the words of execution only here. */
-export const JEV_LAB_SHADOW_NOTICE =
-  "This is a SHADOW evaluation for measurement: nothing is executed, signed or sent, no capital is at risk and no real position exists.";
-
-export const JEV_LAB_QUESTION = "Which single candidate, if any, has the best net result over its horizon, or is holding better?";
-
-export const JEV_LAB_GOAL = `${JEV_LAB_SHADOW_NOTICE} Pick the candidate whose expected net result over the horizon, after the listed costs, is clearly positive. Holding is always valid and is the preferred answer whenever the evidence is thin, mixed, stale or unknown.`;
-
-export const JEV_LAB_INPUTS =
-  "Each candidate has an opaque id, a modality, a side and a horizon in hours. Every figure under values was measured before the decision time, and names ending in Bps are basis points. A criterion listed under unknown is UNKNOWN: it is not zero and must not be guessed or assumed. costBps is already a conservative total of fees, spread and slippage. The probabilities you give are uncalibrated decision weights, not win rates, and your confidence is not calibrated.";
-
-const HOLD_TEXT = "Hold: do not select any candidate this epoch. This is a valid and preferred answer when the evidence is thin, mixed, stale or unknown, or when the expected net result does not clearly exceed costBps.";
+const JEV_LAB_PROMPT = PROMPTS["p-lab-chooser"];
+const JEV_LAB_GOAL = JEV_LAB_PROMPT.goal.replace("{shadowNotice}", JEV_LAB_PROMPT.shadowNotice);
+const HOLD_TEXT = JEV_LAB_PROMPT.holdCriterion;
 
 // ---------------------------------------------------------------------------
 // Errors (fixed messages: the message of a provider error is never copied)
@@ -207,11 +199,19 @@ export function buildJevLabPayload(state: ChooserState): JevLabPayload {
 
   const criteria: Record<string, string> = { hold: HOLD_TEXT };
   for (const candidate of candidates) {
-    criteria[candidate.id] = `Select candidate ${candidate.id}: the hypothetical ${candidate.side} ${candidate.modality} position over ${candidate.horizonHours} hours. Select it only if its figures imply a net gain over that horizon that is clearly larger than its costBps and the uncertainty; figures listed as unknown count against it.`;
+    criteria[candidate.id] = JEV_LAB_PROMPT.candidateCriterion.replace(/\{candidateId\}|\{side\}|\{modality\}|\{horizonHours\}/g, (placeholder) => {
+      switch (placeholder) {
+        case "{candidateId}": return candidate.id;
+        case "{side}": return candidate.side;
+        case "{modality}": return candidate.modality;
+        case "{horizonHours}": return String(candidate.horizonHours);
+        default: return placeholder;
+      }
+    });
   }
   return {
     state: { horizonHours, candidates },
-    questions: { [JEV_LAB_QUESTION_ID]: { type: "choice", instructions: { question: JEV_LAB_QUESTION, goal: JEV_LAB_GOAL, inputs: JEV_LAB_INPUTS }, criteria } },
+    questions: { [JEV_LAB_QUESTION_ID]: { type: "choice", instructions: { question: JEV_LAB_PROMPT.question, goal: JEV_LAB_GOAL, inputs: JEV_LAB_PROMPT.inputs }, criteria } },
     keys: [HOLD, ...candidates.map((candidate) => candidate.id)],
   };
 }

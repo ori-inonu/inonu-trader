@@ -9,13 +9,10 @@ import { ReplaySource, SyntheticSource, syntheticConfig } from "../lab/source.ts
 import { HOUR_MS, LAB_MODALITIES, LAB_SIDES, deepFreeze, type LabCandidate, type LabModality, type LabSide } from "../lab/types.ts";
 import {
   JEV_LAB_CRITERIA,
-  JEV_LAB_GOAL,
   JEV_LAB_HARD_MAX_CALLS,
   JEV_LAB_HARD_MAX_USD,
-  JEV_LAB_INPUTS,
   JEV_LAB_PROMPT_VERSION,
   JEV_LAB_QUESTION_ID,
-  JEV_LAB_SHADOW_NOTICE,
   JevBudgetExhaustedError,
   JevCallError,
   JevCircuitOpenError,
@@ -195,22 +192,41 @@ describe("LJ8 an unknown figure never becomes zero", () => {
   });
 
   test("LJ8 the instruction tells the model that unknown is not zero and must not be guessed", () => {
-    expect(JEV_LAB_INPUTS).toContain("UNKNOWN");
-    expect(JEV_LAB_INPUTS).toContain("not zero");
-    expect(JEV_LAB_INPUTS).toContain("must not be guessed");
+    const { inputs } = buildJevLabPayload(state()).questions[JEV_LAB_QUESTION_ID].instructions;
+    expect(inputs).toContain("UNKNOWN");
+    expect(inputs).toContain("not zero");
+    expect(inputs).toContain("must not be guessed");
   });
 });
 
 describe("LJ9 the instruction says what this is, and the call is bounded", () => {
   test("LJ9 the goal says shadow, nothing executed, hold valid and preferred; the inputs say the confidence is not calibrated", () => {
-    expect(JEV_LAB_GOAL).toContain("SHADOW");
-    expect(JEV_LAB_GOAL).toContain(JEV_LAB_SHADOW_NOTICE);
-    expect(JEV_LAB_SHADOW_NOTICE).toContain("nothing is executed, signed or sent");
-    expect(JEV_LAB_SHADOW_NOTICE).toContain("no capital is at risk");
-    expect(JEV_LAB_GOAL).toContain("Holding is always valid and is the preferred answer");
-    expect(JEV_LAB_INPUTS).toContain("your confidence is not calibrated");
-    expect(JEV_LAB_INPUTS).toContain("uncalibrated decision weights, not win rates");
-    expect(`${JEV_LAB_GOAL} ${JEV_LAB_INPUTS}`).not.toMatch(BANNED);
+    const { goal, inputs } = buildJevLabPayload(state()).questions[JEV_LAB_QUESTION_ID].instructions;
+    expect(goal).toContain("SHADOW");
+    expect(goal).toContain("This is a SHADOW evaluation for measurement: nothing is executed, signed or sent, no capital is at risk and no real position exists.");
+    expect(goal).toContain("Holding is always valid and is the preferred answer");
+    expect(inputs).toContain("your confidence is not calibrated");
+    expect(inputs).toContain("uncalibrated decision weights, not win rates");
+    expect(`${goal} ${inputs}`).not.toMatch(BANNED);
+  });
+
+  test("LJ9 original question payload is pinned to literal text", () => {
+    const expected = {
+      decision: {
+        type: "choice",
+        instructions: {
+          question: "Which single candidate, if any, has the best net result over its horizon, or is holding better?",
+          goal: "This is a SHADOW evaluation for measurement: nothing is executed, signed or sent, no capital is at risk and no real position exists. Pick the candidate whose expected net result over the horizon, after the listed costs, is clearly positive. Holding is always valid and is the preferred answer whenever the evidence is thin, mixed, stale or unknown.",
+          inputs: "Each candidate has an opaque id, a modality, a side and a horizon in hours. Every figure under values was measured before the decision time, and names ending in Bps are basis points. A criterion listed under unknown is UNKNOWN: it is not zero and must not be guessed or assumed. costBps is already a conservative total of fees, spread and slippage. The probabilities you give are uncalibrated decision weights, not win rates, and your confidence is not calibrated.",
+        },
+        criteria: {
+          hold: "Hold: do not select any candidate this epoch. This is a valid and preferred answer when the evidence is thin, mixed, stale or unknown, or when the expected net result does not clearly exceed costBps.",
+          c1: "Select candidate c1: the hypothetical long spot-momentum position over 24 hours. Select it only if its figures imply a net gain over that horizon that is clearly larger than its costBps and the uncertainty; figures listed as unknown count against it.",
+          c2: "Select candidate c2: the hypothetical short perp-directional position over 24 hours. Select it only if its figures imply a net gain over that horizon that is clearly larger than its costBps and the uncertainty; figures listed as unknown count against it.",
+        },
+      },
+    };
+    expect(JSON.stringify(buildJevLabPayload(state()).questions)).toBe(JSON.stringify(expected));
   });
 
   test("LJ9 the texts sent to the model are pinned by a hash: editing them without a new prompt version fails here", () => {

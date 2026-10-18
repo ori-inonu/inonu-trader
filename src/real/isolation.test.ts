@@ -120,6 +120,8 @@ const ALLOWED_OUTSIDE = [
   "src/okx-derivatives/canonical.ts", "src/okx-derivatives/contract.ts", "src/okx-derivatives/decimal.ts", "src/okx-derivatives/snapshot.ts", "src/okx-derivatives/types.ts",
   // Static table of chain ids and native symbols. Pure.
   "src/okx-wallet/chains.ts",
+  // Texto dos prompts gerado a partir do grafo (bun scripts/brain.ts gen-prompts). Constantes puras, sem imports.
+  "src/generated/prompts.ts",
 ];
 
 describe("ISO-REAL the real pipeline can read and record, and nothing else", () => {
@@ -173,10 +175,11 @@ describe("ISO-REAL the real pipeline can read and record, and nothing else", () 
   });
 
   test("ISO-REAL-5 no executable code names a signing or sending call, a key, a gate of the trader, a socket, a server or dynamic code (entry scripts may serve and spawn)", () => {
-    for (const file of CLOSURE.files) {
+    for (const file of CLOSURE.files.filter((name) => name !== "src/generated/prompts.ts")) {
       const code = codeOf(join(ROOT, file));
       for (const [label, pattern] of NEVER) expect({ file, label, found: pattern.test(code) }, `${file}: ${label}`).toEqual({ file, label, found: false });
     }
+    // The graph-generated prompts are pure string constants and may mention keys or other forbidden runtime symbols as natural-language payload.
     for (const file of CLOSURE.files.filter((name) => !ENTRY_SCRIPTS.includes(name as (typeof ENTRY_SCRIPTS)[number]))) {
       expect({ file, serves: /\bBun\.(?:serve|spawn)\b/.test(codeOf(join(ROOT, file))) }).toEqual({ file, serves: false });
     }

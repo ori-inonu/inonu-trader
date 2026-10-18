@@ -1,3 +1,4 @@
+import { PROMPTS } from '../generated/prompts';
 import { experimental_evaluate } from 'ai';
 import { typeSafeAi } from '@ai-sdk/typesafe-ai';
 import type { SanitizedCoreSample } from './types';
@@ -28,16 +29,17 @@ export function realDecisionFromEvaluation(value: unknown, model: string, latenc
  return { choice: 'hold', status: answer.choice === 'hold' ? 'ready' : 'blocked', model, latencyMs, inputTokens, costUsd, called: true, reasons: [answer.choice === 'hold' ? 'Jev mantém hold: nenhuma oportunidade financeira qualificada' : 'Jev apontou evidência insuficiente'], };
 }
 
+/** Perguntas enviadas ao Jev. Texto vem do nó p-real-allocation do grafo (módulo gerado); o encaixe é o original. */
+export function realQuestions() {
+ const { criteria, ...instructions } = PROMPTS['p-real-allocation'];
+ return { allocation: { type: 'choice' as const, instructions, criteria } };
+}
+
 export function createRealJev(modelId: string, usdPerMillion: number | null) {
  const model = typeSafeAi.evaluationModel(modelId);
  return async (sample: SanitizedCoreSample, signal: AbortSignal): Promise<RealDecision> => {
   const started = performance.now();
-  const result = await experimental_evaluate({ model, state: sanitizedDecisionState(sample, Date.now()) as any, questions: {
-   allocation: { type: 'choice', instructions: { question: 'Should this paper cycle hold, or is the observed evidence insufficient to assess even its current readiness?', goal: 'Preserve capital and describe the current evidence honestly. No candidate is financially qualified and execution is disabled.', inputs: 'State is a sanitized summary. Values may be unknown. Source freshness does not establish economic eligibility. Do not infer address, private balances, profit, or permission.' }, criteria: {
-    hold: 'The observed data supports a paper hold decision; commit no capital because no financially qualified candidate exists.',
-    insufficient_evidence: 'The source evidence is inconsistent or insufficient to assess readiness; commit no capital and request better observations.',
-   } },
-  } as any, maxRetries: 0, abortSignal: signal });
+  const result = await experimental_evaluate({ model, state: sanitizedDecisionState(sample, Date.now()), questions: realQuestions(), maxRetries: 0, abortSignal: signal });
   return realDecisionFromEvaluation(result, modelId, performance.now() - started, usdPerMillion);
  };
 }

@@ -6,6 +6,7 @@
 
 import { experimental_evaluate } from "ai";
 import { typeSafeAi } from "@ai-sdk/typesafe-ai";
+import { PROMPTS } from "../generated/prompts";
 import type { QuantAnnex } from "../quant/annex";
 import { isRecord, finiteOrNull, type LeverageBrief, type LeverageCandidate, type LeverageDecision } from "./types";
 
@@ -47,20 +48,20 @@ export interface SystemOneState {
 export type SystemOneQuantState =
   | { status: "unavailable"; reason: string; dataGrade: string }
   | {
-      status: "ok";
-      dataGrade: string;
-      sigmaDaily: { low: number | null; central: number | null; high: number | null };
-      regime: string | null;
-      tailRatio: number | null;
-      excessKurtosis: number | null;
-      hillIndex: number | null;
-      /** Null when the clustering fit sat on the edge of its search grid or did not run. */
-      clusteringHalfLifeBars: number | null;
-      /** Paths behind simulatedTouch, null when the simulation did not run. A simulatedTouch of 0 means fewer than 1 hit in this many. */
-      simulationPaths: number | null;
-      simulationSkipped: string | null;
-      candidates: Array<{ id: string; sideAwareTouch: number | null; simulatedTouch: number | null; simulatedStdError: number | null }>;
-    };
+    status: "ok";
+    dataGrade: string;
+    sigmaDaily: { low: number | null; central: number | null; high: number | null };
+    regime: string | null;
+    tailRatio: number | null;
+    excessKurtosis: number | null;
+    hillIndex: number | null;
+    /** Null when the clustering fit sat on the edge of its search grid or did not run. */
+    clusteringHalfLifeBars: number | null;
+    /** Paths behind simulatedTouch, null when the simulation did not run. A simulatedTouch of 0 means fewer than 1 hit in this many. */
+    simulationPaths: number | null;
+    simulationSkipped: string | null;
+    candidates: Array<{ id: string; sideAwareTouch: number | null; simulatedTouch: number | null; simulatedStdError: number | null }>;
+  };
 
 /** Compact quant view for the eligible candidates only. */
 function quantState(annex: QuantAnnex, eligible: LeverageCandidate[]): SystemOneQuantState {
@@ -174,7 +175,7 @@ export function validateLeverageDecision(decision: unknown, eligible: LeverageCa
   const choice = typeof decision.choice === "string" ? decision.choice : null;
   if (choice === null || !keys.includes(choice)) return fallback("invalid-choice", model, latencyMs);
   if (decision.probabilities !== undefined && (!isRecord(decision.probabilities) ||
-      Object.values(decision.probabilities).some(value => typeof value !== "number" || !Number.isFinite(value) || value < 0))) {
+    Object.values(decision.probabilities).some(value => typeof value !== "number" || !Number.isFinite(value) || value < 0))) {
     return fallback("malformed", model, latencyMs);
   }
   if (isRecord(decision.probabilities)) {
@@ -203,23 +204,34 @@ export function decisionFromEvaluation(result: unknown, eligible: LeverageCandid
   return validateLeverageDecision({ choice, probabilities, confidence: answer.confidence, latencyMs, model }, eligible);
 }
 
-const BASE_INPUTS = "Every candidate already passed the phase envelope: leverage cap, liquidation floor, order and exposure caps, complete inventory. Touch probabilities assume no drift. Funding carry is from the candidate side's point of view. Probabilities are decision weights, not win rates.";
-
-const QUANT_INPUTS = " The state may also carry a quant block. It describes risk and data quality and does not change which candidates are eligible; touchProbability above is the envelope figure. dataGrade: A clean, B some bars were marked as outliers, C bars were lost so only the newest continuous stretch is used. sigmaDaily is the band of daily volatility from several estimators; regime says whether recent volatility is calm, normal or stressed against the sample; tailRatio is close to close sigma over robust sigma, and well above 1 means a few extreme bars dominate; excessKurtosis and hillIndex describe fat tails, where a lower hillIndex is a heavier tail, about 2 to 4 is typical for crypto, and it uses the largest 10 percent of moves so it is biased for other shapes; clusteringHalfLifeBars is how many bars a volatility shock takes to halve, null when the fit was unreliable. Per candidate, sideAwareTouch is a closed form that uses the liquidation barrier of the candidate side and simulatedTouch is a simulation that keeps fat tails and volatility clustering. Both assume no drift and are decision weights, not win rates. A simulatedTouch of 0 means fewer than 1 hit in simulationPaths, not impossibility, and simulatedStdError is its standard error. In 90 days of real data for five perpetuals the simulation still underestimated low probabilities by a factor of about 4 to 22, and it was calibrated for barriers 1 to 4 horizon sigmas away. Read low values as a floor and far barriers as extrapolation.";
 
 /** The inputs paragraph the model reads. Unchanged unless the brief carries a quant annex. */
 export function inputsText(brief: LeverageBrief): string {
-  return brief.quant === undefined ? BASE_INPUTS : BASE_INPUTS + QUANT_INPUTS;
+  const prompt = PROMPTS["p-system-one"];
+  return brief.quant === undefined ? prompt.baseInputs : prompt.baseInputs + prompt.quantInputs;
 }
 
 function criteriaFor(eligible: LeverageCandidate[]): Record<string, string> {
-  const criteria: Record<string, string> = {
-    hold: "Do not open or add to a position now. Choose this when the funding carry, the basis and the realized volatility do not justify the liquidation risk inside the horizon, or when any input is missing.",
-  };
+  const prompt = PROMPTS["p-system-one"];
+  const criteria: Record<string, string> = { hold: prompt.hold };
   for (const candidate of eligible) {
-    criteria[candidate.id] = `Open a ${candidate.side} position at ${candidate.leverage}x with margin ${candidate.marginUsd} USD (notional ${candidate.notionalUsd} USD). Choose this only when the expected funding carry and basis over the horizon outweigh the volatility drag and the probability of touching liquidation listed for it.`;
+    criteria[candidate.id] = prompt.candidate.replace("{side}", candidate.side).replace("{leverage}", String(candidate.leverage)).replace("{marginUsd}", String(candidate.marginUsd)).replace("{notionalUsd}", String(candidate.notionalUsd));
   }
   return criteria;
+}
+
+export function systemOneQuestions(brief: LeverageBrief, eligible: LeverageCandidate[]) {
+  return {
+    leverage: {
+      type: "choice" as const,
+      instructions: {
+        question: PROMPTS["p-system-one"].question,
+        goal: PROMPTS["p-system-one"].goal,
+        inputs: inputsText(brief),
+      },
+      criteria: criteriaFor(eligible),
+    },
+  } as const;
 }
 
 /** Real Jev through the AI SDK TypeSafe provider; one choice question per cycle. */
@@ -236,17 +248,7 @@ export class JevSystemOneModel implements SystemOneModel {
     if (eligible.length > 254) throw new Error("Too many candidates for one choice question");
     const t0 = performance.now();
     const state = buildSystemOneState(brief, eligible);
-    const questions = {
-      leverage: {
-        type: "choice",
-        instructions: {
-          question: "Which single leverage candidate should System One open now, or should it hold?",
-          goal: "Act as the fast decision layer of the wallet. Grow median wealth over the horizon while keeping the probability of touching liquidation low. Never exceed the listed caps; prefer hold when carry and basis are small relative to drag and liquidation risk.",
-          inputs: inputsText(brief),
-        },
-        criteria: criteriaFor(eligible),
-      },
-    } as const;
+    const questions = systemOneQuestions(brief, eligible);
     const result = await experimental_evaluate({ model: this.model, state: state as any, questions: questions as any, maxRetries: 0, abortSignal: options?.signal });
     return decisionFromEvaluation(result, eligible, performance.now() - t0, this.name);
   }

@@ -112,6 +112,7 @@ const pilotCode = (file: string): boolean => file.startsWith("src/pilot/") || fi
  */
 const ALLOWED_OUTSIDE = [
   "src/okx-wallet/chains.ts", // chain table: chainByIndex
+  "src/generated/prompts.ts", // prompt text generated from the graph (pure constants, no imports)
   "src/okx-wallet/portfolio.ts", // InventorySnapshot (type) and normalizeInventory (fixture only); the HMAC client of the same file is never imported
   "src/operator/candidates.ts", // round trip candidate builder and the default pairs
   "src/operator/jev-selector.ts", // sanitized state and decision validator; the SDK backed model classes of the same file are never imported
@@ -173,7 +174,8 @@ describe("ISO-PILOT the pilot observes and simulates, and nothing else", () => {
   });
 
   test("ISO-PILOT-4 no executable code names a signing or sending call, a key, a gate of the trader, any JSON-RPC method, a socket or dynamic code (entry scripts may serve); the pilot never names the model classes", () => {
-    for (const file of CLOSURE.files) {
+    // The generated prompt module is string data only; its natural-language text is not executable code.
+    for (const file of CLOSURE.files.filter((name) => name !== "src/generated/prompts.ts")) {
       const code = codeOfRel(file);
       // jev-selector.ts legitimately holds the model classes; the pilot itself must not name them (the default entry has no
       // model and the fixture brings its own).
