@@ -7,10 +7,10 @@
 | B1 | Conferir consumidores dos dez exports selecionados | A1 | busca e leitura de declaracoes atuais e diff goal1 | feito com limite explicito para consumidores dinamicos |
 | B2 | Aplicar proposta literal em candidato isolado | B1 | nove arquivos alterados, dez palavras export retiradas | feito em codex/remaining-alignment-20261018; corpos e valores conferidos |
 | B3 | Verificar tipos e testes | B2 | typecheck, test e test:lab com saida real; teste focado | feito: tipos exit 0; core 8539 pass / 2 skip / 0 fail; lab 650 pass / 0 fail; antes da mudanca, 193 testes real passaram |
-| B4 | Revisar e integrar o diff validado | B3 | review-diff, ship-pr e prova do conteudo final em main | diff revisado; integracao em main retida pelo gate do agente completo |
+| B4 | Revisar e integrar o diff validado | B3 | review-diff, ship-pr e prova do conteudo final em main | PR 5 aberto em rascunho; integracao em main retida pelo gate do agente completo |
 | C1 | Revisar consolidacao de cliente API e seus testes | A2 | todos os consumidores, compatibilidade e isolamento | pendente; mudancas de autenticacao ficam bloqueadas |
-| C2 | Revisar migracao documental e regras locais | A2 | referencias resolvidas e preservacao dos artefatos congelados | parcial: oito artefatos v1 byte-identicos na origem e sem exclusao; 1146 deltas documentais requerem revisao dos destinos e anexos |
-| C3 | Reconciliar conflitos antigos e deltas exclusivos | B4, C1, C2 | nenhuma perda de WIP; conflitos resolvidos com prova | pendente |
+| C2 | Revisar migracao documental e regras locais | A2 | referencias resolvidas e preservacao dos artefatos congelados | parcial: oito artefatos v1 preservados; dois anexos com recorte CRLF incorreto e contratos anteriores a atualizacoes de main, conforme document-contract-review.md |
+| C3 | Reconciliar conflitos antigos e deltas exclusivos | B4, C1, C2 | nenhuma perda de WIP; conflitos resolvidos com prova | parcial: zero conflitos na raiz, dependencia transitiva reposta, tipos/core/lab/web passam; merge local ainda aberto e restante WIP preservado, conforme bootstrap-root.md |
 | D1 | Abrir interface local e observar estado | A1 | navegador com aplicativo renderizado e estado verificado | feito para observacao: painel renderizado, core e analise indisponiveis; nao prova agente ativo |
 | D2 | Diagnosticar frescor com timestamps por fonte | A1 | origem da expiracao provada e reamostragem real | parcial: 30/30 snapshots reais prontos na reamostragem; falha anterior nao reproduzida |
 | D3 | Medir agente completo e inferencia Jev | C3, D1, D2 | ciclos, latencias, recusas e custos observados | pendente |

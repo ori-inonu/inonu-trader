@@ -1,6 +1,6 @@
 # Estado do alinhamento
 
-Fase: primeira limpeza implementada, verificada e revisada em candidato isolado. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
+Fase: primeira limpeza publicada no PR 5 em rascunho; checkout original recuperado para compilar e passar nas suites. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
 
 ## Saida dos checks
 
@@ -37,9 +37,9 @@ Os dois skips sao os testes condicionais de receipt-safety Market/Trader, que ex
 
 Goal1: 59 arquivos de comentarios/tipos, 113 de superficie de export, 53 de runtime/import, seis remocoes TypeScript e seis itens nao TypeScript no escopo auditado. Categorias sao triagem, nao aprovacao automatica. Origem e checkout original preservados. Artefato: .scratch/remaining-system-audit-20261018/result.json.
 
-No checkout original, 25 de 37 deltas de fonte tem o mesmo texto de main apos normalizar CRLF/LF. Os demais precisam de revisao. Um conflito permanece em scripts/jev-consensus.ts. O comparador corrigido esta em .scratch/remaining-doc-root-audit-20261018-v2/result.json; o primeiro resultado misturava blobs Git com conversao de fim de linha e tem erratum explicito.
+O inventario anterior do checkout original encontrou 25 de 37 deltas com o mesmo texto de main apos normalizar CRLF/LF. O comparador corrigido esta em .scratch/remaining-doc-root-audit-20261018-v2/result.json; o primeiro resultado misturava blobs Git com conversao de fim de linha e tem erratum explicito. Depois desse inventario, o ultimo conflito de scripts/jev-consensus.ts foi resolvido e as dependencias de main ausentes foram repostas. Tipos, core (8160 pass, 2 skip, 0 fail), lab (650 pass, 0 fail), tipos web e testes web (3821 pass, 0 fail) passaram na raiz. O merge local permanece aberto, sem commit ou alteracao de main. Ver bootstrap-root.md.
 
-Os oito artefatos v1 congelados permanecem byte-identicos na origem e sem exclusao rastreada. As 1146 exclusoes documentais exigem revisao dos destinos por pasta e anexos. Ausencia de blob identico entre arquivos novos de ate 1 MiB nao demonstra perda de conteudo transformado.
+Os oito artefatos v1 congelados permanecem byte-identicos na origem e sem exclusao rastreada. As 1146 exclusoes documentais exigem revisao dos destinos por pasta e anexos. Dois contratos foram conferidos: preservam a versao antiga a4a9ef5, mas precisam incorporar as atualizacoes de main, alem de corrigir o recorte de anexos com CRLF. Ver document-contract-review.md. Ausencia de blob identico entre arquivos novos de ate 1 MiB nao demonstra perda de conteudo transformado.
 
 Consolidacao API, migracao documental, demais exports e divergencias exclusivas seguem pendentes. Autenticacao, segredos, risco, migracoes de dados e operacoes financeiras permanecem bloqueados para decisao automatica.
 
