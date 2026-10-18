@@ -47,7 +47,7 @@ Revisao de escopo e diff check passaram. Cerebro verify confirmou seq 1086, dois
 
 Cinco consultas novas do adaptador createJevAgentModel usaram leituras publicas reais e o provedor real, com as variaveis ja disponiveis no processo. Todas tiveram HTTP 200 e resposta validada; postura neutra em cinco, p50 301,436 ms e p95/max 373,992 ms. Sem fallback, 4311 tokens de entrada e 216 de saida reportados por consulta. O alias solicitado foi jev-latest; versao efetiva e custo faturado permanecem desconhecidos. Nenhuma carteira, inventario, candidato operacional ou executor participou, e nenhum mandato retornado foi aplicado. Fonte inalterada. Ver model-public-observation.md.
 
-A revalidacao das portas encontrou apenas o gateway global em 18471, sem o backend de carteira em 3000/3020 e sem frontend em 3001. A sonda de modelo nao e uma observacao de ciclos completos no navegador e nao demonstra retorno financeiro.
+A revalidacao inicial das portas encontrou apenas o gateway global em 18471, sem o backend de carteira em 3000/3020 e sem frontend em 3001. Depois, a fatia ../core-browser-validation/ construiu o export atual e observou o core desktop real em 47321 com perfil novo e vazio. Inicio e configuracoes renderizaram; health, status e analise responderam, guardas recusaram origens indevidas. Agendador desligado e zero consultas antes/depois. Filho encerrado e 2536 arquivos preservados. Essa observacao e a sonda separada de modelo nao demonstram ciclos completos ou retorno financeiro.
 
 ## Trabalho restante
 
@@ -70,6 +70,8 @@ Migracao documental integral, demais exports e divergencias exclusivas seguem pe
 ## Jev e continuidade
 
 O consenso do projeto ja oferece chamadas sem teto por padrao e mantem o ledger. O conector global Jev Engineering ficou indisponivel durante o ajuste do teto separado de 20 tentativas. A consulta anterior recebeu erro de limite; o instalador preparado parou por fonte ausente antes de escrever. Nao se afirma ajuste global aplicado.
+
+Nova revalidacao de origin/main confirmou o consenso sem teto. A regressao focada passou em 3 testes, com 10 expect() calls e reserva contada de 1200 consultas sem provedor. Ainda existem tetos distintos no Pedir ao Inonu e no agente de carteira, preservados nesta verificacao. Ver decision-limit-status.md.
 
 As cinco chamadas do adaptador do projeto sao inferencias reais distintas do conector de engenharia. Nenhuma chamada Jev Engineering foi inventada; a decisao da coorte usa o fallback local sem-jev. A existencia do ambiente do provedor foi comprovada e permitiu a sonda sem restaurar a instalacao global, ler arquivos de credenciais ou modificar autenticacao.
 

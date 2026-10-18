@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1090,
-  "headHash": "b3ac84fd0acf789036545fd2fb80fa26af5d73fe3cb9365b45b4b802e4b803bb",
+  "headSeq": 1095,
+  "headHash": "94eadaa3bedc4b935f204d06af63318331e6c5e589912c1ecb925196a7a59e7a",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1752,6 +1752,16 @@
       "id": "iter-export-surface-closure-20261018",
       "type": "iteration",
       "text": "Mais 133 exports internos em 68 arquivos, corpos/valores intactos. Passam tipos core/web, 8544 core, 650 lab e 3821 web. Adaptador Jev real: 5/5 HTTP 200 sobre contexto publico, p50 301 ms, sem carteira ou ordens. Main e agente completo seguem pendentes; fallback de design sem-jev."
+    },
+    {
+      "id": "iter-core-browser-validation-20261018",
+      "type": "iteration",
+      "text": "Validacao desktop com perfil vazio: build e tipos web passaram; HTTP e IAB reais, sem ciclos ou consultas. Filho encerrado, 2536 arquivos intactos. Limite global ausente, main integral pendente. Fallback sem-jev; docs/specs/core-browser-validation."
+    },
+    {
+      "id": "fato-porta-desktop-20261018",
+      "type": "fact",
+      "text": "Desktop: core.ts fixa loopback em 47321 e launcher.ts serve export e handlers na mesma origem. package.json start ainda chama src/index.ts legado. Diagnostico de perfil vazio em 2026-10-18 nao executou o agente. Ver docs/specs/core-browser-validation."
     }
   ],
   "edges": [
@@ -4799,6 +4809,21 @@
       "from": "iter-doc-provenance-audit-20261018",
       "to": "iter-export-surface-closure-20261018",
       "seq": 1090
+    },
+    {
+      "from": "iter-export-surface-closure-20261018",
+      "to": "iter-core-browser-validation-20261018",
+      "seq": 1092
+    },
+    {
+      "from": "iter-core-browser-validation-20261018",
+      "to": "fato-porta-desktop-20261018",
+      "seq": 1094
+    },
+    {
+      "from": "fato-como-rodar",
+      "to": "fato-porta-desktop-20261018",
+      "seq": 1095
     }
   ],
   "retractions": [
