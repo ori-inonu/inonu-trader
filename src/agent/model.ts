@@ -116,7 +116,7 @@ const r2 = (v: number | null): number | null => (v === null || !Number.isFinite(
 const thousands = (v: number | null): number | null => (v === null || !Number.isFinite(v) ? null : Math.round(v / 1000));
 
 /** A symbol comes from a token anyone can create: it is cut down to a plain label or replaced. */
-export const safeSymbol = (s: string): string => (/^[A-Za-z0-9$._-]{1,12}$/.test(s) ? s : "?");
+const safeSymbol = (s: string): string => (/^[A-Za-z0-9$._-]{1,12}$/.test(s) ? s : "?");
 
 const CODE = /^[a-z_]{1,20}$/;
 const HEX64 = /^[a-f0-9]{64}$/;

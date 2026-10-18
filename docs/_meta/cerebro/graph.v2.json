@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1080,
-  "headHash": "49fedd9aea4da07f62b93887246332ec926dce4888f2f1721a343e33369b8bd7",
+  "headSeq": 1082,
+  "headHash": "f377b5573b2d6ae24f37007413335f16d0fc26d6a8032f1632d5d07c37ba94af",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1727,6 +1727,11 @@
       "id": "iter-source-error-20261018",
       "type": "iteration",
       "text": "SourceError extraida para modulo puro, export legado preservado e sete consumidores atualizados. Tipos, testes de inonu, core e lab passam. Origem preservada. Sem mudanca de cadencia, limite, dependencias ou operacao."
+    },
+    {
+      "id": "iter-cleanup-exports-20261018",
+      "type": "iteration",
+      "text": "Dez exports internos removidos em nove modulos. Tipos, 8539 testes core e 650 lab passam. Coleta publica repetida 30/30 pronta; painel aberto com core indisponivel. Revisao integral e inferencia do agente ainda pendentes. Origens preservadas."
     }
   ],
   "edges": [
@@ -4749,6 +4754,11 @@
       "from": "iter-prob-offline-20261018",
       "to": "iter-source-error-20261018",
       "seq": 1080
+    },
+    {
+      "from": "iter-source-error-20261018",
+      "to": "iter-cleanup-exports-20261018",
+      "seq": 1082
     }
   ],
   "retractions": [

@@ -1,5 +1,5 @@
 export interface OwnedChild { exited: Promise<number>; requestStop(): void; forceStop(): void }
-export interface ShutdownResult { resourcesClosed: boolean; forced: boolean; unexpectedExit: boolean }
+interface ShutdownResult { resourcesClosed: boolean; forced: boolean; unexpectedExit: boolean }
 
 /** Owns exactly the processes it creates. No global PID discovery or unrelated termination. */
 export function createConsoleSupervisor(deps: { spawn: (name: 'backend' | 'frontend') => OwnedChild; graceMs: number }) {

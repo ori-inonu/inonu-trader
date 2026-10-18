@@ -221,7 +221,7 @@ function parseBuild(data: unknown, input: CoreReadInput, pair: PairRequest, samp
   return { quote, transaction };
 }
 
-export function coreIdentityKey(chainIndex: string, address: string): string {
+function coreIdentityKey(chainIndex: string, address: string): string {
   const normalized = /^0x[\da-fA-F]{40}(?:[\da-fA-F]{24})?$/.test(address) ? address.toLowerCase() : address;
   return createHash("sha256").update(`${chainIndex}:${normalized}`).digest("hex");
 }
