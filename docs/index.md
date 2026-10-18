@@ -91,6 +91,7 @@ Comece por [README.md](README.md). Convenções: [SCHEMA.md](SCHEMA.md). Catálo
 - [[_meta/currentness|Atualidade e divergências]].
 - [[raw/README|Política de fontes externas futuras]].
 ## Proveniência dos pesos de decisão (2026-10-13)- [Especificação](sdd/decision-weight-provenance/SPEC.md), [requisitos](sdd/decision-weight-provenance/requirements.md), [uso](sdd/decision-weight-provenance/USAGE.md) e [verificação](sdd/decision-weight-provenance/VERIFICATION.md) do módulo `src/decision-evidence` (puro, não ligado ao ciclo). Trabalho do Codex que estava sem commit; integrado aqui com typecheck e 11 testes passando.
+## Dataset de aprendizado com proveniência (2026-10-13)- [Especificação](sdd/learning-evidence-20261013/SPEC.md), [plano](sdd/learning-evidence-20261013/PLAN.md), [uso](sdd/learning-evidence-20261013/USAGE.md) e [verificação](sdd/learning-evidence-20261013/VERIFICATION.md) do módulo `src/learning-evidence` e do comando `scripts/learning-dataset.ts` (puros, somente leitura, não ligados ao ciclo). Trabalho do Codex reconciliado com a `main`: decisão do Jev `rc3-d4-learning-evidence`. O registro `standards-coverage-v2.json` guarda um comando de busca que cita os caracteres vedados como padrão; foi mantido como está.
 
 ## Interpretação segura
 

@@ -1,0 +1,25 @@
+bun test v1.3.14 (0d9b296a)
+
+src\learning-evidence\dataset.test.ts:
+(pass) exports hypothetical net spot long target, preserving unknown features and input objects [17.13ms]
+(pass) purges training outcomes at the cutoff and groups simultaneous instruments [11.09ms]
+(pass) excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts [2.95ms]
+(pass) rejects conflicting duplicates and makes replay independent of input order [4.11ms]
+(pass) checks feature provenance and projects only the fixed schema [4.28ms]
+(pass) validates options and fails malformed records before producing a partial dataset [1.58ms]
+(pass) rejects explicit null options while keeping defaults for omitted or undefined options [0.42ms]
+(pass) accounts for skipped test blocks and incomplete tails with literal chronological boundaries [4.33ms]
+(pass) enforces input and fold output resource limits [638.88ms]
+(pass) excludes historical backfill supported by the updated recorder contract [3.69ms]
+
+scripts\learning-dataset.test.ts:
+(pass) CLI exports real recorder files without altering them or reading decisions [375.94ms]
+(pass) CLI reports empty evidence and rejects duplicate or invalid options without source content [938.80ms]
+(pass) CLI fails malformed recorder records and UTF-8 with filename and line only [556.06ms]
+(pass) CLI rejects nonregular files and directory links before reading [785.50ms]
+(pass) CLI enforces a combined byte cap before parsing the oversized file [785.93ms]
+
+ 15 pass
+ 0 fail
+ 96 expect() calls
+Ran 15 tests across 2 files. [4.32s]

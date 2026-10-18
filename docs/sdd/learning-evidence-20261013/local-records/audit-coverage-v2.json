@@ -1,0 +1,709 @@
+{
+  "audit_version": 2,
+  "verdict": "approved_local_delivery_with_nonblocking_observation",
+  "reviewer_id": "01a13658-31bc-76d0-a75b-1d07b5928bd3",
+  "root_conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "implementer_id": "root-01a1362a",
+  "reviewer_is_implementer": false,
+  "isolation": "Exclusive coordinator-provided candidate copy, distinct from implementer worktree, without .git. Readonly attributes observed on all thirteen source/dependency/frozen-spec/patch files. Actual sandbox is danger-full-access; attributes do not guarantee enforcement. No candidate or acceptance edits.",
+  "sandbox_actual": "danger-full-access",
+  "baseline": "00a593bcabe25dbb6d83795268533551098f645b",
+  "commits": [],
+  "candidate_manifest_sha256": "1020e399d1dc4610fd0aad7004fe9e49b74ec28ef73f5a75200529c1762546ff",
+  "delivery_patch_sha256": "8430c928edfe8d5e9b4dc1f8b125a219ecc4a98b04da8c73f180798eb9d6a64f",
+  "frozen_spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+  "acceptance_section_sha256": "7a5951dc5212297db0c80218fde78b60f421dfd7de531a2d60235b7eac9e4926",
+  "acceptance_section_bytes": 3139,
+  "acceptance_section_identical": true,
+  "authored": [
+    {
+      "path": "src/learning-evidence/dataset.ts",
+      "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+      "bytes": 8795,
+      "patch_added_lines": 161,
+      "patch_reconstruction_matches": true
+    },
+    {
+      "path": "src/learning-evidence/dataset.test.ts",
+      "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+      "bytes": 9130,
+      "patch_added_lines": 165,
+      "patch_reconstruction_matches": true
+    },
+    {
+      "path": "scripts/learning-dataset.ts",
+      "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+      "bytes": 5154,
+      "patch_added_lines": 95,
+      "patch_reconstruction_matches": true
+    },
+    {
+      "path": "scripts/learning-dataset.test.ts",
+      "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+      "bytes": 6460,
+      "patch_added_lines": 120,
+      "patch_reconstruction_matches": true
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/requirements.md",
+      "sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+      "bytes": 4885,
+      "patch_added_lines": 22,
+      "patch_reconstruction_matches": true
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/RESEARCH.md",
+      "sha256": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2",
+      "bytes": 19976,
+      "patch_added_lines": 143,
+      "patch_reconstruction_matches": true
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+      "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+      "bytes": 2821,
+      "patch_added_lines": 21,
+      "patch_reconstruction_matches": true
+    },
+    {
+      "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+      "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+      "bytes": 1635,
+      "patch_added_lines": 25,
+      "patch_reconstruction_matches": true
+    }
+  ],
+  "readonly_dependencies": [
+    {
+      "path": "src/intel/features/types.ts",
+      "sha256": "583208c64c99f60aa761e5742bf7a5139d885e6963859006196e892669101bb6",
+      "bytes": 4673,
+      "excluded_from_patch": true
+    },
+    {
+      "path": "src/outcomes/types.ts",
+      "sha256": "0faa225908aa0a917a74c9a94f532559f770bc90c3d568b198f601472c5a99c3",
+      "bytes": 4364,
+      "excluded_from_patch": true
+    },
+    {
+      "path": "src/outcomes/store.ts",
+      "sha256": "f5ccb266976012f83a113589fa4ed638c0ae2a2db3e7eaf42048aa0c4ffc3bf0",
+      "bytes": 12188,
+      "excluded_from_patch": true
+    }
+  ],
+  "excluded_local_records": [
+    "docs/sdd/learning-evidence-20261013/SPEC.md",
+    "docs/sdd/learning-evidence-20261013/PLAN.md",
+    "docs/sdd/learning-evidence-20261013/decision.json"
+  ],
+  "exact_manifest_patch_match": true,
+  "excluded_records_absent_from_patch": true,
+  "copied_dependencies_absent_from_patch": true,
+  "candidate_hashes_before_after_verified": true,
+  "original_worktree_and_copy_match_manifest": {
+    "checked": 11,
+    "matches": 11
+  },
+  "private_manifest_and_patch_match_review_copy": true,
+  "standards_review": {
+    "report": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-standards/REPORT-v2.md",
+    "coverage": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-standards/coverage-v2.json",
+    "verdict": "approved_with_nonblocking_observation",
+    "report_words": 282,
+    "nonblocking_findings": [
+      {
+        "id": "STD-2",
+        "severity": "P3",
+        "kind": "possible_smell_judgment",
+        "smell": "Duplicated Code",
+        "blocking": false,
+        "locations": [
+          "src/learning-evidence/dataset.ts:68",
+          "src/learning-evidence/dataset.ts:155",
+          "scripts/learning-dataset.ts:33"
+        ],
+        "rule": "Parent-provided Fowler baseline, a heuristic rather than a documented-standard breach.",
+        "evidence": "Defaults minTrainGroups=30, testGroups=12 and embargoMs=0 repeated in fold setup, reported settings and CLI defaults. Validation no longer repeats defaults after the null fix, reducing the original four sites to three.",
+        "remedy": "Consider resolving options once and sharing normalized settings when a related change warrants it. No required behavior change for this delivery."
+      }
+    ],
+    "report_sha256": "8e12888bcf6db1e5dc2b9bd2733dc859a38a56b1e4e1be0ba73ead4da70f6a0f",
+    "coverage_sha256": "8a79ba9ed3424c350ae70bedd629666c4f5670d846acab7240e843022f6ffccb"
+  },
+  "spec_review": {
+    "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+    "report": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-spec/REPORT-v2.md",
+    "report_sha256": "90dddabb39bfe0e1f84ef0c6bbfee29fa9bd5468246de7af29a8b877143552bb",
+    "coverage": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-spec/coverage-v2.json",
+    "coverage_sha256": "487cf1cae375ca521b622d29a82a4d5f7e30c8b371ba320ef3d73dd8d52b5199",
+    "decision": "approved",
+    "findings": [],
+    "resolved_findings": [
+      {
+        "id": "SPEC-1",
+        "priority": "P2",
+        "requirement": "LE-6",
+        "status": "resolved",
+        "result": "Validation distinguishes undefined from explicit null before defaults; public regression and independent --eval probe confirm all three controls."
+      }
+    ],
+    "final_verifications": [
+      {
+        "id": "behavior-final",
+        "status": "pass",
+        "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+        "result": "15 pass, 0 fail, 96 expects [8.99s]; exact same command replayed sequentially after typecheck completed.",
+        "command": "& 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py' run --cwd 'C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2' --timeout 120 --profile test --rtk 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe' --headroom-python 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' --store 'C:/Users/gabri/.codex/rtk-headroom-data' -- bun --no-env-file test ./src/learning-evidence ./scripts/learning-dataset.test.ts",
+        "chunk_id": "590238",
+        "wall_time_seconds": 2.11E-05,
+        "original_token_count": 395,
+        "output": "bun test v1.3.14 (0d9b296a)\n\nsrc\\learning-evidence\\dataset.test.ts:\n(pass) exports hypothetical net spot long target, preserving unknown features and input objects [141.01ms]\n(pass) purges training outcomes at the cutoff and groups simultaneous instruments [50.91ms]\n(pass) excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts [8.78ms]\n(pass) rejects conflicting duplicates and makes replay independent of input order [5.97ms]\n(pass) checks feature provenance and projects only the fixed schema [3.48ms]\n(pass) validates options and fails malformed records before producing a partial dataset [2.95ms]\n(pass) rejects explicit null options while keeping defaults for omitted or undefined options [0.97ms]\n(pass) accounts for skipped test blocks and incomplete tails with literal chronological boundaries [3.67ms]\n(pass) enforces input and fold output resource limits [993.91ms]\n(pass) excludes historical backfill supported by the updated recorder contract [3.13ms]\n\nscripts\\learning-dataset.test.ts:\n(pass) CLI exports real recorder files without altering them or reading decisions [1253.81ms]\n(pass) CLI reports empty evidence and rejects duplicate or invalid options without source content [3031.16ms]\n(pass) CLI fails malformed recorder records and UTF-8 with filename and line only [1799.46ms]\n(pass) CLI rejects nonregular files and directory links before reading [775.77ms]\n(pass) CLI enforces a combined byte cap before parsing the oversized file [437.53ms]\n\n 15 pass\n 0 fail\n 96 expect() calls\nRan 15 tests across 2 files. [8.99s]\n",
+        "exit_code": 0
+      },
+      {
+        "id": "types",
+        "status": "pass",
+        "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+        "result": "Exit 0; no diagnostics; focused new-source and imported-contract scope.",
+        "command": "bun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/learning-evidence/dataset.ts src/learning-evidence/dataset.test.ts scripts/learning-dataset.ts scripts/learning-dataset.test.ts",
+        "chunk_id": "664acf",
+        "wall_time_seconds": 3.03E-05,
+        "original_token_count": 0,
+        "output": "",
+        "exit_code": 0
+      },
+      {
+        "id": "null-probe",
+        "status": "pass",
+        "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+        "result": "All three explicit null options rejected with invalid_options; omitted and undefined options retain defaults.",
+        "command": "$probeSource = @'\nimport { buildLearningDataset } from \"./src/learning-evidence/dataset.ts\";\nconst base = { horizon: \"15m\", asOfMs: 900000 };\nconst observations = [];\nfor (const field of [\"minTrainGroups\",\"testGroups\",\"embargoMs\"]) {\n  try {\n    const result = buildLearningDataset([], [], { ...base, [field]: null });\n    observations.push({field,value:null,result:\"accepted\",settings:result.settings});\n  } catch(error) {\n    observations.push({field,value:null,result:\"rejected\",error:error instanceof Error ? error.message : \"unknown\"});\n  }\n}\nfor (const options of [base,{...base,minTrainGroups:undefined,testGroups:undefined,embargoMs:undefined}]) {\n  const result = buildLearningDataset([], [], options);\n  observations.push({kind:options===base?\"omitted\":\"undefined\",result:\"accepted\",settings:result.settings});\n}\nconsole.log(JSON.stringify(observations));\nif (observations.slice(0,3).some(x => x.result!==\"rejected\" || x.error!==\"invalid_options\")) throw new Error(\"null_validation_failed\");\nif (observations.slice(3).some(x => JSON.stringify(x.settings)!==JSON.stringify({minTrainGroups:30,testGroups:12,embargoMs:0}))) throw new Error(\"defaults_changed\");\n'@\nbun --no-env-file --eval $probeSource",
+        "chunk_id": "58892b",
+        "wall_time_seconds": 2.3402463,
+        "exit_code": 0,
+        "original_token_count": 115,
+        "output": "[{\"field\":\"minTrainGroups\",\"value\":null,\"result\":\"rejected\",\"error\":\"invalid_options\"},{\"field\":\"testGroups\",\"value\":null,\"result\":\"rejected\",\"error\":\"invalid_options\"},{\"field\":\"embargoMs\",\"value\":null,\"result\":\"rejected\",\"error\":\"invalid_options\"},{\"kind\":\"omitted\",\"result\":\"accepted\",\"settings\":{\"minTrainGroups\":30,\"testGroups\":12,\"embargoMs\":0}},{\"kind\":\"undefined\",\"result\":\"accepted\",\"settings\":{\"minTrainGroups\":30,\"testGroups\":12,\"embargoMs\":0}}]\n"
+      }
+    ],
+    "limitations": [
+      "First verification run timed out one CLI test at 5000ms; exact sequential replay passed. Cause and reliability under concurrent load remain unestablished.",
+      "Danger-full-access remains real; source isolation is an independent copy, not a sandbox enforcement claim.",
+      "Synthetic inputs in real local files establish behavior and source hashes, not data quality, production activation, model efficacy, financial gain, calibration or statistical independence.",
+      "The full concurrent main checkout was not typechecked or integrated. No live network/trading/wallet action was performed."
+    ]
+  },
+  "LE_coverage": {
+    "LE-1": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "API em memória e CLI sem escrita, rede ou serviços de trading. CLI valida flags explícitas, filtra arquivos regulares sem links, limita bytes/registros, projeta hashes dos bytes e sanitiza erros; comando documentado e subprocessos usam --no-env-file.",
+      "spec_result": "CLI com arquivos reais preservou conteúdo e lista de arquivos; diretório vazio retornou insufficient_data. JSON/UTF-8 inválidos, arquivos não regulares, links, limites e flags inválidas recusados.",
+      "standards_evidence": "Unchanged CLI hash and previously reviewed source; five CLI tests passed with real temporary regular files, hash checks, context-only errors, invalid bytes, links and byte limit.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 13,
+      "source_references": [
+        {
+          "path": "scripts/learning-dataset.ts",
+          "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+          "line_start": 1,
+          "line_end": 38
+        },
+        {
+          "path": "scripts/learning-dataset.ts",
+          "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd",
+          "line_start": 40,
+          "line_end": 95
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 7,
+          "line_end": 15
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 17,
+          "line_end": 55
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 58,
+          "line_end": 120
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 3,
+          "line_end": 9
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "integrity"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "No exhaustive file replacement race or environment-loading audit beyond the explicit no-env invocation."
+    },
+    "LE-2": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "Só spot/relogio elegível; custo conhecido não negativo, tempos seguros, identidade/as-of/idades e whitelist completa. FEATURE_NAMES projetado, null preservado e exclusões contadas.",
+      "spec_result": "Testes verificaram null em features sem imputação, custo null, origem manual/perp/historico, feature futura/estrangeira, idade negativa, chave ausente e timestamp negativo.",
+      "standards_evidence": "Null preserved, cost and sampling exclusions, identity, timestamps, feature whitelist/provenance read; API tests passed.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 14,
+      "source_references": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 120,
+          "line_end": 134
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 143,
+          "line_end": 149
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 35
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 80
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 96,
+          "line_end": 117
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 159,
+          "line_end": 165
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "types"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "Historical source fidelity not certified."
+    },
+    "LE-3": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "Alvo exige label completo com motivo null e retornos finitos nos contratos copiados; maturação explícita e net=gross-custo com tolerância absoluta. Alvo separado das features e identificado hipotético long spot.",
+      "spec_result": "API verificou maturação no limite literal, exclusão de labels imaturos/incompletos e líquido inconsistente; net negativo/zero/positivo classificam >0 corretamente. Nenhuma alegação de lucro executado ou calibração.",
+      "standards_evidence": "Separate explicitly hypothetical target, cost consistency, positive-net boolean and maturity/incompleteness exclusions read and tested.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 15,
+      "source_references": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 135,
+          "line_end": 149
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 153,
+          "line_end": 160
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 35
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 80
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 13,
+          "line_end": 17
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "types"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "No executed-profit or calibrated-probability certification."
+    },
+    "LE-4": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "Registros normalizados são deduplicados por snapshot id e (snapshotId,horizonte); conflitos e dois ids no mesmo instrumento/instante abortam. Ordenação canônica e temporal sem mutação dos inputs.",
+      "spec_result": "Replay invertido gerou resultado igual, duplicatas foram contadas, os três conflitos falharam e objetos originais mantiveram JSON idêntico.",
+      "standards_evidence": "Deterministic deduplication/conflicts and unchanged inputs tested.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 16,
+      "source_references": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 34,
+          "line_end": 65
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 108,
+          "line_end": 118
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 151,
+          "line_end": 151
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 35
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 83,
+          "line_end": 94
+        }
+      ],
+      "verification_refs": [
+        "behavior-final"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "Full Spec semantics are independently reviewed on the other axis."
+    },
+    "LE-5": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "Folds expansivos agrupam todos os ativos por timestamp. Blocos de teste completos e disjuntos; labelEndMs deve ser estritamente menor que testStartMs-embargoMs. Contagem mínima pós-purga, skips e cauda explícitos.",
+      "spec_result": "Cortes literais confirmaram exclusão na igualdade, embargo adicional, inclusão simultânea BTC/ETH, treino purgado, bloco insuficiente omitido e cauda sem fold.",
+      "standards_evidence": "Literal temporal boundaries, equality, embargo, simultaneous asset groups, expanding training, skipped blocks and tail tests passed.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 17,
+      "source_references": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 67,
+          "line_end": 101
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 37,
+          "line_end": 58
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 139,
+          "line_end": 150
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 15,
+          "line_end": 15
+        }
+      ],
+      "verification_refs": [
+        "behavior-final"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "No statistical sufficiency or financial validation."
+    },
+    "LE-6": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "Validação ocorre antes de aplicar padrões: controles inteiros seguros, positivos ou não negativos; horizonte e as-of válidos. Diagnósticos completos e status derivado da existência de folds.",
+      "spec_result": "Probe real rejeitou null explícito nos três controles; omissão/undefined mantiveram 30/12/0. Casos numéricos inválidos recusados; testes conferiram contagens, skips, cauda e os dois estados.",
+      "standards_evidence": "V2 explicitly rejects null minTrainGroups/testGroups/embargoMs, preserves omitted/undefined defaults, and passes public-API regression; diagnostics/readiness and resource bounds read.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 18,
+      "source_references": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 5,
+          "line_end": 7
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 103,
+          "line_end": 107
+        },
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 153,
+          "line_end": 160
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 119,
+          "line_end": 150
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 80
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/USAGE.md",
+          "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e",
+          "line_start": 17,
+          "line_end": 21
+        }
+      ],
+      "verification_refs": [
+        "behavior-final",
+        "null-probe"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "No exhaustive adversarial options certification."
+    },
+    "LE-7": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "Testes usam API pública, CLI real em arquivos temporários, limites literais e hashes antes/depois. Fontes novas e contratos importados passam typecheck; revisão independente vinculada ao baseline e SPEC congelada.",
+      "spec_result": "Replay sequencial: 15 pass/0 fail/96 expects, exit 0; typecheck exit 0. A primeira execução, simultânea ao typecheck, teve timeout de um teste aos 5000ms: 14 pass/1 fail. Ambas preservadas, sem atribuir causa não comprovada.",
+      "standards_evidence": "Distinct reviewer; one v2 suite, 15 tests/96 expects, exact focused tsc exit 0, all hashes before/after, frozen acceptance unchanged.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 19,
+      "source_references": [
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 1,
+          "line_end": 4
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 22,
+          "line_end": 58
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 60,
+          "line_end": 138
+        },
+        {
+          "path": "src/learning-evidence/dataset.test.ts",
+          "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5",
+          "line_start": 139,
+          "line_end": 165
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 7,
+          "line_end": 55
+        },
+        {
+          "path": "scripts/learning-dataset.test.ts",
+          "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0",
+          "line_start": 58,
+          "line_end": 120
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+          "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+          "line_start": 5,
+          "line_end": 25
+        }
+      ],
+      "verification_refs": [
+        "behavior-initial",
+        "behavior-final",
+        "types",
+        "null-probe",
+        "integrity",
+        "baseline"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "Approval is Standards only; actual sandbox danger-full-access is not readonly enforcement."
+    },
+    "LE-8": {
+      "status": "pass_local_candidate",
+      "spec_reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+      "observed_requirement": "Patch de entrega contém exatamente oito novos caminhos permitidos. Três contratos copiados permanecem dependências excluídas do patch, verificados por hash. SPEC/PLAN/recibo internos ficam fora da entrega.",
+      "spec_result": "Diff --no-index NUL executado nos oito authored paths com exit 1 esperado, new file mode e bytes reconstruídos iguais; patch reconstruído igual. Baseline resolvido, sem commits novos ou diff tracked. Nenhuma mudança observada em trading, carteira, cadence, pacote ou árvores concorrentes dentro da entrega.",
+      "standards_evidence": "Patch contains exactly eight allowed authored paths; no dependency edits, package, frontend, wallet or trading changes; three dependency hashes match; excluded internal records absent from delivered patch.",
+      "spec_path": "docs/sdd/learning-evidence-20261013/SPEC.md",
+      "actual_spec_read_path": "frozen/SPEC.md",
+      "spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+      "spec_line": 20,
+      "source_references": [
+        {
+          "path": "src/learning-evidence/dataset.ts",
+          "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb",
+          "line_start": 1,
+          "line_end": 3
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/requirements.md",
+          "sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf",
+          "line_start": 1,
+          "line_end": 22
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+          "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+          "line_start": 3,
+          "line_end": 3
+        },
+        {
+          "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md",
+          "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64",
+          "line_start": 23,
+          "line_end": 25
+        }
+      ],
+      "verification_refs": [
+        "integrity",
+        "new-file-diffs",
+        "baseline"
+      ],
+      "finding_ids": [],
+      "source_excerpts_independently_validated": true,
+      "limitations": "No main-workspace, integration or live-state certification."
+    }
+  },
+  "own_executed_tests": {
+    "command": "bun --no-env-file test ./src/learning-evidence ./scripts/learning-dataset.test.ts",
+    "executed_via": "RTK + Headroom adapter run, cwd exclusive v2 copy, timeout 120 seconds, profile test; optional metrics omitted to respect exclusive output paths.",
+    "exit": 0,
+    "passed": 15,
+    "failed": 0,
+    "expect_calls": 96,
+    "elapsed_reported_seconds": 10.03,
+    "bun_version": "1.3.14 (0d9b296a)",
+    "tests_started_by_this_reviewer": 1,
+    "failure_observed_by_this_reviewer": null
+  },
+  "own_typecheck": {
+    "command": "bun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/learning-evidence/dataset.ts src/learning-evidence/dataset.test.ts scripts/learning-dataset.ts scripts/learning-dataset.test.ts",
+    "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "separate_spec_first_failure": {
+    "provenance": "Observed in hash-verified final Spec coverage, not executed by audit reviewer",
+    "execution": {
+      "id": "behavior-initial",
+      "status": "failed_timeout",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+      "result": "14 pass, 1 fail, 96 expects; 5000ms timeout in CLI empty/invalid options test. Run overlapped typecheck; cause unestablished.",
+      "command": "& 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py' run --cwd 'C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2' --timeout 120 --profile test --rtk 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe' --headroom-python 'C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe' --store 'C:/Users/gabri/.codex/rtk-headroom-data' -- bun --no-env-file test ./src/learning-evidence ./scripts/learning-dataset.test.ts",
+      "chunk_id": "a908b1",
+      "wall_time_seconds": 2.6E-05,
+      "original_token_count": 412,
+      "output": "\nsrc\\learning-evidence\\dataset.test.ts:\n(pass) exports hypothetical net spot long target, preserving unknown features and input objects [292.80ms]\n(pass) purges training outcomes at the cutoff and groups simultaneous instruments [29.85ms]\n(pass) excludes unknown costs, ineligible sampling and immature or inconsistent outcomes with counts [5.75ms]\n(pass) rejects conflicting duplicates and makes replay independent of input order [8.89ms]\n(pass) checks feature provenance and projects only the fixed schema [4.03ms]\n(pass) validates options and fails malformed records before producing a partial dataset [3.32ms]\n(pass) rejects explicit null options while keeping defaults for omitted or undefined options [0.77ms]\n(pass) accounts for skipped test blocks and incomplete tails with literal chronological boundaries [5.09ms]\n(pass) enforces input and fold output resource limits [1349.81ms]\n(pass) excludes historical backfill supported by the updated recorder contract [1.47ms]\n\nscripts\\learning-dataset.test.ts:\n(pass) CLI exports real recorder files without altering them or reading decisions [3934.03ms]\nkilled 1 dangling process\n(fail) CLI reports empty evidence and rejects duplicate or invalid options without source content [5045.40ms]\n  ^ this test timed out after 5000ms.\n(pass) CLI fails malformed recorder records and UTF-8 with filename and line only [4073.40ms]\n(pass) CLI rejects nonregular files and directory links before reading [1219.76ms]\n(pass) CLI enforces a combined byte cap before parsing the oversized file [349.24ms]\n\n 14 pass\n 1 fail\n 96 expect() calls\nRan 15 tests across 2 files. [18.03s]\nbun test v1.3.14 (0d9b296a)\n",
+      "exit_code": 1
+    },
+    "exact_output_preserved": true,
+    "exact_replay_command_unchanged": true,
+    "root_cause": "unestablished",
+    "reliability_under_concurrent_load": "not_certified"
+  },
+  "authorization_limits": {
+    "candidate_edits": 0,
+    "acceptance_edits": 0,
+    "staging": 0,
+    "commits": 0,
+    "push": 0,
+    "deploy": 0,
+    "paid_api_calls_initiated": 0,
+    "network_actions_initiated": 0,
+    "trades": 0,
+    "transfers": 0,
+    "model_training": 0,
+    "calibration": 0,
+    "model_promotion": 0
+  },
+  "not_certified": [
+    "Main-workspace integration",
+    "Full-project typecheck or build",
+    "Real feed, source fidelity or historical quality",
+    "Financial quality, returns or profit",
+    "Live activation, wallet or Kuru/Monad performance",
+    "Enforced readonly sandbox",
+    "Effective model or tier",
+    "Permission for future staging of excluded records"
+  ],
+  "v1_artifacts_preserved": true,
+  "approval_scope": "Exact eight-file DELIVERY.patch v2 only, built against the recorded copied dependencies and frozen acceptance; no root integration, live, financial or external-action certification.",
+  "approval_date": "2026-10-13",
+  "configured_role": "Independent GPT-6.1 Sol/xhigh reviewer; effective model/tier remain unverified.",
+  "audit_source_excerpt_validation": {
+    "command": "bun --no-env-file --eval <read-only audit source>; 53 requirement/resolved-finding literal excerpts checked against candidate hashes and line ranges; 13 current manifest entries hashed.",
+    "exit": 0,
+    "excerpt_count": 53,
+    "excerpt_matches": 53,
+    "current_hash_entries": 13,
+    "current_hash_matches": 13,
+    "candidate_writes": 0
+  },
+  "gates": {
+    "standards_approved": true,
+    "spec_approved": true,
+    "every_LE_has_evidence": true,
+    "immutable_acceptance_preserved": true,
+    "manifest_patch_exact_match": true,
+    "dependency_hashes_preserved": true,
+    "delivered_internal_records_absent": true,
+    "final_behavior_and_types_passed": true,
+    "all_test_attempts_passed": false,
+    "no_active_blocking_findings": true,
+    "authorization_scope_preserved": true
+  }
+}
