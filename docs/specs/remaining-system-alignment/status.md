@@ -2,7 +2,7 @@
 
 Fase: limpeza e C2a publicadas no PR 5 em rascunho, com commit de codigo aeba0f8 confirmado. Auditoria documental complementar registrada. Checkout original recuperado para compilar e passar nas suites. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
 
-A continuacao aplicou, verificou e revisou mais 133 remocoes literais de export em 68 arquivos. O corpo e os valores permaneceram intactos; nenhum modulo antigo foi copiado. A auditoria de 1798 fontes deixou 88 simbolos preservados com motivo. Tipos core/web, core e lab abaixo, mais 3821 testes web sem falhas, passaram. Publicacao preparada para o PR 5; ver ../export-surface-alignment/.
+A continuacao aplicou, verificou e revisou mais 133 remocoes literais de export em 68 arquivos, publicadas no PR 5 no commit de codigo 7dc4574, confirmado no remoto. O corpo e os valores permaneceram intactos; nenhum modulo antigo foi copiado. A auditoria de 1798 fontes deixou 88 simbolos preservados com motivo. Tipos core/web, core e lab abaixo, mais 3821 testes web sem falhas, passaram. Ver ../export-surface-alignment/.
 
 A inversao das substituicoes reproduziu os hashes originais de todos os arquivos, byte a byte. Diff check e cerebro verify passaram em seq 1090, com dois eventos novos e historico anterior intacto. Nenhum achado bloqueante no diff desta coorte; a migracao documental integral, autenticacao e a observacao operacional do agente continuam separadas e abertas.
 

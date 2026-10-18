@@ -1,6 +1,6 @@
 # Estado
 
-Fase: implementacao literal, verificacao e revisao concluidas; publicacao preparada para o PR 5 em rascunho. Base e3759fe e main 2327a28 revalidadas; candidato inicialmente limpo. Os 133 exports foram retirados em 68 arquivos, com hashes e equivalencia do conteudo transpilado fora dos exports conferidos.
+Fase: implementacao literal, verificacao e revisao concluidas; publicada no PR 5 em rascunho, commit de codigo 7dc4574 confirmado no remoto. Base e3759fe e main 2327a28 revalidadas; candidato inicialmente limpo. Os 133 exports foram retirados em 68 arquivos, com hashes e equivalencia do conteudo transpilado fora dos exports conferidos.
 
 A busca atual classificou 221 simbolos propostos em goal1: 133 elegiveis e 88 preservados por motivos registrados. Retirar um export nao remove o corpo da funcao, nao demonstra lucro e nao encerra o alinhamento integral.
 
