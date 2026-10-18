@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1074,
-  "headHash": "e6337f97eef059b6e1e0e7efd3834ce0bd0d515bb2744cfc8ef5c9dc64b9d71d",
+  "headSeq": 1076,
+  "headHash": "c98d58e5016297944678a62fff50e089d49849e544cf095d3c82db6cbfe4a493",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1712,6 +1712,11 @@
       "id": "rc6-bloqueios-dono",
       "type": "fact",
       "text": "Fora do Jev por regra, ficam para o dono: producao e modo real, limites de risco e alavancagem, dependencia fallow, alteracoes da goal1, apagar branches, push e defaults do breaker e do motor em sombra."
+    },
+    {
+      "id": "iter-main-integracao-20261017",
+      "type": "iteration",
+      "text": "Integracao local da WIP ja reconciliada, preservando validacoes da main. Tipos core/web, suites core/web e laboratorio passam. Testes HUD corrigidos. Outras arvores e runtime financeiro preservados; sem push."
     }
   ],
   "edges": [
@@ -4719,6 +4724,11 @@
       "from": "iter-rodada3-decisoes-jev-20261017",
       "to": "rc6-bloqueios-dono",
       "seq": 1074
+    },
+    {
+      "from": "iter-rodada3-decisoes-jev-20261017",
+      "to": "iter-main-integracao-20261017",
+      "seq": 1076
     }
   ],
   "retractions": [

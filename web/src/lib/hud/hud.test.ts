@@ -79,8 +79,10 @@ describe("the model: what comes from outside is cleaned once and what the core d
     expect(c).toMatchObject({ s: "DDD", closed: true, pbuy: null, requested: null });
   });
 
-  test("the age of the wallet reading is the core's own moment, kept for the screen to word carefully", () => {
-    const model = buildHudModel(sampleStatus(), ANALYSIS, NOW);
+  test("the wallet reading keeps its explicit observation time and leaves a legacy timestamp unknown", () => {
+    expect(buildHudModel(sampleStatus(), ANALYSIS, NOW).wallet.readAtMs).toBeNull();
+    const book = rawStatus().status.book as Record<string, unknown>;
+    const model = buildHudModel(sampleStatus({ book: { ...book, atMs: NOW, observedAtMs: NOW - 4 * 60_000, quality: "current" } }), ANALYSIS, NOW);
     expect(model.wallet.readAtMs).toBe(NOW - 4 * 60_000);
   });
 });
@@ -676,21 +678,23 @@ describe("an agent that is not running cycles is said plainly, on every tab, and
     expect(flat(stopped(), "sistema", 16 / 9)).toMatch(/RITMO DOS OLHARES PARADO/);
   });
 
-  test("with no reading of the wallet the screen says so, with the hour of the last reading when there was one, and shows no cash of US$ 0,00 as a fact", () => {
+  test("without a wallet reading the screen keeps it unknown even when historical equity exists, and never invents zero cash", () => {
     const series = [{ t: NOW - 3_600_000, v: 118.5 }, { t: NOW - 1_800_000, v: 119 }];
     const never = flat(running({ book: null }), "comando", 16 / 9);
     expect(never).toContain("SEM LEITURA");
     expect(never).not.toMatch(/CAIXA US\$ 0,00/);
     expect(never).not.toContain("ULTIMA LEITURA");
-    const hh = new Date(NOW - 1_800_000).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
     for (const aspect of SHAPES) {
       const some = flat(running({ book: null, performance: { series, record: {} } }), "comando", aspect);
-      expect(some).toContain(`SEM LEITURA DA CARTEIRA, ULTIMA LEITURA ${hh}`);
+      expect(some).toContain("SEM LEITURA");
+      expect(some).not.toContain("ULTIMA LEITURA");
       expect(some).not.toMatch(/CAIXA US\$ 0,00/);
       expect(some).not.toMatch(/US\$ 0,00/);
     }
     expect(buildHudModel(running({ book: null }), ANALYSIS, NOW).wallet).toMatchObject({ total: null, cash: null, lastReadMs: null });
-    expect(buildHudModel(running({ book: null, performance: { series, record: {} } }), ANALYSIS, NOW).wallet.lastReadMs).toBe(NOW - 1_800_000);
+    const model = buildHudModel(running({ book: null, performance: { series, record: {} } }), ANALYSIS, NOW);
+    expect(model.wallet.lastReadMs).toBeNull();
+    expect(model.equity).toEqual(series);
     // a wallet that was read keeps its own numbers
     expect(buildHudModel(running(), ANALYSIS, NOW).wallet).toMatchObject({ total: 1010, cash: 800 });
   });
