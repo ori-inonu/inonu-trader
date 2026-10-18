@@ -2,6 +2,10 @@
 
 Fase: limpeza e C2a publicadas no PR 5 em rascunho, com commit de codigo aeba0f8 confirmado. Auditoria documental complementar registrada. Checkout original recuperado para compilar e passar nas suites. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
 
+A continuacao aplicou, verificou e revisou mais 133 remocoes literais de export em 68 arquivos. O corpo e os valores permaneceram intactos; nenhum modulo antigo foi copiado. A auditoria de 1798 fontes deixou 88 simbolos preservados com motivo. Tipos core/web, core e lab abaixo, mais 3821 testes web sem falhas, passaram. Publicacao preparada para o PR 5; ver ../export-surface-alignment/.
+
+A inversao das substituicoes reproduziu os hashes originais de todos os arquivos, byte a byte. Diff check e cerebro verify passaram em seq 1090, com dois eventos novos e historico anterior intacto. Nenhum achado bloqueante no diff desta coorte; a migracao documental integral, autenticacao e a observacao operacional do agente continuam separadas e abertas.
+
 ## Saida dos checks
 
 ```
@@ -14,16 +18,16 @@ bun --no-env-file run test
 2 skip
 0 fail
 1165518 expect() calls
-Ran 8546 tests across 542 files. [357.49s]
+Ran 8546 tests across 542 files. [398.75s]
 
 bun --no-env-file run test:lab
 650 pass
 0 fail
 838161 expect() calls
-Ran 650 tests across 16 files. [29.76s]
+Ran 650 tests across 16 files. [34.25s]
 ```
 
-Os dois skips sao os testes condicionais de receipt-safety Market/Trader, que exigem RECEIPT_SAFETY_SOURCE. Saidas integrais da verificacao atual: .scratch/lab-annex-alignment-20261018/. A fatia anterior retirou exatamente dez exports em nove arquivos, preservando corpos, valores e imports. C2a muda dois leitores de teste e acrescenta um extrator puro, sua regressao e dois anexos documentais atuais. Nenhuma fonte web mudou.
+Os dois skips sao os testes condicionais de receipt-safety Market/Trader, que exigem RECEIPT_SAFETY_SOURCE. Saidas integrais da verificacao atual: .scratch/export-surface-closure-20261018/. A primeira fatia retirou exatamente dez exports em nove arquivos, preservando corpos, valores e imports. C2a muda dois leitores de teste e acrescenta um extrator puro, sua regressao e dois anexos documentais atuais. A nova coorte acrescenta 133 declaracoes privadas em 68 arquivos. Nenhuma fonte web mudou, mas sua superficie compartilhada foi conferida: tipos exit 0 e 3821 pass, 0 fail, 59679 expect() calls, 252 arquivos, 26.36s.
 
 ## Contratos documentais C2a
 
@@ -40,6 +44,10 @@ Revisao de escopo e diff check passaram. Cerebro verify confirmou seq 1086, dois
 - Chrome, http://127.0.0.1:3001: painel atual renderizado, status e analise indisponiveis. O proxy consulta o core de carteira em localhost:3000, que nao foi iniciado. Captura: .scratch/observe-main-browser-20261018/panel-core-unavailable.png.
 - O runtime paper independente em 3020 completou 25 ciclos hold, called=false e executionEnabled=false. Sua coleta publica funciona; suas rotas /api/real nao atendem as rotas /agent do painel. Isso nao mede inferencia do agente de carteira.
 - Os dois filhos e o observador foram encerrados; a ausencia dos tres PIDs foi conferida. Nenhum processo de producao foi iniciado.
+
+Cinco consultas novas do adaptador createJevAgentModel usaram leituras publicas reais e o provedor real, com as variaveis ja disponiveis no processo. Todas tiveram HTTP 200 e resposta validada; postura neutra em cinco, p50 301,436 ms e p95/max 373,992 ms. Sem fallback, 4311 tokens de entrada e 216 de saida reportados por consulta. O alias solicitado foi jev-latest; versao efetiva e custo faturado permanecem desconhecidos. Nenhuma carteira, inventario, candidato operacional ou executor participou, e nenhum mandato retornado foi aplicado. Fonte inalterada. Ver model-public-observation.md.
+
+A revalidacao das portas encontrou apenas o gateway global em 18471, sem o backend de carteira em 3000/3020 e sem frontend em 3001. A sonda de modelo nao e uma observacao de ciclos completos no navegador e nao demonstra retorno financeiro.
 
 ## Trabalho restante
 
@@ -62,6 +70,8 @@ Migracao documental integral, demais exports e divergencias exclusivas seguem pe
 ## Jev e continuidade
 
 O consenso do projeto ja oferece chamadas sem teto por padrao e mantem o ledger. O conector global Jev Engineering ficou indisponivel durante o ajuste do teto separado de 20 tentativas. A consulta anterior recebeu erro de limite; o instalador preparado parou por fonte ausente antes de escrever. Nao se afirma ajuste global aplicado.
+
+As cinco chamadas do adaptador do projeto sao inferencias reais distintas do conector de engenharia. Nenhuma chamada Jev Engineering foi inventada; a decisao da coorte usa o fallback local sem-jev. A existencia do ambiente do provedor foi comprovada e permitiu a sonda sem restaurar a instalacao global, ler arquivos de credenciais ou modificar autenticacao.
 
 Decisao local sem-jev no escopo autorizado: preservar as fontes, validar a limpeza literal e manter main/producao retidas enquanto a evidencia do agente completo estiver ausente. scripts/goal.ts nao existe neste checkout; o fallback e os bloqueios estao registrados aqui.
 

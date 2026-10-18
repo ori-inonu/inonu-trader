@@ -5,7 +5,7 @@
  */
 import type { QuoteFacts } from "./quote-facts";
 
-export const FEE_SOURCES = ["cotacao_de_compra", "cotacao_de_venda", "cotacao_de_fechamento"] as const;
+const FEE_SOURCES = ["cotacao_de_compra", "cotacao_de_venda", "cotacao_de_fechamento"] as const;
 export type FeeSource = (typeof FEE_SOURCES)[number];
 
 export interface ChainFee {

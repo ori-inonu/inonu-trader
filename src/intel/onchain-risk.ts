@@ -84,7 +84,7 @@ export interface RiskThresholds {
   readonly devRugCount: number;
 }
 
-export const DEFAULT_RISK_THRESHOLDS: RiskThresholds = {
+const DEFAULT_RISK_THRESHOLDS: RiskThresholds = {
   top10HoldPct: 50,
   devHoldPct: 10,
   bundleHoldPct: 20,

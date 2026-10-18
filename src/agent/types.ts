@@ -10,7 +10,7 @@ export const MODES = ["desligado", "sombra", "limitado"] as const;
 export type Mode = (typeof MODES)[number];
 
 /** What each mode lets the agent do with the money. `sombra` reads, decides, records and measures, moving nothing; `limitado` carries the decisions out inside the owner's policy. There is no mode in which the person approves each order: that is manual work, and the agent is the one that decides. */
-export const MODE_RANK: Readonly<Record<Mode, number>> = { desligado: 0, sombra: 1, limitado: 2 };
+const MODE_RANK: Readonly<Record<Mode, number>> = { desligado: 0, sombra: 1, limitado: 2 };
 
 /**
  * The posture of the portfolio, the one strategic choice the model makes about the whole book. The model never writes a number: the code turns the posture into limits (reserve, how much new risk), always inside

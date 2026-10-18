@@ -49,7 +49,7 @@ export type DecimalText = string;
 
 export const MAX_EPOCH_MS = 4_102_444_800_000;
 /** 2000-01-01T00:00:00Z: below this a "milliseconds" value of undeclared unit is more likely seconds. */
-export const MIN_PLAUSIBLE_EPOCH_MS = 946_684_800_000;
+const MIN_PLAUSIBLE_EPOCH_MS = 946_684_800_000;
 
 // ---------------------------------------------------------------------------
 // Numeric readers

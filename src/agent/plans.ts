@@ -27,7 +27,7 @@ export const PROFILES = {
 export type ProfileId = keyof typeof PROFILES;
 export const PROFILE_IDS = Object.keys(PROFILES) as ProfileId[];
 
-export const PROFILE_LABEL: Readonly<Record<ProfileId, string>> = {
+const PROFILE_LABEL: Readonly<Record<ProfileId, string>> = {
   alvo_2: "alvo de 2 por cento, saida se cair 1,5, ate 24 horas",
   alvo_5: "alvo de 5 por cento, saida se cair 4, ate 12 horas",
   alvo_10: "alvo de 10 por cento, saida se cair 6, ate 36 horas",
@@ -35,7 +35,7 @@ export const PROFILE_LABEL: Readonly<Record<ProfileId, string>> = {
 };
 
 /** A target is offered when it is touched at least this often over its horizon, and a stop when it is touched no more than this (otherwise it is noise). Driftless: it does not predict direction. */
-export const OFFER = { minTargetTouch: 0.15, maxStopTouch: 0.75 } as const;
+const OFFER = { minTargetTouch: 0.15, maxStopTouch: 0.75 } as const;
 
 /**
  * The chance that a driftless price touches a level at some moment within `hours`, given the size of a normal hour's move (reflection principle on the log price). `distancePct` is how far the level is, in

@@ -45,7 +45,7 @@ export function selectOrders(rows: readonly unknown[], walletKind: "agente" | "p
   return { orders: [...grouped.values()].map(x => x.order), invalidOrderRows };
 }
 
-export function decimalMinor(value: string, decimals: number): string {
+function decimalMinor(value: string, decimals: number): string {
   const negative = value.startsWith("-"); const digits = negative ? value.slice(1) : value;
   if (decimals === 0) return value;
   const padded = digits.padStart(decimals + 1, "0");

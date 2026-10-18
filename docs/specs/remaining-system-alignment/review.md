@@ -22,4 +22,12 @@ A revisao offline de C1 passou em 89 testes da origem, sem altera-la. O conjunto
 
 O auditor somente leu blobs e 694 destinos Markdown, incluindo o grafo maior que o limite anterior. Os resultados e limites estao em folder-document-provenance-review.md. O corpo de 15 fontes foi encontrado integralmente, tres anteriores a main; 299 registros de fonte usam o proprio destino e 98 ocorrencias de links locais nao resolvem. Isso exige revisao antes da migracao integral; nao implica perda automatica dos corpos nao encontrados.
 
-A publicacao de C2a foi confirmada no PR 5 em rascunho, commit de codigo aeba0f8. Depois desse commit, somente documentacao e grafo mudaram. Git diff --check e cerebro verify passaram; seq 1088 preserva os artefatos v1 e o prefixo dos eventos anteriores. Os checks completos do codigo seguem os mesmos, sem rerun por esta atualizacao exclusivamente documental.
+A publicacao de C2a foi confirmada no PR 5 em rascunho, commit de codigo aeba0f8. No complemento e3759fe, somente documentacao e grafo mudaram. Git diff --check e cerebro verify passaram; seq 1088 preserva os artefatos v1 e o prefixo dos eventos anteriores. Os checks completos do codigo foram preservados sem rerun por aquela atualizacao exclusivamente documental.
+
+## Coorte seguinte de exports e consulta publica real
+
+A partir de e3759fe, 133 exports em 68 arquivos foram retirados literalmente. A busca em 1798 fontes preservou 88 simbolos com motivo, incluindo consumidores indiretos e casos reservados. Os casos constam em ../export-surface-alignment/preserved.json; ocorrencia lexical por si so nao foi classificada como import efetivo.
+
+A inversao literal do diff reproduziu todos os hashes originais, garantindo que corpos, valores, limites e imports nao mudaram. Tipos core/web, 8544 testes core (2 skips condicionais), 650 lab e 3821 web passaram. Os hashes permaneceram iguais depois dos testes. Diff check e cerebro verify passaram em seq 1090; dois eventos novos, prefixo historico intacto e artefatos v1 preservados. Sem achados bloqueantes no diff desta coorte.
+
+Cinco consultas reais do adaptador, com mercado publico e sem carteira/candidatos operacionais, tiveram HTTP 200 e respostas validadas. Isso mede o adaptador, nao o agente completo. As variaveis ja presentes no processo foram usadas sem ler arquivos de credenciais ou alterar autenticacao. O conector Jev Engineering segue ausente; a decisao de limpeza e sem-jev, distinta dessa sonda de modelo. Fonte: model-public-observation.md.

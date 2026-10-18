@@ -14,7 +14,7 @@ export const CANDLES_TTL_MS = 30 * 60_000;
 export const RETRY_AFTER_ERROR_MS = 30_000;
 
 /** What a pair must have to be looked at at all: money traded, and a spread that does not eat the move. */
-export const LIQUIDITY_RULES = { minVolQuote24h: 1_000_000, maxSpreadBps: 15, maxPairs: 90 } as const;
+const LIQUIDITY_RULES = { minVolQuote24h: 1_000_000, maxSpreadBps: 15, maxPairs: 90 } as const;
 
 /** Bases that are a dollar, or close to one: a pair of one against USDT is a price, not an opportunity. */
 export const STABLE_BASES: ReadonlySet<string> = new Set(["USDC", "DAI", "TUSD", "FDUSD", "USDE", "PYUSD", "USDG", "USDD", "BUSD", "USDP", "EURT", "EUR", "USDT"]);

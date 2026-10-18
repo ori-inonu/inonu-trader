@@ -16,7 +16,7 @@ import { meanTest, wilsonInterval } from "../lab/stats";
 import type { DecisionRecord, Horizon, Label, Snapshot } from "./types";
 
 export const MIN_MEASURED = 30;
-export const PRIMARY_HORIZON: Horizon = "1h";
+const PRIMARY_HORIZON: Horizon = "1h";
 /** Five minute steps in the primary horizon: the overlap that the Newey-West lag must cover. */
 const OVERLAP_STEPS = 12;
 

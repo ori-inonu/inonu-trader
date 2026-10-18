@@ -28,7 +28,7 @@ export const HARD_LIMITS = {
 } as const;
 
 /** Repository root, so state paths never depend on the process working directory (R5 A3). */
-export const REPO_ROOT = resolve(import.meta.dir, "..", "..");
+const REPO_ROOT = resolve(import.meta.dir, "..", "..");
 
 export interface OperatorConfig {
   profile: OperatorProfile;

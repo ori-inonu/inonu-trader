@@ -40,3 +40,9 @@ grafo/graph.json tem 7860 nos e 13996 arestas. Nenhum campo source textual norma
 Status Git da origem e SHA-256 de todos os destinos lidos permaneceram iguais antes e depois. Evidencia: .scratch/folder-document-provenance-20261018/result.json. Os resultados anteriores do comparador de blobs continuam limitados como descrito no erratum; este auditor complementa aquela triagem, sem declarar migracao semantica concluida.
 
 C2 segue aberto para os prefixos, as fontes resumidas, os links, o terceiro contrato desatualizado e os artefatos nao Markdown. Decisao local sem-jev no escopo de revisao autorizado: registrar os achados, preservar a origem e manter as exclusoes fora do candidato enquanto a correspondencia nao estiver demonstrada. O conector Jev Engineering segue indisponivel.
+
+## Revalidacao do grafo da origem
+
+Na continuacao, bun --no-env-file grafo/grafo.ts verify retornou ok, exit 0, e os sete testes de grafo/grafo.test.ts passaram, com 22 verificacoes e nenhuma falha. O resultado contradiz o estado antigo ainda escrito em grafo/AGENTS.md e docs/tasks.md, que dizia haver um fragmento obsoleto de okx-api.ts. O fragmento atual src__okx-market.json ja nao lista esse arquivo; ele continua listado no fragmento da raiz src, onde existe.
+
+Nao foi executado build nem gravado o grafo. Verify valida os nos e arestas presentes contra seus predicados; ele nao compara o derivado com uma reconstrucao dos fragmentos nem prova a preservacao dos documentos excluidos. Portanto o grafo atual passou nessa verificacao, enquanto suas instrucoes locais de estado precisam de atualizacao antes de eventual integracao. Logs: .scratch/export-surface-closure-20261018/source-graph-verify.log e source-graph-tests.log.

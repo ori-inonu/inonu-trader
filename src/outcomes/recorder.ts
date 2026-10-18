@@ -19,7 +19,7 @@ import type { OkxBars } from "./okx-bars";
 import type { OutcomeStore } from "./store";
 import { HORIZONS, type Label, type Snapshot, type ZoneRef } from "./types";
 
-export const SNAPSHOT_EVERY_MS = 300_000;
+const SNAPSHOT_EVERY_MS = 300_000;
 /** A snapshot whose window still has a hole after this age is labeled incomplete for good. */
 export const GIVE_UP_AGE_MS = 48 * 3_600_000;
 const LABEL_LOOKBACK_MS = 3 * 86_400_000;

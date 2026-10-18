@@ -18,7 +18,7 @@ import { join } from "node:path";
 import { FEATURE_NAMES, FEATURE_VERSION, INTERVALS } from "../intel/features/types";
 import { HORIZONS, type DecisionRecord, type Label, type Snapshot, type ZoneRef } from "./types";
 
-export const DEFAULT_MAX_BYTES = 200 * 1024 * 1024;
+const DEFAULT_MAX_BYTES = 200 * 1024 * 1024;
 /** The exact size of the folder is read again every this many writes, so a change made from outside is noticed. */
 const RECOUNT_EVERY = 50;
 const SNAP = /^snapshots-(\d{4}-\d{2}-\d{2})\.jsonl$/;

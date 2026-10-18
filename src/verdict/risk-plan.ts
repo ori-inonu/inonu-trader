@@ -17,7 +17,7 @@
  */
 import type { RiskPlan, RiskProfile, TargetCandidate, TargetKind } from "./types";
 
-export const DEFAULT_TARGET_MULTIPLE = 1.5;
+const DEFAULT_TARGET_MULTIPLE = 1.5;
 
 export interface PlanInput {
   readonly side: "compra" | "venda";

@@ -10,18 +10,18 @@ import { normalQuantile } from "./normal";
 import { excessKurtosis, mean, quantile, sampleStdDev, skewness } from "./stats";
 import { isFiniteNumber, QuantError } from "./types";
 
-export const MIN_TAIL_COUNT = 3;
-export const MIN_HILL_SAMPLE = 100;
-export const MIN_CORNISH_SAMPLE = 30;
+const MIN_TAIL_COUNT = 3;
+const MIN_HILL_SAMPLE = 100;
+const MIN_CORNISH_SAMPLE = 30;
 /**
  * The Cornish Fisher expansion is only trustworthy for moderate shape: beyond these bounds it overshoots badly
  * (a Student t with 3 degrees of freedom gave twice the historical 99 percent VaR in this repository's tests),
  * so tailProfile reports null there and the historical VaR and ES carry the tail.
  */
-export const CORNISH_MAX_EXCESS_KURTOSIS = 3.5;
-export const CORNISH_MAX_ABS_SKEW = 1;
+const CORNISH_MAX_EXCESS_KURTOSIS = 3.5;
+const CORNISH_MAX_ABS_SKEW = 1;
 /** Excess kurtosis above which a sample is called heavy tailed (a gaussian has 0). */
-export const HEAVY_KURTOSIS = 1;
+const HEAVY_KURTOSIS = 1;
 
 export interface VarEs {
   /** Loss at the confidence level, positive when the quantile is a loss. */

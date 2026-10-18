@@ -5,7 +5,7 @@ import { readJournalTail, type JournalReadFailure, type JournalReadOptions, type
 import type { ExperienceEpisode } from "./memory";
 import { captureMetadataReference, decisionMetadataReference, metadataReferenceAvailable, DECISION_REFERENCE_JOURNALS, readDecisionCycle, type MetadataReferenceResult } from "./metadata-reference";
 
-export const DECISION_JOURNALS = Object.freeze({
+const DECISION_JOURNALS = Object.freeze({
   A: Object.freeze({ sourceId: "agent_briefs", metadataSourceId: "agent_decision_evidence" }),
   B: Object.freeze({ sourceId: "shadow_briefs", metadataSourceId: "shadow_decision_evidence" }),
 } as const);

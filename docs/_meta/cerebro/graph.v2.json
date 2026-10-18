@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1088,
-  "headHash": "5e4e5f15acf819bda42ac4d7af871df55be272ae027cabfcf494125ed612485d",
+  "headSeq": 1090,
+  "headHash": "b3ac84fd0acf789036545fd2fb80fa26af5d73fe3cb9365b45b4b802e4b803bb",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1747,6 +1747,11 @@
       "id": "iter-doc-provenance-audit-20261018",
       "type": "iteration",
       "text": "C2: 611 Markdown excluidos comparados a 694 destinos; 15 corpos integrais, tres anteriores a main. Registro tem 299 rotulos de fonte no proprio arquivo e 98 links locais ausentes. Origem intacta, exclusoes nao importadas. C2a publicada no PR 5; main e agente completo seguem pendentes."
+    },
+    {
+      "id": "iter-export-surface-closure-20261018",
+      "type": "iteration",
+      "text": "Mais 133 exports internos em 68 arquivos, corpos/valores intactos. Passam tipos core/web, 8544 core, 650 lab e 3821 web. Adaptador Jev real: 5/5 HTTP 200 sobre contexto publico, p50 301 ms, sem carteira ou ordens. Main e agente completo seguem pendentes; fallback de design sem-jev."
     }
   ],
   "edges": [
@@ -4789,6 +4794,11 @@
       "from": "iter-lab-annex-alignment-20261018",
       "to": "iter-doc-provenance-audit-20261018",
       "seq": 1088
+    },
+    {
+      "from": "iter-doc-provenance-audit-20261018",
+      "to": "iter-export-surface-closure-20261018",
+      "seq": 1090
     }
   ],
   "retractions": [

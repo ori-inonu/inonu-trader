@@ -20,7 +20,7 @@ export interface ForecastRecord {
 }
 
 const DEFAULT_LOG_FLOOR = 1e-4;
-export const DEFAULT_EDGES: readonly number[] = Object.freeze([0, 0.01, 0.03, 0.1, 0.3, 0.6, 1]);
+const DEFAULT_EDGES: readonly number[] = Object.freeze([0, 0.01, 0.03, 0.1, 0.3, 0.6, 1]);
 
 function validProbability(p: number): boolean {
   return isFiniteNumber(p) && p >= 0 && p <= 1;

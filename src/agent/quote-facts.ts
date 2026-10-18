@@ -6,10 +6,10 @@
  * is kept here as a percent, `priceImpactPercent` is a signed percent. The announced fee and the impact are what the quote promised: the cost an order really had is another thing, read from its receipt (fills.ts).
  */
 
-export const QUOTE_ACTIONS = ["ok", "warn", "block"] as const;
+const QUOTE_ACTIONS = ["ok", "warn", "block"] as const;
 export type QuoteAction = (typeof QUOTE_ACTIONS)[number];
 /** The fields read from a quote, in this order. */
-export const QUOTE_FIELDS = ["impact", "tradeFee", "gas", "slot", "taxFrom", "taxTo", "fromAmount", "toAmount"] as const;
+const QUOTE_FIELDS = ["impact", "tradeFee", "gas", "slot", "taxFrom", "taxTo", "fromAmount", "toAmount"] as const;
 export type QuoteField = (typeof QUOTE_FIELDS)[number];
 
 export interface QuoteFacts {

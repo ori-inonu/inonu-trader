@@ -26,7 +26,7 @@ export interface CycleAudit {
 
 export const emptyCursor = (): ReviewCursor => ({ version: 1, latestCycleId: null, reviewed: {} });
 
-export function parseCursor(raw: unknown): ReviewCursor | null {
+function parseCursor(raw: unknown): ReviewCursor | null {
   const r = obj(raw), reviewed = obj(r?.reviewed);
   if (r?.version !== 1 || reviewed === null || Object.keys(reviewed).length > 2000 || (r.latestCycleId !== null && !code(r.latestCycleId)) || !Object.entries(reviewed).every(([id, h]) => code(id) && typeof h === "string" && /^[a-f0-9]{64}$/.test(h))) return null;
   const cached = r.consultations === undefined ? {} : obj(r.consultations);

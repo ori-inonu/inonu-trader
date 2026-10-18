@@ -3,7 +3,7 @@ import { parseOpportunityEvent, type OpportunityEvent, type OpportunityReviewAck
 
 /** Local consistency evidence only. Hashes do not authenticate a provider, prove
  * that a model was called, authorize an order, or establish financial benefit. */
-export const EVENT_EVIDENCE_SCHEMA = 1 as const;
+const EVENT_EVIDENCE_SCHEMA = 1 as const;
 type Json = null | boolean | number | string | readonly Json[] | { readonly [key: string]: Json };
 type Obj = { readonly [key: string]: Json };
 type Scalar = null | boolean | number | string;

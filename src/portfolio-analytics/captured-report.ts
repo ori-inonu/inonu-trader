@@ -4,7 +4,7 @@ import { analyzePortfolio, concentration, type PortfolioAnalysis, type PositionI
 import { logReturnsOf } from "../quant/stats";
 import type { Candle } from "../quant/types";
 
-export const CAPTURE_BAR_MS = 900_000;
+const CAPTURE_BAR_MS = 900_000;
 export type CaptureExclusion = "missing_capture" | "unreadable_capture" | "invalid_capture" | "identity_mismatch" | "interval_mismatch" | "insufficient_candles";
 export interface CaptureInput { readonly key: string; readonly value: unknown; readonly readError?: boolean }
 export interface CaptureReceipt {

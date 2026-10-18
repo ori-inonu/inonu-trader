@@ -13,7 +13,7 @@ import type { PositionSide } from "./types.ts";
 // Not modeled: fee and funding deducted from the isolated margin, tier changes as the position
 // value moves, divergence of mark and last price, and other account modes.
 
-export const MAX_LEVERAGE = 125;
+const MAX_LEVERAGE = 125;
 
 export interface StressRow {
   movePpm: bigint;

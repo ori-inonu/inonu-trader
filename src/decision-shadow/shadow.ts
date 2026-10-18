@@ -196,7 +196,7 @@ export function createEngineShadow(options: EngineShadowOptions): EngineShadow {
 }
 
 /** Uma linha JSON por avaliação, em append. Falha de escrita não muda nada. */
-export function jsonlShadowSink(path: string): (record: ShadowRecord) => void {
+function jsonlShadowSink(path: string): (record: ShadowRecord) => void {
   return (record) => {
     try {
       mkdirSync(dirname(path), { recursive: true });

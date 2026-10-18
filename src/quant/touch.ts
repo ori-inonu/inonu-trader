@@ -95,9 +95,9 @@ export function gaussianTouchProbability(input: GaussianTouchInput): number {
   return p < 0 ? 0 : p > 1 ? 1 : p;
 }
 
-export const MIN_PATHS = 100;
-export const MAX_PATHS = 50_000;
-export const MAX_WORK = 20_000_000;
+const MIN_PATHS = 100;
+const MAX_PATHS = 50_000;
+const MAX_WORK = 20_000_000;
 const MAX_STEPS = 50_000;
 
 export interface SimulationOptions {

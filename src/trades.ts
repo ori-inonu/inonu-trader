@@ -17,9 +17,9 @@
 import { rpc } from "./chain";
 import { toFloat } from "./book";
 
-export const TRADE_EVENT_SIG = "Trade(uint40,address,bool,uint256,uint96,address,address,uint96)";
+const TRADE_EVENT_SIG = "Trade(uint40,address,bool,uint256,uint96,address,address,uint96)";
 /** keccak256(TRADE_EVENT_SIG) — precomputed with ethers.utils.id. */
-export const TRADE_TOPIC0 = "0xf16924fba1c18c108912fcacaac7450c98eb3f2d8c0a3cdf3df7066c08f21581";
+const TRADE_TOPIC0 = "0xf16924fba1c18c108912fcacaac7450c98eb3f2d8c0a3cdf3df7066c08f21581";
 
 export interface TradePrint { block: number; price: number; size: number; side: "buy" | "sell" }
 
@@ -40,7 +40,7 @@ export interface TradeSummary {
 interface RawLog { blockNumber: string; logIndex: string; transactionHash: string; data: string; removed?: boolean }
 
 /** Trade.price is a 1e18 fixed-point number on every Kuru market. */
-export const TRADE_PRICE_DEC = 18;
+const TRADE_PRICE_DEC = 18;
 const RING = 500;
 const FIRST_LOOKBACK = 300;
 /** rpc.monad.xyz rejects eth_getLogs spans > 100 blocks ("eth_getLogs is limited to a 100 range", -32614). */

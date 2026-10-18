@@ -10,7 +10,7 @@ import type { BoundEntryQuote } from "../decision-review/entry-quote";
 import type { ExecBrief } from "./fills";
 import { PROFILES, type ProfileId } from "./plans";
 
-export const CLOSING_VERSION = 1;
+const CLOSING_VERSION = 1;
 /** The version of the wording of the question and of the legend: written on every record, so two periods can be told apart. */
 export const CLOSING_CRITERIA = "closing-v1";
 /** The brief of one closing: one candidate with ALL the facts the first brief gave it, the first answer, the quote and the plan. Measured by the tests; far under what the provider takes. */

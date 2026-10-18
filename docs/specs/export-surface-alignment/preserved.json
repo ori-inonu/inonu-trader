@@ -1,0 +1,951 @@
+{
+  "base": "e3759feb5e4684df5ec6df48ff3dab9da294e9a4",
+  "count": 88,
+  "entries": [
+    {
+      "path": "src/agent/autopilot.ts",
+      "symbol": "REFRESH_MIN",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/book.ts",
+      "symbol": "DOLLAR_CONTRACTS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/candidates.ts",
+      "symbol": "TRIGGER_LABEL",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/candidates.ts",
+      "symbol": "executableCashByChain",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/http.ts",
+      "symbol": "isAgentPath",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/model.ts",
+      "symbol": "safeSymbol",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/recording.ts",
+      "symbol": "RECORDING_LIMITS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/shadow/outcomes.ts",
+      "symbol": "ENTRY_TOLERANCE_MS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "src/outcomes/labeler-zone.test.ts",
+        "src/outcomes/labeler.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/shadow/outcomes.ts",
+      "symbol": "exitToleranceMs",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/timing.ts",
+      "symbol": "MAX_STALE_MS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "src/agent/analysis.ts",
+        "src/agent/live.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/agent/timing.ts",
+      "symbol": "TIMING_MARK_LABEL",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/api-budget/okx.ts",
+      "symbol": "OKX_CATALOG_SOURCE",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/api-budget/okx.ts",
+      "symbol": "OKX_MARKET_FEE_URL",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/api-budget/okx.ts",
+      "symbol": "OKX_TRADE_FEE_URL",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/consensus/jev-judge.ts",
+      "symbol": "JEV_JUDGE_DEFAULT_TIMEOUT_MS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/decision-review/events.ts",
+      "symbol": "OPPORTUNITY_EVENT_KINDS",
+      "reason": "indirect_consumer_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/decision-review/events.test.ts",
+          "kind": "namespace_import"
+        }
+      ]
+    },
+    {
+      "path": "src/decision/sizing.ts",
+      "symbol": "heldUsd",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 15,
+      "examples": [
+        "scripts/bench-decision.ts",
+        "src/agent/candidates.test.ts",
+        "src/agent/candidates.ts",
+        "src/agent/cycle.ts",
+        "src/agent/entry-cost.test.ts",
+        "src/agent/facets.test.ts",
+        "src/agent/review2.test.ts",
+        "src/agent/shadow/variants.test.ts",
+        "src/agent/types.ts",
+        "src/decision-review/model-retry-review.test.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/decision/testing.ts",
+      "symbol": "costs",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 177,
+      "examples": [
+        "scripts/autoresearch/online-report.ts",
+        "scripts/autoresearch/panel-metrics.ts",
+        "scripts/bench-decision.test.ts",
+        "scripts/bench-decision.ts",
+        "scripts/doctor.ts",
+        "scripts/jev-lab-real.ts",
+        "scripts/ml-research.ts",
+        "scripts/opportunity-backtest.ts",
+        "scripts/paper-run.ts",
+        "scripts/replay-real.test.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/decision/validate.ts",
+      "symbol": "MAX_QUOTE_FUTURE_MS",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/desktop/browser.ts",
+      "symbol": "realFs",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/desktop/core.ts",
+      "symbol": "DOCTOR_PATH",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 1,
+      "examples": [
+        "web/src/lib/doctor/client.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/desktop/vault.ts",
+      "symbol": "isVaultName",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/inonu/collector.ts",
+      "symbol": "MAX_INSTRUMENTS",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "src/jev-read/analytics.ts",
+        "src/onchainos/public-okx.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/intel/ta/indicators.ts",
+      "symbol": "mean",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 114,
+      "examples": [
+        "scripts/autoresearch/online-report.test.ts",
+        "scripts/autoresearch/online-report.ts",
+        "scripts/autoresearch/online-source.test.ts",
+        "scripts/autoresearch/online-source.ts",
+        "scripts/autoresearch/panel-metrics.ts",
+        "scripts/baseline-audit.ts",
+        "scripts/bench-decision.ts",
+        "scripts/bench-read.ts",
+        "scripts/brief-freshness.ts",
+        "scripts/decision-dashboard.test.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/intel/zones.ts",
+      "symbol": "FAMILIES",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 4,
+      "examples": [
+        "src/opportunity/ecosystem.ts",
+        "src/prob/features.ts",
+        "web/src/lib/opportunity/picks.test.ts",
+        "web/src/lib/opportunity/picks.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/jev-read/decide.ts",
+      "symbol": "INPUTS_PLAIN",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/jev-read/decide.ts",
+      "symbol": "INPUTS_WITH_ANALYSIS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/jev-read/feed.ts",
+      "symbol": "DEFAULT_FUNDING_MAX_AGE_MS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/jev-read/loop.ts",
+      "symbol": "BOOK_REFRESH_AFTER_MS",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/jev-read/loop.ts",
+      "symbol": "TICKER_REFRESH_AFTER_MS",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/lab/types.ts",
+      "symbol": "SECOND_MS",
+      "reason": "explicit_documentary_export_contract",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/lab/types.ts",
+      "symbol": "isRecord",
+      "reason": "explicit_documentary_export_contract",
+      "lexicalOccurrences": 55,
+      "examples": [
+        "scripts/autoresearch/online-source.ts",
+        "scripts/okx-scan.ts",
+        "scripts/qualify-live.ts",
+        "src/backtest-evidence.ts",
+        "src/consensus/jev-judge.ts",
+        "src/consensus/mcp.ts",
+        "src/consensus/spec.ts",
+        "src/decision-evidence/weights.ts",
+        "src/jev-read/analytics.ts",
+        "src/jev-read/decide.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/model.ts",
+      "symbol": "MockModel",
+      "reason": "indirect_consumer_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/model-adapter.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/okx-derivatives/decimal.ts",
+      "symbol": "MICRO",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "src/inonu/overlay.test.ts",
+        "web/src/lib/wallet/holdings.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/okx-wallet/chains.ts",
+      "symbol": "OKX_CHAINS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/okx-wallet/chains.ts",
+      "symbol": "isKnownChainIndex",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/okx-wallet/solana-signer.ts",
+      "symbol": "solanaJsonRpc",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/onchainos/archive-discovery.ts",
+      "symbol": "ARCHIVE_ENDPOINT",
+      "reason": "indirect_consumer_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/onchainos/archive-discovery.test.ts",
+          "kind": "namespace_import"
+        }
+      ]
+    },
+    {
+      "path": "src/onchainos/http.ts",
+      "symbol": "DEFAULT_ONCHAINOS_ORIGIN",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/onchainos/http.ts",
+      "symbol": "ONCHAINOS_PATH_PATTERN",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/onchainos/http.ts",
+      "symbol": "TIERS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 11,
+      "examples": [
+        "src/agent/resources.ts",
+        "src/decision-review/resource-capacity.ts",
+        "src/onchain-read/budget.ts",
+        "web/src/lib/central/central-safety.test.ts",
+        "web/src/lib/central/permission-tiers.test.ts",
+        "web/src/lib/central/permission-tiers.ts",
+        "web/src/lib/growth-deck.ts",
+        "web/src/lib/onchain/client.ts",
+        "web/src/lib/wallet/holdings.ts",
+        "web/src/lib/wallet/quote.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "parseTicker",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 6,
+      "examples": [
+        "web/out-radar-seq-01a136cd/_next/static/chunks/0k16pbnd5dfgy.js",
+        "web/out-radar-seq-01a136cd/_next/static/chunks/1drvqx8e2rjcs.js",
+        "web/src/lib/desk/desk-ingest.ts",
+        "web/src/lib/desk/okx-parse.test.ts",
+        "web/src/lib/desk/okx-parse.ts",
+        "web/src/lib/desk/okx-rest.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/operator/ledger.ts",
+      "symbol": "validateCumulativeLimits",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "ENTRY_RULES",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "FAMILIES",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 4,
+      "examples": [
+        "src/intel/zones.ts",
+        "src/prob/features.ts",
+        "web/src/lib/opportunity/picks.test.ts",
+        "web/src/lib/opportunity/picks.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "FAMILY_RULES",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "MARK_LABEL",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "MARK_RULES",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "RANKS",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "STANCES",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/ecosystem.ts",
+      "symbol": "capInput",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/opportunity/scan.ts",
+      "symbol": "STABLE_BASES",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "web/src/lib/desk/ui/opportunity-radar.test.ts",
+        "web/src/lib/desk/ui/opportunity-radar.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/paper-supervisor.ts",
+      "symbol": "assertByteEventCapacity",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 1,
+      "examples": [
+        "src/paper-supervisor-store.ts"
+      ],
+      "indirectConsumers": [
+        {
+          "from": "src/paper-supervisor.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/paper-supervisor.ts",
+      "symbol": "cloneSupervisorValue",
+      "reason": "indirect_consumer_needs_review",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/paper-supervisor.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/paper-supervisor.ts",
+      "symbol": "configSha256",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 1,
+      "examples": [
+        "src/paper-supervisor.test.ts"
+      ],
+      "indirectConsumers": [
+        {
+          "from": "src/paper-supervisor.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "MAX_GROUPS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 1,
+      "examples": [
+        "src/onchain-read/routes/clusters-detail.ts"
+      ],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "MAX_ROWS_PER_ANSWER",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "MAX_SPECIFIC_TOKENS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "MAX_TOKENS_PER_MARKET_CALL",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "PROVIDER_RECORD_CEILING",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "parseDexHistoryPage",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "parseOverview",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "web/src/lib/wallet/holdings.test.ts",
+        "web/src/lib/wallet/holdings.ts"
+      ],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/adapters/okx-read.ts",
+      "symbol": "parsePnlPage",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/address-analysis.ts",
+      "symbol": "PNL_PARTS_TOLERANCE_USD",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/address-analysis.ts",
+      "symbol": "TIME_FRAMES",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 4,
+      "examples": [
+        "web/src/components/Desk/Dock/HoldingsPanel.tsx",
+        "web/src/components/Desk/Dock/OnchainTabs.tsx",
+        "web/src/lib/wallet/holdings.test.ts",
+        "web/src/lib/wallet/holdings.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/balances.ts",
+      "symbol": "HONEYPOT_FILTER_CHAINS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/balances.ts",
+      "symbol": "buildReportedTotal",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/balances.ts",
+      "symbol": "worseState",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/canonical.ts",
+      "symbol": "CanonicalError",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/collector.ts",
+      "symbol": "HARD_CEILINGS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        },
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/decimal.ts",
+      "symbol": "DEC_ZERO",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/decimal.ts",
+      "symbol": "MAX_DECIMALS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 1,
+      "examples": [
+        "web/src/lib/desk/ui/format.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/decimal.ts",
+      "symbol": "MAX_SCALE",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/decimal.ts",
+      "symbol": "MAX_TEXT_LENGTH",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/reconcile.ts",
+      "symbol": "DEFAULT_SKEW_TOLERANCE_MS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/reconcile.ts",
+      "symbol": "DEFAULT_THIN_LIQUIDITY_BPS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/reconcile.ts",
+      "symbol": "DEFAULT_VALUE_TOLERANCE_USD",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/reconcile.ts",
+      "symbol": "ELEVATED_RISK_LEVEL",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/report.ts",
+      "symbol": "statusLabel",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "src/mobile-decision-report/export.ts",
+        "web/src/components/WalletPanel/WalletPanel.tsx"
+      ],
+      "indirectConsumers": [
+        {
+          "from": "src/portfolio-evidence/portfolio-family.test.ts",
+          "kind": "dynamic_import"
+        }
+      ]
+    },
+    {
+      "path": "src/portfolio-evidence/store.ts",
+      "symbol": "DEFAULT_MAX_JOURNAL_BYTES",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/store.ts",
+      "symbol": "MAX_EVIDENCE_BYTES",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/types.ts",
+      "symbol": "STATE_KINDS",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/portfolio-evidence/types.ts",
+      "symbol": "STATUSES",
+      "reason": "fenced_or_reserved_area_preserved",
+      "lexicalOccurrences": 3,
+      "examples": [
+        "src/jev-read/public-view.ts",
+        "web/src/lib/inonu/client.ts",
+        "web/src/lib/wallet/holdings.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/public-market-capture/plan.ts",
+      "symbol": "SCHEMA",
+      "reason": "main_runtime_changed_needs_review",
+      "lexicalOccurrences": 3,
+      "examples": [
+        "scripts/policy-envelope.ts",
+        "src/okx-derivatives/snapshot.ts",
+        "src/onchainos/public-okx.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/real/core.ts",
+      "symbol": "coreIdentityKey",
+      "reason": "already_private_or_changed_declaration",
+      "lexicalOccurrences": 0,
+      "examples": [],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/system-one/clock.ts",
+      "symbol": "DEFAULT_CLOCK_SAMPLES",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 1,
+      "examples": [
+        "web/src/lib/desk/clock-skew.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/system-one/clock.ts",
+      "symbol": "MAX_TRUSTED_ROUND_TRIP_MS",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "web/src/lib/desk/clock-skew.test.ts",
+        "web/src/lib/desk/clock-skew.ts"
+      ],
+      "indirectConsumers": []
+    },
+    {
+      "path": "src/system-one/cycle.ts",
+      "symbol": "redactCycle",
+      "reason": "external_lexical_occurrence_needs_review",
+      "lexicalOccurrences": 2,
+      "examples": [
+        "src/operator/cycle.ts",
+        "src/operator/operator.test.ts"
+      ],
+      "indirectConsumers": []
+    }
+  ],
+  "note": "Lexical occurrences are candidates for semantic review, not proof that each is an actual import. Preserved cases were not edited."
+}

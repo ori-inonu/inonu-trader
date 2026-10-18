@@ -30,7 +30,7 @@ export interface Mandate {
 /** Where the agent starts, before the model has chosen anything: the middle of every choice. */
 export const DEFAULT_MANDATE: Mandate = { risk: "moderado", reserve: "media", concentration: "media", look: "normal" };
 
-export const MANDATE_OPTIONS: { readonly [K in keyof Mandate]: readonly Mandate[K][] } = { risk: RISKS, reserve: RESERVES, concentration: CONCENTRATIONS, look: LOOKS };
+const MANDATE_OPTIONS: { readonly [K in keyof Mandate]: readonly Mandate[K][] } = { risk: RISKS, reserve: RESERVES, concentration: CONCENTRATIONS, look: LOOKS };
 
 /** The mandate in an answer of the model, or null when any choice is missing or is not one of the options. */
 export function parseMandate(raw: unknown): Mandate | null {

@@ -142,7 +142,7 @@ const SOLANA_STABLES: ReadonlySet<string> = new Set(["EPjFWdd5AufqSSqeM2qN1xzyba
  * Whether a final, successful transaction of the wallet is the swap of this order: a sale took exactly (within half a percent) the order's amount of its token out and something came in; a purchase brought its token in
  * for about the dollars of stablecoin that went out. Anything the transaction does not say (a balance that could not be read) is no match. Pure.
  */
-export function swapMatches(evidence: SolanaReceiptEvidence, q: SolanaOrderQuery): boolean {
+function swapMatches(evidence: SolanaReceiptEvidence, q: SolanaOrderQuery): boolean {
   if (evidence.status !== "success" || evidence.tokenDeltas === null) return false;
   const mine = evidence.tokenDeltas.find((d) => d.mint === q.mint);
   if (mine === undefined) return false;

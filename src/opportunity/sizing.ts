@@ -68,7 +68,7 @@ export interface SizingInput {
 }
 
 /** A reserve outside what makes sense (nothing kept, or almost everything) is the default one. */
-export const reserveOf = (reserveShare: number | null | undefined): number => (typeof reserveShare === "number" && Number.isFinite(reserveShare) && reserveShare >= 0.05 && reserveShare <= 0.6 ? reserveShare : SIZING.reserveShare);
+const reserveOf = (reserveShare: number | null | undefined): number => (typeof reserveShare === "number" && Number.isFinite(reserveShare) && reserveShare >= 0.05 && reserveShare <= 0.6 ? reserveShare : SIZING.reserveShare);
 
 export interface SizingCap {
   /** The ceiling in dollars, whole dollars, zero when the candidate cannot be bought. */

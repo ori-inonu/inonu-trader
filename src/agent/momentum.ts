@@ -37,7 +37,7 @@ export interface MomentumFacts {
   readonly marks: readonly MomentumMark[];
 }
 
-export const MOMENTUM_MARK_LABEL: Readonly<Record<MomentumMark, string>> = {
+const MOMENTUM_MARK_LABEL: Readonly<Record<MomentumMark, string>> = {
   estagnado: "estagnado: nao se moveu na ultima hora",
   disparando: "disparando: subiu muito nos ultimos 15 minutos",
   caindo_agora: "caindo agora: caiu muito nos ultimos 15 minutos",

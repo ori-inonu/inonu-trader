@@ -12,7 +12,7 @@
 
 import { isFiniteNumber, QuantError } from "./types";
 
-export const MIN_EXCESSES = 20;
+const MIN_EXCESSES = 20;
 const XI_MIN = -0.25;
 const XI_MAX = 0.45;
 

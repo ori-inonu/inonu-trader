@@ -39,9 +39,9 @@ import { asArray, asRecord, field, readCount, readEnum, readEpochMs, readFlag01,
 // ---------------------------------------------------------------------------
 
 export const DEFAULT_PUBLIC_OKX_ORIGIN = "https://www.okx.com";
-export const PUBLIC_OKX_PATH_PATTERN = /^\/api\/v5\/(?:public|market)(?:\/[A-Za-z0-9_-]+)+$/;
+const PUBLIC_OKX_PATH_PATTERN = /^\/api\/v5\/(?:public|market)(?:\/[A-Za-z0-9_-]+)+$/;
 /** The strictest documented limit is 10 requests per 2 seconds: 5 per second. */
-export const PUBLIC_MAX_REQUESTS_PER_SECOND = 5;
+const PUBLIC_MAX_REQUESTS_PER_SECOND = 5;
 
 export interface PublicOkxHttpOptions extends HttpTuning {
   fetch: FetchLike;
@@ -234,21 +234,21 @@ const ALLOWED_INTERVALS_MS = [3_600_000, 7_200_000, 14_400_000, 28_800_000] as c
 const MAX_INSTRUMENTS = 5_000;
 const MAX_BOOK_LEVELS = 400;
 
-export function readInstId(value: unknown): string | null {
+function readInstId(value: unknown): string | null {
   return typeof value === "string" && value.length <= 48 && INST_ID.test(value) ? value : null;
 }
 
 /** A decimal text that passes the strict grammar of the derivatives evaluator (signed). */
-export function readDecimalText(value: unknown): DecimalText | null {
+function readDecimalText(value: unknown): DecimalText | null {
   return parseDecimal(value) === null ? null : (value as string);
 }
 
-export function readPositiveText(value: unknown): DecimalText | null {
+function readPositiveText(value: unknown): DecimalText | null {
   const parsed = parseDecimal(value);
   return parsed !== null && sign(parsed) > 0 ? (value as string) : null;
 }
 
-export function readNonNegativeText(value: unknown): DecimalText | null {
+function readNonNegativeText(value: unknown): DecimalText | null {
   const parsed = parseDecimal(value);
   return parsed !== null && sign(parsed) >= 0 ? (value as string) : null;
 }
@@ -376,7 +376,7 @@ export function parseTicker(data: unknown, instId: string): TickerRow {
   };
 }
 
-export function parseOpenInterest(data: unknown, instId: string): OpenInterestRow {
+function parseOpenInterest(data: unknown, instId: string): OpenInterestRow {
   const record = rowFor(data, instId, "interesse em aberto");
   return {
     instId,
@@ -480,10 +480,10 @@ export const PUBLIC_BAR_MS: Readonly<Record<PublicBar, number | null>> = Object.
   "3Mutc": null,
 });
 
-export const MAX_PUBLIC_CANDLES_PER_CALL = 300;
-export const MAX_BOOK_DEPTH = 400;
-export const MAX_FUNDING_HISTORY_PER_CALL = 400;
-export const DEFAULT_WALK_PAGE_SIZE = 100;
+const MAX_PUBLIC_CANDLES_PER_CALL = 300;
+const MAX_BOOK_DEPTH = 400;
+const MAX_FUNDING_HISTORY_PER_CALL = 400;
+const DEFAULT_WALK_PAGE_SIZE = 100;
 
 function instIdOrThrow(value: string, swapOnly = false): string {
   const instId = readInstId(value);

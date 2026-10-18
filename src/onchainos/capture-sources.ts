@@ -27,8 +27,8 @@ const INST = /^[A-Z0-9]{1,20}(?:-[A-Z0-9]{1,20}){1,3}$/;
 const MAX_INST_LENGTH = 48;
 const ALLOWED_INTERVALS_MS = [3_600_000, 7_200_000, 14_400_000, 28_800_000] as const;
 
-export const PUBLIC_OKX_KINDS: readonly CaptureKind[] = Object.freeze(["ticker", "funding", "mark", "candle", "book", "oi"] as const);
-export const ONCHAINOS_KINDS: readonly CaptureKind[] = Object.freeze(["mark", "candle"] as const);
+const PUBLIC_OKX_KINDS: readonly CaptureKind[] = Object.freeze(["ticker", "funding", "mark", "candle", "book", "oi"] as const);
+const ONCHAINOS_KINDS: readonly CaptureKind[] = Object.freeze(["mark", "candle"] as const);
 
 function usage(message: string): never {
   throw new CaptureError("usage", message);

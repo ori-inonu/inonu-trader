@@ -1,6 +1,6 @@
 # Alinhamento das atualizacoes pendentes
 
-Estado: em andamento. Objetivo integral: alinhar as implementacoes e a limpeza pendentes com main, validar o sistema e observar o agente no navegador. Resultado financeiro e consulta real ao modelo ainda nao estao demonstrados.
+Estado: em andamento. Objetivo integral: alinhar as implementacoes e a limpeza pendentes com main, validar o sistema e observar o agente no navegador. Cinco consultas reais do adaptador em contexto publico foram medidas; o agente completo em contexto operacional e o resultado financeiro ainda nao estao demonstrados.
 
 ## Evidencia inicial
 
