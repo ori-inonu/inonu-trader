@@ -1,0 +1,174 @@
+{
+  "schema": "offline_mobile_final_manifest_v1",
+  "scope": "Offline delivery including archived v1 and post-review integrator metadata",
+  "reviewed_candidate_digest": "5ec32260afaa982a33068b8c79ff4c49bb12dde04c4cc342694b96e96c2e3a36",
+  "files": [
+    {
+      "path": "docs/mobile-decision-report/AUDIT.json",
+      "sha256": "97c4af8282a9e8f10f1e41ee1aa41b37f260c3cfa18e29ee1c9a742cd1a25e80",
+      "bytes": 5840
+    },
+    {
+      "path": "docs/mobile-decision-report/BASELINE.json",
+      "sha256": "d55f4340e2ab25f30ab057cd73980aafecc1e496377ae3fb219cb59bc96f9276",
+      "bytes": 107011
+    },
+    {
+      "path": "docs/mobile-decision-report/BROWSER.json",
+      "sha256": "fd321a677f02e93f3373f566da0d7394061ca13aab46d3a3c1a13586cbdec280",
+      "bytes": 8825
+    },
+    {
+      "path": "docs/mobile-decision-report/CANDIDATE-MANIFEST-v1.json",
+      "sha256": "dcd6c2a53e8b640f86e94b990149481e6580486f2dd852fa2b94709723670519",
+      "bytes": 5377
+    },
+    {
+      "path": "docs/mobile-decision-report/CANDIDATE-MANIFEST.json",
+      "sha256": "36436ed0892a5f1eab653bfd7585a97966e791225691665237d1c771b12c353b",
+      "bytes": 6124
+    },
+    {
+      "path": "docs/mobile-decision-report/CHECKPOINT.md",
+      "sha256": "323cee699dff2e6d4b689b9e06365394ed27882918f9c51be5e05092bc5de0bf",
+      "bytes": 10158
+    },
+    {
+      "path": "docs/mobile-decision-report/PRESERVATION.json",
+      "sha256": "c79304bfb41b54d9ecd2c489ff16f52d029ddb576d1e04e88c24df0400baf44e",
+      "bytes": 784
+    },
+    {
+      "path": "docs/mobile-decision-report/README.md",
+      "sha256": "fe68632db6582b8fd2bd0453d70eb482358ce0606061413f93eb42db8381e238",
+      "bytes": 7867
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-SPEC-v1.json",
+      "sha256": "1f008b1ebe55edcb8e6821e8e952e468514ad4fbed5dec907f67d5670cdaefc0",
+      "bytes": 16379
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-SPEC-v1.md",
+      "sha256": "4be539753543681e896669b761a103c70ec305544bc9d0f8e17c1235ff7d13e7",
+      "bytes": 2225
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-SPEC.json",
+      "sha256": "99eae4f9bb0ad814fdb87628fec5a4d49f8b0585e36146cdde020a4ef2edd64c",
+      "bytes": 19394
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-SPEC.md",
+      "sha256": "d5630fdcede8be4e3a77d607a8be5c72518ec2a3d6b5fa72fe898c8a6a98f284",
+      "bytes": 2261
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-STANDARDS-v1.json",
+      "sha256": "db298e562287ec24e8538ffa99f44fdc959222f50c4b031ebf41c1085638754e",
+      "bytes": 16721
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-STANDARDS-v1.md",
+      "sha256": "4ae5600caf389c48ad2e05d8de0e8973833ce97e068d549cc16bf401d727bcd5",
+      "bytes": 2216
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-STANDARDS.json",
+      "sha256": "0fb226412b458303d9c34951f3a1967adc8a460c685b53d4f0e2fd1eae14fe34",
+      "bytes": 36766
+    },
+    {
+      "path": "docs/mobile-decision-report/REVIEW-STANDARDS.md",
+      "sha256": "32ab66d788b596ad00908b52bc510b1d1a4397ba6b9755a8aa8f3b14c0b8f0e5",
+      "bytes": 2035
+    },
+    {
+      "path": "docs/mobile-decision-report/SPEC.md",
+      "sha256": "7fdb9f0f49ef469fb05e3d101e93f9bf2a454d84d716481f4f66b65fa97ea10b",
+      "bytes": 8040
+    },
+    {
+      "path": "docs/mobile-decision-report/VERIFICATION-v1.json",
+      "sha256": "896f73e84a5218d77c6937d9966b9a5f94ea85bf61579a7fb99452c4d4210c29",
+      "bytes": 3298
+    },
+    {
+      "path": "docs/mobile-decision-report/VERIFICATION.json",
+      "sha256": "092432258a831e967f79eca6d5b18db4252def3e6a5854733fe378f45fd2d2e4",
+      "bytes": 3306
+    },
+    {
+      "path": "docs/mobile-decision-report/example.html",
+      "sha256": "1af025fb8585a895e0c3a07df9c4d97e77e158e438dc70b53b80561dbc8523f3",
+      "bytes": 12337
+    },
+    {
+      "path": "docs/mobile-decision-report/example.json",
+      "sha256": "39af89cdba5787317a4f55c547a964f6f67a8d3ce2f8f137cc0d6334c715fdcf",
+      "bytes": 4135
+    },
+    {
+      "path": "docs/mobile-decision-report/fixtures.json",
+      "sha256": "c2259a193ea1e541921b3ac0367acd1f3be2e14ad1061a4b29ff24effea9348e",
+      "bytes": 18758
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-360-human.jpg",
+      "sha256": "6a4cb1ddcbfe1f2511a2f992d39987803c7c881fd46a49be22e5e832a51431bc",
+      "bytes": 40556
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-360-top.jpg",
+      "sha256": "27eb008995ba835ee02cfb0990c136a8dcbc072622574ed6bd31e4ca7fe403aa",
+      "bytes": 40065
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-390-human.jpg",
+      "sha256": "050a0fa9fb868927fb5312a6793a0e46a45f7e7c0cd03a9c2aa27afbdb4f0899",
+      "bytes": 43889
+    },
+    {
+      "path": "docs/mobile-decision-report/mobile-390-top.jpg",
+      "sha256": "3971024edd3ee009fdd353abb7897fcd2f8d2d59ec4f9a834cf2827e23310bf4",
+      "bytes": 45165
+    },
+    {
+      "path": "src/mobile-decision-report/example.ts",
+      "sha256": "3836d01074eeb128d0e0e5390272baafb5212f9134320648bc365096512b4e1d",
+      "bytes": 1180
+    },
+    {
+      "path": "src/mobile-decision-report/export.test.ts",
+      "sha256": "e053b563d6c0040af98e115c2f59069e0b23b8c24e3f83d13f74250b7366dce6",
+      "bytes": 3928
+    },
+    {
+      "path": "src/mobile-decision-report/export.ts",
+      "sha256": "eb2fc9c1270b5d9f9532c5aafa6a346f4abdef6c060e54d44b0d81b2adae25ab",
+      "bytes": 13581
+    },
+    {
+      "path": "src/mobile-decision-report/fixtures.ts",
+      "sha256": "0c7bfe6b7287c0c89768fa70a5e0747bc011b6b693b388a404ab385b6acd3cb8",
+      "bytes": 1403
+    },
+    {
+      "path": "src/mobile-decision-report/preview.ts",
+      "sha256": "76e4191db3e809191dd40217927b3cf36eec3c6976b59fab107ae12d7492cae7",
+      "bytes": 737
+    },
+    {
+      "path": "src/mobile-decision-report/report.test.ts",
+      "sha256": "1dbdc211309d58049de53e9e0a9b516bad7e77b1d4e40b0ccfc0ab1862050de0",
+      "bytes": 7030
+    },
+    {
+      "path": "src/mobile-decision-report/report.ts",
+      "sha256": "e072934421b8dc9f9f17aca87b1b294113a06084d3b42cb78f625cd17b575717",
+      "bytes": 12310
+    }
+  ],
+  "self_excluded": true,
+  "post_review_metadata_independently_reviewed": false
+}

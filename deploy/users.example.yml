@@ -1,0 +1,9 @@
+# Replace the password with an Argon2id hash made privately on the host.
+# This placeholder cannot authenticate. Enroll TOTP through the Authelia portal yourself.
+users:
+  owner:
+    disabled: false
+    displayname: Inonu owner
+    password: REPLACE_WITH_ARGON2ID_HASH
+    email: owner@example.com
+    groups: []

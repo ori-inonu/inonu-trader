@@ -1,0 +1,22 @@
+{
+  "status": "assessed",
+  "receiptId": "63dc0dd3-25e7-47ed-9ec1-b782559ffaf5",
+  "inputDigest": "2bcb92b8979fc39f74954e46e41d28cd58e2a4bc9005c3e7379aa62741f8bca6",
+  "model": "jev-1.13.0",
+  "choice": "technicaldocs",
+  "confidence": 0.96,
+  "probabilities": {
+    "technicaldocs": 0.97,
+    "privateplan": 0.02,
+    "abstain": 0,
+    "insufficient_evidence": 0.01
+  },
+  "usage": {
+    "input_tokens": 814,
+    "output_tokens": 59
+  },
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "costUsd": null,
+  "authority": "advisory_only"
+}

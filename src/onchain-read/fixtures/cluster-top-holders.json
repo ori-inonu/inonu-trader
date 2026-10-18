@@ -1,0 +1,16 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": {
+    "averageBuyPricePercent": "null",
+    "averageBuyPriceUsd": "null",
+    "averageHoldingPeriod": "1744243118",
+    "averagePnlUsd": "null",
+    "averageSellPricePercent": "null",
+    "averageSellPriceUsd": "null",
+    "clusterTrendType": ["buy", "bad trend!", "", "transferIn"],
+    "holdingAmount": "10974869038.4",
+    "holdingPercent": "0.22701"
+  },
+  "msg": ""
+}

@@ -1,0 +1,232 @@
+{
+  "/onchain/price-info": [
+    {
+      "chainIndex": "1",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "tsMs": 1791847218547,
+      "price": 2464.2716104377955,
+      "marketCap": 5379627781.167244,
+      "liquidityUsd": 9142840739.657866,
+      "holders": 886855,
+      "circSupply": 2183049.854724218,
+      "high24h": 2617.429110010028,
+      "low24h": 2423.8137130533178,
+      "tradeNum": 526101.1593883411,
+      "change": {
+        "m5": 0.18,
+        "h1": -0.95,
+        "h4": -1.78,
+        "h24": -2.7
+      },
+      "volume": {
+        "m5": 6336972.883614588,
+        "h1": 36646427.66427137,
+        "h4": 119387117.31908214,
+        "h24": 1338084619.9283373
+      },
+      "txs": {
+        "m5": 761,
+        "h1": 11060,
+        "h4": 37629,
+        "h24": 213897
+      }
+    }
+  ],
+  "/onchain/token-risk": {
+    "chainIndex": "1",
+    "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    "riskLevel": 1,
+    "tags": [
+      "communityRecognized",
+      "ok_tag-2"
+    ],
+    "top10HoldPct": 74.0083,
+    "devHoldPct": 0,
+    "bundleHoldPct": null,
+    "sniperHoldPct": null,
+    "suspiciousHoldPct": null,
+    "lpBurnedPct": 99.5,
+    "devCreateCount": 3,
+    "devLaunchedCount": 3,
+    "devRugCount": null,
+    "createdMs": 1690000000000,
+    "progressPct": 87.2
+  },
+  "/onchain/pools": [
+    {
+      "pool": "WETH/aEthWETH",
+      "protocol": "Aave V3",
+      "liquidityUsd": 6352772851.958669,
+      "address": "0xAA...EEEE",
+      "feePct": null
+    },
+    {
+      "pool": "WETH/USDT",
+      "protocol": "EulerSwap v2",
+      "liquidityUsd": 136976994.62098345,
+      "address": "0x66...AAAA",
+      "feePct": 0.3
+    }
+  ],
+  "/onchain/cluster-chains": [
+    {
+      "chainIndex": "501",
+      "name": "Solana",
+      "symbol": null
+    },
+    {
+      "chainIndex": "1",
+      "name": "Ethereum",
+      "symbol": null
+    },
+    {
+      "chainIndex": "196",
+      "name": "X Layer",
+      "symbol": null
+    }
+  ],
+  "/onchain/clusters": {
+    "concentration": "Low",
+    "top100HoldPct": 0.4432,
+    "newAddressPct": null,
+    "sameFundSourcePct": null,
+    "sameCreationTimePct": 1,
+    "rugPullPct": null
+  },
+  "/onchain/trades": [
+    {
+      "id": "1791847211000!@#394!@#79487168660",
+      "tsMs": 1791847211000,
+      "side": "sell",
+      "priceUsd": 2464.2716104377955,
+      "volumeUsd": 421.63041404140415,
+      "dex": "Uniswap V3",
+      "wallet": "0xAA...EEEE",
+      "tx": "0xaa...aaaa"
+    },
+    {
+      "id": "1791847210000!@#353!@#79487168509",
+      "tsMs": 1791847210000,
+      "side": "buy",
+      "priceUsd": 2464.08,
+      "volumeUsd": 46.888653084719145,
+      "dex": "Uniswap V3",
+      "wallet": "0xBB...FFFF",
+      "tx": "0xbb...bbbb"
+    }
+  ],
+  "/onchain/news": {
+    "articles": [
+      {
+        "id": "89880580950304",
+        "title": "Most Americans oppose betting on elections and g",
+        "summary": "A poll shows 69% of Democrats and 61% of Republi",
+        "source": "jinse.com.cn",
+        "tsMs": 1791840951000,
+        "importance": "high",
+        "symbols": [],
+        "sentiments": []
+      },
+      {
+        "id": "89879967858976",
+        "title": "The frontend will be deprecated on November 12,",
+        "summary": "Blur will depreciate its blur.io frontend on Nov",
+        "source": "jinse.com.cn",
+        "tsMs": 1791840324000,
+        "importance": "high",
+        "symbols": [
+          "BLUR"
+        ],
+        "sentiments": [
+          {
+            "symbol": "BLUR",
+            "label": "bullish"
+          }
+        ]
+      }
+    ],
+    "cursor": "MTc5MTgzMjAzMTAwMDo4OTg3MTM2NDc4NzQ4OA=="
+  },
+  "/onchain/sentiment": {
+    "symbol": "BTC",
+    "period": "1h",
+    "tsMs": 1791842400000,
+    "mentions": 94,
+    "newsMentions": 15,
+    "xMentions": 79,
+    "label": "neutral",
+    "bullishRatio": 0.4,
+    "bearishRatio": 0.21,
+    "bullishCount": 38,
+    "bearishCount": 20,
+    "neutralCount": 36
+  },
+  "/onchain/sentiment-ranking": [
+    {
+      "symbol": "BTC",
+      "period": "1h",
+      "tsMs": 1791842400000,
+      "mentions": 94,
+      "newsMentions": 15,
+      "xMentions": 79,
+      "label": "neutral",
+      "bullishRatio": 0.4,
+      "bearishRatio": 0.21,
+      "bullishCount": 38,
+      "bearishCount": 20,
+      "neutralCount": 36
+    },
+    {
+      "symbol": "ETH",
+      "period": "1h",
+      "tsMs": 1791842400000,
+      "mentions": 32,
+      "newsMentions": 2,
+      "xMentions": 30,
+      "label": "neutral",
+      "bullishRatio": 0.44,
+      "bearishRatio": 0.06,
+      "bullishCount": 14,
+      "bearishCount": 2,
+      "neutralCount": 16
+    }
+  ],
+  "/onchain/vibe": {
+    "score": 57.57757814783334,
+    "scoreChangeRate": 4.17,
+    "mentions": 14,
+    "mentionsChangeRate": 27.27,
+    "impressions": 330991,
+    "engagement": 5384,
+    "points": [
+      {
+        "tsMs": 1791763200000,
+        "score": 55.080158537181006
+      },
+      {
+        "tsMs": 1791766800000,
+        "score": 56.22541672625139
+      }
+    ]
+  },
+  "/onchain/kols": [
+    {
+      "handle": "jackduval",
+      "nickname": "Jack Duval",
+      "followers": 58389,
+      "mentions": 2,
+      "impressions": 302503,
+      "engagement": 4664,
+      "firstMentionMs": 1791760874000
+    },
+    {
+      "handle": "bonk_inu_zh",
+      "nickname": "BONK zh",
+      "followers": 4943,
+      "mentions": 2,
+      "impressions": 13952,
+      "engagement": 326,
+      "firstMentionMs": 1791769852000
+    }
+  ]
+}

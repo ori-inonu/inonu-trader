@@ -1,0 +1,57 @@
+{
+  "decision_source": "jev",
+  "human_response": false,
+  "billed_cost_usd": null,
+  "observed": "Revisor sem entrega observável após aproximadamente13min; diretório exclusivo vazio. Causa desconhecida.",
+  "receipt": {
+    "status": "assessed",
+    "receiptId": "387fd773-0e16-47fc-87e3-88bc1da7a84a",
+    "evidenceIds": [
+      "no_report"
+    ],
+    "inputDigest": "203c8bdc2a00a2581dd77a0d3ca803189f6329b71f6fa6f36e1a7568a239e5ce",
+    "rubricVersion": "decision-2026-09-26.2",
+    "policy": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12971-f91a-7b01-befa-dfa93eb04425"
+    },
+    "model": "jev-1.13.0",
+    "confidence": 0.92,
+    "probabilities": {
+      "replace_reviewer": 0.95,
+      "continue_wait": 0.01,
+      "insufficient_evidence": 0.04
+    },
+    "usage": {
+      "input_tokens": 849,
+      "output_tokens": 51
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T17:48:11.075Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T17:48:11.346Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12c155fea7ac18d35b6530d5ae7c5",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "signals": {},
+    "choice": "replace_reviewer",
+    "providerChoice": "replace_reviewer",
+    "bestCandidate": "replace_reviewer",
+    "domain": "strategy",
+    "disposition": "recommendation",
+    "recommendation": "replace_reviewer",
+    "latencyMs": 305,
+    "receiptPersisted": true
+  }
+}

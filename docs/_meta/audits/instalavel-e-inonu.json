@@ -1,0 +1,315 @@
+{
+  "owner": "instalavel-e-inonu",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T11:57:06-03:00",
+  "branch": "main",
+  "page": "docs/concepts/instalavel-e-inonu.md",
+  "page_sha256": "e0033892e5e47b7c4ed5391774ebf154e8a91715550a926f8a060b50429a225a",
+  "page_line_count": 45,
+  "inspection": {
+    "head_at_inspection": "00a593bcabe25dbb6d83795268533551098f645b",
+    "snapshot_captured_at": "2026-10-13T10:53:03.109798-03:00",
+    "drift_manifest_observed_at": "2026-10-13T11:15:58.521130-03:00",
+    "working_tree_state_before_outputs": "dirty",
+    "git_status_paths_before_outputs": 183,
+    "owner_inventory_files_hashed": 132,
+    "owner_inventory_digest_sha256": "9f21c29eebd73ac0db74fc75cf545074ddbd994561f0b44c33ae3be69da57905",
+    "owner_inventory_digest_definition": "SHA-256 over sorted owner source_paths and document_paths as relative path, NUL, SHA-256(file bytes), LF; no source content embedded."
+  },
+  "owner_inventory": {
+    "source_paths": 101,
+    "document_paths": 31,
+    "artifact_paths": 11,
+    "changed_source_paths_after_snapshot": 28
+  },
+  "source_drift": {
+    "manifest": "docs/_meta/concurrent-source-drift-20261013.json",
+    "repository_changed_paths": 44,
+    "owner_changed_paths": 28,
+    "changed_paths": [
+      "src/desktop/cleanup.test.ts",
+      "src/desktop/cleanup.ts",
+      "src/desktop/doctor.test.ts",
+      "src/desktop/doctor.ts",
+      "src/desktop/handlers.test.ts",
+      "src/desktop/handlers.ts",
+      "src/desktop/launcher.ts",
+      "src/desktop/vault.test.ts",
+      "src/desktop/vault.ts",
+      "src/inonu/ask.test.ts",
+      "src/inonu/ask.ts",
+      "src/inonu/collector.test.ts",
+      "src/inonu/collector.ts",
+      "src/inonu/flow-memory.test.ts",
+      "src/inonu/flow-memory.ts",
+      "src/inonu/ledger.test.ts",
+      "src/inonu/ledger.ts",
+      "src/inonu/okx-public.test.ts",
+      "src/inonu/okx-public.ts",
+      "src/inonu/overlay.test.ts",
+      "src/inonu/overlay.ts",
+      "src/inonu/source-discovery.test.ts",
+      "src/inonu/source.test.ts",
+      "src/inonu/source.ts",
+      "web/src/lib/inonu/ask-trigger.test.ts",
+      "web/src/lib/inonu/ask-trigger.ts",
+      "web/src/lib/inonu/overlay-feed.test.ts",
+      "web/src/lib/inonu/overlay-feed.ts"
+    ],
+    "note": "HEAD coincide com o snapshot; os caminhos de source drift são alterações do working tree, não commits. A classificação não certifica esse baseline antigo."
+  },
+  "freeze_verification": {
+    "path": "docs/sdd/inonu-desktop-v1/FREEZE.json",
+    "latest_revision": "r3",
+    "frozen_at": "2026-10-13",
+    "files_checked": 13,
+    "hashes_match": true,
+    "method": "SHA-256 dos bytes atuais comparado aos hashes da última revisão do manifesto."
+  },
+  "code_inspected": true,
+  "code_inspected_count": 60,
+  "code_inspected_paths": [
+    "src/desktop/main.ts",
+    "src/desktop/core.ts",
+    "src/desktop/handlers.ts",
+    "src/desktop/vault.ts",
+    "src/desktop/provision.ts",
+    "src/desktop/doctor.ts",
+    "src/desktop/launcher.ts",
+    "src/desktop/browser.ts",
+    "src/desktop/cleanup.ts",
+    "src/desktop/paths.ts",
+    "src/desktop/cleanup.test.ts",
+    "src/desktop/doctor.test.ts",
+    "src/desktop/handlers.test.ts",
+    "src/desktop/vault.test.ts",
+    "installer/inonu.nsi",
+    "scripts/build-desktop.ts",
+    "src/inonu/http.ts",
+    "src/inonu/ask.ts",
+    "src/inonu/source.ts",
+    "src/inonu/source-onchain.ts",
+    "src/inonu/source-discovery.ts",
+    "src/inonu/source-ranking.ts",
+    "src/inonu/onchain-plan.ts",
+    "src/inonu/ledger.ts",
+    "src/inonu/source-count.ts",
+    "src/inonu/jev-model.ts",
+    "src/inonu/collector.ts",
+    "src/inonu/flow-memory.ts",
+    "src/inonu/okx-ws.ts",
+    "src/inonu/okx-public.ts",
+    "src/inonu/overlay.ts",
+    "src/inonu/prices.ts",
+    "src/inonu/screener.ts",
+    "src/inonu/ask.test.ts",
+    "src/inonu/collector.test.ts",
+    "src/inonu/flow-memory.test.ts",
+    "src/inonu/ledger.test.ts",
+    "src/inonu/okx-public.test.ts",
+    "src/inonu/overlay.test.ts",
+    "src/inonu/source-discovery.test.ts",
+    "src/inonu/source.test.ts",
+    "web/src/app/doctor/page.tsx",
+    "web/src/components/Doctor/DoctorView.tsx",
+    "web/src/lib/doctor/client.ts",
+    "web/src/components/Desk/InonuAsk.tsx",
+    "web/src/lib/inonu/client.ts",
+    "web/src/lib/inonu/accept.ts",
+    "web/src/lib/inonu/ask-target.ts",
+    "web/src/lib/inonu/ask-trigger.ts",
+    "web/src/lib/inonu/overlay-feed.ts",
+    "web/src/components/Desk/TopbarDiscovery.tsx",
+    "web/src/lib/inonu/ask-trigger.test.ts",
+    "web/src/lib/inonu/overlay-feed.test.ts",
+    "web/src/components/Desk/Dock/DockComposite.tsx",
+    "web/src/components/Desk/Dock/DockPanel.tsx",
+    "web/src/lib/mesa/dock.ts",
+    "web/src/lib/mesa/dock-subviews.ts",
+    "web/src/components/Rastreador/RastreadorView.tsx",
+    "web/src/lib/rastreador/choose.ts",
+    "web/src/lib/inonu/ask-target.test.ts"
+  ],
+  "documents": [
+    {"path":"docs/sdd/inonu-desktop-v1/adr/ADR-1-instalavel.md","read_mode":"full","classification":"frozen_contract","reason":"ADR incluído no freeze r3; descreve decisão de instalação, não prova execução."},
+    {"path":"docs/sdd/inonu-desktop-v1/adr/ADR-2-segredos.md","read_mode":"full","classification":"frozen_contract","reason":"ADR incluído no freeze r3; define o limite de segredos."},
+    {"path":"docs/sdd/inonu-desktop-v1/adr/ADR-3-camadas-e-nomenclatura.md","read_mode":"full","classification":"frozen_contract","reason":"ADR incluído no freeze r3; contrato de camadas e chamada sob demanda."},
+    {"path":"docs/sdd/inonu-desktop-v1/adr/ADR-4-sem-simulado.md","read_mode":"full","classification":"frozen_contract","reason":"ADR incluído no freeze r3; regra de dados reais no caminho de execução."},
+    {"path":"docs/sdd/inonu-desktop-v1/adr/ADR-5-carteira.md","read_mode":"full","classification":"frozen_contract","reason":"ADR incluído no freeze r3; enviar pela carteira permanece desligado no contrato."},
+    {"path":"docs/sdd/inonu-desktop-v1/adr/ADR-6-custo-e-formas-de-uso.md","read_mode":"full","classification":"frozen_contract","reason":"ADR incluído no freeze r3; decisão sobre modos e orçamento de OnchainOS."},
+    {"path":"docs/sdd/inonu-desktop-v1/CHECKPOINT.md","read_mode":"full","classification":"historical_evidence","reason":"Registro datado da sessão; status e testes ali relatados não foram reexecutados. RAS-6 e DOC-3/AC-DOC-2 precisam de reconciliação com o código atual.","code_refs":[{"path":"web/src/components/Rastreador/RastreadorView.tsx","lines":"351-365, 566-596"},{"path":"src/desktop/handlers.ts","lines":"150-160"}]},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/busca-real.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência de busca de uma sessão anterior; não reexecutada nesta auditoria."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/revisao-independente-1.md","read_mode":"full","classification":"historical_evidence","reason":"Parecer independente datado; não substitui revisão desta árvore."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T1-instalavel.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência histórica de build/instalação; não reexecutada."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T1.8-T7.3-doctor-e-pedir-ao-inonu.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência histórica de Doctor e fluxo Inonu; não reexecutada nem usada como leitura de credenciais."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T2-cofre.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência histórica de testes do cofre; nenhum valor do cofre foi lido nesta auditoria."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T2.3-T2.4-T7.4-provedores-limpeza-uso.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência de uso e provisionamento de outra execução; não reproduzida."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T3.2-relogio.md","read_mode":"full","classification":"historical_evidence","reason":"Registro datado de medição de relógio; nenhuma sincronização foi acionada nesta auditoria."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T4.6-painel-de-5-abas.md","read_mode":"full","classification":"historical_evidence","reason":"Captura e relato de comportamento anterior; confrontado com a estrutura atual do dock, sem abrir app."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência histórica de tela/camada do gráfico; não reexecutada."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T6.6-zonas-nao-medido.md","read_mode":"full","classification":"historical_evidence","reason":"Registro de medição que não foi feita; não certifica desempenho."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência histórica de descoberta e aceitar; não houve chamada de rede/modelo ou clique nesta auditoria."},
+    {"path":"docs/sdd/inonu-desktop-v1/evidence/T8-rastreador.md","read_mode":"full","classification":"historical_evidence","reason":"Evidência datada do Rastreador; confrontada com código atual, sem reproduzir a sessão ao vivo."},
+    {"path":"docs/sdd/inonu-desktop-v1/flow-engine.md","read_mode":"full","classification":"frozen_contract","reason":"Definições operacionais congeladas na revisão r3; não equivalem a medição de ganho."},
+    {"path":"docs/sdd/inonu-desktop-v1/info-diet.md","read_mode":"full","classification":"frozen_contract","reason":"Documento congelado na revisão r3; determina cinco abas e remoção de Ecossistema, mas conflita com DOC-3/AC-DOC-2 da SPEC." ,"code_refs":[{"path":"web/src/lib/mesa/dock.ts","lines":"35-60"}]},
+    {"path":"docs/sdd/inonu-desktop-v1/onchainos-coverage.md","read_mode":"full","classification":"frozen_contract","reason":"Matriz de cobertura incluída no freeze r3; é referência documental, sem sondagem nesta auditoria."},
+    {"path":"docs/sdd/inonu-desktop-v1/OWNERSHIP.md","read_mode":"full","classification":"current_reference","reason":"Mapa de posse e zonas de edição; lido para preservar limites, sem inferir que todos os caminhos atribuídos foram inspecionados."},
+    {"path":"docs/sdd/inonu-desktop-v1/PLAN.md","read_mode":"full","classification":"proposal","reason":"Plano de ondas e dependências, não autorização nem prova de conclusão."},
+    {"path":"docs/sdd/inonu-desktop-v1/rastreador.md","read_mode":"full","classification":"frozen_contract","reason":"Contrato do Rastreador congelado na revisão r3; confrontado com a implementação, sem certificação em runtime."},
+    {"path":"docs/sdd/inonu-desktop-v1/README.md","read_mode":"full","classification":"current_reference","reason":"Índice da pasta SDD. A frase da entrega documental sem código em linha 3 é contextual àquela rodada, não afirma que o working tree atual não contém produto."},
+    {"path":"docs/sdd/inonu-desktop-v1/runbooks/reiniciar-backend.md","read_mode":"full","classification":"current_reference","reason":"Runbook consultivo; nenhuma porta, processo ou serviço foi alterado ou reiniciado."},
+    {"path":"docs/sdd/inonu-desktop-v1/SPEC.md","read_mode":"sections","classification":"frozen_contract","reason":"SPEC da revisão r3 com hashes conferidos; DOC-3 e AC-DOC-2 permanecem em conflito com info-diet, aberto para revisão sem alteração." ,"code_refs":[{"path":"web/src/lib/mesa/dock.ts","lines":"35-60"}]},
+    {"path":"docs/sdd/inonu-desktop-v1/spikes/T1.1.md","read_mode":"full","classification":"historical_evidence","reason":"Spike datado e inconclusivo sobre extensão; não foi repetido."},
+    {"path":"docs/sdd/inonu-desktop-v1/TASKS.md","read_mode":"full","classification":"needs_review","reason":"O status RAS-6 e a afirmação final de que nenhum código foi executado conflitam com o caminho de ranking atual e com verificações descritas no próprio documento; os testes históricos não foram reexecutados.","code_refs":[{"path":"web/src/components/Rastreador/RastreadorView.tsx","lines":"351-365, 566-596"},{"path":"src/inonu/source-ranking.ts","lines":"78-125"},{"path":"src/desktop/handlers.ts","lines":"150-160"}]},
+    {"path":"docs/sdd/inonu-desktop-v1/wallet.md","read_mode":"full","classification":"frozen_contract","reason":"Contrato de carteira congelado na revisão r3; envio permanece condicionado e não foi executado."}
+  ],
+  "hypothesis_checks": [
+    {
+      "id": "H-README-SDD",
+      "result": "not_a_current_state_conflict",
+      "reason": "README.md:3 delimita 'sem código' à entrega documental original; CHECKPOINT.md:3 descreve a implementação iniciada depois.",
+      "classification": "current_reference",
+      "evidence": [{"path":"docs/sdd/inonu-desktop-v1/README.md","lines":"3"},{"path":"docs/sdd/inonu-desktop-v1/CHECKPOINT.md","lines":"3, 33-50"}]
+    },
+    {
+      "id": "H-FASE2-R2-R3",
+      "result": "confirmed_stale_current_reference",
+      "reason": "O freeze r3 atual confere em 13/13 hashes; o README da Fase 2 ainda declara baseline r2 e diz que o modo token não está ligado, enquanto handlers.ts já liga token e descoberta.",
+      "classification": "stale_reference",
+      "evidence": [{"path":"docs/sdd/inonu-desktop-v1/FREEZE.json","lines":"44-62"},{"path":"docs/sdd/config-onchain-smartmoney/fase-2/README.md","lines":"24, 61-63"},{"path":"src/desktop/handlers.ts","lines":"150-160"}]
+    },
+    {
+      "id": "H-ECOSSISTEMA-INFO-DIET",
+      "result": "confirmed_unresolved_conflict",
+      "reason": "SPEC DOC-3/AC-DOC-2 exigem a aba Ecossistema; info-diet e o código atual colocam notícias em Radar e mantêm cinco abas. CHECKPOINT registra revisão r4 pendente.",
+      "classification": "needs_review",
+      "evidence": [{"path":"docs/sdd/inonu-desktop-v1/SPEC.md","lines":"186-187, 367"},{"path":"docs/sdd/inonu-desktop-v1/info-diet.md","lines":"38, 48-64"},{"path":"web/src/lib/mesa/dock.ts","lines":"35-60"},{"path":"docs/sdd/inonu-desktop-v1/CHECKPOINT.md","lines":"74"}]
+    },
+    {
+      "id": "H-RAS6",
+      "result": "static_path_present_status_needs_review",
+      "reason": "A UI, request mapper e source ranking estão conectados no working tree; sem teste, app ou modelo real, não se certifica funcionamento observado.",
+      "classification": "needs_review",
+      "evidence": [{"path":"web/src/components/Rastreador/RastreadorView.tsx","lines":"351-365, 566-596"},{"path":"web/src/lib/inonu/ask-target.ts","lines":"26-36"},{"path":"src/inonu/source-ranking.ts","lines":"78-125"},{"path":"src/desktop/handlers.ts","lines":"150-160"}]
+    }
+  ],
+  "claims": [
+    {
+      "id": "C-01",
+      "statement": "Build script define export estático, exe Bun e instalador NSIS; o instalador especifica instalação por usuário e preservação de dados salvo escolha explícita.",
+      "evidence": [{"path":"scripts/build-desktop.ts","lines":"4-12, 20-21, 123-146"},{"path":"installer/inonu.nsi","lines":"4-10, 32-36, 80-95, 149-155"}],
+      "limits": ["Nenhum build, instalador ou desinstalador foi executado nesta auditoria."]
+    },
+    {
+      "id": "C-02",
+      "statement": "O núcleo é configurado para 127.0.0.1 e exige IP/Host de loopback; /__inonu/doctor atende GET e recusa Sec-Fetch-Site não same-origin quando o cabeçalho existe.",
+      "evidence": [{"path":"src/desktop/core.ts","lines":"184-200, 232-240"}],
+      "limits": ["A rota Doctor aceita sec-fetch-site ausente; não foi feito teste dinâmico de guarda."]
+    },
+    {
+      "id": "C-03",
+      "statement": "Montar Doctor dispara fetch; o launcher liga medição de relógio, estado booleano de credenciais e uma leitura gratuita de /onchain/chains.",
+      "evidence": [{"path":"web/src/components/Doctor/DoctorView.tsx","lines":"73-85"},{"path":"src/desktop/launcher.ts","lines":"118-141"},{"path":"src/desktop/doctor.ts","lines":"42-53, 79-97, 122-158"}],
+      "limits": ["A auditoria não montou a página, não chamou rede e não leu valores de credenciais."]
+    },
+    {
+      "id": "C-04",
+      "statement": "Handlers conectam fontes para ativo, token, descoberta e ranking; filtro usa o caminho separado do screener.",
+      "evidence": [{"path":"src/desktop/handlers.ts","lines":"150-174"},{"path":"src/inonu/ask.ts","lines":"25-44, 441-459"},{"path":"src/inonu/source-onchain.ts","lines":"60-86, 119-126"},{"path":"src/inonu/source-discovery.ts","lines":"76-78, 139-143"}],
+      "limits": ["Rotas foram inspecionadas estaticamente; nada foi chamado."]
+    },
+    {
+      "id": "C-05",
+      "statement": "Rastreador permite selecionar de duas a cinco linhas, mapeia para modo ranking e a fonte compõe um Brief conjunto; handler liga a fonte.",
+      "evidence": [{"path":"web/src/components/Rastreador/RastreadorView.tsx","lines":"351-365, 566-596"},{"path":"web/src/lib/inonu/ask-target.ts","lines":"26-36"},{"path":"src/inonu/source-ranking.ts","lines":"78-125"},{"path":"src/desktop/handlers.ts","lines":"153-160"}],
+      "limits": ["Presença estática não certifica uso do modelo, UI em execução nem conclusão observada de RAS-6."]
+    },
+    {
+      "id": "C-06",
+      "statement": "Ledger é JSONL local limitado; não armazena prompt, resposta ou chave. Taxas por milhão começam null no handler e o código mantém teto de contagem diária.",
+      "evidence": [{"path":"src/desktop/handlers.ts","lines":"68-72, 104-108, 147-150"},{"path":"src/inonu/ledger.ts","lines":"6-8, 86-103, 130-162"},{"path":"src/inonu/ask.ts","lines":"141-142, 307-310, 395-398"}],
+      "limits": ["Não foram lidos dados de ledger ou prices.json; preço efetivo atual, custos e uso permanecem desconhecidos."]
+    },
+    {
+      "id": "C-07",
+      "statement": "Aceitar grava um registro local e atualiza estado da decisão; o fluxo observado no código não envia ordem.",
+      "evidence": [{"path":"web/src/lib/inonu/accept.ts","lines":"2-5, 26-59"},{"path":"web/src/components/Desk/InonuAsk.tsx","lines":"215-221"}],
+      "limits": ["Nenhum clique, journal local ou caminho de execução financeira foi exercitado."]
+    },
+    {
+      "id": "C-08",
+      "statement": "Dock tem cinco abas e mapeia o identificador legado ecossistema para Radar/Notícias.",
+      "evidence": [{"path":"web/src/lib/mesa/dock.ts","lines":"35-60"},{"path":"web/src/lib/mesa/dock-subviews.ts","lines":"19-31"}],
+      "limits": ["A montagem visual não foi testada nesta auditoria."]
+    },
+    {
+      "id": "C-09",
+      "statement": "A última revisão declarada no freeze é r3 e os 13 hashes nela listados correspondem aos arquivos atuais.",
+      "evidence": [{"path":"docs/sdd/inonu-desktop-v1/FREEZE.json","lines":"44-62"}],
+      "limits": ["Verificação de hash documental, não teste do produto nem certificação dos outros arquivos do working tree."]
+    }
+  ],
+  "documentation_findings": [
+    {
+      "id": "DF-01",
+      "classification": "stale_reference",
+      "related_documents": [
+        {"path":"docs/sdd/config-onchain-smartmoney/fase-2/README.md","lines":"24, 61-63"},
+        {"path":"docs/sdd/config-onchain-smartmoney/fase-2/SPEC.md","lines":"3, 251"}
+      ],
+      "statement": "Essas referências ainda apresentam r2 como baseline corrente e dizem que o modo token não foi ligado.",
+      "current_evidence": [
+        {"path":"docs/sdd/inonu-desktop-v1/FREEZE.json","lines":"44-62"},
+        {"path":"docs/sdd/inonu-desktop-v1/CHECKPOINT.md","lines":"6, 75"},
+        {"path":"src/desktop/handlers.ts","lines":"150-160"}
+      ],
+      "assessment": "A revisão r3 é a última congelada e seus 13 hashes conferem; o código liga token, descoberta e ranking. Manter o adendo como proposta histórica e atualizar apenas por processo autorizado.",
+      "limits": ["Nenhuma SPEC congelada ou documento externo ao owner foi alterado."]
+    },
+    {
+      "id": "DF-02",
+      "classification": "needs_review",
+      "related_documents": [
+        {"path":"docs/sdd/inonu-desktop-v1/SPEC.md","lines":"186-187, 367"},
+        {"path":"docs/sdd/inonu-desktop-v1/info-diet.md","lines":"38, 48-64"},
+        {"path":"docs/sdd/inonu-desktop-v1/CHECKPOINT.md","lines":"74"},
+        {"path":"docs/sdd/inonu-desktop-v1/TASKS.md","lines":"89"}
+      ],
+      "statement": "DOC-3 e AC-DOC-2 ainda mencionam Ecossistema como aba; info-diet e o código removem a aba e movem notícias para Radar.",
+      "current_evidence": [{"path":"web/src/lib/mesa/dock.ts","lines":"35-60"},{"path":"web/src/lib/mesa/dock-subviews.ts","lines":"19-31"}],
+      "assessment": "Conflito explicitamente pendente de revisão r4; não resolver nem editar o contrato nesta auditoria.",
+      "limits": ["Nenhum app foi aberto para conferir aparência ou montagem visual."]
+    },
+    {
+      "id": "DF-03",
+      "classification": "needs_review",
+      "related_documents": [
+        {"path":"docs/sdd/inonu-desktop-v1/TASKS.md","lines":"142, 177"},
+        {"path":"docs/sdd/inonu-desktop-v1/CHECKPOINT.md","lines":"75"}
+      ],
+      "statement": "Os docs dizem que RAS-6 não foi feito e TASKS também diz que nenhuma execução de código ocorreu.",
+      "current_evidence": [
+        {"path":"web/src/components/Rastreador/RastreadorView.tsx","lines":"351-365, 566-596"},
+        {"path":"web/src/lib/inonu/ask-target.ts","lines":"26-36"},
+        {"path":"src/inonu/source-ranking.ts","lines":"78-125"},
+        {"path":"src/desktop/handlers.ts","lines":"153-160"},
+        {"path":"docs/sdd/inonu-desktop-v1/TASKS.md","lines":"38-49, 54-58, 124-142"}
+      ],
+      "assessment": "O caminho está estaticamente conectado, então a indicação de não implementação precisa de revisão. A alegação de nenhuma execução é contradita pelo próprio TASKS e CHECKPOINT. Não promover para funcionamento verificado sem evidência atual de execução.",
+      "limits": ["Testes lidos não foram executados; nenhuma inferência de modelo real ou runtime."]
+    }
+  ],
+  "verification_scope": "static_source_and_document_inspection",
+  "tests_run": [],
+  "reported_test_results_not_attributed": "Resultados existentes em CHECKPOINT, log ou relatados por terceiros não foram contados como testes executados nesta auditoria.",
+  "unverified": [
+    "Não foram examinados todos os 101 source_paths; code_inspected_paths lista somente os 60 arquivos efetivamente examinados.",
+    "Não foram lidos individualmente os 11 artifact_paths nem os arquivos de captura; FREEZE.json foi usado para a checagem estática dos hashes r3.",
+    "App, navegador, build, installer, smoke tests e suítes de teste não foram executados.",
+    "Nenhuma chamada externa de Doctor, OKX, OnchainOS, modelo ou rede foi feita.",
+    "Nenhum valor de cofre, arquivo .env, ledger local ou prices.json foi lido; nenhuma operação de cofre foi realizada.",
+    "Não foram medidos custo faturado, tokens, comportamento em runtime, status efetivo de credenciais ou resultado de resposta real do modelo.",
+    "O índice e o log globais não foram editados por causa da restrição de escrita aos dois caminhos exclusivos do owner."
+  ],
+  "billed_cost": null
+}

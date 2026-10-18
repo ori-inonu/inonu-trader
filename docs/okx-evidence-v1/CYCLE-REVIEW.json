@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "kind": "sdd_cycle_review",
+  "proposal_id": "okx-evidence-offline-v1",
+  "proposal_sha256": "dbb8440386f98cadf58935f6b4fd48a584516144ab284a16bf19def6b9e8f5a4",
+  "objective_sha256": "ba984bb07b02aab6428e66cdaaac0f08959b09bb564091517bc2a08ffd847fe5",
+  "constraints_sha256": "dd16e485f84cc3aeae27614a46c281ee2dc4f75f7ba7eb551f067168bec46c35",
+  "implementer_id": "01a1221e-root-integrator",
+  "reviewer_id": "01a125a9-632d-7c62-b920-da886d69a180",
+  "decision": "approve",
+  "scope_assessment": "within_authorized_objective",
+  "scope_reason": "A união offline de relatórios Signals e Meme Pump por rede e contrato amplia a pesquisa verificável de oportunidades OKX já autorizada. Aprovação restrita ao ciclo local descrito em PROPOSTA.md: preservar proveniência, caixa por rede, duplicatas, horários, estágio, desconhecidos e execution=not_qualified; não promover sintético a autenticado, popularidade a qualificação, liquidez de pool a saída executável ou delta bruto a retorno líquido. A barreira DEX e seus critérios congelados permanecem. SPEC e limites de entrada devem ser detalhados, congelados e revisados independentemente antes da implementação. Sem rede, autenticação, credenciais, alteração do executor, operações financeiras, commit/push ou publicação. Todas as quatro referências conferem por SHA256; esta decisão independente de escopo não inventa aprovação humana nem valida implementação ou ganhos."
+}

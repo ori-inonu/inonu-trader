@@ -1,0 +1,214 @@
+{
+  "observedAt": "2026-10-11T15:19:02.7515896-03:00",
+  "conversation": "01a12971-f941-7e42-8a42-fab6d44d4eb5",
+  "baselineMain": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+  "worktrees": [
+    {
+      "path": "C:/Users/gabri/jev-trader",
+      "head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+      "branch": "feature/jev-command-center",
+      "trackedChanges": 18,
+      "untrackedEntries": 61
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/gev-wallet-pilot/jev-trader",
+      "head": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+      "branch": null,
+      "trackedChanges": 2,
+      "untrackedEntries": 7
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/gev-wallet-pilot-ui/jev-trader",
+      "head": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+      "branch": null,
+      "trackedChanges": 0,
+      "untrackedEntries": 5
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/inonu-system-one-safety/jev-trader",
+      "head": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+      "branch": "codex/inonu-system-one-safety",
+      "trackedChanges": 2,
+      "untrackedEntries": 78
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/jev-panel-integration/jev-trader",
+      "head": "32fbaf8c51d799c734a758ed2e9afa23a9c898d5",
+      "branch": "codex/jev-panel-integration",
+      "trackedChanges": 0,
+      "untrackedEntries": 0
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/okx-real-integration/jev-trader",
+      "head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+      "branch": null,
+      "trackedChanges": 18,
+      "untrackedEntries": 49
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/.claude/worktrees/agent-a8cd8353a9c2206b8",
+      "head": "85141d12266f824deaf7532c8b64ccb860dfe7de",
+      "branch": "worktree-agent-a8cd8353a9c2206b8",
+      "trackedChanges": 0,
+      "untrackedEntries": 0
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/.claude/worktrees/agent-ac3b992be12068e8d",
+      "head": "667a32761f775497bc7b270b412a18e6922ab632",
+      "branch": "worktree-agent-ac3b992be12068e8d",
+      "trackedChanges": 0,
+      "untrackedEntries": 0
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader-desk",
+      "head": "4a1d9e9500468ba566d377d6248d20834e932b4f",
+      "branch": "feature/jev-trading-desk",
+      "trackedChanges": 0,
+      "untrackedEntries": 6
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader-jev",
+      "head": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "branch": "feature/lab-real-jev",
+      "trackedChanges": 0,
+      "untrackedEntries": 0
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader-main",
+      "head": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+      "branch": "main",
+      "trackedChanges": 0,
+      "untrackedEntries": 0
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader-r8",
+      "head": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "branch": "feature/okx-operator-r8",
+      "trackedChanges": 16,
+      "untrackedEntries": 0
+    }
+  ],
+  "branches": [
+    {
+      "branch": "codex/inonu-system-one-safety",
+      "head": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+      "mainOnly": 0,
+      "branchOnly": 0
+    },
+    {
+      "branch": "codex/inonu-trader-preparation",
+      "head": "12394df44e1bd28e424fb55db462eeadf7168d41",
+      "mainOnly": 124,
+      "branchOnly": 0
+    },
+    {
+      "branch": "codex/jev-panel-integration",
+      "head": "32fbaf8c51d799c734a758ed2e9afa23a9c898d5",
+      "mainOnly": 2,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/central-ui",
+      "head": "2f71f8ff186e77863c8095bd2aef8e8fb01a11cf",
+      "mainOnly": 106,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/derivatives-and-live-qualification",
+      "head": "62b6453e61da47928ae5086a93ad24d139edcdb3",
+      "mainOnly": 115,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/jev-command-center",
+      "head": "055a637f27f28cbf357cfb492534f7ed33d9b68f",
+      "mainOnly": 34,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/jev-decision-lab",
+      "head": "ab30273e4c0d322fe49efc888ff49061224aa32f",
+      "mainOnly": 55,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/jev-trading-desk",
+      "head": "4a1d9e9500468ba566d377d6248d20834e932b4f",
+      "mainOnly": 0,
+      "branchOnly": 2
+    },
+    {
+      "branch": "feature/lab-real-jev",
+      "head": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "mainOnly": 37,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/okx-operator-r8",
+      "head": "bd8f78aeb0f3ba8acfc184a3b31699a5c815c8e8",
+      "mainOnly": 37,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/onchainos-data-clients",
+      "head": "60133ceb718d41f573fbb343e53d14248c7989ee",
+      "mainOnly": 52,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/onchainos-inventory",
+      "head": "3edfd5c5e7817f032b01f4d70ea3e190219e0483",
+      "mainOnly": 89,
+      "branchOnly": 0
+    },
+    {
+      "branch": "feature/policy-envelope",
+      "head": "026abdd657656901aa4d906d3f0093497011f570",
+      "mainOnly": 106,
+      "branchOnly": 0
+    },
+    {
+      "branch": "hermes/release-v0.0.2",
+      "head": "a14a425f9af7ceae6a24b02b32ba9fe15ce4203f",
+      "mainOnly": 124,
+      "branchOnly": 0
+    },
+    {
+      "branch": "hermes/release-v0.0.2-ready",
+      "head": "a2fa020ca827d283d50dfb3ade282808a7801128",
+      "mainOnly": 124,
+      "branchOnly": 0
+    },
+    {
+      "branch": "hermes/release-v0.0.2-receipt-safety",
+      "head": "ee4249de3be554a0f0eccfbf20d77a7f0d739cec",
+      "mainOnly": 124,
+      "branchOnly": 0
+    },
+    {
+      "branch": "integration/v0.0.2",
+      "head": "c352f82755862f4a4619d5e0d4411e2194f8d6a8",
+      "mainOnly": 124,
+      "branchOnly": 0
+    },
+    {
+      "branch": "main",
+      "head": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+      "mainOnly": 0,
+      "branchOnly": 0
+    },
+    {
+      "branch": "worktree-agent-a8cd8353a9c2206b8",
+      "head": "85141d12266f824deaf7532c8b64ccb860dfe7de",
+      "mainOnly": 114,
+      "branchOnly": 0
+    },
+    {
+      "branch": "worktree-agent-ac3b992be12068e8d",
+      "head": "667a32761f775497bc7b270b412a18e6922ab632",
+      "mainOnly": 114,
+      "branchOnly": 0
+    }
+  ],
+  "limitations": "Untracked entries count porcelain normal directory entries, not recursive file count. Ancestry does not prove behavioral completion. Concurrent changes remain preserved."
+}

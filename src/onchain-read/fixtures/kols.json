@@ -1,0 +1,36 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": {
+    "kols": [
+      {
+        "engagement": "4664",
+        "firstMention": { "contentId": "89798340153408", "time": "1791760874000" },
+        "followers": "58389",
+        "handle": "jackduval",
+        "impressions": "302503",
+        "mentions": "2",
+        "nickname": "Jack Duval"
+      },
+      {
+        "engagement": "326",
+        "firstMention": { "contentId": "89807520109792", "time": "1791769852000" },
+        "followers": "4943",
+        "handle": "bonk_inu_zh",
+        "impressions": "13952",
+        "mentions": "2",
+        "nickname": "BONK zh"
+      },
+      {
+        "engagement": "10",
+        "firstMention": { "contentId": "1", "time": "1791760000000" },
+        "followers": "1",
+        "handle": "not a handle!",
+        "impressions": "20",
+        "mentions": "1",
+        "nickname": "bad row drops"
+      }
+    ]
+  },
+  "msg": ""
+}

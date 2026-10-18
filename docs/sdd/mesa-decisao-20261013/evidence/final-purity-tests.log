@@ -1,0 +1,32 @@
+bun test v1.3.14 (0d9b296a)
+
+src\outcomes\live-costs.test.ts:
+(pass) the runtime cost defaults preserve the complete existing schema and values [5.96ms]
+(pass) every object in the runtime cost defaults is frozen [0.87ms]
+(pass) the runtime cost module has no dependency on evaluator fixtures [62.79ms]
+
+src\outcomes\wire.test.ts:
+(pass) the wiring > the costs come from the lab table: two legs of a fee and of slippage [0.77ms]
+(pass) the wiring > not live: nothing is scheduled, the asker is returned untouched and the recorder is off [57.97ms]
+(pass) the wiring > live: the clock is aligned to the five minute boundary, the asker is wrapped, and close stops the clock [5.60ms]
+(pass) the wiring > INONU_RECORDER=off switches it off at the moment it is read, with no restart [3.06ms]
+(pass) the wiring > the Placar of an empty store is not measured, and it is reused for a few seconds [17.56ms]
+(pass) GET /inonu/placar > serves the Placar and the recorder's health, with the same guards as the other routes [28.07ms]
+(pass) GET /inonu/placar > without the dependency the route does not exist [1.30ms]
+(pass) /inonu/perfil > nothing chosen yet, then a profile is saved with the intent header and read back, and cleared with two nulls [26.18ms]
+(pass) /inonu/perfil > a write needs the intent header, and a nonsense profile is a 400 that changes nothing [4.10ms]
+
+web\src\lib\purity-bundle.test.ts:
+(pass) the scanner sees what it should > follows relative and alias imports, re-exports and dynamic imports, and not packages [96.92ms]
+(pass) the scanner sees what it should > a fixture reached through two hops is found by its path, a synthetic constant by its name [35.77ms]
+(pass) the scanner sees what it should > a module that is not reached is not a leak, and a clean graph is clean [16.51ms]
+(pass) the scanner sees what it should > tests, mocks and synthetic readings are caught by name wherever they sit [45.36ms]
+(pass) what the installed app can reach > the pages the core serves reach no fixture, no synthetic data and no mock (the old console is not served) [2922.84ms]
+(pass) what the installed app can reach > the core reaches none either, so no synthetic reading is ever served as if it were the market [2168.07ms]
+(pass) what the installed app can reach > the old console, which the installed app does not serve, is where the synthetic report still is (the guard would fire if it were served) [1502.47ms]
+(pass) what the installed app can reach > the core does answer 404 for the console, so that leak is unreachable at run time (T1.11) [0.60ms]
+
+ 20 pass
+ 0 fail
+ 62 expect() calls
+Ran 20 tests across 3 files. [8.38s]

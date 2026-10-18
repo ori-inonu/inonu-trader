@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-subgrafo",
+    "specHash": "0f347a58df4b918ddc9c47b380642bcf97bd50b565e3ea63b07f8f1d6c978089",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "export_neighborhood",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "export_neighborhood",
+          "export_by_type",
+          "defer"
+        ],
+        "framings": [
+          {
+            "order": [
+              "export_neighborhood",
+              "export_by_type",
+              "defer"
+            ],
+            "probs": {
+              "export_neighborhood": 0.83,
+              "export_by_type": 0.14,
+              "defer": 0.02,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "export_by_type",
+              "defer",
+              "export_neighborhood"
+            ],
+            "probs": {
+              "export_by_type": 0.15,
+              "defer": 0.02,
+              "export_neighborhood": 0.81,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "defer",
+              "export_neighborhood",
+              "export_by_type"
+            ],
+            "probs": {
+              "defer": 0.01,
+              "export_neighborhood": 0.85,
+              "export_by_type": 0.13,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "export_neighborhood": 0.83,
+          "export_by_type": 0.14,
+          "defer": 0.0167
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.69,
+        "leader": "export_neighborhood",
+        "railProb": {
+          "export_neighborhood": 0.02,
+          "export_by_type": 0.01,
+          "defer": 0.01
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "export_neighborhood",
+          "export_by_type",
+          "defer"
+        ],
+        "framings": [
+          {
+            "order": [
+              "export_neighborhood",
+              "export_by_type",
+              "defer"
+            ],
+            "probs": {
+              "export_neighborhood": 0.8,
+              "export_by_type": 0.17,
+              "defer": 0.01,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "export_by_type",
+              "defer",
+              "export_neighborhood"
+            ],
+            "probs": {
+              "export_by_type": 0.33,
+              "defer": 0.04,
+              "export_neighborhood": 0.61,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "defer",
+              "export_neighborhood",
+              "export_by_type"
+            ],
+            "probs": {
+              "defer": 0.02,
+              "export_neighborhood": 0.85,
+              "export_by_type": 0.12,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "export_neighborhood": 0.7533,
+          "export_by_type": 0.2067,
+          "defer": 0.0233
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.5466,
+        "leader": "export_neighborhood",
+        "railProb": {
+          "export_neighborhood": 0.02,
+          "export_by_type": 0.01,
+          "defer": 0.01
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 7065,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

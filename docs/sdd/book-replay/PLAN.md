@@ -1,0 +1,16 @@
+# Future profile-4 plan
+
+Status: proposed, unfrozen. Native goal remains active and full scope remains unchanged.
+
+1. Research: retain 34 input hashes; independently assess F01-F06 and exact compact output capacity. Root owns root/contract/evidence files; assessor owns assessment only. Record actual source excerpts and synthetic proof results.
+2. Decision: submit the proved finite alternatives to installed Jev Workflows Choice in evaluate mode using only sanitized facts. Persist receipt, source/model/known usage, unknown cost=null and human_response=false. Abstention means defer dependent freeze and continue independent work.
+3. Specification: root writes exact SPEC/SCHEMA and machine-readable acceptance. Review a fixed copy with a different reviewer against F01-F06 and V4-AC01-V4-AC14 testability/completeness. Freeze only after real independent ACCEPT. Preserve all old frozen references and failed candidate status.
+4. Implementation handoff: create a separate isolated writer workspace; inspect/pin the old failed candidate as a possible seed without accepting it. Writer exclusively owns src/book-replay-v4/**, scripts/book-replay-v4.ts, docs/BOOK-REPLAY-V4.md and owned contract copies. Root alone owns main integration. No user preexisting work is staged or overwritten.
+5. TDD: write actual failing regressions for original literal preservation under overflow, four-field maximum escaping, producer reason difference, valid update diagnostic, resultBytes boundaries and cancellation/provenance before changing implementation. Preserve original assertions for gates, metadata, precision, partitions and book events. Record red exit/evidence, make minimum changes, rerun green; explain any alternative where direct TDD is impossible.
+6. Verification: run the full new replay suite, relevant preserved public-capture regressions, scoped type/build checks, static import/I/O checks and default/embedded synthetic CLI. Use Bun --no-env-file and RTK/Headroom for large output. Verify real final API summary and hashing against independent bound, controlled cancellation, immutability and forbidden output fields. No network or wallet access.
+7. Independent review: freeze candidate file manifest and criterion hashes; provide an isolated copy and exclusive review outputs to separate standards and specification reviewers. Configured model/tier/sandbox are not runtime proof. Review findings cannot weaken frozen criteria. No reviewer edits candidate; root integrates fixes via new pinned evidence.
+8. Integration/audit: only after current future acceptance and independent reviews, root copies exclusive approved files into main using before/after guards, reads back exact hashes, and reruns affected checks. Distinct review confirms applied target and untouched baseline. Close the bounded delivery only with evidence for every frozen future criterion; leave the broad native goal active.
+
+## Continuation
+
+The current task covers research/specification through independent design review. Actual replay implementation and backtest economics are still pending goal work. A plan is not proof of functionality. Capture authentication, historic validity, net return and 24-hour runtime need separate future evidence and cannot be inferred from this design.

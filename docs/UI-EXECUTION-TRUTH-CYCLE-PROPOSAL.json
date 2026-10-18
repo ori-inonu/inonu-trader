@@ -1,0 +1,11 @@
+{
+  "id": "ui-execution-truth",
+  "summary": "Correct unsupported public execution and cadence claims within the full operational JEV objective; preserve individual receipt semantics and pending runtime/integration work.",
+  "references": [
+    {
+      "path": "docs/UI-EXECUTION-TRUTH-SPEC.md",
+      "sha256": "585570519ecbd1d9a383ecf42d7465bacca709f33e13e136ef1fcff8461f4c30",
+      "excerpt": "U1: Rail public brand copy describes monitoring and decisions"
+    }
+  ]
+}

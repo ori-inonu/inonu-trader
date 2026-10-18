@@ -1,0 +1,42 @@
+{
+  "id": "rc3-d1-prompts",
+  "goal": "Objetivo do projeto: o agente de carteira tomar as melhores decisoes para o melhor retorno liquido, compondo a cada ciclo de 1 minuto. Tudo comeca em sombra e e reversivel; a meta e uma hipotese a medir com custo real, nao uma promessa. O commit 0147547 da branch autoresearch troca os textos de prompt do Jev por constantes de src/generated/prompts. O que fazer com essa extracao agora que a branch esta na main?",
+  "facts": {
+    "modulo": "src/generated/prompts e o gerador que o produziria nao existem em nenhum commit, worktree ou historico; a branch sozinha nao compila",
+    "estado": "13 arquivos (6 de codigo e 7 de teste) ficaram como na main, com os prompts inline; a extracao traz exports novos (operatorQuestions, realQuestions, systemOneQuestions) e cerca de 130 linhas de teste em jev-model.test.ts",
+    "risco": "o texto dos prompts muda o comportamento do Jev; qualquer reescrita sem prova de igualdade e risco de decisao",
+    "prova": "da para reconstruir o modulo a partir dos literais originais e provar por teste que as perguntas montadas ficam identicas as da main",
+    "dono": "o dono ainda pode ter o gerador e os nos de prompt fora do repositorio (grafo local)"
+  },
+  "rails": [
+    "Dinheiro real, ordens, carteira e live trading so por autorizacao do dono",
+    "Nenhuma mudanca de limite de risco, segredo, credencial, migracao de dados ou dependencia paga",
+    "Nao apagar branches, nao reescrever historico e nao fazer push",
+    "Nao prometer lucro; resultado so por medicao com custo real",
+    "O texto dos prompts nao pode mudar sem prova de igualdade por teste"
+  ],
+  "options": [
+    {
+      "id": "manter_adiado",
+      "label": "Manter adiado",
+      "what": "Deixar os 13 arquivos como na main e reaplicar o commit 0147547 so quando o dono commitar o gerador e o modulo gerado."
+    },
+    {
+      "id": "reconstruir_modulo",
+      "label": "Reconstruir o modulo gerado",
+      "what": "Criar src/generated/prompts.ts com os textos dos literais originais, reaplicar 0147547 e provar por teste que as perguntas montadas sao identicas as da main."
+    },
+    {
+      "id": "descartar_refator",
+      "label": "Descartar a extracao",
+      "what": "Abandonar a extracao de prompts e manter os prompts inline definitivamente."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "gerador_dono",
+      "ask": "O dono tem o gerador de prompts e os nos de prompt em algum lugar fora do repositorio?"
+    }
+  ]
+}

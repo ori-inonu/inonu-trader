@@ -1,0 +1,11 @@
+{
+  "references": [
+    {
+      "excerpt": "Evidencia atual:",
+      "sha256": "3fe4d5902116415cd82f005766463ef60cd9c49b9a9f1b44219be77ce697ebf8",
+      "path": "docs/sdd/ui-connected-audit-20261013/PROPOSAL.md"
+    }
+  ],
+  "summary": "Corrigir estados contraditorios da carteira conectada e revisar Carteira, Radar e decisoes em desktop e celular com backend local seguro, preservando gates e sem ordens.",
+  "id": "connected-ui-20261013"
+}

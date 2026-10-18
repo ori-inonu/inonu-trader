@@ -1,0 +1,5 @@
+# Modelo de nomes, sem segredos. O scanner não carrega este arquivo.
+# Configure no ambiente local do processo; não publique valores.
+OKX_WEB3_API_KEY=
+OKX_WEB3_API_SECRET=
+OKX_WEB3_API_PASSPHRASE=

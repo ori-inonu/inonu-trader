@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-5",
+    "specHash": "db47fb45ac70f589da06e37b78771793d79df6e1db62275d48bbdeccbfb4c95a",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "keep_log_new_in_graph",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "migrate_log",
+          "keep_log_new_in_graph",
+          "keep_both"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_log",
+              "keep_log_new_in_graph",
+              "keep_both"
+            ],
+            "probs": {
+              "migrate_log": 0.34,
+              "keep_log_new_in_graph": 0.64,
+              "keep_both": 0.01,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "keep_log_new_in_graph",
+              "keep_both",
+              "migrate_log"
+            ],
+            "probs": {
+              "keep_log_new_in_graph": 0.68,
+              "keep_both": 0.02,
+              "migrate_log": 0.28,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "keep_both",
+              "migrate_log",
+              "keep_log_new_in_graph"
+            ],
+            "probs": {
+              "keep_both": 0.04,
+              "migrate_log": 0.31,
+              "keep_log_new_in_graph": 0.64,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "migrate_log": 0.31,
+          "keep_log_new_in_graph": 0.6533,
+          "keep_both": 0.0233
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.3433,
+        "leader": "keep_log_new_in_graph",
+        "railProb": {
+          "migrate_log": 0.16,
+          "keep_log_new_in_graph": 0.13,
+          "keep_both": 0.06
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "migrate_log",
+          "keep_log_new_in_graph",
+          "keep_both"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_log",
+              "keep_log_new_in_graph",
+              "keep_both"
+            ],
+            "probs": {
+              "migrate_log": 0.32,
+              "keep_log_new_in_graph": 0.66,
+              "keep_both": 0.01,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "keep_log_new_in_graph",
+              "keep_both",
+              "migrate_log"
+            ],
+            "probs": {
+              "keep_log_new_in_graph": 0.72,
+              "keep_both": 0.01,
+              "migrate_log": 0.26,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "keep_both",
+              "migrate_log",
+              "keep_log_new_in_graph"
+            ],
+            "probs": {
+              "keep_both": 0.06,
+              "migrate_log": 0.28,
+              "keep_log_new_in_graph": 0.65,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "migrate_log": 0.2867,
+          "keep_log_new_in_graph": 0.6767,
+          "keep_both": 0.0267
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.39,
+        "leader": "keep_log_new_in_graph",
+        "railProb": {
+          "migrate_log": 0.16,
+          "keep_log_new_in_graph": 0.13,
+          "keep_both": 0.06
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 7887,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

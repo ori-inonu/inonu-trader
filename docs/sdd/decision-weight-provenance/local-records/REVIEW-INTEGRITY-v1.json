@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "kind": "coordinator_evidence_validation_only",
+  "reviews": [
+    {
+      "axis": "SPEC",
+      "report": {
+        "path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\weights-spec-review-v1\\REPORT.md",
+        "sha256": "79d1516671734d077261f8c23bcadcacc99360ba80e95f89682218ddf8980b4c"
+      },
+      "coverage": {
+        "path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\weights-spec-review-v1\\coverage.json",
+        "sha256": "7b0d6254ba8c34b5dd93ae27a1ceaa3599ca48afddd9a30663b7df3e5d1b02d5"
+      },
+      "decision": "approved_implementation_local",
+      "keys": [
+        "version",
+        "review_kind",
+        "reviewer_id",
+        "reviewer_task",
+        "root_conversation",
+        "implementer_id",
+        "baseline",
+        "commits",
+        "verdict",
+        "status",
+        "findings",
+        "certification_scope",
+        "isolation",
+        "evidence_bases",
+        "immutable_spec",
+        "candidate_manifest",
+        "delivery_patch",
+        "acceptance_integrity",
+        "input_hashes_before_after",
+        "auxiliary_input_hashes_before_after",
+        "unchanged_input_count",
+        "requirements",
+        "executions",
+        "execution_log",
+        "execution_artifact_diagnostic",
+        "limitations",
+        "output_hashes",
+        "report",
+        "own_final_hashes"
+      ]
+    },
+    {
+      "axis": "STANDARDS",
+      "report": {
+        "path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\weights-standards-review-v1\\REPORT.md",
+        "sha256": "08a521454bd3bf5ca19d713e9a9be182eae754cb34c41120acb84a1ffccba166"
+      },
+      "coverage": {
+        "path": "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\weights-standards-review-v1\\coverage.json",
+        "sha256": "29816f868cc78cc83cca2a5fa0ab05a46c389863505dc13ef9cbd6a89f56b899"
+      },
+      "decision": "approved",
+      "keys": [
+        "schemaVersion",
+        "reviewKind",
+        "decision",
+        "conclusion",
+        "reviewer",
+        "runtime",
+        "baseline",
+        "candidate",
+        "integrity",
+        "executions",
+        "metrics",
+        "standards",
+        "documentedViolations",
+        "possibleSmells",
+        "heuristicReview",
+        "acceptanceCoverage",
+        "historicalTdd",
+        "limitations",
+        "authorization"
+      ]
+    }
+  ],
+  "literalReferencesValidated": 141,
+  "uniqueReferencedFiles": 49,
+  "authored": [
+    {
+      "path": "src/decision-evidence/weights.ts",
+      "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf"
+    },
+    {
+      "path": "src/decision-evidence/weights.test.ts",
+      "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f"
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/requirements.md",
+      "sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977"
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+      "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3"
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+      "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f"
+    }
+  ],
+  "trackedDiffExitCode": 0,
+  "stagedDiffExitCode": 0,
+  "rootIntegration": false,
+  "financialCalibration": "not_established"
+}

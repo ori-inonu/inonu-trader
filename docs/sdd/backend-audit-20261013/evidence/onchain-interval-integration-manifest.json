@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "integratedAt": "2026-10-13T18:58:43.347Z",
+  "sourceRows": [
+    {
+      "path": "src/onchain-read/client.ts",
+      "before": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "after": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "kind": "source"
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "before": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "after": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "kind": "source"
+    },
+    {
+      "path": "src/onchain-read/gateway.ts",
+      "before": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "after": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "kind": "source"
+    },
+    {
+      "path": "src/onchain-read/gateway.test.ts",
+      "before": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "after": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "kind": "source"
+    }
+  ],
+  "written": [
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.ts.txt",
+      "before": null,
+      "after": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "kind": "preimage"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.test.ts.txt",
+      "before": null,
+      "after": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "kind": "preimage"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.ts.txt",
+      "before": null,
+      "after": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "kind": "preimage"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.test.ts.txt",
+      "before": null,
+      "after": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "kind": "preimage"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-DIAGNOSIS.md",
+      "before": null,
+      "after": "e9253abca718575cf16bfd85f005b357fa69789b93a65e2c7ca06f383506cdfe",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-VERIFICATION.md",
+      "before": null,
+      "after": "82acb3e9332da6c05787e628125d2019697651f487efb0804f53000e248cb3d4",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+      "before": null,
+      "after": "77d3139a57a5512fe836a4b029aa4d1050b4705f2877f1a949b41f6e77fc81bb",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-STANDARDS-REVIEW.md",
+      "before": null,
+      "after": "3f68fac4086574e55660b12d1f16ab774a01e17766b913d5867532986bf0a2b5",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-candidate.json",
+      "before": null,
+      "after": "e0941d26ea67987e07d2909536a0552779dcf4b4018e62a45d98e2f29283b317",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-live-tests.log",
+      "before": null,
+      "after": "9db21bf243246facca5737ce690bdca65192a23d7ca5a0e42d73fc741d87f70a",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-red.log",
+      "before": null,
+      "after": "e5a225f07dae9dc2ceb7e1fba50648c383c261d54c14ea2f8b20685ba39bcbd1",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-green.log",
+      "before": null,
+      "after": "d4e73cfbed99af998f322583eb3f491f88360bc9b057c364fec5cdf9c1bef398",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-full.log",
+      "before": null,
+      "after": "eb2fa5984c4ead0f5fce811e7931d882959dd0297a30eb270b4b47165477c324",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-types.log",
+      "before": null,
+      "after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-VERIFICATION.md",
+      "before": null,
+      "after": "e8f0451c0446ee176cea3f1aa73eb5c6547b2fb02f8b1c481b20277c2bc56f3a",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+      "before": null,
+      "after": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+      "before": null,
+      "after": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-candidate.json",
+      "before": null,
+      "after": "ce8ccd1ff91cfcad4d377f391bfec7c08ce3f8861a9a7785f31587e34e881318",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-url-red.log",
+      "before": null,
+      "after": "a803b027ffc035c7e637f9f3afc2603903ed2ed39898802fa4b30f99aebed0f0",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-lookup-red.log",
+      "before": null,
+      "after": "ef96f69b8a461a8ac797ca133df78989503f25307a1f23d47ec164b8bddfc2a9",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-full.log",
+      "before": null,
+      "after": "a82ed66f8b38e1a354496842235eaa4279a48d42b054b5bc30ff041190999ebc",
+      "kind": "document"
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-types.log",
+      "before": null,
+      "after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "document"
+    },
+    {
+      "path": "src/onchain-read/client.ts",
+      "before": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "after": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "kind": "source"
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "before": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "after": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "kind": "source"
+    }
+  ],
+  "verification": "pending",
+  "concurrentWriterLockClaim": false
+}

@@ -1,0 +1,22 @@
+{
+  "capturedAt": "2026-10-14T20:10:12.258Z",
+  "source": "Previously sealed Next.js Google Fonts Latin assets, unchanged bytes",
+  "fonts": [
+    {
+      "family": "Inter",
+      "file": "inter-latin.woff2",
+      "original": "83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2",
+      "sha256": "c940764593d0fe5d596be327ca7558855e018039fb78509aa21921fd3644c3e4",
+      "bytes": 48432,
+      "licenseUrl": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/OFL.txt"
+    },
+    {
+      "family": "Geist Mono",
+      "file": "geist-mono-latin.woff2",
+      "original": "797e433ab948586e-s.p.0r6juujl39pe6.woff2",
+      "sha256": "5f3d6ad60f29d6cb708414ec6887163d63bf197377ef5417d2483ff31ace6c3b",
+      "bytes": 23108,
+      "licenseUrl": "https://raw.githubusercontent.com/google/fonts/main/ofl/geistmono/OFL.txt"
+    }
+  ]
+}

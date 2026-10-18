@@ -1,0 +1,59 @@
+{
+  "purpose": "Ajustar o limite do review de planejamento, sem mudar aceite ou forçar aprovação.",
+  "decision_source": "jev",
+  "human_response": false,
+  "billed_cost_usd": null,
+  "approved_by": "jev_delegated",
+  "receipt": {
+    "status": "assessed",
+    "receiptId": "a490bd75-8e86-4d87-916f-ef661df3c62f",
+    "evidenceIds": [
+      "elapsed",
+      "scope"
+    ],
+    "inputDigest": "3dae5040c320e054908fe8e53c337161b5e456574b3bc4b568c3afce3314756f",
+    "rubricVersion": "decision-2026-09-26.2",
+    "policy": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12971-f91a-7b01-befa-dfa93eb04425"
+    },
+    "model": "jev-1.13.0",
+    "confidence": 0.98,
+    "probabilities": {
+      "bounded_report": 0.99,
+      "continue_event_wait": 0.01,
+      "insufficient_evidence": 0
+    },
+    "usage": {
+      "input_tokens": 842,
+      "output_tokens": 48
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T17:45:47.953Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T17:45:48.254Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12c1330ef753e8423a478ca54d4d8",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "signals": {},
+    "choice": "bounded_report",
+    "providerChoice": "bounded_report",
+    "bestCandidate": "bounded_report",
+    "domain": "strategy",
+    "disposition": "recommendation",
+    "recommendation": "bounded_report",
+    "latencyMs": 357,
+    "receiptPersisted": true
+  }
+}

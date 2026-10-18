@@ -1,0 +1,1152 @@
+{
+  "format": "docs-document-findings-v1",
+  "captured": "2026-10-13T12:57:48.349888-03:00",
+  "findings": [
+    {
+      "owner": "governanca-e-historico",
+      "receipt": "docs/_meta/audits/governanca-e-historico.json",
+      "finding": {
+        "id": "README-portfolio-evidence-status",
+        "classification": "stale_reference",
+        "status": "confirmed_static_conflict",
+        "summary": "README.md:56 diz que o módulo portfolio-evidence é apenas especificação e não implementado. A inspeção estática verificou entrypoint, CLI, coletor, tipos e relatório presentes. O README não foi editado por limite de escopo.",
+        "paths": [
+          "README.md:56",
+          "src/portfolio-evidence/main.ts:1-10,18-28",
+          "src/portfolio-evidence/cli.ts:1-10,149-160,186-245",
+          "src/portfolio-evidence/collector.ts:1-10,88-90,225-246"
+        ]
+      }
+    },
+    {
+      "owner": "governanca-e-historico",
+      "receipt": "docs/_meta/audits/governanca-e-historico.json",
+      "finding": {
+        "id": "portfolio-evidence-date-scopes",
+        "classification": "historical_evidence",
+        "status": "resolved_by_explicit_dates_and_scope",
+        "summary": "A consolidação de 2026-10-11 registra o trabalho como aguardando outra sessão; a consolidação de 2026-10-12 registra implementação parcial e testes daquele baseline. Não é conflito sobre a mesma observação nem prova de teste atual.",
+        "paths": [
+          "docs/CONSOLIDACAO-MAIN-20261011.md:46-50,79-85",
+          "docs/CONSOLIDACAO-ESPECIFICACOES-20261012.md:40-55"
+        ]
+      }
+    },
+    {
+      "owner": "governanca-e-historico",
+      "receipt": "docs/_meta/audits/governanca-e-historico.json",
+      "finding": {
+        "id": "documentation-inventory-counts",
+        "classification": "historical_evidence",
+        "status": "scope_difference_not_unresolved_drift",
+        "summary": "O manifesto inicial conta 988 arquivos e exclui cinco configurações .obsidian da navegação; o log registra uma fonte concorrente, e o snapshot posterior lista 984 fontes visíveis com 408 Markdown. Horários e escopos diferem; a contagem não indica quatro arquivos perdidos.",
+        "paths": [
+          "docs/_meta/source-manifest-20261013.json:2-9",
+          "docs/log.md:15-19,70-76",
+          "docs/_meta/organization-spec.md:15-17"
+        ]
+      }
+    },
+    {
+      "owner": "laboratorio-e-paper",
+      "receipt": "docs/_meta/audits/laboratorio-e-paper.json",
+      "finding": {
+        "id": "DOC-01",
+        "classification": "needs_review",
+        "severity": "medium",
+        "statement": "README.md:3 says SPEC, PLAN, and ACCEPTANCE were never versioned. The current paths are tracked and commit b7b4c6b (2026-10-12) added them in this folder. This does not disprove that the files at the former undefined path were untracked; clarify the intended referent rather than asserting a definite contradiction.",
+        "references": [
+          "docs/sdd/book-replay/README.md:3",
+          "docs/sdd/book-replay/README.md:5",
+          "docs/sdd/book-replay/ACCEPTANCE.json:6-9"
+        ],
+        "action": "Ask the integrator/owner to clarify the former path and chronology; leave proposal/unfrozen status intact."
+      }
+    },
+    {
+      "owner": "laboratorio-e-paper",
+      "receipt": "docs/_meta/audits/laboratorio-e-paper.json",
+      "finding": {
+        "id": "DOC-02",
+        "classification": "needs_review",
+        "severity": "medium",
+        "statement": "The general lab guide implies per-epoch inference costs are subtracted when known; the real-Jev guide specifies subtraction only when every consultation cost is known. src/lab/run.ts matches the all-known rule, omitting known costs from all epochs if any cost is null.",
+        "references": [
+          "docs/JEV-LABORATORIO-DE-DECISAO.md:262-266",
+          "docs/JEV-LAB-JEV-REAL.md:115-117",
+          "src/lab/run.ts:395-420",
+          "src/lab/stats.ts:598-629"
+        ],
+        "impact": "The inference-cost gate remains unknown, so this cannot qualify the run; descriptive net returns may nevertheless be overstated for partial-cost runs.",
+        "action": "Decide desired accounting semantics, align both guides, and add a mixed-known/unknown cost regression before changing code."
+      }
+    },
+    {
+      "owner": "seguranca-e-qualificacao",
+      "receipt": "docs/_meta/audits/seguranca-e-qualificacao.json",
+      "finding": {
+        "finding": "A tabela de estágio 0 em LIVE-QUALIFICATION ancora seu estado em um commit de 2026-10-09; preservá-la como fotografia histórica. O requisito p95 de 300 ms no perfil every-block continua explícito, mas não é prova de desempenho atual.",
+        "classification": "historical_evidence",
+        "document_paths": [
+          "docs/LIVE-QUALIFICATION.md"
+        ],
+        "current_refs": [
+          "src/live-qualification.ts:65-70,484-485",
+          "src/config.ts:58-62"
+        ]
+      }
+    },
+    {
+      "owner": "seguranca-e-qualificacao",
+      "receipt": "docs/_meta/audits/seguranca-e-qualificacao.json",
+      "finding": {
+        "finding": "HTTP-PREVIEW-SPEC-20261011 declara proposta e produção sem mudanças; no snapshot de 2026-10-13 scripts/http-preview.ts e src/server.ts já implementam o modo read-only. Isso atualiza a síntese, não prova servidor ativo ou aceite de runtime.",
+        "classification": "proposal",
+        "document_paths": [
+          "docs/HTTP-PREVIEW-SPEC-20261011.md",
+          "docs/HTTP-PREVIEW-IMPLEMENTATION-CHECKPOINT-20261011.md",
+          "docs/HTTP-PREVIEW-INTEGRATED-RUNTIME-CHECKPOINT-20261011.md"
+        ],
+        "current_refs": [
+          "scripts/http-preview.ts:3-23",
+          "src/server.ts:27-47,70-93"
+        ]
+      }
+    },
+    {
+      "owner": "seguranca-e-qualificacao",
+      "receipt": "docs/_meta/audits/seguranca-e-qualificacao.json",
+      "finding": {
+        "finding": "P4 da SPEC lista root, history, events, operator e System One; o servidor atual também publica /jev-read. Confirmar se essa rota pertence ao escopo de preview; nenhuma alteração ou runtime test foi feito.",
+        "classification": "needs_review",
+        "document_paths": [
+          "docs/HTTP-PREVIEW-SPEC-20261011.md",
+          "docs/HTTP-PREVIEW-SCOPE-REVIEW-20261011.md"
+        ],
+        "current_refs": [
+          "src/server.ts:90-93",
+          "src/jev-read/http.ts:13-43"
+        ]
+      }
+    },
+    {
+      "owner": "seguranca-e-qualificacao",
+      "receipt": "docs/_meta/audits/seguranca-e-qualificacao.json",
+      "finding": {
+        "finding": "O envelope policy é usado por System One e ferramentas de laboratório, mas Trader importa SpotLedger/economics/config/Market e não importa policy/envelope. Se a política por fase deveria limitar ordens Kuru, a ligação não foi observada e requer decisão do dono; não alterada.",
+        "classification": "needs_review",
+        "document_paths": [
+          "docs/POLITICA-DE-LIMITES.md",
+          "docs/READINESS-SPEC.md"
+        ],
+        "current_refs": [
+          "src/trader.ts:1-8",
+          "src/system-one/brief.ts:14-16",
+          "src/policy/envelope.ts:8-15"
+        ]
+      }
+    },
+    {
+      "owner": "seguranca-e-qualificacao",
+      "receipt": "docs/_meta/audits/seguranca-e-qualificacao.json",
+      "finding": {
+        "finding": "Checkpoints de branch, HTTP, localhost, exposição, sessão OKX e threat model registram datas, hashes ou processos próprios; mantidos como evidência histórica, sem extrapolar para runtime presente.",
+        "classification": "historical_evidence",
+        "document_paths": [
+          "docs/BRANCH-READINESS-CHECKPOINT.md",
+          "docs/BRANCH-READINESS-REVIEW.md",
+          "docs/HTTP-PREVIEW-INTEGRATED-RUNTIME-CHECKPOINT-20261011.md",
+          "docs/LOCALHOST-ORIGIN-DIAGNOSIS-20261011.md",
+          "docs/SYSTEM-ONE-EXPOSURE-CHECKPOINT.md",
+          "docs/OKX-SESSION-READINESS-20261011.md",
+          "docs/JEV-OKX-SDD-THREAT-MODEL-20261009.md"
+        ],
+        "current_refs": [
+          "docs/HTTP-PREVIEW-SPEC-20261011.md:3-18",
+          "scripts/http-preview.ts:16-23"
+        ]
+      }
+    },
+    {
+      "owner": "interface-e-central",
+      "receipt": "docs/_meta/audits/interface-e-central.json",
+      "finding": {
+        "path": "docs/MESA-DE-OPERACOES.md",
+        "classification": "needs_review",
+        "lines": "18-22,34-35",
+        "reason": "O guia fala de fixtures apenas em teste/laboratório. A árvore contém um exemplo sintético explícito em /console, e o teste de pureza define esse console como fora do bundle instalado. Sem executar a guarda ou inspecionar o pacote, a frase precisa explicitar o escopo; não afirmo que o app instalado exponha o exemplo.",
+        "code_refs": [
+          "web/src/app/console/page.tsx:45-60,194-198",
+          "web/src/components/DexReportPanel/DexReportPanel.tsx:222-256,275-294",
+          "web/src/lib/dex-report-example.ts:1-18",
+          "web/src/lib/purity-bundle.test.ts:125-147"
+        ]
+      }
+    },
+    {
+      "owner": "interface-e-central",
+      "receipt": "docs/_meta/audits/interface-e-central.json",
+      "finding": {
+        "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+        "classification": "frozen_contract",
+        "lines": "184-187,367",
+        "reason": "DOC-3 pede Ecossistema lendo /onchain/status e DOC-4 fixa cinco abas. O código atual não tem Ecossistema como aba de topo: o id salvo ecossistema migra para Radar/Noticias. A tensão permanece documental; a SPEC congelada não foi alterada.",
+        "code_refs": [
+          "web/src/lib/mesa/dock.ts:35-60",
+          "web/src/lib/mesa/dock-subviews.ts:19-36",
+          "web/src/components/Desk/MesaView.tsx:347-395"
+        ]
+      }
+    },
+    {
+      "owner": "interface-e-central",
+      "receipt": "docs/_meta/audits/interface-e-central.json",
+      "finding": {
+        "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+        "classification": "frozen_contract",
+        "lines": "35-38,56-66",
+        "reason": "A revisão r3 manda remover Ecossistema como aba e colocar Notícias e sentimento em Radar. A forma do código coincide com essa destinação, sem provar o endpoint ou o aceite de DOC-3.",
+        "code_refs": [
+          "web/src/lib/mesa/dock.ts:48-60",
+          "web/src/lib/mesa/dock-subviews.ts:19-36",
+          "web/src/components/Desk/MesaView.tsx:347-395"
+        ]
+      }
+    },
+    {
+      "owner": "interface-e-central",
+      "receipt": "docs/_meta/audits/interface-e-central.json",
+      "finding": {
+        "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+        "classification": "historical_evidence",
+        "lines": "88-90",
+        "reason": "O hash atual difere do baseline inicial. T4.5/T4.6 registram resultados e desvios de outras sessões; a tensão DOC-3/AC-DOC-2 é estado documental, não execução reproduzida aqui.",
+        "code_refs": [
+          "web/src/lib/mesa/dock.ts:35-60",
+          "web/src/components/Desk/MesaView.tsx:376-395"
+        ]
+      }
+    },
+    {
+      "owner": "interface-e-central",
+      "receipt": "docs/_meta/audits/interface-e-central.json",
+      "finding": {
+        "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+        "classification": "historical_evidence",
+        "lines": "35-57,70-79",
+        "reason": "O hash atual difere do baseline inicial. O checkpoint reúne observações de sessões diferentes, incluindo /console 404 e uso on-chain do Rastreador; nenhuma dessas observações de runtime foi reexecutada nesta auditoria.",
+        "code_refs": [
+          "web/src/components/Desk/DeskRail.tsx:114-131",
+          "web/src/app/console/page.tsx:45-60",
+          "web/src/lib/mesa/dock.ts:35-60"
+        ]
+      }
+    },
+    {
+      "owner": "interface-e-central",
+      "receipt": "docs/_meta/audits/interface-e-central.json",
+      "finding": {
+        "path": "docs/research/spec-review-20261012/spec-review-central-ui.md",
+        "classification": "historical_evidence",
+        "lines": "1-4,9,145-156",
+        "reason": "A própria revisão delimita outro candidato e diretório de integração. Suas conclusões não são transplante de estado para este working tree.",
+        "code_refs": [
+          "web/src/app/page.tsx:9-11",
+          "web/src/app/console/page.tsx:45-60",
+          "web/src/components/Desk/DeskRail.tsx:114-131"
+        ]
+      }
+    },
+    {
+      "owner": "operador-e-execucao",
+      "receipt": "docs/_meta/audits/operador-e-execucao.json",
+      "finding": {
+        "finding_id": "guide-failed-state",
+        "path": "docs/OKX-OPERADOR-JEV.md",
+        "lines": "135",
+        "classification": "stale_reference",
+        "finding": "A frase sobre perna failed poder ser lançada com resultado final pode sugerir desbloqueio; o ledger continua bloqueando status failed até status closed.",
+        "current_refs": [
+          "src/operator/ledger.ts:184-188,220-245",
+          "scripts/okx-operator.ts:155-170"
+        ]
+      }
+    },
+    {
+      "owner": "operador-e-execucao",
+      "receipt": "docs/_meta/audits/operador-e-execucao.json",
+      "finding": {
+        "finding_id": "guide-observed-delta",
+        "path": "docs/OKX-OPERADOR-JEV.md",
+        "lines": "55",
+        "classification": "stale_reference",
+        "finding": "O guia diz que o ciclo informa variação observada; o caminho live passa riskTokensExcluded true e o helper recusa esse snapshot, então a leitura retorna null.",
+        "current_refs": [
+          "scripts/okx-operator.ts:191-196",
+          "src/operator/cycle.ts:104-110,185-194"
+        ]
+      }
+    },
+    {
+      "owner": "operador-e-execucao",
+      "receipt": "docs/_meta/audits/operador-e-execucao.json",
+      "finding": {
+        "finding_id": "guide-gas-limit",
+        "path": "docs/OKX-OPERADOR-JEV.md",
+        "lines": "69",
+        "classification": "stale_reference",
+        "finding": "A descrição de teto por transação não distingue estimativa checada, multiplicador 3/2 no swap e gasLimit fixo de approval.",
+        "current_refs": [
+          "src/operator/executor.ts:105-120,221,239,274",
+          "src/operator/config.ts:19-28,157-160"
+        ]
+      }
+    },
+    {
+      "owner": "operador-e-execucao",
+      "receipt": "docs/_meta/audits/operador-e-execucao.json",
+      "finding": {
+        "finding_id": "cli-lock-spec-baseline",
+        "path": "docs/OPERATOR-CLI-LOCK-SPEC.md",
+        "lines": "3,7,35-46",
+        "classification": "historical_evidence",
+        "finding": "O próprio documento marca a proposta/checkpoint como histórico; a descrição antiga de leitura sem lock não é estado atual.",
+        "current_refs": [
+          "scripts/okx-operator.ts:142-151",
+          "src/operator/ledger.ts:344-362"
+        ]
+      }
+    },
+    {
+      "owner": "operador-e-execucao",
+      "receipt": "docs/_meta/audits/operador-e-execucao.json",
+      "finding": {
+        "finding_id": "persistence-spec-baseline",
+        "path": "docs/OPERATOR-PERSISTENCE-SPEC.md",
+        "lines": "3,7,13-19",
+        "classification": "historical_evidence",
+        "finding": "O baseline sem retry é histórico; o status diz implementado/integrado e o código presente tem retry Windows limitado.",
+        "current_refs": [
+          "src/operator/ledger.ts:300-341"
+        ]
+      }
+    },
+    {
+      "owner": "operador-e-execucao",
+      "receipt": "docs/_meta/audits/operador-e-execucao.json",
+      "finding": {
+        "finding_id": "r10-reconcile-superseded",
+        "path": "docs/research/R10-re-revisao-operador-c1-c9-20261011.md",
+        "lines": "5-7,18,53-54",
+        "classification": "historical_evidence",
+        "finding": "A crítica de --realized opcional é válida para o snapshot f7be047 citado, mas foi superada pelo CLI atual; isto não fecha nem reavalia o conjunto R10.",
+        "current_refs": [
+          "scripts/okx-operator.ts:155-170",
+          "src/operator/cli-guards.ts:16-24",
+          "src/operator/ledger.ts:220-245"
+        ]
+      }
+    },
+    {
+      "owner": "operador-e-execucao",
+      "receipt": "docs/_meta/audits/operador-e-execucao.json",
+      "finding": {
+        "finding_id": "roundtrip-proposal-not-contract",
+        "path": "docs/OPERATOR-ROUNDTRIP-AMOUNT-SPEC.md",
+        "lines": "3,21,25-37,69-75",
+        "classification": "proposal",
+        "finding": "A direção de vincular evidência de input e cotar o input conservador continua proposta; não foi tratada como aceite ou resolução econômica.",
+        "current_refs": [
+          "src/operator/executor.ts:258-271"
+        ]
+      }
+    },
+    {
+      "owner": "defi-e-oportunidades",
+      "receipt": "docs/_meta/audits/defi-e-oportunidades.json",
+      "finding": {
+        "primary_document": "docs/okx-ecosystem-v1/SPEC.md",
+        "classification": "frozen_contract",
+        "related_documents": [
+          "docs/okx-ecosystem-v1/GUIA.md"
+        ],
+        "finding": "A SPEC define composição de Signals/scanner e DeFi sob okx_ecosystem_research_v1. O código atual examinado mantém joinEvidence(okx_evidence_offline_v1) para Signals/scanner e buildDefiReport separado; package.json:44-48 lista rotas individuais sem okx:ecosystem. A GUIA já registra estado não implementado. Tratar contrato como pendente de implementação nesta superfície, sem alterar critérios.",
+        "current_reference": [
+          "src/okx-evidence/report.ts:65-101",
+          "src/okx-defi/report.ts:41-54",
+          "package.json:44-48",
+          "docs/okx-ecosystem-v1/GUIA.md:3-5"
+        ]
+      }
+    },
+    {
+      "owner": "defi-e-oportunidades",
+      "receipt": "docs/_meta/audits/defi-e-oportunidades.json",
+      "finding": {
+        "primary_document": "docs/research/OKX-DEFI-ENDPOINT-COVERAGE-20261011.md",
+        "classification": "historical_evidence",
+        "related_documents": [
+          "docs/research/codex-operator-c4-research-20261011/docs-research-defi-endpoint-coverage-20261011.md"
+        ],
+        "finding": "Os dois caminhos têm SHA-256 idêntico no catálogo/snapshot (9d3affd64bc188893f5a5d10604d4764255368da455aa4af17c97fb80e83c1d0). É duplicação de conteúdo histórico; não removida nem reclassificada como conteúdo atual.",
+        "current_reference": [
+          "docs/_meta/catalog.json",
+          "docs/_meta/project-state-20261013.json"
+        ]
+      }
+    },
+    {
+      "owner": "defi-e-oportunidades",
+      "receipt": "docs/_meta/audits/defi-e-oportunidades.json",
+      "finding": {
+        "primary_document": "docs/research/DEFI-CANDIDATE-BOUNDARY-FINDINGS-20261011.md",
+        "classification": "historical_evidence",
+        "related_documents": [
+          "docs/DEFI-DISCOVERY-SCOPE-REVIEW-20261011.md"
+        ],
+        "finding": "Os achados citam baseline/HEAD 1f08e6edd589449a82eeb70638987a09572a3bd2 e src/operator/candidates.ts. São evidência daquela árvore e não defeitos automaticamente reproduzidos em src/okx-defi, src/okx-evidence ou src/okx-opportunities atuais.",
+        "current_reference": [
+          "docs/research/DEFI-CANDIDATE-BOUNDARY-FINDINGS-20261011.md:5,13-15",
+          "docs/DEFI-DISCOVERY-SCOPE-REVIEW-20261011.md:5-16",
+          "src/okx-defi/report.ts:137-168",
+          "src/okx-evidence/report.ts:65-101",
+          "src/okx-opportunities.ts:193-296"
+        ]
+      }
+    },
+    {
+      "owner": "defi-e-oportunidades",
+      "receipt": "docs/_meta/audits/defi-e-oportunidades.json",
+      "finding": {
+        "primary_document": "docs/okx-ecosystem/GUIA.md",
+        "classification": "needs_review",
+        "related_documents": [],
+        "finding": "Guia de estado amplo datado em 2026-10-10, incluindo portfólio e outras superfícies além da delegação. Suas cifras e estados históricos não foram revalidados contra cada módulo atual; não usar como status integral em 2026-10-13 sem revisão do owner correspondente.",
+        "current_reference": [
+          "docs/okx-ecosystem/GUIA.md:3, 44",
+          "docs/_meta/project-state-20261013.json: owners"
+        ]
+      }
+    },
+    {
+      "owner": "relatorios-e-evidencias",
+      "receipt": "docs/_meta/audits/relatorios-e-evidencias.json",
+      "finding": {
+        "id": "REL-001",
+        "classification": "stale_reference",
+        "path": "docs/mobile-decision-report/README.md",
+        "lines": "29",
+        "finding": "A frase afirma que src/dashboard/reports-server.ts não existe no checkout. O arquivo existe no snapshot atual e package.json registra reports:serve. A ausência de integração do exportador continua verdadeira: o servidor atual só mapeia rotas Operator e System One.",
+        "current_refs": [
+          "src/dashboard/reports-server.ts:39-78",
+          "scripts/reports-server.ts:14-47",
+          "package.json:58"
+        ],
+        "action": "Sugerir ao integrador atualizar apenas a frase do guia; este auditor não editou o README."
+      }
+    },
+    {
+      "owner": "relatorios-e-evidencias",
+      "receipt": "docs/_meta/audits/relatorios-e-evidencias.json",
+      "finding": {
+        "id": "REL-002",
+        "classification": "frozen_contract",
+        "path": "docs/mobile-decision-report/SPEC.md",
+        "lines": "7-10",
+        "finding": "A ausência de src/dashboard/reports-server.ts está vinculada ao checkout e HEAD histórico da SPEC de 2026-10-11. Não contradiz o inventário atual e não deve ser reescrita como documentação live.",
+        "current_refs": [
+          "src/dashboard/reports-server.ts:39-78"
+        ],
+        "action": "Preservar contrato e explicar a diferença de snapshot na página compilada."
+      }
+    },
+    {
+      "owner": "relatorios-e-evidencias",
+      "receipt": "docs/_meta/audits/relatorios-e-evidencias.json",
+      "finding": {
+        "id": "REL-003",
+        "classification": "current_reference",
+        "path": "docs/REPORTS-SERVER.md",
+        "lines": "3-46",
+        "finding": "Guia de uso do servidor local consistente com CLI, rotas e limites estáticos observados. Não é prova de processo ativo nem de dados atuais.",
+        "current_refs": [
+          "scripts/reports-server.ts:1-47",
+          "src/dashboard/reports-server.ts:39-78",
+          "src/operator/http.ts:71-87",
+          "src/system-one/http.ts:15-45"
+        ],
+        "action": "Manter a distinção entre guia e runtime; sem mudança nesta rodada."
+      }
+    },
+    {
+      "owner": "carteira-e-patrimonio",
+      "receipt": "docs/_meta/audits/carteira-e-patrimonio.json",
+      "finding": {
+        "path": "docs/sdd/carteira-evidencia/tasks.md",
+        "classification": "stale_reference",
+        "document_ref": "lines 1-3: o plano diz que nenhuma tarefa de código foi iniciada",
+        "current_refs": [
+          "src/portfolio-evidence/collector.ts:225-247",
+          "src/portfolio-evidence/main.ts:12-29",
+          "src/portfolio-evidence/reconcile.ts:89-127"
+        ],
+        "assessment": "O plano canônico não foi editado. Existência de código não demonstra conclusão dos objetivos SDD."
+      }
+    },
+    {
+      "owner": "carteira-e-patrimonio",
+      "receipt": "docs/_meta/audits/carteira-e-patrimonio.json",
+      "finding": {
+        "path": "web/OKX-WALLET.md",
+        "classification": "needs_review",
+        "document_ref": "lines 13-22: cobertura documentada para Monad e X Layer no painel descrito",
+        "current_refs": [
+          "web/src/components/MultichainPanel/MultichainPanel.tsx:74-99",
+          "web/src/lib/evm-multichain.ts:25-59",
+          "web/src/lib/okx-solana.ts:122-149"
+        ],
+        "assessment": "Não é contradição se o texto se limitar a WalletPanel; está incompleto como guia geral da carteira browser."
+      }
+    },
+    {
+      "owner": "carteira-e-patrimonio",
+      "receipt": "docs/_meta/audits/carteira-e-patrimonio.json",
+      "finding": {
+        "path": "web/src/components/MultichainPanel/MultichainPanel.tsx",
+        "classification": "needs_review",
+        "document_ref": "lines 74-78: badge OKX OnChain OS",
+        "current_refs": [
+          "web/src/lib/evm-multichain.ts:1-5",
+          "web/src/lib/evm-multichain.ts:180-219"
+        ],
+        "assessment": "O leitor descrito no código usa RPCs públicas por rede; revisar o rótulo de proveniência sem assumir API de portfolio OKX."
+      }
+    },
+    {
+      "owner": "carteira-e-patrimonio",
+      "receipt": "docs/_meta/audits/carteira-e-patrimonio.json",
+      "finding": {
+        "path": "docs/sdd/carteira-evidencia/design.md",
+        "classification": "historical_evidence",
+        "document_ref": "lines 3-5: mapa de estado baseado em main@14cbb7b",
+        "current_refs": [
+          "src/portfolio-evidence/types.ts:19-43",
+          "src/portfolio-evidence/evidence.ts:49-120"
+        ],
+        "assessment": "O design continua canônico como contrato; o inventário antigo não foi relido como status atual."
+      }
+    },
+    {
+      "owner": "carteira-e-patrimonio",
+      "receipt": "docs/_meta/audits/carteira-e-patrimonio.json",
+      "finding": {
+        "path": "docs/portfolio-evidence-v1/REPORT.md",
+        "classification": "historical_evidence",
+        "document_ref": "lines 3-15 e seções de verificação/revisões: execução datada em 2026-10-11/12",
+        "current_refs": [
+          "src/portfolio-evidence/collector.ts:225-247",
+          "src/portfolio-evidence/reconcile.ts:89-127"
+        ],
+        "assessment": "Resultados registrados são históricos; 379 testes do módulo passaram agora, mas não revalidam runtime/live nem a totalidade dos critérios do relatório."
+      }
+    },
+    {
+      "owner": "integracao-real-e-piloto",
+      "receipt": "docs/_meta/audits/integracao-real-e-piloto.json",
+      "finding": {
+        "id": "pilot-p2",
+        "classification": "frozen_contract",
+        "finding_kind": "implementation_gap",
+        "statement": "P2 requires a real source/cotação/GEV episode; current default entrypoint injects no source/model, so the historical pending gate remains unproved.",
+        "refs": [
+          "docs/gev-wallet-pilot/SPEC.md:7-12",
+          "docs/gev-wallet-pilot/VERIFICATION.md:15-16,39-43",
+          "scripts/gev-wallet-pilot.ts:7-12",
+          "src/pilot/service.ts:99-131"
+        ]
+      }
+    },
+    {
+      "owner": "integracao-real-e-piloto",
+      "receipt": "docs/_meta/audits/integracao-real-e-piloto.json",
+      "finding": {
+        "id": "r8-scope",
+        "classification": "historical_evidence",
+        "finding_kind": "proof-scope",
+        "statement": "R8 proves captured paper/browser slices only: wallet gesture, authenticated Web3, app Jev and whole G01-G17 remain false/unproved; no current live-process receipt was obtained.",
+        "refs": [
+          "docs/real-integration/CONSOLE-LIVE-R8.json:4-7",
+          "docs/real-integration/BROWSER-EVIDENCE-R8.json:4-5",
+          "docs/real-integration/AUDIT-R8.json:308-312",
+          "src/real/runtime.ts:31-45,55-70,73-110"
+        ]
+      }
+    },
+    {
+      "owner": "integracao-real-e-piloto",
+      "receipt": "docs/_meta/audits/integracao-real-e-piloto.json",
+      "finding": {
+        "id": "public-read-not-readiness",
+        "classification": "historical_evidence",
+        "finding_kind": "semantic-proof-limit",
+        "statement": "Historical public HTTP 200/exercisedReal coexists with blocked status in one sample and ready status later; both do not imply financial qualification or current status.",
+        "refs": [
+          "docs/real-integration/LIVE-SERVICES.json:109-158",
+          "docs/real-integration/LIVE-FINAL.json:2,32,319-383",
+          "src/real/public-runtime.ts:24-35"
+        ]
+      }
+    },
+    {
+      "owner": "integracao-real-e-piloto",
+      "receipt": "docs/_meta/audits/integracao-real-e-piloto.json",
+      "finding": {
+        "id": "g11-bounded",
+        "classification": "historical_evidence",
+        "finding_kind": "proof-scope",
+        "statement": "G11 records public read and hash observation; ABI/deployment/decoder/authenticated wallet qualification remains absent.",
+        "refs": [
+          "docs/real-integration/G11-PUBLIC-ROUTER-READ.json:3-7,68-69,132-133",
+          "docs/real-integration/G11-METADATA-CONCLUSION.md:3-20",
+          "src/real/rpc-read.ts:119-127"
+        ]
+      }
+    },
+    {
+      "owner": "integracao-real-e-piloto",
+      "receipt": "docs/_meta/audits/integracao-real-e-piloto.json",
+      "finding": {
+        "id": "guide-drift",
+        "classification": "stale_reference",
+        "finding_kind": "path-and-port-drift",
+        "statement": "GUIA-local worktree and receipts/ports 4130/4131 are candidate-specific; current UI/backend defaults 3001/3000.",
+        "refs": [
+          "docs/real-integration/GUIA-LOCAL.md:7-18",
+          "scripts/real-console.ts:7-15",
+          "src/real/config.ts:53-55"
+        ]
+      }
+    },
+    {
+      "owner": "integracao-real-e-piloto",
+      "receipt": "docs/_meta/audits/integracao-real-e-piloto.json",
+      "finding": {
+        "id": "extension-proposal",
+        "classification": "proposal",
+        "finding_kind": "dated-status-change",
+        "statement": "Proposal said source files absent in isolated snapshot; current GET adapter exists, is opt-in, and remains unqualified. This is a scoped status change, not retroactive falsehood.",
+        "refs": [
+          "docs/real-integration/EXTENSIONS-SPEC.md:3,13-21",
+          "src/real/extensions.ts:105-119,159-170,194-205",
+          "scripts/real-start.ts:14-15,37-41"
+        ]
+      }
+    },
+    {
+      "owner": "integracao-real-e-piloto",
+      "receipt": "docs/_meta/audits/integracao-real-e-piloto.json",
+      "finding": {
+        "id": "alternate-snapshots",
+        "classification": "stale_reference",
+        "finding_kind": "provenance",
+        "statement": "Dated readiness and alternate branch/worktree reports cannot transfer test counts or status to this HEAD; ESTADO-ATUAL remains historical checkout analysis, not a live report.",
+        "refs": [
+          "docs/real-integration/ESTADO-ATUAL.md:3-18,56-66",
+          "docs/WEB3-INTEGRATION-READINESS.md:3-8,141-151",
+          "docs/research/spec-review-20261012/implementacao-real-web-hardening.md:3-5,20-29",
+          "docs/research/spec-review-20261012/spec-review-real-pilot.md:3-5,164-179"
+        ]
+      }
+    },
+    {
+      "owner": "fita-e-decisao-jev",
+      "receipt": "docs/_meta/audits/fita-e-decisao-jev.json",
+      "finding": {
+        "id": "DF-1",
+        "classification": "stale_reference",
+        "statement": "Findings de futuro, cancelamento, funding e overflow nos relatórios antigos são vinculados a hashes candidatos anteriores; o source atual contém relógio corrigido, identidade/provas, abort/deadline e validação finita. Não foi feito replay para atribuir aceite.",
+        "source_refs": [
+          "docs/JEV-READ-INDEPENDENT-SPEC-REVIEW-4a1d9e9.md:11-16",
+          "docs/research/codex-tape-review-20261012/REPORT-SPEC.md:42-50",
+          "docs/research/codex-tape-review-20261012/REPORT-SPEC-P1-P2.md:5-6"
+        ],
+        "current_code_refs": [
+          "src/jev-read/state.ts:32-70",
+          "src/jev-read/feed.ts:643-716",
+          "src/jev-read/read.ts:45-79",
+          "src/jev-read/decide.ts:31-63"
+        ]
+      }
+    },
+    {
+      "owner": "fita-e-decisao-jev",
+      "receipt": "docs/_meta/audits/fita-e-decisao-jev.json",
+      "finding": {
+        "id": "DF-2",
+        "classification": "stale_reference",
+        "statement": "O relato de bloqueio permanente após 257 observações e watermark futuro não descreve o feed atual, que mantém envelope de perda, adia amostra futura e recupera com evidência que supera a história perdida; a alteração é estática e permanece sem revisão independente nesta auditoria.",
+        "source_refs": [
+          "docs/research/codex-tape-review-20261012/REPORT-STANDARDS-P1-P2.md:5-7",
+          "docs/JEV-TAPE-FUTURE-PROMOTION-CHECKPOINT-20261012.md:17,38-39"
+        ],
+        "current_code_refs": [
+          "src/jev-read/feed.ts:643-716"
+        ]
+      }
+    },
+    {
+      "owner": "fita-e-decisao-jev",
+      "receipt": "docs/_meta/audits/fita-e-decisao-jev.json",
+      "finding": {
+        "id": "DF-3",
+        "classification": "needs_review",
+        "statement": "As SPECs de modelo continuam marcadas proposed/freeze pending e a SPEC F1-F4 como draft não aceita/não congelada. O código atual não muda esse status nem concede aprovação.",
+        "source_refs": [
+          "docs/JEV-READ-MODEL-SAFETY-SPEC-V2-20261011.md:1-3",
+          "docs/JEV-TAPE-DATA-F1-F4-SPEC-V2-20261011.md:1-3"
+        ],
+        "current_code_refs": [
+          "src/jev-read/read.ts:29-79",
+          "src/jev-read/state.ts:177-203"
+        ]
+      }
+    },
+    {
+      "owner": "fita-e-decisao-jev",
+      "receipt": "docs/_meta/audits/fita-e-decisao-jev.json",
+      "finding": {
+        "id": "DF-4",
+        "classification": "current_reference",
+        "statement": "O checkpoint de recuperação está alinhado ao SHA atual de feed.ts, mas declara revisão independente pendente, possibilidade de bloqueio conservador em envelopes mistos e objetivo amplo incompleto.",
+        "source_refs": [
+          "docs/JEV-TAPE-LOSS-RECOVERY-CHECKPOINT-20261012.md:15-17,26-36"
+        ],
+        "current_code_refs": [
+          "src/jev-read/feed.ts:643-716"
+        ]
+      }
+    },
+    {
+      "owner": "onchainos-e-configuracoes",
+      "receipt": "docs/_meta/audits/onchainos-e-configuracoes.json",
+      "finding": {
+        "id": "fase2-r2-vs-desktop-r3",
+        "classification": "stale_reference",
+        "status": "reconciled_by_scope_and_hashes",
+        "summary": "README/TASKS da Fase 2 registram baseline r2 e D13 pendente; o checkpoint desktop registra r3 e a captura SHA-256 confirma 13/13 arquivos. A TASKS desktop identifica seu registro r2 como artefato de progresso fora do congelamento. RECONCILIACAO preserva o snapshot das 07:31 e diz que não é o estado oficial. Diferença documental e temporal, sem inferência de defeito de produto.",
+        "paths": [
+          "docs/sdd/config-onchain-smartmoney/fase-2/README.md:3,20-26,61-67",
+          "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md:22-24",
+          "docs/sdd/config-onchain-smartmoney/fase-2/RECONCILIACAO.md:1-5",
+          "docs/sdd/inonu-desktop-v1/CHECKPOINT.md:3-7",
+          "docs/sdd/inonu-desktop-v1/TASKS.md:1-3,22",
+          "docs/sdd/inonu-desktop-v1/FREEZE.json:45-61"
+        ],
+        "product_defect": false
+      }
+    },
+    {
+      "owner": "onchainos-e-configuracoes",
+      "receipt": "docs/_meta/audits/onchainos-e-configuracoes.json",
+      "finding": {
+        "id": "fase2-g10-source-link",
+        "classification": "stale_reference",
+        "status": "source_link_verified_runtime_unverified",
+        "summary": "Fase 2 README/TASKS dizem que G10 aguarda ligação; o checkpoint atual diz que token/descoberta foram ligados e o handler/core atuais mostram essa composição. Isto comprova apenas ligação estática. O checkpoint separa as rotas da Fase 2 vistas no harness das que não foram vistas dentro do exe; esta auditoria não reproduziu runtime.",
+        "paths": [
+          "docs/sdd/config-onchain-smartmoney/fase-2/README.md:24,26",
+          "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md:73-75",
+          "docs/sdd/inonu-desktop-v1/CHECKPOINT.md:47-50,78",
+          "src/desktop/handlers.ts:150-159",
+          "src/desktop/core.ts:140-147"
+        ],
+        "product_defect": false
+      }
+    },
+    {
+      "owner": "onchainos-e-configuracoes",
+      "receipt": "docs/_meta/audits/onchainos-e-configuracoes.json",
+      "finding": {
+        "id": "fase2-g11-reference-cache",
+        "classification": "needs_review",
+        "status": "separate_open_scope",
+        "summary": "G11 é tarefa distinta elegível no quadro Fase 2. A fonte token permite callbacks sets/leaderboard, mas a composição desktop passa apenas gateway e now. Registro de limite de wiring estático; não afirmar digest integral nem classificar como falha de runtime.",
+        "paths": [
+          "docs/sdd/config-onchain-smartmoney/fase-2/TASKS.md:72-75",
+          "src/inonu/source-onchain.ts:29-39,99-105",
+          "src/desktop/handlers.ts:153-156"
+        ],
+        "product_defect": false
+      }
+    },
+    {
+      "owner": "onchainos-e-configuracoes",
+      "receipt": "docs/_meta/audits/onchainos-e-configuracoes.json",
+      "finding": {
+        "id": "gateway-route-reference",
+        "classification": "stale_reference",
+        "status": "dated_route_snapshot",
+        "summary": "O guia onchainos-gateway registra um retrato de rotas/evidências de 2026-10-12. O catálogo corrente contém também quote, token-info e cluster-top-holders; não tratar o guia como inventário exaustivo pós-Fase 2.",
+        "paths": [
+          "docs/sdd/config-onchain-smartmoney/onchainos-gateway.md",
+          "docs/sdd/config-onchain-smartmoney/fase-2/README.md:22",
+          "src/onchain-read/catalog.ts:1005-1034"
+        ],
+        "product_defect": false
+      }
+    },
+    {
+      "owner": "onchainos-e-configuracoes",
+      "receipt": "docs/_meta/audits/onchainos-e-configuracoes.json",
+      "finding": {
+        "id": "background-setting-hook-connection",
+        "classification": "needs_review",
+        "status": "preference-not-threaded-through-hook",
+        "summary": "SettingsView salva a preferência background; useOnchainResource escolhe intenção via carga/reload ou poll visível, sem ler essa preferência. Descrever como ligação não encontrada nesta trilha, não como defeito de produto.",
+        "paths": [
+          "src/settings/store.ts:32-50",
+          "web/src/components/Settings/SettingsView.tsx:308-315",
+          "web/src/lib/onchain/useOnchainResource.ts:82-85,110-140",
+          "web/src/components/Desk/Dock/OnchainDeskTabs.tsx:88-92"
+        ],
+        "product_defect": false
+      }
+    },
+    {
+      "owner": "mercado-e-dados",
+      "receipt": "docs/_meta/audits/mercado-e-dados.json",
+      "finding": {
+        "status": "mismatch_found",
+        "path": "docs/okx-dex-v2/OKX-DEX-V2-SPEC.md",
+        "classification": "frozen_contract",
+        "reference_lines": "3,9,21",
+        "current_code": "src/okx-market/round-trip.ts:156-162",
+        "finding": "Checkpoint registra o hash local da SPEC como congelado; D2 requer round-trip A→B→A. O código atual faz uma quote e para com outputUnit unknown. A divergência é um bloqueio conservador, mas continua divergência do contrato congelado. O guia posterior descreve o bloqueio e a emenda permanece rascunho; não alterei a SPEC. O registry OKX-DEX-V2-FREEZE.json citado não está no checkout."
+      }
+    },
+    {
+      "owner": "mercado-e-dados",
+      "receipt": "docs/_meta/audits/mercado-e-dados.json",
+      "finding": {
+        "status": "stale_reference",
+        "path": "docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+        "classification": "stale_reference",
+        "reference_lines": "69,202",
+        "current_code": "src/okx-market/round-trip.ts:94-110; scripts/okx-market-scan.ts:9-41",
+        "finding": "A pesquisa generaliza indevidamente unidade mínima para saída DEX e diz que o scanner não foi implementado. Código atual preserva saída raw unknown e disponibiliza scanner/alias."
+      }
+    },
+    {
+      "owner": "mercado-e-dados",
+      "receipt": "docs/_meta/audits/mercado-e-dados.json",
+      "finding": {
+        "status": "proposal_not_authority",
+        "path": "docs/okx-market-v1/OKX-DEX-V2-CONTRACT-AMENDMENT-DRAFT-20261009.md",
+        "classification": "proposal",
+        "reference_lines": "3,15-17",
+        "current_code": "src/okx-market/round-trip.ts:156-162",
+        "finding": "O bloqueio proposto está no código e no guia posterior, mas o draft declara não congelado/não implementado e não substitui a SPEC. É necessária reconciliação documental formal, sem edição nesta delegação."
+      }
+    },
+    {
+      "owner": "mercado-e-dados",
+      "receipt": "docs/_meta/audits/mercado-e-dados.json",
+      "finding": {
+        "status": "current_reference_matches_static_code",
+        "path": "docs/PUBLIC-MARKET-CAPTURE.md",
+        "classification": "current_reference",
+        "reference_lines": "7,24-30,64-89,103-124",
+        "current_code": "src/public-market-capture/plan.ts:16-29; node-adapter.ts:11-15; runner.ts:18-29",
+        "finding": "Os limites e a recusa de runtime descritos no guia correspondem ao código. Nenhum acesso, captura ou permissão foi observado."
+      }
+    },
+    {
+      "owner": "mercado-e-dados",
+      "receipt": "docs/_meta/audits/mercado-e-dados.json",
+      "finding": {
+        "status": "current_reference_metadata_only",
+        "path": "docs/OKX-HISTORICAL-ARCHIVES.md",
+        "classification": "current_reference",
+        "reference_lines": "13,27-29,38-47,59-65",
+        "current_code": "src/onchainos/archive-discovery.ts:84-121,176-239,259-271",
+        "finding": "O guia e o código limitam-se à descoberta/validação de metadados; direitos, disponibilidade, schema do arquivo e cobertura permanecem unknown."
+      }
+    },
+    {
+      "owner": "mercado-e-dados",
+      "receipt": "docs/_meta/audits/mercado-e-dados.json",
+      "finding": {
+        "status": "scope_clarification",
+        "path": "package.json",
+        "classification": "current_code",
+        "reference_lines": "31-45",
+        "current_code": "scripts/capture.ts:3-30; scripts/public-market-capture.ts:5-35; web/src/lib/mesa/capture.ts:37-55",
+        "finding": "Há três significados de capture: alias paper com RPC/model, gravador WebSocket recusado e exportação PNG local. Não os trate como o mesmo fluxo."
+      }
+    },
+    {
+      "owner": "mercado-e-dados",
+      "receipt": "docs/_meta/audits/mercado-e-dados.json",
+      "finding": {
+        "status": "needs_review",
+        "path": "docs/OKX-DERIVATIVES-SPEC.md; docs/okx-derivatives-v1/GUIA.md",
+        "classification": "needs_review",
+        "reference_lines": "1-30",
+        "current_code": null,
+        "finding": "Os documentos foram lidos, mas o código de derivativos não pertence ao escopo inspecionado; nenhuma conclusão sobre sua implementação."
+      }
+    },
+    {
+      "owner": "grafico-e-analytics",
+      "receipt": "docs/_meta/audits/grafico-e-analytics.json",
+      "finding": {
+        "path": "docs/sdd/grafico-jev/evidencia-vetores.md",
+        "classification": "historical_evidence",
+        "statement": "A linha 73 diz que a reprodução TypeScript dos vetores ainda está pendente, enquanto a SPEC declara F2 concluída e 43 de 43 casos. O teste TypeScript atual contém casos parametrizados, mas não foi executado nesta rodada. São registros de escopos e datas distintos; nenhum prevalece por ser mais recente.",
+        "source_refs": [
+          "docs/sdd/grafico-jev/evidencia-vetores.md:69-73",
+          "docs/sdd/grafico-jev/spec.md:151-159,167-175",
+          "web/src/lib/desk/chart/vectors.test.ts:6-23,41-46"
+        ],
+        "action": "Manter a evidência como histórica e reconciliar somente com execução autorizada e registrada, sem editar os documentos fonte nesta delegação."
+      }
+    },
+    {
+      "owner": "grafico-e-analytics",
+      "receipt": "docs/_meta/audits/grafico-e-analytics.json",
+      "finding": {
+        "path": "docs/sdd/grafico-jev/spec.md",
+        "classification": "stale_reference",
+        "statement": "A seção 7.1 descreve draw-chart.ts como construído sobre draw-candles.ts; o código atual declara draw-candles.ts uma fachada compatível que delega a draw-chart.ts.",
+        "source_refs": [
+          "docs/sdd/grafico-jev/spec.md:92-97",
+          "web/src/lib/desk/ui/draw-candles.ts:1-10",
+          "web/src/lib/desk/ui/draw-chart.ts:1031-1033"
+        ],
+        "action": "Sinalizar como referência arquitetural antiga na wiki compilada; preservar a SPEC congelada."
+      }
+    },
+    {
+      "owner": "instalavel-e-inonu",
+      "receipt": "docs/_meta/audits/instalavel-e-inonu.json",
+      "finding": {
+        "id": "DF-01",
+        "classification": "stale_reference",
+        "related_documents": [
+          {
+            "path": "docs/sdd/config-onchain-smartmoney/fase-2/README.md",
+            "lines": "24, 61-63"
+          },
+          {
+            "path": "docs/sdd/config-onchain-smartmoney/fase-2/SPEC.md",
+            "lines": "3, 251"
+          }
+        ],
+        "statement": "Essas referências ainda apresentam r2 como baseline corrente e dizem que o modo token não foi ligado.",
+        "current_evidence": [
+          {
+            "path": "docs/sdd/inonu-desktop-v1/FREEZE.json",
+            "lines": "44-62"
+          },
+          {
+            "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+            "lines": "6, 75"
+          },
+          {
+            "path": "src/desktop/handlers.ts",
+            "lines": "150-160"
+          }
+        ],
+        "assessment": "A revisão r3 é a última congelada e seus 13 hashes conferem; o código liga token, descoberta e ranking. Manter o adendo como proposta histórica e atualizar apenas por processo autorizado.",
+        "limits": [
+          "Nenhuma SPEC congelada ou documento externo ao owner foi alterado."
+        ]
+      }
+    },
+    {
+      "owner": "instalavel-e-inonu",
+      "receipt": "docs/_meta/audits/instalavel-e-inonu.json",
+      "finding": {
+        "id": "DF-02",
+        "classification": "needs_review",
+        "related_documents": [
+          {
+            "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+            "lines": "186-187, 367"
+          },
+          {
+            "path": "docs/sdd/inonu-desktop-v1/info-diet.md",
+            "lines": "38, 48-64"
+          },
+          {
+            "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+            "lines": "74"
+          },
+          {
+            "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+            "lines": "89"
+          }
+        ],
+        "statement": "DOC-3 e AC-DOC-2 ainda mencionam Ecossistema como aba; info-diet e o código removem a aba e movem notícias para Radar.",
+        "current_evidence": [
+          {
+            "path": "web/src/lib/mesa/dock.ts",
+            "lines": "35-60"
+          },
+          {
+            "path": "web/src/lib/mesa/dock-subviews.ts",
+            "lines": "19-31"
+          }
+        ],
+        "assessment": "Conflito explicitamente pendente de revisão r4; não resolver nem editar o contrato nesta auditoria.",
+        "limits": [
+          "Nenhum app foi aberto para conferir aparência ou montagem visual."
+        ]
+      }
+    },
+    {
+      "owner": "instalavel-e-inonu",
+      "receipt": "docs/_meta/audits/instalavel-e-inonu.json",
+      "finding": {
+        "id": "DF-03",
+        "classification": "needs_review",
+        "related_documents": [
+          {
+            "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+            "lines": "142, 177"
+          },
+          {
+            "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+            "lines": "75"
+          }
+        ],
+        "statement": "Os docs dizem que RAS-6 não foi feito e TASKS também diz que nenhuma execução de código ocorreu.",
+        "current_evidence": [
+          {
+            "path": "web/src/components/Rastreador/RastreadorView.tsx",
+            "lines": "351-365, 566-596"
+          },
+          {
+            "path": "web/src/lib/inonu/ask-target.ts",
+            "lines": "26-36"
+          },
+          {
+            "path": "src/inonu/source-ranking.ts",
+            "lines": "78-125"
+          },
+          {
+            "path": "src/desktop/handlers.ts",
+            "lines": "153-160"
+          },
+          {
+            "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+            "lines": "38-49, 54-58, 124-142"
+          }
+        ],
+        "assessment": "O caminho está estaticamente conectado, então a indicação de não implementação precisa de revisão. A alegação de nenhuma execução é contradita pelo próprio TASKS e CHECKPOINT. Não promover para funcionamento verificado sem evidência atual de execução.",
+        "limits": [
+          "Testes lidos não foram executados; nenhuma inferência de modelo real ou runtime."
+        ]
+      }
+    },
+    {
+      "owner": "manutencao-da-documentacao",
+      "receipt": "docs/_meta/audits/manutencao-da-documentacao.json",
+      "finding": {
+        "path": "docs/SCHEMA.md",
+        "classification": "needs_review",
+        "lines": "87-91",
+        "reason": "O comando documentado depende de docs/_meta/generated-files.json, ausente na observação. A instrução deve permanecer bloqueada até o integrador fornecer o recibo e registrar os outputs.",
+        "code_refs": [
+          "docs/_meta/tools/verify.py:65-73"
+        ]
+      }
+    },
+    {
+      "owner": "manutencao-da-documentacao",
+      "receipt": "docs/_meta/audits/manutencao-da-documentacao.json",
+      "finding": {
+        "path": "docs/_meta/tools/verify.py",
+        "classification": "needs_review",
+        "lines": "67-81,94-100,142-173,176-186",
+        "reason": "O código não valida integridade do próprio manifesto, não impõe o teto de 50 entradas por catálogo, não sinaliza wikilinks repetidos, trata navegação por substring e não protege janela de leitura concorrente nem destino de --output.",
+        "code_refs": [
+          "docs/SCHEMA.md:39-41",
+          "docs/_meta/organization-spec.md:23-32"
+        ]
+      }
+    }
+  ],
+  "limits": "Static and documentary findings. Original receipts retain their timestamps and scopes; changes may supersede older findings without erasing them.",
+  "latest_reconciliation": {
+    "captured": "2026-10-13T16:16:55.990340-03:00",
+    "new_sources_registered": 158,
+    "unread_markdown_sources": [
+      "docs/research/UI-EXECUTION-CLAIMS-20261011.md",
+      "docs/sdd/backend-audit-20261013/INTELLIGENCE-AUDIT.md",
+      "docs/sdd/backend-audit-20261013/NEXT-CYCLE.md",
+      "docs/sdd/backend-audit-20261013/OKX-AUDIT.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-DIAGNOSIS.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-AUDIT.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-LIVE-VERIFICATION.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-VERIFICATION.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-STANDARDS-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-VERIFICATION.md",
+      "docs/sdd/backend-audit-20261013/PORTFOLIO-SPEC-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/PORTFOLIO-STANDARDS-REVIEW.md",
+      "docs/sdd/backend-audit-20261013/SPEC.md",
+      "docs/sdd/frontend-ux-20261013/acceptance.md",
+      "docs/sdd/frontend-ux-20261013/audit.md",
+      "docs/sdd/frontend-ux-20261013/design.md",
+      "docs/sdd/frontend-ux-20261013/docs-research.md",
+      "docs/sdd/frontend-ux-20261013/docs-revalidation.md",
+      "docs/sdd/frontend-ux-20261013/frontend-research.md",
+      "docs/sdd/frontend-ux-20261013/frontend-revalidation.md",
+      "docs/sdd/frontend-ux-20261013/README.md",
+      "docs/sdd/frontend-ux-20261013/requirements.md",
+      "docs/sdd/frontend-ux-20261013/review.md",
+      "docs/sdd/frontend-ux-20261013/tasks.md",
+      "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-5.md",
+      "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-6.md",
+      "docs/sdd/inteligencia-decisao/evidence/C1-ao-vivo.md",
+      "docs/sdd/inteligencia-decisao/evidence/C3-pesquisa-2026-10-13.md",
+      "docs/sdd/mesa-decisao-20261013/credential-evidence.md",
+      "docs/sdd/ui-audit-20261013/browser-matrix.md",
+      "docs/sdd/ui-audit-20261013/CHECKPOINT.md",
+      "docs/sdd/ui-audit-20261013/integration-audit-independent.md",
+      "docs/sdd/ui-audit-20261013/REPORT.md",
+      "docs/sdd/ui-audit-20261013/spec-review-final.md",
+      "docs/sdd/ui-audit-20261013/spec-review-responsive.md",
+      "docs/sdd/ui-audit-20261013/SPEC.md",
+      "docs/sdd/ui-audit-20261013/standards-review-final.md",
+      "docs/sdd/ui-audit-20261013/standards-review-responsive.md",
+      "docs/sdd/ui-mesa-cabecalho-20261013/CHECKPOINT.md"
+    ],
+    "sensitive_path_not_opened": "docs/sdd/mesa-decisao-20261013/credential-evidence.md",
+    "registered_drift_count": 18,
+    "registered_drift_paths": [
+      "docs/.obsidian/graph.json",
+      "docs/.obsidian/workspace.json",
+      "docs/SYSTEM-ONE.md",
+      "docs/sdd/dados-quant/REPORT.md",
+      "docs/sdd/dados-quant/SPEC.md",
+      "docs/sdd/dados-quant/evidence/calibration-latest.json",
+      "docs/sdd/dados-quant/evidence/calibration-train30.json",
+      "docs/sdd/dados-quant/evidence/calibration-train300bars.json",
+      "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "docs/sdd/inonu-desktop-v1/OWNERSHIP.md",
+      "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md",
+      "docs/sdd/inonu-desktop-v1/evidence/T9.5-T9.7-escada-e-ticket.md",
+      "docs/sdd/inteligencia-decisao/evidence/C1-ao-vivo.md",
+      "docs/sdd/mesa-decisao-20261013/REPORT.md",
+      "docs/sdd/mesa-decisao-20261013/change-manifest.json"
+    ],
+    "notes": "Historical findings remain unchanged. New metadata classifications are not semantic reviews or runtime evidence."
+  }
+}

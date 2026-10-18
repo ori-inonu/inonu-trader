@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-recibo-jev",
+    "specHash": "5e7118e62bdf8c7578dba7e0f6e249a375d1327ae18ee388a5d1c32c289f056f",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "record_node",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "record_node",
+          "receipt_file",
+          "manual_node"
+        ],
+        "framings": [
+          {
+            "order": [
+              "record_node",
+              "receipt_file",
+              "manual_node"
+            ],
+            "probs": {
+              "record_node": 0.69,
+              "receipt_file": 0.28,
+              "manual_node": 0.01,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "receipt_file",
+              "manual_node",
+              "record_node"
+            ],
+            "probs": {
+              "receipt_file": 0.29,
+              "manual_node": 0.01,
+              "record_node": 0.67,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "manual_node",
+              "record_node",
+              "receipt_file"
+            ],
+            "probs": {
+              "manual_node": 0.06,
+              "record_node": 0.83,
+              "receipt_file": 0.1,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "record_node": 0.73,
+          "receipt_file": 0.2233,
+          "manual_node": 0.0267
+        },
+        "noneFits": 0.02,
+        "agreement": 1,
+        "margin": 0.5067,
+        "leader": "record_node",
+        "railProb": {
+          "record_node": 0.01,
+          "receipt_file": 0.04,
+          "manual_node": 0.21
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "record_node",
+          "receipt_file",
+          "manual_node"
+        ],
+        "framings": [
+          {
+            "order": [
+              "record_node",
+              "receipt_file",
+              "manual_node"
+            ],
+            "probs": {
+              "record_node": 0.7,
+              "receipt_file": 0.27,
+              "manual_node": 0.02,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "receipt_file",
+              "manual_node",
+              "record_node"
+            ],
+            "probs": {
+              "receipt_file": 0.26,
+              "manual_node": 0.02,
+              "record_node": 0.69,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "manual_node",
+              "record_node",
+              "receipt_file"
+            ],
+            "probs": {
+              "manual_node": 0.07,
+              "record_node": 0.79,
+              "receipt_file": 0.12,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "record_node": 0.7267,
+          "receipt_file": 0.2167,
+          "manual_node": 0.0367
+        },
+        "noneFits": 0.02,
+        "agreement": 1,
+        "margin": 0.51,
+        "leader": "record_node",
+        "railProb": {
+          "record_node": 0.01,
+          "receipt_file": 0.04,
+          "manual_node": 0.21
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 24,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 8142,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

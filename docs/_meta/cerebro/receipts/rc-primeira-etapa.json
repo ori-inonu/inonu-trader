@@ -1,0 +1,223 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-primeira-etapa",
+    "specHash": "8735f4ca24ce7f666b3533faee3cca3e1b41d30b447be46b07751d013eeceda4",
+    "removedByCode": [
+      "raspagem_site",
+      "plano_pago_ws"
+    ],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "medir_primeiro",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "medir_primeiro",
+          "filtro_custo",
+          "feed_cex",
+          "ciclo_evento",
+          "pools_solana",
+          "governador_cota"
+        ],
+        "framings": [
+          {
+            "order": [
+              "medir_primeiro",
+              "filtro_custo",
+              "feed_cex",
+              "ciclo_evento",
+              "pools_solana",
+              "governador_cota"
+            ],
+            "probs": {
+              "medir_primeiro": 0.96,
+              "filtro_custo": 0.02,
+              "feed_cex": 0.02,
+              "ciclo_evento": 0,
+              "pools_solana": 0,
+              "governador_cota": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "filtro_custo",
+              "feed_cex",
+              "ciclo_evento",
+              "pools_solana",
+              "governador_cota",
+              "medir_primeiro"
+            ],
+            "probs": {
+              "filtro_custo": 0.06,
+              "feed_cex": 0.01,
+              "ciclo_evento": 0.01,
+              "pools_solana": 0,
+              "governador_cota": 0,
+              "medir_primeiro": 0.92,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "feed_cex",
+              "ciclo_evento",
+              "pools_solana",
+              "governador_cota",
+              "medir_primeiro",
+              "filtro_custo"
+            ],
+            "probs": {
+              "feed_cex": 0.01,
+              "ciclo_evento": 0,
+              "pools_solana": 0,
+              "governador_cota": 0,
+              "medir_primeiro": 0.97,
+              "filtro_custo": 0.02,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "medir_primeiro": 0.95,
+          "filtro_custo": 0.0333,
+          "feed_cex": 0.0133,
+          "ciclo_evento": 0.0033,
+          "pools_solana": 0,
+          "governador_cota": 0
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.9167,
+        "leader": "medir_primeiro",
+        "railProb": {
+          "medir_primeiro": 0,
+          "filtro_custo": 0.01,
+          "feed_cex": 0.21,
+          "ciclo_evento": 0.05,
+          "pools_solana": 0.15,
+          "governador_cota": 0.17
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "medir_primeiro",
+          "filtro_custo",
+          "feed_cex",
+          "ciclo_evento",
+          "pools_solana",
+          "governador_cota"
+        ],
+        "framings": [
+          {
+            "order": [
+              "medir_primeiro",
+              "filtro_custo",
+              "feed_cex",
+              "ciclo_evento",
+              "pools_solana",
+              "governador_cota"
+            ],
+            "probs": {
+              "medir_primeiro": 0.96,
+              "filtro_custo": 0.02,
+              "feed_cex": 0.02,
+              "ciclo_evento": 0,
+              "pools_solana": 0,
+              "governador_cota": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "filtro_custo",
+              "feed_cex",
+              "ciclo_evento",
+              "pools_solana",
+              "governador_cota",
+              "medir_primeiro"
+            ],
+            "probs": {
+              "filtro_custo": 0.04,
+              "feed_cex": 0.01,
+              "ciclo_evento": 0,
+              "pools_solana": 0,
+              "governador_cota": 0,
+              "medir_primeiro": 0.95,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "feed_cex",
+              "ciclo_evento",
+              "pools_solana",
+              "governador_cota",
+              "medir_primeiro",
+              "filtro_custo"
+            ],
+            "probs": {
+              "feed_cex": 0.01,
+              "ciclo_evento": 0,
+              "pools_solana": 0,
+              "governador_cota": 0,
+              "medir_primeiro": 0.97,
+              "filtro_custo": 0.02,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "medir_primeiro": 0.96,
+          "filtro_custo": 0.0267,
+          "feed_cex": 0.0133,
+          "ciclo_evento": 0,
+          "pools_solana": 0,
+          "governador_cota": 0
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.9333,
+        "leader": "medir_primeiro",
+        "railProb": {
+          "medir_primeiro": 0,
+          "filtro_custo": 0.01,
+          "feed_cex": 0.21,
+          "ciclo_evento": 0.05,
+          "pools_solana": 0.15,
+          "governador_cota": 0.17
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 12,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 12,
+    "failed": 0,
+    "inputTokens": 17239,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

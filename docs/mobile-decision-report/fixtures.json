@@ -1,0 +1,581 @@
+{
+  "schema": "synthetic_mobile_fixtures_v1",
+  "synthetic": true,
+  "now_ms": 1791504000100,
+  "cases": [
+    {
+      "name": "fresh",
+      "input": {
+        "schema": "mobile_decision_input_v1",
+        "snapshot_id": "synthetic-mobile-fresh",
+        "revision": "1",
+        "origin": "synthetic_fixture",
+        "dex_report": {
+          "source": "synthetic",
+          "chainIndex": "1",
+          "tokenA": {
+            "address": "0x0000000000000000000000000000000000000001",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "tokenB": {
+            "address": "0x0000000000000000000000000000000000000002",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "inputAtomic": "1000000",
+          "outputAtomic": "995000",
+          "quotedGrossDeltaAtomic": "-5000",
+          "status": "quoted_gross_delta",
+          "reasons": [
+            "quoted_output_unit_inferred",
+            "total_cost_coverage_unknown"
+          ],
+          "legs": [
+            {
+              "inputAtomic": "1000000",
+              "outputAtomic": "1010000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000003,
+              "receivedAt": 1791504000004
+            },
+            {
+              "inputAtomic": "1010000",
+              "outputAtomic": "995000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000005,
+              "receivedAt": 1791504000006
+            }
+          ],
+          "execution": "not_qualified",
+          "liveQualified": false,
+          "netAtomic": null,
+          "netStatus": "net_not_evaluated",
+          "costsCoverage": "unknown",
+          "costUsd": null,
+          "quotaRemaining": null,
+          "timing": {
+            "startedAt": 1791504000000,
+            "completedAt": 1791504000007,
+            "elapsedMs": 7,
+            "coverageRequestedAt": 1791504000001,
+            "coverageReceivedAt": 1791504000002
+          },
+          "policy": {
+            "maxElapsedMs": 5000,
+            "maxImpactMagnitudePercent": 1
+          }
+        },
+        "source_time_ms": 1791503999900,
+        "fetched_at_ms": 1791504000050,
+        "max_age_ms": 60000,
+        "api_cost_usd": null,
+        "jev": null
+      }
+    },
+    {
+      "name": "missing",
+      "input": {
+        "schema": "mobile_decision_input_v1",
+        "snapshot_id": "synthetic-mobile-missing",
+        "revision": "1",
+        "origin": "synthetic_fixture",
+        "dex_report": {
+          "source": "synthetic",
+          "chainIndex": "1",
+          "tokenA": {
+            "address": "0x0000000000000000000000000000000000000001",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "tokenB": {
+            "address": "0x0000000000000000000000000000000000000002",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "inputAtomic": "1000000",
+          "outputAtomic": "995000",
+          "quotedGrossDeltaAtomic": "-5000",
+          "status": "quoted_gross_delta",
+          "reasons": [
+            "quoted_output_unit_inferred",
+            "total_cost_coverage_unknown"
+          ],
+          "legs": [
+            {
+              "inputAtomic": "1000000",
+              "outputAtomic": "1010000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000003,
+              "receivedAt": 1791504000004
+            },
+            {
+              "inputAtomic": "1010000",
+              "outputAtomic": "995000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000005,
+              "receivedAt": 1791504000006
+            }
+          ],
+          "execution": "not_qualified",
+          "liveQualified": false,
+          "netAtomic": null,
+          "netStatus": "net_not_evaluated",
+          "costsCoverage": "unknown",
+          "costUsd": null,
+          "quotaRemaining": null,
+          "timing": {
+            "startedAt": 1791504000000,
+            "completedAt": 1791504000007,
+            "elapsedMs": 7,
+            "coverageRequestedAt": 1791504000001,
+            "coverageReceivedAt": 1791504000002
+          },
+          "policy": {
+            "maxElapsedMs": 5000,
+            "maxImpactMagnitudePercent": 1
+          }
+        },
+        "source_time_ms": null,
+        "fetched_at_ms": null,
+        "max_age_ms": 60000,
+        "api_cost_usd": null,
+        "jev": null
+      }
+    },
+    {
+      "name": "stale",
+      "input": {
+        "schema": "mobile_decision_input_v1",
+        "snapshot_id": "synthetic-mobile-stale",
+        "revision": "1",
+        "origin": "synthetic_fixture",
+        "dex_report": {
+          "source": "synthetic",
+          "chainIndex": "1",
+          "tokenA": {
+            "address": "0x0000000000000000000000000000000000000001",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "tokenB": {
+            "address": "0x0000000000000000000000000000000000000002",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "inputAtomic": "1000000",
+          "outputAtomic": "995000",
+          "quotedGrossDeltaAtomic": "-5000",
+          "status": "quoted_gross_delta",
+          "reasons": [
+            "quoted_output_unit_inferred",
+            "total_cost_coverage_unknown"
+          ],
+          "legs": [
+            {
+              "inputAtomic": "1000000",
+              "outputAtomic": "1010000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000003,
+              "receivedAt": 1791504000004
+            },
+            {
+              "inputAtomic": "1010000",
+              "outputAtomic": "995000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000005,
+              "receivedAt": 1791504000006
+            }
+          ],
+          "execution": "not_qualified",
+          "liveQualified": false,
+          "netAtomic": null,
+          "netStatus": "net_not_evaluated",
+          "costsCoverage": "unknown",
+          "costUsd": null,
+          "quotaRemaining": null,
+          "timing": {
+            "startedAt": 1791504000000,
+            "completedAt": 1791504000007,
+            "elapsedMs": 7,
+            "coverageRequestedAt": 1791504000001,
+            "coverageReceivedAt": 1791504000002
+          },
+          "policy": {
+            "maxElapsedMs": 5000,
+            "maxImpactMagnitudePercent": 1
+          }
+        },
+        "source_time_ms": 1791503940099,
+        "fetched_at_ms": 1791504000050,
+        "max_age_ms": 60000,
+        "api_cost_usd": null,
+        "jev": null
+      }
+    },
+    {
+      "name": "future",
+      "input": {
+        "schema": "mobile_decision_input_v1",
+        "snapshot_id": "synthetic-mobile-future",
+        "revision": "1",
+        "origin": "synthetic_fixture",
+        "dex_report": {
+          "source": "synthetic",
+          "chainIndex": "1",
+          "tokenA": {
+            "address": "0x0000000000000000000000000000000000000001",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "tokenB": {
+            "address": "0x0000000000000000000000000000000000000002",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "inputAtomic": "1000000",
+          "outputAtomic": "995000",
+          "quotedGrossDeltaAtomic": "-5000",
+          "status": "quoted_gross_delta",
+          "reasons": [
+            "quoted_output_unit_inferred",
+            "total_cost_coverage_unknown"
+          ],
+          "legs": [
+            {
+              "inputAtomic": "1000000",
+              "outputAtomic": "1010000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000003,
+              "receivedAt": 1791504000004
+            },
+            {
+              "inputAtomic": "1010000",
+              "outputAtomic": "995000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000005,
+              "receivedAt": 1791504000006
+            }
+          ],
+          "execution": "not_qualified",
+          "liveQualified": false,
+          "netAtomic": null,
+          "netStatus": "net_not_evaluated",
+          "costsCoverage": "unknown",
+          "costUsd": null,
+          "quotaRemaining": null,
+          "timing": {
+            "startedAt": 1791504000000,
+            "completedAt": 1791504000007,
+            "elapsedMs": 7,
+            "coverageRequestedAt": 1791504000001,
+            "coverageReceivedAt": 1791504000002
+          },
+          "policy": {
+            "maxElapsedMs": 5000,
+            "maxImpactMagnitudePercent": 1
+          }
+        },
+        "source_time_ms": 1791504000101,
+        "fetched_at_ms": 1791504000102,
+        "max_age_ms": 60000,
+        "api_cost_usd": null,
+        "jev": null
+      }
+    },
+    {
+      "name": "contradiction",
+      "input": {
+        "schema": "mobile_decision_input_v1",
+        "snapshot_id": "synthetic-mobile-contradiction",
+        "revision": "1",
+        "origin": "synthetic_fixture",
+        "dex_report": {
+          "source": "synthetic",
+          "chainIndex": "1",
+          "tokenA": {
+            "address": "0x0000000000000000000000000000000000000001",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "tokenB": {
+            "address": "0x0000000000000000000000000000000000000002",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "inputAtomic": "1000000",
+          "outputAtomic": "995000",
+          "quotedGrossDeltaAtomic": "-5000",
+          "status": "quoted_gross_delta",
+          "reasons": [
+            "quoted_output_unit_inferred",
+            "total_cost_coverage_unknown"
+          ],
+          "legs": [
+            {
+              "inputAtomic": "1000000",
+              "outputAtomic": "1010000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000003,
+              "receivedAt": 1791504000004
+            },
+            {
+              "inputAtomic": "1010000",
+              "outputAtomic": "995000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000005,
+              "receivedAt": 1791504000006
+            }
+          ],
+          "execution": "not_qualified",
+          "liveQualified": false,
+          "netAtomic": null,
+          "netStatus": "net_not_evaluated",
+          "costsCoverage": "unknown",
+          "costUsd": null,
+          "quotaRemaining": null,
+          "timing": {
+            "startedAt": 1791504000000,
+            "completedAt": 1791504000007,
+            "elapsedMs": 7,
+            "coverageRequestedAt": 1791504000001,
+            "coverageReceivedAt": 1791504000002
+          },
+          "policy": {
+            "maxElapsedMs": 5000,
+            "maxImpactMagnitudePercent": 1
+          }
+        },
+        "source_time_ms": 1791504000075,
+        "fetched_at_ms": 1791503999900,
+        "max_age_ms": 60000,
+        "api_cost_usd": null,
+        "jev": null
+      }
+    },
+    {
+      "name": "invalid",
+      "input": {
+        "schema": "mobile_decision_input_v1",
+        "snapshot_id": "synthetic-mobile-invalid",
+        "revision": "1",
+        "origin": "synthetic_fixture",
+        "dex_report": {
+          "source": "synthetic",
+          "chainIndex": "1",
+          "tokenA": {
+            "address": "0x0000000000000000000000000000000000000001",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "tokenB": {
+            "address": "0x0000000000000000000000000000000000000002",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "inputAtomic": "1000000",
+          "outputAtomic": "995000",
+          "quotedGrossDeltaAtomic": "-5000",
+          "status": "quoted_gross_delta",
+          "reasons": [
+            "quoted_output_unit_inferred",
+            "total_cost_coverage_unknown"
+          ],
+          "legs": [
+            {
+              "inputAtomic": "1000000",
+              "outputAtomic": "1010000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000003,
+              "receivedAt": 1791504000004
+            },
+            {
+              "inputAtomic": "1010000",
+              "outputAtomic": "995000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000005,
+              "receivedAt": 1791504000006
+            }
+          ],
+          "execution": "not_qualified",
+          "liveQualified": false,
+          "netAtomic": null,
+          "netStatus": "net_not_evaluated",
+          "costsCoverage": "unknown",
+          "costUsd": null,
+          "quotaRemaining": null,
+          "timing": {
+            "startedAt": 1791504000000,
+            "completedAt": 1791504000007,
+            "elapsedMs": 7,
+            "coverageRequestedAt": 1791504000001,
+            "coverageReceivedAt": 1791504000002
+          },
+          "policy": {
+            "maxElapsedMs": 5000,
+            "maxImpactMagnitudePercent": 1
+          }
+        },
+        "source_time_ms": 1791503999900,
+        "fetched_at_ms": 1791504000050,
+        "max_age_ms": 0,
+        "api_cost_usd": null,
+        "jev": null
+      }
+    },
+    {
+      "name": "known_costs",
+      "input": {
+        "schema": "mobile_decision_input_v1",
+        "snapshot_id": "synthetic-mobile-known_costs",
+        "revision": "1",
+        "origin": "synthetic_fixture",
+        "dex_report": {
+          "source": "synthetic",
+          "chainIndex": "1",
+          "tokenA": {
+            "address": "0x0000000000000000000000000000000000000001",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "tokenB": {
+            "address": "0x0000000000000000000000000000000000000002",
+            "decimals": 6,
+            "metadataSource": "synthetic-fixture-only"
+          },
+          "inputAtomic": "1000000",
+          "outputAtomic": "995000",
+          "quotedGrossDeltaAtomic": "-5000",
+          "status": "quoted_gross_delta",
+          "reasons": [
+            "quoted_output_unit_inferred",
+            "total_cost_coverage_unknown"
+          ],
+          "legs": [
+            {
+              "inputAtomic": "1000000",
+              "outputAtomic": "1010000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000003,
+              "receivedAt": 1791504000004
+            },
+            {
+              "inputAtomic": "1010000",
+              "outputAtomic": "995000",
+              "priceImpactPercent": -0.1,
+              "fromTaxFraction": 0,
+              "toTaxFraction": 0,
+              "networkEstimates": {
+                "tradeFeeUsd": null,
+                "estimateGasFeeNativeAtomic": null
+              },
+              "requestedAt": 1791504000005,
+              "receivedAt": 1791504000006
+            }
+          ],
+          "execution": "not_qualified",
+          "liveQualified": false,
+          "netAtomic": null,
+          "netStatus": "net_not_evaluated",
+          "costsCoverage": "unknown",
+          "costUsd": null,
+          "quotaRemaining": null,
+          "timing": {
+            "startedAt": 1791504000000,
+            "completedAt": 1791504000007,
+            "elapsedMs": 7,
+            "coverageRequestedAt": 1791504000001,
+            "coverageReceivedAt": 1791504000002
+          },
+          "policy": {
+            "maxElapsedMs": 5000,
+            "maxImpactMagnitudePercent": 1
+          }
+        },
+        "source_time_ms": 1791503999900,
+        "fetched_at_ms": 1791504000050,
+        "max_age_ms": 60000,
+        "api_cost_usd": "0.000000000000000000000001",
+        "jev": null
+      }
+    }
+  ]
+}

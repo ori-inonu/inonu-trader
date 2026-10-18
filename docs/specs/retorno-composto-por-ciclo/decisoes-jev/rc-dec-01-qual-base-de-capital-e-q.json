@@ -1,0 +1,38 @@
+{
+  "id": "rc-dec-01-qual-base-de-capital-e-q",
+  "goal": "Qual base de capital e qual definicao de retorno a sombra reporta nesta fase, sem alterar limites de risco? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "capital_configurado": "US$ 100, source configured (data/quant/so-latest.json:24)",
+    "medido_15_10": "US$ 118,17 a 118,80 (EVIDENCIA-OPERACAO-20261015.md:45)",
+    "citado_14_10": "US$ 121 (ALAVANCAGEM-VIABILIDADE-20261014.md:118) e cerca de US$ 126 (design.md:193)",
+    "valueComplete": "false no snapshot de sombra (so-latest.json:26); falso se algum ativo sem preco (portfolio.ts:301)",
+    "knownValueUsd_operator": "155 com valueComplete false, sem data verificada (operator/latest.json:121-122)",
+    "agentUsd": "nulo sem ultimo livro (wire.ts:302)",
+    "initialUsd_script": "118 fixo em scripts/autoresearch.ts:60, status not_proven",
+    "sem_ordens": "nenhuma ordem enviada nem leitura de carteira feita nesta pesquisa",
+    "patrimonio_medido": "US$ 118,17 a 118,80 em 15/10/2026; caixa em stablecoin de 90 a 91 por cento",
+    "valueComplete_atual": "falso; knownValueUsd 0 (data/quant/so-latest.json:25)"
+  },
+  "rails": [
+    "Base de dimensionamento (deriveLimits, teto por ordem, caixa maximo) fica fora: decisao do dono.",
+    "Nenhum percentual de retorno composto antes de G0, com valueComplete verdadeiro em todas as pernas.",
+    "Sem gravacao em journal existente; a serie B precisa registrar depositos e saques."
+  ],
+  "options": [
+    {
+      "id": "medir-sem-base",
+      "label": "Medir sem base fixa",
+      "what": "Agregados diarios por perna, sem percentual composto e sem base fixa, ate G0. Evidencia: valueComplete falso em todo snapshot atual (so-latest.json:25); 4 ativos sem preco em 15/10 (T01)."
+    },
+    {
+      "id": "base-118-rotulada",
+      "label": "Base provisoria de 118",
+      "what": "Base de 118,17 a 118,80 apenas para reporte, com faixa de erro declarada. Evidencia: Unica leitura de 15/10 (T01); 100, 121, 126 e 155 nao conciliados."
+    },
+    {
+      "id": "duas-series-arquivo-novo",
+      "label": "Duas series em arquivo novo",
+      "what": "Volta fechada com custo (A) e variacao marcada a mercado (B) em arquivo novo e aditivo, sem percentual composto ate G0. Evidencia: fills.jsonl nao tem preco USD nem taxa completa; spec.md:50 veda alterar journal (T08)."
+    }
+  ]
+}

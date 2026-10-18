@@ -1,0 +1,71 @@
+{
+  "id": "rc-t10-custo-total-e-impacto-por-tamanho",
+  "goal": "Antes de fixar um piso de tamanho ou um gate de custo, qual medicao de custo por tamanho o sistema deve fazer? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "taxa_base_lamports": "5000 por assinatura, 50% queimado",
+    "recibo_rede": "97859 lamports = US$ 0,0103 (SOL 105,48)",
+    "mediana_rede": "85427 lamports em 21 ordens",
+    "raso_medido": "-2,09% a -2,14% em 2, 5 e 10 USDC, pool ~US$ 37 mil",
+    "impacto_formula_raso": "0,011% a 0,054% em 2 a 10 USDC (2 x tamanho / TVL)",
+    "round_trip_codigo": "round-trip.ts:162 sempre unknown; sem custo medido",
+    "liquido_medido": "0,42% medio em 6 pares, nao verificado no repo",
+    "ata_rent": "0,00204 SOL, nao verificado"
+  },
+  "rails": [
+    "Somente leitura: nenhuma ordem, assinatura ou transferencia; nenhuma chamada ao Jev nem a servico pago.",
+    "Spot Solana, sem alavancagem; caixa nao vai a emprestimo (decisao do dono).",
+    "Piso de tamanho e teto de ordem sao limites de risco: decisao do dono, nao do Jev.",
+    "Medir em sombra antes de qualquer live; live so por autorizacao do dono."
+  ],
+  "options": [
+    {
+      "id": "so_medir",
+      "label": "So medir, sem piso nem gate",
+      "what": "Adiar qualquer piso. Medir custo por tamanho e componente em sombra, sem alterar decisao nem tamanho de ordem. Evidencia: Custo do raso nao explicado pela formula (a7); round-trip.ts:162 bloqueia calculo."
+    },
+    {
+      "id": "decompor_fill",
+      "label": "Decompor fills antes",
+      "what": "Criar arquivo novo com componentes por fill (base, prioridade, gorjeta, pool) antes de qualquer decisao de tamanho. Evidencia: fills.ts:30-32 guarda so o total de taxa (a9)."
+    },
+    {
+      "id": "cotacao_lote",
+      "label": "Cotacao sintetica em lote",
+      "what": "Cotar 2, 5, 10, 12 e 25 USDC sem ordem, com unidade de saida validada por fixture antes de qualquer chamada real. Evidencia: Unidade de saida nao verificada; exige chave do dono (round-trip.ts:162)."
+    },
+    {
+      "id": "gate_subtrai",
+      "label": "Gate de custo que so subtrai",
+      "what": "Subtrair custo medido antes do Jev, sem criar compra e sem mudar tamanho. Piso fica para o dono. Evidencia: RC-T11 pede teste que prove que o gate nunca cria compra."
+    },
+    {
+      "id": "decompor_rpc_transacoes",
+      "label": "Decompor taxa das ordens ja executadas via RPC",
+      "what": "Ler, por RPC publico e somente leitura, cada assinatura ja gravada em fills.ts (campo signature, fills.ts:22). Extrair meta.fee, o compute unit price e o limite de CU das instrucoes ComputeBudget, e transferencias de gorjeta Jito. Gravar em arquivo derivado novo, sem alterar o journal nem o schema de fills. Nao usa chave, nao envia ordem, nao chama Jev. Responde prioridade_real e tip_jito como dad"
+    },
+    {
+      "id": "ler_reservas_pool_rpc",
+      "label": "Medir impacto real lendo reservas do pool por RPC",
+      "what": "Ler o estado on-chain das pools dos pares testados por RPC (somente leitura) para obter reservas e TVL reais. Calcular o impacto de 2, 5, 10, 12 e 25 USDC pela curva do pool e comparar com a formula de produto constante e com a cotacao. Separa custo de impacto de custo percentual fixo, que e a hipotese do desvio em a7. Evidencia: a7 (formula 2 s / L e observacao de custo quase constante no raso); "
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "prioridade_real",
+      "ask": "Qual compute unit price e limite de CU as ordens reais usaram? (dado de transacao, sem carteira)"
+    },
+    {
+      "id": "tip_jito",
+      "ask": "Quanto de gorjeta Jito foi paga por ordem, se alguma?"
+    },
+    {
+      "id": "pool_imposto",
+      "ask": "Qual taxa de pool e imposto de token por par, na cotacao OKX DEX?"
+    },
+    {
+      "id": "tvl_pools",
+      "ask": "Qual TVL atual dos pools dos pares testados (dado publico de pool)?"
+    }
+  ]
+}

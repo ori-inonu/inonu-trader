@@ -1,0 +1,74 @@
+{
+  "browser": "Codex In-app Browser",
+  "browserId": "2",
+  "inspectionTimeApproximateUtc": "2026-10-11T20:26:00Z",
+  "browserCapabilities": [
+    "visibility",
+    "viewport"
+  ],
+  "tabCapabilities": [
+    "pageAssets",
+    "webmcp"
+  ],
+  "reducedMotionEmulationExposed": false,
+  "touchEmulationExposed": false,
+  "osSettingsChanged": false,
+  "sourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "proofScope": "Catalog inspection only. No new interaction, contrast qualification, physical touch or wallet connection.",
+  "strategyConsultation": {
+    "status": "abstained",
+    "receiptId": "118060f2-6b02-4569-a8c5-9ca73e682c87",
+    "evidenceIds": [
+      "checks",
+      "gaps"
+    ],
+    "inputDigest": "b096e872a8f0f37df4f8f1f985c5f6386a5b1dbec1c2c93ed566a4a8d2ca41d5",
+    "rubricVersion": "decision-2026-09-26.2",
+    "policy": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "authority": "advisory_only",
+    "origin": {
+      "source": "mcp",
+      "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+      "agentId": "root"
+    },
+    "model": "jev-1.13.0",
+    "confidence": 0.45,
+    "probabilities": {
+      "browser": 0.63,
+      "checkpoint": 0.35,
+      "insufficient_evidence": 0.02
+    },
+    "usage": {
+      "input_tokens": 868,
+      "output_tokens": 44
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T20:26:03.276Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T20:26:03.580Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12ca5e77b7c9d88992d9655748d5c",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "signals": {},
+    "choice": "browser",
+    "providerChoice": "browser",
+    "bestCandidate": "browser",
+    "domain": "strategy",
+    "disposition": "abstained",
+    "reasonCode": "low_confidence",
+    "latencyMs": 329,
+    "receiptPersisted": true,
+    "billedCost": null,
+    "human_response": false,
+    "note": "Abstenção: não autoriza escolha. Pesquisa local do catálogo demonstrou ausência de emulação de preferência/toque."
+  }
+}

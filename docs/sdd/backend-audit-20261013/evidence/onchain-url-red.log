@@ -1,0 +1,23 @@
+bun test v1.3.14 (0d9b296a)
+
+src\onchain-read\client.test.ts:
+254 |     });
+255 |     const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: Date.now, minIntervalMs: 40 });
+256 |     const results = await Promise.all([client.call(request, "free"), client.call(REQ, "free")]);
+257 |     expect(results.every((result) => result.ok && result.sent)).toBe(true);
+258 |     expect(calls).toHaveLength(2);
+259 |     expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38);
+                                          ^
+error: expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 38
+Received: 0
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:259:37)
+(fail) onchain client > queue interval starts at fetch after delayed URL preparation [83.58ms]
+
+ 0 pass
+ 47 filtered out
+ 1 fail
+ 3 expect() calls
+Ran 1 test across 1 file. [375.00ms]

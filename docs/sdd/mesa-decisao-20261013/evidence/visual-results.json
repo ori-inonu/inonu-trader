@@ -1,0 +1,49 @@
+[
+  {
+    "name": "after-desktop",
+    "graph": {
+      "x": 16,
+      "y": 161.96875,
+      "width": 1122.40625,
+      "height": 488.03125
+    },
+    "overflow": {
+      "body": 1440,
+      "root": 1440,
+      "viewport": 1440
+    },
+    "errors": [],
+    "body": "INONU TRADER\n\nMesa de decisao do Inonu\n\nMesa\nRastreador\nBTC-USDT\n/\nFontes\n3 de 5 ao vivo\n3 ao vivo, 2 fora do ar\nCarteira OKX\nextensao nao encontrada\n18:13:19 UTC\nrelogio sincronizado\nRelogio local sincronizado com a OKX\nDescobrir\nAlertas de preco\nPreferencias\nMERCADO EM FOCO\nBTC / USDT\n\nInvestigue no grafico. Consulte o Inonu antes de agir.\n\n83.239,4\nULTIMO EM USDT\n24H\n+0,86%\n81.032,8\n84.166,3\nAmpliar grafico\nConsultar ativo\nAnalisar carteira\nGRAFICO\nBTC-USDT\nAo vivo\nBTC-USDT\n1m\n5m\n15m\n1H\n4H\n1D\nIndicadores\nVelas\nHeikin Ashi\nBarras\nLinha\nArea\nRenko\n24H +0,86%\nLeituras do Inonu indisponiveis\n13/10 18:13\nO83.245,9\nH83.248,6\nL83.239,4\nC83.239,4\nVol0,0272\n-0,01%\nem formacao\nPremium 69%\nDemanda a 26 bps abaixo\nOferta a 26 bps acima\nFVG de alta aberto (3)\nFVG de baixa aberto (5)\nCHoCH de alta ha 6 barras\nVarredura de fundos ha 64 barras\nVol 0,0272\nNiveis do Inonu --\nINONU\nZonas\nFluxo\nDecisao\nnucleo desatualizado, reinicie o app\n\nUltima vela 13/10 18:13: abertura 83.245,9, maxima 83.248,6, minima 83.239,4, fechamento 83.239,4, volume 0,0272, vela em formacao.\n\nATIVOS\nAo vivo\nATIVO\nULTIMO\n24H\nBTC\n, a vista, ativo em foco\n83.239\n+0,86%\nETH\n, a vista\n2.508,2\n-0,26%\nSOL\n, a vista\n107,75\n-0,11%\nOKB\n, a vista\n121,74\n-2,30%\nMON\n, a vista\n0,024430\n-1,65%\nMAIS ATIVOS POR VOLUME\nUSDC\n, a vista\n1,0011\n0,00%\nZEC\n, a vista\n1.205,9\n-2,70%\nNEAR\n, a vista\n5,0220\n-7,48%\nSTRK\n, a vista\n0,085020\n-13,35%\nDOGE\n, a vista\n0,084360\n-0,58%\nXRP\n, a vista\n1,3691\n+0,49%\nHYPE\n, a vista\n81,435\n-2,52%\nUNI\n, a vista\n7,5880\n+2,87%\nSUI\n, a vista\n1,0496\n-1,92%\nCT\n, a vista\n0,36690\n+7,76%\nFIL\n, a vista\n1,1482\n-0,09%\nWLD\n, a vista\n0,52040\n-0,04%\nUSDG\n, a vista\n1,0009\n+0,01%\nXCRCL\n, a vista\n84,530\n+1,75%\nDOS\n, a vista\n0,21210\n-26,61%\nPEPE\n, a vista\n0,00000421\n+3,06%\nTRUMP\n, a vista\n1,9100\n+0,69%\nENA\n, a vista\n0,21"
+  },
+  {
+    "name": "expanded",
+    "graph": {
+      "x": 16,
+      "y": 161.96875,
+      "width": 1408,
+      "height": 688.03125
+    },
+    "layout": {
+      "layout": "grafico",
+      "grids": [
+        "1408px"
+      ]
+    }
+  },
+  {
+    "name": "after-mobile",
+    "graph": {
+      "x": 12,
+      "y": 60,
+      "width": 366,
+      "height": 716
+    },
+    "overflow": {
+      "body": 390,
+      "root": 390,
+      "viewport": 390
+    },
+    "errors": [],
+    "body": "INONU TRADER\nFontes\n3 ao vivo, 2 fora do ar\nCarteira OKX\nDescobrir\nAlertas de preco\nPreferencias\nAmpliar grafico\nConsultar ativo\nAnalisar carteira\n83.251,1\n+0,88%\n81.032,8\n84.166,3\nGRAFICO\nBTC-USDT\nAo vivo\nBTC-USDT\n1m\n5m\n15m\n1H\n4H\n1D\nIndicadores\nVelas\nHeikin Ashi\nBarras\nLinha\nArea\nRenko\n24H +0,88%\nLeituras do Inonu indisponiveis\n13/10 18:13\nO83.245,9\nH83.251,1\nL83.239,4\nC83.251,1\nVol0,0279\n+0,01%\nem formacao\nPremium 72%\nDemanda a 28 bps abaixo\nOferta a 25 bps acima\nFVG de alta aberto (3)\nFVG de baixa aberto (5)\nCHoCH de alta ha 6 barras\nVarredura de fundos ha 64 barras\nVol 0,0279\nNiveis do Inonu --\nINONU\nZonas\nFluxo\nDecisao\nnucleo desatualizado, reinicie o app\n\nUltima vela 13/10 18:13: abertura 83.245,9, maxima 83.251,1, minima 83.239,4, fechamento 83.251,1, volume 0,0279, vela em formacao.\n\nInonu\nGrafico\nLivro\nFluxo\nFontes"
+  }
+]

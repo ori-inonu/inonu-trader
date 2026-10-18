@@ -1,0 +1,14 @@
+/* The ground the Inonu will be asked about, in three lines, above the button that asks. Nothing animates. */
+.root { display: grid; gap: var(--s2); min-width: 0; }
+.title { margin: 0; color: var(--ink-3); font: var(--fs-micro); letter-spacing: var(--track-micro); text-transform: uppercase; }
+.list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s1); color: var(--ink-2); font-size: 12px; line-height: 16px; }
+/* Each line is a small card with a rail on the left: lit when the moment lines up for a question, quiet otherwise. */
+.list li {
+  padding: 5px var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--bg-deck-2) 70%, transparent);
+  box-shadow: inset 2px 0 0 var(--edge-strong);
+}
+.list li[data-tone="worth"] { border-color: color-mix(in srgb, var(--signal) 40%, var(--edge)); background: color-mix(in srgb, var(--signal) 8%, var(--bg-deck-2)); color: var(--ink); font-weight: 600; box-shadow: inset 2px 0 0 var(--signal); }
+.note { margin: 0; color: var(--ink-3); font-size: 11px; line-height: 15px; }

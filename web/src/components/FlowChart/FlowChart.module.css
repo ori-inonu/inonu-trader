@@ -1,21 +1,129 @@
-/* FlowChart: the hero. A calm, responsive price flow drawn by hand in SVG. */
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-block-grow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom center;
+  }
+
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom center;
+  }
+}
+
+@keyframes jev-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .wrap {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
   width: 100%;
   height: 100%;
-  min-height: 0;
-  min-width: 0;
-  display: flex;
   flex-direction: column;
+  gap: var(--s2);
+}
+
+.toolbar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.heading {
+  min-width: 0;
+}
+
+.eyebrow {
+  color: var(--signal);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font: var(--fs-md);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.windows {
+  display: flex;
+  flex: none;
+  gap: var(--s1);
+}
+
+.windowButton,
+.inspectButton {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  background: var(--bg-deck-2);
+  color: var(--ink-2);
+  cursor: pointer;
+  font: var(--fs-base);
+  font-weight: 600;
+  transition: background-color var(--dur-fast) var(--ease-snap), border-color var(--dur-fast) var(--ease-snap);
+}
+
+.windowButton[aria-pressed="true"] {
+  border-color: var(--signal);
+  background: var(--signal);
+  color: var(--bg-well);
+}
+
+.windowButton:hover,
+.inspectButton:hover:not(:disabled) {
+  border-color: var(--signal);
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
+.windowButton[aria-pressed="true"]:hover {
+  background: var(--signal);
+  color: var(--bg-well);
+}
+
+.windowButton:focus-visible,
+.inspectButton:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.availability {
+  min-height: var(--fs-base);
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
 }
 
 .panel {
   position: relative;
+  min-width: 0;
+  min-height: 300px;
   flex: 1;
-  min-height: 0;
-  background: var(--panel);
-  border-radius: 20px;
   overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-2);
+  touch-action: pan-y;
 }
 
 .svg {
@@ -24,225 +132,326 @@
   display: block;
   width: 100%;
   height: 100%;
+  cursor: crosshair;
 }
 
-/* the sliding group: exactly one 10px step left per block */
-.slide {
-  transition: transform 0.3s linear;
+.floor {
+  fill: var(--bg-well);
+}
+
+.corners path {
+  fill: none;
+  stroke: var(--edge-strong);
+  stroke-width: 1;
+}
+
+.blockCell {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: jev-block-grow var(--dur-base) var(--ease-out-expo) both;
+}
+
+.buy {
+  fill: var(--buy);
+}
+
+.sell {
+  fill: var(--sell);
+}
+
+.hold {
+  fill: var(--hold);
+}
+
+.late {
+  fill: var(--late);
+}
+
+.idle {
+  fill: var(--ink-3);
 }
 
 .line {
   fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.6;
-  stroke-linejoin: round;
+  stroke: var(--signal);
+  stroke-width: 2;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .grid {
-  stroke: #efede8;
+  stroke: var(--edge);
   stroke-width: 1;
 }
 
-.tick {
-  font: 400 10px var(--font-mono), monospace;
-  fill: var(--muted-2);
-  font-variant-numeric: tabular-nums;
+/* Mean of the plotted window. It is a reading aid, so it sits behind the price line. */
+.reference {
+  stroke: var(--edge-strong);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
 }
 
-/* last-price tag: tracks the line end vertically */
-.tag {
-  transition: transform 0.3s linear;
-}
-
-.tagText {
-  font: 500 11px var(--font-mono), monospace;
+.tick,
+.blockTick {
+  fill: var(--ink-3);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  fill: #fff;
 }
 
 .guide {
-  stroke: var(--muted-2);
-  stroke-width: 1;
-  stroke-dasharray: 1 3;
-  stroke-linecap: round;
-  opacity: 0.7;
+  stroke: var(--hold);
+  stroke-width: 1.5;
 }
 
-/* soft halo behind the end dot (transform/opacity only) */
-.halo {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: halo 2.2s ease-out infinite;
-  pointer-events: none;
+.guideDot {
+  fill: var(--hold);
 }
 
-@keyframes halo {
-  0% { transform: scale(1); opacity: 0.3; }
-  70%, 100% { transform: scale(3); opacity: 0; }
+.tagBox {
+  fill: var(--signal);
 }
 
-/* hover crosshair */
+.tagText {
+  fill: var(--bg-well);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
 .cross {
-  stroke: var(--ink);
+  stroke: var(--ink-2);
   stroke-width: 1;
-  opacity: 0.18;
+  stroke-dasharray: 4 4;
 }
 
 .crossDot {
-  fill: var(--bg);
+  fill: var(--hold);
+  stroke: var(--bg-well);
+  stroke-width: 2;
+}
+
+.cellMarker {
+  fill: none;
   stroke: var(--ink);
-  stroke-width: 1.6;
+  stroke-width: 1.5;
 }
 
-.tip {
-  fill: var(--bg);
-  stroke: var(--border-2);
-  stroke-width: 1;
+.areaTop {
+  stop-color: var(--signal);
+  stop-opacity: 0.14;
 }
 
-.tipBlock {
-  font: 400 10px var(--font-mono), monospace;
-  font-variant-numeric: tabular-nums;
-  fill: var(--muted);
+.areaBase {
+  stop-color: var(--signal);
+  stop-opacity: 0;
 }
 
-.tipPrice {
-  font: 500 14px var(--font-mono), monospace;
-  font-variant-numeric: tabular-nums;
-  fill: var(--ink);
-}
-
-.tipSide {
-  font: 500 11px var(--font-sans), sans-serif;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-}
-
-.tipMeta {
-  font: 400 10px var(--font-mono), monospace;
-  font-variant-numeric: tabular-nums;
-  fill: var(--muted-2);
-}
-
-.fade {
+.priceOverlay,
+.statusOverlay {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 64px;
-  background: linear-gradient(90deg, var(--panel), transparent);
+  top: var(--s3);
+  display: flex;
+  max-width: 46%;
+  flex-direction: column;
+  gap: 2px;
   pointer-events: none;
 }
 
-.tl {
-  position: absolute;
-  top: 18px;
-  left: 22px;
-  pointer-events: none;
+.priceOverlay {
+  left: var(--s4);
 }
 
-.tr {
-  position: absolute;
-  top: 18px;
-  right: 22px;
+.statusOverlay {
+  right: var(--s4);
+  align-items: flex-end;
   text-align: right;
-  pointer-events: none;
 }
 
-.price {
-  font: 500 34px var(--font-mono), monospace;
-  letter-spacing: -0.02em;
+.priceOverlay strong {
+  overflow-wrap: anywhere;
   color: var(--ink);
+  font: var(--fs-readout);
   font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0.45; }
-  to { opacity: 1; }
+.priceOverlay span,
+.statusOverlay span {
+  color: var(--ink-3);
+  font: var(--fs-xs);
 }
 
-.sub {
+.action {
+  color: var(--ink);
+  font: var(--fs-lg);
+  line-height: 1.2;
+}
+
+.action.buy {
+  fill: var(--ink);
+  color: var(--buy);
+}
+
+.action.sell {
+  fill: var(--ink);
+  color: var(--sell);
+}
+
+.action.hold {
+  fill: var(--ink);
+  color: var(--hold);
+}
+
+.action.late {
+  fill: var(--ink);
+  color: var(--late);
+}
+
+.action.waiting {
+  fill: var(--ink);
+  color: var(--ink-2);
+}
+
+.positionSummary {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 12px;
-  margin-top: 6px;
-  font: 400 12px var(--font-sans), sans-serif;
+  justify-content: space-between;
+  gap: var(--s1) var(--s3);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  color: var(--muted);
-  white-space: nowrap;
 }
 
-.tr .sub {
-  justify-content: flex-end;
+.positionSummary span {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
-
-.word {
-  font: 300 30px var(--font-sans), sans-serif;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  transition: color 0.3s;
-  white-space: nowrap;
-}
-
-/* one-shot trade cues: every animated node is keyed by block, so it plays once on mount */
-.ripple, .beadPop, .cellPop, .cellGlow {
-  transform-box: fill-box;
-  transform-origin: center;
-  pointer-events: none;
-}
-
-.ripple { vector-effect: non-scaling-stroke; animation: ripple 0.7s ease-out forwards; }
-@keyframes ripple { from { transform: scale(1); opacity: 0.9; } to { transform: scale(5.3); opacity: 0; } }
-
-.beadPop { animation: beadPop 0.3s ease-out; }
-@keyframes beadPop { from { transform: scale(1.8); } to { transform: scale(1); } }
-
-/* riser: joins the new strip cell to its bead on the line */
-.riser { stroke-width: 1; pointer-events: none; animation: riser 0.9s ease-out forwards; }
-@keyframes riser { from { opacity: 0.35; } to { opacity: 0; } }
-
-.cellPop { animation: cellPop 0.25s ease-out; }
-@keyframes cellPop { from { transform: scale(1.6); } to { transform: scale(1); } }
-
-.cellGlow { animation: cellGlow 0.6s ease-out forwards; }
-@keyframes cellGlow { from { transform: scale(1.4); opacity: 0.35; } to { transform: scale(2.3); opacity: 0; } }
-
-.wordPop { transform-origin: right center; animation: wordPop 0.25s ease-out; }
-@keyframes wordPop { from { transform: scale(1.06); } to { transform: scale(1); } }
 
 .empty {
   position: absolute;
   inset: 0;
-  display: flex;
+  display: grid;
+  place-items: center;
+  padding: var(--s6);
+  color: var(--ink-2);
+  font: var(--fs-base);
+  text-align: center;
+}
+
+.inspector {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: center;
-  font: 400 13px var(--font-sans), sans-serif;
-  color: var(--muted-2);
+  gap: var(--s2);
+  animation: jev-fade-rise var(--dur-base) var(--ease-out-expo) both;
+}
+
+.inspectButton {
+  padding: 0 var(--s2);
+  white-space: nowrap;
+}
+
+.inspectButton:disabled {
+  cursor: not-allowed;
+  color: var(--ink-4);
+}
+
+.inspectSummary {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  text-align: center;
+}
+
+.inspectSummary strong {
+  color: var(--ink);
+  font: var(--fs-base);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.inspectSummary span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 899.98px) {
+  .panel {
+    min-height: 240px;
+  }
+
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--s1);
+  }
+
+  .windows {
+    width: 100%;
+  }
+
+  .windowButton {
+    flex: 1;
+  }
+
+  .priceOverlay,
+  .statusOverlay {
+    top: var(--s2);
+    max-width: 46%;
+  }
+
+  .priceOverlay {
+    left: var(--s3);
+  }
+
+  .statusOverlay {
+    right: var(--s3);
+  }
+
+  .priceOverlay strong {
+    font-size: var(--fs-md);
+  }
+
+  .action {
+    font-size: var(--fs-md);
+  }
+
+  .inspector {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .inspectSummary {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .priceOverlay,
+  .statusOverlay {
+    max-width: 44%;
+  }
+
+  .priceOverlay strong {
+    font-size: var(--fs-base);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide,
-  .tag,
-  .word {
-    transition: none;
-  }
-  .halo,
-  .price,
-  .ripple,
-  .beadPop,
-  .riser,
-  .cellPop,
-  .cellGlow,
-  .wordPop {
+  .blockCell,
+  .inspector {
     animation: none;
   }
-  .halo,
-  .ripple,
-  .riser,
-  .cellGlow {
-    opacity: 0;
+
+  .windowButton,
+  .inspectButton {
+    transition: none;
   }
 }

@@ -1,0 +1,19 @@
+{
+  "format":"jev-documentation-fix-receipt-v1",
+  "delegation_id":"deleg_0e1905a5",
+  "source":"fixer_subagent_with_parent_verification",
+  "human_response":false,
+  "addressed_findings":["REV1-S1","REV1-S2","REV1-L1"],
+  "changed_paths":["docs/_meta/evolucao/compiler.py","docs/_meta/evolucao/test_compiler.py"],
+  "hashes":{
+    "docs/_meta/evolucao/compiler.py":"0e579d531e05aa1fe69e5f0982fc50f93b1e1faea920b06f782309afaa52c3b0",
+    "docs/_meta/evolucao/test_compiler.py":"0bfe33c7562ae99fd1bf70065c3e5647281419664803488166cf33be50afa342",
+    "docs/_meta/evolucao/curation.json":"1b6a9e8f93ede6342e0c850f80557d8daeec4ac2c9835ca60d517d224f90a25c"
+  },
+  "red_green_reported":{"baseline_pass":19,"red_test_count":27,"red_failures":9,"green_pass":28},
+  "parent_exercised":{"own_tests_pass":28,"own_tests_exit_code":0,"dry_compile_exit_code":0,"dry_compile_ok":true,"sources":1364,"compiled_pages":454,"edges":1486,"implementation_hashes_match":true},
+  "resolved_behaviors":["Caminhos de leitura da curadoria confinados à raiz e sujeitos à política sensível/privada antes de read.","Fonte sensível só por caminho, sem tamanho/hash/revisão legado no inventário.","Seis controles estáticos incluídos como fontes; exclusões explícitas por registro e cobertura enumerada independentemente."],
+  "review_state":"independent_recheck_passed_deleg_e6a1a10c",
+  "limits":["Nenhuma fonte original ou código do produto foi alterado pelo fixer.","Contagens e checks são documentais, não qualificação de runtime, release publicada ou autorização financeira."],
+  "cost":"unknown"
+}

@@ -1,0 +1,13 @@
+# Checkpoint da auditoria visual
+
+Conversa: 01a13627-77f2-7cd2-909b-5d85a8cfa1d8. Responsável: ui-audit-root-01a13627. Objetivo observado: revisar e corrigir clareza, navegação e responsividade nas páginas acessíveis, especialmente Carteira, Radar e painel inferior. Critérios congelados permanecem em SPEC.md; este arquivo registra resultados, sem duplicar requisitos ou conceder autorização.
+
+Integração concluída em C:/Users/gabri/jev-trader. As 24 fontes ainda coincidem com final-manifest.json; a auditoria independente também conferiu quatro dependências preservadas. Mudanças preexistentes e arquivos financeiros reservados não foram revertidos. Há backup anterior à integração na cópia candidate. Manifestos de integração, revisão, capturas e logs estão nesta pasta.
+
+171 testes pertinentes passaram após integração, com 1175 assertions e zero falhas. Typecheck original passou. Build webpack da cópia isolada passou. A suíte completa isolada mantém cinco falhas também presentes no baseline. O check de whitespace encontra uma linha vazia preexistente ao fim de MesaView.module.css; ela foi preservada. Uma execução anterior de git diff estava no diretório não Git e não conta como verificação. A cópia do log de baseline inicialmente apontou para candidate e falhou; o arquivo correto foi recuperado de baseline, sem alterar resultados.
+
+Revisões independentes de SPEC, normas, delta responsivo e integração não têm novos achados impeditivos. Navegador real exercitou Mesa, Rastreador, Central, Configurações e Doctor nas dimensões registradas em browser-matrix.md. As capturas integrated-wallet-1024.png, integrated-wallet-320-end.png e integrated-radar-320.png são do servidor original em 3031. O servidor em 3001 serve compilação anterior. O viewport temporário foi restaurado.
+
+Não houve staging, commit, push, deploy, conexão de carteira ou ordem. Backend Inonu indisponível e carteira desconectada: estados autenticados e resultados financeiros não estão certificados. Próximo passo dependente: backend disponível e carteira já conectada para inspeção visual de leitura, sem enviar ordens ou alterar permissões. Nenhuma tarefa, ciclo ou automação foi criada para isso. Não há outra correção confirmada pendente nas telas acessíveis revisadas.
+
+Jev Workflows foi consultado nas decisões abertas. A abstenção no último CSS foi registrada, e a correção reversível foi sustentada pelo defeito observado e pelos critérios existentes. Não se atribuiu aprovação humana ou do Jev à abstenção. Custos faturados desconhecidos permanecem null; não há alegação de ganho de tempo, tokens ou custo.

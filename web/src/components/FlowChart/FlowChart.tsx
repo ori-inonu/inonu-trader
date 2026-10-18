@@ -1,361 +1,468 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { BlockEvent } from "@/lib/types";
-import { fmtConf, fmtMon, fmtPrice, fmtSigned, fmtSignedMon } from "@/lib/format";
+import { fmtInt, fmtMon, fmtPrice, fmtSigned, fmtSignedMon } from "@/lib/format";
+import { presentDecision, sliceChartWindow, type ChartWindow } from "@/lib/presentation";
 import { smoothPath } from "./smooth";
 import styles from "./FlowChart.module.css";
 
-const STEP = 10; // px per block
-const ANCHOR_GAP = 88; // newest point sits this far from the right edge
-const PAD_TOP = 84; // overlays live here
-const PAD_BOTTOM = 72; // block strip + tag clearance
-const EASE = 0.1; // scale easing per new block
-const MIN_RANGE_PCT = 0.002; // floor of 0.20% of price, so bps noise stays calm
-const CELL_W = 6;
-const CELL_H = 18;
-const TAG_W = 58;
+const WINDOWS: ChartWindow[] = [32, 64, 128];
+/** Right gutter reserved for the price scale: tick labels and the live price pill. */
+const PLOT_RIGHT = 96;
+/** Bottom band reserved for the block strip and the block axis. */
+const PAD_BOTTOM = 52;
+/** Left with the overlays clear of the plot. */
+const PAD_TOP_WIDE = 96;
+const PAD_TOP_SHORT = 72;
+const MIN_RANGE_PCT = 0.002;
+const TAG_W = 68;
+/** A tick label is dropped when the live price pill would sit on top of it. */
+const TAG_CLEARANCE = 12;
 
-function cellFill(e: BlockEvent): string {
-  if (e.decision?.late) return "var(--late-cell)";
-  const side = e.fill?.side ?? e.decision?.action;
-  if (side === "buy") return "var(--buy-bar)";
-  if (side === "sell") return "var(--sell-bar)";
-  return "var(--hold-cell)";
+type Tone = "buy" | "sell" | "hold" | "late" | "idle";
+
+interface ChartScale {
+  lo: number;
+  hi: number;
+  block: number;
+  window: ChartWindow;
 }
+
+interface ChartModel {
+  w: number;
+  h: number;
+  padTop: number;
+  base: number;
+  plotWidth: number;
+  plotHeight: number;
+  lo: number;
+  hi: number;
+  mean: number;
+  line: string;
+  area: string;
+  cells: Array<{ key: number; x: number; tone: Tone }>;
+  fills: Array<{ key: number; x: number; y: number; tone: "buy" | "sell" }>;
+  ticks: Array<{ y: number; label: string }>;
+  blockTicks: Array<{ x: number; label: string; anchor: "start" | "middle" | "end" }>;
+  cellY: number;
+  cellH: number;
+  endY: number;
+  first: BlockEvent;
+  last: BlockEvent;
+  fx: (block: number) => number;
+  fy: (price: number) => number;
+}
+
+function cellTone(event: BlockEvent): Tone {
+  if (event.decision?.late) return "late";
+  const side = event.fill?.side ?? event.decision?.action;
+  if (side === "buy") return "buy";
+  if (side === "sell") return "sell";
+  return "idle";
+}
+
+function confidence(event: BlockEvent): string {
+  const decision = event.decision;
+  if (!decision || decision.late) return "Indisponível";
+  const buy = decision.probabilities?.buy;
+  const sell = decision.probabilities?.sell;
+  const hold = decision.probabilities?.hold;
+  const values = [buy, sell, hold];
+  if (values.some((value) => typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1)) {
+    return "Indisponível";
+  }
+  let peak = 0;
+  for (const value of values) {
+    if (typeof value === "number" && value > peak) peak = value;
+  }
+  return `${Math.round(peak * 100)}%`;
+}
+
+function statusFor(event: BlockEvent): string {
+  const decision = presentDecision(event.decision);
+  if (event.fill?.simulated || event.quote?.status === "sim") return "Simulado";
+  if (event.fill) return "Execução informada pelo feed";
+  if (event.quote?.status === "sent") return "Ordem pendente";
+  if (event.quote?.status === "placed") return "Ordem registrada";
+  if (event.quote?.status === "reverted") return "Ordem revertida";
+  if (event.quote?.status === "lost") return "Ordem sem confirmação";
+  return decision.label;
+}
+
+/**
+ * Everything that depends only on the plotted geometry. Pointer moves re-render the chart for the
+ * crosshair alone, so the plot itself is memoized and never reconciles again while the pointer
+ * travels the same series.
+ */
+const Plot = memo(function Plot({ model, gradientId }: { model: ChartModel; gradientId: string }) {
+  const { w, h, padTop, base, plotWidth, plotHeight, cells, fills, ticks, blockTicks, cellY, cellH, endY, last } = model;
+  return (
+    <>
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop className={styles.areaTop} offset="0%" />
+          <stop className={styles.areaBase} offset="100%" />
+        </linearGradient>
+      </defs>
+
+      <rect className={styles.floor} x="0" y={padTop - 12} width={w} height={base - padTop + 12} />
+      <g className={styles.corners} aria-hidden="true">
+        <path d={`M0 ${padTop - 12} L14 ${padTop - 12} M0 ${padTop - 12} L0 ${padTop + 2}`} />
+        <path d={`M${plotWidth} ${padTop - 12} L${plotWidth - 14} ${padTop - 12} M${plotWidth} ${padTop - 12} L${plotWidth} ${padTop + 2}`} />
+        <path d={`M0 ${base} L14 ${base} M0 ${base} L0 ${base - 14}`} />
+        <path d={`M${plotWidth} ${base} L${plotWidth - 14} ${base} M${plotWidth} ${base} L${plotWidth} ${base - 14}`} />
+      </g>
+
+      {ticks.map((tick) => (
+        <line key={tick.y} className={styles.grid} x1="0" x2={plotWidth} y1={tick.y} y2={tick.y} />
+      ))}
+
+      <path d={model.area} fill={`url(#${gradientId})`} />
+      <path className={styles.line} d={model.line} />
+
+      <line
+        className={styles.reference}
+        x1="0"
+        x2={plotWidth}
+        y1={model.fy(model.mean)}
+        y2={model.fy(model.mean)}
+      />
+
+      {fills.map((fill) => (
+        <circle key={fill.key} className={styles[fill.tone]} cx={fill.x} cy={fill.y} r="3.5" />
+      ))}
+
+      {cells.map((cell) => (
+        <rect key={cell.key} className={`${styles.blockCell} ${styles[cell.tone]}`} x={cell.x - 2.5} y={cellY} width="5" height={cellH} rx="2" />
+      ))}
+
+      <text className={styles.tick} x={plotWidth + 8} y={model.fy(model.mean) + 4}>
+        média
+      </text>
+
+      {ticks.map((tick) => (
+        <text key={`label-${tick.y}`} className={styles.tick} x={w - 8} y={tick.y - 5} textAnchor="end">
+          {tick.label}
+        </text>
+      ))}
+
+      {blockTicks.map((tick) => (
+        <text key={`block-${tick.x}`} className={styles.blockTick} x={tick.x} y={h - 6} textAnchor={tick.anchor}>
+          {tick.label}
+        </text>
+      ))}
+
+      <g className={styles.tag} style={{ transform: `translateY(${endY.toFixed(1)}px)` }}>
+        <line className={styles.guide} x1={plotWidth} x2={w - TAG_W - 12} y1="0" y2="0" />
+        <circle className={styles.guideDot} cx={w - TAG_W - 8} cy="0" r="4" />
+        <rect className={styles.tagBox} x={w - TAG_W - 4} y="-10" width={TAG_W} height="20" rx="999" />
+        <text className={styles.tagText} x={w - 4 - TAG_W / 2} y="4" textAnchor="middle">
+          {fmtPrice(last.mid)}
+        </text>
+      </g>
+    </>
+  );
+});
 
 export default function FlowChart({
   events,
   latest,
+  market,
 }: {
   events: BlockEvent[];
   latest: BlockEvent | null;
+  market: string;
 }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
-  const originRef = useRef<number | null>(null);
-  const scaleRef = useRef<{ lo: number; hi: number; block: number } | null>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
-  const [hover, setHover] = useState<number | null>(null);
+  const [windowSize, setWindowSize] = useState<ChartWindow>(64);
+  const [selectedBlock, setSelectedBlock] = useState<number | null>(null);
+  const [scale, setScale] = useState<ChartScale | null>(null);
   const gid = useId().replace(/[^a-zA-Z0-9]/g, "");
 
   useEffect(() => {
-    const el = panelRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver((entries) => {
-      const r = entries[0].contentRect;
-      setSize((s) =>
-        Math.abs(s.w - r.width) < 0.5 && Math.abs(s.h - r.height) < 0.5
-          ? s
-          : { w: Math.round(r.width), h: Math.round(r.height) },
+    const element = panelRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      // The pointer mapping is derived from this rect, so it is captured with the size and
+      // never re-read on every pointer move.
+      rectRef.current = element.getBoundingClientRect();
+      setSize((current) =>
+        Math.abs(current.w - width) < 0.5 && Math.abs(current.h - height) < 0.5
+          ? current
+          : { w: Math.round(width), h: Math.round(height) },
       );
     });
-    ro.observe(el);
-    return () => ro.disconnect();
+    observer.observe(element);
+    return () => observer.disconnect();
   }, []);
 
-  const { w, h } = size;
+  const eventSeries = useMemo(() => {
+    const byBlock = new Map(events.map((event) => [event.block, event]));
+    if (latest) byBlock.set(latest.block, latest);
+    return [...byBlock.values()].sort((a, b) => a.block - b.block);
+  }, [events, latest]);
+  const windowEvents = useMemo(() => sliceChartWindow(eventSeries, windowSize), [eventSeries, windowSize]);
 
-  const model = useMemo(() => {
-    const plotH = h - PAD_TOP - PAD_BOTTOM;
-    if (w < 160 || plotH < 60) return null;
+  useEffect(() => {
+    if (!windowEvents.length) {
+      setSelectedBlock(null);
+      return;
+    }
+    setSelectedBlock((current) =>
+      current !== null && windowEvents.some((event) => event.block === current)
+        ? current
+        : windowEvents[windowEvents.length - 1].block,
+    );
+  }, [windowEvents]);
 
-    const n = Math.max(2, Math.ceil((w - ANCHOR_GAP) / STEP) + 2);
-    let series = events.slice(-n);
-    const tail = series[series.length - 1];
-    if (latest && (!tail || latest.block > tail.block)) series = [...series, latest].slice(-n);
-    else if (latest && tail && latest.block === tail.block) series[series.length - 1] = latest;
-    const last = series[series.length - 1];
-    if (!last) return null;
-
-    if (originRef.current === null) originRef.current = series[0].block;
-    const origin = originRef.current;
-    const fx = (b: number) => (b - origin) * STEP;
-
-    // --- value scale: window min/max, floored to 0.20% of price, eased 10%/block
+  const bounds = useMemo(() => {
+    if (!windowEvents.length) return null;
     let lo = Infinity;
     let hi = -Infinity;
     let sum = 0;
-    for (const e of series) {
-      if (e.mid < lo) lo = e.mid;
-      if (e.mid > hi) hi = e.mid;
-      sum += e.mid;
+    for (const event of windowEvents) {
+      lo = Math.min(lo, event.mid);
+      hi = Math.max(hi, event.mid);
+      sum += event.mid;
     }
-    const mean = sum / series.length;
-    const floor = Math.max(mean * MIN_RANGE_PCT, 1e-9);
+    return { lo, hi, mean: sum / windowEvents.length, block: windowEvents[windowEvents.length - 1].block };
+  }, [windowEvents]);
+
+  // The scale eases toward each new block instead of snapping. It lives in state, not in a ref
+  // written during render, so React can render the same block twice without shifting the scale.
+  useEffect(() => {
+    if (!bounds) {
+      setScale(null);
+      return;
+    }
+    const previous = scale;
+    if (!previous || previous.window !== windowSize || previous.block === bounds.block) {
+      setScale({ lo: bounds.lo, hi: bounds.hi, block: bounds.block, window: windowSize });
+      return;
+    }
+    let lo = previous.lo + (bounds.lo - previous.lo) * 0.1;
+    let hi = previous.hi + (bounds.hi - previous.hi) * 0.1;
+    for (const event of windowEvents) {
+      lo = Math.min(lo, event.mid);
+      hi = Math.max(hi, event.mid);
+    }
+    const floor = Math.max(bounds.mean * MIN_RANGE_PCT, 1e-9);
     if (hi - lo < floor) {
-      lo = mean - floor / 2;
-      hi = mean + floor / 2;
+      const center = (hi + lo) / 2;
+      lo = center - floor / 2;
+      hi = center + floor / 2;
     }
-    const prev = scaleRef.current;
-    if (prev) {
-      if (prev.block === last.block) {
-        lo = prev.lo;
-        hi = prev.hi;
-      } else {
-        lo = prev.lo + (lo - prev.lo) * EASE;
-        hi = prev.hi + (hi - prev.hi) * EASE;
-      }
-      // the eased band must still contain the data: shrink slowly, grow at once
-      for (const e of series) {
-        if (e.mid < lo) lo = e.mid;
-        if (e.mid > hi) hi = e.mid;
-      }
-      if (hi - lo < floor) {
-        const c = (hi + lo) / 2;
-        lo = c - floor / 2;
-        hi = c + floor / 2;
-      }
-    }
-    scaleRef.current = { lo, hi, block: last.block };
+    setScale({ lo, hi, block: bounds.block, window: windowSize });
+    // `scale` is read as the previous value only, so it is intentionally not a dependency.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bounds, windowSize, windowEvents]);
 
+  const model = useMemo<ChartModel | null>(() => {
+    const { w, h } = size;
+    const padTop = h < 280 ? PAD_TOP_SHORT : PAD_TOP_WIDE;
+    const plotHeight = h - padTop - PAD_BOTTOM;
+    if (!bounds || w < 180 || plotHeight < 40 || !windowEvents.length) return null;
+
+    const first = windowEvents[0];
+    const last = windowEvents[windowEvents.length - 1];
+    const blockSpan = Math.max(1, last.block - first.block);
+    const plotWidth = Math.max(1, w - PLOT_RIGHT);
+    const fx = (block: number) => ((block - first.block) / blockSpan) * plotWidth;
+
+    const active = scale ?? bounds;
+    let lo = active.lo;
+    let hi = active.hi;
+    const floor = Math.max(bounds.mean * MIN_RANGE_PCT, 1e-9);
+    if (hi - lo < floor) {
+      const center = (hi + lo) / 2;
+      lo = center - floor / 2;
+      hi = center + floor / 2;
+    }
     const range = hi - lo || 1;
-    const fy = (p: number) => PAD_TOP + (1 - (p - lo) / range) * plotH;
-
-    const pts = series.map((e) => [fx(e.block), fy(e.mid)] as const);
-    const line = smoothPath(pts);
+    const fy = (price: number) => padTop + (1 - (price - lo) / range) * plotHeight;
     const base = h - PAD_BOTTOM;
-    const area = `${line} L${pts[pts.length - 1][0].toFixed(1)} ${base} L${pts[0][0].toFixed(1)} ${base} Z`;
 
-    const cells = series.map((e, i) => ({
-      key: e.block,
-      x: fx(e.block) - CELL_W / 2,
-      fill: cellFill(e),
-      opacity: i === series.length - 1 ? 1 : e.quote && e.quote.status === "sent" ? 0.6 : 0.82,
-    }));
+    const points = windowEvents.map((event) => [fx(event.block), fy(event.mid)] as const);
+    const line = smoothPath(points);
+    const area = `${line} L${points[points.length - 1][0].toFixed(1)} ${base} L${points[0][0].toFixed(1)} ${base} Z`;
+    const cells = windowEvents.map((event) => ({ key: event.block, x: fx(event.block), tone: cellTone(event) }));
+    const fills = windowEvents.flatMap((event) =>
+      event.fill
+        ? [{ key: event.block, x: fx(event.block), y: fy(event.mid), tone: event.fill.side === "buy" ? "buy" as const : "sell" as const }]
+        : [],
+    );
+    const endY = fy(last.mid);
+    const ticks = [0.25, 0.5, 0.75]
+      .map((fraction) => ({ y: padTop + plotHeight * fraction, label: fmtPrice(lo + (1 - fraction) * range) }))
+      .filter((tick) => Math.abs(tick.y - endY) > TAG_CLEARANCE);
 
-    const beads = series
-      .filter((e) => e.fill)
-      .map((e) => ({
-        key: e.block,
-        x: fx(e.block),
-        y: fy(e.mid),
-        fill: e.fill!.side === "buy" ? "var(--buy)" : "var(--sell)",
-      }));
-
-    const ticks = [0.25, 0.5, 0.75].map((f) => ({
-      y: PAD_TOP + plotH * f,
-      label: fmtPrice(lo + (1 - f) * range),
-    }));
-
-    const byBlock = new Map(series.map((e) => [e.block, e]));
+    const lastIndex = windowEvents.length - 1;
+    const blockTicks = [
+      { index: 0, anchor: "start" as const },
+      { index: Math.round(lastIndex / 2), anchor: "middle" as const },
+      { index: lastIndex, anchor: "end" as const },
+    ]
+      .filter((tick, at, all) => all.findIndex((other) => other.index === tick.index) === at)
+      .map((tick) => ({ x: fx(windowEvents[tick.index].block), label: fmtInt(windowEvents[tick.index].block), anchor: tick.anchor }));
 
     return {
-      line,
-      area,
-      cells,
-      beads,
-      hot: beads.length ? beads[beads.length - 1] : null,
-      hotCell: cells[cells.length - 1],
-      ticks,
-      byBlock,
-      fx,
-      fy,
-      last,
-      base,
-      shift: w - ANCHOR_GAP - fx(last.block),
-      endY: fy(last.mid),
+      w, h, padTop, base, plotWidth, plotHeight, lo, hi, mean: bounds.mean, line, area,
+      cells, fills, ticks, blockTicks, cellY: base + 8, cellH: 14, endY, first, last, fx, fy,
     };
-  }, [events, latest, w, h]);
+  }, [size, scale, bounds, windowEvents]);
 
-  const hv = useMemo(() => {
-    if (!model || hover === null) return null;
-    const e = model.byBlock.get(hover);
-    if (!e) return null;
-    const x = model.fx(e.block);
-    const flip = x + model.shift > w - 168;
-    const ty = Math.min(Math.max(model.fy(e.mid) - 92, PAD_TOP - 46), model.base - 82);
-    const side = e.fill ? (e.fill.side === "buy" ? "BUY" : "SELL") : null;
-    const q = e.quote;
-    const quoteText = q ? `${q.side === "buy" ? "bid" : "ask"} ${fmtPrice(q.price)}` : "no quote";
-    return {
-      x,
-      y: model.fy(e.mid),
-      tx: flip ? x - 146 : x + 14,
-      ty,
-      block: `#${e.block}`,
-      price: fmtPrice(e.mid),
-      trade: side ? `FILL ${side} ${fmtMon(e.fill!.size, 0)}` : quoteText,
-      tint: e.fill ? (e.fill.side === "buy" ? "var(--buy-ink)" : "var(--sell-ink)") : q ? (q.side === "buy" ? "var(--buy-ink)" : "var(--sell-ink)") : "var(--muted)",
-      lat: e.decision && !e.decision.late ? `${Math.round(e.decision.latencyMs)} ms` : "late",
-    };
-  }, [model, hover, w]);
+  const selectedIndex = windowEvents.findIndex((event) => event.block === selectedBlock);
+  const inspected = selectedIndex >= 0 ? windowEvents[selectedIndex] : windowEvents[windowEvents.length - 1] ?? null;
+  const shown = inspected ?? latest;
+  const decision = presentDecision(shown?.decision ?? null);
+  const orderStatus = shown ? statusFor(shown) : "Aguardando dados do feed";
+  const pnl = shown?.totals;
+  const hasFinitePnl = typeof pnl === "object"
+    && pnl !== null
+    && !Array.isArray(pnl)
+    && typeof pnl.pnlMon === "number"
+    && Number.isFinite(pnl.pnlMon)
+    && typeof pnl.pnlPct === "number"
+    && Number.isFinite(pnl.pnlPct);
 
-  const shown = latest ?? events[events.length - 1] ?? null;
-  const d = shown?.decision ?? null;
-  const late = d?.late === true;
-  const act = late ? "late" : (d?.action ?? "hold");
-  const word =
-    act === "buy" ? "Buying" : act === "sell" ? "Selling" : act === "late" ? "Missed the block" : "Holding";
-  const wordColor =
-    act === "buy"
-      ? "var(--buy-ink)"
-      : act === "sell"
-        ? "var(--sell-ink)"
-        : act === "late"
-          ? "var(--late-ink)"
-          : "var(--ink)";
-  const wordRef = useRef<{ act: string; block: number }>({ act, block: shown?.block ?? 0 });
-  if (wordRef.current.act !== act) wordRef.current = { act, block: shown?.block ?? 0 };
-  const conf = d ? Math.max(d.probabilities.buy, d.probabilities.sell, d.probabilities.hold) : 0;
-  const pos = shown?.position;
-  const stance =
-    !pos || pos.side === "flat"
-      ? "flat"
-      : `${pos.side} ${fmtMon(pos.size, Number.isInteger(pos.size) ? 0 : 3)}`;
-  const pnlMon = shown?.totals?.pnlMon ?? 0;
-  const pnlPct = shown?.totals?.pnlPct ?? 0;
+  function selectAt(clientX: number) {
+    if (!model || !windowEvents.length) return;
+    const rect = rectRef.current;
+    if (!rect) return;
+    const x = clientX - rect.left;
+    let closest = windowEvents[0];
+    let distance = Infinity;
+    for (const event of windowEvents) {
+      const nextDistance = Math.abs(model.fx(event.block) - x);
+      if (nextDistance < distance) {
+        closest = event;
+        distance = nextDistance;
+      }
+    }
+    setSelectedBlock((current) => (current === closest.block ? current : closest.block));
+  }
+
+  const selectedX = inspected && model ? model.fx(inspected.block) : null;
+  const selectedY = inspected && model ? model.fy(inspected.mid) : null;
+
+  // Rebuilt only when the plotted numbers change, never on a pointer move.
+  const chartLabel = useMemo(() => {
+    if (!model || !shown) return "Gráfico de preço por bloco. Aguardando dados do feed.";
+    return `Gráfico de preço médio por bloco para ${market || "o mercado informado"}. `
+      + `${windowEvents.length} blocos, do ${fmtInt(model.first.block)} ao ${fmtInt(model.last.block)}. `
+      + `Preço mínimo ${fmtPrice(model.lo)}, preço máximo ${fmtPrice(model.hi)}, `
+      + `média da janela ${fmtPrice(model.mean)}, último preço ${fmtPrice(model.last.mid)}.`;
+  }, [model, shown, market, windowEvents.length]);
 
   return (
-    <div className={styles.wrap}>
+    <section className={styles.wrap} aria-labelledby="chart-title">
+      <div className={styles.toolbar}>
+        <div className={styles.heading}>
+          <p className={styles.eyebrow}>FLUXO OBSERVADO</p>
+          <h2 id="chart-title" className={styles.title}>{market || "Mercado não informado"}</h2>
+        </div>
+        <div className={styles.windows} role="group" aria-label="Janela de blocos do gráfico">
+          {WINDOWS.map((count) => (
+            <button
+              key={count}
+              type="button"
+              className={styles.windowButton}
+              aria-pressed={windowSize === count}
+              onClick={() => setWindowSize(count)}
+            >
+              {count}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <p className={styles.availability}>
+        {windowEvents.length} de {windowSize} blocos disponíveis
+      </p>
+
       <div
         ref={panelRef}
         className={styles.panel}
-        onPointerMove={(ev) => {
-          if (ev.pointerType !== "mouse" || !model || originRef.current === null) return;
-          const r = ev.currentTarget.getBoundingClientRect();
-          const b = Math.round((ev.clientX - r.left - model.shift) / STEP) + originRef.current;
-          setHover(model.byBlock.has(b) ? b : null);
+        onPointerMove={(event) => {
+          if (event.pointerType === "mouse") selectAt(event.clientX);
         }}
-        onPointerLeave={() => setHover(null)}
+        onPointerDown={(event) => {
+          if (event.pointerType !== "mouse") selectAt(event.clientX);
+        }}
       >
-        {!model || !shown ? (
-          <div className={styles.empty}>waiting for blocks…</div>
+        {!shown ? (
+          <div className={styles.empty}>Aguardando dados do feed</div>
+        ) : !model ? (
+          <div className={styles.empty}>Espaço insuficiente para desenhar o gráfico</div>
         ) : (
           <>
-            <svg className={styles.svg} viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-hidden="true">
-              <defs>
-                <linearGradient id={`g${gid}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(10,10,10,0.07)" />
-                  <stop offset="100%" stopColor="rgba(10,10,10,0)" />
-                </linearGradient>
-              </defs>
-
-              {model.ticks.map((t) => (
-                <line key={t.y} className={styles.grid} x1="0" x2={w} y1={t.y} y2={t.y} />
-              ))}
-
-              <g className={styles.slide} style={{ transform: `translateX(${model.shift.toFixed(1)}px)` }}>
-                <path d={model.area} fill={`url(#g${gid})`} />
-                <path className={styles.line} d={model.line} />
-                {model.beads.map((b) => (
-                  <circle
-                    key={b.key}
-                    className={b.key === model.hot?.key ? styles.beadPop : undefined}
-                    cx={b.x}
-                    cy={b.y}
-                    r="3"
-                    fill={b.fill}
-                    opacity="0.7"
-                  />
-                ))}
-                {model.hot ? (
-                  <g key={model.hot.key}>
-                    <line
-                      className={styles.riser}
-                      x1={model.hot.x}
-                      x2={model.hot.x}
-                      y1={h - 40}
-                      y2={model.hot.y}
-                      stroke={model.hot.fill}
-                    />
-                    <circle
-                      className={styles.ripple}
-                      cx={model.hot.x}
-                      cy={model.hot.y}
-                      r="3"
-                      fill="none"
-                      stroke={model.hot.fill}
-                      strokeWidth="2"
-                    />
-                  </g>
-                ) : null}
-                <rect
-                  key={`glow${model.hotCell.key}`}
-                  className={styles.cellGlow}
-                  x={model.hotCell.x}
-                  y={h - 40}
-                  width={CELL_W}
-                  height={CELL_H}
-                  rx="3"
-                  fill={model.hotCell.fill}
-                />
-                {model.cells.map((c, i) => (
+            <svg className={styles.svg} viewBox={`0 0 ${size.w} ${size.h}`} role="img" aria-label={chartLabel}>
+              <Plot model={model} gradientId={`area${gid}`} />
+              {selectedX !== null && selectedY !== null ? (
+                <g>
+                  <line className={styles.cross} x1={selectedX} x2={selectedX} y1={model.padTop - 8} y2={model.base + 4} />
+                  <circle className={styles.crossDot} cx={selectedX} cy={selectedY} r="4.5" />
                   <rect
-                    key={c.key}
-                    className={i === model.cells.length - 1 ? styles.cellPop : undefined}
-                    x={c.x}
-                    y={h - 40}
-                    width={CELL_W}
-                    height={CELL_H}
+                    className={styles.cellMarker}
+                    x={selectedX - 3.5}
+                    y={model.cellY - 1}
+                    width="7"
+                    height={model.cellH + 2}
                     rx="3"
-                    fill={c.fill}
-                    opacity={c.opacity}
                   />
-                ))}
-                {hv ? (
-                  <g>
-                    <line className={styles.cross} x1={hv.x} x2={hv.x} y1={PAD_TOP - 12} y2={model.base + 10} />
-                    <circle className={styles.crossDot} cx={hv.x} cy={hv.y} r="4.5" />
-                    <g transform={`translate(${hv.tx.toFixed(1)},${hv.ty.toFixed(1)})`}>
-                      <rect className={styles.tip} width="132" height="78" rx="10" />
-                      <text className={styles.tipBlock} x="12" y="21">{hv.block}</text>
-                      <text className={styles.tipPrice} x="12" y="41">{hv.price}</text>
-                      <text className={styles.tipSide} x="12" y="58" fill={hv.tint}>{hv.trade}</text>
-                      <text className={styles.tipMeta} x="12" y="71">{hv.lat}</text>
-                    </g>
-                  </g>
-                ) : null}
-              </g>
-
-              {model.ticks.map((t) => (
-                <text key={`l${t.y}`} className={styles.tick} x={w - 8} y={t.y - 5} textAnchor="end">
-                  {t.label}
-                </text>
-              ))}
-
-              <g className={styles.tag} style={{ transform: `translateY(${model.endY.toFixed(1)}px)` }}>
-                <line className={styles.guide} x1={w - ANCHOR_GAP + 8} x2={w - TAG_W - 6} y1="0" y2="0" />
-                <circle className={styles.halo} cx={w - ANCHOR_GAP} cy="0" r="4" fill="var(--ink)" />
-                <circle cx={w - ANCHOR_GAP} cy="0" r="4" fill="var(--ink)" />
-                <rect x={w - TAG_W - 4} y="-10" width={TAG_W} height="20" rx="999" fill="var(--ink)" />
-                <text className={styles.tagText} x={w - 4 - TAG_W / 2} y="4" textAnchor="middle">
-                  {fmtPrice(model.last.mid)}
-                </text>
-              </g>
+                </g>
+              ) : null}
             </svg>
 
-            <div className={styles.fade} />
-
-            <div className={styles.tl}>
-              <div className={styles.price} key={shown.mid}>
-                {fmtPrice(shown.mid)}
-              </div>
-              <div className={styles.sub}>
-                <span>MON/USDC</span>
-                <span>Kuru</span>
-                <span>{stance}</span>
-                <span style={{ color: pnlMon >= 0 ? "var(--pnl-pos)" : "var(--pnl-neg)" }}>
-                  p&amp;l {fmtSignedMon(pnlMon, 3)} ({fmtSigned(pnlPct, 2)}%)
-                </span>
-              </div>
+            <div className={styles.priceOverlay}>
+              <strong>{fmtPrice(shown.mid)}</strong>
+              <span>Preço informado</span>
             </div>
-
-            <div className={styles.tr}>
-              <div
-                className={`${styles.word} ${styles.wordPop}`}
-                key={`${wordRef.current.block}-${act}`}
-                style={{ color: wordColor }}
-              >
-                {word}
-              </div>
-              <div className={styles.sub}>
-                <span>{!d || late ? "late" : `${Math.round(d.latencyMs)} ms`}</span>
-                <span>conf {fmtConf(conf)}</span>
-              </div>
+            <div className={styles.statusOverlay}>
+              <strong className={`${styles.action} ${styles[decision.status]}`}>{decision.label}</strong>
+              <span>{shown.decision && !shown.decision.late ? `${Math.round(shown.decision.latencyMs)} ms` : "Latência indisponível"}</span>
             </div>
           </>
         )}
       </div>
-    </div>
+
+      {shown ? (
+        <div className={styles.positionSummary}>
+          <span>{shown.position?.side && shown.position.side !== "flat"
+            ? `${shown.position.side === "long" ? "Comprada" : "Vendida"}: ${fmtMon(shown.position.size, Number.isInteger(shown.position.size) ? 0 : 3)}`
+            : "Posição informada: sem posição"}</span>
+          <span>{hasFinitePnl && pnl ? `PnL informado ${fmtSignedMon(pnl.pnlMon, 3)} (${fmtSigned(pnl.pnlPct, 2)}%)` : "PnL indisponível"}</span>
+        </div>
+      ) : null}
+
+      <div className={styles.inspector}>
+        <button
+          className={styles.inspectButton}
+          type="button"
+          onClick={() => setSelectedBlock(windowEvents[Math.max(0, selectedIndex - 1)]?.block ?? null)}
+          disabled={!windowEvents.length || selectedIndex <= 0}
+          aria-label="Inspecionar bloco anterior"
+        >
+          Anterior
+        </button>
+        <div className={styles.inspectSummary}>
+          <strong>{shown ? `Bloco ${fmtInt(shown.block)}` : "Aguardando bloco"}</strong>
+          <span>{shown ? `${fmtPrice(shown.mid)}. ${orderStatus}. Confiança: ${confidence(shown)}.` : "Sem bloco disponível para inspeção."}</span>
+        </div>
+        <button
+          className={styles.inspectButton}
+          type="button"
+          onClick={() => setSelectedBlock(windowEvents[Math.min(windowEvents.length - 1, selectedIndex + 1)]?.block ?? null)}
+          disabled={!windowEvents.length || selectedIndex >= windowEvents.length - 1}
+          aria-label="Inspecionar próximo bloco"
+        >
+          Próximo
+        </button>
+      </div>
+    </section>
   );
 }

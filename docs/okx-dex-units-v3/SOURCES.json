@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "research_date": "2026-10-10",
+  "created_at_utc": "2026-10-10T12:29:34.521Z",
+  "objective": "Resolve DEX quote input/output amount units using current public REST and pinned official CLI sources.",
+  "role": "independent public researcher",
+  "native_identity": {
+    "conversation_id": "01a12585-fb20-73a2-8882-ba3fa62b8cdb",
+    "session_id": "01a1221e-d419-7770-a8e9-4983b7be5a25"
+  },
+  "runtime": {
+    "required_model": "GPT-6.1 Sol",
+    "required_reasoning": "xhigh",
+    "effective_model": null,
+    "effective_tier": null,
+    "effective_sandbox": null
+  },
+  "constraints": {
+    "authenticated_api_observed": false,
+    "cli_executed": false,
+    "wallet_connected": false,
+    "credentials_read": false,
+    "repository_modified": false
+  },
+  "conclusion": {
+    "input_unit": "atomic",
+    "input_unit_evidence": "published",
+    "output_unit": "unknown",
+    "output_unit_human_explicit": false,
+    "output_unit_atomic_explicit": false,
+    "authenticated_second_leg": "must remain blocked",
+    "live_qualified": false,
+    "execution": "not_qualified",
+    "net_returns": "unknown"
+  },
+  "evidence_hierarchy": [
+    "published REST requirement",
+    "pinned official CLI input conversion and pass-through",
+    "illustrative examples and synthetic fixture do not prove output unit",
+    "live behavior not observed"
+  ],
+  "proposed_requirements": [
+    {
+      "id": "Q-UNIT-1",
+      "behavior": "Keep raw output, unknown unit and block authenticated second quote."
+    },
+    {
+      "id": "Q-IDENTITY-1",
+      "behavior": "Require matching chain/contracts/decimals, inverse pair and exactIn before any future second quote."
+    },
+    {
+      "id": "Q-FRESHNESS-1",
+      "behavior": "Explicit local deadline and clock validation; never treat client trace timestamp as provider snapshot time."
+    },
+    {
+      "id": "Q-COST-1",
+      "behavior": "Keep total costs and net unknown until independently supported; preserve not_qualified."
+    }
+  ],
+  "independent_acceptance": [
+    {
+      "id": "A-UNIT-1",
+      "criterion": "Injected fetch sees one authenticated quote only when output unit remains unknown."
+    },
+    {
+      "id": "A-IDENTITY-1",
+      "criterion": "Missing/mismatched identity or decimals blocks advancement."
+    },
+    {
+      "id": "A-FRESHNESS-1",
+      "criterion": "Backward/nonfinite clock or expired local deadline blocks advancement."
+    },
+    {
+      "id": "A-PROVENANCE-1",
+      "criterion": "Synthetic integers cannot promote output units or certify live qualification."
+    }
+  ],
+  "alternatives": [
+    {
+      "id": "preserve_unknown",
+      "status": "grounded",
+      "consequence": "Current blocked second leg remains; bounded research closes with explicit dependency."
+    },
+    {
+      "id": "assume_atomic_from_examples",
+      "status": "unsupported",
+      "consequence": "Would infer unit from integer shape and bypass unresolved contract; reject."
+    },
+    {
+      "id": "future_confirmed_atomic_adapter",
+      "status": "dependent",
+      "consequence": "Requires explicit authoritative output-unit statement plus independently authorized authenticated observation, with identity/freshness/cost gates unchanged."
+    }
+  ],
+  "remaining_dependencies": [
+    "Explicit primary declaration of quote toTokenAmount unit",
+    "Live provider behavior and account access/tier/quota/billing remain unobserved",
+    "Independent review of any eventual SPEC and integration"
+  ],
+  "local_context": [
+    {
+      "path": "src/okx-market/round-trip.ts",
+      "sha256": "7ceecf472342efc6ee9aaa86769a9c62cbcebfa82111a07da2cd9a53badd6ca4",
+      "read_only": true,
+      "body_copied": false
+    },
+    {
+      "path": "src/okx-market/okx-dex.ts",
+      "sha256": "2163e14494d9732ad438463472a65ec320d09d450011b05501fe1c6908e5fb5d",
+      "read_only": true,
+      "body_copied": false
+    }
+  ],
+  "artifact": {
+    "research_md_sha256": "f51e61d8c4c975e0638f66eccbffe2783c8e0f65bd2a3c63659944d4323b7610",
+    "research_md_word_count": 433
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "kind": "published_rest_contract",
+      "url": "https://web3.okx.com/onchainos/dev-docs/trade/dex-get-quote",
+      "title": "Get Quotes",
+      "excerpts": [
+        {
+          "quote": "The amount must be specified in the token's smallest unit.",
+          "location": "Request Parameters / amount; web-rendered lines 67–75"
+        },
+        {
+          "quote": "The resulting estimated amount of a token to be bought",
+          "location": "Response Parameters / toTokenAmount; web-rendered line 108"
+        },
+        {
+          "quote": "reference only",
+          "location": "Response Parameters / decimal; web-rendered lines 120, 128"
+        }
+      ],
+      "facts": {
+        "method": "GET",
+        "path": "/api/v6/dex/aggregator/quote",
+        "required_query": [
+          "chainIndex",
+          "amount",
+          "fromTokenAddress",
+          "toTokenAddress"
+        ],
+        "swap_modes": [
+          "exactIn",
+          "exactOut",
+          "maxIn"
+        ],
+        "swap_mode_default": "exactIn",
+        "amount_unit": "smallest_token_unit",
+        "exact_in_amount_role": "input_sell_token",
+        "to_token_amount_type": "String",
+        "to_token_amount_unit_explicit": null,
+        "to_token_amount_semantics": "estimated output, actual execution may differ",
+        "token_identity_fields": [
+          "chainIndex",
+          "fromToken.tokenContractAddress",
+          "toToken.tokenContractAddress"
+        ],
+        "decimal_type": "String, reference only, may change",
+        "trade_fee_unit": "USD estimated network fee",
+        "estimate_gas_fee_description": "estimated gas consumption in smallest chain units",
+        "tax_rate_scale": "0..1",
+        "price_impact_scale": "percent, 5 represents 5%",
+        "provider_freshness_timestamp": null,
+        "provider_validity_ttl": null
+      },
+      "absence_scope": "Response Parameters table and complete example do not explicitly name a unit for toTokenAmount or amountOut. Numeric shape is not unit evidence.",
+      "retrieved_at_utc": "2026-10-10T12:29:33.513Z",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 128589,
+      "body_sha256": "cdeb2da7850ef1db5205fe28c86ee67c3f5c276d02cfbb32ecb5a18da188c37a",
+      "hash_scope": "Exact HTTP response bytes after transport decoding; bodies not retained"
+    },
+    {
+      "id": "S2",
+      "kind": "published_cli_reference",
+      "file": "skills/okx-agentic-wallet/references/swap-cli-reference.md",
+      "title": "DEX Swap CLI Reference",
+      "excerpts": [
+        {
+          "quote": "`--readable-amount` (human units, CLI converts) or `--amount` (raw minimal units)",
+          "line": 21
+        }
+      ],
+      "facts": {
+        "input_raw_flag": "--amount",
+        "input_human_flag": "--readable-amount",
+        "quote_output_unit_explicit": null,
+        "allowed_cli_modes": [
+          "exactIn",
+          "exactOut"
+        ],
+        "adds_wallet_balance_and_risk_fields": true
+      },
+      "absence_scope": "swap quote reference names toTokenAmount but supplies no output-unit declaration.",
+      "url": "https://raw.githubusercontent.com/okx/onchainos-skills/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/skills/okx-agentic-wallet/references/swap-cli-reference.md",
+      "retrieved_at_utc": "2026-10-10T12:29:33.557Z",
+      "http_status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 5752,
+      "body_sha256": "7a998f46d7c8c32267dfb8b1a77f8e8b02c4b840fa13f0cf06cad965e746e8cf",
+      "hash_scope": "Exact HTTP response bytes after transport decoding; bodies not retained",
+      "commit_sha": "cfbb0bafa71898e50762cd9fa77f026b4a8caa1b",
+      "commit_committer_date": "2026-10-08T10:42:42Z",
+      "permalink": "https://github.com/okx/onchainos-skills/blob/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/skills/okx-agentic-wallet/references/swap-cli-reference.md",
+      "git_blob_sha1": "44f3aff6ef43c06280a300ad0746ee1ae5b53b98"
+    },
+    {
+      "id": "S3",
+      "kind": "pinned_official_cli_implementation",
+      "file": "cli/src/commands/swap.rs",
+      "title": "swap.rs",
+      "excerpts": [
+        {
+          "quote": "return readable_to_minimal_str(readable, decimal);",
+          "line": 527
+        },
+        {
+          "quote": "(\"amount\", amount),",
+          "line": 634
+        },
+        {
+          "quote": ".get_with_headers(\"/api/v6/dex/aggregator/quote\", &params, Some(&headers))",
+          "line": 648
+        },
+        {
+          "quote": "    result",
+          "line": 653
+        }
+      ],
+      "facts": {
+        "input_resolution_lines": [
+          475,
+          527
+        ],
+        "same_rest_endpoint_binding_lines": [
+          594,
+          654
+        ],
+        "client_timestamp_lines": [
+          626,
+          639
+        ],
+        "client_timestamp_is_provider_quote_time": false,
+        "from_token_required_minimal_comment_lines": [
+          1749,
+          1764
+        ],
+        "synthetic_fixture_line": 2402,
+        "to_token_amount_scale_conversion_in_fetch_quote": false
+      },
+      "absence_scope": "fetch_quote passes raw query amount and returns the API Value without scaling toTokenAmount. This establishes endpoint linkage and pass-through, not the unit of that field. A fabricated fixture is not live evidence.",
+      "url": "https://raw.githubusercontent.com/okx/onchainos-skills/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/cli/src/commands/swap.rs",
+      "retrieved_at_utc": "2026-10-10T12:29:33.721Z",
+      "http_status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 92310,
+      "body_sha256": "567e8693cd6f5a61fd133e2d3b4142fec3bb428b4a1b5b6b14f6ca38e7d45e40",
+      "hash_scope": "Exact HTTP response bytes after transport decoding; bodies not retained",
+      "commit_sha": "cfbb0bafa71898e50762cd9fa77f026b4a8caa1b",
+      "commit_committer_date": "2026-10-08T10:42:42Z",
+      "permalink": "https://github.com/okx/onchainos-skills/blob/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/cli/src/commands/swap.rs",
+      "git_blob_sha1": "f9b31c8aa49c0ef71209629d911bdfcf942b72ea"
+    },
+    {
+      "id": "S4",
+      "kind": "published_token_metadata_contract",
+      "url": "https://web3.okx.com/onchainos/dev-docs/market/market-token-basic-info",
+      "title": "Token Basic Information",
+      "excerpts": [
+        {
+          "quote": "Token precision",
+          "location": "Response Parameters / decimal; web-rendered line 116"
+        }
+      ],
+      "facts": {
+        "method": "POST",
+        "path": "/api/v6/dex/market/token/basic-info",
+        "request_identity": [
+          "chainIndex",
+          "tokenContractAddress"
+        ],
+        "decimal_type": "String",
+        "response_table_omits_token_contract_address": true,
+        "response_example_includes_token_contract_address": true,
+        "freshness_ttl": null
+      },
+      "retrieved_at_utc": "2026-10-10T12:29:34.139Z",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 74358,
+      "body_sha256": "5117fb6ce2adbd35c5fba66b5e792d9508cee5374ab3d6be81cfac888e14b8a8",
+      "hash_scope": "Exact HTTP response bytes after transport decoding; bodies not retained"
+    },
+    {
+      "id": "S5",
+      "kind": "published_trade_api_fee_policy",
+      "url": "https://web3.okx.com/onchainos/dev-docs/trade/api-fee",
+      "title": "Trade API Fee",
+      "excerpts": [
+        {
+          "quote": "default rate limit of 1 request per second (RPS)",
+          "location": "Trial API Tier"
+        },
+        {
+          "quote": "Positive slippage only",
+          "location": "API Tiers Summary"
+        }
+      ],
+      "facts": {
+        "trial_default_rps": 1,
+        "trial_review_max_rps": 5,
+        "trial_valid_days": 60,
+        "start_up_public_rps_range": [
+          2,
+          50
+        ],
+        "partner_fee_max_percent": {
+          "solana": 10,
+          "other_supported_chains": 3
+        },
+        "start_up_partner_revenue_share_percent": 20,
+        "positive_slippage_fee_cap_percent": 10,
+        "enterprise": "custom terms",
+        "per_read_quote_price_published": null,
+        "account_tier": null,
+        "account_access": null,
+        "account_quota": null,
+        "account_consumption": null
+      },
+      "scope_note": "Transaction fee policy and public RPS ranges do not prove this account access, free quote requests, quota or billing.",
+      "retrieved_at_utc": "2026-10-10T12:29:34.509Z",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 61367,
+      "body_sha256": "6421a1c9e483b3d37f9d4cdfe6fd5e84e31d3106ad168eda74ea3f7da1e861e2",
+      "hash_scope": "Exact HTTP response bytes after transport decoding; bodies not retained"
+    },
+    {
+      "id": "S6",
+      "kind": "pinned_official_cli_workflow_guidance",
+      "file": "skills/okx-agentic-wallet/references/swap.md",
+      "title": "DEX Swap Workflow",
+      "excerpts": [
+        {
+          "quote": "If >10s pass before the user confirms, re-fetch the quote",
+          "line": 52
+        }
+      ],
+      "facts": {
+        "confirmation_refetch_threshold_seconds": 10,
+        "threshold_is_rest_provider_ttl": false,
+        "input_human_conversion_guidance_line": 34,
+        "display_ui_units_line": 147,
+        "mev_formula_line": 127
+      },
+      "ambiguity": "The MEV value formula uses amount times token price without stating decimal normalization; it cannot define the REST output unit. No signing or CLI wallet action was run.",
+      "url": "https://raw.githubusercontent.com/okx/onchainos-skills/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/skills/okx-agentic-wallet/references/swap.md",
+      "retrieved_at_utc": "2026-10-10T12:29:34.519Z",
+      "http_status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 10870,
+      "body_sha256": "ec6833c9c5de88af1ced897f19b7c32439339ded01b9b5aaac3b5e39924ce7b9",
+      "hash_scope": "Exact HTTP response bytes after transport decoding; bodies not retained",
+      "commit_sha": "cfbb0bafa71898e50762cd9fa77f026b4a8caa1b",
+      "commit_committer_date": "2026-10-08T10:42:42Z",
+      "permalink": "https://github.com/okx/onchainos-skills/blob/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/skills/okx-agentic-wallet/references/swap.md",
+      "git_blob_sha1": "62fda0fe09c1a4a60225ff5993e2538b279643c4"
+    }
+  ]
+}

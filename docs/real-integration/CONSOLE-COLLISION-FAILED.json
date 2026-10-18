@@ -1,0 +1,21 @@
+{
+  "qualified": false,
+  "ports": [
+    3010,
+    3011
+  ],
+  "observedForeignPids": [
+    13052,
+    35380
+  ],
+  "ownedTestChildPid": 51036,
+  "ownedChildStartupFailed": true,
+  "mistakenHealthAccepted": true,
+  "discardedHttpAndBrowserProof": true,
+  "error": {
+    "message": "Subprocess.send() cannot be used after process has exited.",
+    "code": "ERR_IPC_CHANNEL_CLOSED"
+  },
+  "recovery": "Fresh free ports 4130/4131, owned-child liveness and real pipeline health checked before R8 proof.",
+  "foreignProcessesTerminated": false
+}

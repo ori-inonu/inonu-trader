@@ -1,0 +1,46 @@
+{
+  "id": "rc-t02-markout-dos-grupos-de-decisao-em",
+  "goal": "Qual caminho o ticket T02 deve adotar para medir o markout de 1, 5, 15 e 60 min antes de qualquer decisao de design? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {},
+  "rails": [
+    "Sem chamada ao Jev nem a servico pago nesta medida.",
+    "Sem mudanca de schema de journal (regra do ticket e bloqueio B5).",
+    "Sem ordem, carteira, chave ou saldo.",
+    "Qualquer retorno medido e bruto, antes de custo e impacto: counterfactual, nao resultado.",
+    "Os 717 candidatos cobrem so 38 tokens: n efetivo pequeno."
+  ],
+  "options": [
+    {
+      "id": "medir-gravador",
+      "label": "Medir com o gravador existente",
+      "what": "Confirmar que answers e prices sao gravados no processo em uso, esperar amostra e so depois rodar o script de markout, sem mudar codigo ou schema. Evidencia: wire.ts:413 grava; data sem answers.jsonl e sem recording-status.json"
+    },
+    {
+      "id": "janela-1min",
+      "label": "Corrigir tolerancia para a janela de 1 min",
+      "what": "Acrescentar 1 min e 5 min a WINDOWS_MS e usar tolerancia de saida curta para a janela de 1 min, em vez de 5 min. Mudanca de codigo, sem schema. Evidencia: outcomes.ts:13 tem 15m, 1h, 4h; outcomes.ts:20 aceita 5 min de atraso"
+    },
+    {
+      "id": "cotacao-propria",
+      "label": "Cotar ida e volta dos 38 tokens",
+      "what": "Cotar os 38 tokens na decisao e em 1, 5, 15 e 60 min com a cotacao sintetica, sem ordem. Gasta cota de RPC ou Jupiter e precisa de validacao de custo. Evidencia: 38 tokens distintos; Jupiter Free 60/min (research.md)"
+    },
+    {
+      "id": "adiar",
+      "label": "Adiar e acumular amostra",
+      "what": "Nao mudar codigo nem gastar cota; esperar ciclos com preco antes de qualquer markout e de qualquer decisao de design. Evidencia: validacao-e-baseline.md:63 pede markout que ainda nao existe"
+    },
+    {
+      "id": "placar-existente",
+      "label": "Usar o placar ja gravado para o markout de 15m, 1h, 4h e 24h",
+      "what": "Montar o relatorio de markout a partir de scoreboard.jsonl (linhas kind decision e kind settlement), sem codigo novo e sem leitura nova de preco. Reportar sempre bruto e contrafactual, declarar que o preco e fechamento de barra de 5 min ou de 1 h, e marcar 1 min e 5 min como lacuna explicita. Pode ser feito ja, e mede parte do T02 sem tocar B5. Evidencia: scoreboard.jsonl: 3239 linhas settlement ("
+    },
+    {
+      "id": "fonte-1min",
+      "label": "Definir a fonte de preco de 1 min antes de mudar a janela",
+      "what": "Verificar se a rota de velas do gateway aceita barra de 1 min, qual a cota dela e se cobre os tokens dos 38 candidatos. Se nao cobrir, a janela de 1 min fica fora desta medida ate haver fonte aprovada. Nada disso foi verificado nesta rodada. Evidencia: src/agent/live.ts createPriceLookup le so barras 5m e 1H; evidence/pesquisa-t03-okx-exchange-ws.md:44 cita velas publicas de minuto para 16 tokens "
+    }
+  ],
+  "forbidden": [],
+  "unknowns": []
+}

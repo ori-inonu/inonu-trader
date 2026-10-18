@@ -1,0 +1,321 @@
+{
+  "candidate": "integrated-r8c",
+  "sourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "frozenManifestPath": "C:\\Users\\gabri\\.codex\\tmp\\okx-real-review-r8c-01a12b5f\\REVIEW-MANIFEST.json",
+  "frozenManifestSha256": "0bf5458a1446a06dc6843e192682411ba6e058cbe7c0156aa7f802bf7fd867c0",
+  "realExternalQualification": false,
+  "versions": {
+    "bun": "1.3.14",
+    "node": "24.3.0"
+  },
+  "records": [
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-01a12b5f-final-r8.json",
+      "receiptSha256": "19410dcd6412791dd81dada82e422a387a61e659ff88bcc3d06758dad161ced3",
+      "result": {
+        "job": "backend",
+        "exitCode": 0,
+        "durationSeconds": 234.22,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "test"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader",
+        "summary": [
+          " 2101 pass",
+          " 2 skip",
+          " 0 fail",
+          " 884342 expect() calls",
+          "Ran 2103 tests across 135 files. [233.08s]"
+        ],
+        "failureDetails": [],
+        "buildApiUrl": "http://127.0.0.1:3010",
+        "stdoutSha256": "ada76148422d1f9fe5f4c7ac53e4ef4af37e5b8b6212dc7c09bbbba38d630fea",
+        "stderrSha256": "e802d39aeb5dc2d4a60ba433341a1aa495755f65873b0eabfdf1f5a00fb28d42",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-01a12b5f-final-r8.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-01a12b5f-final-r8.stderr"
+      },
+      "buildApiUrlApplies": false
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-types-01a12b5f-final-r8.json",
+      "receiptSha256": "09e65fa88ac403b3753fbb0a471283f3db030906a6c4b150162af496fab3aa10",
+      "result": {
+        "job": "backend-types",
+        "exitCode": 0,
+        "durationSeconds": 14.1,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader",
+        "summary": [],
+        "failureDetails": [],
+        "buildApiUrl": "http://127.0.0.1:3010",
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "b7dc95512cdb71e1e12f2047c55eb42aa39153f3d4bbabe372034af273755ead",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-types-01a12b5f-final-r8.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-backend-types-01a12b5f-final-r8.stderr"
+      },
+      "buildApiUrlApplies": false
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-final-r8b.json",
+      "receiptSha256": "b8c6288c5eba6dde70dee8b17c4635f7b74c7377e4a186f6a30af89d70e4e318",
+      "result": {
+        "job": "webtests",
+        "exitCode": 0,
+        "durationSeconds": 8.18,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "test"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web",
+        "summary": [
+          " 581 pass",
+          " 0 fail",
+          " 4138 expect() calls",
+          "Ran 581 tests across 43 files. [7.42s]"
+        ],
+        "failureDetails": [],
+        "buildApiUrl": "http://127.0.0.1:3010",
+        "stdoutSha256": "cb0f07e797c40ffea982ed4b8faa690bf4d6309b5a3e233c7c71cc718326e1cd",
+        "stderrSha256": "b45c884b876cf3892713301fefb517d660901e4e1baae6f5f4f6b8402bfbffb7",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-final-r8b.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-final-r8b.stderr"
+      },
+      "buildApiUrlApplies": false
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-web-types-01a12b5f-final-r8b.json",
+      "receiptSha256": "84eae4a2a339c41218bbe8f7e628ddd5d4deb77c9f1ac7b65f8c844bbcde6911",
+      "result": {
+        "job": "web-types",
+        "exitCode": 0,
+        "durationSeconds": 7.25,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web",
+        "summary": [],
+        "failureDetails": [],
+        "buildApiUrl": "http://127.0.0.1:3010",
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "8366207267355d3e3d5bf3bf6e8c94c5f93f6078c34f08973fa2b38cdda6cc92",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-web-types-01a12b5f-final-r8b.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-web-types-01a12b5f-final-r8b.stderr"
+      },
+      "buildApiUrlApplies": false
+    },
+    {
+      "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-build-01a12b5f-final-r8b.json",
+      "receiptSha256": "b633e665db9b3b37c39e3c53cb91e26bad1a7a0ecab8c6c8d41d1936f436c4bf",
+      "result": {
+        "job": "build",
+        "exitCode": 0,
+        "durationSeconds": 15.79,
+        "command": [
+          "C:/Users/gabri/.bun/bin/bun.exe",
+          "--no-env-file",
+          "run",
+          "build"
+        ],
+        "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web",
+        "summary": [
+          "✓ Compiled successfully in 1183ms",
+          "✓ Generating static pages using 5 workers (4/4) in 2.2s",
+          "Route (app)",
+          "┌ ○ /",
+          "└ ○ /_not-found"
+        ],
+        "failureDetails": [],
+        "buildApiUrl": "http://127.0.0.1:4130",
+        "stdoutSha256": "3917a91504f9a5748b8bf5ed961007bdcb1eaf46c81c872e1213572dcfd3cb99",
+        "stderrSha256": "8c87e6c88f8aa719cdec20bba96b21a6a64d5678f80517663f3457e265cbe519",
+        "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-build-01a12b5f-final-r8b.stdout",
+        "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-build-01a12b5f-final-r8b.stderr"
+      },
+      "buildApiUrlApplies": true
+    }
+  ],
+  "preservedFailure": {
+    "receiptPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-final-r8.json",
+    "receiptSha256": "8836213c3172f473d6906c44f4327e03b61b50ac7f5765e1ec945be301ebcb81",
+    "result": {
+      "job": "webtests",
+      "exitCode": 1,
+      "durationSeconds": 18.1,
+      "command": [
+        "C:/Users/gabri/.bun/bin/bun.exe",
+        "--no-env-file",
+        "run",
+        "test"
+      ],
+      "cwd": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web",
+      "summary": [
+        " 580 pass",
+        " 1 fail",
+        " 4138 expect() calls",
+        "Ran 581 tests across 43 files. [16.82s]"
+      ],
+      "failureDetails": [
+        "(pass) feedFrameState > shows a static reconnect notice only while reconnecting [0.10ms]",
+        "(pass) feedFrameState > the notice is plain text with no indicator of its own [0.11ms]",
+        "(pass) feedFrameState > recovers fully once the feed returns to live [0.10ms]",
+        "",
+        "src\\lib\\flow-chart-render.test.ts:",
+        "175 |     const value = await read();",
+        "176 |     latest = value;",
+        "177 |     if (accept(value)) return value;",
+        "178 |     await Bun.sleep(40);",
+        "179 |   }",
+        "180 |   throw new Error(`Timed out waiting for ${description}; last value: ${JSON.stringify(latest)}`);",
+        "                  ^",
+        "error: Timed out waiting for Edge's loopback-only DevToolsActivePort; last value: null",
+        "      at waitUntil (C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web\\src\\lib\\flow-chart-render.test.ts:180:13)",
+        "      at C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\web\\src\\lib\\flow-chart-render.test.ts:470:116",
+        "      at processTicksAndRejections (native:7:39)",
+        "(fail) mounted FlowChart reports unavailable PnL for every non-finite or missing field [7440.42ms]",
+        "",
+        "(pass) phase 2: edge validated out of sample > leverage is capped at 2x and at a quarter of the estimated Kelly lower bound [0.14ms]",
+        "(pass) phase 2: edge validated out of sample > capital, order cap, total notional and liquidation floor for US$ 1000 and MON [0.15ms]",
+        "(pass) phase 2: edge validated out of sample > the liquidation floor never drops below 35% [0.10ms]",
+        "(pass) phase table > has the parameters of R3 section 6 in a stable order, each with three cells and a basis [0.37ms]",
+        "(pass) phase table > phase 0 applies almost nothing [0.77ms]",
+        "(pass) phase table > monetary cells carry the dollar value and the fraction it comes from [0.39ms]",
+        "(pass) phase table > the per order cap shows the R3 value and the stricter architecture value [0.26ms]",
+        "(pass) phase table > the asset position cell carries the exposure fraction [0.14ms]",
+        "(pass) phase table > leverage in phase 2 states the Kelly condition [0.16ms]",
+        "(pass) phase table > the liquidation floor only exists in phase 2 [0.16ms]",
+        "(pass) phase table > text rows keep the cooldowns, kill switches and reinvestment rule of R3 [0.42ms]",
+        "(pass) phase table > scales with the capital [0.73ms]",
+        "(pass) phase table > lists the promotion criteria [0.20ms]",
+        "(pass) input validation > rejects non positive or non finite capital and sigma [1.61ms]",
+        "",
+        "1 tests failed:",
+        "(fail) mounted FlowChart reports unavailable PnL for every non-finite or missing field [7440.42ms]",
+        ""
+      ],
+      "buildApiUrl": "http://127.0.0.1:3010",
+      "stdoutSha256": "a8aaa6f4fd5fa0cae5595e4ba348c283fd04448728101ef1b37b689b1e8840eb",
+      "stderrSha256": "edb363235dea4168a7886f4535544231199d8d141c6c284631b4518b072176e5",
+      "stdoutPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-final-r8.stdout",
+      "stderrPath": "C:\\Users\\gabri\\.codex\\tmp\\real-final-webtests-01a12b5f-final-r8.stderr"
+    },
+    "causeEstablished": false,
+    "repeat": "full web suite unchanged, final-r8b exit0"
+  },
+  "buildMetadataNote": "buildApiUrl in non-build job receipts is helper metadata, not configuration proof. Final build used API4130.",
+  "proofs": [
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\CONSOLE-LIVE-R8.json",
+      "sha256": "fd01d35accf21e1d7fd2854e4ece862c76cefafaa3cf961847bbc6900606a164"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\BROWSER-EVIDENCE-R8.json",
+      "sha256": "f7bb3b40f307674a6fb854977f6a7b61356c7efccafc8e3762a6db4e18d3ffe6"
+    }
+  ],
+  "images": [
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\visual\\r8-desktop-1440.png",
+      "sha256": "0b15b5459ca87f42a7ee1eeb1a8e04af93097287a1fcb2ded661ab5a45c55894"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\visual\\r8-desktop-final.png",
+      "sha256": "1c82631b5f0288ae8167fb5d3f38b4623fac09ab462f82026b88a393c2420c69"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\visual\\r8-mobile-360-details.png",
+      "sha256": "b69d56e72f5e4fad5213775c76ca3b60710e8b646779e58f976117204f150249"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\visual\\r8-mobile-360-provenance.png",
+      "sha256": "ec94af31e6a4c40554c8244f1621927f45b15fd0db9f6363c214535e7cf07e62"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\visual\\r8-mobile-390.png",
+      "sha256": "61002fe626d90a77f122bfd101f048a50930bf2bb3b52424754e1f4120566148"
+    }
+  ],
+  "limitations": [
+    "Two receipt-safety skips do not qualify external integration.",
+    "No authenticated Web3, wallet connection, consent or app inference proof.",
+    "No measured RTK/Headroom performance gain.",
+    "Review isolation is a read-only contract, not an OS enforced sandbox."
+  ],
+  "continuation1": {
+    "consolidatedAt": "2026-10-11T21:57:21.946619+00:00",
+    "goalTurnNumber": 2,
+    "nativeGoalStatus": "active",
+    "productSourceUnchanged": true,
+    "productFilesChecked": 447,
+    "sourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+    "newFullTestRuns": 0,
+    "completeCoreCycles": 0,
+    "authenticatedWeb3Requests": 0,
+    "appJevRequests": 0,
+    "independentBrowserReproduction": false,
+    "independentOfflineContrastRecalculation": true,
+    "activeTextContrastDistinctPairs": 8,
+    "activeTextContrastMinimum": 10.4905419447,
+    "fullG14Approved": false,
+    "fullG17Approved": false,
+    "wholeGoalComplete": false,
+    "proofs": [
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\REVALIDATION-DECISION-CONTINUATION-1.json",
+        "sha256": "8fc013705c5fcff72cadd3c3f247061bf3caf1338659aae3cdd384cd776bf28a"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\G14-DECISION-CONTINUATION-1.json",
+        "sha256": "4e699615e5a009156490e4ab7cbf5eb647ddbba3fd15878e6d3688a687e30c71"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\ACCESS-REVALIDATION-CONTINUATION-1.json",
+        "sha256": "d59fdf28e44824afc3bad39f958223629e12f53618e53f67d785979efb44306e"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\DOCTOR-CONTINUATION-1.json",
+        "sha256": "5405da18dc44a41770fd7984c0b505d889786828ffa569f0b230b897a3bf6721"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\BROWSER-CAPABILITIES-CONTINUATION-1.json",
+        "sha256": "a81149c709c7a21f005c4d25d9e1965cd686e15531ebfee43a5dd771a03211ea"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\BROWSER-G14-CONTINUATION-1.json",
+        "sha256": "25223d41e1e4460a15d0d8629053d5b41f7f8dad08ae1292ab84b6dac32cddb6"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\CONSOLE-G14-CONTINUATION-1.json",
+        "sha256": "cd93edf0b81da298ef5081321dc670117f1f36541cc10bb5a4d3af64f197f97e"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\AUDIT-CONTINUATION-1.json",
+        "sha256": "0e32ef41d3eb09996fce093243a279903deb23d04f7e53f36f326e3955711ff8"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\REVIEW-G14-CONTINUATION-1.md",
+        "sha256": "f898bfc4a68d4ea0e78a64cbadc2b17bf9980c9ef24863f9a83770ffde797f89"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\REVIEW-G14-CONTINUATION-1.json",
+        "sha256": "35c06967842879a51e1548854111464067f947bb8ee851c246516c34e658f6b5"
+      },
+      {
+        "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\REVIEW-G14-CONTINUATION-1-LINK.json",
+        "sha256": "20bc22a90700641d3ce244ca3e1573df95ea769613d64d7aba4a0e29948e1c27"
+      }
+    ]
+  }
+}

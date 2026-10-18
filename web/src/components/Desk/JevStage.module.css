@@ -1,0 +1,239 @@
+/* The Jev strip (spec G9): one horizontal band about 96 px tall. No rings, no animation:
+   state never depends on motion, and the freed height belongs to the chart. */
+.stage {
+  --tone: var(--signal);
+  position: relative;
+  display: flex;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s2) var(--s4);
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(80% 120% at 14% 50%, color-mix(in srgb, var(--tone) 8%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-deck) 92%, transparent), color-mix(in srgb, var(--bg-hull) 96%, transparent));
+  box-shadow: var(--elev-2);
+  transition: border-color var(--dur-slow) var(--ease-out-expo);
+}
+
+.stage[data-tone="buy"] { --tone: var(--buy); }
+.stage[data-tone="sell"] { --tone: var(--sell); }
+.stage[data-tone="hold"] { --tone: var(--hold); }
+.stage[data-tone="late"] { --tone: var(--late); }
+.stage[data-tone="neutral"] { --tone: var(--signal); }
+.stage[data-dimmed="true"] .headline,
+.stage[data-dimmed="true"] .weights { opacity: 0.55; }
+
+.micro {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.market {
+  display: grid;
+  min-width: 0;
+  flex: 0 0 auto;
+  grid-template-rows: auto auto auto;
+  gap: 1px;
+}
+
+.pair {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font: 600 17px/20px var(--font-sans);
+  letter-spacing: 0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quote { color: var(--ink-3); font-size: 0.62em; }
+
+.quoteBox {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.price {
+  color: var(--ink);
+  font: 600 14px/18px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.change {
+  overflow: hidden;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.up { color: var(--buy); }
+.down { color: var(--sell); }
+
+.decision {
+  display: grid;
+  min-width: 0;
+  flex: 0 0 auto;
+  grid-template-rows: auto auto auto;
+  gap: 1px;
+  padding-left: var(--s3);
+  border-left: 1px solid var(--edge);
+}
+
+.headline {
+  color: var(--tone);
+  font: 600 17px/20px var(--font-mono);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.confidence {
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.weights {
+  display: grid;
+  min-width: 0;
+  flex: 0 0 auto;
+  gap: 3px;
+  list-style: none;
+}
+
+.weight {
+  display: grid;
+  grid-template-columns: 48px minmax(28px, 1fr) auto;
+  align-items: center;
+  gap: var(--s2);
+  font: var(--fs-micro);
+}
+
+.weightLabel { overflow: hidden; color: var(--ink-3); text-overflow: ellipsis; white-space: nowrap; }
+.weightValue { color: var(--ink-2); font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+
+.weightTrack {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--bg-deck-3);
+}
+
+.weightFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--r-pill);
+  background: var(--ink-3);
+  transition: width var(--dur-slow) var(--ease-out-expo);
+}
+
+.weight[data-key="buy"] .weightFill { background: var(--buy); }
+.weight[data-key="sell"] .weightFill { background: var(--sell); }
+.weight[data-key="hold"] .weightFill { background: var(--hold); }
+
+.meta {
+  display: grid;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-content: center;
+  gap: 2px;
+  padding-left: var(--s3);
+  border-left: 1px solid var(--edge);
+}
+
+.status {
+  overflow: hidden;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The seen list shows one complete row of items; whatever wraps to a second row is clipped
+   whole, never mid glyph, and stays available through the dl title attribute. Items never
+   wrap internally, so two lines can never paint over each other inside the 16 px window. */
+.seen {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 0 var(--s3);
+  overflow: hidden;
+  /* Exactly one whole 12 px line: a wrapped second row is hidden entirely, never half drawn. */
+  max-height: 12px;
+}
+.seenItem { display: inline-flex; flex: none; gap: var(--s1); white-space: nowrap; }
+.seenItem dt { flex: none; color: var(--ink-3); font: var(--fs-micro); white-space: nowrap; }
+.seenItem dd { flex: none; color: var(--ink); font: var(--fs-micro); font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.muted {
+  overflow: hidden;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.foot {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 0 var(--s3);
+  overflow: hidden;
+  /* Same whole line rule as the seen list: no row is ever cut through. */
+  max-height: 12px;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+}
+.modelTag { color: var(--ink-2); font-family: var(--font-mono); white-space: nowrap; }
+.systemOne { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* The small decision donut: same three arcs as before, thumb sized. */
+.gauge {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  transform: rotate(-90deg);
+}
+
+.track {
+  fill: none;
+  stroke: var(--bg-deck-3);
+  stroke-width: 6;
+  opacity: 0.8;
+}
+
+.arc {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: butt;
+}
+
+.arcBuy { stroke: var(--buy); }
+.arcSell { stroke: var(--sell); }
+.arcHold { stroke: var(--hold); }
+
+@media (max-width: 1100px) {
+  .seen { display: none; }
+  .meta { gap: 4px; }
+}
+
+@media (max-width: 820px) {
+  .stage { flex-wrap: wrap; align-content: center; row-gap: var(--s2); }
+  .meta { flex-basis: 100%; padding-left: 0; border-left: 0; order: 4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage, .weightFill { transition: none; }
+}

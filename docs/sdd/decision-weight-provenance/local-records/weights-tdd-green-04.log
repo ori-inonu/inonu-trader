@@ -1,0 +1,12 @@
+bun test v1.3.14 (0d9b296a)
+
+src\decision-evidence\weights.test.ts:
+(pass) historical unit weights retain their value without implying provider provenance [0.65ms]
+(pass) invalid responses and observed matching failures identify only canonical safety holds [0.33ms]
+(pass) a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback [0.10ms]
+(pass) invalid decisions return null instead of inventing weights or status [0.92ms]
+
+ 4 pass
+ 0 fail
+ 24 expect() calls
+Ran 4 tests across 1 file. [63.00ms]

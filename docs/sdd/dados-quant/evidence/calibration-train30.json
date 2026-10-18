@@ -1,0 +1,2513 @@
+{
+  "schema": "quant_calibration_v2",
+  "generatedAtMs": 1791917206607,
+  "config": {
+    "horizons": [
+      1,
+      3,
+      7
+    ],
+    "ks": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3,
+      4
+    ],
+    "paths": 3000,
+    "trainDays": 30,
+    "strideDays": 1,
+    "seed": 20261013,
+    "forecasters": [
+      "envelope",
+      "side-aware",
+      "side-aware-high",
+      "fhs",
+      "fhs-evt"
+    ],
+    "floors": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "resamples": 4000,
+    "truth": "low or high of confirmed last-price bars after the start bar",
+    "note": "adverse moves are k horizon sigmas of the whole sample, chosen identically for all forecasters; headline intervals are date level block bootstraps; no multiplicity correction, only fhs against envelope in log loss at the three horizons is a primary comparison"
+  },
+  "provenance": [
+    {
+      "file": "BTC-USDT-SWAP-15m.json",
+      "instId": "BTC-USDT-SWAP",
+      "source": "okx_public_v5_history_candles",
+      "capturedAtMs": 1791908979182,
+      "sha256": "3a31a8bc9303845c30aa3292e3ac685c854219aee0ff20a2474d7bc72d851269",
+      "input": 8640,
+      "usable": 8639,
+      "grade": "B",
+      "coverage": 1,
+      "fresh": true,
+      "issueCounts": {
+        "unconfirmed": 1,
+        "return_outlier": 31,
+        "range_outlier": 9
+      },
+      "firstMs": 1784133000000,
+      "lastMs": 1791907200000
+    },
+    {
+      "file": "DOGE-USDT-SWAP-15m.json",
+      "instId": "DOGE-USDT-SWAP",
+      "source": "okx_public_v5_history_candles",
+      "capturedAtMs": 1791909264970,
+      "sha256": "21be4943fbd4da625fb4e3e28e81b0060b0dfa595999f216a4b0ec8428c2e0a7",
+      "input": 8640,
+      "usable": 8639,
+      "grade": "B",
+      "coverage": 1,
+      "fresh": true,
+      "issueCounts": {
+        "unconfirmed": 1,
+        "return_outlier": 46,
+        "range_outlier": 18
+      },
+      "firstMs": 1784133900000,
+      "lastMs": 1791908100000
+    },
+    {
+      "file": "ETH-USDT-SWAP-15m.json",
+      "instId": "ETH-USDT-SWAP",
+      "source": "okx_public_v5_history_candles",
+      "capturedAtMs": 1791909090457,
+      "sha256": "4c556af1d1aa29aa0b56baeaa386ef72e7ab5c22bde9acdd010c345be1b9dd57",
+      "input": 8640,
+      "usable": 8639,
+      "grade": "B",
+      "coverage": 1,
+      "fresh": true,
+      "issueCounts": {
+        "unconfirmed": 1,
+        "return_outlier": 38,
+        "range_outlier": 16
+      },
+      "firstMs": 1784133900000,
+      "lastMs": 1791908100000
+    },
+    {
+      "file": "MON-USDT-SWAP-15m.json",
+      "instId": "MON-USDT-SWAP",
+      "source": "okx_public_v5_history_candles",
+      "capturedAtMs": 1791909352712,
+      "sha256": "5f16a43243fbfeaa97f627af54c7bc939fb35b87482b20e844da205bd8cd2999",
+      "input": 8640,
+      "usable": 8639,
+      "grade": "B",
+      "coverage": 1,
+      "fresh": true,
+      "issueCounts": {
+        "unconfirmed": 1,
+        "return_outlier": 21,
+        "range_outlier": 3
+      },
+      "firstMs": 1784133900000,
+      "lastMs": 1791908100000
+    },
+    {
+      "file": "SOL-USDT-SWAP-15m.json",
+      "instId": "SOL-USDT-SWAP",
+      "source": "okx_public_v5_history_candles",
+      "capturedAtMs": 1791909177725,
+      "sha256": "4e8339706c304f9f146b649c916b2314945b5b906f195c0669ad0fff79997844",
+      "input": 8640,
+      "usable": 8639,
+      "grade": "B",
+      "coverage": 1,
+      "fresh": true,
+      "issueCounts": {
+        "unconfirmed": 1,
+        "return_outlier": 24,
+        "range_outlier": 11
+      },
+      "firstMs": 1784133900000,
+      "lastMs": 1791908100000
+    }
+  ],
+  "summary": [
+    {
+      "horizonDays": 1,
+      "starts": 295,
+      "events": 3540,
+      "dateBlockDays": 3,
+      "independentBlock": 1,
+      "baseRate": 0.08757062146892655,
+      "logLoss": {
+        "envelope": 0.3063295020052518,
+        "side-aware": 0.29878907770518154,
+        "side-aware-high": 0.27661798568009,
+        "fhs": 0.2567928795413444,
+        "fhs-evt": 0.2575669811242462
+      },
+      "brier": {
+        "envelope": 0.07466713527607088,
+        "side-aware": 0.07532567221015163,
+        "side-aware-high": 0.08144526579863084,
+        "fhs": 0.07282157536095415,
+        "fhs-evt": 0.07298871657250466
+      },
+      "vsEnvelope": {
+        "side-aware": {
+          "log1e-4": {
+            "meanGain": 0.00754042430006975,
+            "byDate": {
+              "n": 59,
+              "meanDiff": 0.00754042430006975,
+              "ciLow": -0.00158092278142081,
+              "ciHigh": 0.01972420232573215
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": 0.007540424300069754,
+              "ciLow": 0.001402928131613793,
+              "ciHigh": 0.014536038988741019
+            },
+            "days": 59
+          },
+          "brier": {
+            "meanGain": -0.0006585369340806536,
+            "byDate": {
+              "n": 59,
+              "meanDiff": -0.0006585369340806536,
+              "ciLow": -0.0017887554665490702,
+              "ciHigh": 0.0006150895216704169
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": -0.0006585369340806541,
+              "ciLow": -0.0014388012070233555,
+              "ciHigh": 0.00018079617948373928
+            },
+            "days": 59
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.7877042631635836,
+            "meanGainWithoutTop3Days": 0.0016865570721019487,
+            "daysWorseThanEnvelope": 40,
+            "days": 59
+          },
+          "floorSensitivity": {
+            "0.0001": 0.00754042430006975,
+            "0.001": 0.004983999964180468,
+            "0.01": 0.0013996490180944784
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.007218722526485337,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.007218722526485337,
+                "ciLow": -0.001841044747875168,
+                "ciHigh": 0.01890569910620041
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.007799225812905622,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.007799225812905622,
+                "ciLow": -0.0011908083827795236,
+                "ciHigh": 0.02001257009608101
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.007588172675395658,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.007588172675395658,
+                "ciLow": -0.001510422798005186,
+                "ciHigh": 0.019319850190461396
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.008737294232152313,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.008737294232152313,
+                "ciLow": -0.003129191716033555,
+                "ciHigh": 0.024499575240594602
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.006358706253409834,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.006358706253409834,
+                "ciLow": -0.0016920342518323846,
+                "ciHigh": 0.01778589031848214
+              }
+            }
+          }
+        },
+        "side-aware-high": {
+          "log1e-4": {
+            "meanGain": 0.029711516325161284,
+            "byDate": {
+              "n": 59,
+              "meanDiff": 0.029711516325161284,
+              "ciLow": -0.03603926477665054,
+              "ciHigh": 0.13336130914794034
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": 0.029711516325161263,
+              "ciLow": -0.004005340404151327,
+              "ciHigh": 0.06998354016851177
+            },
+            "days": 59
+          },
+          "brier": {
+            "meanGain": -0.006778130522559888,
+            "byDate": {
+              "n": 59,
+              "meanDiff": -0.006778130522559888,
+              "ciLow": -0.015116425150022499,
+              "ciHigh": 0.0028855009890187454
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": -0.0067781305225598845,
+              "ciLow": -0.011454617859441766,
+              "ciHigh": -0.0019204253467533681
+            },
+            "days": 59
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 1.6551079981768118,
+            "meanGainWithoutTop3Days": -0.020506979767354824,
+            "daysWorseThanEnvelope": 40,
+            "days": 59
+          },
+          "floorSensitivity": {
+            "0.0001": 0.029711516325161284,
+            "0.001": 0.016929634264238873,
+            "0.01": -0.0014055869305845082
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.027864950600454474,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.027864950600454474,
+                "ciLow": -0.034078880453923564,
+                "ciHigh": 0.12619014090481742
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.02419060159365821,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.02419060159365821,
+                "ciLow": -0.03999426958125744,
+                "ciHigh": 0.12794800314445096
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.03246592696024079,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.03246592696024079,
+                "ciLow": -0.03339955577547356,
+                "ciHigh": 0.13630403674731195
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.035433643380343126,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.035433643380343126,
+                "ciLow": -0.03780626968752291,
+                "ciHigh": 0.14985281238164982
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.028602459091109717,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.028602459091109717,
+                "ciLow": -0.036839994675097736,
+                "ciHigh": 0.13338681299722804
+              }
+            }
+          }
+        },
+        "fhs": {
+          "log1e-4": {
+            "meanGain": 0.04953662246390695,
+            "byDate": {
+              "n": 59,
+              "meanDiff": 0.04953662246390695,
+              "ciLow": -0.0003745742583277729,
+              "ciHigh": 0.13083308903541427
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": 0.049536622463906964,
+              "ciLow": 0.023931052944391157,
+              "ciHigh": 0.08026772385010676
+            },
+            "days": 59
+          },
+          "brier": {
+            "meanGain": 0.0018455599151167336,
+            "byDate": {
+              "n": 59,
+              "meanDiff": 0.0018455599151167336,
+              "ciLow": -0.0018479015384917554,
+              "ciHigh": 0.006096382954926866
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": 0.0018455599151167318,
+              "ciLow": -0.000038694251265998546,
+              "ciHigh": 0.0038811103667906184
+            },
+            "days": 59
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.8397507141391941,
+            "meanGainWithoutTop3Days": 0.008363469536679451,
+            "daysWorseThanEnvelope": 25,
+            "days": 59
+          },
+          "floorSensitivity": {
+            "0.0001": 0.04953662246390695,
+            "0.001": 0.03576644865909621,
+            "0.01": 0.015640654293043062
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.04634725665465016,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.04634725665465016,
+                "ciLow": 0.000443417402651584,
+                "ciHigh": 0.12071392108201512
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.05068092251445361,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.05068092251445361,
+                "ciLow": -0.00024624800014388145,
+                "ciHigh": 0.13468705880423829
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.048096775004286205,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.048096775004286205,
+                "ciLow": 0.0010204485203783556,
+                "ciHigh": 0.1261970329683926
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.05376546870861084,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.05376546870861084,
+                "ciLow": -0.0012876681882052685,
+                "ciHigh": 0.14201400135041822
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.04879268943753388,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.04879268943753388,
+                "ciLow": -0.004720064801364859,
+                "ciHigh": 0.13616843105021975
+              }
+            }
+          }
+        },
+        "fhs-evt": {
+          "log1e-4": {
+            "meanGain": 0.04876252088100497,
+            "byDate": {
+              "n": 59,
+              "meanDiff": 0.04876252088100497,
+              "ciLow": -0.0013710102140491226,
+              "ciHigh": 0.1306371688454547
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": 0.04876252088100495,
+              "ciLow": 0.0226860449434777,
+              "ciHigh": 0.07931093336386302
+            },
+            "days": 59
+          },
+          "brier": {
+            "meanGain": 0.0016784187035662028,
+            "byDate": {
+              "n": 59,
+              "meanDiff": 0.0016784187035662028,
+              "ciLow": -0.002073564114914478,
+              "ciHigh": 0.005980711736360552
+            },
+            "independentAssets": {
+              "n": 295,
+              "meanDiff": 0.0016784187035662028,
+              "ciLow": -0.0002290569721827853,
+              "ciHigh": 0.0037473577045009313
+            },
+            "days": 59
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.8595248498782608,
+            "meanGainWithoutTop3Days": 0.0072168825718454165,
+            "daysWorseThanEnvelope": 27,
+            "days": 59
+          },
+          "floorSensitivity": {
+            "0.0001": 0.04876252088100497,
+            "0.001": 0.034995399883926866,
+            "0.01": 0.014847923704809016
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.046193063973648495,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.046193063973648495,
+                "ciLow": -0.0006456280731580966,
+                "ciHigh": 0.12173636098260592
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.0496994655579787,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.0496994655579787,
+                "ciLow": -0.0012276352976205813,
+                "ciHigh": 0.133696662805119
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.04728621989260452,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.04728621989260452,
+                "ciLow": 0.00021607755665409056,
+                "ciHigh": 0.12590773916098208
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.052379218647741296,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.052379218647741296,
+                "ciLow": -0.002786574243599359,
+                "ciHigh": 0.1410190505260054
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.04825463633305182,
+              "byDate": {
+                "n": 59,
+                "meanDiff": 0.04825463633305182,
+                "ciLow": -0.005389854211706967,
+                "ciHigh": 0.13606777609536977
+              }
+            }
+          }
+        }
+      },
+      "evtVersusFhs": {
+        "log1e-4": {
+          "meanGain": -0.000774101582901955,
+          "byDate": {
+            "n": 59,
+            "meanDiff": -0.000774101582901955,
+            "ciLow": -0.0020118885323342456,
+            "ciHigh": 0.0004751287746290936
+          },
+          "days": 59,
+          "daysWorse": 39,
+          "top3DaysShareOfTotalGain": null
+        },
+        "brier": {
+          "meanGain": -0.00016714121155053034,
+          "byDate": {
+            "n": 59,
+            "meanDiff": -0.00016714121155053034,
+            "ciLow": -0.0004145744452291232,
+            "ciHigh": 0.00005909834824231396
+          },
+          "days": 59,
+          "daysWorse": 38,
+          "top3DaysShareOfTotalGain": null
+        }
+      },
+      "reliability": {
+        "envelope": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1610,
+            "meanForecast": 0.002113730425250459,
+            "hitRate": 0.031055900621118012
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 384,
+            "meanForecast": 0.01896418228139009,
+            "hitRate": 0.049479166666666664
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 540,
+            "meanForecast": 0.05506520813489253,
+            "hitRate": 0.07407407407407407
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 656,
+            "meanForecast": 0.1762479806864613,
+            "hitRate": 0.1676829268292683
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 350,
+            "meanForecast": 0.3399445894475018,
+            "hitRate": 0.26
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "side-aware": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1386,
+            "meanForecast": 0.002174744020539007,
+            "hitRate": 0.02813852813852814
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 428,
+            "meanForecast": 0.017874741496363058,
+            "hitRate": 0.0397196261682243
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 629,
+            "meanForecast": 0.057637649976991966,
+            "hitRate": 0.06200317965023847
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 617,
+            "meanForecast": 0.16928008156901786,
+            "hitRate": 0.15235008103727715
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 480,
+            "meanForecast": 0.36168977269810393,
+            "hitRate": 0.2520833333333333
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "side-aware-high": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 940,
+            "meanForecast": 0.0022662119829051203,
+            "hitRate": 0.011702127659574468
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 424,
+            "meanForecast": 0.01774672219042937,
+            "hitRate": 0.025943396226415096
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 656,
+            "meanForecast": 0.05932104248282526,
+            "hitRate": 0.04420731707317073
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 810,
+            "meanForecast": 0.1815330555423859,
+            "hitRate": 0.10864197530864197
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 657,
+            "meanForecast": 0.4098943962112382,
+            "hitRate": 0.2313546423135464
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 53,
+            "meanForecast": 0.6495050782068896,
+            "hitRate": 0.3584905660377358
+          }
+        ],
+        "fhs": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 998,
+            "meanForecast": 0.004184368737474929,
+            "hitRate": 0.012024048096192385
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 822,
+            "meanForecast": 0.018222222222222216,
+            "hitRate": 0.0364963503649635
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 885,
+            "meanForecast": 0.0580218455743879,
+            "hitRate": 0.0903954802259887
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 731,
+            "meanForecast": 0.18450296397628846,
+            "hitRate": 0.21751025991792067
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 104,
+            "meanForecast": 0.361333333333333,
+            "hitRate": 0.27884615384615385
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "fhs-evt": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 986,
+            "meanForecast": 0.004319472616632845,
+            "hitRate": 0.011156186612576065
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 830,
+            "meanForecast": 0.01803815261044176,
+            "hitRate": 0.03975903614457831
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 892,
+            "meanForecast": 0.05815545590433486,
+            "hitRate": 0.08520179372197309
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 734,
+            "meanForecast": 0.18585876475930968,
+            "hitRate": 0.22070844686648503
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 98,
+            "meanForecast": 0.3641326530612245,
+            "hitRate": 0.2857142857142857
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ]
+      },
+      "instruments": [
+        {
+          "instId": "BTC-USDT-SWAP",
+          "horizonDays": 1,
+          "sigmaRefDaily": 0.01840356564685021,
+          "distances": [
+            0.0186,
+            0.028,
+            0.0375,
+            0.0471,
+            0.0568,
+            0.0764
+          ],
+          "starts": 59,
+          "skipped": 0,
+          "baseRate": 0.096045197740113,
+          "logLoss": {
+            "envelope": 0.3445886866903972,
+            "side-aware": 0.33576145529598994,
+            "side-aware-high": 0.3074909074664093,
+            "fhs": 0.2822946009894641,
+            "fhs-evt": 0.28554833817996733
+          },
+          "brier": {
+            "envelope": 0.08259339514094026,
+            "side-aware": 0.08288098364757256,
+            "side-aware-high": 0.09287969386953321,
+            "fhs": 0.08048990709353424,
+            "fhs-evt": 0.08067982470182042
+          }
+        },
+        {
+          "instId": "DOGE-USDT-SWAP",
+          "horizonDays": 1,
+          "sigmaRefDaily": 0.0387081284307333,
+          "distances": [
+            0.0395,
+            0.0598,
+            0.0805,
+            0.1016,
+            0.1231,
+            0.1675
+          ],
+          "starts": 59,
+          "skipped": 0,
+          "baseRate": 0.08898305084745763,
+          "logLoss": {
+            "envelope": 0.3108010562782288,
+            "side-aware": 0.30429583802950233,
+            "side-aware-high": 0.259005881027055,
+            "fhs": 0.26584163401650907,
+            "fhs-evt": 0.26578631410511905
+          },
+          "brier": {
+            "envelope": 0.075235427151243,
+            "side-aware": 0.07626147278847004,
+            "side-aware-high": 0.07862527923809001,
+            "fhs": 0.07475101961707471,
+            "fhs-evt": 0.07496969617074704
+          }
+        },
+        {
+          "instId": "ETH-USDT-SWAP",
+          "horizonDays": 1,
+          "sigmaRefDaily": 0.02603044051864412,
+          "distances": [
+            0.0264,
+            0.0398,
+            0.0534,
+            0.0672,
+            0.0812,
+            0.1097
+          ],
+          "starts": 59,
+          "skipped": 0,
+          "baseRate": 0.08192090395480225,
+          "logLoss": {
+            "envelope": 0.30235273089239795,
+            "side-aware": 0.2950033000936323,
+            "side-aware-high": 0.28365885710755545,
+            "fhs": 0.24705671859000897,
+            "fhs-evt": 0.247685006057792
+          },
+          "brier": {
+            "envelope": 0.07194406925214698,
+            "side-aware": 0.07287430783716624,
+            "side-aware-high": 0.08049485261453364,
+            "fhs": 0.07003540599497815,
+            "fhs-evt": 0.07026149591964852
+          }
+        },
+        {
+          "instId": "MON-USDT-SWAP",
+          "horizonDays": 1,
+          "sigmaRefDaily": 0.05918541690789605,
+          "distances": [
+            0.061,
+            0.0928,
+            0.1257,
+            0.1595,
+            0.1943,
+            0.2671
+          ],
+          "starts": 59,
+          "skipped": 0,
+          "baseRate": 0.08192090395480225,
+          "logLoss": {
+            "envelope": 0.25486991708111395,
+            "side-aware": 0.25211697250937426,
+            "side-aware-high": 0.24804690897668008,
+            "fhs": 0.2222486795960224,
+            "fhs-evt": 0.22057418726705427
+          },
+          "brier": {
+            "envelope": 0.06665791278630337,
+            "side-aware": 0.06665539389804265,
+            "side-aware-high": 0.07170326112713225,
+            "fhs": 0.0635763753923415,
+            "fhs-evt": 0.06337521625863149
+          }
+        },
+        {
+          "instId": "SOL-USDT-SWAP",
+          "horizonDays": 1,
+          "sigmaRefDaily": 0.03150270485123442,
+          "distances": [
+            0.032,
+            0.0484,
+            0.065,
+            0.0819,
+            0.0991,
+            0.1343
+          ],
+          "starts": 59,
+          "skipped": 0,
+          "baseRate": 0.08898305084745763,
+          "logLoss": {
+            "envelope": 0.31903511908411675,
+            "side-aware": 0.306767822597407,
+            "side-aware-high": 0.2848873738227494,
+            "fhs": 0.2665227645147177,
+            "fhs-evt": 0.26824106001129944
+          },
+          "brier": {
+            "envelope": 0.07690487204972103,
+            "side-aware": 0.07795620287950636,
+            "side-aware-high": 0.08352324214386488,
+            "fhs": 0.07525516870684257,
+            "fhs-evt": 0.07565734981167607
+          }
+        }
+      ]
+    },
+    {
+      "horizonDays": 3,
+      "starts": 285,
+      "events": 3420,
+      "dateBlockDays": 6,
+      "independentBlock": 3,
+      "baseRate": 0.09064327485380116,
+      "logLoss": {
+        "envelope": 0.36308359410064,
+        "side-aware": 0.35078979588688386,
+        "side-aware-high": 0.3169258452362862,
+        "fhs": 0.2970982445354698,
+        "fhs-evt": 0.29759084873959435
+      },
+      "brier": {
+        "envelope": 0.0787960925578171,
+        "side-aware": 0.07904979141684142,
+        "side-aware-high": 0.08589609362785673,
+        "fhs": 0.0768809545484081,
+        "fhs-evt": 0.0769532231643925
+      },
+      "vsEnvelope": {
+        "side-aware": {
+          "log1e-4": {
+            "meanGain": 0.012293798213756488,
+            "byDate": {
+              "n": 57,
+              "meanDiff": 0.012293798213756488,
+              "ciLow": -0.007062257153144036,
+              "ciHigh": 0.03886821994281953
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": 0.012293798213756492,
+              "ciLow": 0.0024327854439466228,
+              "ciHigh": 0.024042705843192236
+            },
+            "days": 57
+          },
+          "brier": {
+            "meanGain": -0.00025369885902431225,
+            "byDate": {
+              "n": 57,
+              "meanDiff": -0.00025369885902431225,
+              "ciLow": -0.002234068656930334,
+              "ciHigh": 0.0021421023536419186
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": -0.0002536988590243122,
+              "ciLow": -0.00140878446009069,
+              "ciHigh": 0.0010092665889650505
+            },
+            "days": 57
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.7365445025713718,
+            "meanGainWithoutTop3Days": 0.00341880587500864,
+            "daysWorseThanEnvelope": 36,
+            "days": 57
+          },
+          "floorSensitivity": {
+            "0.0001": 0.012293798213756488,
+            "0.001": 0.006550504837107167,
+            "0.01": 0.0019665601433040956
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.012988228952883997,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.012988228952883997,
+                "ciLow": -0.007383628632679708,
+                "ciHigh": 0.04092428571160767
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.012867285517926798,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.012867285517926798,
+                "ciLow": -0.005583685425641224,
+                "ciHigh": 0.037595151119388256
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.012174248414816643,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.012174248414816643,
+                "ciLow": -0.005906677295616683,
+                "ciHigh": 0.0365476765425082
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.012925054323774632,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.012925054323774632,
+                "ciLow": -0.010491774862139418,
+                "ciHigh": 0.04368562790757579
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.010514173859380343,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.010514173859380343,
+                "ciLow": -0.00799137570799911,
+                "ciHigh": 0.03639457061520431
+              }
+            }
+          }
+        },
+        "side-aware-high": {
+          "log1e-4": {
+            "meanGain": 0.04615774886435414,
+            "byDate": {
+              "n": 57,
+              "meanDiff": 0.04615774886435414,
+              "ciLow": -0.05129974580811128,
+              "ciHigh": 0.21704867638927008
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": 0.046157748864354135,
+              "ciLow": -0.010978990252104878,
+              "ciHigh": 0.11648447822143436
+            },
+            "days": 57
+          },
+          "brier": {
+            "meanGain": -0.007100001070039554,
+            "byDate": {
+              "n": 57,
+              "meanDiff": -0.007100001070039554,
+              "ciLow": -0.017512600073207162,
+              "ciHigh": 0.0063713134366009325
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": -0.007100001070039557,
+              "ciLow": -0.012856163493637298,
+              "ciHigh": -0.0007807262211634884
+            },
+            "days": 57
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 1.4732137663937177,
+            "meanGainWithoutTop3Days": -0.023055953421042837,
+            "daysWorseThanEnvelope": 42,
+            "days": 57
+          },
+          "floorSensitivity": {
+            "0.0001": 0.04615774886435414,
+            "0.001": 0.025072194199953157,
+            "0.01": 0.0006966611069250002
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.048730158926204845,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.048730158926204845,
+                "ciLow": -0.04707021370292995,
+                "ciHigh": 0.21701585564508427
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.037147419557232664,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.037147419557232664,
+                "ciLow": -0.05239144587352636,
+                "ciHigh": 0.19019121210898723
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.05291778420527357,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.05291778420527357,
+                "ciLow": -0.0477917777307657,
+                "ciHigh": 0.23013488732244772
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.05191296229239895,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.05191296229239895,
+                "ciLow": -0.057393488618012384,
+                "ciHigh": 0.24051386552287263
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.04008041934066068,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.04008041934066068,
+                "ciLow": -0.05581745706818154,
+                "ciHigh": 0.20739766121334202
+              }
+            }
+          }
+        },
+        "fhs": {
+          "log1e-4": {
+            "meanGain": 0.0659853495651702,
+            "byDate": {
+              "n": 57,
+              "meanDiff": 0.0659853495651702,
+              "ciLow": -0.0006761469637839518,
+              "ciHigh": 0.18506261928257822
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": 0.06598534956517023,
+              "ciLow": 0.026797019748118486,
+              "ciHigh": 0.11554443719371921
+            },
+            "days": 57
+          },
+          "brier": {
+            "meanGain": 0.0019151380094090502,
+            "byDate": {
+              "n": 57,
+              "meanDiff": 0.0019151380094090502,
+              "ciLow": -0.00032809801332830724,
+              "ciHigh": 0.004596265267813394
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": 0.0019151380094090498,
+              "ciLow": 0.00028926445134998355,
+              "ciHigh": 0.003566715809622608
+            },
+            "days": 57
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.730419528995684,
+            "meanGainWithoutTop3Days": 0.018776603927116525,
+            "daysWorseThanEnvelope": 25,
+            "days": 57
+          },
+          "floorSensitivity": {
+            "0.0001": 0.0659853495651702,
+            "0.001": 0.04089234396291902,
+            "0.01": 0.015844603801710544
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.061302517326079185,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.061302517326079185,
+                "ciLow": -0.00024098760439975975,
+                "ciHigh": 0.17145481521469172
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.06860004023440236,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06860004023440236,
+                "ciLow": 0.00017773059881240826,
+                "ciHigh": 0.19077269728646992
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.06285790798956989,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06285790798956989,
+                "ciLow": 0.0006923045010955602,
+                "ciHigh": 0.17310159141877884
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.06925583300790747,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06925583300790747,
+                "ciLow": -0.00244611464549199,
+                "ciHigh": 0.19547063076473964
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.06791044926789215,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06791044926789215,
+                "ciLow": -0.0038082648697319713,
+                "ciHigh": 0.19539914681302847
+              }
+            }
+          }
+        },
+        "fhs-evt": {
+          "log1e-4": {
+            "meanGain": 0.06549274536104543,
+            "byDate": {
+              "n": 57,
+              "meanDiff": 0.06549274536104543,
+              "ciLow": -0.0009290203584192095,
+              "ciHigh": 0.18459045916348096
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": 0.06549274536104543,
+              "ciLow": 0.026579837200155422,
+              "ciHigh": 0.11490115006634576
+            },
+            "days": 57
+          },
+          "brier": {
+            "meanGain": 0.0018428693934246468,
+            "byDate": {
+              "n": 57,
+              "meanDiff": 0.0018428693934246468,
+              "ciLow": -0.0004748469336989104,
+              "ciHigh": 0.004580198258594115
+            },
+            "independentAssets": {
+              "n": 285,
+              "meanDiff": 0.0018428693934246481,
+              "ciLow": 0.00018094460117080955,
+              "ciHigh": 0.0034899660930859263
+            },
+            "days": 57
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.7214247566318734,
+            "meanGainWithoutTop3Days": 0.019258249559899968,
+            "daysWorseThanEnvelope": 26,
+            "days": 57
+          },
+          "floorSensitivity": {
+            "0.0001": 0.06549274536104543,
+            "0.001": 0.04023512317730617,
+            "0.01": 0.015944000603919397
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.06107189130932792,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06107189130932792,
+                "ciLow": -0.00038690231053574507,
+                "ciHigh": 0.17122956260119593
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.06697047153258671,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06697047153258671,
+                "ciLow": -0.00034159365269165556,
+                "ciHigh": 0.18651802402884476
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.06209309759547582,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06209309759547582,
+                "ciLow": 0.000548188719617699,
+                "ciHigh": 0.17134665498319218
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.06959289002952364,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06959289002952364,
+                "ciLow": -0.0025197034065417515,
+                "ciHigh": 0.1963405187002458
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.06773537633831324,
+              "byDate": {
+                "n": 57,
+                "meanDiff": 0.06773537633831324,
+                "ciLow": -0.004117394214593434,
+                "ciHigh": 0.1941832641335516
+              }
+            }
+          }
+        }
+      },
+      "evtVersusFhs": {
+        "log1e-4": {
+          "meanGain": -0.0004926042041247576,
+          "byDate": {
+            "n": 57,
+            "meanDiff": -0.0004926042041247576,
+            "ciLow": -0.00211005489769175,
+            "ciHigh": 0.001934183115103392
+          },
+          "days": 57,
+          "daysWorse": 26,
+          "top3DaysShareOfTotalGain": null
+        },
+        "brier": {
+          "meanGain": -0.00007226861598440192,
+          "byDate": {
+            "n": 57,
+            "meanDiff": -0.00007226861598440192,
+            "ciLow": -0.0003686274545159164,
+            "ciHigh": 0.0002005350552306755
+          },
+          "days": 57,
+          "daysWorse": 28,
+          "top3DaysShareOfTotalGain": null
+        }
+      },
+      "reliability": {
+        "envelope": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1620,
+            "meanForecast": 0.0018635014524449088,
+            "hitRate": 0.046296296296296294
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 350,
+            "meanForecast": 0.018654043694896764,
+            "hitRate": 0.04857142857142857
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 506,
+            "meanForecast": 0.054324098358105914,
+            "hitRate": 0.08498023715415019
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 634,
+            "meanForecast": 0.17869988325182357,
+            "hitRate": 0.14826498422712933
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 310,
+            "meanForecast": 0.33791546582815335,
+            "hitRate": 0.26129032258064516
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "side-aware": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1415,
+            "meanForecast": 0.0019006027984900887,
+            "hitRate": 0.045936395759717315
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 413,
+            "meanForecast": 0.01873950914453431,
+            "hitRate": 0.04600484261501211
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 555,
+            "meanForecast": 0.05751450637302273,
+            "hitRate": 0.05405405405405406
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 595,
+            "meanForecast": 0.1696211529655532,
+            "hitRate": 0.14285714285714285
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 442,
+            "meanForecast": 0.36007073308047804,
+            "hitRate": 0.251131221719457
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "side-aware-high": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1002,
+            "meanForecast": 0.002112764274047096,
+            "hitRate": 0.029940119760479042
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 380,
+            "meanForecast": 0.01879807535328938,
+            "hitRate": 0.03684210526315789
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 623,
+            "meanForecast": 0.0602493630565896,
+            "hitRate": 0.04012841091492777
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 742,
+            "meanForecast": 0.18294922965517174,
+            "hitRate": 0.11590296495956873
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 626,
+            "meanForecast": 0.41038544670423666,
+            "hitRate": 0.22364217252396165
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 47,
+            "meanForecast": 0.6522152985994577,
+            "hitRate": 0.3191489361702128
+          }
+        ],
+        "fhs": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1165,
+            "meanForecast": 0.0037021459227467666,
+            "hitRate": 0.03261802575107296
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 768,
+            "meanForecast": 0.018076822916666676,
+            "hitRate": 0.046875
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 752,
+            "meanForecast": 0.05807047872340424,
+            "hitRate": 0.08776595744680851
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 678,
+            "meanForecast": 0.18917994100295005,
+            "hitRate": 0.2168141592920354
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 57,
+            "meanForecast": 0.3308654970760233,
+            "hitRate": 0.40350877192982454
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "fhs-evt": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1151,
+            "meanForecast": 0.0037998841587025683,
+            "hitRate": 0.03301476976542137
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 777,
+            "meanForecast": 0.018027456027456017,
+            "hitRate": 0.04504504504504504
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 761,
+            "meanForecast": 0.05776828734121763,
+            "hitRate": 0.08804204993429698
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 674,
+            "meanForecast": 0.18950692383778425,
+            "hitRate": 0.22255192878338279
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 57,
+            "meanForecast": 0.3283859649122808,
+            "hitRate": 0.3508771929824561
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ]
+      },
+      "instruments": [
+        {
+          "instId": "BTC-USDT-SWAP",
+          "horizonDays": 3,
+          "sigmaRefDaily": 0.01840356564685021,
+          "distances": [
+            0.0324,
+            0.049,
+            0.0658,
+            0.083,
+            0.1003,
+            0.136
+          ],
+          "starts": 57,
+          "skipped": 0,
+          "baseRate": 0.10380116959064327,
+          "logLoss": {
+            "envelope": 0.3906930004850713,
+            "side-aware": 0.3811769252278253,
+            "side-aware-high": 0.3548248918681208,
+            "fhs": 0.3059763219635383,
+            "fhs-evt": 0.30751683891715664
+          },
+          "brier": {
+            "envelope": 0.08744378763655483,
+            "side-aware": 0.08710527941669678,
+            "side-aware-high": 0.09675973785712147,
+            "fhs": 0.08560241130604285,
+            "fhs-evt": 0.08574474870045481
+          }
+        },
+        {
+          "instId": "DOGE-USDT-SWAP",
+          "horizonDays": 3,
+          "sigmaRefDaily": 0.0387081284307333,
+          "distances": [
+            0.0693,
+            0.1058,
+            0.1435,
+            0.1825,
+            0.2228,
+            0.3076
+          ],
+          "starts": 57,
+          "skipped": 0,
+          "baseRate": 0.0891812865497076,
+          "logLoss": {
+            "envelope": 0.3808228954172635,
+            "side-aware": 0.3708230464201901,
+            "side-aware-high": 0.29862382932442577,
+            "fhs": 0.3252963085290249,
+            "fhs-evt": 0.32124105474238585
+          },
+          "brier": {
+            "envelope": 0.07696409059736407,
+            "side-aware": 0.07816121003328075,
+            "side-aware-high": 0.0822175407819686,
+            "fhs": 0.07723904515919437,
+            "fhs-evt": 0.07705789441195576
+          }
+        },
+        {
+          "instId": "ETH-USDT-SWAP",
+          "horizonDays": 3,
+          "sigmaRefDaily": 0.02603044051864412,
+          "distances": [
+            0.0461,
+            0.07,
+            0.0944,
+            0.1193,
+            0.1448,
+            0.1976
+          ],
+          "starts": 57,
+          "skipped": 0,
+          "baseRate": 0.0847953216374269,
+          "logLoss": {
+            "envelope": 0.34653766263228075,
+            "side-aware": 0.3337656652227659,
+            "side-aware-high": 0.32742005513160566,
+            "fhs": 0.2680425467647111,
+            "fhs-evt": 0.2674463262089592
+          },
+          "brier": {
+            "envelope": 0.07307932183569632,
+            "side-aware": 0.07405350532870995,
+            "side-aware-high": 0.08329255556401298,
+            "fhs": 0.07184493356075378,
+            "fhs-evt": 0.07176900584795325
+          }
+        },
+        {
+          "instId": "MON-USDT-SWAP",
+          "horizonDays": 3,
+          "sigmaRefDaily": 0.05918541690789605,
+          "distances": [
+            0.108,
+            0.1662,
+            0.2276,
+            0.2921,
+            0.3601,
+            0.5069
+          ],
+          "starts": 57,
+          "skipped": 0,
+          "baseRate": 0.07602339181286549,
+          "logLoss": {
+            "envelope": 0.2878385742789254,
+            "side-aware": 0.27806980050524155,
+            "side-aware-high": 0.26470167912675086,
+            "fhs": 0.23493515848470473,
+            "fhs-evt": 0.23874640759179327
+          },
+          "brier": {
+            "envelope": 0.06701309543225123,
+            "side-aware": 0.06613925938146774,
+            "side-aware-high": 0.07406687800417962,
+            "fhs": 0.063345276965562,
+            "fhs-evt": 0.0634674420077973
+          }
+        },
+        {
+          "instId": "SOL-USDT-SWAP",
+          "horizonDays": 3,
+          "sigmaRefDaily": 0.03150270485123442,
+          "distances": [
+            0.0561,
+            0.0853,
+            0.1153,
+            0.1462,
+            0.1779,
+            0.2439
+          ],
+          "starts": 57,
+          "skipped": 0,
+          "baseRate": 0.09941520467836257,
+          "logLoss": {
+            "envelope": 0.40952583768965,
+            "side-aware": 0.39011354205839005,
+            "side-aware-high": 0.3390587707305239,
+            "fhs": 0.35124088693537014,
+            "fhs-evt": 0.3530036162376781
+          },
+          "brier": {
+            "envelope": 0.08948016728721893,
+            "side-aware": 0.08978970292405213,
+            "side-aware-high": 0.09314375593200062,
+            "fhs": 0.08637310575048739,
+            "fhs-evt": 0.08672702485380118
+          }
+        }
+      ]
+    },
+    {
+      "horizonDays": 7,
+      "starts": 265,
+      "events": 3180,
+      "dateBlockDays": 14,
+      "independentBlock": 7,
+      "baseRate": 0.09937106918238994,
+      "logLoss": {
+        "envelope": 0.4596807010478434,
+        "side-aware": 0.43268590938853546,
+        "side-aware-high": 0.41711532872926776,
+        "fhs": 0.37696670469185684,
+        "fhs-evt": 0.3766493286810943
+      },
+      "brier": {
+        "envelope": 0.0897967417059744,
+        "side-aware": 0.08958358492482416,
+        "side-aware-high": 0.09768207195048258,
+        "fhs": 0.08651732921034237,
+        "fhs-evt": 0.08658026443046818
+      },
+      "vsEnvelope": {
+        "side-aware": {
+          "log1e-4": {
+            "meanGain": 0.02699479165930819,
+            "byDate": {
+              "n": 53,
+              "meanDiff": 0.02699479165930819,
+              "ciLow": -0.010222869250210497,
+              "ciHigh": 0.04560105772262898
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": 0.0269947916593082,
+              "ciLow": 0.006781112918091534,
+              "ciHigh": 0.048086836872404434
+            },
+            "days": 53
+          },
+          "brier": {
+            "meanGain": 0.000213156781150218,
+            "byDate": {
+              "n": 53,
+              "meanDiff": 0.000213156781150218,
+              "ciLow": -0.00287771900516268,
+              "ciHigh": 0.003064387305315504
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": 0.00021315678115021782,
+              "ciLow": -0.0017758354580880594,
+              "ciHigh": 0.0022739311000596228
+            },
+            "days": 53
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.47089637159260556,
+            "meanGainWithoutTop3Days": 0.015140024747944127,
+            "daysWorseThanEnvelope": 31,
+            "days": 53
+          },
+          "floorSensitivity": {
+            "0.0001": 0.02699479165930819,
+            "0.001": 0.015251532887684894,
+            "0.01": 0.006135409478436932
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.029024339159023516,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.029024339159023516,
+                "ciLow": -0.01068441030450121,
+                "ciHigh": 0.04891920189543791
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.026118454634383923,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.026118454634383923,
+                "ciLow": -0.00907531267175294,
+                "ciHigh": 0.04514407367288
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.02635686978142727,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.02635686978142727,
+                "ciLow": -0.008440032597698762,
+                "ciHigh": 0.045865269296115126
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.027710572707045567,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.027710572707045567,
+                "ciLow": -0.014771457343548323,
+                "ciHigh": 0.048357055141560606
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.025763722014660664,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.025763722014660664,
+                "ciLow": -0.009419697561048556,
+                "ciHigh": 0.0415784878771966
+              }
+            }
+          }
+        },
+        "side-aware-high": {
+          "log1e-4": {
+            "meanGain": 0.042565372318575795,
+            "byDate": {
+              "n": 53,
+              "meanDiff": 0.042565372318575795,
+              "ciLow": -0.05783554240292967,
+              "ciHigh": 0.10660521054751516
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": 0.04256537231857578,
+              "ciLow": -0.017335326285183996,
+              "ciHigh": 0.1053511329160228
+            },
+            "days": 53
+          },
+          "brier": {
+            "meanGain": -0.007885330244508227,
+            "byDate": {
+              "n": 53,
+              "meanDiff": -0.007885330244508227,
+              "ciLow": -0.018904861029547557,
+              "ciHigh": -0.004500297109774374
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": -0.00788533024450823,
+              "ciLow": -0.015103772733480424,
+              "ciHigh": -0.0012907253787978025
+            },
+            "days": 53
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 1.2555727225811995,
+            "meanGainWithoutTop3Days": -0.011531260976609286,
+            "daysWorseThanEnvelope": 40,
+            "days": 53
+          },
+          "floorSensitivity": {
+            "0.0001": 0.042565372318575795,
+            "0.001": 0.020341395632418945,
+            "0.01": -0.002935603938602839
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.045474666494744125,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.045474666494744125,
+                "ciLow": -0.054906026253182895,
+                "ciHigh": 0.10796854393681052
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.03738532867067374,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.03738532867067374,
+                "ciLow": -0.059860184915576056,
+                "ciHigh": 0.09603047097109516
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.04912710599183147,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.04912710599183147,
+                "ciLow": -0.05457436267171711,
+                "ciHigh": 0.12116044765265711
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.04520837231183913,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.04520837231183913,
+                "ciLow": -0.06367157440909661,
+                "ciHigh": 0.12264681542583733
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.035631388123790554,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.035631388123790554,
+                "ciLow": -0.061335388272197706,
+                "ciHigh": 0.08896218425249572
+              }
+            }
+          }
+        },
+        "fhs": {
+          "log1e-4": {
+            "meanGain": 0.08271399635598685,
+            "byDate": {
+              "n": 53,
+              "meanDiff": 0.08271399635598685,
+              "ciLow": 0.010515067517913292,
+              "ciHigh": 0.1380693123277188
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": 0.08271399635598681,
+              "ciLow": 0.031007310411092455,
+              "ciHigh": 0.12860655585902273
+            },
+            "days": 53
+          },
+          "brier": {
+            "meanGain": 0.003279412495631904,
+            "byDate": {
+              "n": 53,
+              "meanDiff": 0.003279412495631904,
+              "ciLow": 0.002647045588293307,
+              "ciHigh": 0.0049885419149623975
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": 0.003279412495631904,
+              "ciLow": 0.0019724054981922205,
+              "ciHigh": 0.00476016291488334
+            },
+            "days": 53
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.4654127168030897,
+            "meanGainWithoutTop3Days": 0.046870921629964514,
+            "daysWorseThanEnvelope": 8,
+            "days": 53
+          },
+          "floorSensitivity": {
+            "0.0001": 0.08271399635598685,
+            "0.001": 0.04882221923978006,
+            "0.01": 0.020082282488802405
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.0739937676403719,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.0739937676403719,
+                "ciLow": 0.011734983495883302,
+                "ciHigh": 0.1243558687033138
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.090884143355711,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.090884143355711,
+                "ciLow": 0.010625768496870074,
+                "ciHigh": 0.15018041732604198
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.0751055775124766,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.0751055775124766,
+                "ciLow": 0.010547340787364494,
+                "ciHigh": 0.12497281258477028
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.0856971113749186,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.0856971113749186,
+                "ciLow": 0.007148787588411751,
+                "ciHigh": 0.14373685286466936
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.08788938189645633,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.08788938189645633,
+                "ciLow": 0.010486435912030271,
+                "ciHigh": 0.14623303195273124
+              }
+            }
+          }
+        },
+        "fhs-evt": {
+          "log1e-4": {
+            "meanGain": 0.08303137236674929,
+            "byDate": {
+              "n": 53,
+              "meanDiff": 0.08303137236674929,
+              "ciLow": 0.009768945996161129,
+              "ciHigh": 0.13845704012286167
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": 0.08303137236674937,
+              "ciLow": 0.029250778985968787,
+              "ciHigh": 0.13150658800766057
+            },
+            "days": 53
+          },
+          "brier": {
+            "meanGain": 0.003216477275506119,
+            "byDate": {
+              "n": 53,
+              "meanDiff": 0.003216477275506119,
+              "ciLow": 0.0023680742317661397,
+              "ciHigh": 0.004978454581065701
+            },
+            "independentAssets": {
+              "n": 265,
+              "meanDiff": 0.0032164772755061185,
+              "ciLow": 0.0018246229795843584,
+              "ciHigh": 0.004690039637166903
+            },
+            "days": 53
+          },
+          "concentration": {
+            "top3DaysShareOfTotalGain": 0.46204588033945704,
+            "meanGainWithoutTop3Days": 0.04734709295530703,
+            "daysWorseThanEnvelope": 11,
+            "days": 53
+          },
+          "floorSensitivity": {
+            "0.0001": 0.08303137236674929,
+            "0.001": 0.05046983843116476,
+            "0.01": 0.02082168238215626
+          },
+          "leaveOneAssetOut": {
+            "BTC-USDT-SWAP": {
+              "meanGain": 0.0733614686008451,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.0733614686008451,
+                "ciLow": 0.011026110732123348,
+                "ciHigh": 0.1234132062426504
+              }
+            },
+            "DOGE-USDT-SWAP": {
+              "meanGain": 0.09322454198467889,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.09322454198467889,
+                "ciLow": 0.00955590297436658,
+                "ciHigh": 0.153923814005158
+              }
+            },
+            "ETH-USDT-SWAP": {
+              "meanGain": 0.07284793589396968,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.07284793589396968,
+                "ciLow": 0.009893539037389147,
+                "ciHigh": 0.1214474741676265
+              }
+            },
+            "MON-USDT-SWAP": {
+              "meanGain": 0.08724319534005133,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.08724319534005133,
+                "ciLow": 0.006366984167771549,
+                "ciHigh": 0.14587163019271518
+              }
+            },
+            "SOL-USDT-SWAP": {
+              "meanGain": 0.08847972001420182,
+              "byDate": {
+                "n": 53,
+                "meanDiff": 0.08847972001420182,
+                "ciLow": 0.009762961338466807,
+                "ciHigh": 0.14685580214848393
+              }
+            }
+          }
+        }
+      },
+      "evtVersusFhs": {
+        "log1e-4": {
+          "meanGain": 0.00031737601076245865,
+          "byDate": {
+            "n": 53,
+            "meanDiff": 0.00031737601076245865,
+            "ciLow": -0.0012005788702638908,
+            "ciHigh": 0.0010064838511523665
+          },
+          "days": 53,
+          "daysWorse": 28,
+          "top3DaysShareOfTotalGain": 5.140680710093392
+        },
+        "brier": {
+          "meanGain": -0.00006293522012578532,
+          "byDate": {
+            "n": 53,
+            "meanDiff": -0.00006293522012578532,
+            "ciLow": -0.0004121695335429765,
+            "ciHigh": 0.00008377924266247479
+          },
+          "days": 53,
+          "daysWorse": 28,
+          "top3DaysShareOfTotalGain": null
+        }
+      },
+      "reliability": {
+        "envelope": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1588,
+            "meanForecast": 0.0016687319186372497,
+            "hitRate": 0.06675062972292191
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 332,
+            "meanForecast": 0.019685824705124956,
+            "hitRate": 0.04819277108433735
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 424,
+            "meanForecast": 0.05675042407310185,
+            "hitRate": 0.12735849056603774
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 572,
+            "meanForecast": 0.18121796997847292,
+            "hitRate": 0.13636363636363635
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 264,
+            "meanForecast": 0.33532896836671294,
+            "hitRate": 0.23484848484848486
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "side-aware": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1397,
+            "meanForecast": 0.0016875579509698605,
+            "hitRate": 0.06871868289191124
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 365,
+            "meanForecast": 0.01851990012313685,
+            "hitRate": 0.03287671232876712
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 506,
+            "meanForecast": 0.05902466148013395,
+            "hitRate": 0.08498023715415019
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 536,
+            "meanForecast": 0.17585757895027712,
+            "hitRate": 0.15858208955223882
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 376,
+            "meanForecast": 0.36084848241189693,
+            "hitRate": 0.2127659574468085
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "side-aware-high": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1014,
+            "meanForecast": 0.0017716591091666025,
+            "hitRate": 0.07001972386587771
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 350,
+            "meanForecast": 0.018179959438712135,
+            "hitRate": 0.02857142857142857
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 549,
+            "meanForecast": 0.06015531820468197,
+            "hitRate": 0.06375227686703097
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 661,
+            "meanForecast": 0.18246610822015685,
+            "hitRate": 0.11497730711043873
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 564,
+            "meanForecast": 0.40839386577376585,
+            "hitRate": 0.1950354609929078
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 42,
+            "meanForecast": 0.6544548017566438,
+            "hitRate": 0.3333333333333333
+          }
+        ],
+        "fhs": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1265,
+            "meanForecast": 0.00310434782608694,
+            "hitRate": 0.06086956521739131
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 631,
+            "meanForecast": 0.017718436344426842,
+            "hitRate": 0.05229793977812995
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 629,
+            "meanForecast": 0.0568351881293058,
+            "hitRate": 0.08744038155802862
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 599,
+            "meanForecast": 0.18901669449081807,
+            "hitRate": 0.20701168614357263
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 56,
+            "meanForecast": 0.3242797619047619,
+            "hitRate": 0.48214285714285715
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ],
+        "fhs-evt": [
+          {
+            "lo": 0,
+            "hi": 0.01,
+            "n": 1240,
+            "meanForecast": 0.0032693548387096602,
+            "hitRate": 0.05725806451612903
+          },
+          {
+            "lo": 0.01,
+            "hi": 0.03,
+            "n": 634,
+            "meanForecast": 0.01744321766561515,
+            "hitRate": 0.056782334384858045
+          },
+          {
+            "lo": 0.03,
+            "hi": 0.1,
+            "n": 660,
+            "meanForecast": 0.05656666666666666,
+            "hitRate": 0.08787878787878788
+          },
+          {
+            "lo": 0.1,
+            "hi": 0.3,
+            "n": 598,
+            "meanForecast": 0.19137346711259767,
+            "hitRate": 0.21237458193979933
+          },
+          {
+            "lo": 0.3,
+            "hi": 0.6,
+            "n": 48,
+            "meanForecast": 0.3242430555555555,
+            "hitRate": 0.5
+          },
+          {
+            "lo": 0.6,
+            "hi": 1,
+            "n": 0,
+            "meanForecast": null,
+            "hitRate": null
+          }
+        ]
+      },
+      "instruments": [
+        {
+          "instId": "BTC-USDT-SWAP",
+          "horizonDays": 7,
+          "sigmaRefDaily": 0.01840356564685021,
+          "distances": [
+            0.0499,
+            0.0758,
+            0.1023,
+            0.1294,
+            0.1573,
+            0.215
+          ],
+          "starts": 53,
+          "skipped": 0,
+          "baseRate": 0.11477987421383648,
+          "logLoss": {
+            "envelope": 0.5058527195939961,
+            "side-aware": 0.4869761179335499,
+            "side-aware-high": 0.4749245239800951,
+            "fhs": 0.3882578083755508,
+            "fhs-evt": 0.38414173216363146
+          },
+          "brier": {
+            "envelope": 0.10129469555373312,
+            "side-aware": 0.10077609921274998,
+            "side-aware-high": 0.11188271217014213,
+            "fhs": 0.098901001222921,
+            "fhs-evt": 0.09885876781970646
+          }
+        },
+        {
+          "instId": "DOGE-USDT-SWAP",
+          "horizonDays": 7,
+          "sigmaRefDaily": 0.0387081284307333,
+          "distances": [
+            0.1078,
+            0.166,
+            0.2273,
+            0.2918,
+            0.3597,
+            0.5063
+          ],
+          "starts": 53,
+          "skipped": 0,
+          "baseRate": 0.10220125786163523,
+          "logLoss": {
+            "envelope": 0.504476132481591,
+            "side-aware": 0.47397599272258706,
+            "side-aware-high": 0.4411905855714087,
+            "fhs": 0.4544427241245034,
+            "fhs-evt": 0.4622174385865633
+          },
+          "brier": {
+            "envelope": 0.09269356525296338,
+            "side-aware": 0.09281979742567943,
+            "side-aware-high": 0.09921552786826511,
+            "fhs": 0.09103516107617061,
+            "fhs-evt": 0.09119979385045428
+          }
+        },
+        {
+          "instId": "ETH-USDT-SWAP",
+          "horizonDays": 7,
+          "sigmaRefDaily": 0.02603044051864412,
+          "distances": [
+            0.0713,
+            0.1088,
+            0.1477,
+            0.1879,
+            0.2295,
+            0.3172
+          ],
+          "starts": 53,
+          "skipped": 0,
+          "baseRate": 0.0880503144654088,
+          "logLoss": {
+            "envelope": 0.44474019862541847,
+            "side-aware": 0.415193719454587,
+            "side-aware-high": 0.42842176099986656,
+            "fhs": 0.331592526895392,
+            "fhs-evt": 0.3209750803675521
+          },
+          "brier": {
+            "envelope": 0.08220505199716353,
+            "side-aware": 0.08364663732139521,
+            "side-aware-high": 0.09460949811129159,
+            "fhs": 0.07813017662473798,
+            "fhs-evt": 0.0778478876659679
+          }
+        },
+        {
+          "instId": "MON-USDT-SWAP",
+          "horizonDays": 7,
+          "sigmaRefDaily": 0.05918541690789605,
+          "distances": [
+            0.1695,
+            0.2648,
+            0.3678,
+            0.4792,
+            0.5996,
+            0.8708
+          ],
+          "starts": 53,
+          "skipped": 0,
+          "baseRate": 0.08176100628930817,
+          "logLoss": {
+            "envelope": 0.3363959181623544,
+            "side-aware": 0.3122642506939959,
+            "side-aware-high": 0.3044025458168325,
+            "fhs": 0.26561438188209574,
+            "fhs-evt": 0.270211837688814
+          },
+          "brier": {
+            "envelope": 0.07424125619560283,
+            "side-aware": 0.07281508701578655,
+            "side-aware-high": 0.08251649148561895,
+            "fhs": 0.06947826484975554,
+            "fhs-evt": 0.0698019704751922
+          }
+        },
+        {
+          "instId": "SOL-USDT-SWAP",
+          "horizonDays": 7,
+          "sigmaRefDaily": 0.03150270485123442,
+          "distances": [
+            0.0869,
+            0.1332,
+            0.1814,
+            0.2317,
+            0.2841,
+            0.3957
+          ],
+          "starts": 53,
+          "skipped": 0,
+          "baseRate": 0.11006289308176101,
+          "logLoss": {
+            "envelope": 0.5069385363758477,
+            "side-aware": 0.4750194661379504,
+            "side-aware-high": 0.43663722727813187,
+            "fhs": 0.4449260821817409,
+            "fhs-evt": 0.4457005545989105
+          },
+          "brier": {
+            "envelope": 0.09854913953040872,
+            "side-aware": 0.09786030364850969,
+            "side-aware-high": 0.10018613011709533,
+            "fhs": 0.09504204227812714,
+            "fhs-evt": 0.09519290234102036
+          }
+        }
+      ]
+    }
+  ]
+}

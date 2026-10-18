@@ -1,0 +1,11 @@
+{
+  "id": "http-preview-20261011",
+  "summary": "Deliver integrated loopback HTTP-only development preview with explicit origins, isolated state, truthful metadata and subprocess verification; preserve financial gates and ongoing roundtrip research.",
+  "references": [
+    {
+      "path": "docs/HTTP-PREVIEW-SPEC-20261011.md",
+      "sha256": "e32244822c49fe6b248eccd15da9c9addff18a1fa6c8abd97004861de7a42d2c",
+      "excerpt": "The authorized goal includes making the integrated main visible on localhost without financial execution."
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+ "registradoEm": "2026-10-13",
+ "pasta": "docs/sdd/inonu-desktop-v1",
+ "revisaoCongelada": {
+  "revisao": "r2",
+  "congeladoEm": "2026-10-13",
+  "arquivos": 13
+ },
+ "congelados": {
+  "SPEC.md": {
+   "declarado": "75fea1d9ff4c99486c8580f2a00b221cea2be96e868c5051c1431b84772f830c",
+   "atual": "75fea1d9ff4c99486c8580f2a00b221cea2be96e868c5051c1431b84772f830c",
+   "igual": true
+  },
+  "flow-engine.md": {
+   "declarado": "4ccfc5444d6a4c7ba5722ca17af63b2aac9f2f74b8522ac56e4d596a9f8f60ca",
+   "atual": "4ccfc5444d6a4c7ba5722ca17af63b2aac9f2f74b8522ac56e4d596a9f8f60ca",
+   "igual": true
+  },
+  "rastreador.md": {
+   "declarado": "4457c870ea8aba45c254eed35935cb0ab6c193d2eb6e998c194e3ad0c696643c",
+   "atual": "4457c870ea8aba45c254eed35935cb0ab6c193d2eb6e998c194e3ad0c696643c",
+   "igual": true
+  },
+  "info-diet.md": {
+   "declarado": "f4402d875fcca40ccfe3eccaec8ff6edbc9e1cb290bd6b3f5d1b831983b23101",
+   "atual": "f4402d875fcca40ccfe3eccaec8ff6edbc9e1cb290bd6b3f5d1b831983b23101",
+   "igual": true
+  },
+  "wallet.md": {
+   "declarado": "a22dcdfbbcd247ff9a4c5faf0b022862b1ff3cc7ba604af44742bf4a71910ca8",
+   "atual": "a22dcdfbbcd247ff9a4c5faf0b022862b1ff3cc7ba604af44742bf4a71910ca8",
+   "igual": true
+  },
+  "onchainos-coverage.json": {
+   "declarado": "102225743394f501dcfc3235366624d6ba4976d4749feb121ed6cd4f8edf3e48",
+   "atual": "102225743394f501dcfc3235366624d6ba4976d4749feb121ed6cd4f8edf3e48",
+   "igual": true
+  },
+  "onchainos-coverage.md": {
+   "declarado": "dd41e1072461cb2cfda1a02f37ec740ef23e0dbf9b91a72c8fd41defa8a5dacd",
+   "atual": "dd41e1072461cb2cfda1a02f37ec740ef23e0dbf9b91a72c8fd41defa8a5dacd",
+   "igual": true
+  },
+  "adr/ADR-1-instalavel.md": {
+   "declarado": "92ba20f5da1df1d66d3591d8bd276b828c3dbb403acd865a4223d100df4e55b6",
+   "atual": "92ba20f5da1df1d66d3591d8bd276b828c3dbb403acd865a4223d100df4e55b6",
+   "igual": true
+  },
+  "adr/ADR-2-segredos.md": {
+   "declarado": "b4c33e9537d82ba4de8f755781a6c01bf9ee46c24f3bede4be8673b78204aa7e",
+   "atual": "b4c33e9537d82ba4de8f755781a6c01bf9ee46c24f3bede4be8673b78204aa7e",
+   "igual": true
+  },
+  "adr/ADR-3-camadas-e-nomenclatura.md": {
+   "declarado": "14624483ca9f065ffdf207a3a79d317076d1f39fe7fa0e25f4f74bd8d0ce9e4e",
+   "atual": "14624483ca9f065ffdf207a3a79d317076d1f39fe7fa0e25f4f74bd8d0ce9e4e",
+   "igual": true
+  },
+  "adr/ADR-4-sem-simulado.md": {
+   "declarado": "8856c56580aff47455e0d062672e7c158ca4cf1c87edfd0851b9d3ab716f5550",
+   "atual": "8856c56580aff47455e0d062672e7c158ca4cf1c87edfd0851b9d3ab716f5550",
+   "igual": true
+  },
+  "adr/ADR-5-carteira.md": {
+   "declarado": "9bade3faaa8e525a0e235410dee805ffa98648023816339fa22f2ea2b49c3190",
+   "atual": "9bade3faaa8e525a0e235410dee805ffa98648023816339fa22f2ea2b49c3190",
+   "igual": true
+  },
+  "adr/ADR-6-custo-e-formas-de-uso.md": {
+   "declarado": "ac4b1dcf68c729bc1f164b3b6b11c97c1127e977b8a4acd3a1197b6e406e516f",
+   "atual": "ac4b1dcf68c729bc1f164b3b6b11c97c1127e977b8a4acd3a1197b6e406e516f",
+   "igual": true
+  }
+ },
+ "progressoNaoCongelado": {
+  "PLAN.md": {
+   "sha256": "99d25dfc858a6a5379111dae0f70450f3c26525429eac2c18638d441f2fe48ea",
+   "mtime": "2026-10-13T01:17:12.353Z"
+  },
+  "TASKS.md": {
+   "sha256": "01bcd1e33c2a153fc0791b7e45c20c49372d962ad189dfe116250f627a6a435c",
+   "mtime": "2026-10-13T10:31:58.221Z"
+  },
+  "OWNERSHIP.md": {
+   "sha256": "90cc33c65c255cba46a0bfe538aa426e3391f0e01906321d4d75d8313cb26aad",
+   "mtime": "2026-10-13T10:34:35.762Z"
+  },
+  "CHECKPOINT.md": {
+   "sha256": "4b9af17ef09e24dc6662056019720214038d2cb568cf24b866cb152c685d2f41",
+   "mtime": "2026-10-13T10:35:48.219Z"
+  },
+  "FREEZE.json": {
+   "sha256": "5d05242a1325189e6eff4b8f4fdf1cc2efec65fb19aae92086fb2a6e0de7735e",
+   "mtime": "2026-10-13T03:27:33.582Z"
+  }
+ },
+ "nota": "Baseline do instante em que a Fase 2 foi escrita. Os arquivos congelados nao foram editados por esta etapa; PLAN, TASKS, OWNERSHIP e CHECKPOINT mudam com o progresso da sessao c38db1, entao so registramos o hash."
+}

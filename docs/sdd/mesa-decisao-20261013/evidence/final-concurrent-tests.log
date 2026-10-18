@@ -1,0 +1,55 @@
+bun test v1.3.14 (0d9b296a)
+
+src\outcomes\decision-log.test.ts:
+(pass) the recorder wrapper preserves the caller's request and cancellation ownership [16.43ms]
+(pass) instrumentOf > only a click about one OKX instrument has an instrument [0.87ms]
+(pass) the log > the snapshot is taken at the click, before the model answers, and the answer is recorded with it [11.06ms]
+(pass) the log > a hold is recorded too (the Placar counts it and never scores it) [6.10ms]
+(pass) the log > a reused answer is marked as reused [4.09ms]
+(pass) the log > a refusal, a cooldown or an error is not a decision [13.08ms]
+(pass) the log > a ranking or a token has no snapshot and no Veredito, but its answer is still recorded [4.88ms]
+(pass) the log > two clicks on the same instrument within a minute share one snapshot; a minute later it is read again [9.11ms]
+(pass) the log > when the recorder is off nothing is read and nothing is written, and the answer is the same, with no Veredito [2.09ms]
+(pass) the log > a recorder that fails never changes the answer: the Veredito comes with no plan and says why [4.30ms]
+(pass) the log > a Veredito that fails to compose never stops the record, nor changes the answer [7.21ms]
+(pass) the log > a snapshot that never comes does not hold the answer: after the wait the Veredito is given without it [40.74ms]
+(pass) the log > cancel and running pass through [4.91ms]
+(pass) the Veredito that goes with the answer > a buy over a zone the engine offered: the plan is anchored on that zone's limits and invalidation [6.76ms]
+(pass) the Veredito that goes with the answer > the profile of the moment gives the size, and the Placar flag drops the warning [4.11ms]
+(pass) the Veredito that goes with the answer > a hold becomes esperar, and a sell is anchored on the supply zone [7.67ms]
+(pass) the Veredito that goes with the answer > a zone the snapshot does not know has no zone score, and an instrument level candidate falls back to the ATR [7.83ms]
+(pass) the Veredito that goes with the answer > a warming engine turns a buy into esperar, the model's answer stays what it said, and the record keeps which gate did it [3.32ms]
+(pass) what the model call left about its own answers > a decided model gives the word for its consistency, and the bench is asked with the hash of the Brief it answered [3.50ms]
+(pass) what the model call left about its own answers > a divided model, or one that leaned on the order of the options, turns the answer into esperar [8.89ms]
+(pass) what the model call left about its own answers > with nothing left on the bench the card says the consistency is not informed, as before [3.08ms]
+
+src\outcomes\live-costs.test.ts:
+(pass) the runtime cost defaults preserve the complete existing schema and values [3.68ms]
+(pass) every object in the runtime cost defaults is frozen [0.59ms]
+(pass) the runtime cost module has no dependency on evaluator fixtures [3.62ms]
+
+src\outcomes\wire.test.ts:
+(pass) the wiring > the costs come from the lab table: two legs of a fee and of slippage [0.69ms]
+(pass) the wiring > not live: nothing is scheduled, the asker is returned untouched and the recorder is off [4.46ms]
+(pass) the wiring > live: the clock is aligned to the five minute boundary, the asker is wrapped, and close stops the clock [2.31ms]
+(pass) the wiring > INONU_RECORDER=off switches it off at the moment it is read, with no restart [1.61ms]
+(pass) the wiring > the Placar of an empty store is not measured, and it is reused for a few seconds [9.89ms]
+(pass) GET /inonu/placar > serves the Placar and the recorder's health, with the same guards as the other routes [11.11ms]
+(pass) GET /inonu/placar > without the dependency the route does not exist [0.81ms]
+(pass) /inonu/perfil > nothing chosen yet, then a profile is saved with the intent header and read back, and cleared with two nulls [16.81ms]
+(pass) /inonu/perfil > a write needs the intent header, and a nonsense profile is a 400 that changes nothing [4.85ms]
+
+web\src\lib\purity-bundle.test.ts:
+(pass) the scanner sees what it should > follows relative and alias imports, re-exports and dynamic imports, and not packages [24.54ms]
+(pass) the scanner sees what it should > a fixture reached through two hops is found by its path, a synthetic constant by its name [24.03ms]
+(pass) the scanner sees what it should > a module that is not reached is not a leak, and a clean graph is clean [11.18ms]
+(pass) the scanner sees what it should > tests, mocks and synthetic readings are caught by name wherever they sit [14.01ms]
+(pass) what the installed app can reach > the pages the core serves reach no fixture, no synthetic data and no mock (the old console is not served) [197.18ms]
+(pass) what the installed app can reach > the core reaches none either, so no synthetic reading is ever served as if it were the market [127.86ms]
+(pass) what the installed app can reach > the old console, which the installed app does not serve, is where the synthetic report still is (the guard would fire if it were served) [61.01ms]
+(pass) what the installed app can reach > the core does answer 404 for the console, so that leak is unreachable at run time (T1.11) [0.52ms]
+
+ 41 pass
+ 0 fail
+ 131 expect() calls
+Ran 41 tests across 4 files. [1116.00ms]

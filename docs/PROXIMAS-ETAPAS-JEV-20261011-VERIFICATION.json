@@ -1,0 +1,71 @@
+{
+  "verifiedAtUtc": "2026-10-11T17:36:40.4192712Z",
+  "hashesChecked": 32,
+  "linksChecked": [
+    "PROXIMAS-ETAPAS-JEV-20261011-SPEC.md",
+    "PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json",
+    "PROXIMAS-ETAPAS-JEV-20261011-JEV.json"
+  ],
+  "deliveries": [
+    {
+      "id": "E0",
+      "depends": "Nenhuma",
+      "responsibility": "Integrador + revisor"
+    },
+    {
+      "id": "E1",
+      "depends": "E0",
+      "responsibility": "Backend de leitura"
+    },
+    {
+      "id": "E2",
+      "depends": "E1",
+      "responsibility": "Integração de decisões"
+    },
+    {
+      "id": "E3",
+      "depends": "E2",
+      "responsibility": "Adaptador e capital"
+    },
+    {
+      "id": "E4",
+      "depends": "E3",
+      "responsibility": "Dados + verificação"
+    },
+    {
+      "id": "E5",
+      "depends": "E0; estado integrado final depende de E2/E3",
+      "responsibility": "Frontend"
+    },
+    {
+      "id": "E6",
+      "depends": "E4, E5",
+      "responsibility": "Revisor + dono"
+    }
+  ],
+  "goalContractWordCount": 195,
+  "baseline": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+  "mainClean": true,
+  "productTestsRun": false,
+  "specSha256": "194d98d1bfd47cb5698e1138b9b8f0f9a70858869a826f9fbd6b2766f229c82b",
+  "planSha256": "f727321b845cbe1e49ab4fb6f64c68ad1ac642f4eb6f915223ffe26eef49a028",
+  "dependenciesAcyclic": true,
+  "topologicalOrder": [
+    "E0",
+    "E1",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6"
+  ],
+  "commandExitCode": 0,
+  "criterionChecks": {
+    "PC1": "Commit atual confirmado; resultado histórico separado; não foram executados testes do produto.",
+    "PC2": "32 hashes e âncoras declaradas conferidos; caminho backtest corrigido antes do export de revisão.",
+    "PC3": "7 entregas com dependências válidas e acíclicas; resultados, donos, aceite e verificações descritos no plano.",
+    "PC4": "Recibo com integration_first, human_response=false e billed_cost_usd=null validado.",
+    "PC5": "Limites lidos no artefato; revisão semântica independente ainda pendente.",
+    "PC6": "Consistência mecânica aprovada; revisão independente e checkpoint de encerramento ainda pendentes."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "rc-dec-07-como-medir-o-atrito-e-o",
+  "goal": "Como medir o atrito e o custo por tamanho de ordem antes de qualquer piso de tamanho ou gate de custo? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "cotacoes_por_ida_e_volta": "2 (perna 1 e volta, round-trip.ts:157)",
+    "cota_basic_mes": "100.000; projecao 160.451 no ritmo de 17/10",
+    "sustentavel_basic_dia": "5.953 por dia nas rotas todas (api-budget 17/10)",
+    "intervalo_cliente": "1.100 ms (okx-dex.ts:8)",
+    "pares_interseccao": "104 unicos, 54 com tag estrita, 7 ambiguos fora",
+    "atrito_liquido": "0,17% a 0,56%, media 0,42%, n=6 de um ativo",
+    "atrito_intermediario_raso": "1,82% (n=1); pelo menos 2,1% (n=1)",
+    "impacto_nulo": "bloqueado como desconhecido (round-trip.ts:107); taxa nao medida",
+    "taxa_base_lamports": "5000 por assinatura, 50% queimado",
+    "recibo_rede": "97859 lamports = US$ 0,0103 (SOL 105,48)"
+  },
+  "rails": [
+    "Piso ou teto de tamanho e limite de risco: decisao do dono.",
+    "Gate de custo so pode subtrair; nao cria nem altera ordem.",
+    "Sem assinatura, envio ou cotacao autenticada.",
+    "2 vezes tamanho sobre TVL nao confere com o medido (T10); nao usar como regra.",
+    "Componentes em arquivo novo derivado; o journal fills.jsonl nao muda."
+  ],
+  "options": [
+    {
+      "id": "medir-sem-mudar-codigo",
+      "label": "Medir o que ja existe",
+      "what": "Distribuicao da taxa de rede nas 17 ordens com taxa ja gravadas, separando compra e venda, sem piso nem gate. Evidencia: fills.ts:30-32 guarda so o total; taxa de 97.859 lamports no recibo e 85.427 na mediana (T07, T10)."
+    },
+    {
+      "id": "decompor-transacao-rpc",
+      "label": "Decompor 20 transacoes por RPC",
+      "what": "Ler 20 transacoes finalizadas por RPC publico e separar taxa base, prioridade, gorjeta e aluguel pelos saldos. Evidencia: Taxa base de 5.000 lamports por assinatura e prioridade = ceil(preco por CU x limite / 1.000.000) (T07); RPC publico 100 req por 10 s."
+    },
+    {
+      "id": "cotacao-10-pares-com-teto",
+      "label": "Cotacao de 10 pares com teto",
+      "what": "10 pares em 24 rodadas por dia via rota gratuita, depois de corrigir o instrumento que hoje sempre devolve unknown. Evidencia: round-trip.ts:162 sempre encerra em unknown; OKX DEX Basic projeta 160.451 por mes contra 100.000 (T09)."
+    },
+    {
+      "id": "adiar-sem-piso",
+      "label": "Aceitar taxa medida e nao decompor",
+      "what": "Nao fixar piso nem gate; tratar a taxa medida como custo. Evidencia: Rede de cerca de 0,017% no round trip com US$ 121 (calculo nao verificado); atrito medido de 0,42% a 2,1%."
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+--- a/src/agent/cycle.ts
++++ b/src/agent/cycle.ts
+@@ -25,6 +25,7 @@
+ import { agentBrief, physicalRequestsOf, type AgentBrief, type AgentModel, type BriefInput, type FamilyHistory, type MarketContext, type ModelAnswer } from "./model";
+ import { offeredProfiles, planKey, PROFILES, type PlanStore, type ProfileId } from "./plans";
+ import { pendingBuys } from "./pending-buys";
++import { ENTRY_COST_CLOSED, narrowBuysByEntryCost, recentSaleRefusals, withoutRefusedSales, type EntryImpactReader } from "./entry-cost";
+ import { holdingId, protect } from "./protection";
+ import type { Scoreboard } from "./scoreboard";
+ import type { RunState } from "./state";
+@@ -185,6 +186,8 @@
+   readonly reserveShare?: () => number | null;
+   /** The agent's own circuit breaker is open: no new purchase is offered to the model, and the exits, the stops and the management of what is held go on. */
+   readonly buyingPaused?: () => boolean;
++  /** Reads the price impact of the quote of the smallest size of a purchase (read only, it never signs): what lets the code stop offering the plans the executor is certain to refuse for entry cost (entry-cost.ts). Absent: no quote is taken. */
++  readonly entryCost?: EntryImpactReader;
+   /** Called once per consultation with what the model was shown (the candidates, with what was on offer and the marks of care) and what it answered: for whoever studies how the decisions can be improved. Never given a balance or an address. */
+   /** Called with the record of each primary consultation and, apart from it, the real clocks and the full hash of the Brief (ADENDO-D, V2-4): what lets the study of the agent bind a decision to the moment it was asked and answered. */
+   readonly onConsult?: (entry: ConsultRecord, meta?: ConsultMeta) => void;
+@@ -828,8 +831,12 @@
+       const stances = c.stances.filter((s) => s === "hold" || s === "exit_all");
+       return { ...c, stances, usdByStance: Object.fromEntries(Object.entries(c.usdByStance).filter(([s]) => (stances as readonly string[]).includes(s))) };
+     };
+-    const holdings = holdingsPlain.map((c) => cooled(momentum.has(c.id) ? withMomentum(c, momentum.get(c.id) ?? null) : c));
+-    const buys = paused ? [] : buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, (f) => momentum.get(`buy:${f.candidateId}`) ?? null, limited?.policy?.perTxUsd ?? null, (chainIndex, address) => (heldKeys.has(planKey(chainIndex, address)) ? (deps.plans.get(planKey(chainIndex, address))?.profile ?? null) : null)).filter((c) => !exiting.has(planKey(c.chainIndex, c.address)) && !inflightTokens.has(planKey(c.chainIndex, c.address)) && !pending.tokens.has(planKey(c.chainIndex, c.address)));
++    // a sale the executor refused for price impact is not asked again at that size or larger for half an hour (a stop the plan demands never waits)
++    const saleRefusals = recentSaleRefusals(deps.ledger.orderRecords(), deps.now());
++    const holdings = holdingsPlain.map((c) => withoutRefusedSales(cooled(momentum.has(c.id) ? withMomentum(c, momentum.get(c.id) ?? null) : c), saleRefusals.get(planKey(c.chainIndex, c.address))));
++    const buysFound = paused ? [] : buyCandidates(eco, (f) => timings.get(f.candidateId) ?? null, deps.minBuyUsd ?? minBuyUsd, (f) => momentum.get(`buy:${f.candidateId}`) ?? null, limited?.policy?.perTxUsd ?? null, (chainIndex, address) => (heldKeys.has(planKey(chainIndex, address)) ? (deps.plans.get(planKey(chainIndex, address))?.profile ?? null) : null)).filter((c) => !exiting.has(planKey(c.chainIndex, c.address)) && !inflightTokens.has(planKey(c.chainIndex, c.address)) && !pending.tokens.has(planKey(c.chainIndex, c.address)));
++    // what a purchase costs to get in is known before the model is asked (entry-cost.ts): the plans the executor is certain to refuse for price impact are not offered, and a purchase left with none is shown closed with the mark that says why
++    const buys = await narrowBuysByEntryCost({ buys: buysFound, quality: (c) => buyQuality(c, ecoFactsByBuyId.get(c.id)), records: deps.ledger.orderRecords(), nowMs: deps.now(), probe: runMode === "limitado" && !deps.stopFilePresent() ? (deps.entryCost ?? null) : null, clock: deps.now });
+     // the model is shown the purchases the code left OPEN first (up to MAX_OPEN_BUYS when closed ones exist, or up to MAX_BUYS_SHOWN when fewer are closed), ranked with clean/early setups and smart-money discounts ahead of parabolic ones
+     const openAll = [...buys.filter((c) => c.stances.length > 1)].sort((a, b) => buyQuality(b, ecoFactsByBuyId.get(b.id)) - buyQuality(a, ecoFactsByBuyId.get(a.id)));
+     const closedAll = buys.filter((c) => c.stances.length <= 1);
+@@ -845,7 +852,7 @@
+     considered = { holdings: holdings.length, buys: buys.length, protected: protection.handled.size };
+     ecoById = new Map(eco.candidates.map((c) => [`buy:${c.facts.candidateId}`, c.facts]));
+     byCandidate = new Map(candidates.map((c) => [c.id, c]));
+-    looked = candidates.slice(0, 16).map((c): CandidateView => ({ id: c.id, kind: c.kind, symbol: c.symbol, chainIndex: c.chainIndex, stance: null, families: c.families.slice(0, 4), marks: c.marks.slice(0, 4), closed: c.kind === "buy" && c.stances.length <= 1 ? (c.cap !== undefined && c.cap.maxUsd > 0 ? "abaixo_do_minimo" : "sem_tamanho") : null, probs: null, facets: null }));
++    looked = candidates.slice(0, 16).map((c): CandidateView => ({ id: c.id, kind: c.kind, symbol: c.symbol, chainIndex: c.chainIndex, stance: null, families: c.families.slice(0, 4), marks: c.marks.slice(0, 4), closed: c.kind === "buy" && c.stances.length <= 1 ? (c.marks.includes(ENTRY_COST_CLOSED) ? "custo_de_entrada" : c.cap !== undefined && c.cap.maxUsd > 0 ? "abaixo_do_minimo" : "sem_tamanho") : null, probs: null, facets: null }));
+ 
+     /** The closing phase of this cycle (shadow). Never throws: a failure here costs the measurement, never the cycle. */
+     const closingPhase = async (from: { readonly first: ModelAnswer["raw"]; readonly gated: Readonly<Record<string, string>>; readonly brief: AgentBrief } | null, saldoNow: Saldo | null, book: Book, placed: "antes" | "depois"): Promise<void> => {
+--- a/src/agent/wire.ts
++++ b/src/agent/wire.ts
+@@ -23,6 +23,8 @@
+ import { configFile, createConfigStore, type ConfigPatch } from "./config";
+ import { capRaised, type PolicyMirror } from "./gate";
+ import { createCycleRunner, type CycleReport, type Executor } from "./cycle";
++import { cachedImpactReader, impactOfQuote } from "./entry-cost";
++import { createRecorders } from "./recording";
+ import { createFileAgentLedger } from "./ledger";
+ import { createBookReader, createEcosystemReader, createHoldingFactsReader, createMarketContext, createMomentumReader, createPriceLookup, createTimingReader, okxPublicCandles, okxPublicDerivatives, type BalanceSource, type PublicCandles, type PublicDerivatives } from "./live";
+ import { createJevAgentModel, questionsDigest, type AgentModel } from "./model";
+@@ -101,6 +103,8 @@
+   readonly eventMinGapMs?: number;
+   /** The closing of the purchases the model leaned to (closing.ts), in shadow: on by default, `false` turns it off. */
+   readonly closing?: boolean;
++  /** The durable record of what the Jev answered and of the prices the cycle already reads, for the laboratory of the autoevolution (recording.ts): on by default, `false` turns it off. */
++  readonly recording?: boolean;
+   /** Starts the scheduler. The launcher turns it on; tests leave it off. */
+   readonly start?: boolean;
+   readonly schedule?: (ms: number, fn: () => void) => () => void;
+@@ -342,6 +346,8 @@
+   // the allowlisted facts of the quote of each order (quote-facts.ts), handed over by the executor as it reads the quote and written on the order record by the cycle; the newest few hundred are kept, in memory only
+   const quotes = new Map<string, QuoteFacts>();
+   // the read-only quote of an entry, for the closing: the same tool and the same guard as the executor, asked for the quote only
++  // the durable record of the answers and of the price path, for the laboratory (recording.ts): append only, derived, no new request, best effort
++  const recorders = options.recording === false ? null : createRecorders({ dir, now: localNow });
+   const entryQuoter = createEntryQuoter({ runner, config: () => configStore.get(), book: () => lastBook ?? guardBook, timeoutMs: 30_000, now: localNow });
+   const executor: Executor = createCliExecutor({
+     runner,
+@@ -619,6 +625,7 @@
+     requireOwnerPolicy: policyRequired,
+     onGuardBook: (b) => {
+       guardBook = b;
++      recorders?.recordBook(b, "guard");
+       for (const e of priceMoveEvents({ looked: lookedAt, book: b, plans, nowMs: localNow() })) events.notify(e);
+     },
+ 
+@@ -626,11 +633,16 @@
+     // only the verified view is shown and used to pick a settlement coin: a claimed value nobody could pay is never displayed as capital
+     onBook: (book) => {
+       lastBook = book;
++      recorders?.recordBook(book, "look");
+       lookingAt = pricesOf(book);
+       recordEquity(book);
+     },
+     holdingFacts: (book, signal) => factsReader.read(book, signal),
+-    ecosystem: (saldo, signal) => ecosystemReader.read(saldo, signal),
++    ecosystem: async (saldo, signal) => {
++      const eco = await ecosystemReader.read(saldo, signal);
++      recorders?.recordEco(eco);
++      return eco;
++    },
+     timingOf: (facts, signal) => timingReader.read(facts, signal),
+     momentumOf: (facts, signal) => momentumReader.read(facts, signal),
+     context: () => marketContext.get(),
+@@ -674,6 +686,7 @@
+       return Object.keys(record).length === 0 ? null : record;
+     },
+     onConsult: (entry, meta) => {
++      recorders?.recordConsult(entry, meta);
+       let line = "";
+       try {
+         const path = join(dir, "briefs.jsonl");
+@@ -735,6 +748,15 @@
+           },
+         }),
+     riskPct: () => settings().riskPct,
++    // the price impact of the entry quote, read before the model is asked so that it is not offered plans the executor will refuse (entry-cost.ts): the same read-only quote of the closing, never signed, never sent
++    ...(options.closing === false
++      ? {}
++      : {
++          entryCost: cachedImpactReader(async (order, signal) => {
++            const read = await entryQuoter.read(order, { cycleId: "sonda", requestId: `sonda-${localNow()}`, signal });
++            return read.ok ? impactOfQuote(read.raw) : null;
++          }, localNow),
++        }),
+     boldConviction: () => ownerProfile === "arrojado",
+     reserveShare: () => settings().reserveShare,
+     mandate: () => ({ mandate: settings().mandate, aggressiveOpen: settingsCache?.open ?? aggressiveOpen() }),

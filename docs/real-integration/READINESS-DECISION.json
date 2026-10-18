@@ -1,0 +1,13 @@
+{
+  "receiptId": "1059b2de-fcbc-4d11-b14b-7dd8ba226000",
+  "status": "assessed",
+  "choice": "catalog_bootstrap",
+  "model": "jev-1.13.0",
+  "usage": {
+    "input_tokens": 857,
+    "output_tokens": 59
+  },
+  "costUsd": null,
+  "approved_by": "jev_delegated",
+  "human_response": false
+}

@@ -1,0 +1,149 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-13",
+    "specHash": "74bff079568719e6c18f2ea4bf979de534944942df2f5b04eb9d6604a79d6aa8",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "add_search",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "add_search",
+          "no_search"
+        ],
+        "framings": [
+          {
+            "order": [
+              "add_search",
+              "no_search"
+            ],
+            "probs": {
+              "add_search": 0.82,
+              "no_search": 0.17,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "no_search",
+              "add_search"
+            ],
+            "probs": {
+              "no_search": 0.16,
+              "add_search": 0.83,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "add_search",
+              "no_search"
+            ],
+            "probs": {
+              "add_search": 0.82,
+              "no_search": 0.16,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "add_search": 0.8233,
+          "no_search": 0.1633
+        },
+        "noneFits": 0.0133,
+        "agreement": 1,
+        "margin": 0.66,
+        "leader": "add_search",
+        "railProb": {
+          "add_search": 0.05,
+          "no_search": 0.13
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "add_search",
+          "no_search"
+        ],
+        "framings": [
+          {
+            "order": [
+              "add_search",
+              "no_search"
+            ],
+            "probs": {
+              "add_search": 0.84,
+              "no_search": 0.14,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "no_search",
+              "add_search"
+            ],
+            "probs": {
+              "no_search": 0.19,
+              "add_search": 0.8,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "add_search",
+              "no_search"
+            ],
+            "probs": {
+              "add_search": 0.82,
+              "no_search": 0.16,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "add_search": 0.82,
+          "no_search": 0.1633
+        },
+        "noneFits": 0.0167,
+        "agreement": 1,
+        "margin": 0.6567,
+        "leader": "add_search",
+        "railProb": {
+          "add_search": 0.05,
+          "no_search": 0.13
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 8,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 8,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 5910,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

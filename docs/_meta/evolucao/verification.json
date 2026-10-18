@@ -1,0 +1,26 @@
+{
+  "format": "jev-evolution-verification-v1",
+  "ok": true,
+  "counts": {
+    "artefato": 813,
+    "documento": 550,
+    "fonte_sensivel": 1,
+    "release_nao_atribuida": 1,
+    "referencia_de_versao_nao_comprovada": 1,
+    "versao": 1,
+    "pacote": 17,
+    "agrupamento": 41,
+    "tarefa": 331,
+    "referencia_local_fora_do_corpus_docs": 7,
+    "mapa": 2
+  },
+  "sources": 1364,
+  "pages": 454,
+  "edges": 1486,
+  "errors": [],
+  "limits": [
+    "Task extraction covers dedicated tasks.md tables and explicitly curated delivery slices, not every inline task mention or hypothesis.",
+    "Inventory and legacy classifications are not a fresh semantic review of every source.",
+    "No release membership is inferred from package.json."
+  ]
+}

@@ -1,0 +1,420 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. Nothing in this module loops. */
+@keyframes jev-slab-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) translateZ(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.strip {
+  --accent: var(--signal);
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  background: linear-gradient(180deg, var(--bg-deck) 0%, var(--bg-hull) 100%);
+  box-shadow: var(--elev-1);
+}
+
+.strip.buy {
+  --accent: var(--buy);
+}
+
+.strip.sell {
+  --accent: var(--sell);
+}
+
+.strip.hold {
+  --accent: var(--hold);
+}
+
+.strip.unknown {
+  --accent: var(--edge-strong);
+}
+
+.head {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s4);
+}
+
+.eyebrow {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 2px;
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.sub {
+  max-width: 70ch;
+  margin-top: var(--s1);
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.choice {
+  display: flex;
+  min-width: 180px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, var(--edge));
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
+  background: var(--bg-deck-2);
+  box-shadow: var(--elev-2);
+  text-align: right;
+  transition: border-color var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.choiceLabel {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.choiceWord {
+  color: var(--accent);
+  font: var(--fs-readout);
+  transition: color var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.unknown .choiceWord {
+  color: var(--ink-2);
+}
+
+.choiceMeta {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+}
+
+.body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.readouts {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--s2);
+  margin: 0;
+}
+
+.readout {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  padding: var(--s2) var(--s3);
+  background: var(--bg-deck-2);
+}
+
+.readout dt {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.readout dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Ladder: two rows of slabs on a shallow plane, one per side. */
+.ladder {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s2);
+  perspective: 900px;
+}
+
+.ladderRow {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 92px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s3);
+}
+
+.ladderSide {
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+}
+
+.side_long {
+  color: var(--buy);
+}
+
+.side_short {
+  color: var(--sell);
+}
+
+.ladderSlabs {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s2);
+  transform: rotateX(16deg);
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+}
+
+.slab {
+  --i: 0;
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 56px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  padding: var(--s2);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+  transform-style: preserve-3d;
+  animation: jev-slab-rise var(--dur-base) var(--ease-out-expo) both;
+  animation-delay: calc(var(--i) * var(--stagger-step));
+  transition: transform var(--dur-slow) var(--ease-out-expo), box-shadow var(--dur-slow) var(--ease-out-expo), border-color var(--dur-slow) var(--ease-out-expo);
+}
+
+.slabTop {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  border-radius: var(--r-xs) var(--r-xs) 0 0;
+  background: var(--edge-strong);
+}
+
+.slabEligible {
+  border-color: var(--edge-strong);
+  background: var(--bg-deck-2);
+}
+
+.slabTone_long.slabEligible .slabTop {
+  background: var(--buy);
+}
+
+.slabTone_short.slabEligible .slabTop {
+  background: var(--sell);
+}
+
+.slabRejected {
+  background: var(--bg-well);
+}
+
+.slabStatus {
+  color: var(--ink-2);
+  font: var(--fs-micro);
+}
+
+.slabDetails {
+  width: 100%;
+  min-width: 0;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  overflow-wrap: anywhere;
+}
+
+.slabDetails summary {
+  min-height: 44px;
+  border-radius: var(--r-xs);
+  padding: var(--s2);
+  cursor: pointer;
+}
+
+.slabDetails summary:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.slabDetails p {
+  padding: var(--s2);
+  text-align: left;
+}
+
+.slabChosen {
+  border-color: var(--accent);
+  box-shadow: var(--elev-3);
+  transform: translateZ(22px) translateY(-4px);
+}
+
+.wall_ceiling,
+.wall_cap {
+  background: repeating-linear-gradient(135deg, var(--bg-deck) 0 6px, var(--bg-well) 6px 12px);
+}
+
+.slabLeverage {
+  color: var(--ink);
+  font: var(--fs-md);
+  font-family: var(--font-mono);
+}
+
+.slabTouch {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+}
+
+.slabFlag {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-pill);
+  padding: 0 var(--s2);
+  background: var(--bg-hull);
+  color: var(--accent);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.note {
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+.still .slab {
+  animation: none;
+  transition: none;
+}
+
+/* Measured liquidation risk (src/quant). Static: nothing here animates. */
+.quant {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-xs);
+  padding: var(--s3);
+  background: var(--bg-deck-2);
+}
+
+.quantTitle {
+  margin: 0;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+}
+
+.quantScroll {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.quantTable {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.quantTable th,
+.quantTable td {
+  border-bottom: 1px solid var(--edge);
+  padding: var(--s1) var(--s2);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.quantTable th:first-child {
+  text-align: left;
+}
+
+.quantTable thead th {
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+@media (max-width: 1279.98px) {
+  .readouts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 899.98px) {
+  .choice {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .ladderRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ladderSlabs {
+    transform: none;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .readouts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quantTable {
+    font-size: 11px;
+  }
+
+  .quantTable th,
+  .quantTable td {
+    padding: var(--s1) 3px;
+  }
+
+  .quantTable thead th {
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+
+  .ladderSlabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slab,
+  .choice,
+  .choiceWord {
+    animation: none;
+    transition: none;
+  }
+}

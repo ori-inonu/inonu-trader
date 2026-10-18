@@ -1,0 +1,175 @@
+{
+  "format": "docs-source-drift-v1",
+  "captured": "2026-10-13T16:16:55.990340-03:00",
+  "baseline": "docs/_meta/source-manifest-20261013.json",
+  "authorship_policy": "unknown unless independently evidenced; no source restored or rebased",
+  "records": [
+    {
+      "path": "docs/.obsidian/graph.json",
+      "baseline_sha256": "9351cf41491b894bc788b702493a9e6d78edb7669d73b61398e05f175a9482df",
+      "current_sha256": "0105a8b4d8c56be7e611e6503fda851c35328a4115d3e92701b9a99694a221e1",
+      "bytes": 512,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/.obsidian/workspace.json",
+      "baseline_sha256": "7ed59974c2011cc7eed2fb00152f72e852a2063698efb310473ba71f2aff6bbc",
+      "current_sha256": "744a1ce4eb3e58247032e9da6bccf099216cc3e3a4aeec667f6224f11238cde9",
+      "bytes": 7930,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established",
+      "previous_observation": {
+        "current_sha256": "4d12bb9ddfe11b22ce5c9cef5a88800abe1e4b509ad30dc817a8c1d07b86f8cc",
+        "bytes": 7889,
+        "observed_at": "2026-10-13T16:03:21.859088-03:00"
+      }
+    },
+    {
+      "path": "docs/SYSTEM-ONE.md",
+      "baseline_sha256": "12d18034ca3d6c7d97746bc459a5bc54600b490c2c9bc9ac2c951e0869e0b3e1",
+      "current_sha256": "768c29ea0d147af6918d8281e6c6b951ea356d8cb2c56523f9253b92675cfade",
+      "bytes": 8465,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/dados-quant/REPORT.md",
+      "baseline_sha256": "9ed51fe3d90845fa7acfcb6f24c2863556fa9b802d2827f245f2abcf51a65bf4",
+      "current_sha256": "3e021d26dc9c34319916774dec979b5d2d2363bc8da55410e94edb4059be2c8c",
+      "bytes": 34663,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/dados-quant/SPEC.md",
+      "baseline_sha256": "1c7405a7f748ac6fd0d9c3ae1ee7681c6d741cbe2559f24d7698b173ba494b1a",
+      "current_sha256": "f43e1b11705c7f8905c59035a44f6f38a4f0b8580bbd754d43f55a0e0baa3bcb",
+      "bytes": 10517,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-latest.json",
+      "baseline_sha256": "976bfd66151c30f8bace122ab3a0d344a75bfbc602d94508e25a23fa8b73a271",
+      "current_sha256": "c636bce232d84e4123b2a65698cd580f6938386df0a75a0bc1b0aaf47e0bab25",
+      "bytes": 74834,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-train30.json",
+      "baseline_sha256": "cf2aa9e57bba41c833ecf801fa6f80e3a2e0970af37cc63420c2f2b02a2e3d4b",
+      "current_sha256": "ee39fc8471f3e41d6ac20223823f39f8d7005002e79e0babb22b3c4a7b247ccf",
+      "bytes": 74635,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-train300bars.json",
+      "baseline_sha256": "2f02ccd1597dac97fed326b485e494fe0bb7a9f77c93ae1707dbdaf4be1a0019",
+      "current_sha256": "5c95a76c91f08148afe63f6b67210fbad3fcb0bc3c6485e85d4fd929629920d8",
+      "bytes": 74990,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+      "baseline_sha256": "b23eacac0529cc9f15b7ca96716d3eba844a39710e456efaa12dadb57bc23766",
+      "current_sha256": "50588543bcd5559739ae42b0206c8ae9d059d66420e105d58b9a329f37feabe0",
+      "bytes": 24585,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/OWNERSHIP.md",
+      "baseline_sha256": "5c34646e0f7c5812582b5d3483c8dbfa539b1935537d609d49ee63c4e9a81e6b",
+      "current_sha256": "99451409334eb092d1e9840556ce2133c44dd551ea62c3ab856fbaa59d44e25e",
+      "bytes": 12996,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "baseline_sha256": "b721e0c0792d54842e9f53407cedfde0899db9fa0e8c8837a87c6cb8552d1019",
+      "current_sha256": "5e31a5fa3a4036c83efe51f2ccb4a127185ece52323570525c87da6640eb74b3",
+      "bytes": 59403,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md",
+      "baseline_sha256": "1f3591c9249cc680665554458ab7c2a9cda577f0e2cb9531a39e88f743d1e9e0",
+      "current_sha256": "aa6f11be22af8f26e64e24386beb923b68ed4990c96db051fb15ccf3c20ad8f3",
+      "bytes": 5715,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md",
+      "baseline_sha256": "d0eada85980425231e575e740374442410b11278823777630fdf49e837dd957a",
+      "current_sha256": "6ffbac053bb3cee48c21bcd755a09ebd7a97d9903dc3931c863be5f7c3b55c20",
+      "bytes": 6647,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md",
+      "baseline_sha256": "07bb13a898a03f35325db4e5a64852abfcae765ab64108882e87d366147c0dc8",
+      "current_sha256": "90cfbb7c77113725528ef11c686c7912c7a4116cb93456ec40b2504e9613f869",
+      "bytes": 7273,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T9.5-T9.7-escada-e-ticket.md",
+      "baseline_sha256": "99e014be12212129e5e57b3e271f038c860d2b80c5c14a752233fc9dab6abf42",
+      "current_sha256": "8ea3eeb28cfff698c17769c841e8109700a7b45e6c0e25d2aa81d647343c65b3",
+      "bytes": 7275,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/evidence/C1-ao-vivo.md",
+      "baseline_sha256": "aa9344150c710804cdb2882d4a8fc76bfee77e066baeb900be31ccaafad37657",
+      "current_sha256": "825761d0c0989ae49442f06eb21017bc833d19903af8ce306698971e2e116de5",
+      "bytes": 2837,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/REPORT.md",
+      "baseline_sha256": "e1f1eff4ca56ca987eb57507d3397f19b655c7bb3b95b273d780ae01179a1ffa",
+      "current_sha256": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779",
+      "bytes": 7265,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/change-manifest.json",
+      "baseline_sha256": "89b828fa1a8b3d8a9e7a607902d32cff205c557f1daf362df0414ba0c47ff878",
+      "current_sha256": "e95cf6f907d9fad9184de72f396e5f605f9a7d2c0d1de8ec477a5ea76e300ecb",
+      "bytes": 11870,
+      "observed_at": "2026-10-13T16:16:55.990340-03:00",
+      "authorship": "unknown",
+      "cause": "not_established"
+    }
+  ]
+}

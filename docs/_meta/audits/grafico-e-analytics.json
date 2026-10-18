@@ -1,0 +1,210 @@
+{
+  "owner": "grafico-e-analytics",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T11:38:03.579780-03:00",
+  "page": "docs/concepts/grafico-e-analytics.md",
+  "documents": [
+    {
+      "path": "docs/sdd/grafico-jev/spec.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Contrato aprovado para implementação em fases. Seus requisitos permanecem referência de aceitação, mas descrições de snapshot e resultados datados não comprovam o estado ou a execução atual.",
+      "code_refs": [
+        "src/jev-read/analytics.ts:13,19-20,323-399",
+        "web/src/components/Desk/panels/PriceChart.tsx:365-449",
+        "web/src/lib/desk/ui/draw-candles.ts:1-10"
+      ]
+    },
+    {
+      "path": "docs/sdd/grafico-jev/evidencia-vetores.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de 2026-10-12 que relata comparações aritméticas em vetores sintéticos. Não demonstra feed ao vivo nem execução atual de testes.",
+      "code_refs": [
+        "web/src/lib/desk/chart/vectors.test.ts:6-23,41-46",
+        "web/src/lib/desk/chart/smc.test.ts:1-20"
+      ]
+    }
+  ],
+  "classification_counts": {
+    "frozen_contract": 1,
+    "historical_evidence": 1
+  },
+  "code_inspected": [
+    "python/jev_analytics/__init__.py",
+    "python/jev_analytics/__main__.py",
+    "python/jev_analytics/cache.py",
+    "python/jev_analytics/collector.py",
+    "python/jev_analytics/features.py",
+    "python/jev_analytics/indicators.py",
+    "python/jev_analytics/okx_public.py",
+    "python/jev_analytics/pack.py",
+    "python/jev_analytics/smc.py",
+    "python/jev_analytics/stats.py",
+    "python/jev_analytics/structure.py",
+    "python/jev_analytics/transforms.py",
+    "python/tests/test_smc.py",
+    "python/tests/test_vectors.py",
+    "scripts/jev-analytics.ts",
+    "scripts/jev-read.ts",
+    "src/jev-read/analytics-runner.ts",
+    "src/jev-read/analytics.ts",
+    "src/jev-read/loop.ts",
+    "src/jev-read/decide.ts",
+    "src/intel/analyst.ts",
+    "src/intel/atr.ts",
+    "src/intel/brief.ts",
+    "src/intel/candidates.ts",
+    "src/intel/decimal.ts",
+    "src/intel/derivatives.ts",
+    "src/intel/factors.ts",
+    "src/intel/factors-trend.ts",
+    "src/intel/factors-volume.ts",
+    "src/intel/footprint.ts",
+    "src/intel/ingest.ts",
+    "src/intel/profile.ts",
+    "src/intel/smart-cost.ts",
+    "src/intel/thresholds.ts",
+    "src/intel/trail.ts",
+    "src/intel/zones.ts",
+    "web/src/lib/desk/chart/decisions.ts",
+    "web/src/lib/desk/chart/history.ts",
+    "web/src/lib/desk/chart/inonu-layer.ts",
+    "web/src/lib/desk/chart/indicators.ts",
+    "web/src/lib/desk/chart/smc-chips.ts",
+    "web/src/lib/desk/chart/smc.ts",
+    "web/src/lib/desk/chart/transforms.ts",
+    "web/src/lib/desk/chart/types.ts",
+    "web/src/lib/desk/chart/useDecisionHistory.ts",
+    "web/src/lib/desk/chart/vectors.test.ts",
+    "web/src/lib/desk/chart/smc.test.ts",
+    "web/src/lib/desk/chart/inonu-layer.test.ts",
+    "web/src/lib/desk/ui/draw-chart.ts",
+    "web/src/lib/desk/ui/draw-candles.ts",
+    "web/src/components/Desk/panels/PriceChart.tsx",
+    "web/src/lib/inonu/overlay.ts",
+    "web/src/lib/inonu/useInonuLayer.ts",
+    "src/inonu/ask.ts",
+    "src/inonu/collector.ts",
+    "src/inonu/derivatives.ts",
+    "src/inonu/flow-memory.ts",
+    "src/inonu/http.ts",
+    "src/inonu/jev-model.ts",
+    "src/inonu/ledger.ts",
+    "src/inonu/okx-public.ts",
+    "src/inonu/okx-ws.ts",
+    "src/inonu/overlay.ts",
+    "src/inonu/source.ts",
+    "src/desktop/handlers.ts",
+    "src/desktop/core.ts"
+  ],
+  "claims": [
+    {
+      "statement": "A CLI Python expõe os modos de coleta e grava analytics descritivo, sem produzir decisão ou ordem.",
+      "source_path": "python/jev_analytics/__main__.py",
+      "lines": "1-4,27-76"
+    },
+    {
+      "statement": "As features usam dados confirmados, mantêm campos indisponíveis explícitos e não preenchem a seção on-chain nesta versão.",
+      "source_path": "python/jev_analytics/features.py",
+      "lines": "1-5,324-382"
+    },
+    {
+      "statement": "O contrato do pack rejeita chaves de decisão e o leitor TypeScript aplica validação estrita e idade máxima de 120 segundos.",
+      "source_path": "src/jev-read/analytics.ts",
+      "lines": "13,19-20,323-399"
+    },
+    {
+      "statement": "O digest Python é uma entrada opcional do ciclo Jev; falha da fonte de analytics não interrompe a leitura.",
+      "source_path": "src/jev-read/loop.ts",
+      "lines": "90-126"
+    },
+    {
+      "statement": "O gráfico calcula indicadores no renderizador e produz SMC a partir de velas confirmadas, enquanto as transformações de exibição têm séries de origem próprias.",
+      "source_path": "web/src/components/Desk/panels/PriceChart.tsx",
+      "lines": "365-407,415-449,535-559"
+    },
+    {
+      "statement": "Os marcadores Jev só são criados para leitura real utilizável do instrumento em foco com decision.status ok.",
+      "source_path": "web/src/lib/desk/chart/decisions.ts",
+      "lines": "91-123"
+    },
+    {
+      "statement": "Os limites adaptativos derivam de até 50 velas fechadas do instrumento, com percentis P50, P90 e P99, e retornam aquecimento antes de dados suficientes.",
+      "source_path": "src/intel/thresholds.ts",
+      "lines": "20-24,78-96"
+    },
+    {
+      "statement": "A camada de overlay Inonu é gratuita e não chama modelo; o collector usa dados vivos quando a janela atende ao mínimo ou recorre a REST.",
+      "source_path": "src/inonu/source.ts",
+      "lines": "7-8,96-148,206-209"
+    },
+    {
+      "statement": "A chamada de modelo Inonu tem uma porta explícita, valida a resposta contra candidatos gerados pelo código e mantém execução nunca.",
+      "source_path": "src/inonu/ask.ts",
+      "lines": "1-19,319-449"
+    },
+    {
+      "statement": "O teste TypeScript parametriza vetores fixos e tolerâncias; isso verifica reprodução dos casos, não resultado de mercado ou decisão ao vivo.",
+      "source_path": "web/src/lib/desk/chart/vectors.test.ts",
+      "lines": "6-23,41-46",
+      "supporting_source": "docs/sdd/grafico-jev/evidencia-vetores.md:69-73"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "path": "docs/sdd/grafico-jev/evidencia-vetores.md",
+      "classification": "historical_evidence",
+      "statement": "A linha 73 diz que a reprodução TypeScript dos vetores ainda está pendente, enquanto a SPEC declara F2 concluída e 43 de 43 casos. O teste TypeScript atual contém casos parametrizados, mas não foi executado nesta rodada. São registros de escopos e datas distintos; nenhum prevalece por ser mais recente.",
+      "source_refs": [
+        "docs/sdd/grafico-jev/evidencia-vetores.md:69-73",
+        "docs/sdd/grafico-jev/spec.md:151-159,167-175",
+        "web/src/lib/desk/chart/vectors.test.ts:6-23,41-46"
+      ],
+      "action": "Manter a evidência como histórica e reconciliar somente com execução autorizada e registrada, sem editar os documentos fonte nesta delegação."
+    },
+    {
+      "path": "docs/sdd/grafico-jev/spec.md",
+      "classification": "stale_reference",
+      "statement": "A seção 7.1 descreve draw-chart.ts como construído sobre draw-candles.ts; o código atual declara draw-candles.ts uma fachada compatível que delega a draw-chart.ts.",
+      "source_refs": [
+        "docs/sdd/grafico-jev/spec.md:92-97",
+        "web/src/lib/desk/ui/draw-candles.ts:1-10",
+        "web/src/lib/desk/ui/draw-chart.ts:1031-1033"
+      ],
+      "action": "Sinalizar como referência arquitetural antiga na wiki compilada; preservar a SPEC congelada."
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "unverified": [
+    "Nenhuma suíte foi executada por esta rodada. O relato do usuário de que suítes do integrador passaram não foi reexecutado nem verificado nesta auditoria.",
+    "Não foram verificados runtime ativo, conteúdo local atual do pack ou da memória de fluxo, chamadas reais à API ou a modelo, decisões reais, resultados de mercado, rentabilidade ou custo faturado.",
+    "O conteúdo futuro do working tree pode divergir após a observação registrada; referências de linha descrevem apenas o estado observado."
+  ],
+  "source_drift": {
+    "manifest": "docs/_meta/concurrent-source-drift-20261013.json",
+    "manifest_observed_at": "2026-10-13T11:15:58.521130-03:00",
+    "manifest_change_count": 44,
+    "paths": [
+      {
+        "path": "src/intel/thresholds.ts",
+        "manifest_state": "changed",
+        "manifest_owner": "grafico-e-analytics",
+        "snapshot": {
+          "captured_at": "2026-10-13T10:53:03.109798-03:00",
+          "sha256": "4bd8a5b0572b2b8d76f28f04e77490ee4b9101d635d80cdc174a7fdd1c438df4",
+          "bytes": 4620
+        },
+        "observed": {
+          "observed_at": "2026-10-13T11:38:03.579780-03:00",
+          "mtime": "2026-10-13T11:01:33.214520-03:00",
+          "sha256": "460be26f0e9fdac7a19a32554f743e9603029574a520ac7f814ea546274ba751",
+          "bytes": 4787
+        },
+        "limitation": "A sessão releu o arquivo e não escreveu código ou fonte. O manifesto e a diferença de hash registram deriva desde o snapshot, mas não identificam autoria nem reconstroem o diff causal. O proprietário no manifesto é uma atribuição de tema, não evidência de autoria desta sessão. Revalidar se o arquivo mudar depois desta observação."
+      }
+    ]
+  },
+  "billed_cost": null
+}

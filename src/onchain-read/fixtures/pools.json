@@ -1,0 +1,49 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": [
+    {
+      "hookFeePercent": null,
+      "liquidityAmount": [
+        { "tokenAmount": "389559.77311386605", "tokenContractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", "tokenSymbol": "WETH" },
+        { "tokenAmount": "2188628.6179718473", "tokenContractAddress": "0x4d5f47fa6a74757f35c14fd3a6ef8e3c9bc514e8", "tokenSymbol": "aEthWETH" }
+      ],
+      "liquidityProviderFeePercent": "",
+      "liquidityUsd": "6352772851.9586683622765",
+      "pool": "WETH/aEthWETH",
+      "poolAddress": "0xAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEE",
+      "poolBasicFeePercent": null,
+      "poolCreator": "0x1111111122222222333333334444444455555555",
+      "protocolName": "Aave V3",
+      "sniperTaxInfo": null
+    },
+    {
+      "hookFeePercent": null,
+      "liquidityAmount": [
+        { "tokenAmount": "27126.328115767647", "tokenContractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", "tokenSymbol": "WETH" },
+        { "tokenAmount": "68921201.046075", "tokenContractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7", "tokenSymbol": "USDT" }
+      ],
+      "liquidityProviderFeePercent": "0.3",
+      "liquidityUsd": "136976994.62098345021989",
+      "pool": "WETH/USDT",
+      "poolAddress": "0x66666666777777778888888899999999AAAAAAAA",
+      "poolBasicFeePercent": "0.3",
+      "poolCreator": "0xBBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFF",
+      "protocolName": "EulerSwap v2",
+      "sniperTaxInfo": null
+    },
+    {
+      "hookFeePercent": null,
+      "liquidityAmount": [],
+      "liquidityProviderFeePercent": "",
+      "liquidityUsd": "not-a-number",
+      "pool": "WETH/BAD",
+      "poolAddress": "0xCCCCCCCCDDDDDDDDEEEEEEEEFFFFFFFF00000000",
+      "poolBasicFeePercent": null,
+      "poolCreator": "0x3333333344444444555555556666666677777777",
+      "protocolName": "BrokenPool",
+      "sniperTaxInfo": null
+    }
+  ],
+  "msg": ""
+}

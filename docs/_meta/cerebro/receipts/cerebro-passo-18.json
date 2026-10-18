@@ -1,0 +1,149 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-18",
+    "specHash": "a5f4b846de5d467060d0c9a7e5836ee5bab83848fc510c0c83085bdc2799d103",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "in_cerebro",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "in_cerebro",
+          "new_script"
+        ],
+        "framings": [
+          {
+            "order": [
+              "in_cerebro",
+              "new_script"
+            ],
+            "probs": {
+              "in_cerebro": 0.71,
+              "new_script": 0.25,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "new_script",
+              "in_cerebro"
+            ],
+            "probs": {
+              "new_script": 0.22,
+              "in_cerebro": 0.75,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "in_cerebro",
+              "new_script"
+            ],
+            "probs": {
+              "in_cerebro": 0.66,
+              "new_script": 0.3,
+              "none_fits": 0.04
+            }
+          }
+        ],
+        "means": {
+          "in_cerebro": 0.7067,
+          "new_script": 0.2567
+        },
+        "noneFits": 0.0367,
+        "agreement": 1,
+        "margin": 0.45,
+        "leader": "in_cerebro",
+        "railProb": {
+          "in_cerebro": 0.1,
+          "new_script": 0.38
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "in_cerebro",
+          "new_script"
+        ],
+        "framings": [
+          {
+            "order": [
+              "in_cerebro",
+              "new_script"
+            ],
+            "probs": {
+              "in_cerebro": 0.72,
+              "new_script": 0.25,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "new_script",
+              "in_cerebro"
+            ],
+            "probs": {
+              "new_script": 0.17,
+              "in_cerebro": 0.81,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "in_cerebro",
+              "new_script"
+            ],
+            "probs": {
+              "in_cerebro": 0.71,
+              "new_script": 0.25,
+              "none_fits": 0.04
+            }
+          }
+        ],
+        "means": {
+          "in_cerebro": 0.7467,
+          "new_script": 0.2233
+        },
+        "noneFits": 0.03,
+        "agreement": 1,
+        "margin": 0.5234,
+        "leader": "in_cerebro",
+        "railProb": {
+          "in_cerebro": 0.1,
+          "new_script": 0.38
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 8,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 8,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 6432,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

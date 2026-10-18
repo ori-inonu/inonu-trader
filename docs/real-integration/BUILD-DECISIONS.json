@@ -1,0 +1,30 @@
+[
+  {
+    "key": "buildFallbackDecision",
+    "receipt": "d11e5e3b-26ac-4fe7-8920-0e3bb169de8f",
+    "status": "assessed",
+    "recommendation": "copy_deps",
+    "decision": null,
+    "approved_by": "jev_delegated",
+    "human_response": false,
+    "usage": {
+      "input_tokens": 760,
+      "output_tokens": 48
+    },
+    "cost": null
+  },
+  {
+    "key": "dependencyRecoveryDecision",
+    "receipt": "fd07a229-cef7-4630-9c2c-02d6a95efa06",
+    "status": "abstained",
+    "recommendation": null,
+    "decision": null,
+    "approved_by": "jev_delegated",
+    "human_response": false,
+    "usage": {
+      "input_tokens": 822,
+      "output_tokens": 59
+    },
+    "cost": null
+  }
+]

@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "question": "Quais contratos públicos OKX documentam saldos, posições e histórico úteis à reconciliação patrimonial, sem confundir valuation/PnL com retorno líquido realizado?",
+  "researcher_id": "01a12585-fb20-73a2-8882-ba3fa62b8cdb",
+  "task_name": "/root/signals_contract",
+  "prepared_at_utc": "2026-10-10 17:27:51 UTC",
+  "scope": "Pesquisa documental pública; não implementação, seleção de prioridade nem qualificação live/financeira.",
+  "skill": "C:/Users/gabri/.agents/skills/research/SKILL.md",
+  "search_queries": [
+    {
+      "q": "site:web3.okx.com/onchainos/dev-docs wallet all-token-balances-by-address transactions-by-address balance history fees"
+    },
+    {
+      "q": "site:web3.okx.com/onchainos/dev-docs defi user positions wallet portfolio assets balances"
+    }
+  ],
+  "counts": {
+    "search_queries": 2,
+    "web_search_tool_calls": 1,
+    "unique_canonical_official_pages": 4,
+    "web_document_open_operations": 8,
+    "public_http_body_hash_reads": 4,
+    "data_api_requests": 0,
+    "authenticated_requests": 0
+  },
+  "retrieval_window_utc": {
+    "started": "2026-10-10T17:21:37Z",
+    "completed": "2026-10-10T17:25:41.824270Z"
+  },
+  "hashing": {
+    "algorithm": "SHA256",
+    "scope": "Exact HTTP response body bytes read by Python urllib; public HTML only",
+    "original_html_saved": false,
+    "immutable_document_revision": null,
+    "limitation": "HTML hash fixes the retrieved body, not a permanent publication version or live API behavior. Excerpts verified in official rendered text; separate HTTP-plaintext checks explicitly marked."
+  },
+  "sources": [
+    {
+      "source_id": "S1",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/balance-api-all-token-balances",
+      "final_url": "https://web3.okx.com/onchainos/dev-docs/wallet/balance-api-all-token-balances",
+      "retrieval_started_at_utc": "2026-10-10T17:25:41.185062+00:00",
+      "retrieved_at_utc": "2026-10-10T17:25:41.805821+00:00",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "etag": "W/\"1e7b8-Zr943qfDO9FwDVP7JOyNeL3RPPk\"",
+      "last_modified_header": null,
+      "http_body_sha256": "2956cd8a7ae17679edf48eefa07bd03151e18f6c0e759ce4ea0b098f9613704d",
+      "http_body_bytes": 124650,
+      "title": "All Token Balances by Address",
+      "method": "GET",
+      "path": "/api/v6/dex/balance/all-token-balances-by-address",
+      "locators": {
+        "request": "Request URL / Request Parameters, rendered lines 66–79",
+        "response": "Response Parameters, rendered lines 83–91",
+        "auth_and_envelope": "Request Example / Response Example, lines 98–113"
+      },
+      "literal_evidence": [
+        {
+          "field": "tokenPrice",
+          "excerpt": "Token unit value, priced in USD",
+          "rendered_line": 90,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "rawBalance",
+          "excerpt": "For unsupported chains, this field is empty.",
+          "rendered_line": 89,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "unresolved": [
+        "balance/rawBalance quantity scale and decimals relationship",
+        "price timestamp",
+        "chain coverage/pagination",
+        "chains Array versus comma-separated transport"
+      ],
+      "publication_date": null,
+      "publication_date_status": "Not identified in the consulted page",
+      "source_document_commit": null,
+      "source_class": "official_documentation",
+      "live_behavior_observed": false,
+      "documented_limits": [
+        "Maximum 50 requested chains",
+        "Honeypot filtering: ETH/BSC/SOL/BASE"
+      ]
+    },
+    {
+      "source_id": "S2",
+      "url": "https://web3.okx.com/onchainos/dev-docs/market/tx-history-transactions-by-address",
+      "final_url": "https://web3.okx.com/onchainos/dev-docs/market/tx-history-transactions-by-address",
+      "retrieval_started_at_utc": "2026-10-10T17:25:41.186855+00:00",
+      "retrieved_at_utc": "2026-10-10T17:25:41.811522+00:00",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "etag": "W/\"130d5-i9NKw+KJVUffDpmX65O4LcgMdqk\"",
+      "last_modified_header": null,
+      "http_body_sha256": "f5a079f7a9ec23cc72122d9444d79ee3dedef0fcf0d084cf1016a8550f4e5a53",
+      "http_body_bytes": 77831,
+      "title": "Get History by Address",
+      "method": "GET",
+      "path": "/api/v6/dex/post-transaction/transactions-by-address",
+      "locators": {
+        "coverage": "Introduction, rendered line 93",
+        "request": "Request Parameters, lines 103–111",
+        "response": "Response Parameters, lines 115–137",
+        "discrepancies": "Request Example line 143; Response Example lines 154–159"
+      },
+      "literal_evidence": [
+        {
+          "field": "coverage",
+          "excerpt": "6 months",
+          "rendered_line": 93,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "begin/end",
+          "excerpt": "Unix timestamp, in milliseconds",
+          "rendered_lines": [
+            106,
+            107
+          ],
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "txTime",
+          "excerpt": "Transaction time in Unix timestamp format, in milliseconds",
+          "rendered_line": 124,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "txFee",
+          "excerpt": "Transaction fee",
+          "rendered_line": 134,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "unresolved": [
+        "amount and txFee units/currency/payer",
+        "unique movement identity and cursor completion semantics",
+        "address versus addresses; transactions versus transactionList",
+        "external capital-flow classification and completeness beyond six months"
+      ],
+      "publication_date": null,
+      "publication_date_status": "Not identified in the consulted page",
+      "source_document_commit": null,
+      "source_class": "official_documentation",
+      "live_behavior_observed": false,
+      "documented_limits": [
+        "Six-month history window",
+        "Default 20; maximum 20 single-chain or 100 multi-chain records"
+      ]
+    },
+    {
+      "source_id": "S3",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-user-asset-platform-list",
+      "final_url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-user-asset-platform-list",
+      "retrieval_started_at_utc": "2026-10-10T17:25:41.188554+00:00",
+      "retrieved_at_utc": "2026-10-10T17:25:41.816945+00:00",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "etag": "W/\"1413e-AyoWM6uxywxYEm1OxykYt2YP5IE\"",
+      "last_modified_header": null,
+      "http_body_sha256": "5e2a4d29b12b7a42bff44691307d3ea819154850f816d5acbe92f8d48acbb52a",
+      "http_body_bytes": 82032,
+      "title": "Holdings Overview",
+      "method": "POST",
+      "path": "/api/v6/defi/user/asset/platform/list",
+      "locators": {
+        "purpose_and_request": "Introduction / Request Parameters, rendered lines 60–72",
+        "response": "Response Parameters, lines 112–131",
+        "examples": "Response Example, lines 137–139, 203–208"
+      },
+      "literal_evidence": [
+        {
+          "field": "currencyAmount",
+          "excerpt": "Protocol total assets (USD)",
+          "rendered_line": 117,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "totalAssets",
+          "excerpt": "Wallet total assets (USD)",
+          "rendered_line": 129,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "updateAt",
+          "excerpt": "Update timestamp (milliseconds)",
+          "rendered_line": 130,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "assetStatus",
+          "excerpt": "1=updated, 2=updating",
+          "rendered_line": 131,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "unresolved": [
+        "updateAt table String versus example number",
+        "staleness policy, protocol completeness and pagination",
+        "walletId/accountId association and personal access"
+      ],
+      "publication_date": null,
+      "publication_date_status": "Not identified in the consulted page",
+      "source_document_commit": null,
+      "source_class": "official_documentation",
+      "live_behavior_observed": false,
+      "documented_limits": [
+        "One wallet per chain",
+        "Response example explicitly shows only three of four protocols"
+      ]
+    },
+    {
+      "source_id": "S4",
+      "url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-user-asset-platform-detail",
+      "final_url": "https://web3.okx.com/onchainos/dev-docs/wallet/defi-user-asset-platform-detail",
+      "retrieval_started_at_utc": "2026-10-10T17:25:41.189874+00:00",
+      "retrieved_at_utc": "2026-10-10T17:25:41.824270+00:00",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "etag": "W/\"1958b-K7pUdCnHR+YqQLrOKwPaIeDyubY\"",
+      "last_modified_header": null,
+      "http_body_sha256": "dfc13bf3c709c8b5d4ea31680a23df0774d391f5332a5ab14460dd985e67ebdf",
+      "http_body_bytes": 103613,
+      "title": "Holdings Detail",
+      "method": "POST",
+      "path": "/api/v6/defi/user/asset/platform/detail",
+      "locators": {
+        "request": "Request Parameters, rendered lines 67–73",
+        "identity_units": "Response Parameters, lines 98–189",
+        "example_only_token_metadata": "Response Example, lines 238–246 and 306–314",
+        "identifier_discrepancy": "Response Parameters lines 108,112; example lines 211,213"
+      },
+      "literal_evidence": [
+        {
+          "field": "settlementTime",
+          "excerpt": "Settlement time (second-level timestamp)",
+          "rendered_line": 132,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "yieldYesterday",
+          "excerpt": "Yesterday's yield (USD)",
+          "rendered_line": 160,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "totalEarnings",
+          "excerpt": "Total earnings (USD)",
+          "rendered_line": 161,
+          "http_plaintext_match_verified": true
+        },
+        {
+          "field": "tokenPrecision (example only)",
+          "excerpt": "\"tokenPrecision\": 18",
+          "rendered_line": 312,
+          "http_plaintext_match_verified": null
+        },
+        {
+          "field": "coinAmount (example only)",
+          "excerpt": "\"coinAmount\": \"0.0001\"",
+          "rendered_line": 310,
+          "http_plaintext_match_verified": null
+        }
+      ],
+      "unresolved": [
+        "coinAmount scale and complete token-item schema",
+        "maturityTime unit and price-as-of time",
+        "yield/earnings methodology, realization and all costs",
+        "identifier String versus example number; optional platform child fields",
+        "coverage, auth and personal claim/investment eligibility",
+        "availableRewards.currencyAmount currency not explicitly specified"
+      ],
+      "publication_date": null,
+      "publication_date_status": "Not identified in the consulted page",
+      "source_document_commit": null,
+      "source_class": "official_documentation",
+      "live_behavior_observed": false
+    }
+  ],
+  "account_access": {
+    "authenticated_feed": null,
+    "personal_tier": null,
+    "eligibility": null,
+    "billed_cost": null,
+    "usage": null,
+    "auth_algorithm_reviewed": false,
+    "rate_limits_reviewed": false,
+    "authenticated_feed_observed": false
+  },
+  "facts_vs_inference": {
+    "facts": "Published method/path/fields and explicit units; response examples are examples, not observed API responses.",
+    "unknowns": "Unspecified quantity/fee units, identities, coverage, auth/access, rates, valuation timing and realized/cost methodology remain unknown.",
+    "inference": "Complete net-return reconciliation requires a defined wealth boundary, deduplicated identities/flows, verified units, realizations, coverage and costs; these pages alone do not qualify it."
+  },
+  "independent_acceptance_candidates": [
+    "Retain field-specific units, source timestamp/coverage and discrepancies without silent aliasing or scaling.",
+    "Do not equate empty fee with zero or failed/pending transfer with successful movement.",
+    "Require verified wealth boundary, movement uniqueness, token/position association, coverage and costs before deriving realized net return."
+  ],
+  "alternatives_not_selected": [
+    "Valuation snapshots with explicit uncertainty and no profit inference.",
+    "Partial movement ledger without net-return calculation."
+  ],
+  "priority_decision": "not_made",
+  "operations_qualified": false,
+  "financial_or_live_qualification": false,
+  "effective_runtime": {
+    "configured_model": "GPT-6.1 Sol",
+    "configured_reasoning": "xhigh",
+    "effective_model": null,
+    "effective_reasoning": null,
+    "effective_tier": null,
+    "effective_sandbox": null
+  }
+}
+

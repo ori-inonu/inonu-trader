@@ -1,0 +1,542 @@
+{
+  "snapshot": "C:\\Users\\gabri\\.codex\\tmp\\jev-trader-01a1216a\\okx-market-review-v3",
+  "frozenSpec": "13ba216cca87b8fd139d95895cd84a30df536788602fa4679201b8307aa856cb",
+  "files": [
+    {
+      "path": "docs/CONTRIBUICAO.md",
+      "sha256": "51b9dc6f9d242cc32434f7a16fd210e995eda1bf4395b4744ec8ff5de1305ee5"
+    },
+    {
+      "path": "docs/evidence/backtest-20261009.json",
+      "sha256": "3009fb763893b004068be10cda7e7f8cb7de5d031d057d33d655d722d7ce7594"
+    },
+    {
+      "path": "docs/evidence/capture-20261009.json",
+      "sha256": "1c7d932ff00f49bb0f7d3d9bc9f37c2a65403e18e4efbfe85582879a7fd922b1"
+    },
+    {
+      "path": "docs/evidence/completion-check.json",
+      "sha256": "c3e44b6a037c94f7f15d7d0f3226f624594990c538f4101cd2bdaca71b2a5e39"
+    },
+    {
+      "path": "docs/evidence/doctor-20261009.json",
+      "sha256": "8ba50b2cf6b54041c1e4079bbf8108a4554f3f0431873f79ecde67c8a2c67a7a"
+    },
+    {
+      "path": "docs/evidence/doctor-final-20261009.json",
+      "sha256": "c9bce67ec601987c3a85369304f64ae25ea066fc5b8019806460c17d0c973327"
+    },
+    {
+      "path": "docs/evidence/doctor-jev-windows-20261009.json",
+      "sha256": "db013831af95703fd7cab2aadeb51091d5ef37f334b210b18cdf1b403b9d84d4"
+    },
+    {
+      "path": "docs/evidence/economic-gate-20261009.jsonl",
+      "sha256": "3b95e8cba0104ba1c7565fe6fd1058acec8e28505081fffc3e1cba389a7016a7"
+    },
+    {
+      "path": "docs/evidence/economic-gate-backtest-20261009.json",
+      "sha256": "7b3590e064288df21f0a9f1918768a359bb347a821212e8f08952bc71f390965"
+    },
+    {
+      "path": "docs/evidence/economic-gate-capture-20261009.json",
+      "sha256": "7a9aa337dbd5127a2f533d82a3e51929da1b9a2ddea3076e70cd5310f5bcf0da"
+    },
+    {
+      "path": "docs/evidence/github-preparation.json",
+      "sha256": "b0fb37adc196ed80148ad78d592bda785a1ad43815fe38a9092a9ec128ca4fea"
+    },
+    {
+      "path": "docs/evidence/independent-reviews.json",
+      "sha256": "1267bc2847b1f1486cbf3530192ae2fe2d18f857d0baf710b1ddc1a3f3f3bcbb"
+    },
+    {
+      "path": "docs/evidence/jev-decisions.json",
+      "sha256": "fdc9cdc6fd34c8a004f974f9ee81952063f5f9e9a69e981273b162b3052f2133"
+    },
+    {
+      "path": "docs/evidence/jev-windows-key-20261009.backtest.json",
+      "sha256": "281ad7803cb178e5452776fcaeaff467f613f7310d4290cfb2aa8c7e8d843084"
+    },
+    {
+      "path": "docs/evidence/jev-windows-key-20261009.jsonl",
+      "sha256": "ff5e7576274dd4e9e767ad0278b6b6e62594aa7a26ff89f2801fe2b0344b766a"
+    },
+    {
+      "path": "docs/evidence/jev-windows-key-20261009.jsonl.summary.json",
+      "sha256": "7b67865f53649fa2ad5c1d928a0251e8ad7cb2f07da04fc1cd01935f37213f42"
+    },
+    {
+      "path": "docs/evidence/jev-windows-key-20261009.run.json",
+      "sha256": "f1e66b412eb7fab7fafb39e2a2fe6528c37dd48e12da33ae32771d6be39d6f0a"
+    },
+    {
+      "path": "docs/evidence/lifecycle-final-20261009.jsonl",
+      "sha256": "b48ce5e8c926a2eb13efea06434b32d9b92aa1df489062425a5bca823d18613c"
+    },
+    {
+      "path": "docs/evidence/lifecycle-final-backtest-20261009.json",
+      "sha256": "7cfa72a9aad5dea221a4a095ddf8843b53d028512f3def8994bbf2ac42e2be22"
+    },
+    {
+      "path": "docs/evidence/lifecycle-final-capture-20261009.json",
+      "sha256": "2cd410fa0e12437c8f4cf597a01442af80fe645bbaf49c3b4d03a2279d4623c1"
+    },
+    {
+      "path": "docs/evidence/okx-baseline.json",
+      "sha256": "f1da6fe4ef95ceb598eac86936c79cd0a6e3531e55031ee5a992927bbc0b47c6"
+    },
+    {
+      "path": "docs/evidence/okx-coordination.md",
+      "sha256": "69df83ce43103df1af370d2bf029479db4de85eced4fef98caa67be43c362466"
+    },
+    {
+      "path": "docs/evidence/okx-cycle-context.json",
+      "sha256": "eb9b366cd2962cca19ca03d15c0d5faf613c2758218ff0f1948d6982eb1d7417"
+    },
+    {
+      "path": "docs/evidence/okx-cycle-review.json",
+      "sha256": "01d861f7ff6c483702dc1eb08fa0df047708d8c3baa0c60a1b85951690f2ac25"
+    },
+    {
+      "path": "docs/evidence/okx-cycle-template.json",
+      "sha256": "0edf98e4b9ff931df61964e01524d465ef38b3d0ae2fd0b44320feea7b896ba5"
+    },
+    {
+      "path": "docs/evidence/okx-implementation.md",
+      "sha256": "af9f5847cb63a0720cfa9ef30455d9db676301485cffe28621f3a1544863d185"
+    },
+    {
+      "path": "docs/evidence/okx-jev-decisions.json",
+      "sha256": "fbaf01ba5d76c11120306d4f9d9b14a4f2d2a6a8b55f5008eb67369b3f40090f"
+    },
+    {
+      "path": "docs/evidence/okx-research.md",
+      "sha256": "885bd6a0a047201089817355c8e8218371b8f8c52fcea81fb9f3c4d1a028f24a"
+    },
+    {
+      "path": "docs/evidence/okx-spec-review-result.json",
+      "sha256": "61eea821f3106586dd3cf921ee5843eb479553ff757cc9b89bbb1d194a87791e"
+    },
+    {
+      "path": "docs/evidence/okx-spec-review-result.md",
+      "sha256": "1a04b38b93ed2ec59fec5af6475c6c02849f9cec057407b8639305c33cb03df8"
+    },
+    {
+      "path": "docs/evidence/okx-standards-followup-result.json",
+      "sha256": "0b1d2df6aa99be4d858523daae7a1c186c3c9e7eff2fb96730660ce6c29d9c6c"
+    },
+    {
+      "path": "docs/evidence/okx-standards-followup-result.md",
+      "sha256": "cf9737fe51fb8e784677e06511f95fbc53ef18b04c080fc05f6e4bcba5524030"
+    },
+    {
+      "path": "docs/evidence/okx-standards-network-followup.json",
+      "sha256": "5bc4b6276640f68f87bf2ec09c77c07284422dab07b00357d467063134a61e3b"
+    },
+    {
+      "path": "docs/evidence/okx-standards-network-followup.md",
+      "sha256": "a73befdf7e5443ddd5c2739586d742965c0bcfb27e8e0daef64cf6bff5ba0742"
+    },
+    {
+      "path": "docs/evidence/okx-standards-review-result.json",
+      "sha256": "4bdd1a7c33c7bf3fc5853fe6941b69461aa8e93f266e96fdee29894cdb30f91d"
+    },
+    {
+      "path": "docs/evidence/okx-standards-review-result.md",
+      "sha256": "41c7da4dd6703ae7bd7ff415dea5ac25cd26982ae43de3e85465bfbd9cd8995a"
+    },
+    {
+      "path": "docs/evidence/okx-ui-desktop.jpg",
+      "sha256": "1608314355fb765c42fa6140272c5e322cdcac205a5520bcd8d20fc2afc71f80"
+    },
+    {
+      "path": "docs/evidence/okx-ui-mobile.jpg",
+      "sha256": "677097af2bc3287acc68ed435ae926d851986a181dce83e98085d88a36b4de7b"
+    },
+    {
+      "path": "docs/evidence/okx-ui-product.jpg",
+      "sha256": "9a82db116661636f36b2c510246366a8965c0fd15250e9b7f21ab9a54dbc1c05"
+    },
+    {
+      "path": "docs/evidence/okx-verification.md",
+      "sha256": "6aa5b1729f77f643a02fc606048a89e4de0d060a5752c34b6dd5b5df917106d3"
+    },
+    {
+      "path": "docs/evidence/public-health-20261009.json",
+      "sha256": "4446074265be8d5e433c7687c44da05e117a32fce42a557ffc3fc8671eeb26b3"
+    },
+    {
+      "path": "docs/evidence/readiness-20261009.jsonl",
+      "sha256": "66ce7653c74c5d2cf0a935bf1381b162a8c6cdb7e4df6fba62d5c88d6e15576c"
+    },
+    {
+      "path": "docs/evidence/review-manifest.json",
+      "sha256": "af533da3d3fc23ee9e566b15f4d02c40b3918181946266d30f35279cb6f55ac3"
+    },
+    {
+      "path": "docs/evidence/windows-key-config-20261009.json",
+      "sha256": "2a2e26234b741f194420c1d505d1379600aa190dbe214af9959e73745ccf4053"
+    },
+    {
+      "path": "docs/evidence/windows-key-decision-20261009.json",
+      "sha256": "35abec7eb15c1a288f5037e02de3aafb6388b383d5e55182548b49426989a38f"
+    },
+    {
+      "path": "docs/evidence/windows-key-review-20261009.json",
+      "sha256": "436f6e5607ddfcd21fed0a9dc7758f30c4a1de5c5387c707f919dce343f691bb"
+    },
+    {
+      "path": "docs/FUNDING-RESEARCH.md",
+      "sha256": "7d68fdd273f4b92451cf44f30975b9bc75d0f6e4c22860ed4cc34f2718ae213b"
+    },
+    {
+      "path": "docs/INONU-DESIGN-SPEC.md",
+      "sha256": "184d31ac33e0b83734047d9d73f8cf2b7b4c46dafc9cabf9379ba8b8af6016a7"
+    },
+    {
+      "path": "docs/INONU-PROPOSAL.md",
+      "sha256": "07ae8d6a6a0d08340d2b3726deb83a7e8cc49bab90bafdc5d28aff54c414445a"
+    },
+    {
+      "path": "docs/JEV-WINDOWS.md",
+      "sha256": "de0d0aa364017a3e617648a884ebc4e0f32f4aa1444b1f82a8a7acf2ac9db5cc"
+    },
+    {
+      "path": "docs/OKX-API-FIX-DECISION.json",
+      "sha256": "6bc4dd45c7645128a198e7808ec59618b3eeebad94952d769894eec6f30a7eec"
+    },
+    {
+      "path": "docs/OKX-API-IDENTITY-FIX.md",
+      "sha256": "70e8e34c4867e17323b4603bd302e78cbdac72c58e9141681417b576e278750b"
+    },
+    {
+      "path": "docs/OKX-API-TDD-EVIDENCE.md",
+      "sha256": "a552f27fae21111d6393da6a33c29f785ff5a53e60ddf8b890091f5fd2ef7310"
+    },
+    {
+      "path": "docs/OKX-CONFIGURATION-READINESS.md",
+      "sha256": "f40f4032cc071f5323744b2203aa429cde967cc1baa7af3f82e2a0fbf0c2ca3c"
+    },
+    {
+      "path": "docs/OKX-DEX-NEXT-PROPOSAL.md",
+      "sha256": "5f6112f4309e5aa7e4099e9cc598e8f258d7035ad9ba3a19ce6b56510757a943"
+    },
+    {
+      "path": "docs/OKX-DEX-QUOTE-CONTRACT-20261009.md",
+      "sha256": "4ce9b26ed0dd15e6cb52bd8057f0a6f9186a2ad7f8c970e81a984817febe87cb"
+    },
+    {
+      "path": "docs/OKX-DEX-SEAMS-DECISION.json",
+      "sha256": "2f057c6eb813f9299b4507c51cc3fe2010f38a45e99f206bbb40eeb54b70e961"
+    },
+    {
+      "path": "docs/OKX-DEX-V2-DRAFT.md",
+      "sha256": "3aa48675faafe6e08030dd3ab07dc10b5e045dcd26827123f4b4627571ae3bf8"
+    },
+    {
+      "path": "docs/OKX-EARN-RESEARCH.md",
+      "sha256": "7aa6c1229724dff806307cbaf0b77648cc0f02cdd5c0ffe70079faa75e621e53"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-PLAN.md",
+      "sha256": "6d9e3edbad5ae26edcfc414763786b76d93b798bec500af2a2530cf0d310e409"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-SPEC.md",
+      "sha256": "c0c0ca088fed47c7e37d495134d53ebd1e63e7360bdaddbc2ce2f08235525946"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-V1-BASELINE.md",
+      "sha256": "e7db0940523893e7ec8510fc590fccda3e8a03a3e2cbed7214058dff82018aa7"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-V1-CONTRACT-ERRATA.md",
+      "sha256": "ccb28dfc2935a03034edc60780d0cfc6f7567d0e189f4138f0f1eedfff1b9da9"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-V1-DECISIONS.json",
+      "sha256": "8dd21c70d5cf36a829739814958794687c930b4d53411f392cf7827c38ea5760"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-V1-DELEGATION.json",
+      "sha256": "2f528680228305d325ed85a04ce56d377310ba4f037cce6b77b2251430aff52b"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-V1-PROTOCOL-SCOPE.json",
+      "sha256": "6d68492503992216be3f874e20118fe6dcffac285addb3ae1f68067996ecabad"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-V1-SPEC.md",
+      "sha256": "13ba216cca87b8fd139d95895cd84a30df536788602fa4679201b8307aa856cb"
+    },
+    {
+      "path": "docs/OKX-IDENTITY-REPAIR-DECISION.json",
+      "sha256": "74ff50ce8762cb98e0d0833618529408ab9dcf0cfe24a53c4867a16fbecba425"
+    },
+    {
+      "path": "docs/OKX-INTEGRATION-RESEARCH-20261009.md",
+      "sha256": "c83291232ea82f0a9505f647e0caeff14a4a494fce44f11392159c5eb69fdfa0"
+    },
+    {
+      "path": "docs/OKX-INVESTIGACAO.md",
+      "sha256": "7fc01773dbc3553f8312132d92e6c87370406897e3835d11e9bdf8b7d9979286"
+    },
+    {
+      "path": "docs/OKX-PROPOSAL.md",
+      "sha256": "00a4da44b59584d3b3d1e6b35ce1cb21286e4dc6f26a054933a54cc75a2f5e41"
+    },
+    {
+      "path": "docs/OKX-SCANNER-INTEGRATION-DECISION.json",
+      "sha256": "272f6771682dceb4b03331d575d57d0912b8c4d32607c02306d4bd6df6edc977"
+    },
+    {
+      "path": "docs/OKX-SCANNER-LAYOUT-ADDENDUM.md",
+      "sha256": "9d4982cf930fc0c7ecab3b2bfbb4f0ac575074701399c951df16b99518806469"
+    },
+    {
+      "path": "docs/OKX-SCANNER-NAMESPACE-DECISION.json",
+      "sha256": "1f8498c8340a72cf75544705e80f59b0d5ad167f1fb255f0eee5d5a3e2600b19"
+    },
+    {
+      "path": "docs/OKX-SCANNER-REVIEW-DECISION.json",
+      "sha256": "583372b1e0b9a24201117bb2a0f66f06e4f62aef4dbfc1052cfd94bcd1d102d1"
+    },
+    {
+      "path": "docs/OKX-SCANNER-TDD-EVIDENCE.md",
+      "sha256": "bacf9e6bd60745dd5b8f96bfc6f64ede505180257170f2fba9a2b2f647ad87c4"
+    },
+    {
+      "path": "docs/OKX-SPEC.md",
+      "sha256": "09b01feac2e94cf7b7461ef0295155ce41cebb07b368caefdad44592777edabd"
+    },
+    {
+      "path": "docs/OKX-WEB3-ENV.example",
+      "sha256": "02a048132c4fadd1de3daafd3854b1357669af88cc1fc0419d73999f39f7cdd9"
+    },
+    {
+      "path": "docs/OKX-WEB3-INTEGRATION.md",
+      "sha256": "3659778d374ca4cf863c5aa3624c784a65f0a9b70f5175f07b573de48079ed06"
+    },
+    {
+      "path": "docs/OPERACAO-BRASIL.md",
+      "sha256": "53d4ba133a29cfa42caa5882203ec27f4b1e475fd3760476c701996451591d2d"
+    },
+    {
+      "path": "docs/OPPORTUNITY-ARCHITECTURE.md",
+      "sha256": "a954ffcefcec9c211127de2fc013798a718947c36013a46ebaf91c2ad391fe7a"
+    },
+    {
+      "path": "docs/PROFIT-SPEC.md",
+      "sha256": "268e005d5891a53b7f540faa2c34da3fef440f207e2fefcac6ae113cd5bb52a8"
+    },
+    {
+      "path": "docs/READINESS-SPEC.md",
+      "sha256": "a21f516ff056656db1b4e6579e10f1c38184b0f26f4aecca4886cae4b623af41"
+    },
+    {
+      "path": "docs/RISCO-E-BACKTEST.md",
+      "sha256": "b96f0a9813eac46536161d632b89af3a5ef13fea9f2a5bf9ec4574c98ed36718"
+    },
+    {
+      "path": "docs/ROOT-PREINTEGRATION-MANIFEST.json",
+      "sha256": "dd2b2c00801ae0c5c1fab1dd0b39c9c562f7e8f87ea6231f70f86fd364a3ce5e"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-09-okx-readonly.md",
+      "sha256": "872e88aa914939d26405f7f8c6010e4327a6a03e58750c2cbee4bd6641e3710a"
+    },
+    {
+      "path": "docs/VERIFICACAO.md",
+      "sha256": "de0fb45b7af1f9a9d7bfd61a197013509eb25e606921b91cea3fb5ed2919ada5"
+    },
+    {
+      "path": "docs/WALLET-OPPORTUNITIES-SPEC.md",
+      "sha256": "2f36fdaa60961851afa2f39cf6eb969872dd3fc7c1b3c9252119c35c6c22dff8"
+    },
+    {
+      "path": "docs/wallet-opportunity-research.md",
+      "sha256": "21a2d58636f38cdbdabb9fa53e745122974f4e7623918745cc3ccae4d4ce2205"
+    },
+    {
+      "path": "package.json",
+      "sha256": "db1489eb4ee887712704aa72b24aed9db8b52dceca743ced86f12b9632f1bc4f"
+    },
+    {
+      "path": "scripts/abi-selectors.ts",
+      "sha256": "df71e5489c204855c3169b694238728e83068c672a176987eb8d6a6ecaea3558"
+    },
+    {
+      "path": "scripts/backtest.ts",
+      "sha256": "22fb1282920fc7f43b4aca16dfaa6dc2e8407ade39e70a790ae1c9e08fdefd0b"
+    },
+    {
+      "path": "scripts/bench-read.ts",
+      "sha256": "78e19f69865f83dc0242d501b70d5b04bbf7b691124f5c7a3a17dbdf206bcb0f"
+    },
+    {
+      "path": "scripts/capture.ts",
+      "sha256": "40f918b2e723e724120b239ab5893e34f433dedf68fc33a70d6ad0c347dbf62a"
+    },
+    {
+      "path": "scripts/doctor.ts",
+      "sha256": "1763e1402a09038bba1831a0226cb5c4a3de97efb842f328bfe2188c26db95fb"
+    },
+    {
+      "path": "scripts/dry-encode.ts",
+      "sha256": "56071bbda6145a4d687152c22efd38cc5277c59e8ad38587bb909ad1de88d8ec"
+    },
+    {
+      "path": "scripts/github.ps1",
+      "sha256": "28b963453a70f6afffacb16c25bc57466d5aeb14d560fba709dcb91aa1239f90"
+    },
+    {
+      "path": "scripts/okx-market-scan.ts",
+      "sha256": "5d3d1de12bb59bcdc816a1ab109a86d4b87b18defde8ca19f22c6eaab8f9ed2e"
+    },
+    {
+      "path": "scripts/probe-book.ts",
+      "sha256": "3c85e6c06e4ad70eaa2f86b963d161bc0d867e219c01b5d7c0cbb819b624975f"
+    },
+    {
+      "path": "scripts/probe-book2.ts",
+      "sha256": "d6608792d3cb4a72ea72fcf12d220ae0fd1a2f19d87082d3212a8aeba65456fe"
+    },
+    {
+      "path": "scripts/probe-estimategas.ts",
+      "sha256": "2249be9eab42e16f7e0f2c5ed817f051cc42ca951513df4bdb9adf4a1234cd02"
+    },
+    {
+      "path": "scripts/probe-poll.ts",
+      "sha256": "e389ac7c21c1c53f571a86187d287659dd752a83766aa15fee84f669dd94f504"
+    },
+    {
+      "path": "scripts/probe-read.ts",
+      "sha256": "b770206630f5179f6dcb4ff5526c2366371e367813705f652f4f89526ddb0f5e"
+    },
+    {
+      "path": "scripts/probe-rpc-caps.ts",
+      "sha256": "1ab9c6d54750b4bd90fe59cdec3028a910167904d450e7643c5fbb52baeeef07"
+    },
+    {
+      "path": "scripts/trace-rpc.ts",
+      "sha256": "cb43caa93968c7fc88080f6779a8bcfba87d2fc8601bfbf291d0d269f7503aa3"
+    },
+    {
+      "path": "scripts/trades-smoke.ts",
+      "sha256": "31725cd3204487b1c6bbf98c43fa97765c173ee0fc92e9731e992a7b91aa5add"
+    },
+    {
+      "path": "src/backtest.test.ts",
+      "sha256": "48d7bfda58b9d2ec09b7ce61d28639382a3cb0d927f658bce24d0527718b6261"
+    },
+    {
+      "path": "src/backtest.ts",
+      "sha256": "c8b91ee5690c153fa07fbc90b813a7f7e4ab81283156833c4f986d67b005bf1f"
+    },
+    {
+      "path": "src/book.ts",
+      "sha256": "3c737c7a51d208296d6d4542a49b69cb4f45d17c4637e122099f28514c1834c5"
+    },
+    {
+      "path": "src/chain.ts",
+      "sha256": "b94a062562b5b6b018fb58c8f9987681e2bbaf8437b7abae0e514b175da22cb5"
+    },
+    {
+      "path": "src/config.test.ts",
+      "sha256": "5f69b0e86ea1e5157cec53f46631edc5cf85631f690553adecec181994dc6340"
+    },
+    {
+      "path": "src/config.ts",
+      "sha256": "92dd7a44a786676fb456da019660871b2e77dd273fe148271f2c1541f43a2693"
+    },
+    {
+      "path": "src/doctor.test.ts",
+      "sha256": "3a501ae0d209d302e3ac7f3629535261a0cf505ecc0828cc231dcf02789c8b23"
+    },
+    {
+      "path": "src/economics.test.ts",
+      "sha256": "1e1b972daa4fc3c8209bee5c71b2a8ef9da25e762e21cd8aecd5d0fc1887506b"
+    },
+    {
+      "path": "src/economics.ts",
+      "sha256": "bf3ed7488bd1a2b3fddcd22404a2775b2a863736fcd1ed79011d904c8b19b74e"
+    },
+    {
+      "path": "src/index.ts",
+      "sha256": "fe4c66f9c12e28f6eb4fdc2a24076c090b97101a5dbba4f0a7d5688a05e6747a"
+    },
+    {
+      "path": "src/market.ts",
+      "sha256": "f8adb13592316506b449261370489ad978c7d4ac9e5acf45b8e85c9c4a9dd5fb"
+    },
+    {
+      "path": "src/model.test.ts",
+      "sha256": "3e3c979fbbcfb1d9489c35eff19b2ea631b3643b62b32f7b1013e26ea27913db"
+    },
+    {
+      "path": "src/model.ts",
+      "sha256": "b2f0c1508e981f2e172ede0952086c29b16fd2ad9b53c978292c0b999c459381"
+    },
+    {
+      "path": "src/okx-market/okx-api.test.ts",
+      "sha256": "da967f4f93cab356ef996e612df3a2326437d68da8b08a4294326769ba9192a1"
+    },
+    {
+      "path": "src/okx-market/okx-api.ts",
+      "sha256": "a0f454d1d7cd0ad13c8e6ccde8fbe3c1b754945c08d420606a61ee1ce0053393"
+    },
+    {
+      "path": "src/okx-market/okx-cli.test.ts",
+      "sha256": "c2b81fbee948da29bad8025f88d634c343432d59c9964f52c6bdb788da723f15"
+    },
+    {
+      "path": "src/okx-market/okx-fixture.ts",
+      "sha256": "875fc8c6d09acc8cd8b79b4ce00d626b8bc174c383e7a2c1486b9b13178f580d"
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.test.ts",
+      "sha256": "cce1d7d2c21dbe50ecf4275538cda0defb6286fbd15637866eaaee4d5b45cc99"
+    },
+    {
+      "path": "src/okx-market/okx-opportunities.ts",
+      "sha256": "f7361b23520cdd03e623c1f35b5afe488d3e4f5e28959718359832de03b0be3e"
+    },
+    {
+      "path": "src/okx-market/okx-scan.test.ts",
+      "sha256": "b2afc7d64fd937fbc9ed290ff7166a525eb290f45daf9f5afc9f79bc4f884466"
+    },
+    {
+      "path": "src/okx-market/okx-scan.ts",
+      "sha256": "c95fe7c87ec92ddd6f038c797f04b174775fa2dca55c69751cd2789117e701f8"
+    },
+    {
+      "path": "src/risk.test.ts",
+      "sha256": "9a886f27ef18635133c0b946398e81cfb29e68a4508707c416194c852c122303"
+    },
+    {
+      "path": "src/risk.ts",
+      "sha256": "57bfbb0a2a4180efd682e6226c70eb200b32f3a446ea67b489abc3239ca80008"
+    },
+    {
+      "path": "src/server.ts",
+      "sha256": "56511e042a178b730429e2e7cdd338f6fccd34870f8d6a8ec1920b3397240ea4"
+    },
+    {
+      "path": "src/trader.test.ts",
+      "sha256": "50b1366883b51e41b28c686df1e549d201c31a6d54234550dbf3fef4359897a0"
+    },
+    {
+      "path": "src/trader.ts",
+      "sha256": "61c441d1d13e9816f572a3f2d473c76062c941d8c7d594eb86dfdbe83e7603d9"
+    },
+    {
+      "path": "src/trades.ts",
+      "sha256": "1ff0dfd30c7f7bdaaa59569957eec6870c5aa2aaf37c824c24101d5f657cc962"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "3cfeed9b7634006a4b9bb2bb2ce3d6f9b446b688a9bb9b4eb93cbdfd9d331c48"
+    }
+  ]
+}

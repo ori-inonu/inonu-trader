@@ -1,0 +1,141 @@
+{
+  "axis": "Standards",
+  "version": 2,
+  "verdict": "approved_with_nonblocking_observation",
+  "approval_scope": "Only DELIVERY.patch whose SHA-256 is recorded below, matching exactly the eight authored paths of CANDIDATE v2. No approval for future inclusion of local excluded records, external actions, full Spec acceptance or financial quality.",
+  "review_date": "2026-10-13",
+  "reviewer_conversation": "01a13658-31bc-76d0-a75b-1d07b5928bd3",
+  "root_conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "implementer_id": "root-01a1362a",
+  "reviewer_is_implementer": false,
+  "workspace": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+  "git_evidence_workspace": "C:/Users/gabri/.codex/worktrees/learning-evidence/jev-trader",
+  "isolation": "Exclusive coordinator-provided candidate copy, distinct from implementer worktree, without .git. Readonly attributes observed on all thirteen source/dependency/frozen-spec/patch files. Actual sandbox is danger-full-access; attributes do not guarantee enforcement. No candidate or acceptance edits.",
+  "effective_model": null,
+  "effective_tier": null,
+  "baseline": "00a593bcabe25dbb6d83795268533551098f645b",
+  "commits": [],
+  "candidate_manifest_sha256": "1020e399d1dc4610fd0aad7004fe9e49b74ec28ef73f5a75200529c1762546ff",
+  "delivery_patch_sha256": "8430c928edfe8d5e9b4dc1f8b125a219ecc4a98b04da8c73f180798eb9d6a64f",
+  "frozen_spec_sha256": "7e0bc8c5ef915f3f94c017cea1181e325fdf1dae7653a43f253be77db42acc78",
+  "acceptance_section_sha256": "7a5951dc5212297db0c80218fde78b60f421dfd7de531a2d60235b7eac9e4926",
+  "acceptance_section_bytes": 3139,
+  "acceptance_section_extraction": "Exact UTF-8 substring from ## Aceitação imutável inclusive through the character before ## Limites e riscos, retaining the final blank line.",
+  "acceptance_section_identical_to_frozen": true,
+  "hashes_verified_before_and_after": true,
+  "checked_nonmanifest_entries": 13,
+  "authored": [
+    { "path": "src/learning-evidence/dataset.ts", "sha256": "0e6e9491e24acaf7676d03fab3d7af47c70406544b6b146db4f6ef55087fbcdb", "bytes": 8795, "patch_added_lines": 161, "patch_reconstruction_matches": true },
+    { "path": "src/learning-evidence/dataset.test.ts", "sha256": "11b4a4e97a61b04fe73a8810d6216ff9f4fed016ee176d00b038062c01e3a6b5", "bytes": 9130, "patch_added_lines": 165, "patch_reconstruction_matches": true },
+    { "path": "scripts/learning-dataset.ts", "sha256": "5b88906f3750a0dc308f0569fbb73b3fe31495cc41babbccab0271968ce30ccd", "bytes": 5154, "patch_added_lines": 95, "patch_reconstruction_matches": true },
+    { "path": "scripts/learning-dataset.test.ts", "sha256": "cc9136770c6c9f0bb93609ca74aa44abe50114f7744e0093657f329b60bd65c0", "bytes": 6460, "patch_added_lines": 120, "patch_reconstruction_matches": true },
+    { "path": "docs/sdd/learning-evidence-20261013/requirements.md", "sha256": "8647df91094cf8ccde6ecf52526b2e35a45c83a0940db76de0d4b909be3d9baf", "bytes": 4885, "patch_added_lines": 22, "patch_reconstruction_matches": true },
+    { "path": "docs/sdd/learning-evidence-20261013/RESEARCH.md", "sha256": "31dd60607a0e98125ea523878d2b5ace3fc79a76817b0b139476497e3a247fb2", "bytes": 19976, "patch_added_lines": 143, "patch_reconstruction_matches": true },
+    { "path": "docs/sdd/learning-evidence-20261013/USAGE.md", "sha256": "b507563619fa7026af0e14fdf4335b9ce9f90480a466f22e789836d7ce30920e", "bytes": 2821, "patch_added_lines": 21, "patch_reconstruction_matches": true },
+    { "path": "docs/sdd/learning-evidence-20261013/VERIFICATION.md", "sha256": "c03b6b38a60e44547ee2fdbd240e84c58da48797e384140c2f53c21202099d64", "bytes": 1635, "patch_added_lines": 25, "patch_reconstruction_matches": true }
+  ],
+  "readonly_dependencies": [
+    { "path": "src/intel/features/types.ts", "sha256": "583208c64c99f60aa761e5742bf7a5139d885e6963859006196e892669101bb6", "bytes": 4673, "excluded_from_patch": true },
+    { "path": "src/outcomes/types.ts", "sha256": "0faa225908aa0a917a74c9a94f532559f770bc90c3d568b198f601472c5a99c3", "bytes": 4364, "excluded_from_patch": true },
+    { "path": "src/outcomes/store.ts", "sha256": "f5ccb266976012f83a113589fa4ed638c0ae2a2db3e7eaf42048aa0c4ffc3bf0", "bytes": 12188, "excluded_from_patch": true }
+  ],
+  "excluded_local_records": [
+    "docs/sdd/learning-evidence-20261013/SPEC.md",
+    "docs/sdd/learning-evidence-20261013/PLAN.md",
+    "docs/sdd/learning-evidence-20261013/decision.json"
+  ],
+  "other_material_not_delivered": ["CANDIDATE.json", "DELIVERY.patch", "frozen/SPEC.md"],
+  "exactly_manifest_authored_paths_in_patch": true,
+  "excluded_local_records_absent_from_patch": true,
+  "standards_sources": [
+    "User-provided AGENTS instructions",
+    "CONTRIBUTING.md:5 reread from original worktree",
+    "C:/Users/gabri/.codex/skills/codex-desktop-harness/SKILL.md",
+    "C:/Users/gabri/.agents/skills/code-review/SKILL.md",
+    "Parent-provided complete Fowler baseline"
+  ],
+  "resolved_findings": [
+    {
+      "id": "STD-1",
+      "previous_severity": "P2",
+      "kind": "documented_standard_breach",
+      "status": "resolved_for_exact_delivered_patch",
+      "rule": "CONTRIBUTING.md:5: internal agent records out of the diff; developer instruction to keep private state out of the repository.",
+      "evidence": "Entire delivered documentation reread. Native conversation/session IDs, harness snapshots and lease conflicts removed from RESEARCH/VERIFICATION; decision.json and PLAN.md excluded. DELIVERY.patch reconstructs precisely all eight authored files with exact manifest SHA-256 and bytes, and no copied dependency or excluded operational record. Local frozen records are not submitted or approved.",
+      "limits": "Approval does not cover later staging of excluded untracked records. No claim that those local originals were removed or rebound in harness state."
+    }
+  ],
+  "findings": [
+    {
+      "id": "STD-2",
+      "severity": "P3",
+      "kind": "possible_smell_judgment",
+      "smell": "Duplicated Code",
+      "blocking": false,
+      "locations": ["src/learning-evidence/dataset.ts:68", "src/learning-evidence/dataset.ts:155", "scripts/learning-dataset.ts:33"],
+      "rule": "Parent-provided Fowler baseline, a heuristic rather than a documented-standard breach.",
+      "evidence": "Defaults minTrainGroups=30, testGroups=12 and embargoMs=0 repeated in fold setup, reported settings and CLI defaults. Validation no longer repeats defaults after the null fix, reducing the original four sites to three.",
+      "remedy": "Consider resolving options once and sharing normalized settings when a related change warrants it. No required behavior change for this delivery."
+    }
+  ],
+  "smells_reviewed": {
+    "Mysterious Name": "No additional actionable finding. Local processing names have visible purpose and domain types identify target and fold meaning.",
+    "Duplicated Code": "STD-2, possible nonblocking repetition of operational defaults.",
+    "Feature Envy": "No additional actionable finding. Projection from source contracts is the explicit responsibility of the dataset boundary.",
+    "Data Clumps": "No additional actionable finding. Options, LearningRow and LearningFold already bundle related data.",
+    "Primitive Obsession": "No additional actionable finding. Existing Horizon/feature contracts are reused; timestamps and options have bounded validation.",
+    "Repeated Switches": "No repeated same-type dispatch cascade requiring a shared map or polymorphism observed.",
+    "Shotgun Surgery": "No additional actionable finding beyond STD-2 defaults.",
+    "Divergent Change": "No additional actionable finding. Dataset building and CLI I/O are separated into their respective files.",
+    "Speculative Generality": "No additional actionable finding. The generic record deduplication has two actual uses.",
+    "Message Chains": "No actionable long navigation chain observed.",
+    "Middle Man": "No actionable mostly-delegating wrapper observed.",
+    "Refused Bequest": "No authored inheritance hierarchy."
+  },
+  "checks": {
+    "focused_tests": {
+      "command": "bun --no-env-file test ./src/learning-evidence ./scripts/learning-dataset.test.ts",
+      "executed_via": "RTK + Headroom adapter run, cwd exclusive v2 copy, timeout 120 seconds, profile test; optional metrics omitted to respect exclusive output paths.",
+      "exit": 0,
+      "passed": 15,
+      "failed": 0,
+      "expect_calls": 96,
+      "elapsed_reported_seconds": 10.03,
+      "bun_version": "1.3.14 (0d9b296a)",
+      "tests_started_by_this_reviewer": 1,
+      "failure_observed_by_this_reviewer": null
+    },
+    "typecheck": {
+      "command": "bun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/learning-evidence/dataset.ts src/learning-evidence/dataset.test.ts scripts/learning-dataset.ts scripts/learning-dataset.test.ts",
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/review-candidate-v2",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "patch_numstat": { "command": "git apply --numstat DELIVERY.patch", "exit": 0, "file_count": 8, "only_new_files": true },
+    "patch_reconstruction": { "method": "Read DELIVERY.patch using Bun.file; validate new-file sections and reconstruct additions in memory; compare SHA-256 and byte lengths with manifest and verified copy.", "exit": 0, "all_eight_match": true, "writes": 0 },
+    "acceptance_equivalence": { "method": "Exact UTF-8 section substring comparison, including heading and final blank line; Bun.CryptoHasher SHA-256.", "exit": 0, "identical": true },
+    "forbidden_punctuation_and_animation_scan": { "command": "rg -n -- '[·—–]|blink|pulse|animate-pulse' src/learning-evidence scripts/learning-dataset.ts scripts/learning-dataset.test.ts docs/sdd/learning-evidence-20261013", "exit": 1, "matches": 0 },
+    "v1_v2_source_diff": { "command": "git diff --no-index -- <v1-file> <v2-file>", "exit": 1, "observed_change": "Only optional-option validation in dataset.ts; one public-API regression for null versus omitted/undefined options in dataset.test.ts.", "warning": "LF will be replaced by CRLF the next time Git touches it", "hashes_unchanged_by_git_reads": true },
+    "other_reviewer_notice": "Coordinator reported a separate Spec-review timeout under parallel execution and a sequential retry. It is not this reviewer's observed test result. This reviewer started no additional suite after the notice."
+  },
+  "acceptance_evidence": {
+    "LE-1": { "status": "standards_subset_reviewed", "evidence": "Unchanged CLI hash and previously reviewed source; five CLI tests passed with real temporary regular files, hash checks, context-only errors, invalid bytes, links and byte limit.", "limits": "No exhaustive file replacement race or environment-loading audit beyond the explicit no-env invocation." },
+    "LE-2": { "status": "standards_subset_reviewed", "evidence": "Null preserved, cost and sampling exclusions, identity, timestamps, feature whitelist/provenance read; API tests passed.", "limits": "Historical source fidelity not certified." },
+    "LE-3": { "status": "standards_subset_reviewed", "evidence": "Separate explicitly hypothetical target, cost consistency, positive-net boolean and maturity/incompleteness exclusions read and tested.", "limits": "No executed-profit or calibrated-probability certification." },
+    "LE-4": { "status": "standards_subset_reviewed", "evidence": "Deterministic deduplication/conflicts and unchanged inputs tested.", "limits": "Full Spec semantics are independently reviewed on the other axis." },
+    "LE-5": { "status": "standards_subset_reviewed", "evidence": "Literal temporal boundaries, equality, embargo, simultaneous asset groups, expanding training, skipped blocks and tail tests passed.", "limits": "No statistical sufficiency or financial validation." },
+    "LE-6": { "status": "standards_subset_reviewed", "evidence": "V2 explicitly rejects null minTrainGroups/testGroups/embargoMs, preserves omitted/undefined defaults, and passes public-API regression; diagnostics/readiness and resource bounds read.", "limits": "No exhaustive adversarial options certification." },
+    "LE-7": { "status": "observed_checks_passed_standards_approved", "evidence": "Distinct reviewer; one v2 suite, 15 tests/96 expects, exact focused tsc exit 0, all hashes before/after, frozen acceptance unchanged.", "limits": "Approval is Standards only; actual sandbox danger-full-access is not readonly enforcement." },
+    "LE-8": { "status": "exact_delivery_scope_verified", "evidence": "Patch contains exactly eight allowed authored paths; no dependency edits, package, frontend, wallet or trading changes; three dependency hashes match; excluded internal records absent from delivered patch.", "limits": "No main-workspace, integration or live-state certification." }
+  },
+  "spec_acceptance_certified": false,
+  "financial_quality_certified": false,
+  "live_activation_certified": false,
+  "external_research_sources_revalidated": false,
+  "gain_measurement": null,
+  "paid_api_calls_initiated_by_reviewer": 0,
+  "network_actions_initiated_by_reviewer": 0,
+  "candidate_edits": 0,
+  "v1_artifacts_preserved": true
+}

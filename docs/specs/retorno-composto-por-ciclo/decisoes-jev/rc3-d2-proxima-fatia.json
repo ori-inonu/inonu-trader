@@ -1,0 +1,54 @@
+{
+  "id": "rc3-d2-proxima-fatia",
+  "goal": "Objetivo do projeto: o agente de carteira tomar as melhores decisoes para o melhor retorno liquido, compondo a cada ciclo de 1 minuto. Tudo comeca em sombra e e reversivel; a meta e uma hipotese a medir com custo real, nao uma promessa. A main esta limpa e validada, entao a F0 (merge limpo) esta cumprida. Qual e a PROXIMA fatia de implementacao em sombra que mais aproxima o agente de decisoes melhores, medindo antes de mudar?",
+  "facts": {
+    "pronto": "fatias S1 (carimbo de tempo por etapa) e S3 (custo sintetico em lote) ja estao na main como modulos puros, ainda nao ligados ao ciclo",
+    "s2": "a fatia S2 (contador de rotas da OnchainOS) foi reprovada pelo revisor e precisa ser refeita com a tabela de planos verificada",
+    "funil": "57% dos candidatos de compra fecham antes de chegar ao Jev (411 fechamentos) e a causa nao esta medida; o modelo escolhe compra em 1,86% das linhas",
+    "cota": "OnchainOS Free tem 100 mil chamadas Basic por mes e o ritmo atual projeta acima do teto",
+    "markout": "o placar existente mede 15 min, 1 h, 4 h e 24 h; falta 1 e 5 minutos, que e a escala do ciclo",
+    "baseline": "0 de 7 voltas positivas (-0,41% bruto); atrito 0,42% em ativo liquido e 1,8% a 2,1% em raso; movimento mediano de 1 minuto 0,38%",
+    "prazo": "a OKX para de aceitar o WebSocket na porta 8443 em 2026-10-31 (o feed vivo ja migrou)"
+  },
+  "rails": [
+    "Dinheiro real, ordens, carteira e live trading so por autorizacao do dono",
+    "Nenhuma mudanca de limite de risco, segredo, credencial, migracao de dados ou dependencia paga",
+    "Nao apagar branches, nao reescrever historico e nao fazer push",
+    "Nao prometer lucro; resultado so por medicao com custo real",
+    "Cada fatia e aditiva, em sombra, sem mudar o executor, o journal ou a cadencia"
+  ],
+  "options": [
+    {
+      "id": "ligar_carimbo_s1",
+      "label": "Ligar o carimbo de etapas",
+      "what": "Integrar a fatia S1 em cycle.ts e wire.ts como campo opcional em memoria do relatorio do ciclo, para medir p50, p95 e p99 por etapa em 1000 ciclos."
+    },
+    {
+      "id": "classificar_fechamentos",
+      "label": "Classificar os fechamentos antes do Jev",
+      "what": "Contador em memoria da causa dos 57% de candidatos fechados antes do Jev, e markout dos fechados contra os escolhidos, sem campo novo no journal."
+    },
+    {
+      "id": "refazer_contador_s2",
+      "label": "Refazer o contador de rotas",
+      "what": "Refazer a fatia S2 com a tabela de planos verificada e os achados do revisor, para saber quanto da cota Basic cada rota consome."
+    },
+    {
+      "id": "markout_1_5_min",
+      "label": "Markout de 1 e 5 minutos",
+      "what": "Registrar em sombra o preco de saida de cada decisao a 1 e 5 minutos, a escala do ciclo, com n e N efetivo, sem tocar no placar existente."
+    },
+    {
+      "id": "teste_ws_canal_quieto",
+      "label": "Teste de 2 h do canal quieto",
+      "what": "Medir por 2 h se o pong renova o prazo de 30 s do WebSocket publico da bolsa e a idade do dado por canal por 24 h, so com dados publicos."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "custo_real",
+      "ask": "Qual e o custo all-in medido por ida e volta com pelo menos 30 execucoes por classe de liquidez?"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": {
+    "bundleHoldingPercent": "",
+    "chainIndex": "1",
+    "createTime": "1690000000000",
+    "creatorAddress": "0xAAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEEEEEEE",
+    "devCreateTokenCount": "3",
+    "devHoldingPercent": "0",
+    "devLaunchedTokenCount": "3",
+    "devRugPullTokenCount": "",
+    "isInternal": false,
+    "lpBurnedPercent": "99.5",
+    "progress": "87.2",
+    "protocolId": "",
+    "riskControlLevel": "1",
+    "sniperHoldingPercent": "",
+    "snipersClearAddressCount": "",
+    "snipersTotal": "",
+    "stockProfile": null,
+    "suspiciousHoldingPercent": "",
+    "tokenContractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    "tokenTags": ["communityRecognized", "bad tag!", "", "ok_tag-2"],
+    "top10HoldPercent": "74.0083",
+    "totalFee": ""
+  },
+  "msg": ""
+}

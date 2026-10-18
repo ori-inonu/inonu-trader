@@ -1,0 +1,24 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": [
+    {
+      "chainIndex": "1",
+      "decimal": "18",
+      "tagList": { "communityRecognized": true },
+      "tokenContractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "tokenLogoUrl": "https://static.oklink.com/cdn/web3/currency/token/placeholder.png",
+      "tokenName": "Wrapped Ether",
+      "tokenSymbol": "WETH"
+    },
+    {
+      "chainIndex": "1",
+      "decimal": "",
+      "tagList": {},
+      "tokenContractAddress": "",
+      "tokenName": "Row without address is dropped",
+      "tokenSymbol": "BAD"
+    }
+  ],
+  "msg": ""
+}

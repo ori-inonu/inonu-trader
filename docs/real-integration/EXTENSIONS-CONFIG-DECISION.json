@@ -1,0 +1,66 @@
+{
+  "status": "assessed",
+  "receiptId": "1dc78f0f-63a5-48cf-a01e-ecfbc6549ac2",
+  "questionIds": [
+    "integration"
+  ],
+  "inputDigest": "bb7a041c0049b388222fd748cc752197a0f88f2f9d77c02757a31055ef0edf05",
+  "rubricVersion": "batch-2026-09-26.2",
+  "policies": {
+    "integration": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    }
+  },
+  "authority": "advisory_only",
+  "model": "jev-1.13.0",
+  "answers": {
+    "integration": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "seam",
+      "bestCandidate": "seam",
+      "probabilities": {
+        "bootstrap": 0.19,
+        "seam": 0.81,
+        "abstain": 0,
+        "insufficient_evidence": 0
+      },
+      "confidence": 0.75,
+      "disposition": "recommendation",
+      "recommendation": "seam",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 611,
+    "output_tokens": 55
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-11T19:28:24.374Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-11T19:28:24.661Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a12c7120897d37a2c53da1c35cc3bb",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null
+  },
+  "latencyMs": 314,
+  "receiptPersisted": true,
+  "approved_by": "jev_delegated",
+  "decision_source": "jev",
+  "human_response": false,
+  "costUsd": null,
+  "scope": "G12 conditional integration only; no qualification, access or authorization granted",
+  "appliedDecision": "seam"
+}

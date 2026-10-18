@@ -1,0 +1,294 @@
+/* The columns and row heights come from watchlistLayout() through custom properties on .root:
+   --wl-cols, --wl-pad, --row-h, --spark-h and --vol-h. One grid serves the header and every row. */
+
+.root {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* Even the essential columns may not fit: the panel scrolls sideways, header included. */
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.cols,
+.list {
+  min-width: var(--wl-min-w, 0);
+}
+
+.cols,
+.item {
+  display: grid;
+  grid-template-columns: var(--wl-cols, 62px minmax(0, 1fr) 62px 60px 78px 62px);
+  align-items: center;
+  gap: 0 var(--s2);
+  padding: 0 var(--wl-pad, 12px);
+}
+
+.cols {
+  height: 22px;
+  flex: none;
+  background: color-mix(in srgb, var(--bg-deck-2) 55%, transparent);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cols span:nth-child(2),
+.cols span:nth-child(3),
+.colFund {
+  text-align: right;
+}
+
+/* One row of the list: the pin star sits beside the grid button, never inside it. */
+.lineWrap {
+  display: flex;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.lineWrap .item {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.star {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  align-self: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-4);
+  cursor: pointer;
+}
+.star:hover:not(:disabled) { color: var(--hold); }
+.star:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: -2px; border-radius: var(--r-xs); }
+.star:disabled { cursor: default; }
+.star[data-filled="true"] { color: var(--hold); }
+
+.starIcon {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+.star[data-filled="true"] .starIcon { fill: currentColor; }
+
+.extraSep {
+  padding: 4px var(--wl-pad, 8px) 2px;
+  border-top: 1px solid var(--edge);
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+/* Only when even the thinnest rows cannot all fit does the list scroll inside the panel. */
+.root[data-scroll="true"] .list {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--edge-strong) transparent;
+}
+
+.li {
+  display: flex;
+  height: var(--row-h, 34px);
+  flex: none;
+}
+
+.item {
+  position: relative;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  font: 500 11.5px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  transition: background-color var(--dur-fast) linear;
+}
+
+.root[data-level="snug"] .item {
+  font-size: 11px;
+}
+
+.root[data-level="tight"] .item {
+  font-size: 10.5px;
+  line-height: 14px;
+}
+
+.item:hover {
+  background: color-mix(in srgb, var(--bg-deck-3) 55%, transparent);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: -2px;
+}
+
+/* The focus row: a fill, a marker on the left edge and heavier type. Never an animation. */
+.item[data-focus="true"] {
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
+.item[data-focus="true"]::before {
+  position: absolute;
+  inset: 3px auto 3px 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--signal);
+  content: "";
+}
+
+.item[data-focus="true"] .symName {
+  font-weight: 700;
+}
+
+.sym {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 5px;
+  text-align: left;
+}
+
+.symName {
+  overflow: hidden;
+  color: var(--ink);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag {
+  flex: none;
+  color: var(--ink-4);
+  font: 600 8.5px/10px var(--font-sans);
+  letter-spacing: 0.08em;
+}
+
+.px {
+  overflow: hidden;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chg {
+  white-space: nowrap;
+}
+
+.item[data-tone="up"] .chg {
+  color: var(--buy);
+}
+
+.item[data-tone="down"] .chg {
+  color: var(--sell);
+}
+
+.na {
+  color: var(--ink-4);
+}
+
+.spark {
+  display: block;
+  height: var(--spark-h, 22px);
+}
+
+.spark svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.sparkLine {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-linejoin: round;
+  stroke-width: 1.4;
+}
+
+.sparkFill {
+  fill: color-mix(in srgb, var(--ink-3) 12%, transparent);
+  stroke: none;
+}
+
+.item[data-trend="up"] .sparkLine {
+  stroke: var(--buy);
+}
+
+.item[data-trend="up"] .sparkFill {
+  fill: color-mix(in srgb, var(--buy) 13%, transparent);
+}
+
+.item[data-trend="down"] .sparkLine {
+  stroke: var(--sell);
+}
+
+.item[data-trend="down"] .sparkFill {
+  fill: color-mix(in srgb, var(--sell) 13%, transparent);
+}
+
+/* 24h quote volume: a bar against the largest in the list, with the figure over it. */
+.vol {
+  position: relative;
+  display: block;
+  height: var(--vol-h, 18px);
+  overflow: hidden;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--bg-well) 70%, transparent);
+}
+
+.volBar {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--signal) 24%, transparent);
+  transform: scaleX(var(--v, 0));
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+.volText {
+  position: relative;
+  display: block;
+  padding: 0 5px;
+  color: var(--ink-2);
+  font: 500 10.5px/var(--vol-h, 18px) var(--font-mono);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.fund {
+  color: var(--ink-3);
+  font: 500 10.5px/16px var(--font-mono);
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .volBar {
+    transition: none;
+  }
+}

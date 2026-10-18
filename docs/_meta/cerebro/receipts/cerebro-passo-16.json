@@ -1,0 +1,149 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-16",
+    "specHash": "f38e6763455974f0c8d698fd30ea765e2e2420aa6ce559c67153cbe4808a4581",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "keep_index",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "migrate_index",
+          "keep_index"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_index",
+              "keep_index"
+            ],
+            "probs": {
+              "migrate_index": 0.31,
+              "keep_index": 0.64,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "keep_index",
+              "migrate_index"
+            ],
+            "probs": {
+              "keep_index": 0.82,
+              "migrate_index": 0.15,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "migrate_index",
+              "keep_index"
+            ],
+            "probs": {
+              "migrate_index": 0.31,
+              "keep_index": 0.63,
+              "none_fits": 0.06
+            }
+          }
+        ],
+        "means": {
+          "migrate_index": 0.2567,
+          "keep_index": 0.6967
+        },
+        "noneFits": 0.0467,
+        "agreement": 1,
+        "margin": 0.44,
+        "leader": "keep_index",
+        "railProb": {
+          "migrate_index": 0.27,
+          "keep_index": 0.01
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "migrate_index",
+          "keep_index"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_index",
+              "keep_index"
+            ],
+            "probs": {
+              "migrate_index": 0.34,
+              "keep_index": 0.6,
+              "none_fits": 0.06
+            }
+          },
+          {
+            "order": [
+              "keep_index",
+              "migrate_index"
+            ],
+            "probs": {
+              "keep_index": 0.83,
+              "migrate_index": 0.14,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "migrate_index",
+              "keep_index"
+            ],
+            "probs": {
+              "migrate_index": 0.29,
+              "keep_index": 0.67,
+              "none_fits": 0.04
+            }
+          }
+        ],
+        "means": {
+          "migrate_index": 0.2567,
+          "keep_index": 0.7
+        },
+        "noneFits": 0.0433,
+        "agreement": 1,
+        "margin": 0.4433,
+        "leader": "keep_index",
+        "railProb": {
+          "migrate_index": 0.27,
+          "keep_index": 0.01
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 8,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 8,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 5801,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

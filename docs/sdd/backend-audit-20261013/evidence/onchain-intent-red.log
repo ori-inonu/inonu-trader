@@ -1,0 +1,40 @@
+bun test v1.3.14 (0d9b296a)
+
+src\onchain-read\gateway.test.ts:
+57 |     const background = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xac" }, "background");
+58 |     const user = gateway.callInternal("/onchain/price", { chainIndex: "66", token: "0xac" }, "user");
+59 |     release({ ok: false, error: "provider_error", sent: true });
+60 |     await leader;
+61 |     expect(await background).toEqual({ ok: false, error: "pace_limited", sent: false });
+62 |     expect(await user).toEqual({ ok: false, error: "provider_error", sent: true });
+                            ^
+error: expect(received).toEqual(expected)
+
+  {
+-   "error": "provider_error",
++   "error": "pace_limited",
+    "ok": false,
+-   "sent": true,
++   "sent": false,
+  }
+
+- Expected  - 2
++ Received  + 2
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\gateway.test.ts:62:24)
+(fail) onchain gateway > a queued background pace refusal does not refuse its eligible user follower [19.88ms]
+(pass) onchain gateway > concurrent different keys cannot exceed the remaining cap [7.16ms]
+(pass) onchain gateway > happy path returns the single envelope with budget meta [4.55ms]
+(pass) onchain gateway > records only calls actually sent [7.57ms]
+(pass) onchain gateway > unknown route and bad params are refused before any call [2.58ms]
+(pass) onchain gateway > credential states short-circuit [3.64ms]
+(pass) onchain gateway > provider failure serves stale cache marked stale:true [9.87ms]
+(pass) onchain gateway > budget exhausted blocks the call before the network [5.84ms]
+(pass) onchain gateway > no cache + provider failure returns the error [4.41ms]
+(pass) onchain gateway > schema failure on a response serves stale too [12.36ms]
+(pass) onchain gateway > status exposes credential state without secrets [1.91ms]
+
+ 10 pass
+ 1 fail
+ 35 expect() calls
+Ran 11 tests across 1 file. [165.00ms]

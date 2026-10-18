@@ -1,0 +1,179 @@
+{
+  "observedAt": "2026-10-11T13:50:23.0835778-03:00",
+  "conversation": "01a12971-f91a-7b01-befa-dfa93eb04425",
+  "targetCommit": "32fbaf8c51d799c734a758ed2e9afa23a9c898d5",
+  "mainWorktree": "C:/Users/gabri/jev-trader-main",
+  "tree": "7c7ceaccf3cdc2e807308fc654c1f65668948319",
+  "buildId": "j1s1cW9B0aeroZ160t6vL",
+  "mainClean": true,
+  "unchangedBackendGitInputs": {
+    "tsconfig.verification.json": "ad712a96f24faa1629331b7ddbcca12d948de962",
+    "package.json": "4f30317ada72d4ab086091632317dc699602fc43",
+    "tsconfig.json": "934c00528222778e564fe9e5fad058d209efea94",
+    "src": "487a6fc2e8b7b7dd37d2987b5ced6a0579bac79e",
+    "bun.lock": "f3793c5fe6e264d685423719c6c8d2dc05ce1f33"
+  },
+  "tests": {
+    "webTypesExit": 0,
+    "backend": {
+      "fail": 0,
+      "pass": 1986,
+      "skip": 2,
+      "files": 119,
+      "exit": 0,
+      "source": "serial 16 baseline evidence reused only after exact input identity"
+    },
+    "frontend": {
+      "exit": 0,
+      "source": "fresh final candidate execution",
+      "files": 40,
+      "fail": 0,
+      "pass": 430
+    },
+    "rootTypesExit": 0,
+    "candidateBuildExit": 0,
+    "mainBuildExit": 0
+  },
+  "ui": {
+    "realBrowserInspectionBy": "integrator",
+    "widths": [
+      1280,
+      390,
+      320
+    ],
+    "fullAccessibilityAudit": false,
+    "reducedMotion": "unchanged source/test contract and independent source review; not OS preference emulation",
+    "consoleWarningsErrors": []
+  },
+  "closureReview": "pending independent Herschel audit; no global completion claim yet",
+  "preview": {
+    "readOnlyApiPid": 25128,
+    "temporaryCandidatePidStopped": 39712,
+    "financialActions": "none",
+    "mainPid": 4412,
+    "data": "historical/mock/dryRun",
+    "url": "http://127.0.0.1:3005/"
+  },
+  "artifacts": [
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-inventory-32fbaf8.json",
+      "sha256": "ef3920d00384677e30edbf28bdedcf6f5a0f97c8f3bf42dcb9e79d20e7e4e454",
+      "bytes": 17654
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-preview-provenance-32fbaf8.json",
+      "sha256": "f938134e2cefdadc0c873746c6fea75850894c53b1604970278a942db1ccb481",
+      "bytes": 1449
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-ui-validation-32fbaf8.json",
+      "sha256": "a9fa2f1f9098f0e924a18e6c580915c4a4a0b08673a68eaea40c70895496432b",
+      "bytes": 17222
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-web-tests-32fbaf8.log",
+      "sha256": "e4bb7f17851f6ff48122c8ca1a003978b649876cd2a2e5cd676d23b011f9d925",
+      "bytes": 48195
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-web-types-32fbaf8.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-web-build-32fbaf8.log",
+      "sha256": "c9b18348826b276b72ea74e431e3e090f157973c8727a298edc1e79d1d307d49",
+      "bytes": 659
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/main-web-build-32fbaf8.log",
+      "sha256": "9a36328687c0bcac921cac7223e57bddd10fe868f8841f78ba064e1c5544c94c",
+      "bytes": 660
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-root-serial.log",
+      "sha256": "c4a5342fabcc9c609a961c972aca2b8499a42938696940425a60079229a2e45e",
+      "bytes": 290725
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-root.log",
+      "sha256": "1ad9093b08dd8528829f7784f3f94260da290ccb3632a405d9ec724d6df9bcba",
+      "bytes": 280083
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-types.log",
+      "sha256": "f830dee8279913b62956a5c27a3f52f0fccc8cec9f052fd4cdc8dee6f25b9de2",
+      "bytes": 139
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-types.exit",
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/physical-dependencies-verification.json",
+      "sha256": "77c027f1b1d1d06f5af1ce69639abe50f097d09292e8a141d8a31fa6fb398fd0",
+      "bytes": 491
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/review-32fbaf8-report.md",
+      "sha256": "ce734b8caa785f4e9b09d104bc120a644630d6eab35900db3ce77f42abcb2ada",
+      "bytes": 3465
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/review-32fbaf8-report.json",
+      "sha256": "2748e89e2bc44d544c9057bc88668df872e5c531cea2cbfc46a7dc28f74e31bf",
+      "bytes": 9254
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-ACCEPTANCE.md",
+      "sha256": "20e1558da58ceae78332020f1e4f84277eacdb694748d28b9ea599dc30808054",
+      "bytes": 1712
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-MOBILE-FIX-SPEC.md",
+      "sha256": "7d3ac329ab9bf1e6fbcc77eeaa20c928312777a35d763fa1ce9eeb2ee81c4abd",
+      "bytes": 1735
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-CONCURRENT-UI-SPEC.md",
+      "sha256": "e6254463db1d8b7570672f73b121b1daa8ffb6a5711a6c603102af0db80374b2",
+      "bytes": 1431
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-MOBILE-REVIEW-51cfa77.md",
+      "sha256": "cad5038fb0a45ec0ad60bfbaca9b7c67f1b0172952831300d1ac32c5411074bb",
+      "bytes": 3143
+    },
+    {
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-FINAL-VERIFICATION-32fbaf8.md",
+      "sha256": "d28d02c2f661ea91b19fc46142f28366a614e39724f0a9fe5f909ff4fe84f65d",
+      "bytes": 7146
+    },
+    {
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-desktop-32fbaf8.jpg",
+      "sha256": "04f5af21a7589c0f5de492d496f46d12d395aa954afad15f36dc86165c542d5e",
+      "bytes": 62977
+    },
+    {
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-desktop-risk-32fbaf8.jpg",
+      "sha256": "ef2faf2ed3865207162614035f62189f8eb7388dd7f0408c8344c11f3eff8173",
+      "bytes": 57676
+    },
+    {
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-mobile-390-32fbaf8.jpg",
+      "sha256": "469dc8c8b11e216e30282290581957befa040ff6f7d5a27bddad59212e7db4a5",
+      "bytes": 36717
+    },
+    {
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-mobile-risk-390-32fbaf8.jpg",
+      "sha256": "89c723da22ac7d4a8fd76358d693dfdb340d4706ad8de2ca8e07c3d528c2c571",
+      "bytes": 33411
+    },
+    {
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-mobile-320-32fbaf8.jpg",
+      "sha256": "6eb345f44eb3c510f5b989050ce95029489cedf068a35f7bfbd7599039b90b49",
+      "bytes": 19300
+    }
+  ]
+}

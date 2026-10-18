@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-migrar-specs",
+    "specHash": "144b8f277822e6fbff4458a5f2c0b6d105722a8e94dc9faa74511e1dcf060611",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "migrate_status_delete",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "migrate_status_delete",
+          "index_nodes_keep_files",
+          "defer"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_status_delete",
+              "index_nodes_keep_files",
+              "defer"
+            ],
+            "probs": {
+              "migrate_status_delete": 0.91,
+              "index_nodes_keep_files": 0.07,
+              "defer": 0.01,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "index_nodes_keep_files",
+              "defer",
+              "migrate_status_delete"
+            ],
+            "probs": {
+              "index_nodes_keep_files": 0.19,
+              "defer": 0.01,
+              "migrate_status_delete": 0.79,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "defer",
+              "migrate_status_delete",
+              "index_nodes_keep_files"
+            ],
+            "probs": {
+              "defer": 0.03,
+              "migrate_status_delete": 0.89,
+              "index_nodes_keep_files": 0.07,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "migrate_status_delete": 0.8633,
+          "index_nodes_keep_files": 0.11,
+          "defer": 0.0167
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.7533,
+        "leader": "migrate_status_delete",
+        "railProb": {
+          "migrate_status_delete": 0.19,
+          "index_nodes_keep_files": 0.01,
+          "defer": 0
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "migrate_status_delete",
+          "index_nodes_keep_files",
+          "defer"
+        ],
+        "framings": [
+          {
+            "order": [
+              "migrate_status_delete",
+              "index_nodes_keep_files",
+              "defer"
+            ],
+            "probs": {
+              "migrate_status_delete": 0.91,
+              "index_nodes_keep_files": 0.08,
+              "defer": 0.01,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "index_nodes_keep_files",
+              "defer",
+              "migrate_status_delete"
+            ],
+            "probs": {
+              "index_nodes_keep_files": 0.17,
+              "defer": 0.01,
+              "migrate_status_delete": 0.81,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "defer",
+              "migrate_status_delete",
+              "index_nodes_keep_files"
+            ],
+            "probs": {
+              "defer": 0.03,
+              "migrate_status_delete": 0.9,
+              "index_nodes_keep_files": 0.06,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "migrate_status_delete": 0.8733,
+          "index_nodes_keep_files": 0.1033,
+          "defer": 0.0167
+        },
+        "noneFits": 0.0067,
+        "agreement": 1,
+        "margin": 0.77,
+        "leader": "migrate_status_delete",
+        "railProb": {
+          "migrate_status_delete": 0.19,
+          "index_nodes_keep_files": 0.01,
+          "defer": 0
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 7485,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

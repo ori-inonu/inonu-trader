@@ -1,0 +1,876 @@
+{
+ "geradoEm": "2026-10-12",
+ "origem": "lista colada pelo usuario a partir do Dev Portal (gerenciamento de RPS por endpoint)",
+ "endpoints": [
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/all-tokens",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/approve-transaction",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/get-liquidity",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/history",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/intent/auction-info",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/intent/cancel-order",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/intent/cancel-signdata",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/intent/create-order",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/intent/order-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/intent/order-status",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/quote",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/supported/chain",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/swap",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/aggregator/swap-instruction",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/rwa/tokens",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/news/by-symbol",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/news/detail",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/news/latest",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/news/platforms",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/news/search",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/sentiment/ranking",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/sentiment/symbol",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/vibe/timeline",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/market/social/vibe/top-kols",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/post-transaction/orders",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/pre-transaction/broadcast-transaction",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/pre-transaction/check-approvals",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/pre-transaction/gas-limit",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/pre-transaction/gas-price",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/pre-transaction/nonce",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/pre-transaction/simulate",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "TRADE",
+   "caminho": "/api/v6/dex/pre-transaction/supported/chain",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/balance/all-token-balances-by-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/balance/supported/chain",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/balance/token-balances-by-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/balance/total-value-by-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/index/current-price",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/index/historical-price",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/candles",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/historical-candles",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/leaderboard/list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/leaderboard/supported/chain",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/memepump/apedWallet",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/memepump/similarToken",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/memepump/supported/chainsProtocol",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/memepump/tokenBundleInfo",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/memepump/tokenDetails",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/memepump/tokenDevInfo",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/memepump/tokenList",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/portfolio/dex-history",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/portfolio/overview",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/portfolio/recent-pnl",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/portfolio/supported/chain",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/portfolio/token/latest-pnl",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/price",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/price-info",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/signal/list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/signal/supported/chain",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/supported/chain",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/advanced-info",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/basic-info",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/cluster/list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/cluster/overview",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/cluster/supported/chain",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/cluster/top-holders",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/holder",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/hot-token",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/search",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/top-liquidity",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/top-trader",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/token/toplist",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/market/trades",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/post-transaction/transaction-detail-by-txhash",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/dex/post-transaction/transactions-by-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/address/address-active-chain",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/address/information-evm",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/address/supported-chains",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/block/address-balance-history",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/block/block-fills",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/block/block-height-by-time",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/block/block-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/block/block-stats",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/block/supported-chains",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/block/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/block",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/detail",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/hashes",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/stats",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/summary",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/supported-chains",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/info/transaction",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/log/by-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/log/by-address-and-topic",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/log/by-block-and-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/log/by-transaction",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/log/supported-chains",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/transaction/internal-transaction-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/transaction/normal-transaction-list-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/transaction/supported-chains",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/transaction/token-transaction-list-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/transaction/token-transfer-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "MARKET",
+   "caminho": "/api/v6/explorer/transaction/transaction-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/a2a/payment/create",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/mpp/charge/settle",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/mpp/charge/verifyHash",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/mpp/session/close",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/mpp/session/open",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/mpp/session/settle",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/mpp/session/status",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/mpp/session/topUp",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/settle",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/settle/status",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/cancel",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/cancel-pending-change",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/change",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/charge",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/charges",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/detail",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/finalize-expired",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/subscriptions/pending",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/supported",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/verify",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/pay/x402/verify-signature",
+   "reqPorSegundo": 100
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/x402/settle",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/x402/supported",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "PAYMENTS",
+   "caminho": "/api/v6/x402/verify",
+   "reqPorSegundo": 3
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/information-evm",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/internal-transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/internal-transaction-list-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/native-token-position-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/normal-transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/normal-transaction-list-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/token-balance",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/token-transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/address/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/block/block-fills",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/block/block-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/block/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/block/transaction-list-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/contract/check-proxy-verify-result",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/contract/check-verify-result",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/contract/verify-contract-info",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/contract/verify-proxy-contract",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/contract/verify-source-code",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/log/by-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/log/by-address-and-topic",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/log/by-block-and-address",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/log/by-transaction",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/token/position-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/token/token-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/token/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/internal-transaction-detail",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/internal-transaction-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/large-transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/token-transaction-detail",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/token-transfer-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/transaction-fills",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/transaction-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/transaction/unconfirmed-transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/address/information-evm",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/address/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/block/block-fills",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/block/block-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/block/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/block/transaction-list-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/cross/transaction-fills",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/cross/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/cross/transaction-multi",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/transaction/transaction-fills",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/transaction/transaction-list",
+   "reqPorSegundo": 5
+  },
+  {
+   "familia": "XLAYER",
+   "caminho": "/api/v5/xlayer/tz/transaction/transaction-multi",
+   "reqPorSegundo": 5
+  }
+ ]
+}

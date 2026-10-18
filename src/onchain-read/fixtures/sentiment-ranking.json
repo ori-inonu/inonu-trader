@@ -1,0 +1,31 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": {
+    "details": [
+      {
+        "mentionCount": "94",
+        "newsMentionCount": "15",
+        "sentiment": { "bearishCnt": "20", "bearishRatio": "0.21", "bullishCnt": "38", "bullishRatio": "0.40", "label": "neutral", "neutralCnt": "36" },
+        "tokenSymbol": "BTC",
+        "xMentionCount": "79"
+      },
+      {
+        "mentionCount": "32",
+        "newsMentionCount": "2",
+        "sentiment": { "bearishCnt": "2", "bearishRatio": "0.06", "bullishCnt": "14", "bullishRatio": "0.44", "label": "neutral", "neutralCnt": "16" },
+        "tokenSymbol": "ETH",
+        "xMentionCount": "30"
+      },
+      {
+        "mentionCount": "5",
+        "newsMentionCount": "0",
+        "sentiment": { "bearishCnt": "1", "bearishRatio": "0.2", "bullishCnt": "1", "bullishRatio": "0.2", "label": "neutral", "neutralCnt": "3" },
+        "xMentionCount": "4"
+      }
+    ],
+    "period": "1h",
+    "ts": "1791842400000"
+  },
+  "msg": ""
+}

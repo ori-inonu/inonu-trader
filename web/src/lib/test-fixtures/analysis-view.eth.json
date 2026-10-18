@@ -1,0 +1,125 @@
+{
+  "ageSec": 0,
+  "trend": {
+    "regime": "up",
+    "adx15m": 38.24,
+    "efficiency15m": 0.387,
+    "emaStack15m": 1,
+    "emaStack1h": 0,
+    "emaStack4h": 1,
+    "extensionAtr15m": 4.26
+  },
+  "momentum": {
+    "rsi5m": 70.3,
+    "rsi15m": 56.3,
+    "rsi1h": 48.9,
+    "macdHistAtr15m": -0.084
+  },
+  "volatility": {
+    "atrBps15m": 65.7,
+    "atrBps1h": 64.6,
+    "volRank24h": 0.011,
+    "bbWidthRank15m": 0.53,
+    "bbPercentB15m": 0.577,
+    "expectedAbsMove5mBps": 22.02
+  },
+  "structure": {
+    "donchianPos1h": 0.876,
+    "supportBps": 9.2,
+    "supportTouches": 2,
+    "resistanceBps": 32.6,
+    "resistanceTouches": 1,
+    "renkoRun15m": 5,
+    "levels": [
+      {
+        "px": 109.51912,
+        "kind": "support",
+        "touches": 2,
+        "tf": "1h"
+      },
+      {
+        "px": 109.51348,
+        "kind": "support",
+        "touches": 2,
+        "tf": "15m"
+      },
+      {
+        "px": 109.01705,
+        "kind": "support",
+        "touches": 4,
+        "tf": "1h"
+      },
+      {
+        "px": 109.97703,
+        "kind": "resistance",
+        "touches": 1,
+        "tf": "1h"
+      },
+      {
+        "px": 111.55745,
+        "kind": "resistance",
+        "touches": 1,
+        "tf": "1h"
+      }
+    ],
+    "smc15m": {
+      "demandBlockBps": 303.5,
+      "supplyBlockBps": null,
+      "gapsUp": 3,
+      "gapsDown": 0,
+      "gapNearestBps": 195.2,
+      "lastBreak": {
+        "kind": "BOS",
+        "dir": "up",
+        "ageBars": 12
+      },
+      "rangePos": 1,
+      "rangeState": "above",
+      "poolAboveBps": null,
+      "poolBelowBps": 947,
+      "lastSweep": {
+        "kind": "highs",
+        "ageBars": 119
+      }
+    },
+    "smc1h": {
+      "demandBlockBps": 117.9,
+      "supplyBlockBps": null,
+      "gapsUp": 5,
+      "gapsDown": 1,
+      "gapNearestBps": 64.1,
+      "lastBreak": {
+        "kind": "CHoCH",
+        "dir": "up",
+        "ageBars": 11
+      },
+      "rangePos": 0.876,
+      "rangeState": "inside",
+      "poolAboveBps": null,
+      "poolBelowBps": null,
+      "lastSweep": {
+        "kind": "highs",
+        "ageBars": 43
+      }
+    }
+  },
+  "derivatives": {
+    "fundingZ": 0.02,
+    "fundingPctile": 0.556,
+    "oiChange1hPct": 1.104,
+    "oiPriceRegime": "long_buildup",
+    "longShortRatio": 1.2,
+    "longShortZ": -1.52,
+    "takerBuyShare1h": 0.545
+  },
+  "crossAsset": {
+    "corrBtc48h": 0.008,
+    "betaBtc48h": 0.008,
+    "relStrengthVsBtc24hBps": 0
+  },
+  "cost": {
+    "assumedRoundTripFeeBps": 20,
+    "spreadBps": 0.4,
+    "moveToCost": 1.079
+  }
+}

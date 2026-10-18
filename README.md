@@ -1,70 +1,119 @@
-# jev-trader
+# INONU TRADER
 
-One decision every Monad block. A TypeSafe Jev model watches the Kuru MON-USDC order book and answers buy or sell every ~300 ms. Every block posts a real post-only limit order on that side, one tick inside the touch, replacing the last one. Fills happen when a taker hits it, so the bot earns the spread instead of paying it. A small server streams every block to the dashboard.
+INONU TRADER is a MIT-licensed fork of [Jev Trader](https://github.com/jarrodwatts/jev-trader), originally created by Jarrod Watts. Its dashboard uses an abstract circuit mark, deep blue surfaces, cyan controls and gold accents. See [contributing](docs/CONTRIBUICAO.md), [dashboard setup](web/README.md), and the [active engineering goal](docs/GOAL-INONU-TRADER.md).
 
-## Run
+Local MON-USDC maker research on Kuru/Monad, with real market reads and paper execution. This candidate adds cost accounting, funded spot inventory, risk/decision gates and reproducible journal replay. Live startup is blocked until wallet/margin balances, outstanding orders and restart equity are reconciled and execution is independently qualified. Borrowed leverage is not implemented.
 
-    cp .env.example .env
-    bun install
-    bun run start
+The current strategy has no demonstrated profitable edge. A three-minute pre-filter mock capture lost $0.00369142 on a $100 paper example. Mock decisions and optimistic paper fills do not establish Jev profitability.
 
-With no `PRIVATE_KEY` it dry-runs: real book, real decisions, simulated fills. Set `MODEL=jev` and `TYPESAFE_AI_API_KEY` to use Jev; the default `mock` is a momentum heuristic stand-in.
+## Local setup
 
-## Endpoints
+```powershell
+# Only if .env does not exist:
+Copy-Item .env.example .env
+& C:/Users/gabri/.bun/bin/bun.exe install
+& C:/Users/gabri/.bun/bin/bun.exe run doctor
+$env:JOURNAL_PATH = 'data/my-paper-001.jsonl'
+& C:/Users/gabri/.bun/bin/bun.exe run capture --seconds 180
+& C:/Users/gabri/.bun/bin/bun.exe run backtest --journal data/my-paper-001.jsonl
+& C:/Users/gabri/.bun/bin/bun.exe run test
+& C:/Users/gabri/.bun/bin/bun.exe run typecheck
+```
 
-Deployed (dry run, mock model): https://jev-trader-production.up.railway.app
+Doctor reads RPC state and reports missing credential booleans, costs and readiness. It never signs, deposits or prints secrets. Capture requires paper mode. Start serves the local dashboard on port 3000; use a fresh journal path each run.
 
-- `GET /` snapshot: model, wallet, dryRun, latest block event
-- `GET /history` last 1000 block events
-- `GET /events` SSE: `snapshot` on connect, then one `block` event per block, plus a `fill` event whenever a live order's receipt lands
+The local Windows key is configured through the ignored .env and Jev has answered in paper mode; see [verified Windows configuration](docs/JEV-WINDOWS.md). Other installations need their own TYPESAFE_AI_API_KEY and MODEL=jev, retaining DRY_RUN=true and an empty PRIVATE_KEY. Consult current TypeSafe pricing before paid captures. The plugin credential is not transferred into this project.
 
-Every event (see `src/trader.ts` for types):
+## Local OKX Web3 panel
 
-    {
-      "block": 105488269, "ts": 1789593630676,
-      "mid": 0.022636, "bestBid": 0.022628, "bestAsk": 0.022644, "spreadBps": 7.07,
-      "decision": { "action": "buy", "probabilities": { "buy": 0.77, "sell": 0.23, "hold": 0 }, "upIn10": 0.77, "latencyMs": 81, "late": false },
-      "quote": { "side": "buy", "price": 0.022629, "size": 200, "txHash": "0x…", "gasMon": 0.0357, "cancel": [100295801], "status": "sent", "orderId": null, "capped": false },
-      "fill": null,
-      "resting": { "bidMon": 200, "askMon": 200 },
-      "position": { "side": "short", "size": 200, "entryPrice": 0.022633, "unrealizedUsd": -0.0006, "unrealizedMon": -0.027 },
-      "totals": { "blocks": 3, "decisions": 3, "quotes": 3, "fills": 1, "reverted": 0, "lateBlocks": 0, "jevUsd": 0.000004, "gasMon": 0.107, "gasUsd": 0.0024, "realizedUsd": 0, "pnlUsd": -0.003, "pnlMon": -0.13, "pnlPct": -0.003 }
-    }
+In a separate terminal, run the frontend on port 3001:
 
-Every block the model is asked about the move over `HORIZON_BLOCKS` (default 100, ~30 s) and answers `buy` or `sell`. `quote` is the order that block put on the book: a post-only limit order of `TRADE_SIZE_MON` on that side, `QUOTE_INSIDE_TICKS` inside the touch (clamped to the touch when the spread is too tight), in one `batchUpdate` that also cancels everything we had resting (`cancel`). `hold` appears only with `decision.late: true`, when the model missed the block and nothing was posted. When the position cap (or, live, margin funds) blocks a side, the quote goes on the other side with `capped: true` and `probabilities` still show the model's call. `resting` is our size known to be on the book after this block. `upIn10` equals the buy probability.
+```powershell
+Set-Location C:/Users/gabri/jev-trader/web
+& C:/Users/gabri/.bun/bin/bun.exe run dev
+```
 
-Live sends are fired and forgotten, so the `block` event carries the **intent**: `status: "sent"`, `gasMon` is `gasLimit x (last known base fee + priority)`. Monad charges the gas limit, so that is the real cost whether the order lands or not. The receipt arrives a block or two later as its own SSE event:
+Open http://localhost:3001 in the browser with the OKX Wallet extension, then choose **Conectar OKX**. The panel reads the authorized account on Monad (143) or X Layer (196), with exact amounts for a finite list of monitored assets. X Layer supports USDT and USDT0 and keeps USDC variants separate; an explicit network switch selects which balances are read. These amounts are not a consolidated portfolio or a USD valuation. See [wallet coverage and setup](web/OKX-WALLET.md). A wrong network requires an explicit switch; connecting never signs, transfers or enables the executor. The panel also works while the backend is offline. Its default feed is the local backend on port 3000; NEXT_PUBLIC_API_URL can explicitly override it.
 
-    event: quote
-    data: { "block": 105488269, "quote": { …, "status": "placed", "orderId": 100295812, "gasMon": 0.0357 } }
+Pix/BRL on OKX Exchange and assets in OKX Web3 are separate balances. The user-reported funds have not been observed by this application. Mobile-only wallets, native extension behavior and real account balances remain unqualified until used on the user's device. See [OKX investigation and trading routes](docs/OKX-INVESTIGACAO.md).
 
-`status` becomes `placed` (with the order id) or `reverted` (the book moved through the price before the tx landed, or a cancelled order had already filled). No receipt after 10 blocks gives `lost`. Fills are not in our own transactions: someone else's taker order hits our resting one, and the Trade log for it arrives via the same `eth_getLogs` poll that feeds the model. Each block with fills gets its own SSE event, and `position`, `realizedUsd` and `fills` update then:
+## Execution and accounting
 
-    event: fill
-    data: { "block": 105488271, "fill": { "side": "buy", "size": 200, "price": 0.022629, "txHash": "0x…", "orderId": 100295812, "simulated": false } }
+Read book and earlier trade logs → enforce session limits/interval → screen hypothetical two-leg spread after gas, fees and estimated inference cost → ask model → validate action/confidence/deadline/funded inventory → quote or clear paper resting orders → journal individual events → replay net equity/drawdown.
 
-`txHash` is the taker's transaction. In a dry run the quote is `status: "sim"`: the order rests for one block and a real print crossing its price fills it (`simulated: true`).
+The cost screen assumes two full fills at an unchanged book and charges two quote transactions, one inference allowance and maker fees. It is a feasibility filter: queue priority, adverse selection, actual inference/cancellation costs and fill probability can make realized results worse. Stops latch until restart; a transaction, model bill or market gap can exceed caps. These are not on-chain stop-loss orders.
 
-## Layout
+Paper cash starts at BANKROLL_USD minus MARGIN_MON times firstMid. MARGIN_USDC is a legacy live funding target, not additional paper capital. Gas uses a disclosed limit/RPC price; mock inference cost is zero. Individual fills/costs are immutable in JSONL; the dashboard's aggregated mutable history is not valid replay input.
 
-    src/config.ts   env
-    src/chain.ts    block feed (WebSocket newHeads + polling backstop, newest block only), raw RPC
-    src/book.ts     one-eth_call order book reader (decodes getL2Book, merges the AMM vault)
-    src/market.ts   Kuru: read book, hand-encoded batchUpdate (cancel + post-only place), margin deposits, local nonce, async confirmation
-    src/model.ts    Model interface, JevModel (AI SDK experimental_evaluate), MockModel
-    src/trader.ts   the loop: one in flight, hold when late, position and P&L accounting
-    src/server.ts   Bun.serve: snapshot, history, SSE
+## Evidence and Brazil funding
 
-## The 300 ms budget
+- [Operating guide: Jev, OKX Wallet versus exchange, Pix/Nubank and blockers](docs/OPERACAO-BRASIL.md)
+- [Risk, captured results and qualification](docs/RISCO-E-BACKTEST.md)
+- [Primary-source funding research](docs/FUNDING-RESEARCH.md)
+- [Frozen acceptance](docs/READINESS-SPEC.md) and [economic gate addendum](docs/PROFIT-SPEC.md)
+- [v0.0.2 release status, boundaries and open decisions](docs/RELEASE-v0.0.2.md)
+- [Live qualification plan and checklist](docs/LIVE-QUALIFICATION.md)
+- [Portfolio evidence SDD](docs/sdd/carteira-evidencia/requirements.md): canonical requirements, design (real state of the code, evidence contract, concurrent-work map) and finite task plan for verifiable manual portfolio management. Spec only; nothing in it is implemented yet.
+- Recorded pre-filter replay: kept in the local `docs/evidence` directory, which is not published.
 
-A decision and an order have to fit in one block, so the hot loop makes exactly two RPC round trips:
-one `eth_call` for the book (~18 ms on the public RPC, `READ_RPC_URL`) and one `eth_sendRawTransaction`
-(`RPC_URL`), which returns as soon as the tx is accepted. Nothing else is on the path — no
-`eth_estimateGas` (Monad charges gas on the limit, so the limit is hardcoded or derived once at
-startup), no `eth_sendRawTransactionSync` (it blocks until the tx is Proposed), no gas price lookup
-(static type-2 fees: `MAX_FEE_GWEI` cap, 2 gwei priority; the effective price is base + priority).
-Receipts, the fee estimate and the vault check run off the hot path on later blocks. Measured in a
-dry run with the mock model: read p50 18 ms, whole loop p50 100 ms (80 ms of it the mock's inference stand-in).
+Live qualification does not enable live. `bun run qualify:live` prints a read-only checklist of what must be true and evidenced before the owner decides to lift the live-execution gate: JSON on stdout and a short pt-BR summary on stderr. It reads the config like `doctor`, plus optional local `data/live-authorization.json` and `data/live-evidence.json`, and hashes the evidence files they name. It makes no network or RPC calls and never signs or sends anything. `readyForOwnerReview` only means the checklist is complete; it is not permission to trade, and the gate in `Market.init()` is unchanged. The assistant never fills the authorization record, supplies keys or runs a live session.
 
-    bun run scripts/bench-read.ts     # book reader vs the SDK: exactness and latency
-    bun run scripts/dry-encode.ts     # signs a buy and a sell offline, asserts the calldata matches the SDK
+The original root SPEC.md/demo description is historical context. Frozen readiness acceptance/addendum govern this candidate. Local changes have not been deployed to Railway. The original every-300-ms-block real-order demo claim has not been requalified; the current protective hold/interval behavior is not equivalent to that claim. Setting `ECONOMIC_GATE=false`, `QUOTE_INTERVAL_BLOCKS=1` and `MIN_CONFIDENCE=0` selects every-block evaluation; it is an operator choice, not the default, and live execution stays blocked in code.
+
+## Jev as financial operator (multichain OKX Wallet)
+
+`bun run okx:operator` (for live, `bun --no-env-file --env-file=.env.operator run scripts/okx-operator.ts`, so the trader's keys are never inherited) runs one operator cycle: multichain inventory (OKX Balance API, chains 143, 196, 501, 1, 56, 8453, 42161, 137, 10), typed candidates (DEX round trips, cross-chain rebalances, the Kuru maker mandate, DeFi yield), deterministic gates, one Jev choice (candidate or hold) and one bounded plan. Without flags it is an offline synthetic demo; `--live` reads the real wallet through OKX OnChain OS credentials, `--jev` asks real Jev, `--loop` repeats. Plans stay dry run unless the operator's own gates are all set: OPERATOR_EXECUTE, OPERATOR_LIVE_ACK, a dedicated OPERATOR_PRIVATE_KEY, the real Jev model, an https RPC plus router, spender and selector allowlists per chainIndex, and a ledger created once with --init-ledger. The ledger caps daily notional and plans, stops on daily, weekly and drawdown losses, fed only by the result you record with `--reconcile <planId> <closed|failed> --realized <usd>` (each completed plan blocks the operator until you reconcile it), enforces a cooldown, blocks new plans while a leg is open, and the file data/operator/STOP is a kill switch checked before every send. Solana execution is disabled in code until a transaction policy exists. The R5 independent review and the fixes applied for its F1 to F8 conditions are recorded in docs/research and in the operator guide. DeFi products come from the OKX DeFi search and funding carry from the public OKX v5 funding-rate endpoint as research candidates. The backend serves the last cycle at `GET /operator` and the dashboard shows it, together with the connected account's balances on eight EVM networks and the Solana account from the OKX extension. See [the operator guide](docs/OKX-OPERADOR-JEV.md).
+
+## Mesa de operacoes (the root page)
+
+The root page `/` is a full-screen desk without page scroll: order book ladder and tape on the left wing, the Jev decision at the center with candles and an isometric liquidity surface, the watchlist, aggressor flow and perpetual funding on the right wing, and the OKX Wallet, the OKX and OnchainOS capability matrix and the Jev journal in the dock. The wings fold toward the Jev in CSS 3D (pointer parallax, off under reduced motion); on phones it becomes one section at a time with a tab bar. Market data comes straight from the keyless OKX public v5 WebSocket and REST in the browser, so nothing on the desk is a fixture: a value that is not known reads "Indisponivel", a feed that is silent is labelled old, and a blocked capability (for example OnchainOS without its Web3 credentials) says what it needs. The previous command center is kept at `/console`. Spec and run instructions: [docs/MESA-DE-OPERACOES.md](docs/MESA-DE-OPERACOES.md).
+
+`bun run jev-read --jev --serve 3100` starts the producer behind the desk's Jev: it keeps the live OKX public feed in memory, builds a compact state only from real and fresh inputs, asks real Jev for buy, sell or hold over a 5 minute horizon, validates the answer (anything else is hold with a status) and publishes the board at `GET /jev-read` through an allowlisted projection and the same dashboard origins and optional token as `/operator`. It is advisory only: it never signs or sends, and without fresh data it records why and does not call the model. `--observe` records the state without any model. System One now evaluates freshness on the exchange-corrected clock (`src/system-one/clock.ts`), because a local clock behind OKX made every exchange stamp look like the future.
+
+## Dashboard: the Jev command center
+
+The dashboard opens on the command center: Jev sits at the middle of a tilted orbit, with the inputs it reads (price feed, Monad block) on the left, the outputs it drives (Kuru book, wallet) on the right and the OKX operator on top. Every new block sends a signal from the inputs into the core and, when Jev quotes, from the core out to the Kuru book in the decision colour; a late answer makes the core flinch once. A receding belt shows the last blocks. Below the stage, the growth deck folds the three central views into the console: risk and leverage (R3 arithmetic for a chosen capital, volatility, horizon and assumed edge), permissions and limits (tiers T0 to T2-C and the phase limit profile) and the OKX ecosystem map. All of it is reading only: no control on the page executes anything, the only looping motion is ambient and stateless, and reduced motion or a reconnecting feed holds everything still. Sources: `web/src/components/CommandCenter`, `web/src/components/GrowthDeck`, `web/src/lib/command-center.ts`, `web/src/lib/growth-deck.ts`, `web/src/lib/central`.
+
+## Jev Decision Lab and risk tools (read only, shadow only)
+
+`bun run jev:lab run --synthetic --epochs 400 --seed 7 --out ./lab-out` runs an edge discovery loop without executing anything: at every epoch it records what each policy (hold, random, buy and hold, momentum, carry and Jev) would choose, measures the point-in-time result net of conservative costs, and prints a report with honest statistics (Newey-West for overlapping horizons, Holm across policies, comparison against baselines, a Sharpe with its caveat and a 1x to 10x leverage counterfactual). `bun run jev:lab report --journal ./lab-out/journal.jsonl` rebuilds the report from the journal alone. The lab never signs, sends, uses the network, keys or environment variables; the default Jev is a mock chooser announced loudly, and the promotion gate can only recommend staying in fase-0. Synthetic data proves arithmetic and the statistics machinery, never profit. Spec, measured test size and power: [docs/JEV-LABORATORIO-DE-DECISAO.md](docs/JEV-LABORATORIO-DE-DECISAO.md).
+
+The lab can also consult the real Jev, in shadow and under a hard cost cap (`src/lab-jev`, `scripts/jev-lab-real.ts`, [docs/JEV-LAB-JEV-REAL.md](docs/JEV-LAB-JEV-REAL.md)). `bun run jev:lab:plan --capture <capture.jsonl> --usd-per-mtok <price>` estimates, with no network and no key, how many consultations a window needs and what they would cost. `bun run jev:lab:real run --capture <capture.jsonl> --out <folder> --max-usd <n> --max-calls <n> --allow-paid-inference` asks the real Jev once per epoch (after one preflight call) and measures what its choices would have returned net of costs; it refuses without the flag, without both caps (hard maxima: 5 USD and 2000 calls), without the key or without the price. The three variables (`TYPESAFE_AI_API_KEY`, `JEV_MODEL_ID`, `JEV_USD_PER_MTOK`) live in `data/jev.env`, which git ignores, and the key is never printed or stored. Jev sees only numbers, opaque ids and closed vocabularies, and nothing is executed, signed or sent. Every summary ends with the leverage that the measured edge would justify (zero until there is out-of-sample evidence) and says that this is a diagnostic: lifting real execution needs the four conditions of decision D11.
+
+`bun run policy:envelope --capital 80 --sigma 0.04` derives the per-phase limits (fase-0 to fase-2) from the research envelope and `--check <file> --phase fase-1` checks a settings file against a phase ([docs/POLITICA-DE-LIMITES.md](docs/POLITICA-DE-LIMITES.md)). `bun run okx:derivatives` evaluates perpetual-swap carry and leverage risk from a synthetic or imported snapshot ([docs/okx-derivatives-v1/GUIA.md](docs/okx-derivatives-v1/GUIA.md)). Both are offline and execute nothing. How Jev decides on top of the Onchain OS: [docs/JEV-DECISAO-ONCHAIN-OS.md](docs/JEV-DECISAO-ONCHAIN-OS.md); the page and endpoint inventory of the Onchain OS: [docs/research/R6-onchain-os-inventario.md](docs/research/R6-onchain-os-inventario.md).
+
+Read-only data layer for the OKX Onchain OS (`src/onchainos`, spec in Portuguese at [docs/OKX-ONCHAINOS-DADOS-SPEC.md](docs/OKX-ONCHAINOS-DADOS-SPEC.md)). It reads market price, index, candles and trades, token statistics, signals and leaderboards, social numbers, gas price and DeFi products through one signed GET and POST transport (injected fetch, token bucket, bounded retries on 429 and 5xx only, per-tier quota counters, offline unless credentials and `allowNetwork` are both present), plus a keyless client for the public OKX Exchange v5 REST that feeds the derivatives evaluator. It never signs a transaction, never builds calldata, never calls a trade or security-scan endpoint and never pays per call. `bun run onchainos:capture plan` prints the calls and the quota cost of a capture without any network access; `bun run onchainos:capture run --source public-okx --out <folder> --max-epochs 60 --allow-network` records ticker, funding, mark price, candles, order book and open interest in the Jev Decision Lab capture format (JSONL, resumable, idempotent, one request per second by default). The `onchainos` source needs `--credentials-from-env` and `--allow-network`, and its credentials come from `data/onchainos.env` through `bun run onchainos:capture:env`: create that file with only `OKX_WEB3_API_KEY`, `OKX_WEB3_API_SECRET` and `OKX_WEB3_API_PASSPHRASE` (the `data/` folder is ignored by git), so your wallet keys are never loaded. Captured numbers prove parsing and data flow, not profit.
+
+## Treated indicators in Python
+
+`bun run analytics` runs a Python collector (`python/jev_analytics`, standard library only) that reads the keyless public OKX API, computes descriptive indicators (trend, momentum, volatility, structure, derivatives, relation to BTC and cost) from closed candles and writes `data/jev-analytics/latest.json`; the spec is in Portuguese at [docs/sdd/grafico-jev/spec.md](docs/sdd/grafico-jev/spec.md). `bun run analytics:once` makes one pass and exits, `bun run analytics:test` runs the package tests. It is read only: it calls no model, signs nothing and trades nothing, and the file carries measurements and closed vocabulary states, never an action. The Jev read producer (`bun run jev-read`) reads the file by itself and treats it as optional: when it is absent or older than 120 s the Jev decides exactly as before, and `--no-analytics` turns the reading off. Without Onchain OS credentials the on-chain section is not collected. Numbers measured on 2026-10-12 with `python/tools/measure_budget.py` over 10 minutes for 5 instruments: the first cycle took 47 requests in about 19 s, then 12.8 requests per minute, and at most 4 rubik requests in any 2 s window against a documented limit of 5. Effect on the Jev's input tokens: not measured.
+
+Settings, Onchain OS and smart money (spec in Portuguese: [docs/sdd/config-onchain-smartmoney/spec.md](docs/sdd/config-onchain-smartmoney/spec.md)). The desk has a settings page at `/configuracoes` (gear in the top bar) where the Jev key (`TYPESAFE_AI_API_KEY`) and the Onchain OS key, secret and passphrase (`OKX_WEB3_API_KEY`, `OKX_WEB3_API_SECRET`, `OKX_WEB3_API_PASSPHRASE`) are saved only on this machine, in `data/jev.env` and `data/onchainos.env` (the `data/` folder is git ignored). A saved value is never returned to the browser and the write routes accept only loopback connections from the dashboard origins. The backend serves a read only Onchain OS gateway at `/onchain/*` with a per endpoint cache, a one request per 1.1 s queue and a persistent monthly budget per fee tier (free plan: 100 thousand Basic and 100 thousand Premium calls a month; the default caps are half of that and the system never pays). It feeds the bottom dock tabs (Smart money, Traders, Holders), the on-chain chart and the chain picker. The chart's default indicators are smart money structure (BOS and CHoCH, order blocks, fair value gaps, liquidity pools, premium and discount) computed from closed candles by `web/src/lib/desk/chart/smc.ts`, which reproduces the golden vectors written by the Python reference `python/jev_analytics/smc.py`; the Jev receives the same readings as descriptive `structure.smc15m` and `structure.smc1h` fields of the analytics pack and still decides alone. The backend must be restarted to serve `/settings` and `/onchain/*`, and the Jev producer to read a changed Jev key. Agentic Wallet, Payments (x402) and swaps are not wired: they sign or spend, so they need the owner's explicit authorization.
+
+## System One: Jev's leverage decision layer
+
+`bun run system-one` runs one leverage decision cycle: market reading (mark price, funding rate and candles of the perpetual from the keyless OKX public v5 API with `--public`, or a synthetic walk by default), realized daily volatility, the risk envelope of the phase (src/policy/envelope.ts), eight leverage candidates (long and short at 1x, 2x, 3x and 5x) with liquidation touch probability, volatility drag and funding carry, and one Jev choice among the eligible candidates or hold (`--jev`; the default mock announces itself). The cycle is written to `data/system-one/latest.json`, served at `GET /system-one` and shown on the dashboard under the command center as the leverage ladder. System One never signs or sends: every cycle ends as `dry_run` or `blocked`. See [SYSTEM-ONE.md](docs/SYSTEM-ONE.md) and research [R9](docs/research/R9-system-one-alavancagem-onchainos.md).
+
+## OKX Web3 opportunity scanner
+
+Run `bun --no-env-file run okx:market-scan` for the local synthetic report. It makes no live requests and cannot execute trades. See the [OKX Web3 integration guide](docs/okx-market-v1/OKX-WEB3-INTEGRATION.md) for the documented coverage, optional read-only access requirements and remaining limitations.
+
+## Measured decisions: the recorder, the Veredito and the local learner
+
+While the desktop core follows the market it writes, every 5 minutes and for each followed instrument, a compact snapshot (72 numbers, every unknown `null` with its reason, only bars closed at that moment) and, once the horizons of 15 minutes, 1 hour and 4 hours are over, the label of what the price did next, net of fees, slippage and the quoted spread (`src/outcomes/`, files under `<data>/outcomes`, append only, `INONU_RECORDER=off` stops it without a restart). It uses public OKX reads only and never touches the model. `GET /inonu/placar` and the Inonu tab show the honest Placar: below 30 measured answers there is no number, only how many are missing; above it, a hit rate with its Wilson interval and a mean net return with a Newey-West interval, next to what entering at any moment would have returned.
+
+An answer of "Pedir ao Inonu" about one instrument now comes with a Veredito (`src/verdict/`, `web/src/components/Veredito/`): the seal (comprar, vender, esperar) is always the model's answer and the code may only turn it into esperar through a named gate (warming flow, old data, the cost eating the move, a divided model, a risk flag); reasons are a fixed dictionary over measured numbers; the risk plan (entry band, where the idea ends, target, reward over risk net of cost, size for the risk the person chose, capped at their capital) is plain arithmetic and never a forecast. Nothing is sent: it stays advisory.
+
+`bun --no-env-file run scripts/ml-research.ts` fetches public candle history and asks one question with the strictest test in the repository: does a model over candle features beat zero and four simple rules, net of costs, in a walk-forward test with purge, the lab's overlap-aware statistics and a Holm correction (`src/intel/ml/`)? "Not promoted" is the expected and honest answer; a promoted model would still be context only, never an order. Specification, tasks and evidence: `docs/sdd/inteligencia-decisao/`.
+
+## Integration verification
+
+Historical OKX buy observations are available with `bun --no-env-file run okx:signals` (synthetic by default). The [signals guide](docs/okx-signals-v1/GUIA.md) documents freshness, missing execution evidence and explicitly limited authenticated access.
+
+Compare Signals and Meme Pump reports by network/contract with `bun --no-env-file run okx:evidence` (deterministic offline demo). The [comparison guide](docs/okx-evidence-v1/GUIA.md) explains explicit file imports, recalculated freshness, unverified provenance and remaining liquidity/cost evidence.
+
+From the repository root, run `bun --no-env-file run test:all`, `bun --no-env-file run build`, then `bun --no-env-file run typecheck:all`. The backend command includes maintained script tests; frontend verification discovers all library regression tests, including the DEX importer/render suites. Run build before frontend typechecking because Next.js regenerates types. On this Windows installation use `C:/Users/gabri/.bun/bin/bun.exe` when Bun is not on PATH.
+
+The wallet, scanners, Jev MON-USDC trader and bounded synthetic paper supervisor remain separate operational slices. Passing their tests does not prove an autonomous OKX wallet-to-Jev-to-reconciled-execution path, live access, profit or 24-hour operation. The active audit criteria are in [Web3 integration delivery](docs/WEB3-INTEGRATION-DELIVERY-SPEC.md). Authenticated DEX analysis now preserves one raw quote only and blocks dependent quotes while the provider output unit is unqualified; the two-leg example remains synthetic.
+
+Inspect one local DeFi search capture and one product detail with `bun --no-env-file run okx:defi` (synthetic offline demo by default). The [DeFi guide](docs/okx-defi-v1/GUIA.md) distinguishes advertised yield, unknown units and costs, unverified provenance and unqualified execution.

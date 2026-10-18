@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-4",
+    "specHash": "9d8a656716d31d12fc27ebe41c9ee8ad67c7b4cce9fff4800b1e88594ed6ad14",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "star",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "star",
+          "sections",
+          "chain"
+        ],
+        "framings": [
+          {
+            "order": [
+              "star",
+              "sections",
+              "chain"
+            ],
+            "probs": {
+              "star": 0.75,
+              "sections": 0.21,
+              "chain": 0.01,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "sections",
+              "chain",
+              "star"
+            ],
+            "probs": {
+              "sections": 0.3,
+              "chain": 0.02,
+              "star": 0.65,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "chain",
+              "star",
+              "sections"
+            ],
+            "probs": {
+              "chain": 0.04,
+              "star": 0.81,
+              "sections": 0.13,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "star": 0.7367,
+          "sections": 0.2133,
+          "chain": 0.0233
+        },
+        "noneFits": 0.0267,
+        "agreement": 1,
+        "margin": 0.5234,
+        "leader": "star",
+        "railProb": {
+          "star": 0.2,
+          "sections": 0.04,
+          "chain": 0.05
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "star",
+          "sections",
+          "chain"
+        ],
+        "framings": [
+          {
+            "order": [
+              "star",
+              "sections",
+              "chain"
+            ],
+            "probs": {
+              "star": 0.78,
+              "sections": 0.17,
+              "chain": 0.02,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "sections",
+              "chain",
+              "star"
+            ],
+            "probs": {
+              "sections": 0.19,
+              "chain": 0.02,
+              "star": 0.75,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "chain",
+              "star",
+              "sections"
+            ],
+            "probs": {
+              "chain": 0.04,
+              "star": 0.8099999999999999,
+              "sections": 0.12,
+              "none_fits": 0.03
+            }
+          }
+        ],
+        "means": {
+          "star": 0.78,
+          "sections": 0.16,
+          "chain": 0.0267
+        },
+        "noneFits": 0.0333,
+        "agreement": 1,
+        "margin": 0.62,
+        "leader": "star",
+        "railProb": {
+          "star": 0.2,
+          "sections": 0.04,
+          "chain": 0.05
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 8117,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

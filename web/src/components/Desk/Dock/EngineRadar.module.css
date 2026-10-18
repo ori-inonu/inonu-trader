@@ -1,0 +1,208 @@
+/* The radar of the Inonu tab, behind the engine: a header with the state of the reading, a table of pairs with three readings each, the notes in plain words, and the ranking of the ticked pairs.
+   Same visual language as the top bar and the dock (pills, hairlines, one gradient outline for the call to action). Nothing here moves: state is read from colour, shape and words.
+   Text uses --ink, --ink-2 and --ink-3 only. */
+.root { display: grid; min-width: 0; gap: var(--s3); }
+
+.head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s4); }
+.titleBox { display: grid; min-width: 0; gap: 2px; }
+.eyebrow { color: var(--ink-3); font: var(--fs-micro); letter-spacing: var(--track-micro); text-transform: uppercase; }
+.title { margin: 0; color: var(--ink); font: 600 16px/20px var(--font-sans); letter-spacing: -0.005em; white-space: nowrap; }
+
+.status {
+  flex: 1 1 240px;
+  min-width: 0;
+  margin: 0;
+  padding: 2px var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: var(--bg-well);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+}
+.status[data-busy="true"] { border-color: color-mix(in srgb, var(--signal) 35%, var(--edge)); color: var(--ink); }
+
+/* The one action of the header: pick the first three for the ranking. The gradient outline of the other calls to action. */
+.top {
+  flex: none;
+  height: 28px;
+  padding: 0 var(--s4);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--signal) 16%, var(--bg-deck-3)), color-mix(in srgb, var(--signal) 6%, var(--bg-deck-2))) padding-box,
+    linear-gradient(135deg, var(--signal), var(--signal-deep)) border-box;
+  color: var(--ink);
+  font: 600 12px/16px var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-out-expo), opacity var(--dur-fast) var(--ease-out-expo);
+}
+.top:hover:not(:disabled) {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--signal) 26%, var(--bg-deck-3)), color-mix(in srgb, var(--signal) 12%, var(--bg-deck-2))) padding-box,
+    linear-gradient(135deg, var(--signal), var(--signal-deep)) border-box;
+}
+.top:disabled { opacity: 0.6; cursor: default; }
+.top:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+
+.empty {
+  margin: 0;
+  padding: var(--s4);
+  border: 1px dashed var(--edge-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  text-align: center;
+}
+.count { margin: 0; color: var(--ink-3); font: var(--fs-xs); }
+
+/* The table: the header stays, the rows scroll sideways on a narrow desk instead of clipping a number. */
+.table {
+  min-width: 0;
+  overflow-x: auto;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--bg-well) 35%, transparent);
+  scrollbar-width: thin;
+  scrollbar-color: var(--edge-strong) transparent;
+}
+.scroll { min-width: 880px; }
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px minmax(84px, 0.7fr) minmax(76px, 0.7fr) 66px minmax(164px, 1.3fr) minmax(226px, 1.9fr) 66px minmax(96px, 0.9fr) 32px;
+  align-items: center;
+  min-height: 34px;
+  border-bottom: 1px solid var(--edge);
+  font: 500 12px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.row:last-child { border-bottom: 0; }
+.row > span { min-width: 0; padding: 4px var(--s2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.row > .left { text-align: left; }
+.row:not(.thead):hover { background: color-mix(in srgb, var(--bg-deck-3) 55%, transparent); }
+.row[data-focus="true"] { box-shadow: inset 3px 0 0 var(--signal); }
+.row[data-chosen="true"] { background: color-mix(in srgb, var(--signal) 9%, transparent); }
+
+.thead {
+  min-height: 26px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-deck-3) 55%, var(--bg-deck-2)), var(--bg-deck-2));
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.rank { color: var(--ink-3); font: 600 10px/12px var(--font-mono); text-align: center !important; }
+.pair { display: flex; align-items: center; gap: var(--s2); }
+.open {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 600 13px/16px var(--font-sans);
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--edge-strong);
+  cursor: pointer;
+}
+.open:hover { text-decoration-color: var(--signal); }
+.open:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+/* How far out of the ordinary: the two facts in words and a thin bar under them, full at the top of the scale. */
+.unusual { display: grid !important; gap: 3px; align-content: center; }
+.unusualText { overflow: hidden; font-size: 11.5px; text-overflow: ellipsis; }
+.meter { position: relative; display: block; height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--bg-well) 85%, transparent); }
+.meter::after { position: absolute; inset: 0; background: color-mix(in srgb, var(--signal) 55%, transparent); content: ""; transform: scaleX(var(--v, 0)); transform-origin: left center; border-radius: 2px; }
+
+.num[data-tone="up"] { color: var(--buy); }
+.num[data-tone="down"] { color: var(--sell); }
+
+/* The three readings: lit when it holds, a faint outline when it does not, so the eye sees how many hold before it reads a word. */
+.readings { display: flex !important; flex-wrap: nowrap; align-items: center; gap: var(--s1); }
+.pill {
+  display: inline-flex;
+  height: 20px;
+  align-items: center;
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  color: var(--ink-3);
+  font: 600 10.5px/14px var(--font-sans);
+  letter-spacing: 0.02em;
+}
+.pill[data-on="true"] { border-color: color-mix(in srgb, var(--signal) 45%, var(--edge)); background: color-mix(in srgb, var(--signal) 14%, var(--bg-deck)); color: var(--ink); }
+
+.marks { color: var(--ink-2); font: 11px/15px var(--font-sans); }
+.none { color: var(--ink-3); }
+
+.pickCell { text-align: center !important; }
+.pick {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--edge-strong);
+  border-radius: 50%;
+  background: var(--bg-deck);
+  color: var(--ink-3);
+  cursor: pointer;
+}
+.pick:hover:not(:disabled) { border-color: var(--signal); color: var(--ink); }
+.pick[aria-pressed="true"] { border-color: var(--signal); background: var(--signal-deep); color: var(--ink); }
+.pick:disabled { cursor: default; opacity: 0.45; }
+.pick:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+@media (pointer: coarse) {
+  .pick { width: 28px; height: 28px; }
+}
+
+.fallback { display: grid; gap: var(--s2); }
+
+.legend { display: grid; gap: var(--s1); }
+.line { margin: 0; color: var(--ink-3); font: var(--fs-xs); }
+.how { display: grid; gap: 2px; }
+.how summary { width: max-content; color: var(--ink-2); font: var(--fs-xs); cursor: pointer; }
+.how summary:hover { color: var(--ink); }
+.how summary:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+.how[open] { padding: var(--s2) var(--s3); border: 1px solid var(--edge); border-radius: var(--r-sm); background: color-mix(in srgb, var(--bg-well) 45%, transparent); }
+
+/* Below the table: the ranking of the ticked pairs and the door to the networks, side by side when there is room. */
+.lower { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start; gap: var(--s3); }
+
+.picked { display: grid; gap: var(--s2); padding: var(--s3); border: 1px solid var(--edge); border-radius: var(--r-md); background: color-mix(in srgb, var(--bg-well) 45%, transparent); }
+.pickedHead { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.pickedLine { margin: 0; color: var(--ink-2); font: var(--fs-sm); }
+
+.clear {
+  height: 28px;
+  padding: 0 var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  cursor: pointer;
+}
+.clear:hover:not(:disabled) { border-color: var(--edge-strong); background: var(--bg-deck-3); color: var(--ink); }
+.clear:disabled { color: var(--ink-3); cursor: default; }
+.clear:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+
+.network { display: grid; justify-items: start; gap: var(--s2); min-width: 0; padding: var(--s3) var(--s4); border: 1px solid var(--edge); border-radius: var(--r-md); background: linear-gradient(180deg, var(--bg-deck-2), var(--bg-deck)); }
+.networkText { margin: 0; color: var(--ink-2); font: var(--fs-sm); }
+.networkOpen {
+  height: 28px;
+  padding: 0 var(--s4);
+  border: 1px solid var(--edge-focus);
+  border-radius: var(--r-pill);
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  font: 600 12px/16px var(--font-sans);
+  cursor: pointer;
+}
+.networkOpen:hover { border-color: var(--signal); }
+.networkOpen:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }

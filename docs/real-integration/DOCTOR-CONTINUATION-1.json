@@ -1,0 +1,81 @@
+{
+  "observation": "actual-local-doctor-no-private-network-requests",
+  "observedAt": "2026-10-11T21:25:56Z",
+  "command": "C:/Users/gabri/.bun/bin/bun.exe --no-env-file run real:doctor",
+  "cwd": "C:/Users/gabri/.codex/worktrees/okx-real-integration/jev-trader",
+  "exitCode": 0,
+  "configuration": {
+    "mode": "paper",
+    "executionEnabled": false,
+    "services": {
+      "onchainos": {
+        "configured": false,
+        "access": "blocked",
+        "missing": [
+          "OKX_WEB3_API_KEY",
+          "OKX_WEB3_API_SECRET",
+          "OKX_WEB3_API_PASSPHRASE"
+        ]
+      },
+      "jev": {
+        "credentialPresent": false,
+        "authorized": false,
+        "model": "jev-latest",
+        "costUsdPerMillion": null,
+        "maxCalls": 10
+      }
+    },
+    "networks": [
+      {
+        "chainIndex": "196",
+        "name": "X Layer"
+      },
+      {
+        "chainIndex": "143",
+        "name": "Monad"
+      }
+    ],
+    "quotePairConfigured": false,
+    "effectiveConfig": {
+      "intervalMs": 60000,
+      "quotePair": null,
+      "rpcRecipients": [
+        {
+          "chainIndex": "196",
+          "origin": "https://rpc.xlayer.tech"
+        },
+        {
+          "chainIndex": "143",
+          "origin": "https://rpc.monad.xyz"
+        }
+      ]
+    },
+    "web3Origin": "https://web3.okx.com",
+    "ttlMs": {
+      "quote": 15000,
+      "market": 60000,
+      "inventory": 60000
+    },
+    "dependencies": [
+      "Configure OKX_WEB3_API_KEY no ambiente local do aplicativo",
+      "Configure OKX_WEB3_API_SECRET no ambiente local do aplicativo",
+      "Configure OKX_WEB3_API_PASSPHRASE no ambiente local do aplicativo",
+      "Configure TYPESAFE_AI_API_KEY do aplicativo",
+      "Consumo Jev do aplicativo ainda não autorizado na configuração"
+    ],
+    "runtime": {
+      "bun": "1.3.14",
+      "node": "v24.3.0"
+    },
+    "accessProof": "unverified",
+    "financialExecution": "disabled",
+    "checks": {
+      "privateKeyNeeded": false,
+      "kuruNeededForBootstrap": false
+    }
+  },
+  "secretValuesEmitted": false,
+  "authenticatedRequests": 0,
+  "appJevRequests": 0,
+  "readinessClaim": "partial-not-G03-G09-complete"
+}

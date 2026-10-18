@@ -1,0 +1,31 @@
+{
+  "scope": "public-source-metadata-research",
+  "singleRequestPerAddress": true,
+  "retryCount": 0,
+  "executionEnabled": false,
+  "abiQualified": false,
+  "rows": [
+    {
+      "chainIndex": "196",
+      "router": "0x7c5bee2a8091c3ef39072f64f18fac913060aeaf",
+      "url": "https://sourcify.dev/server/v2/contract/196/0x7c5bee2a8091c3ef39072f64f18fac913060aeaf?fields=all",
+      "requestedAtMs": 1791752188838,
+      "httpStatus": 404,
+      "responseBytes": 126,
+      "responseSha256": "7bbe871ca5a6e0c1140cb3050aef5cd5daaa5edddd2daaa80e476778b58ec0f9",
+      "error": "http-404",
+      "receivedAtMs": 1791752190810
+    },
+    {
+      "chainIndex": "143",
+      "router": "0xc1c76e784db8d68585fb608ce68fc5dcff14000e",
+      "url": "https://sourcify.dev/server/v2/contract/143/0xc1c76e784db8d68585fb608ce68fc5dcff14000e?fields=all",
+      "requestedAtMs": 1791752188839,
+      "httpStatus": 404,
+      "responseBytes": 126,
+      "responseSha256": "8a00ffebe9bcc0c920b72e0c858a6cb9708af39f5b216da57b7128d51ef9b060",
+      "error": "http-404",
+      "receivedAtMs": 1791752189497
+    }
+  ]
+}

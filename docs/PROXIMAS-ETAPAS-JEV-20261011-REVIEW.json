@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 1,
+  "reviewType": "independent_proportional_local_plan_review",
+  "language": "pt-BR",
+  "reviewedAtUtc": "2026-10-11T18:01:36.448Z",
+  "verdict": "no_material_blocking_plan_findings_pc6_conditional",
+  "reviewComplete": true,
+  "overallPlanningCompletionCertified": false,
+  "implementationApproved": false,
+  "financialAuthorizationGranted": false,
+  "reviewer": {
+    "nativeThreadId": "01a12c15-23f9-72a2-8cd8-9801a588fd13",
+    "nativeSessionId": "01a12971-f91a-7b01-befa-dfa93eb04425",
+    "sourcePlanningConversation": "01a12971-f91a-7b01-befa-dfa93eb04425",
+    "identityEvidence": "CODEX_THREAD_ID/CODEX_SESSION_ID observados no ambiente; thread do revisor distinta da conversa registrada no plano.",
+    "authoredCandidateInThisTask": false,
+    "reviewedOwnImplementation": false,
+    "effectiveModel": null,
+    "effectiveEffort": null,
+    "effectiveTier": null
+  },
+  "scope": {
+    "candidate": "planning/docs/PROXIMAS-ETAPAS-JEV-20261011.md",
+    "immutableAcceptance": "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-SPEC.md",
+    "isolatedCopy": "C:/Users/gabri/AppData/Local/Temp/jev-roadmap-review-20261011-01a12971",
+    "isolation": "logical_copy_not_enforced_read_only_sandbox",
+    "permittedOutputs": [
+      "review-output-2/REVIEW.md",
+      "review-output-2/REVIEW.json"
+    ],
+    "evidencePolicy": "Material já lido e verificações já realizadas; nenhuma nova pesquisa ou repetição de checks para encerrar.",
+    "productExecutionPerformed": false
+  },
+  "baseline": {
+    "branch": "main",
+    "commit": "f626a3026a524f61d7e9f7baf6ad6c54ebf89a6c",
+    "tree": "96189e3cb9dbfe178a5dfff94f722ecb3d6f77b1",
+    "priorCommit": "32fbaf8c51d799c734a758ed2e9afa23a9c898d5",
+    "changedPathsAsSupplied": [
+      "scripts/okx-operator.ts",
+      "scripts/okx-operator.test.ts"
+    ],
+    "originalGitHistoryIndependentlyVerified": false,
+    "workingTreeClean": "attributed_to_integrator",
+    "historicalBuildId": "j1s1cW9B0aeroZ160t6vL",
+    "currentPreviewAvailabilityVerified": false
+  },
+  "hashVerification": {
+    "algorithm": "SHA-256",
+    "manifestSourceCount": 28,
+    "manifestArtifactCount": 4,
+    "manifestHashesChecked": 32,
+    "allManifestHashesMatch": true,
+    "planSha256": "f727321b845cbe1e49ab4fb6f64c68ad1ac642f4eb6f915223ffe26eef49a028",
+    "specSha256": "194d98d1bfd47cb5698e1138b9b8f0f9a70858869a826f9fbd6b2766f229c82b",
+    "manifestSha256": "4ab816c3ce9bbcc7669a83d2ae507919cd13b412f7c411a201596d7e8189a8eb",
+    "evidenceSha256": "4ab816c3ce9bbcc7669a83d2ae507919cd13b412f7c411a201596d7e8189a8eb",
+    "verificationSha256": "e30e1fc644ef0d08211887a5867adf4ac548421cf3230f50004d807d629bc74a",
+    "checkpointSha256": "95ee04f4b995db94ab7d60cb9436ec9a33b06150ffbbd1608a20779b830afa45",
+    "checks": [
+      {
+        "path": "source/README.md",
+        "expected": "fa0f0d8c684385478694b7e4aaf7555302dcae1e9e519e82dd2b7622b4f84de4",
+        "actual": "fa0f0d8c684385478694b7e4aaf7555302dcae1e9e519e82dd2b7622b4f84de4",
+        "matches": true
+      },
+      {
+        "path": "source/package.json",
+        "expected": "f20dcbb49539fc32e0de83bb0ad9abd5b10c3425519e3ab5241b15a84ec634c6",
+        "actual": "f20dcbb49539fc32e0de83bb0ad9abd5b10c3425519e3ab5241b15a84ec634c6",
+        "matches": true
+      },
+      {
+        "path": "source/web/package.json",
+        "expected": "947d9a16e9b95b9f094bf97d09c834e68e988011bad0bdbf9e76c3e1bb7cec40",
+        "actual": "947d9a16e9b95b9f094bf97d09c834e68e988011bad0bdbf9e76c3e1bb7cec40",
+        "matches": true
+      },
+      {
+        "path": "source/web/AGENTS.md",
+        "expected": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+        "actual": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+        "matches": true
+      },
+      {
+        "path": "source/docs/READINESS-SPEC.md",
+        "expected": "0983bdadc494e50038ac2ab21caec6c539af03c07bdfe9e019308723b711ba78",
+        "actual": "0983bdadc494e50038ac2ab21caec6c539af03c07bdfe9e019308723b711ba78",
+        "matches": true
+      },
+      {
+        "path": "source/docs/PROFIT-SPEC.md",
+        "expected": "4bcf7127807d225d64c4b697807a3ccf3164d2549a3de7ca9e874b651c745c83",
+        "actual": "4bcf7127807d225d64c4b697807a3ccf3164d2549a3de7ca9e874b651c745c83",
+        "matches": true
+      },
+      {
+        "path": "source/docs/WEB3-INTEGRATION-DELIVERY-SPEC.md",
+        "expected": "4ae88b6726cd0ab742c334037fc098907af0af7298d368cf374cb5cc622407ee",
+        "actual": "4ae88b6726cd0ab742c334037fc098907af0af7298d368cf374cb5cc622407ee",
+        "matches": true
+      },
+      {
+        "path": "source/docs/SYSTEM-ONE.md",
+        "expected": "12d18034ca3d6c7d97746bc459a5bc54600b490c2c9bc9ac2c951e0869e0b3e1",
+        "actual": "12d18034ca3d6c7d97746bc459a5bc54600b490c2c9bc9ac2c951e0869e0b3e1",
+        "matches": true
+      },
+      {
+        "path": "source/docs/PAPER-SUPERVISOR.md",
+        "expected": "86fb05cabfc3c77a04c7c2b6b97f18c5db4acf96ee5e8b4ab4ce4cd75d3b0221",
+        "actual": "86fb05cabfc3c77a04c7c2b6b97f18c5db4acf96ee5e8b4ab4ce4cd75d3b0221",
+        "matches": true
+      },
+      {
+        "path": "source/docs/JEV-LABORATORIO-DE-DECISAO.md",
+        "expected": "1d71a02220c608d3453b9cf8b1b0986a4d25b69d334362401ef2fe5cf991f40b",
+        "actual": "1d71a02220c608d3453b9cf8b1b0986a4d25b69d334362401ef2fe5cf991f40b",
+        "matches": true
+      },
+      {
+        "path": "source/docs/LIVE-QUALIFICATION.md",
+        "expected": "90775aa469b370de2213607b02de71a5dd73142507aab344296aa8cb889e008a",
+        "actual": "90775aa469b370de2213607b02de71a5dd73142507aab344296aa8cb889e008a",
+        "matches": true
+      },
+      {
+        "path": "source/src/system-one/readings.ts",
+        "expected": "d7e656126a64339fef09a6c72b0240c80c13313f8dcb4b4c5cf228c1dee9c667",
+        "actual": "d7e656126a64339fef09a6c72b0240c80c13313f8dcb4b4c5cf228c1dee9c667",
+        "matches": true
+      },
+      {
+        "path": "source/src/system-one/types.ts",
+        "expected": "5642a3471bbe389d339047bfaa00122677ad83f596fde325f18c5c8c1861c03c",
+        "actual": "5642a3471bbe389d339047bfaa00122677ad83f596fde325f18c5c8c1861c03c",
+        "matches": true
+      },
+      {
+        "path": "source/src/operator/cycle.ts",
+        "expected": "adcb20abbe449b458a1b69b80a9b9226e1919791b5ad8fa0b63de3cab644f3a2",
+        "actual": "adcb20abbe449b458a1b69b80a9b9226e1919791b5ad8fa0b63de3cab644f3a2",
+        "matches": true
+      },
+      {
+        "path": "source/src/operator/ledger.ts",
+        "expected": "3f56974ea89b86bbf0bea90061d0797463fc5deb1062f772d8cee9f536ee02ab",
+        "actual": "3f56974ea89b86bbf0bea90061d0797463fc5deb1062f772d8cee9f536ee02ab",
+        "matches": true
+      },
+      {
+        "path": "source/src/market.ts",
+        "expected": "0635221348c1acda1ed277c0f5ef69eb37c0d74063e5c34a8fa1dd4161ebffe7",
+        "actual": "0635221348c1acda1ed277c0f5ef69eb37c0d74063e5c34a8fa1dd4161ebffe7",
+        "matches": true
+      },
+      {
+        "path": "source/src/trader.ts",
+        "expected": "a2ec56b8be8ff1046222248e098da495885cea903e49e34665b0137a9bd751be",
+        "actual": "a2ec56b8be8ff1046222248e098da495885cea903e49e34665b0137a9bd751be",
+        "matches": true
+      },
+      {
+        "path": "source/src/market.receipt.test.ts",
+        "expected": "195e45703516dfbaf992d16a59e6e1f30a22d6c59dbbb79e38c008cf019c2357",
+        "actual": "195e45703516dfbaf992d16a59e6e1f30a22d6c59dbbb79e38c008cf019c2357",
+        "matches": true
+      },
+      {
+        "path": "source/src/trader.receipt.test.ts",
+        "expected": "9416870c75f41b073083f2d3eb73f05df8e03171acd660e2af0b065f5c84a782",
+        "actual": "9416870c75f41b073083f2d3eb73f05df8e03171acd660e2af0b065f5c84a782",
+        "matches": true
+      },
+      {
+        "path": "source/scripts/okx-operator.ts",
+        "expected": "ed937480a59c21d94deab87769ac4ae68cf10b7bdaaa743898df7039c03f5784",
+        "actual": "ed937480a59c21d94deab87769ac4ae68cf10b7bdaaa743898df7039c03f5784",
+        "matches": true
+      },
+      {
+        "path": "source/scripts/okx-operator.test.ts",
+        "expected": "b53ea83f632e123fa7d919ff6f0bbf630a8b24b997ec2c26cb7f796fef051a96",
+        "actual": "b53ea83f632e123fa7d919ff6f0bbf630a8b24b997ec2c26cb7f796fef051a96",
+        "matches": true
+      },
+      {
+        "path": "source/src/paper-supervisor.ts",
+        "expected": "6c204fdba201faf0e2298a8ebc0f18aca6554a693c5d13e88cedf75bf0bccd24",
+        "actual": "6c204fdba201faf0e2298a8ebc0f18aca6554a693c5d13e88cedf75bf0bccd24",
+        "matches": true
+      },
+      {
+        "path": "source/src/paper-capital.ts",
+        "expected": "cc3beff14450cf9ac711452f1514c244d77bd6aadf4413d88329c13b1f9ac2e4",
+        "actual": "cc3beff14450cf9ac711452f1514c244d77bd6aadf4413d88329c13b1f9ac2e4",
+        "matches": true
+      },
+      {
+        "path": "source/web/src/lib/useFeed.ts",
+        "expected": "7a71639374b68f4192a9b31bb58e3164bbe12f051299bd00695bdd779d465328",
+        "actual": "7a71639374b68f4192a9b31bb58e3164bbe12f051299bd00695bdd779d465328",
+        "matches": true
+      },
+      {
+        "path": "source/src/backtest.ts",
+        "expected": "5a26969cfe97de3446e898bdb9b8d2a4a1a65ba5885231f9e33e63281c6ad3aa",
+        "actual": "5a26969cfe97de3446e898bdb9b8d2a4a1a65ba5885231f9e33e63281c6ad3aa",
+        "matches": true
+      },
+      {
+        "path": "source/scripts/onchainos-capture.ts",
+        "expected": "4119b76bf8d86b26516a919ceb6461a00441cdbaca3c6118fc48b366d08491bf",
+        "actual": "4119b76bf8d86b26516a919ceb6461a00441cdbaca3c6118fc48b366d08491bf",
+        "matches": true
+      },
+      {
+        "path": "source/scripts/public-market-capture.ts",
+        "expected": "15254c04cb66b4503c713af9d9bfa14c1d77f021102c4516d03169eae6459b34",
+        "actual": "15254c04cb66b4503c713af9d9bfa14c1d77f021102c4516d03169eae6459b34",
+        "matches": true
+      },
+      {
+        "path": "source/scripts/jev-lab.ts",
+        "expected": "5398bdec623baad58918d7bb5b6887c61fad6d86471324369c0ed08171712e02",
+        "actual": "5398bdec623baad58918d7bb5b6887c61fad6d86471324369c0ed08171712e02",
+        "matches": true
+      },
+      {
+        "path": "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-SPEC.md",
+        "expected": "194d98d1bfd47cb5698e1138b9b8f0f9a70858869a826f9fbd6b2766f229c82b",
+        "actual": "194d98d1bfd47cb5698e1138b9b8f0f9a70858869a826f9fbd6b2766f229c82b",
+        "matches": true
+      },
+      {
+        "path": "planning/docs/PROXIMAS-ETAPAS-JEV-20261011.md",
+        "expected": "f727321b845cbe1e49ab4fb6f64c68ad1ac642f4eb6f915223ffe26eef49a028",
+        "actual": "f727321b845cbe1e49ab4fb6f64c68ad1ac642f4eb6f915223ffe26eef49a028",
+        "matches": true
+      },
+      {
+        "path": "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-JEV.json",
+        "expected": "31db0f3497865c18ead18edfa09477ab1e46a6060d6a7bc373cd32887baf61bc",
+        "actual": "31db0f3497865c18ead18edfa09477ab1e46a6060d6a7bc373cd32887baf61bc",
+        "matches": true
+      },
+      {
+        "path": "planning/docs/CENTRAL-JEV-CONCLUSION-32fbaf8.md",
+        "expected": "4b8b4cbc3d26f17e02a6cadfe89283bf562ea416ca0065f5342ecc08cdb149b3",
+        "actual": "4b8b4cbc3d26f17e02a6cadfe89283bf562ea416ca0065f5342ecc08cdb149b3",
+        "matches": true
+      }
+    ],
+    "protectedInputs": [
+      {
+        "path": ".\\source\\package.json",
+        "sha256": "f20dcbb49539fc32e0de83bb0ad9abd5b10c3425519e3ab5241b15a84ec634c6"
+      },
+      {
+        "path": ".\\manifest.json",
+        "sha256": "4ab816c3ce9bbcc7669a83d2ae507919cd13b412f7c411a201596d7e8189a8eb"
+      },
+      {
+        "path": ".\\source\\README.md",
+        "sha256": "fa0f0d8c684385478694b7e4aaf7555302dcae1e9e519e82dd2b7622b4f84de4"
+      },
+      {
+        "path": ".\\source\\web\\AGENTS.md",
+        "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567"
+      },
+      {
+        "path": ".\\source\\web\\package.json",
+        "sha256": "947d9a16e9b95b9f094bf97d09c834e68e988011bad0bdbf9e76c3e1bb7cec40"
+      },
+      {
+        "path": ".\\source\\scripts\\public-market-capture.ts",
+        "sha256": "15254c04cb66b4503c713af9d9bfa14c1d77f021102c4516d03169eae6459b34"
+      },
+      {
+        "path": ".\\source\\scripts\\onchainos-capture.ts",
+        "sha256": "4119b76bf8d86b26516a919ceb6461a00441cdbaca3c6118fc48b366d08491bf"
+      },
+      {
+        "path": ".\\source\\scripts\\okx-operator.ts",
+        "sha256": "ed937480a59c21d94deab87769ac4ae68cf10b7bdaaa743898df7039c03f5784"
+      },
+      {
+        "path": ".\\source\\scripts\\okx-operator.test.ts",
+        "sha256": "b53ea83f632e123fa7d919ff6f0bbf630a8b24b997ec2c26cb7f796fef051a96"
+      },
+      {
+        "path": ".\\source\\scripts\\jev-lab.ts",
+        "sha256": "5398bdec623baad58918d7bb5b6887c61fad6d86471324369c0ed08171712e02"
+      },
+      {
+        "path": ".\\source\\web\\src\\lib\\useFeed.ts",
+        "sha256": "7a71639374b68f4192a9b31bb58e3164bbe12f051299bd00695bdd779d465328"
+      },
+      {
+        "path": ".\\source\\docs\\LIVE-QUALIFICATION.md",
+        "sha256": "90775aa469b370de2213607b02de71a5dd73142507aab344296aa8cb889e008a"
+      },
+      {
+        "path": ".\\source\\docs\\JEV-LABORATORIO-DE-DECISAO.md",
+        "sha256": "1d71a02220c608d3453b9cf8b1b0986a4d25b69d334362401ef2fe5cf991f40b"
+      },
+      {
+        "path": ".\\source\\docs\\PROFIT-SPEC.md",
+        "sha256": "4bcf7127807d225d64c4b697807a3ccf3164d2549a3de7ca9e874b651c745c83"
+      },
+      {
+        "path": ".\\source\\docs\\PAPER-SUPERVISOR.md",
+        "sha256": "86fb05cabfc3c77a04c7c2b6b97f18c5db4acf96ee5e8b4ab4ce4cd75d3b0221"
+      },
+      {
+        "path": ".\\source\\docs\\READINESS-SPEC.md",
+        "sha256": "0983bdadc494e50038ac2ab21caec6c539af03c07bdfe9e019308723b711ba78"
+      },
+      {
+        "path": ".\\source\\docs\\WEB3-INTEGRATION-DELIVERY-SPEC.md",
+        "sha256": "4ae88b6726cd0ab742c334037fc098907af0af7298d368cf374cb5cc622407ee"
+      },
+      {
+        "path": ".\\source\\src\\backtest.ts",
+        "sha256": "5a26969cfe97de3446e898bdb9b8d2a4a1a65ba5885231f9e33e63281c6ad3aa"
+      },
+      {
+        "path": ".\\source\\docs\\SYSTEM-ONE.md",
+        "sha256": "12d18034ca3d6c7d97746bc459a5bc54600b490c2c9bc9ac2c951e0869e0b3e1"
+      },
+      {
+        "path": ".\\source\\src\\market.receipt.test.ts",
+        "sha256": "195e45703516dfbaf992d16a59e6e1f30a22d6c59dbbb79e38c008cf019c2357"
+      },
+      {
+        "path": ".\\source\\src\\market.ts",
+        "sha256": "0635221348c1acda1ed277c0f5ef69eb37c0d74063e5c34a8fa1dd4161ebffe7"
+      },
+      {
+        "path": ".\\planning\\docs\\PROXIMAS-ETAPAS-JEV-20261011.md",
+        "sha256": "f727321b845cbe1e49ab4fb6f64c68ad1ac642f4eb6f915223ffe26eef49a028"
+      },
+      {
+        "path": ".\\source\\src\\trader.ts",
+        "sha256": "a2ec56b8be8ff1046222248e098da495885cea903e49e34665b0137a9bd751be"
+      },
+      {
+        "path": ".\\planning\\docs\\PROXIMAS-ETAPAS-JEV-20261011-VERIFICATION.json",
+        "sha256": "e30e1fc644ef0d08211887a5867adf4ac548421cf3230f50004d807d629bc74a"
+      },
+      {
+        "path": ".\\source\\src\\trader.receipt.test.ts",
+        "sha256": "9416870c75f41b073083f2d3eb73f05df8e03171acd660e2af0b065f5c84a782"
+      },
+      {
+        "path": ".\\planning\\docs\\PROXIMAS-ETAPAS-JEV-20261011-SPEC.md",
+        "sha256": "194d98d1bfd47cb5698e1138b9b8f0f9a70858869a826f9fbd6b2766f229c82b"
+      },
+      {
+        "path": ".\\planning\\docs\\PROXIMAS-ETAPAS-JEV-20261011-JEV.json",
+        "sha256": "31db0f3497865c18ead18edfa09477ab1e46a6060d6a7bc373cd32887baf61bc"
+      },
+      {
+        "path": ".\\planning\\docs\\PROXIMAS-ETAPAS-JEV-20261011-CHECKPOINT.md",
+        "sha256": "95ee04f4b995db94ab7d60cb9436ec9a33b06150ffbbd1608a20779b830afa45"
+      },
+      {
+        "path": ".\\planning\\docs\\CENTRAL-JEV-CONCLUSION-32fbaf8.md",
+        "sha256": "4b8b4cbc3d26f17e02a6cadfe89283bf562ea416ca0065f5342ecc08cdb149b3"
+      },
+      {
+        "path": ".\\source\\src\\paper-capital.ts",
+        "sha256": "cc3beff14450cf9ac711452f1514c244d77bd6aadf4413d88329c13b1f9ac2e4"
+      },
+      {
+        "path": ".\\source\\src\\paper-supervisor.ts",
+        "sha256": "6c204fdba201faf0e2298a8ebc0f18aca6554a693c5d13e88cedf75bf0bccd24"
+      },
+      {
+        "path": ".\\source\\src\\system-one\\readings.ts",
+        "sha256": "d7e656126a64339fef09a6c72b0240c80c13313f8dcb4b4c5cf228c1dee9c667"
+      },
+      {
+        "path": ".\\source\\src\\system-one\\types.ts",
+        "sha256": "5642a3471bbe389d339047bfaa00122677ad83f596fde325f18c5c8c1861c03c"
+      },
+      {
+        "path": ".\\source\\src\\operator\\ledger.ts",
+        "sha256": "3f56974ea89b86bbf0bea90061d0797463fc5deb1062f772d8cee9f536ee02ab"
+      },
+      {
+        "path": ".\\source\\src\\operator\\cycle.ts",
+        "sha256": "adcb20abbe449b458a1b69b80a9b9226e1919791b5ad8fa0b63de3cab644f3a2"
+      },
+      {
+        "path": ".\\planning\\docs\\PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json",
+        "sha256": "4ab816c3ce9bbcc7669a83d2ae507919cd13b412f7c411a201596d7e8189a8eb"
+      }
+    ]
+  },
+  "mechanicalVerification": {
+    "links": [
+      {
+        "target": "PROXIMAS-ETAPAS-JEV-20261011-SPEC.md",
+        "existsInExport": true
+      },
+      {
+        "target": "PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json",
+        "existsInExport": true
+      },
+      {
+        "target": "PROXIMAS-ETAPAS-JEV-20261011-JEV.json",
+        "existsInExport": true
+      }
+    ],
+    "linksChecked": 3,
+    "linksResolved": 3,
+    "deliveries": [
+      {
+        "id": "E0",
+        "depends": "Nenhuma",
+        "owner": "Integrador + revisor",
+        "result": "Baseline testado, proveniência da prévia e mapa dos receipts."
+      },
+      {
+        "id": "E1",
+        "depends": "E0",
+        "owner": "Backend de leitura",
+        "result": "Um snapshot verificável em modo somente leitura."
+      },
+      {
+        "id": "E2",
+        "depends": "E1",
+        "owner": "Integração de decisões",
+        "result": "Uma decisão finita auditável, sem execução financeira."
+      },
+      {
+        "id": "E3",
+        "depends": "E2",
+        "owner": "Adaptador e capital",
+        "result": "Ciclo completo, persistido e recuperável em simulação."
+      },
+      {
+        "id": "E4",
+        "depends": "E3",
+        "owner": "Dados + verificação",
+        "result": "Relatório fora da amostra e operação paper observada."
+      },
+      {
+        "id": "E5",
+        "depends": "E0; estado integrado final depende de E2/E3",
+        "owner": "Frontend",
+        "result": "Explicação visual do ciclo, acessível e com motion medido."
+      },
+      {
+        "id": "E6",
+        "depends": "E4, E5",
+        "owner": "Revisor + dono",
+        "result": "Dossiê de prontidão; qualquer operação real exige autorização própria."
+      }
+    ],
+    "deliveryCount": 7,
+    "edges": {
+      "E2": [
+        "E1"
+      ],
+      "E3": [
+        "E2"
+      ],
+      "E0": [],
+      "E1": [
+        "E0"
+      ],
+      "E4": [
+        "E3"
+      ],
+      "E5": [
+        "E0",
+        "E2",
+        "E3"
+      ],
+      "E6": [
+        "E4",
+        "E5"
+      ]
+    },
+    "dependenciesAcyclic": true,
+    "topologicalOrder": [
+      "E0",
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "goalContractWordCount": 195,
+    "checksAreProductTests": false
+  },
+  "acceptanceCoverage": [
+    {
+      "id": "PC1",
+      "criterion": "Identificar main, commit, tree e a alteração posterior à entrega; separar evidências históricas de testes/preview de verificações ainda necessárias no novo baseline.",
+      "status": "satisfied_for_fixed_planning_baseline",
+      "evidence": [
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-SPEC.md:23-30",
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011.md:18-26,42-50",
+        "manifest.json:6-15",
+        "planning/docs/CENTRAL-JEV-CONCLUSION-32fbaf8.md:5,13-16,29",
+        "source/scripts/okx-operator.ts:127-136",
+        "source/scripts/okx-operator.test.ts:62-74"
+      ],
+      "assessment": "Commit/tree fixados identificados; conclusão 32fbaf8 e BUILD_ID histórico não certificam f626a30. A fonte atual mostra lock adquirido antes de openLedger; E0 exige cobertura posterior. Identidade Git/limpeza/delta de dois arquivos são evidência atribuída ao integrador e baseline fornecido, não uma nova inspeção do repositório original."
+    },
+    {
+      "id": "PC2",
+      "criterion": "Fundamentar capacidade e pendência em caminhos existentes, hashes atuais e trechos consultados. Não apresentar módulo existente como inexistente, checklist histórico como falha atual ou teste pulado como prova de bug.",
+      "status": "satisfied",
+      "evidence": [
+        "manifest.json:16-178",
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011.md:14-26",
+        "source/src/system-one/readings.ts:151-159",
+        "source/src/operator/cycle.ts:14-28,36-64,157-184,197-208",
+        "source/src/market.receipt.test.ts:3-10",
+        "source/src/trader.receipt.test.ts:9-16",
+        "source/src/market.ts:165-205",
+        "source/src/trader.ts:219-221,342-358,445-452",
+        "source/docs/PAPER-SUPERVISOR.md:3-5,31-39",
+        "source/src/paper-capital.ts:45-48,281-301,328-355",
+        "source/docs/JEV-LABORATORIO-DE-DECISAO.md:7-11",
+        "source/scripts/jev-lab.ts:3-6,26-39"
+      ],
+      "assessment": "28 fontes e quatro artefatos conferem os 32 hashes. As alegações consultadas têm suporte: inventário configured incompleto, seleção finita e prazo, guards de receipts existentes, paper sintético e CLI de laboratório mock. Não há inferência de bug a partir de skips, checklist ou documentação antiga."
+    },
+    {
+      "id": "PC3",
+      "criterion": "Cada entrega proposta tem resultado, dependências, arquivos/módulos responsáveis, verificação e condição de conclusão. A ordem respeita pré-requisitos e prioriza uma primeira fatia delimitada.",
+      "status": "satisfied",
+      "evidence": [
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011.md:28-102",
+        "source/package.json:20-36",
+        "source/web/package.json:5-10"
+      ],
+      "assessment": "E0–E6 cobrem resultado, dono, módulos e critérios observáveis. E0 é a primeira fatia; E5 inicia com fixtures depois de E0 e seu aceite integrado aguarda E2/E3. DAG acíclico e ordem E0,E1,E2,E3,E4,E5,E6 válidos. Janela/duração/limites de E4 e teto de rendering de E5 são parâmetros a congelar nas SPECs posteriores antes dos ensaios; o plano não afirma esses resultados."
+    },
+    {
+      "id": "PC4",
+      "criterion": "Registrar a consulta real ao Jev, a escolha e suas limitações: conselho, human_response=false, custo desconhecido=null. Não transformar conselho em permissão humana ou financeira.",
+      "status": "satisfied_from_supplied_local_receipt",
+      "evidence": [
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011.md:12,64,98",
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-JEV.json:4-8,28-64,66-135"
+      ],
+      "assessment": "Recibo 5e7a5f09-e833-4a43-a96e-4ba645c52037 consistente com integration_first, jev-1.13.0, confiança 0.94, probabilidade 0.95 e uso informado 876/69. Inclui evaluate, candidatos reais, abstenção e resposta HTTP 200 validada declarada pelo plugin. human_response=false, authority=advisory_only, billed_cost_usd=null; não há conversão em permissão. Autenticidade remota/fatura não reconsultadas."
+    },
+    {
+      "id": "PC5",
+      "criterion": "Distinguir dados sintéticos, leitura real, decisão em sombra, paper e execução financeira. Credenciais, acesso, consentimento de dados e autorização externa desconhecidos são dependências; nenhum passo pressupõe esses fatos.",
+      "status": "satisfied",
+      "evidence": [
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011.md:54-98,104-112",
+        "source/docs/PAPER-SUPERVISOR.md:3,37-39",
+        "source/docs/JEV-LABORATORIO-DE-DECISAO.md:7-11",
+        "source/src/operator/cycle.ts:182-188"
+      ],
+      "assessment": "Offline primeiro; qualificação externa permanece pendente sem acesso/consentimento. Sessão real do modelo do produto tem dependências próprias; autorização do plugin não a cobre. E2 não liga executor, E3 bloqueia signer/envio real, E6 entrega dossiê e exige autorização separada. Mock/sintético/probabilidade de escolha não certificam edge, modelo real ou lucro."
+    },
+    {
+      "id": "PC6",
+      "criterion": "Salvar plano e evidências locais, verificar caminhos/hashes/dependências e obter revisão independente sobre uma cópia isolada com o baseline fixo e estes critérios. Registrar checkpoint da própria conversa.",
+      "status": "conditional_integrator_closure",
+      "evidence": [
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-VERIFICATION.json:47-69",
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-CHECKPOINT.md:3-20",
+        "planning/docs/PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json",
+        "review-output-2/REVIEW.md",
+        "review-output-2/REVIEW.json"
+      ],
+      "assessment": "Plano, SPEC, recibo, manifesto e checkpoint prévio presentes; 32 hashes, três links, sete entregas/DAG e 195 palavras conferidos. Este parecer fornece revisão independente por thread distinta. Falta o integrador copiar/salvar o parecer e registrar checkpoint/memória final na própria conversa. Memória 53 é informação fornecida pelo usuário; estado privado não consultado. Condição impede declarar PC6/fim global incondicionais, não impede concluir esta revisão."
+    }
+  ],
+  "materialFindings": [],
+  "findingAssessment": "Nenhum achado material de planejamento identificado no escopo PC1–PC6. Ausência de achados não certifica comportamento do produto.",
+  "resolvedObservation": {
+    "id": "EXPORT-1",
+    "status": "resolved",
+    "description": "EVIDENCE.json foi adicionado à cópia. SHA-256 coincide com manifest.json; três links do plano resolvem. Os 35 inputs anteriores permaneceram inalterados na conferência já realizada.",
+    "sha256": "4ab816c3ce9bbcc7669a83d2ae507919cd13b412f7c411a201596d7e8189a8eb"
+  },
+  "limitations": [
+    "Cópia e contrato constituem isolamento lógico; não foi comprovado sandbox de execução em modo somente leitura. O revisor não alterou candidato, fontes, manifesto ou critérios.",
+    "A revisão confere bytes e semântica de fontes selecionadas do export; não audita todas as implementações ou comprova execução integrada.",
+    "Commit/tree/limpeza/delta Git foram fixados pelo contrato e atribuídos ao integrador; a cópia parcial sem objetos Git não permite rederivar toda a árvore.",
+    "Existência de módulos/diretórios não exportados é atribuída ao manifesto; não foram lidos originais.",
+    "Recibo local Jev foi inspecionado; não se consultou provedor/fatura nem se usou conselho como autoridade.",
+    "Não foram executados produto, testes/build, rede, serviços, navegador, ordens, assinaturas, push/deploy, goals ou ciclos/SDD de implementação pelo revisor.",
+    "Histórico de UI/testes é evidência atribuída; não certifica f626a30, live, acessibilidade integral, hooks, desempenho, lucro ou modelo real.",
+    "Checkpoint final e memória 53 não foram verificados no estado privado; PC6 depende do encerramento pelo integrador.",
+    "Modelo, esforço e tier efetivos do revisor não foram comprovados. Não se invoca configuração de papéis como prova.",
+    "Os resultados de hashes e mecânica são das conferências anteriores. Não houve nova rodada de checks no encerramento solicitado."
+  ],
+  "closureConditions": [
+    {
+      "id": "PC6-CLOSE",
+      "blocksThisReview": false,
+      "blocksUnconditionalPlanningClosure": true,
+      "owner": "integrador da conversa 01a12971-f91a-7b01-befa-dfa93eb04425",
+      "action": "Copiar/salvar estes dois pareceres, registrar checkpoint/memória final da própria conversa com hashes atuais e declarar apenas o encerramento do planejamento. Não executar E0–E6 automaticamente."
+    }
+  ]
+}

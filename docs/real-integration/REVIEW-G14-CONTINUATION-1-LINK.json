@@ -1,0 +1,22 @@
+{
+  "kind": "exact-independent-offline-g14-review-copy",
+  "consolidatedAt": "2026-10-11T21:57:21.946619+00:00",
+  "reviewer": "/root/candidate_review",
+  "copies": [
+    {
+      "sourcePath": "C:\\Users\\gabri\\.codex\\tmp\\g14-browser-review-continuation-1-01a12b5f.md",
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\REVIEW-G14-CONTINUATION-1.md",
+      "sha256": "f898bfc4a68d4ea0e78a64cbadc2b17bf9980c9ef24863f9a83770ffde797f89"
+    },
+    {
+      "sourcePath": "C:\\Users\\gabri\\.codex\\tmp\\g14-browser-review-continuation-1-01a12b5f.json",
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\REVIEW-G14-CONTINUATION-1.json",
+      "sha256": "35c06967842879a51e1548854111464067f947bb8ee851c246516c34e658f6b5"
+    }
+  ],
+  "reviewedBrowserEvidenceSha256": "25223d41e1e4460a15d0d8629053d5b41f7f8dad08ae1292ab84b6dac32cddb6",
+  "scope": "Independent offline recalculation and limits of root-acquired browser evidence; no independent browser reproduction, no approval of later status-document edits.",
+  "fullG14Approved": false,
+  "fullG17Approved": false,
+  "wholeGoalComplete": false
+}

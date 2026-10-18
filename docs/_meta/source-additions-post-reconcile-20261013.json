@@ -1,0 +1,44 @@
+{
+  "format": "docs-source-additions-v1",
+  "captured": "2026-10-13T15:09:59.809677-03:00",
+  "origin": "sources_present_at_reconciliation; authorship_and_creation_time_not_inferred",
+  "baseline": "docs/_meta/source-manifest-20261013.json",
+  "files": [
+    {
+      "path": "docs/sdd/dados-quant/evidence/calibration-train300bars.json",
+      "sha256": "2f02ccd1597dac97fed326b485e494fe0bb7a9f77c93ae1707dbdaf4be1a0019",
+      "bytes": 58678,
+      "extension": ".json",
+      "owner": "grafico-e-analytics",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/revisao-independente-6.md",
+      "sha256": "2f380a1df59cda74a3facdc89f2263bb646b091a85865c2aa72203a996b0a264",
+      "bytes": 5547,
+      "extension": ".md",
+      "owner": "instalavel-e-inonu",
+      "role": "revisao",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/inteligencia-decisao/evidence/C3-pesquisa-2026-10-13.md",
+      "sha256": "632e069b322be89b775c954746dd757ff5e7a6403286b222ef6eb9f95877c96f",
+      "bytes": 7859,
+      "extension": ".md",
+      "owner": "grafico-e-analytics",
+      "role": "evidencia",
+      "hidden": false
+    },
+    {
+      "path": "docs/sdd/mesa-decisao-20261013/jev-mobile-receipts.json",
+      "sha256": "e712be38058c59dc0c559782d2c7ad6cbb274ea2c56239089bb252c4d2a24ab0",
+      "bytes": 3870,
+      "extension": ".json",
+      "owner": "interface-e-central",
+      "role": "evidencia",
+      "hidden": false
+    }
+  ]
+}

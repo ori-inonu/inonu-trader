@@ -1,0 +1,465 @@
+{
+  "schema_version": 1,
+  "audit": "independent_local_closure",
+  "observed_utc": "2026-10-11T16:57:07.8431604Z",
+  "verdict": "no_concrete_blocker_for_scoped_local_closure",
+  "findings": [],
+  "scope": "Closure evidence for fixed32 local main integration, C1-C6, M1-M3, CU1-CU4; reuse prior independent source review, no implementation.",
+  "local_delivery_evidence_supported": true,
+  "unrestricted_global_or_live_certification": false,
+  "reviewer": {
+    "thread_id": "01a12ad1-04ba-75d1-b5a3-937bfb6d3a1c",
+    "session_id": "01a12971-f91a-7b01-befa-dfa93eb04425",
+    "identity_source": "Observed CODEX_THREAD_ID and CODEX_SESSION_ID, not another chat",
+    "configured_model_user_reported": "GPT-6.1 Sol",
+    "configured_effort_user_reported": "xhigh",
+    "effective_model": null,
+    "effective_effort": null,
+    "effective_tier": null,
+    "isolation": "Existing isolated source export; read-only by contract, not proven OS enforcement; tool permissions unrestricted.",
+    "product_authored_by_reviewer": false,
+    "reviewer_executed_tests": false,
+    "reviewer_executed_build": false,
+    "reviewer_navigated_browser": false,
+    "reviewer_inspected_supplied_local_screenshots": 5,
+    "reviewer_network_requests": false,
+    "reviewer_financial_actions": false,
+    "reviewer_writes_only": [
+      "C:/Users/gabri/.codex/tmp/jev-central-01a12971/review-32fbaf8-closure-audit.md",
+      "C:/Users/gabri/.codex/tmp/jev-central-01a12971/review-32fbaf8-closure-audit.json"
+    ]
+  },
+  "target": {
+    "commit": "32fbaf8c51d799c734a758ed2e9afa23a9c898d5",
+    "tree": "7c7ceaccf3cdc2e807308fc654c1f65668948319",
+    "parents": [
+      "51cfa77a6a027eac3cff2e403fe8dd5889b66ae4",
+      "99523e427945c3154c59284662e3bbcc526eec3c"
+    ],
+    "main_checkout": "C:/Users/gabri/jev-trader-main",
+    "source_export": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/review-32fbaf8",
+    "main_branch_verified": "main",
+    "main_clean_verified": true,
+    "main_reflog_fast_forward_verified": true,
+    "final_backend_baseline": "16eb1edee343bb16039e53e83bd43d7e3b27f365"
+  },
+  "independent_checks": {
+    "current_git_read_only": true,
+    "local_refs": 19,
+    "concrete_remote_refs": 4,
+    "symbolic_remote_heads": 2,
+    "all_25_ref_heads_ancestral": true,
+    "worktree_heads": 9,
+    "all_worktree_heads_ancestral": true,
+    "source_export_files": 560,
+    "main_tracked_files": 560,
+    "raw_sha256_equal_files": 555,
+    "crlf_only_differences": [
+      "docs/ARQUITETURA-CENTRAL-DE-OPERACOES.md",
+      "docs/research/R1-onchain-os-capacidades.md",
+      "docs/research/R2-carteira-permissoes-delegacao.md",
+      "docs/research/R3-estrategias-e-alavancagem.md",
+      "docs/research/R4-revisao-seguranca-operador-20261010.md"
+    ],
+    "canonical_git_blob_matches": 560,
+    "canonical_blob_mismatches": 0,
+    "canonical_comparison": "git hash-object without -w, core.autocrlf=true, no custom filters; raw --no-filters hashes represent CRLF working-copy bytes and are not canonical Git identities",
+    "changed_vs16": [
+      "web/src/app/page.module.css",
+      "web/src/components/CommandCenter/CommandCenter.tsx",
+      "web/src/lib/command-center-render.test.tsx",
+      "web/src/lib/rail-render.test.tsx"
+    ],
+    "changed_vs995": [
+      "web/src/app/page.module.css"
+    ],
+    "backend_identity_16_and32": {
+      "src_tree": "487a6fc2e8b7b7dd37d2987b5ced6a0579bac79e",
+      "package_json_blob": "4f30317ada72d4ab086091632317dc699602fc43",
+      "bun_lock_blob": "f3793c5fe6e264d685423719c6c8d2dc05ce1f33"
+    },
+    "live_listeners_read_without_http": [
+      {
+        "port": 3005,
+        "pid": 4412,
+        "address": "127.0.0.1",
+        "source": "C:/Users/gabri/jev-trader-main/web/node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3005"
+      },
+      {
+        "port": 3000,
+        "pid": 25128,
+        "address": "127.0.0.1",
+        "source": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/preview-main-authorized.ts",
+        "no_env_file": true
+      }
+    ],
+    "no_3006_listener_observed": true,
+    "build_id_read_from_main_next": "j1s1cW9B0aeroZ160t6vL",
+    "build_id_matches_integrator_ui_and_provenance": true,
+    "preview_source_readonly_handlers_and_get_options_verified": true,
+    "preview_source_has_no_trader_entrypoint_or_model_market_request": true
+  },
+  "criteria": {
+    "C1": {
+      "status": "supported_with_scope_limit",
+      "evidence": "Current Git inventory: all19 local branches,4 concrete remotes,2 symbolic heads and9 worktree heads contained. FF main clean. Historical remote behavior review reused.",
+      "limit": "Observed locally cached histories only; no fetch. Other-owner uncommitted bytes not independently rehashed; preservation is integrator evidence, WIP not merged."
+    },
+    "C2": {
+      "status": "supported_with_scope_limit",
+      "evidence": "Existing source review plus final mock UI: Jev/System One/risks/limits/ecosystem present. Risk selections change from500/BTC/7days/0.3% to1000/ETH/30days/0.1%; limit text and arithmetic update. ArrowRight selects ecosystem. Simulation, unknown cadence/source and model assumptions explicit.",
+      "limit": "Historical snapshots/mock read-only, not live feed/current model inference or financial authorization."
+    },
+    "C3": {
+      "status": "supported_with_verification_limit",
+      "evidence": "Integrator1280/390/320 geometry, five captures independently inspected. Source motion hook, reduced CSS and primitive no-op regression results preserved; information in labels/text/native controls.",
+      "limit": "No reviewer browser session, no OS prefers-reduced-motion emulation, no full accessibility audit."
+    },
+    "C4": {
+      "status": "supported_final_gates_with_retained_failure_limit",
+      "evidence": "Integrator logs:430 frontend pass,0fail; backend serial16:1986pass2skip0fail with identical backend inputs32; types exit0 reported, candidate/main build logs complete. Pooled2416pass2skip0fail is not one newly executed32 suite.",
+      "limit": "Empty web-types log does not independently prove its process exit. Previous child_handshake_timeout cause unknown; serial/isolated success does not prove flake eradication. Two receipt-safety skips remain unqualified."
+    },
+    "C5": {
+      "status": "supported",
+      "evidence": "Immutable premerge independent32 report hashes verified; no blocker on exact four-file delta. Exact source preservation and final closure evidence independently audited; reviewer did not implement product.",
+      "limit": "Historical review is a bounded no-blocker verdict, not self-approval or live certification."
+    },
+    "C6": {
+      "status": "supported_current_local_delivery",
+      "evidence": "Main BUILD_ID matches UI/provenance, main3005 PID4412/API3000 PID25128 loopback listeners independently observed. Integrator HTTP200 and desktop/mobile final-main navigation supplied and captures inspected.",
+      "limit": "Reviewer made no HTTP/browser request; historical inspection attributed to integrator. Availability is time-bounded; no deployment."
+    },
+    "M1": {
+      "status": "supported",
+      "evidence": "390: document375,depth/events351;320:document305,depth/events281; both16px vertical gap, no documentary horizontal overflow."
+    },
+    "M2": {
+      "status": "supported",
+      "evidence": "Desktop1280 depth402.0625/events382.9375 same y2070, separate core; source keeps chart above both."
+    },
+    "M3": {
+      "status": "supported_with_motion_limit",
+      "evidence": "Risk controls/tab evidence and unchanged motion rules/primitives. No backend/financial execution change.",
+      "limit": "OS preference not emulated."
+    },
+    "CU1": {
+      "status": "supported",
+      "evidence": "Both51/995 actual parents preserved and source CommandCenter:218 explicitly says Cadência não verificada."
+    },
+    "CU2": {
+      "status": "supported",
+      "evidence": "Acceptance/mobile/concurrent frozen hashes verified; sources maintain prior gates and mobile correction."
+    },
+    "CU3": {
+      "status": "supported_with_attribution_limit",
+      "evidence": "Premerge review preserved; final gates attributed to integrator; main FF reflog and current clean HEAD verified.",
+      "limit": "Pre-FF guard execution itself not replayed by reviewer."
+    },
+    "CU4": {
+      "status": "supported_current_local_delivery",
+      "evidence": "Fresh complete main build, matching actual BUILD_ID, loopback process3005, final-main integrator geometry/screenshots1280/390/320.",
+      "limit": "No independent browser reexecution."
+    }
+  },
+  "ui_evidence": {
+    "executor": "integrator",
+    "source": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-ui-validation-32fbaf8.json",
+    "reported_url": "http://127.0.0.1:3005/",
+    "reported_build_id": "j1s1cW9B0aeroZ160t6vL",
+    "desktop": {
+      "viewport_width": 1280,
+      "document_width": 1265,
+      "depth_width": 402.0625,
+      "events_width": 382.9375,
+      "depth_y": 2070,
+      "events_y": 2070
+    },
+    "mobile390": {
+      "viewport_width": 390,
+      "document_width": 375,
+      "depth_width": 351,
+      "events_width": 351,
+      "depth_y": 4188.75,
+      "depth_height": 341,
+      "events_y": 4545.75,
+      "gap": 16
+    },
+    "mobile320": {
+      "viewport_width": 320,
+      "document_width": 305,
+      "depth_width": 281,
+      "events_width": 281,
+      "depth_y": -151.25,
+      "depth_height": 314,
+      "events_y": 178.75,
+      "gap": 16
+    },
+    "mobile320_negative_y": "Scroll-relative; not a layout failure.",
+    "keyboard_arrow_right_selected_ecosystem_recorded_value": "true",
+    "console_reported_warnings_errors": [],
+    "console_capture_bounded": true,
+    "motion_emulation": false,
+    "full_accessibility_audit": false
+  },
+  "test_evidence": {
+    "executions_by": "integrator",
+    "new_reviewer_tests": 0,
+    "frontend": {
+      "pass": 430,
+      "fail": 0,
+      "files": 40,
+      "seconds": 3.84,
+      "expect_calls": 3140,
+      "exit0_user_reported": true
+    },
+    "backend_reused": {
+      "baseline": "16eb1ed",
+      "pass": 1986,
+      "skip": 2,
+      "fail": 0,
+      "files": 119,
+      "seconds": 89.98,
+      "exit_file_read": "0",
+      "reexecuted_at32": false
+    },
+    "pooled": {
+      "pass": 2416,
+      "skip": 2,
+      "fail": 0,
+      "is_single32_execution": false
+    },
+    "types": {
+      "reported_frontend_exit": 0,
+      "reported_reused_root_exit": 0,
+      "frontend_log_empty": true
+    },
+    "builds": {
+      "reported_candidate_exit": 0,
+      "reported_main_exit": 0,
+      "both_complete_logs_read": true,
+      "main_build_id": "j1s1cW9B0aeroZ160t6vL"
+    },
+    "reduced_primitives_log_lines": "final-web-tests-32fbaf8.log:170-175",
+    "preserved_failure": {
+      "log": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-root.log",
+      "test": "src/paper-supervisor-runner.test.ts:476",
+      "error": "child_handshake_timeout",
+      "cause": null,
+      "parallel_failures": 1,
+      "isolated_success_reported": true,
+      "serial_success_log_verified": true,
+      "flake_fixed_claim": false
+    },
+    "skipped": [
+      "receipt-safety Market conformance",
+      "receipt-safety Trader conformance"
+    ],
+    "receipt_safety_live_certified": false
+  },
+  "artifacts": [
+    {
+      "key": "acceptance",
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-ACCEPTANCE.md",
+      "sha256": "20e1558da58ceae78332020f1e4f84277eacdb694748d28b9ea599dc30808054",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "mobile_spec",
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-MOBILE-FIX-SPEC.md",
+      "sha256": "7d3ac329ab9bf1e6fbcc77eeaa20c928312777a35d763fa1ce9eeb2ee81c4abd",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "concurrent_spec",
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-CONCURRENT-UI-SPEC.md",
+      "sha256": "e6254463db1d8b7570672f73b121b1daa8ffb6a5711a6c603102af0db80374b2",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "final_verification",
+      "path": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-FINAL-VERIFICATION-32fbaf8.md",
+      "sha256": "d28d02c2f661ea91b19fc46142f28366a614e39724f0a9fe5f909ff4fe84f65d",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "inventory",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-inventory-32fbaf8.json",
+      "sha256": "ef3920d00384677e30edbf28bdedcf6f5a0f97c8f3bf42dcb9e79d20e7e4e454",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "preview",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-preview-provenance-32fbaf8.json",
+      "sha256": "f938134e2cefdadc0c873746c6fea75850894c53b1604970278a942db1ccb481",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "ui",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-ui-validation-32fbaf8.json",
+      "sha256": "a9fa2f1f9098f0e924a18e6c580915c4a4a0b08673a68eaea40c70895496432b",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "main_build",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/main-web-build-32fbaf8.log",
+      "sha256": "9a36328687c0bcac921cac7223e57bddd10fe868f8841f78ba064e1c5544c94c",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "frontend_tests",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-web-tests-32fbaf8.log",
+      "sha256": "e4bb7f17851f6ff48122c8ca1a003978b649876cd2a2e5cd676d23b011f9d925",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "frontend_types",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-web-types-32fbaf8.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "candidate_build",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/final-web-build-32fbaf8.log",
+      "sha256": "c9b18348826b276b72ea74e431e3e090f157973c8727a298edc1e79d1d307d49",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "backend_serial",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-root-serial.log",
+      "sha256": "c4a5342fabcc9c609a961c972aca2b8499a42938696940425a60079229a2e45e",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "root_types",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-types.log",
+      "sha256": "f830dee8279913b62956a5c27a3f52f0fccc8cec9f052fd4cdc8dee6f25b9de2",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "backend_parallel_failure",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/combined-root.log",
+      "sha256": "1ad9093b08dd8528829f7784f3f94260da290ccb3632a405d9ec724d6df9bcba",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "preview_source",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/preview-main-authorized.ts",
+      "sha256": "0f3422c50e78b4a8a5a496fb41ce52f3eebc3e1dbdb77c0df619c4a858b4e434",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "premerge_md",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/review-32fbaf8-report.md",
+      "sha256": "ce734b8caa785f4e9b09d104bc120a644630d6eab35900db3ce77f42abcb2ada",
+      "rehash_by_reviewer": true
+    },
+    {
+      "key": "premerge_json",
+      "path": "C:/Users/gabri/.codex/tmp/jev-central-01a12971/review-32fbaf8-report.json",
+      "sha256": "2748e89e2bc44d544c9057bc88668df872e5c531cea2cbfc46a7dc28f74e31bf",
+      "rehash_by_reviewer": true
+    }
+  ],
+  "source_sha256": [
+    {
+      "path": "web/src/app/page.module.css",
+      "sha256": "c389e7d0d3306a5508bb1fb52a1753e8ff84891961446a224473db65a9d29359"
+    },
+    {
+      "path": "web/src/components/CommandCenter/CommandCenter.tsx",
+      "sha256": "32f86af6d82f86adf5f70033353cecf889260f4af588fd2b7ae9d480458b29fb"
+    },
+    {
+      "path": "web/src/lib/command-center-render.test.tsx",
+      "sha256": "96ff399b7775b8e44fc4e7885f2c48fc66a2aee85d5a44369582593a8120c3c2"
+    },
+    {
+      "path": "web/src/lib/rail-render.test.tsx",
+      "sha256": "9973788ac11af3a1e91b919fc6e9693b456337ad51caf2e4bf41914885943436"
+    },
+    {
+      "path": "web/src/lib/motion.ts",
+      "sha256": "62f0b2a60209eb7d9648c1601fd1d13cc83153166e0fbb6e6ef05416b636b573"
+    },
+    {
+      "path": "web/src/app/globals.css",
+      "sha256": "ac50734ac598a304ab1864f70b0cd3911a2c740889846243d7bc391e384d1712"
+    },
+    {
+      "path": "web/src/components/GrowthDeck/GrowthDeck.tsx",
+      "sha256": "1b0b6f8a417b67ae4fe2c3a807831184bbd0aab44bc6a501685249134ebc5f9c"
+    },
+    {
+      "path": "web/src/components/GrowthDeck/GrowthDeck.module.css",
+      "sha256": "af10d9f5072fe054e23acfbbcac8412dce6d5fb17ed38e28861fd1cac85a0710"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "jev-final-desktop-32fbaf8.jpg",
+      "sha256": "04f5af21a7589c0f5de492d496f46d12d395aa954afad15f36dc86165c542d5e",
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-desktop-32fbaf8.jpg",
+      "rehash_by_reviewer": true,
+      "inspected_by_reviewer": true,
+      "captured_by": "integrator"
+    },
+    {
+      "file": "jev-final-desktop-risk-32fbaf8.jpg",
+      "sha256": "ef2faf2ed3865207162614035f62189f8eb7388dd7f0408c8344c11f3eff8173",
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-desktop-risk-32fbaf8.jpg",
+      "rehash_by_reviewer": true,
+      "inspected_by_reviewer": true,
+      "captured_by": "integrator"
+    },
+    {
+      "file": "jev-final-mobile-390-32fbaf8.jpg",
+      "sha256": "469dc8c8b11e216e30282290581957befa040ff6f7d5a27bddad59212e7db4a5",
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-mobile-390-32fbaf8.jpg",
+      "rehash_by_reviewer": true,
+      "inspected_by_reviewer": true,
+      "captured_by": "integrator"
+    },
+    {
+      "file": "jev-final-mobile-risk-390-32fbaf8.jpg",
+      "sha256": "89c723da22ac7d4a8fd76358d693dfdb340d4706ad8de2ca8e07c3d528c2c571",
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-mobile-risk-390-32fbaf8.jpg",
+      "rehash_by_reviewer": true,
+      "inspected_by_reviewer": true,
+      "captured_by": "integrator"
+    },
+    {
+      "file": "jev-final-mobile-320-32fbaf8.jpg",
+      "sha256": "6eb345f44eb3c510f5b989050ce95029489cedf068a35f7bfbd7599039b90b49",
+      "path": "C:/Users/gabri/.codex/visualizations/2026/10/11/01a12971-f91a-7b01-befa-dfa93eb04425/jev-final-mobile-320-32fbaf8.jpg",
+      "rehash_by_reviewer": true,
+      "inspected_by_reviewer": true,
+      "captured_by": "integrator"
+    }
+  ],
+  "limitations": [
+    "No live model/market/order, financial authorization, deployment or guaranteed returns certified.",
+    "No browser, suites or builds rerun by reviewer; offline screenshot inspection is not browser execution.",
+    "No OS reduced-motion emulation/full accessibility audit.",
+    "No OS read-only sandbox enforcement proved; contract and isolated source export used.",
+    "Other-owner WIP content preservation not independently byte-audited; no product/worktree writes performed.",
+    "Physical10463 dependency hashes not independently recomputed; no claim that reviewer audited them.",
+    "Historical parallel backend timeout cause unknown and retained; receipt-safety conformance skipped.",
+    "Port/build identity observations time-bounded; supplied HTTP200/UI execution belongs to integrator.",
+    "Effective model/effort/tier and billed cost unknown.",
+    "Final evidence/checkpoint/Jev advisory mentioned in latest user update do not replace this review; no additional scope opened."
+  ],
+  "workflow": {
+    "skills": [
+      "C:/Users/gabri/.codex/skills/codex-desktop-harness/SKILL.md",
+      "C:/Users/gabri/.agents/skills/code-review/SKILL.md"
+    ],
+    "proportional_sdd": "Frozen criteria, fixed hashes, read-only evidence, prior independent source findings reused, separate closure audit.",
+    "no_native_goal_created": true,
+    "no_shared_harness_state_imported": true,
+    "metadata_location": "This authorized audit report only; no writes to shared state.",
+    "advisory_is_authority": false,
+    "no_manual_paid_consult_needed": true,
+    "checkpoint": "Independent closure audit concluded for observed fixed32 local delivery. No concrete blocker; verification limits retained."
+  }
+}

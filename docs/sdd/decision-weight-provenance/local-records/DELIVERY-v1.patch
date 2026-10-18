@@ -1,0 +1,446 @@
+diff --git a/src/decision-evidence/weights.ts b/src/decision-evidence/weights.ts
+new file mode 100644
+index 0000000..1e3c8f7
+--- /dev/null
++++ b/src/decision-evidence/weights.ts
+@@ -0,0 +1,96 @@
++export interface DecisionWeightAnnotation {
++  schemaVersion: 1;
++  origin: "provider_reported" | "adapter_choice_fallback" | "adapter_safety_fallback" | "unknown";
++  selectedWeight: number | null;
++  reportedSelectedWeight: number | null;
++  financialCalibration: "not_established";
++}
++
++function isRecord(value: unknown): value is Record<string, unknown> {
++  return typeof value === "object" && value !== null && !Array.isArray(value);
++}
++
++const TOLERANCE = 1e-12;
++type Action = "buy" | "sell" | "hold";
++type Weights = Record<Action, number>;
++type Status = "ok" | "error" | "timeout" | "malformed";
++interface Decision { action: Action; probabilities: Weights; status: Status }
++
++function isAction(value: unknown): value is Action {
++  return value === "buy" || value === "sell" || value === "hold";
++}
++
++function readDecision(value: unknown): Decision | null {
++  if (!isRecord(value) || !isAction(value.action) || !isRecord(value.probabilities)) return null;
++  const { status, probabilities } = value;
++  if (status !== "ok" && status !== "error" && status !== "timeout" && status !== "malformed") return null;
++  const { buy, sell, hold } = probabilities;
++  if (![buy, sell, hold].every(weight => typeof weight === "number" && Number.isFinite(weight) && weight >= 0 && weight <= 1)) return null;
++  const weights = { buy, sell, hold } as Weights;
++  if (Math.abs(weights.buy + weights.sell + weights.hold - 1) > TOLERANCE) return null;
++  if (status === "ok" ? weights[value.action] <= 0 : value.action !== "hold") return null;
++  return { action: value.action, probabilities: weights, status };
++}
++
++function readResponse(value: unknown): { action: Action; probabilities: Weights; reported: boolean } | null {
++  if (!isRecord(value) || !isAction(value.choice)) return null;
++  if (value.probabilities === undefined) {
++    return { action: value.choice, probabilities: {
++      buy: value.choice === "buy" ? 1 : 0,
++      sell: value.choice === "sell" ? 1 : 0,
++      hold: value.choice === "hold" ? 1 : 0,
++    }, reported: false };
++  }
++  if (!isRecord(value.probabilities)) return null;
++  const buy = value.probabilities.buy ?? 0;
++  const sell = value.probabilities.sell ?? 0;
++  const hold = value.probabilities.hold ?? 0;
++  if (![buy, sell, hold].every(weight => typeof weight === "number" && Number.isFinite(weight) && weight >= 0)) return null;
++  const weights = { buy, sell, hold } as Weights;
++  const total = weights.buy + weights.sell + weights.hold;
++  if (!Number.isFinite(total) || total <= 0 || weights[value.choice] <= 0) return null;
++  const normalized = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };
++  if (!Object.values(normalized).every(Number.isFinite) || normalized[value.choice] <= 0) return null;
++  return { action: value.choice, probabilities: normalized, reported: true };
++}
++
++function equalWeights(a: Weights, b: Weights): boolean {
++  return Math.abs(a.buy - b.buy) <= TOLERANCE
++    && Math.abs(a.sell - b.sell) <= TOLERANCE
++    && Math.abs(a.hold - b.hold) <= TOLERANCE;
++}
++
++function readOrigin(decision: Decision, evidence: unknown): DecisionWeightAnnotation["origin"] {
++  if (!isRecord(evidence)) return "unknown";
++  const canonicalHold = decision.action === "hold" && decision.probabilities.buy === 0
++    && decision.probabilities.sell === 0 && decision.probabilities.hold === 1;
++  if (evidence.kind === "observed_failure") {
++    return canonicalHold && (evidence.status === "error" || evidence.status === "timeout")
++      && decision.status === evidence.status ? "adapter_safety_fallback" : "unknown";
++  }
++  if (evidence.kind !== "observed_response" || !("raw" in evidence)) return "unknown";
++  const response = readResponse(evidence.raw);
++  if (!response && canonicalHold && decision.status === "malformed") return "adapter_safety_fallback";
++  if (response && decision.status === "ok" && response.action === decision.action
++    && equalWeights(response.probabilities, decision.probabilities)) {
++    return response.reported ? "provider_reported" : "adapter_choice_fallback";
++  }
++  return "unknown";
++}
++
++export function annotateDecisionWeights(
++  decision: unknown,
++  evidence: unknown,
++): DecisionWeightAnnotation | null {
++  const valid = readDecision(decision);
++  if (!valid) return null;
++  const origin = readOrigin(valid, evidence);
++  const selectedWeight = valid.status === "ok" ? valid.probabilities[valid.action] : null;
++  return {
++    schemaVersion: 1,
++    origin,
++    selectedWeight,
++    reportedSelectedWeight: origin === "provider_reported" ? selectedWeight : null,
++    financialCalibration: "not_established",
++  };
++}
+diff --git a/src/decision-evidence/weights.test.ts b/src/decision-evidence/weights.test.ts
+new file mode 100644
+index 0000000..ada15b8
+--- /dev/null
++++ b/src/decision-evidence/weights.test.ts
+@@ -0,0 +1,216 @@
++import { expect, test } from "bun:test";
++import { annotateDecisionWeights } from "./weights";
++
++test("historical unit weights retain their value without implying provider provenance", () => {
++  const decision = Object.freeze({
++    action: "buy",
++    probabilities: Object.freeze({ buy: 1, sell: 0, hold: 0 }),
++    status: "ok",
++    confidence: 1,
++    privateText: "must not escape",
++  });
++  const evidence = Object.freeze({ kind: "historical_record" });
++  const before = JSON.stringify({ decision, evidence });
++
++  expect(annotateDecisionWeights(decision, evidence)).toEqual({
++    schemaVersion: 1,
++    origin: "unknown",
++    selectedWeight: 1,
++    reportedSelectedWeight: null,
++    financialCalibration: "not_established",
++  });
++  expect(JSON.stringify({ decision, evidence })).toBe(before);
++});
++
++test("reported weights are normalized without requiring the chosen action to be the largest", () => {
++  for (const fixture of [
++    { probabilities: { buy: 0.5, sell: 0.25, hold: 0.25 }, raw: { buy: 2, sell: 1, hold: 1 }, selected: 0.5 },
++    { probabilities: { buy: 0.2, sell: 0.8, hold: 0 }, raw: { buy: 1, sell: 4, hold: 0 }, selected: 0.2 },
++  ]) {
++    expect(annotateDecisionWeights(
++      { action: "buy", probabilities: fixture.probabilities, status: "ok" },
++      { kind: "observed_response", raw: { choice: "buy", probabilities: fixture.raw } },
++    )).toEqual({
++      schemaVersion: 1, origin: "provider_reported", selectedWeight: fixture.selected,
++      reportedSelectedWeight: fixture.selected, financialCalibration: "not_established",
++    });
++  }
++});
++
++test("compatible explicit vectors are supported for every action, including missing or null unused weights", () => {
++  for (const fixture of [
++    { action: "buy", probabilities: { buy: 1, sell: 0, hold: 0 }, raw: { buy: 3, sell: null } },
++    { action: "sell", probabilities: { buy: 0, sell: 1, hold: 0 }, raw: { sell: 3, hold: null } },
++    { action: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, raw: { hold: 3, buy: null } },
++  ]) {
++    expect(annotateDecisionWeights(
++      { action: fixture.action, probabilities: fixture.probabilities, status: "ok" },
++      { kind: "observed_response", raw: { choice: fixture.action, probabilities: fixture.raw } },
++    )).toEqual({
++      schemaVersion: 1, origin: "provider_reported", selectedWeight: 1,
++      reportedSelectedWeight: 1, financialCalibration: "not_established",
++    });
++  }
++});
++
++test("missing, historical or malformed evidence cannot establish origin", () => {
++  const decision = { action: "buy", probabilities: { buy: 1, sell: 0, hold: 0 }, status: "ok" };
++  for (const evidence of [
++    undefined, null, [], "observed_response", {}, { kind: "historical_record" },
++    { kind: "other", raw: { choice: "buy" } }, { kind: "observed_response" },
++    { kind: "observed_failure" }, { kind: "observed_failure", status: "malformed" },
++  ]) {
++    expect(annotateDecisionWeights(decision, evidence)).toEqual({
++      schemaVersion: 1, origin: "unknown", selectedWeight: 1,
++      reportedSelectedWeight: null, financialCalibration: "not_established",
++    });
++  }
++});
++
++test("choice, vector and status mismatches keep origin unknown", () => {
++  const buy = { action: "buy", probabilities: { buy: 1, sell: 0, hold: 0 }, status: "ok" };
++  for (const raw of [
++    { choice: "sell", probabilities: { buy: 0, sell: 1, hold: 0 } },
++    { choice: "buy", probabilities: { buy: 1, sell: 1, hold: 0 } },
++    { choice: "buy", probabilities: null },
++  ]) {
++    expect(annotateDecisionWeights(buy, { kind: "observed_response", raw })).toEqual({
++      schemaVersion: 1, origin: "unknown", selectedWeight: 1,
++      reportedSelectedWeight: null, financialCalibration: "not_established",
++    });
++  }
++  for (const status of ["malformed", "error", "timeout"]) {
++    const decision = { action: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, status };
++    for (const evidence of [
++      { kind: "observed_response", raw: { choice: "hold", probabilities: { buy: 0, sell: 0, hold: 1 } } },
++      { kind: "observed_failure", status: "ok" },
++      { kind: "observed_failure", status: status === "timeout" ? "error" : "timeout" },
++    ]) {
++      expect(annotateDecisionWeights(decision, evidence)).toEqual({
++        schemaVersion: 1, origin: "unknown", selectedWeight: null,
++        reportedSelectedWeight: null, financialCalibration: "not_established",
++      });
++    }
++  }
++  expect(annotateDecisionWeights(
++    { action: "hold", probabilities: { buy: 0.1, sell: 0, hold: 0.9 }, status: "error" },
++    { kind: "observed_failure", status: "error" },
++  )?.origin).toBe("unknown");
++});
++
++test("malformed response values match the observed adapter validation contract", () => {
++  const decision = { action: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, status: "malformed" };
++  for (const raw of [
++    undefined, null, [], "buy", {}, { choice: "wait" },
++    { choice: "buy", probabilities: null },
++    { choice: "buy", probabilities: [1, 0, 0] },
++    { choice: "buy", probabilities: { buy: "1" } },
++    { choice: "buy", probabilities: { buy: 1, sell: -1 } },
++    { choice: "buy", probabilities: { buy: NaN } },
++    { choice: "buy", probabilities: { buy: Infinity } },
++    { choice: "buy", probabilities: { buy: 1, hold: -Infinity } },
++    { choice: "buy", probabilities: { buy: Number.MAX_VALUE, sell: Number.MAX_VALUE } },
++    { choice: "buy", probabilities: { buy: 0, sell: 1, hold: 0 } },
++    { choice: "buy", probabilities: {} },
++  ]) {
++    expect(annotateDecisionWeights(decision, { kind: "observed_response", raw })).toEqual({
++      schemaVersion: 1, origin: "adapter_safety_fallback", selectedWeight: null,
++      reportedSelectedWeight: null, financialCalibration: "not_established",
++    });
++  }
++});
++
++test("vector comparisons accept the absolute boundary and do not repair larger differences", () => {
++  const raw = { kind: "observed_response", raw: { choice: "buy", probabilities: { buy: 1, sell: 0, hold: 0 } } };
++  expect(annotateDecisionWeights(
++    { action: "buy", probabilities: { buy: 1 - 1e-12, sell: 1e-12, hold: 0 }, status: "ok" }, raw,
++  )).toEqual({
++    schemaVersion: 1, origin: "provider_reported", selectedWeight: 1 - 1e-12,
++    reportedSelectedWeight: 1 - 1e-12, financialCalibration: "not_established",
++  });
++  expect(annotateDecisionWeights(
++    { action: "buy", probabilities: { buy: 1 - 2e-12, sell: 2e-12, hold: 0 }, status: "ok" }, raw,
++  )?.origin).toBe("unknown");
++  expect(annotateDecisionWeights(
++    { action: "buy", probabilities: { buy: 1, sell: 0.5e-12, hold: 0 }, status: "ok" }, undefined,
++  )?.selectedWeight).toBe(1);
++  expect(annotateDecisionWeights(
++    { action: "buy", probabilities: { buy: 1, sell: 2e-12, hold: 0 }, status: "ok" }, undefined,
++  )).toBeNull();
++});
++
++test("repeated annotations of frozen provider evidence remain pure and exclude extra fields", () => {
++  const decision = Object.freeze({
++    action: "sell", status: "ok", probabilities: Object.freeze({ buy: 0.25, sell: 0.5, hold: 0.25 }),
++    confidence: 0.5, model: "fixture-model", text: "fixture private text",
++  });
++  const evidence = Object.freeze({ kind: "observed_response", raw: Object.freeze({
++    choice: "sell", probabilities: Object.freeze({ buy: 1, sell: 2, hold: 1 }),
++    token: "synthetic-token", text: "untrusted instruction",
++  }) });
++  const before = JSON.stringify({ decision, evidence });
++  const expected = {
++    schemaVersion: 1, origin: "provider_reported", selectedWeight: 0.5,
++    reportedSelectedWeight: 0.5, financialCalibration: "not_established",
++  } as const;
++  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);
++  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);
++  expect(JSON.stringify({ decision, evidence })).toBe(before);
++  expect(Object.keys(annotateDecisionWeights(decision, evidence)!)).toEqual([
++    "schemaVersion", "origin", "selectedWeight", "reportedSelectedWeight", "financialCalibration",
++  ]);
++});
++
++test("invalid responses and observed matching failures identify only canonical safety holds", () => {
++  const malformed = { action: "hold", probabilities: { buy: 0, sell: 0, hold: 1 }, status: "malformed" };
++  for (const raw of [
++    { choice: "buy", probabilities: { buy: 0, sell: 0, hold: 0 } },
++    { choice: "buy", probabilities: { buy: Number.MIN_VALUE, sell: 2, hold: 0 } },
++  ]) {
++    expect(annotateDecisionWeights(malformed, { kind: "observed_response", raw })).toEqual({
++      schemaVersion: 1, origin: "adapter_safety_fallback", selectedWeight: null,
++      reportedSelectedWeight: null, financialCalibration: "not_established",
++    });
++  }
++  for (const status of ["error", "timeout"]) {
++    expect(annotateDecisionWeights({ ...malformed, status }, { kind: "observed_failure", status })).toEqual({
++      schemaVersion: 1, origin: "adapter_safety_fallback", selectedWeight: null,
++      reportedSelectedWeight: null, financialCalibration: "not_established",
++    });
++  }
++});
++
++test("a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback", () => {
++  const decision = { action: "buy", probabilities: { buy: 1, sell: 0, hold: 0 }, status: "ok" };
++  expect(annotateDecisionWeights(decision, {
++    kind: "observed_response", raw: { choice: "buy", probabilities: { buy: 1, sell: 0, hold: 0 } },
++  })).toEqual({
++    schemaVersion: 1, origin: "provider_reported", selectedWeight: 1,
++    reportedSelectedWeight: 1, financialCalibration: "not_established",
++  });
++  expect(annotateDecisionWeights(decision, { kind: "observed_response", raw: { choice: "buy" } })).toEqual({
++    schemaVersion: 1, origin: "adapter_choice_fallback", selectedWeight: 1,
++    reportedSelectedWeight: null, financialCalibration: "not_established",
++  });
++});
++
++test("invalid decisions return null instead of inventing weights or status", () => {
++  const valid = { action: "buy", probabilities: { buy: 1, sell: 0, hold: 0 }, status: "ok" };
++  for (const decision of [
++    null, [], "buy", {},
++    { ...valid, action: "wait" },
++    { ...valid, status: "unknown" },
++    { ...valid, status: "error" },
++    { ...valid, probabilities: null },
++    { ...valid, probabilities: [1, 0, 0] },
++    { ...valid, probabilities: { buy: 1, sell: 0 } },
++    { ...valid, probabilities: { buy: "1", sell: 0, hold: 0 } },
++    { ...valid, probabilities: { buy: NaN, sell: 0, hold: 0 } },
++    { ...valid, probabilities: { buy: Infinity, sell: 0, hold: 0 } },
++    { ...valid, probabilities: { buy: 1.1, sell: -0.1, hold: 0 } },
++    { ...valid, probabilities: { buy: 0, sell: 1, hold: 0 } },
++    { ...valid, probabilities: { buy: 0.9, sell: 0, hold: 0 } },
++  ]) {
++    expect(annotateDecisionWeights(decision, { kind: "historical_record" })).toBeNull();
++  }
++});
+diff --git a/docs/sdd/decision-weight-provenance/requirements.md b/docs/sdd/decision-weight-provenance/requirements.md
+new file mode 100644
+index 0000000..87057b2
+--- /dev/null
++++ b/docs/sdd/decision-weight-provenance/requirements.md
+@@ -0,0 +1,48 @@
++# Evidência da origem dos pesos de decisão
++
++Este contrato define uma anotação pura para distinguir pesos reportados pelo provedor, fallback da escolha, fallback de segurança e origem desconhecida. Preserva os campos da decisão existente e não estabelece probabilidade de lucro.
++
++A API proposta é `annotateDecisionWeights(decision: unknown, evidence: unknown)`. Evidências: `{kind: "observed_response", raw: unknown}`, `{kind: "observed_failure", status: "error" | "timeout"}` ou `{kind: "historical_record"}`. A saída tem somente schemaVersion, origin, selectedWeight, reportedSelectedWeight e financialCalibration.
++
++## Aceitação
++
++### PP-1: anotação isolada e invariância
++A função retorna somente os cinco campos listados, sem alterar entradas, decisão, ação, pesos, status ou campos legados. Não lê ambiente/arquivos, não usa rede, não consulta modelos e não decide buy/sell. Entradas congeladas e comparação antes/depois devem comprovar ausência de mutação.
++
++### PP-2: origem exige evidência compatível
++Com decisão de status ok, resposta contemporânea válida com raw.probabilities informado como objeto válido, choice igual à ação e pesos normalizados iguais aos da decisão, origin é provider_reported. Ausência de raw.probabilities em uma resposta válida gera adapter_choice_fallback somente quando a decisão tem status ok e é o vetor unitário correspondente. Resposta inválida com a decisão canônica malformed/hold, ou falha error/timeout com hold canônico e status correspondente, gera adapter_safety_fallback. Resposta válida exige decisão de status ok; divergência de status gera unknown. Evidência ausente, histórica, malformada ou incompatível gera unknown. Nunca inferir origem apenas pelo vetor.
++
++O contrato de normalização observado é: buy/sell/hold; choice válida; probabilities ausente significa fallback; objeto informado usa peso ausente ou null como zero; pesos finitos não negativos; soma finita positiva; peso bruto da escolha positivo; cada valor dividido pela soma; todos os pesos normalizados finitos e peso normalizado da escolha positivo. Objeto null/array, peso negativo/não finito, soma inválida ou escolha de peso zero antes ou após normalização são respostas inválidas. Não exigir que a ação seja argmax. Comparações de vetores normalizados usam tolerância absoluta de 1e-12 por componente; nenhuma diferença maior é reparada.
++
++### PP-3: números e estados conservadores
++Decisão válida tem action buy/sell/hold, status ok/error/timeout/malformed, três pesos finitos em [0,1] e soma dentro de 1e-12 de 1. Status ok exige peso selecionado positivo; outro status exige action hold. selectedWeight é o peso da ação apenas para status ok; caso contrário é null. reportedSelectedWeight só é numérico para provider_reported com status ok; todas as outras origens recebem null. financialCalibration é sempre not_established. Texto ou número desconhecido nunca vira zero nem certeza.
++
++### PP-4: compatibilidade histórica e sanitização
++Registro histórico válido continua anotável sem resposta original: origin unknown, selectedWeight preservado para status ok, reportedSelectedWeight null. Provedor pode reportar um vetor unitário legítimo: esse caso recebe provider_reported somente com prova contemporânea compatível. Campos extras e texto livre nunca atravessam a projeção de saída. Não migrar schema/journal/public-view/dashboard, nem adicionar thresholds ou usar a anotação para ordens.
++
++### PP-5: exemplos literais e TDD
++Executar fixtures sintéticas explícitas pela API pública nova, com resultados literais:
++
++| Decisão e evidência | Origem | selectedWeight | reportedSelectedWeight |
++| --- | --- | --- | --- |
++| buy, (1,0,0), ok; response choice buy sem probabilities | adapter_choice_fallback | 1 | null |
++| buy, (1,0,0), ok; response choice buy com (1,0,0) | provider_reported | 1 | 1 |
++| buy, (0.5,0.25,0.25), ok; response choice buy com (2,1,1) | provider_reported | 0.5 | 0.5 |
++| buy, (0.2,0.8,0), ok; response choice buy com (1,4,0) | provider_reported | 0.2 | 0.2 |
++| buy, (1,0,0), ok; historical_record | unknown | 1 | null |
++| hold, (0,0,1), malformed; response choice buy com pesos todos zero | adapter_safety_fallback | null | null |
++| hold, (0,0,1), malformed; response choice buy com (Number.MIN_VALUE,2,0), cujo peso buy normalizado vira zero | adapter_safety_fallback | null | null |
++| hold, (0,0,1), malformed; response válida choice hold com (0,0,1) | unknown | null | null |
++| hold, (0,0,1), timeout; observed_failure timeout | adapter_safety_fallback | null | null |
++| buy, (1,0,0), ok; response choice sell com (0,1,0) | unknown | 1 | null |
++
++Também comprovar decisão inválida -> null; evidence inválida -> unknown; error/timeout/status divergente -> unknown; probabilities null/array e pesos negativos/NaN/infinito; todos os tipos de ação/status; limites da tolerância; repetibilidade; entradas imutáveis; saída allowlist sem payload bruto; null no peso selecionado para status não ok. Testes não chamam APIs nem usam contas reais.
++
++### PP-6: arquivos, verificação e revisão
++Entrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação.
++
++## Fontes e limites
++
++[Choice](https://docs.typesafe.ai/primitives/choice) e [Confidence](https://docs.typesafe.ai/confidence) descrevem os resultados do provedor. Esta anotação não calcula a estatística confidence do fornecedor nem a confunde com chance de lucro.
++
++Nenhum importador runtime, journal, dashboard, carteira, prompt, modelo, ordem ou cadência Kuru/Monad será modificado por esta entrega. Registros históricos permanecem de origem desconhecida. O vínculo contemporâneo é responsabilidade do chamador, não autenticação criptográfica de transporte.
+diff --git a/docs/sdd/decision-weight-provenance/USAGE.md b/docs/sdd/decision-weight-provenance/USAGE.md
+new file mode 100644
+index 0000000..ba0de66
+--- /dev/null
++++ b/docs/sdd/decision-weight-provenance/USAGE.md
+@@ -0,0 +1,31 @@
++# Anotar a origem dos pesos de decisão
++
++`annotateDecisionWeights` é uma função pura em `src/decision-evidence/weights.ts`. Ela recebe a decisão e a evidência do mesmo processamento, valida sua compatibilidade e retorna uma anotação separada. Não consulta o Jev nem altera a decisão.
++
++```ts
++import { annotateDecisionWeights } from "../../../src/decision-evidence/weights";
++
++const annotation = annotateDecisionWeights(
++  { action: "buy", status: "ok", probabilities: { buy: 0.5, sell: 0.25, hold: 0.25 } },
++  { kind: "observed_response", raw: { choice: "buy", probabilities: { buy: 2, sell: 1, hold: 1 } } },
++);
++// { schemaVersion: 1, origin: "provider_reported", selectedWeight: 0.5,
++//   reportedSelectedWeight: 0.5, financialCalibration: "not_established" }
++```
++
++As entradas acima são sintéticas. As origens têm o seguinte significado:
++
++| origin | Evidência necessária |
++| --- | --- |
++| provider_reported | Resposta contemporânea com pesos explícitos válidos e compatíveis com a decisão ok |
++| adapter_choice_fallback | Resposta contemporânea válida sem pesos, compatível com a escolha unitária ok |
++| adapter_safety_fallback | Resposta inválida com hold canônico malformed, ou falha error/timeout com hold canônico e status correspondente |
++| unknown | Registro histórico, evidência ausente, malformada ou incompatível |
++
++Para registros históricos, forneça `{ kind: "historical_record" }`. Um peso histórico igual a 1 preserva `selectedWeight: 1`, mas não comprova origem do provedor. Falhas observadas usam `{ kind: "observed_failure", status: "error" | "timeout" }`.
++
++Decisão inválida retorna `null`. Estados não ok têm `selectedWeight: null`. `reportedSelectedWeight` só é numérico para `provider_reported`; nos demais casos é null. A saída contém somente os cinco campos do exemplo. Campos adicionais, textos e payload bruto não são copiados.
++
++O chamador deve vincular a resposta contemporânea correta à decisão. A função verifica compatibilidade estrutural e numérica, não autentica transporte. Ela segue o contrato observado do adaptador, incluindo tolerância absoluta de 1e-12 e ação escolhida sem exigência de argmax.
++
++Esta entrega não conecta a anotação ao journal ou dashboard, não migra schema e não modifica prompts, modelos, risco, alavancagem, carteira, ordens ou cadência. `financialCalibration: "not_established"` significa que não foi demonstrada uma relação entre peso e resultado financeiro. O peso não é uma probabilidade de lucro.
+diff --git a/docs/sdd/decision-weight-provenance/VERIFICATION.md b/docs/sdd/decision-weight-provenance/VERIFICATION.md
+new file mode 100644
+index 0000000..051d085
+--- /dev/null
++++ b/docs/sdd/decision-weight-provenance/VERIFICATION.md
+@@ -0,0 +1,25 @@
++# Verificação da anotação de pesos
++
++Baseline: `00a593bcabe25dbb6d83795268533551098f645b`.
++
++Comando de comportamento:
++
++```powershell
++bun --no-env-file test src/decision-evidence/weights.test.ts
++```
++
++Resultado observado: exit 0, 11 pass, 0 fail, 76 expect() calls. As fixtures sintéticas exercitam os dez exemplos dos requisitos, normalização sem argmax, pesos ausentes/null, overflow e underflow, evidência incompatível, ações/status, tolerâncias, entradas congeladas, repetibilidade e projeção de cinco campos.
++
++Comando de tipos:
++
++```powershell
++bun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/decision-evidence/weights.ts src/decision-evidence/weights.test.ts
++```
++
++Resultado observado: exit 0. O escopo inclui somente o módulo novo e seus testes; não certifica outros módulos do projeto.
++
++O ciclo TDD iniciou com import ausente. Outros testes falharam antes de implementar a validação de decisões, a distinção entre pesos explícitos e fallback da escolha, e a identificação de fallback de segurança. Cada etapa voltou a passar antes da seguinte. Os testes adicionais verificaram as fronteiras do comportamento já implementado.
++
++A inspeção do módulo não encontrou imports, leitura de ambiente, arquivos, rede ou consultas a modelos. Nenhum importador existente foi alterado. As fontes do adaptador usadas no contrato mantiveram os hashes registrados nos requisitos.
++
++Não foram utilizados feed real, contas reais, inferência paga, ordens ou carteira. Esta verificação local não demonstra calibração, retorno financeiro ou funcionamento em produção.

@@ -1,0 +1,166 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc3-d1-prompts",
+    "specHash": "ebfd8a9aa1c254494a25d0b44cd74d7fa8deeffaa48219a9e9a9e35ea81bfdf8",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "reconstruir_modulo",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "manter_adiado",
+          "reconstruir_modulo",
+          "descartar_refator"
+        ],
+        "framings": [
+          {
+            "order": [
+              "manter_adiado",
+              "reconstruir_modulo",
+              "descartar_refator"
+            ],
+            "probs": {
+              "manter_adiado": 0.18,
+              "reconstruir_modulo": 0.8200000000000001,
+              "descartar_refator": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "reconstruir_modulo",
+              "descartar_refator",
+              "manter_adiado"
+            ],
+            "probs": {
+              "reconstruir_modulo": 0.86,
+              "descartar_refator": 0.01,
+              "manter_adiado": 0.13,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "descartar_refator",
+              "manter_adiado",
+              "reconstruir_modulo"
+            ],
+            "probs": {
+              "descartar_refator": 0.01,
+              "manter_adiado": 0.16,
+              "reconstruir_modulo": 0.83,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "manter_adiado": 0.1567,
+          "reconstruir_modulo": 0.8367,
+          "descartar_refator": 0.0067
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.68,
+        "leader": "reconstruir_modulo",
+        "railProb": {
+          "manter_adiado": 0.01,
+          "reconstruir_modulo": 0.04,
+          "descartar_refator": 0.1
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "manter_adiado",
+          "reconstruir_modulo",
+          "descartar_refator"
+        ],
+        "framings": [
+          {
+            "order": [
+              "manter_adiado",
+              "reconstruir_modulo",
+              "descartar_refator"
+            ],
+            "probs": {
+              "manter_adiado": 0.16,
+              "reconstruir_modulo": 0.84,
+              "descartar_refator": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "reconstruir_modulo",
+              "descartar_refator",
+              "manter_adiado"
+            ],
+            "probs": {
+              "reconstruir_modulo": 0.87,
+              "descartar_refator": 0.01,
+              "manter_adiado": 0.12,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "descartar_refator",
+              "manter_adiado",
+              "reconstruir_modulo"
+            ],
+            "probs": {
+              "descartar_refator": 0.01,
+              "manter_adiado": 0.19,
+              "reconstruir_modulo": 0.8,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "manter_adiado": 0.1567,
+          "reconstruir_modulo": 0.8367,
+          "descartar_refator": 0.0067
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.68,
+        "leader": "reconstruir_modulo",
+        "railProb": {
+          "manter_adiado": 0.01,
+          "reconstruir_modulo": 0.04,
+          "descartar_refator": 0.1
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 9,
+    "failed": 0,
+    "inputTokens": 10298,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

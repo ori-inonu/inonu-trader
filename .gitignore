@@ -1,3 +1,28 @@
 node_modules
 .env
+# Any other env file (for example .env.operator, where the operator guide puts the dedicated wallet key) stays out of git; only the examples are tracked
+.env.*
+!.env.example
 data/
+
+# Internal agent records and local evidence: kept on disk, never committed
+.omh/
+.scratch/
+docs/evidence/
+NUL
+
+# Throwaway browser profiles left by headless render proofs and smoke runs
+web/.keyframe-proof/
+web/.smoke-profile/
+
+# desktop build output (scripts/build-desktop.ts)
+/dist/
+.omp/brain-runtime/
+.codegraph/
+
+# Next.js smoke build output and Playwright captures: local only
+web/.next-t18-smoke/
+.playwright-mcp/
+
+# local harness and verifier run logs: never committed
+.tmp/

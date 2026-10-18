@@ -1,0 +1,44 @@
+{
+  "id": "rc-dec-06-qual-regime-e-qual-limia",
+  "goal": "Qual regime e qual limiar de janela a sombra rotula primeiro, por classe de liquidez e horizonte de 1, 5 ou 15 min? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "atrito_ida_volta_liquido": "0,42%, média de 6 pares de um ativo (n pequeno)",
+    "movimento_mediano": "0,38% em 1 min; 1,03% em 15 min (16 tokens)",
+    "ras7_momentum_7d": "+0,47% no olhar, -0,47% na confirmação; nenhum grupo passou nas duas partes",
+    "graduacao_pumpfun": "0,63% a 6,7% conforme janela e fonte; sem registro do emissor",
+    "preditor_graduacao": "AUROC 0,464 na validação (arXiv 2607.02823 v4)",
+    "pumpportal_dados": "subscribeNewToken e subscribeMigration gratuitos; subscribeTokenTrade 0,01 SOL por 10.000 trades",
+    "mapd_bolsa_dex": "0,06% a 0,08% em BTC, ETH e SOL (working paper não revisado)",
+    "sanduiche_ambiente": "6,85 milhões de sanduíches de out/25 a out/26 (fornecedor)",
+    "atrito_liquido_ida_volta": "0,42% media (6 pares, faixa 0,17% a 0,56%)",
+    "atrito_raso": "1,8% a 2,1%; so entrada medida"
+  },
+  "rails": [
+    "Todo limiar e de sombra; nenhum vira regra de ordem, tamanho ou stop (liberacao de live, dono).",
+    "Atrito de 0,42% vem de 6 pares de um ativo; classe raso tem n=1.",
+    "Classes de liquidez nao estao definidas no codigo: o corte deve ser fixado antes da coleta.",
+    "Migracao pump.fun fica fora: exige chave PumpPortal e carteira."
+  ],
+  "options": [
+    {
+      "id": "medir-sem-limiar",
+      "label": "Medir todas as janelas sem limiar",
+      "what": "Rotular todas as janelas de 1, 5 e 15 min com markout, sem gate, e fixar limiar depois. Evidencia: E|m| condicional nao medido; janelas sobrepostas reduzem o N efetivo (T11)."
+    },
+    {
+      "id": "limiar-2x-atrito",
+      "label": "Rotulo de 2 vezes o atrito",
+      "what": "Rotular, sem filtrar nem ordenar, janelas de 5 e 15 min com movimento acima de 0,84%. Evidencia: Movimento mediano de 0,63% em 5 min e 1,03% em 15 min (validacao-e-baseline.md:34); fator 2 e premissa."
+    },
+    {
+      "id": "momentum-5-15-sombra",
+      "label": "Momentum de 5 a 15 min",
+      "what": "Momentum de 5 a 15 min em sombra, medido por markout, sem ordem. Evidencia: Acerto de equilibrio de 83,3% em 5 min e 70,4% em 15 min com atrito de 0,42% (calculo simetrico; o 95% anterior estava errado)."
+    },
+    {
+      "id": "adiar-regime",
+      "label": "Adiar a escolha de regime",
+      "what": "Nao escolher regime; so acumular janelas nao sobrepostas. Evidencia: Nenhuma janela nao sobreposta medida ainda (T06, T11)."
+    }
+  ]
+}

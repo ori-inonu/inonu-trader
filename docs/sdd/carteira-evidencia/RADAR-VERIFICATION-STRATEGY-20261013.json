@@ -1,0 +1,19 @@
+{
+  "approved_by": "jev_delegated",
+  "receipt_id": "9e9d1e5a-1f29-4c60-81d9-6bb24286be00",
+  "mode": "evaluate",
+  "domain": "strategy",
+  "decision": "review_parallel",
+  "confidence": 0.74,
+  "probabilities": {
+    "review_parallel": 0.83,
+    "review_after_live": 0.12,
+    "abstain": 0.05
+  },
+  "evidence": "36 testes web verdes e typecheck exit 0; nenhuma consulta privada ou ordem autorizada nesta entrega delimitada.",
+  "implementation": "Revisar os 12 arquivos congelados em cópia isolada enquanto o integrador verifica uma consulta pública no localhost:3001.",
+  "model": "jev-1.13",
+  "usage": {"input_tokens": 805, "output_tokens": 48, "billed_cost_usd": null},
+  "provider": {"status": 200, "request_id": "req_01a138305e4c7f01b3ecd41b4e2095ae", "at": "2026-10-14T02:14:13.643Z"},
+  "authority": "Advisory dentro do objetivo autorizado; não é resposta humana nem autorização para ordens ou transmissão privada."
+}

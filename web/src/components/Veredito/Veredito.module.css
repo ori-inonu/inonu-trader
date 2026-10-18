@@ -1,0 +1,177 @@
+.root {
+  display: grid;
+  gap: var(--s2);
+  font-family: var(--font-sans);
+  color: var(--ink);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.seal {
+  padding: 2px var(--s3);
+  border: 1px solid currentColor;
+  border-radius: var(--r-xs);
+  font: 700 12px/18px var(--font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.seal[data-selo="comprar"] { color: var(--buy); }
+.seal[data-selo="vender"] { color: var(--sell); }
+.seal[data-selo="esperar"] { color: var(--hold); }
+
+.message {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.block {
+  display: grid;
+  gap: 2px;
+}
+
+.title {
+  margin: 0;
+  font: 600 11px/16px var(--font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: var(--s4);
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.text {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.plan {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: 12.5px;
+}
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 11em) minmax(0, 1fr);
+  gap: var(--s2);
+  padding: 2px var(--s2);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-3);
+}
+.row dt { color: var(--ink-3); }
+.row dd { margin: 0; display: grid; }
+.value {
+  font: 600 12.5px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.hint {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.meta {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.warnings {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: var(--s4);
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.consultive {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.term {
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+  cursor: help;
+}
+
+.placar {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+
+.form {
+  display: grid;
+  gap: var(--s1);
+  margin-top: var(--s1);
+  padding: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+}
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2);
+}
+.label {
+  display: grid;
+  gap: 2px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.input {
+  width: 9em;
+  padding: var(--s1) var(--s2);
+  background: var(--bg-deck);
+  color: var(--ink);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-xs);
+  font: 12.5px var(--font-mono);
+}
+.input:focus-visible,
+.save:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+.save {
+  appearance: none;
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  border: 1px solid var(--edge-focus);
+  border-radius: var(--r-sm);
+  padding: var(--s1) var(--s3);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.save:hover:not(:disabled) { border-color: var(--signal); }
+.save:disabled { color: var(--ink-4); cursor: default; }
+.formNote {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.medicao {
+  display: grid;
+  gap: 2px;
+  padding: var(--s2) var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+}

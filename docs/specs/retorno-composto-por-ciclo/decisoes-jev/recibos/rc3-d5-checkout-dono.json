@@ -1,0 +1,150 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc3-d5-checkout-dono",
+    "specHash": "1b812cb93d579709229caaf732465e70d9159d5894a1e7895695bbb8d8bd221f",
+    "removedByCode": [
+      "abortar_e_avancar"
+    ],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "roteiro_para_o_dono",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "deixar_como_esta",
+          "roteiro_para_o_dono"
+        ],
+        "framings": [
+          {
+            "order": [
+              "deixar_como_esta",
+              "roteiro_para_o_dono"
+            ],
+            "probs": {
+              "deixar_como_esta": 0.02,
+              "roteiro_para_o_dono": 0.98,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "roteiro_para_o_dono",
+              "deixar_como_esta"
+            ],
+            "probs": {
+              "roteiro_para_o_dono": 0.98,
+              "deixar_como_esta": 0.02,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "deixar_como_esta",
+              "roteiro_para_o_dono"
+            ],
+            "probs": {
+              "deixar_como_esta": 0.02,
+              "roteiro_para_o_dono": 0.98,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "deixar_como_esta": 0.02,
+          "roteiro_para_o_dono": 0.98
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.96,
+        "leader": "roteiro_para_o_dono",
+        "railProb": {
+          "deixar_como_esta": 0,
+          "roteiro_para_o_dono": 0.01
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "deixar_como_esta",
+          "roteiro_para_o_dono"
+        ],
+        "framings": [
+          {
+            "order": [
+              "deixar_como_esta",
+              "roteiro_para_o_dono"
+            ],
+            "probs": {
+              "deixar_como_esta": 0.02,
+              "roteiro_para_o_dono": 0.98,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "roteiro_para_o_dono",
+              "deixar_como_esta"
+            ],
+            "probs": {
+              "roteiro_para_o_dono": 0.98,
+              "deixar_como_esta": 0.02,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "deixar_como_esta",
+              "roteiro_para_o_dono"
+            ],
+            "probs": {
+              "deixar_como_esta": 0.01,
+              "roteiro_para_o_dono": 0.99,
+              "none_fits": 0
+            }
+          }
+        ],
+        "means": {
+          "deixar_como_esta": 0.0167,
+          "roteiro_para_o_dono": 0.9833
+        },
+        "noneFits": 0,
+        "agreement": 1,
+        "margin": 0.9666,
+        "leader": "roteiro_para_o_dono",
+        "railProb": {
+          "deixar_como_esta": 0,
+          "roteiro_para_o_dono": 0.01
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 8,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 8,
+    "failed": 0,
+    "inputTokens": 8006,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

@@ -1,0 +1,34 @@
+bun test v1.3.14 (0d9b296a)
+
+src\lib\purity-bundle.test.ts:
+(pass) the scanner sees what it should > follows relative and alias imports, re-exports and dynamic imports, and not packages [42.98ms]
+(pass) the scanner sees what it should > a fixture reached through two hops is found by its path, a synthetic constant by its name [38.24ms]
+(pass) the scanner sees what it should > a module that is not reached is not a leak, and a clean graph is clean [32.90ms]
+(pass) the scanner sees what it should > tests, mocks and synthetic readings are caught by name wherever they sit [33.85ms]
+(pass) what the installed app can reach > the pages the core serves reach no fixture, no synthetic data and no mock (the old console is not served) [487.31ms]
+131 |   });
+132 | 
+133 |   test("the core reaches none either, so no synthetic reading is ever served as if it were the market", () => {
+134 |     const graph = reachable([join(CORE_SRC, "desktop/main.ts")], null);
+135 |     expect(graph.size).toBeGreaterThan(40);
+136 |     expect(leaks(graph, CORE_SRC)).toEqual([]);
+                                         ^
+error: expect(received).toEqual(expected)
+
+- []
++ [
++   "text: lab/source.ts: SYNTHETIC_DEFAULTS",
++ ]
+
+- Expected  - 1
++ Received  + 3
+
+      at <anonymous> (C:\Users\gabri\jev-trader\web\src\lib\purity-bundle.test.ts:136:36)
+(fail) what the installed app can reach > the core reaches none either, so no synthetic reading is ever served as if it were the market [360.19ms]
+(pass) what the installed app can reach > the old console, which the installed app does not serve, is where the synthetic report still is (the guard would fire if it were served) [172.17ms]
+(pass) what the installed app can reach > the core does answer 404 for the console, so that leak is unreachable at run time (T1.11) [0.74ms]
+
+ 7 pass
+ 1 fail
+ 16 expect() calls
+Ran 8 tests across 1 file. [1445.00ms]

@@ -1,0 +1,184 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-08-como-carimbar-as-etapas",
+    "specHash": "46b5c39c187d15571ade7ef57ec5bee6eef0ef6bb4d3986e9e2446750fab5ca3",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "campo-relatorio-memoria",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "decisions-meta-existente",
+          "wrapper-deps-sombra",
+          "campo-relatorio-memoria",
+          "adiar-carimbo"
+        ],
+        "framings": [
+          {
+            "order": [
+              "decisions-meta-existente",
+              "wrapper-deps-sombra",
+              "campo-relatorio-memoria",
+              "adiar-carimbo"
+            ],
+            "probs": {
+              "decisions-meta-existente": 0.27,
+              "wrapper-deps-sombra": 0.23,
+              "campo-relatorio-memoria": 0.45,
+              "adiar-carimbo": 0.01,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "wrapper-deps-sombra",
+              "campo-relatorio-memoria",
+              "adiar-carimbo",
+              "decisions-meta-existente"
+            ],
+            "probs": {
+              "wrapper-deps-sombra": 0.18,
+              "campo-relatorio-memoria": 0.66,
+              "adiar-carimbo": 0.01,
+              "decisions-meta-existente": 0.12,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "campo-relatorio-memoria",
+              "adiar-carimbo",
+              "decisions-meta-existente",
+              "wrapper-deps-sombra"
+            ],
+            "probs": {
+              "campo-relatorio-memoria": 0.4,
+              "adiar-carimbo": 0.01,
+              "decisions-meta-existente": 0.16,
+              "wrapper-deps-sombra": 0.38,
+              "none_fits": 0.05
+            }
+          }
+        ],
+        "means": {
+          "decisions-meta-existente": 0.1833,
+          "wrapper-deps-sombra": 0.2633,
+          "campo-relatorio-memoria": 0.5033,
+          "adiar-carimbo": 0.01
+        },
+        "noneFits": 0.04,
+        "agreement": 1,
+        "margin": 0.24,
+        "leader": "campo-relatorio-memoria",
+        "railProb": {
+          "decisions-meta-existente": 0.13,
+          "wrapper-deps-sombra": 0.24,
+          "campo-relatorio-memoria": 0.04,
+          "adiar-carimbo": 0.54
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "decisions-meta-existente",
+          "wrapper-deps-sombra",
+          "campo-relatorio-memoria",
+          "adiar-carimbo"
+        ],
+        "framings": [
+          {
+            "order": [
+              "decisions-meta-existente",
+              "wrapper-deps-sombra",
+              "campo-relatorio-memoria",
+              "adiar-carimbo"
+            ],
+            "probs": {
+              "decisions-meta-existente": 0.17,
+              "wrapper-deps-sombra": 0.2,
+              "campo-relatorio-memoria": 0.59,
+              "adiar-carimbo": 0.01,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "wrapper-deps-sombra",
+              "campo-relatorio-memoria",
+              "adiar-carimbo",
+              "decisions-meta-existente"
+            ],
+            "probs": {
+              "wrapper-deps-sombra": 0.18,
+              "campo-relatorio-memoria": 0.67,
+              "adiar-carimbo": 0,
+              "decisions-meta-existente": 0.11,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "campo-relatorio-memoria",
+              "adiar-carimbo",
+              "decisions-meta-existente",
+              "wrapper-deps-sombra"
+            ],
+            "probs": {
+              "campo-relatorio-memoria": 0.37,
+              "adiar-carimbo": 0.01,
+              "decisions-meta-existente": 0.16,
+              "wrapper-deps-sombra": 0.4,
+              "none_fits": 0.06
+            }
+          }
+        ],
+        "means": {
+          "decisions-meta-existente": 0.1467,
+          "wrapper-deps-sombra": 0.26,
+          "campo-relatorio-memoria": 0.5433,
+          "adiar-carimbo": 0.0067
+        },
+        "noneFits": 0.0433,
+        "agreement": 0.6667,
+        "margin": 0.2833,
+        "leader": "campo-relatorio-memoria",
+        "railProb": {
+          "decisions-meta-existente": 0.13,
+          "wrapper-deps-sombra": 0.24,
+          "campo-relatorio-memoria": 0.04,
+          "adiar-carimbo": 0.54
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 10,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 10,
+    "failed": 0,
+    "inputTokens": 13408,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

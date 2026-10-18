@@ -1,0 +1,81 @@
+{
+  "id": "rc-t04-motivo-dos-57-de-candidatos-fecha",
+  "goal": "Antes de mudar o funil de compra, qual caminho o ciclo deve executar primeiro para os 411 candidatos fechados antes da escolha do Jev? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "fechados_antes_do_jev": "411 chaves unicas de 1023 linhas em 262 consultas (audits.jsonl)",
+    "marca_minimo": "387 de 411 (94,2%); origem legada em sizing.ts:140, minimo US$ 10",
+    "marca_sem_historico": "97 de 411 (23,6%); null de timingFacts por janela velha, buraco, curta ou timeout",
+    "marca_entrada_esticada": "22 de 411 (5,4%)",
+    "sem_marca_de_bloqueio": "4 de 411 (1,0%)",
+    "minimo_de_compra_atual": "0 (candidates.ts:34)",
+    "limite_de_defasagem_de_velas": "3 h (timing.ts:88)",
+    "registro_sem_caixa": "audits.jsonl não guarda cap, caixa por rede nem idade do timing"
+  },
+  "rails": [
+    "Não alterar regra de risco nem limite por operação (ADENDO-B já decidido pelo dono).",
+    "Não alterar o esquema do journal audits.jsonl: é assunto vedado ao Jev, registrado em bloqueios_do_dono.",
+    "Não enviar ordem, nem gastar a cota do Jev fora da sombra.",
+    "Não mexer em capital, caixa ou limites antes de o dono conciliar o capital (US$ 100 a 126)."
+  ],
+  "options": [
+    {
+      "id": "so_medir_causa_exata",
+      "label": "Só medir a causa exata, sem mudar regra",
+      "what": "Reconciliar os 411 fechamentos em tabela de causa exclusiva, por leitura. Nenhuma regra de fechamento muda antes do resultado. Evidencia: 387 de 411 com marca minimo; 97 sem_historico; audits sem caixa nem cap (A2, A10)"
+    },
+    {
+      "id": "frescor_timing_antes_de_fechar",
+      "label": "Buscar velas mais novas antes de fechar sem_historico",
+      "what": "Se a causa for janela acima de 3 h ou timeout, tentar nova leitura de velas antes de marcar sem_historico. Não altera o limiar de 3 h sem medir. Evidencia: timing.ts:88 MAX_STALE_MS 3 h; cycle.ts:800 catch vira null (A6)"
+    },
+    {
+      "id": "markout_sem_historico_sombra",
+      "label": "Medir markout dos fechados por sem_historico, em sombra",
+      "what": "Levar ao Jev, só em sombra e sem ordem, os fechados por sem_historico para medir markout contra os escolhidos, dentro da cota local. Evidencia: 97 candidatos; cota local 720 por dia (config); Jev responde em 0,37 s (research.md)"
+    },
+    {
+      "id": "retirar_marca_minimo_legada",
+      "label": "Retirar a marca minimo legada do fluxo de compra",
+      "what": "Se a causa confirmada for o mínimo legado de US$ 10 e não caixa zero, tirar a marca do fluxo de compra. Só depois de confirmar a causa. Evidencia: sizing.ts:19 e :140 minOrderUsd 10; candidates.ts:34 minBuyUsd 0 (A5)"
+    },
+    {
+      "id": "adiar_sem_mudanca",
+      "label": "Adiar: não mudar o funil neste ciclo",
+      "what": "Manter o funil atual até a causa exata estar medida. Conservador: sem ganho imediato, sem risco de liberar candidato sem caixa. Evidencia: Linha de base: 0 de 7 voltas positivas, -0,41% bruto (pesquisa-t12 a5)"
+    },
+    {
+      "id": "medir_taxa_atual_em_sombra",
+      "label": "Medir a taxa atual de fechamento com o código de hoje",
+      "what": "Rodar a sombra com o código atual (minBuyUsd = 0, sem capFor) e medir a parcela de compras fechadas antes da escolha, sem mudar esquema nem regra. Se exigir chamadas ao Jev, o consumo fica como bloqueio do dono. Evidencia: audits.jsonl termina em 15/10 00:52 UTC; minBuyUsd = 0 em candidates.ts:34; o histórico git do arquivo começa em 270ffa1 (15/10 05:00 -0300); 411 é 57,3% de chaves únicas de uma"
+    },
+    {
+      "id": "teste_de_caminho_pre_escolha",
+      "label": "Teste de fixture que enumera os caminhos de fechamento",
+      "what": "Testes em src/agent que reproduzem os caminhos que fecham compra antes da escolha (caixa zero, fonte velha, entrada cara, teto zero) e confirmam qual marca cada um grava. Não muda o journal, é reversível. Evidencia: cycle.ts:797 (fonte velha), cycle.ts:870 e entry-cost.ts:57 (entrada cara), candidates.ts:229 e :242 (teto), candidates.test.ts:476 (sem_historico não fecha)."
+    },
+    {
+      "id": "classificacao_derivada_no_leitor",
+      "label": "Derivar a causa no leitor, sem novo campo gravado",
+      "what": "Ajustar a classificação do leitor para tratar custo_de_entrada_alto como fechamento e separar sem_historico como marca de dado, sem alterar o formato gravado. Exige coordenação com a zona do Codex. Evidencia: audit.ts:45 (CLOSING sem custo_de_entrada_alto); audit.ts:113 (cap binding entra só por observedBlocks); 0 sem_saldo nas 411 chaves; spec.md:51 (zona do Codex)."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "caixa_por_rede",
+      "ask": "Qual o caixa do agente por rede nos horários dos fechamentos, para separar caixa zero de mínimo legado?"
+    },
+    {
+      "id": "janela_411",
+      "ask": "O 411 de latest.json (103 consultas) é o mesmo conjunto que o de audits.jsonl (262 consultas)?"
+    },
+    {
+      "id": "causa_timing",
+      "ask": "Quantos sem_historico são janela velha, timeout ou curta? Só o registro de leitura do provedor revela."
+    },
+    {
+      "id": "markout",
+      "ask": "Qual o preço 1, 5 e 15 min após cada fechamento? Não existe no repo."
+    }
+  ]
+}

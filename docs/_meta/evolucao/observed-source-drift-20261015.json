@@ -1,0 +1,15 @@
+{
+  "format": "jev-evolution-observed-source-drift-v1",
+  "records": [
+    {
+      "path": "docs/sdd/carteira-evidencia/COORDENACAO-CLAUDE-20261013.md",
+      "baseline_sha256": "a4b8cbba83341ca413f07a8061112f6232d90ddc960afb77a9836685ca6ebffd",
+      "observed_sha256": "db1ba3d6ab22a7151264a26ff6019e273d5d1e52f8d4d9dc323d7e0cf77236da",
+      "bytes": 868561,
+      "detected_at": "2026-10-15T15:36:24.086670-03:00",
+      "attribution": "unknown; no write operation of this task targeted this source",
+      "reason": "Source changed during the documentary organization. Preserved in place, never reverted; metadata refreshed without claiming semantic review of the new coordination text."
+    }
+  ],
+  "initial_baseline_preserved": true
+}

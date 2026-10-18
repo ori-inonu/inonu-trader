@@ -1,0 +1,65 @@
+{
+  "id": "rc-t15-cadencia-da-consulta-ao-jev-na-so",
+  "goal": "Na sombra, qual cadência de consulta ao Jev adotar com o teto de 720 consultas por dia? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {},
+  "rails": [
+    "O teto de consultas e a cota real da organização são decisão do dono; nenhuma opção altera o teto.",
+    "src/decision-review/** é zona do Codex e src/decision-review/evolution/** não se toca.",
+    "Nenhuma consulta ao Jev nesta fase; medir antes de ligar.",
+    "Um evento só conta como consumido quando o hash do fato entra no Brief consultado."
+  ],
+  "options": [
+    {
+      "id": "so_medir",
+      "label": "Manter relógio de 2 min e só gravar eventos",
+      "what": "Relógio de 2 min decide. Eventos com factHash são gravados em sombra sem consultar o Jev, para medir a cadência por evento antes de ligá-la. Evidencia: Simulação: 2 min consome 720 e recusa 0; T02 sem markout."
+    },
+    {
+      "id": "relogio_2min",
+      "label": "Relógio fixo de 2 min como única cadência",
+      "what": "Só o relógio de 2 min consulta. Não há evento de consulta. É o comportamento atual da sombra, com volume que cabe no teto de 720. Evidencia: budget.ts:102-107 casa com 720 por dia; autopilot.ts:38."
+    },
+    {
+      "id": "evento_prova_consumo",
+      "label": "Evento com prova de consumo e relógio de conciliação",
+      "what": "Eventos materiais disparam consulta com admissão por orçamento, e o evento só é consumido quando o hash entra no Brief. O relógio de 2 min segue para conciliação. Evidencia: facts.ts:97; events.ts:29-31; ADENDO-E seção E3."
+    },
+    {
+      "id": "armada_pelo_codigo",
+      "label": "Consulta só ao atingir gatilho do código",
+      "what": "O código arma a consulta quando a condição de gatilho é atingida. A consulta acontece só então, dentro do teto de 720. Exige contrato de decisão separado. Evidencia: E4 exige contrato de decisão e executor; fora deste ticket."
+    },
+    {
+      "id": "relogio_1min",
+      "label": "Relógio fixo de 1 min, 1440 consultas por dia",
+      "what": "Relógio de 1 min. Com teto 720 o portão recusa metade; para atender 1440 seria preciso aumentar o teto, que é decisão do dono. Evidencia: config.ts:97 limita a 1000; simulação: 720 consultas e 720 recusas."
+    },
+    {
+      "id": "relogio_5min",
+      "label": "Relógio de 5 min, configuração válida",
+      "what": "Ritmo base de 5 min, que config.ts:98 aceita (faixa 5 a 240). Com teto 720 gera 288 consultas e nenhuma recusa, o que deixa margem sob o teto. É a única cadência de relógio fixo que a configuração atual aceita sem mudar código. Reversível e de baixo custo. Evidencia: Execução read-only de simulateDay(5,720): agendadas 288, consultas 288, recusas 0 (cadence.ts:13-27). config.ts:98 intervalMin entre"
+    },
+    {
+      "id": "sem_consulta_medir_fatos",
+      "label": "Gravar fatos e eventos sem nenhuma consulta",
+      "what": "Nenhuma consulta ao Jev nesta fase. O guarda e o despachante gravam eventos com factHash, e a cadência por evento é medida a partir dos dados gravados. Não há relógio de consulta. Cumpre a restrição 'Nenhuma consulta ao Jev nesta fase'. Evidencia: events.ts:29-31 (reconhecimento só por versões exatas); facts.ts:97 (factHash); wire.ts:655-665 (admissão por orçamento, que pode ser desligada sem cons"
+    }
+  ],
+  "forbidden": [
+    "relogio_1min"
+  ],
+  "unknowns": [
+    {
+      "id": "cota_real",
+      "ask": "Quanto da cota diária real da organização TypeSafe existe, lido só pelo dono no console."
+    },
+    {
+      "id": "guarda_ligado",
+      "ask": "Se o despachante de eventos guard_book está ligado na configuração atual de produção."
+    },
+    {
+      "id": "custo_por_consulta",
+      "ask": "Preço e limite contratual real por consulta do Jev, lidos no console pelo dono."
+    }
+  ]
+}

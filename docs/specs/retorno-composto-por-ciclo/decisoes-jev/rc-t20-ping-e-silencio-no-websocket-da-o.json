@@ -1,0 +1,63 @@
+{
+  "id": "rc-t20-ping-e-silencio-no-websocket-da-o",
+  "goal": "Quais limiares de ping e de silencio sem dado adotar em okx-ws.ts e feed.ts, sabendo que o servidor fecha apos 30 s sem dado e que o pong nao esta provado como dado? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "regra_servidor": "conexao cai sem inscricao ou dado por mais de 30 s",
+    "pong_como_dado": "nao documentado",
+    "okx_ws": "ping 20 s, silencio 45 s",
+    "feed": "ping 25 s, reconexao 60 s",
+    "porta_8443": "deixa de aceitar no publico em 31/10/2026"
+  },
+  "rails": [
+    "Ping abaixo de 30 s; corte de dado abaixo de 30 s enquanto pong nao for provado.",
+    "Porta 443 antes de 31/10/2026 e ticket separado.",
+    "Sem chave, ordem, carteira ou execucao; nada em src/decision-review/evolution/**."
+  ],
+  "options": [
+    {
+      "id": "A-ping15-corte25",
+      "label": "Ping 15 s e corte 25 s sem dado",
+      "what": "Nos dois arquivos: ping apos 15 s sem dado; reconectar apos 25 s sem frame de dado, pong fora da conta. Evidencia: Doc OKX: corte acima de 30 s; pong nao documentado"
+    },
+    {
+      "id": "B-so-medir",
+      "label": "Adiar: so medir antes",
+      "what": "Nao muda limiares agora; roda teste de duas horas e depois escolhe o par. Evidencia: Teste ainda nao feito"
+    },
+    {
+      "id": "C-ping20-corte28",
+      "label": "Ping 20 s e corte 28 s",
+      "what": "Menos reconexoes que A, margem de 2 s antes do corte do servidor. Evidencia: Ping de 20 s em fonte de terceiros; corte de 30 s na doc"
+    },
+    {
+      "id": "D-pong-conta-40",
+      "label": "Pong zera silencio, corte 40 s",
+      "what": "Assume que pong renova o prazo do servidor; so admissivel se o teste provar. Evidencia: Pong nao documentado; feed.test.ts:389 assume"
+    },
+    {
+      "id": "E-status-quo",
+      "label": "Manter 20/45 e 25/60",
+      "what": "Nao muda nada; cortes de 45 s e 60 s passam de 30 s. Evidencia: okx-ws.ts:56-57; feed.ts:90-91"
+    },
+    {
+      "id": "F-zerar-backoff-qualquer-dado",
+      "label": "Zerar backoff com qualquer dado (alinhar a feed.ts)",
+      "what": "Em okx-ws.ts:145, zerar attempt com qualquer frame de dado de canal inscrito (espelho de feed.ts:546), e nao so com trades. Corrige a espera de ate 30 s em canal quieto (a7). Reversivel e de baixo risco. Evidencia: okx-ws.ts:116, 145, 200 (a7); feed.ts:546 (zera com qualquer dado de canal)."
+    },
+    {
+      "id": "G-porta-443-junto",
+      "label": "Trocar 8443 por 443 junto com os timers",
+      "what": "Trocar a URL para wss://ws.okx.com/ws/v5/public (ou :443) nos arquivos de producao listados em a8, com ticket separado mas antes de 31/10/2026. Nao e migracao de dados nem de schema, nao e dependencia nova. Evidencia: Log OKX: 8443 publico deixa de funcionar em 31/10/2026; 443 ja funciona (a9)."
+    }
+  ],
+  "forbidden": [
+    "D-pong-conta-40",
+    "E-status-quo"
+  ],
+  "unknowns": [
+    {
+      "id": "pong-conta",
+      "ask": "Pong renova o prazo de 30 s? Teste de duas horas ou suporte OKX."
+    }
+  ]
+}

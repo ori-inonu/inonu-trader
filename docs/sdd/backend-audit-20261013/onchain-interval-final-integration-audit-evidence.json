@@ -1,0 +1,738 @@
+{
+  "version": 1,
+  "reviewer_id": "audit_intelligence",
+  "observed_utc": "2026-10-13T19:06:27.772020+00:00",
+  "commands_executed_by_auditor": "Read-only PowerShell Get-Content/Get-FileHash/Select-String and this Python hashlib/json/difflib inspector; no Git, tests, environment reads or source writes.",
+  "source_rows": [
+    {
+      "path": "src/onchain-read/client.ts",
+      "before": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "after": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "kind": "source",
+      "live_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "isolated_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "live_equal_isolated_bytes": true,
+      "live_matches_approved_after": true,
+      "preserved_during_audit": true,
+      "preimage_path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.ts.txt",
+      "preimage_live_sha256": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "preimage_isolated_sha256": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "preimage_matches_before": true,
+      "source_changed": true,
+      "preimage_to_live_unified_diff": "--- docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.ts.txt\n+++ src/onchain-read/client.ts\n@@ -115,7 +115,7 @@\n       const signature = signRequest(cred.secret, timestamp, request.method, request.path, request.body ?? \"\");\n       let res: Response;\n       try {\n-        res = await deps.fetch(BASE + request.path, {\n+        const init: RequestInit = {\n           method: request.method,\n           headers: {\n             \"content-type\": \"application/json\",\n@@ -129,7 +129,12 @@\n           credentials: \"omit\",\n           cache: \"no-store\",\n           signal,\n-        });\n+        };\n+        const url = BASE + request.path;\n+        const dispatch = deps.fetch.bind(deps);\n+        // Measure dispatch after synchronous preparation, including URL and transport lookup.\n+        lastSentMs = deps.now();\n+        res = await dispatch(url, init);\n       } catch {\n         if (signal.aborted) return expired();\n         lastCallMs = deps.now();\n@@ -224,7 +229,6 @@\n       if (beforeSend) return beforeSend;\n       const cred = deps.credentials();\n       if (cred === null) return { ok: false, error: \"no_credentials\", sent: false };\n-      lastSentMs = deps.now();\n       const r = await send(request, cred);\n       if (r.ok === false && r.error === \"provider_payment_required\") tierBlockedUntil.set(tier, deps.now() + PAYMENT_BLOCK_MS);\n       return r;\n",
+      "test_declarations": []
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "before": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "after": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "kind": "source",
+      "live_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "isolated_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "live_equal_isolated_bytes": true,
+      "live_matches_approved_after": true,
+      "preserved_during_audit": true,
+      "preimage_path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.test.ts.txt",
+      "preimage_live_sha256": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "preimage_isolated_sha256": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "preimage_matches_before": true,
+      "source_changed": true,
+      "preimage_to_live_unified_diff": "--- docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.test.ts.txt\n+++ src/onchain-read/client.test.ts\n@@ -206,6 +206,89 @@\n     expect(sentAt[2]! - sentAt[1]!).toBeGreaterThanOrEqual(38);\n   });\n \n+  test.each([\"secret\", \"apiKey\", \"passphrase\"] as const)(\"queue interval starts at fetch after delayed %s preparation\", async (field) => {\n+    let reads = 0;\n+    const credential = { ...CREDS };\n+    Object.defineProperty(credential, field, { get() {\n+      reads += 1;\n+      if (reads === 1) {\n+        const end = performance.now() + 80;\n+        while (performance.now() < end) { /* Simulate a synchronous pause during request preparation. */ }\n+      }\n+      return CREDS[field];\n+    } });\n+    const sentAt: number[] = [];\n+    const monotonic: number[] = [];\n+    const { calls, f } = fakeFetch(() => {\n+      sentAt.push(Date.now());\n+      monotonic.push(performance.now());\n+      return okBody();\n+    });\n+    const client = createOnchainClient({ credentials: () => credential, fetch: f, now: Date.now, minIntervalMs: 40 });\n+    const results = await Promise.all([client.call(REQ, \"free\"), client.call(REQ, \"free\")]);\n+    expect(results.every((result) => result.ok)).toBe(true);\n+    expect(calls).toHaveLength(2);\n+    expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38);\n+    expect(monotonic[1]! - monotonic[0]!).toBeGreaterThanOrEqual(38);\n+  });\n+\n+  test(\"queue interval starts at fetch after delayed URL preparation\", async () => {\n+    let reads = 0;\n+    const request = {\n+      method: \"GET\" as const,\n+      get path() {\n+        reads += 1;\n+        if (reads === 2) {\n+          const end = performance.now() + 80;\n+          while (performance.now() < end) { /* Pause while preparing the URL, after signing. */ }\n+        }\n+        return REQ.path;\n+      },\n+    };\n+    const sentAt: number[] = [];\n+    const monotonic: number[] = [];\n+    const { calls, f } = fakeFetch(() => {\n+      sentAt.push(Date.now());\n+      monotonic.push(performance.now());\n+      return okBody();\n+    });\n+    const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: Date.now, minIntervalMs: 40 });\n+    const results = await Promise.all([client.call(request, \"free\"), client.call(REQ, \"free\")]);\n+    expect(results.every((result) => result.ok && result.sent)).toBe(true);\n+    expect(calls).toHaveLength(2);\n+    expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38);\n+    expect(monotonic[1]! - monotonic[0]!).toBeGreaterThanOrEqual(38);\n+  });\n+\n+  test(\"queue interval starts at transport entry after delayed fetch lookup\", async () => {\n+    let reads = 0;\n+    const sentAt: number[] = [];\n+    const monotonic: number[] = [];\n+    const { calls, f } = fakeFetch(() => {\n+      sentAt.push(Date.now());\n+      monotonic.push(performance.now());\n+      return okBody();\n+    });\n+    const client = createOnchainClient({\n+      credentials: () => CREDS,\n+      get fetch() {\n+        reads += 1;\n+        if (reads === 1) {\n+          const end = performance.now() + 80;\n+          while (performance.now() < end) { /* Pause while looking up the transport. */ }\n+        }\n+        return f;\n+      },\n+      now: Date.now,\n+      minIntervalMs: 40,\n+    });\n+    const results = await Promise.all([client.call(REQ, \"free\"), client.call(REQ, \"free\")]);\n+    expect(results.every((result) => result.ok && result.sent)).toBe(true);\n+    expect(calls).toHaveLength(2);\n+    expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38);\n+    expect(monotonic[1]! - monotonic[0]!).toBeGreaterThanOrEqual(38);\n+  });\n+\n   test(\"no credentials -> no_credentials, never touches fetch\", async () => {\n     const { calls, f } = fakeFetch(() => okBody());\n     const client = createOnchainClient({ credentials: () => null, fetch: f, now: () => 0, minIntervalMs: 0 });\n",
+      "test_declarations": [
+        {
+          "line": 42,
+          "literal": "  test(\"queued payment refusal affects only its tier and expires\", async () => {"
+        },
+        {
+          "line": 58,
+          "literal": "  test.each([true, false])(\"credentials are obtained after interval wait, removed=%s\", async (removed) => {"
+        },
+        {
+          "line": 77,
+          "literal": "  test.each([\"429\", \"402\", \"success\", \"reject\"])(\"ignored abort cannot apply late fetch %s\", async (kind) => {"
+        },
+        {
+          "line": 101,
+          "literal": "  test.each([200, 401, 403])(\"late rejected HTTP %s body is handled after deadline\", async (status) => {"
+        },
+        {
+          "line": 121,
+          "literal": "  test(\"clock retry uses the same operation deadline and abort signal\", async () => {"
+        },
+        {
+          "line": 142,
+          "literal": "  test.each([200, 401, 403])(\"deadline covers stalled HTTP %s body and releases queued calls\", async (status) => {"
+        },
+        {
+          "line": 163,
+          "literal": "  test.each([429, 50011])(\"queued calls observe newly opened cooldown %s\", async (code) => {"
+        },
+        {
+          "line": 180,
+          "literal": "  test(\"sends OK-ACCESS headers with a signature computed over the exact request\", async () => {"
+        },
+        {
+          "line": 196,
+          "literal": "  test(\"global queue: at most one request per interval\", async () => {"
+        },
+        {
+          "line": 209,
+          "literal": "  test.each([\"secret\", \"apiKey\", \"passphrase\"] as const)(\"queue interval starts at fetch after delayed %s preparation\", async (field) => {"
+        },
+        {
+          "line": 235,
+          "literal": "  test(\"queue interval starts at fetch after delayed URL preparation\", async () => {"
+        },
+        {
+          "line": 263,
+          "literal": "  test(\"queue interval starts at transport entry after delayed fetch lookup\", async () => {"
+        },
+        {
+          "line": 292,
+          "literal": "  test(\"no credentials -> no_credentials, never touches fetch\", async () => {"
+        },
+        {
+          "line": 300,
+          "literal": "  test.each(["
+        },
+        {
+          "line": 317,
+          "literal": "  test(\"network throw, timeout and invalid JSON are provider_error\", async () => {"
+        },
+        {
+          "line": 345,
+          "literal": "  test(\"envelope without data -> schema; oversized body refused\", async () => {"
+        },
+        {
+          "line": 358,
+          "literal": "  test(\"402 blocks the tier for an hour; 429 cools down for 30s; status exposes codes\", async () => {"
+        },
+        {
+          "line": 373,
+          "literal": "  test(\"429 opens a 30s cooldown that short-circuits later calls\", async () => {"
+        },
+        {
+          "line": 393,
+          "literal": "  test(\"provider msg never propagates and credentials never appear in results\", async () => {"
+        },
+        {
+          "line": 426,
+          "literal": "  test(\"learns the offset from the Date header and retries 50102 once in the same slot\", async () => {"
+        },
+        {
+          "line": 444,
+          "literal": "  test(\"a second 50102 inside the same call reports clock_skew, not unauthorized\", async () => {"
+        },
+        {
+          "line": 454,
+          "literal": "  test(\"50102 with a Date near the used offset reports clock_skew without retrying\", async () => {"
+        },
+        {
+          "line": 468,
+          "literal": "  test(\"401 with an auth code stays provider_unauthorized\", async () => {"
+        },
+        {
+          "line": 478,
+          "literal": "  test(\"401 with a non-JSON body stays provider_unauthorized\", async () => {"
+        },
+        {
+          "line": 485,
+          "literal": "  test.each([\"50103\", \"50104\", \"50105\", \"50112\", \"50113\"])(\"body code %s maps to provider_unauthorized\", (code) => {"
+        },
+        {
+          "line": 494,
+          "literal": "  test(\"body code 50038 maps to unsupported_chain\", async () => {"
+        },
+        {
+          "line": 502,
+          "literal": "  test(\"a small measured skew is not applied and clockOffsetMs is still reported\", async () => {"
+        }
+      ]
+    },
+    {
+      "path": "src/onchain-read/gateway.ts",
+      "before": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "after": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "kind": "source",
+      "live_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "isolated_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "live_equal_isolated_bytes": true,
+      "live_matches_approved_after": true,
+      "preserved_during_audit": true,
+      "preimage_path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.ts.txt",
+      "preimage_live_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "preimage_isolated_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "preimage_matches_before": true,
+      "source_changed": false,
+      "preimage_to_live_unified_diff": "",
+      "test_declarations": []
+    },
+    {
+      "path": "src/onchain-read/gateway.test.ts",
+      "before": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "after": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "kind": "source",
+      "live_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "isolated_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "live_equal_isolated_bytes": true,
+      "live_matches_approved_after": true,
+      "preserved_during_audit": true,
+      "preimage_path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.test.ts.txt",
+      "preimage_live_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "preimage_isolated_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "preimage_matches_before": true,
+      "source_changed": false,
+      "preimage_to_live_unified_diff": "",
+      "test_declarations": [
+        {
+          "line": 45,
+          "literal": "  test.each([\"fetch\", \"body\"])(\"late %s success does not populate gateway cache\", async (phase) => {"
+        },
+        {
+          "line": 75,
+          "literal": "  test.each([true, false])(\"coalesced followers record once only when sent=%s\", async (sent) => {"
+        },
+        {
+          "line": 84,
+          "literal": "  test(\"unsent failures leave allowance for other keys\", async () => {"
+        },
+        {
+          "line": 93,
+          "literal": "  test.each([false, true])(\"queued admission rechecks changed cap and UTC month rollover=%s\", async (rollover) => {"
+        },
+        {
+          "line": 121,
+          "literal": "  test(\"manual intent retains allowance when background was already pace refused\", async () => {"
+        },
+        {
+          "line": 135,
+          "literal": "  test(\"permitted background and user share one send\", async () => {"
+        },
+        {
+          "line": 145,
+          "literal": "  test(\"exhausted cap serves a marked stale entry without another send\", async () => {"
+        },
+        {
+          "line": 155,
+          "literal": "  test(\"a queued background pace refusal does not refuse its eligible user follower\", async () => {"
+        },
+        {
+          "line": 178,
+          "literal": "  test(\"concurrent different keys cannot exceed the remaining cap\", async () => {"
+        },
+        {
+          "line": 190,
+          "literal": "  test(\"happy path returns the single envelope with budget meta\", async () => {"
+        },
+        {
+          "line": 205,
+          "literal": "  test(\"records only calls actually sent\", async () => {"
+        },
+        {
+          "line": 214,
+          "literal": "  test(\"unknown route and bad params are refused before any call\", async () => {"
+        },
+        {
+          "line": 222,
+          "literal": "  test(\"credential states short-circuit\", async () => {"
+        },
+        {
+          "line": 231,
+          "literal": "  test(\"provider failure serves stale cache marked stale:true\", async () => {"
+        },
+        {
+          "line": 252,
+          "literal": "  test(\"budget exhausted blocks the call before the network\", async () => {"
+        },
+        {
+          "line": 276,
+          "literal": "  test(\"no cache + provider failure returns the error\", async () => {"
+        },
+        {
+          "line": 282,
+          "literal": "  test(\"schema failure on a response serves stale too\", async () => {"
+        },
+        {
+          "line": 298,
+          "literal": "  test(\"status exposes credential state without secrets\", async () => {"
+        }
+      ]
+    }
+  ],
+  "written_checks": [
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.ts.txt",
+      "before": null,
+      "after": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "kind": "preimage",
+      "live_sha256": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "isolated_sha256": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/client.test.ts.txt",
+      "before": null,
+      "after": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "kind": "preimage",
+      "live_sha256": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "isolated_sha256": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.ts.txt",
+      "before": null,
+      "after": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "kind": "preimage",
+      "live_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "isolated_sha256": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-preintegration/src/onchain-read/gateway.test.ts.txt",
+      "before": null,
+      "after": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "kind": "preimage",
+      "live_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "isolated_sha256": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-DIAGNOSIS.md",
+      "before": null,
+      "after": "e9253abca718575cf16bfd85f005b357fa69789b93a65e2c7ca06f383506cdfe",
+      "kind": "document",
+      "live_sha256": "e9253abca718575cf16bfd85f005b357fa69789b93a65e2c7ca06f383506cdfe",
+      "isolated_sha256": "e9253abca718575cf16bfd85f005b357fa69789b93a65e2c7ca06f383506cdfe",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-VERIFICATION.md",
+      "before": null,
+      "after": "82acb3e9332da6c05787e628125d2019697651f487efb0804f53000e248cb3d4",
+      "kind": "document",
+      "live_sha256": "82acb3e9332da6c05787e628125d2019697651f487efb0804f53000e248cb3d4",
+      "isolated_sha256": "82acb3e9332da6c05787e628125d2019697651f487efb0804f53000e248cb3d4",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+      "before": null,
+      "after": "77d3139a57a5512fe836a4b029aa4d1050b4705f2877f1a949b41f6e77fc81bb",
+      "kind": "document",
+      "live_sha256": "77d3139a57a5512fe836a4b029aa4d1050b4705f2877f1a949b41f6e77fc81bb",
+      "isolated_sha256": "77d3139a57a5512fe836a4b029aa4d1050b4705f2877f1a949b41f6e77fc81bb",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-STANDARDS-REVIEW.md",
+      "before": null,
+      "after": "3f68fac4086574e55660b12d1f16ab774a01e17766b913d5867532986bf0a2b5",
+      "kind": "document",
+      "live_sha256": "3f68fac4086574e55660b12d1f16ab774a01e17766b913d5867532986bf0a2b5",
+      "isolated_sha256": "3f68fac4086574e55660b12d1f16ab774a01e17766b913d5867532986bf0a2b5",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-candidate.json",
+      "before": null,
+      "after": "e0941d26ea67987e07d2909536a0552779dcf4b4018e62a45d98e2f29283b317",
+      "kind": "document",
+      "live_sha256": "e0941d26ea67987e07d2909536a0552779dcf4b4018e62a45d98e2f29283b317",
+      "isolated_sha256": "e0941d26ea67987e07d2909536a0552779dcf4b4018e62a45d98e2f29283b317",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-live-tests.log",
+      "before": null,
+      "after": "9db21bf243246facca5737ce690bdca65192a23d7ca5a0e42d73fc741d87f70a",
+      "kind": "document",
+      "live_sha256": "9db21bf243246facca5737ce690bdca65192a23d7ca5a0e42d73fc741d87f70a",
+      "isolated_sha256": "9db21bf243246facca5737ce690bdca65192a23d7ca5a0e42d73fc741d87f70a",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-red.log",
+      "before": null,
+      "after": "e5a225f07dae9dc2ceb7e1fba50648c383c261d54c14ea2f8b20685ba39bcbd1",
+      "kind": "document",
+      "live_sha256": "e5a225f07dae9dc2ceb7e1fba50648c383c261d54c14ea2f8b20685ba39bcbd1",
+      "isolated_sha256": "e5a225f07dae9dc2ceb7e1fba50648c383c261d54c14ea2f8b20685ba39bcbd1",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-green.log",
+      "before": null,
+      "after": "d4e73cfbed99af998f322583eb3f491f88360bc9b057c364fec5cdf9c1bef398",
+      "kind": "document",
+      "live_sha256": "d4e73cfbed99af998f322583eb3f491f88360bc9b057c364fec5cdf9c1bef398",
+      "isolated_sha256": "d4e73cfbed99af998f322583eb3f491f88360bc9b057c364fec5cdf9c1bef398",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-full.log",
+      "before": null,
+      "after": "eb2fa5984c4ead0f5fce811e7931d882959dd0297a30eb270b4b47165477c324",
+      "kind": "document",
+      "live_sha256": "eb2fa5984c4ead0f5fce811e7931d882959dd0297a30eb270b4b47165477c324",
+      "isolated_sha256": "eb2fa5984c4ead0f5fce811e7931d882959dd0297a30eb270b4b47165477c324",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-types.log",
+      "before": null,
+      "after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "document",
+      "live_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "isolated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-VERIFICATION.md",
+      "before": null,
+      "after": "e8f0451c0446ee176cea3f1aa73eb5c6547b2fb02f8b1c481b20277c2bc56f3a",
+      "kind": "document",
+      "live_sha256": "e8f0451c0446ee176cea3f1aa73eb5c6547b2fb02f8b1c481b20277c2bc56f3a",
+      "isolated_sha256": "e8f0451c0446ee176cea3f1aa73eb5c6547b2fb02f8b1c481b20277c2bc56f3a",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+      "before": null,
+      "after": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "kind": "document",
+      "live_sha256": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "isolated_sha256": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+      "before": null,
+      "after": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "kind": "document",
+      "live_sha256": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "isolated_sha256": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-candidate.json",
+      "before": null,
+      "after": "ce8ccd1ff91cfcad4d377f391bfec7c08ce3f8861a9a7785f31587e34e881318",
+      "kind": "document",
+      "live_sha256": "ce8ccd1ff91cfcad4d377f391bfec7c08ce3f8861a9a7785f31587e34e881318",
+      "isolated_sha256": "ce8ccd1ff91cfcad4d377f391bfec7c08ce3f8861a9a7785f31587e34e881318",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-url-red.log",
+      "before": null,
+      "after": "a803b027ffc035c7e637f9f3afc2603903ed2ed39898802fa4b30f99aebed0f0",
+      "kind": "document",
+      "live_sha256": "a803b027ffc035c7e637f9f3afc2603903ed2ed39898802fa4b30f99aebed0f0",
+      "isolated_sha256": "a803b027ffc035c7e637f9f3afc2603903ed2ed39898802fa4b30f99aebed0f0",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-lookup-red.log",
+      "before": null,
+      "after": "ef96f69b8a461a8ac797ca133df78989503f25307a1f23d47ec164b8bddfc2a9",
+      "kind": "document",
+      "live_sha256": "ef96f69b8a461a8ac797ca133df78989503f25307a1f23d47ec164b8bddfc2a9",
+      "isolated_sha256": "ef96f69b8a461a8ac797ca133df78989503f25307a1f23d47ec164b8bddfc2a9",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-full.log",
+      "before": null,
+      "after": "a82ed66f8b38e1a354496842235eaa4279a48d42b054b5bc30ff041190999ebc",
+      "kind": "document",
+      "live_sha256": "a82ed66f8b38e1a354496842235eaa4279a48d42b054b5bc30ff041190999ebc",
+      "isolated_sha256": "a82ed66f8b38e1a354496842235eaa4279a48d42b054b5bc30ff041190999ebc",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "docs/sdd/backend-audit-20261013/evidence/onchain-interval-final-types.log",
+      "before": null,
+      "after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "kind": "document",
+      "live_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "isolated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "src/onchain-read/client.ts",
+      "before": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "after": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "kind": "source",
+      "live_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "isolated_sha256": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "before": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "after": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "kind": "source",
+      "live_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "isolated_sha256": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+      "live_matches_after": true,
+      "isolated_matches_after": true
+    }
+  ],
+  "logs": [
+    {
+      "name": "onchain-interval-final-live-tests",
+      "logSha256": "1a3ce4de6c96c21dd4bdbc4827b12720fd0c7c2c1bfaf9f5d6552476b4951e10",
+      "metricsSha256": "dde62ad39af83e8a078463c9c8dc39f4e21dfb99ae9b059b629e36be2d494fab",
+      "log_live_sha256": "1a3ce4de6c96c21dd4bdbc4827b12720fd0c7c2c1bfaf9f5d6552476b4951e10",
+      "log_isolated_sha256": "1a3ce4de6c96c21dd4bdbc4827b12720fd0c7c2c1bfaf9f5d6552476b4951e10",
+      "log_original_sha256": "1a3ce4de6c96c21dd4bdbc4827b12720fd0c7c2c1bfaf9f5d6552476b4951e10",
+      "log_hashes_match": true,
+      "metrics_live_sha256": "dde62ad39af83e8a078463c9c8dc39f4e21dfb99ae9b059b629e36be2d494fab",
+      "metrics_isolated_sha256": "dde62ad39af83e8a078463c9c8dc39f4e21dfb99ae9b059b629e36be2d494fab",
+      "metrics_original_sha256": "dde62ad39af83e8a078463c9c8dc39f4e21dfb99ae9b059b629e36be2d494fab",
+      "metrics_hashes_match": true,
+      "metrics": {
+        "adapter_version": "0.1.0",
+        "archive_id": null,
+        "delivered_bytes": 28,
+        "delivered_sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6",
+        "duration_ms": 2492.2804000088945,
+        "headroom_version": "0.40.0",
+        "pass_reason": "command_not_allowlisted",
+        "rtk_version": "0.51.0",
+        "stderr_bytes": 23189,
+        "stderr_sha256": "ce0f5731908150e12302b2045f378108b179661a777752df0079a53f2cf4cbd3",
+        "stdout_bytes": 28,
+        "stdout_sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6"
+      },
+      "metrics_contains_exit_code": false,
+      "log_bytes": 23479,
+      "literal_log_tail": "(pass) the PnL family > recent PnL rows: required symbol and network, everything else null when unreadable, a cursor to continue [0.28ms]\n(pass) the PnL family > an empty recent PnL is an empty list [0.06ms]\n(pass) what no route ever does > none of the six reaches a path that signs, approves or sends [0.93ms]\n\n 232 pass\n 0 fail\n 941 expect() calls\nRan 232 tests across 12 files. [2.44s]",
+      "literal_file_headers": [
+        "src\\onchain-read\\budget.test.ts:",
+        "src\\onchain-read\\cache.test.ts:",
+        "src\\onchain-read\\catalog.test.ts:",
+        "src\\onchain-read\\client.test.ts:",
+        "src\\onchain-read\\f2-routes.test.ts:",
+        "src\\onchain-read\\gateway.test.ts:",
+        "src\\onchain-read\\http.test.ts:",
+        "src\\onchain-read\\leak.test.ts:",
+        "src\\onchain-read\\probe.test.ts:",
+        "src\\onchain-read\\sign.test.ts:",
+        "src\\onchain-read\\web-fixture-drift.test.ts:",
+        "src\\onchain-read\\routes\\wallet.test.ts:"
+      ],
+      "native_exit_code_evidence": {
+        "value": 0,
+        "provenance": "Parent root: native commandExecution exits captured; not encoded in RTK metrics, not rerun by this auditor."
+      }
+    },
+    {
+      "name": "onchain-interval-final-live-types",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metricsSha256": "28a75af4e899c310daaf6f4195ab0a0bcb7f43fae042161ea68acf885f35d512",
+      "log_live_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_isolated_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_hashes_match": true,
+      "metrics_live_sha256": "28a75af4e899c310daaf6f4195ab0a0bcb7f43fae042161ea68acf885f35d512",
+      "metrics_isolated_sha256": "28a75af4e899c310daaf6f4195ab0a0bcb7f43fae042161ea68acf885f35d512",
+      "metrics_original_sha256": "28a75af4e899c310daaf6f4195ab0a0bcb7f43fae042161ea68acf885f35d512",
+      "metrics_hashes_match": true,
+      "metrics": {
+        "adapter_version": "0.1.0",
+        "archive_id": null,
+        "delivered_bytes": 0,
+        "delivered_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "duration_ms": 505.3141000098549,
+        "headroom_version": "0.40.0",
+        "pass_reason": "command_not_allowlisted",
+        "rtk_version": "0.51.0",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "metrics_contains_exit_code": false,
+      "log_bytes": 0,
+      "literal_log_tail": "",
+      "literal_file_headers": [],
+      "native_exit_code_evidence": {
+        "value": 0,
+        "provenance": "Parent root: native commandExecution exits captured; not encoded in RTK metrics, not rerun by this auditor."
+      }
+    },
+    {
+      "name": "onchain-interval-final-live-global-types",
+      "logSha256": "27c1f71f1597c81ed3a1974cc8ece11a676a1665e53368561f671be9728bc324",
+      "metricsSha256": "a528d9ea3746769e15d08e7b0926e6f5b1292f4eb224973e6e0e753c965475ef",
+      "log_live_sha256": "27c1f71f1597c81ed3a1974cc8ece11a676a1665e53368561f671be9728bc324",
+      "log_isolated_sha256": "27c1f71f1597c81ed3a1974cc8ece11a676a1665e53368561f671be9728bc324",
+      "log_original_sha256": "27c1f71f1597c81ed3a1974cc8ece11a676a1665e53368561f671be9728bc324",
+      "log_hashes_match": true,
+      "metrics_live_sha256": "a528d9ea3746769e15d08e7b0926e6f5b1292f4eb224973e6e0e753c965475ef",
+      "metrics_isolated_sha256": "a528d9ea3746769e15d08e7b0926e6f5b1292f4eb224973e6e0e753c965475ef",
+      "metrics_original_sha256": "a528d9ea3746769e15d08e7b0926e6f5b1292f4eb224973e6e0e753c965475ef",
+      "metrics_hashes_match": true,
+      "metrics": {
+        "adapter_version": "0.1.0",
+        "archive_id": null,
+        "delivered_bytes": 0,
+        "delivered_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "duration_ms": 2807.123699982185,
+        "headroom_version": "0.40.0",
+        "pass_reason": "command_not_allowlisted",
+        "rtk_version": "0.51.0",
+        "stderr_bytes": 45,
+        "stderr_sha256": "b7dc95512cdb71e1e12f2047c55eb42aa39153f3d4bbabe372034af273755ead",
+        "stdout_bytes": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "metrics_contains_exit_code": false,
+      "log_bytes": 46,
+      "literal_log_tail": "$ tsc --noEmit -p tsconfig.verification.json",
+      "literal_file_headers": [],
+      "native_exit_code_evidence": {
+        "value": 0,
+        "provenance": "Parent root: native commandExecution exits captured; not encoded in RTK metrics, not rerun by this auditor."
+      }
+    }
+  ],
+  "document_hashes": {
+    "ONCHAIN-SPEC.md": {
+      "live_sha256": "4ef3aadfbb0baec1c9fdd4fb262312fd425864d53718abad9d9ba6fe94735ec3",
+      "isolated_sha256": "4ef3aadfbb0baec1c9fdd4fb262312fd425864d53718abad9d9ba6fe94735ec3",
+      "equal": true
+    },
+    "ONCHAIN-INTERVAL-FINAL-LIVE-VERIFICATION.md": {
+      "live_sha256": "4039245af4c7067e71bd2c72dff0fbbf606374be60ec62df99654a8e03eca380",
+      "isolated_sha256": "4039245af4c7067e71bd2c72dff0fbbf606374be60ec62df99654a8e03eca380",
+      "equal": true
+    },
+    "ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md": {
+      "live_sha256": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "isolated_sha256": "5365177a0a465a229778fd29358ece232076cc360aacbd6026a99af7d648ada9",
+      "equal": true
+    },
+    "ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md": {
+      "live_sha256": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "isolated_sha256": "1f2e821757e8abfae4b330fa7c38e2bd3b257bf85ee15ff188f4a33cc45e16db",
+      "equal": true
+    },
+    "evidence/onchain-interval-integration-manifest.json": {
+      "live_sha256": "d2dcf7c6283def98ec9019f1a6314d5524f06ceb7afc72f27fc58aa6306732f7",
+      "isolated_sha256": "d2dcf7c6283def98ec9019f1a6314d5524f06ceb7afc72f27fc58aa6306732f7",
+      "equal": true
+    },
+    "evidence/onchain-interval-final-live.json": {
+      "live_sha256": "e5e25048babcd8455576851eef10efbe52f9d32b46502e2d8f4377abefb224e4",
+      "isolated_sha256": "e5e25048babcd8455576851eef10efbe52f9d32b46502e2d8f4377abefb224e4",
+      "equal": true
+    }
+  },
+  "integration": {
+    "manifest_sha256": "d2dcf7c6283def98ec9019f1a6314d5524f06ceb7afc72f27fc58aa6306732f7",
+    "manifest_hash_matches_verification_record": true,
+    "integrated_at": "2026-10-13T18:58:43.347Z",
+    "manifest_verification": "pending",
+    "separate_verification_record_captured_at": "2026-10-13T18:59:53.222Z",
+    "record_results": {
+      "tests": 232,
+      "failed": 0,
+      "assertions": 941,
+      "files": 12,
+      "focusedTypesExit": 0,
+      "globalTypesExit": 0
+    },
+    "helper_sha256": "44068c73136d3820f7135f148c99ed170e061d988011f88b635491d4ae7c5e17",
+    "helper_lines": {
+      "47": "for (const row of rows) {",
+      "48": "  insist(await hashAt(join(candidateRoot,row.path)) === row.after, `candidate_drift:${row.path}`);",
+      "49": "  insist(await hashAt(join(liveRoot,row.path)) === row.before, `live_drift:${row.path}`);",
+      "50": "}",
+      "58": "const preimages = [];",
+      "59": "for (const row of rows.filter(row=>row.kind==='source')) {",
+      "60": "  const bytes = await bytesAt(join(liveRoot,row.path));",
+      "61": "  insist(bytes !== null && sha(bytes) === row.before, `preimage_drift:${row.path}`);",
+      "62": "  const path = `${docRoot}/evidence/onchain-interval-preintegration/${row.path}.txt`;",
+      "63": "  insist(await hashAt(join(liveRoot,path)) === null, `preimage_target_exists:${path}`);",
+      "64": "  mkdirSync(dirname(join(candidateRoot,path)),{recursive:true});",
+      "65": "  await Bun.write(join(candidateRoot,path),bytes);",
+      "66": "  insist(await hashAt(join(candidateRoot,path)) === row.before, `preimage_write_mismatch:${path}`);",
+      "67": "  preimages.push({path,before:null,after:row.before,kind:'preimage'});",
+      "68": "}",
+      "69": "const ordered = [...preimages,...rows.filter(row=>row.kind==='document'),...rows.filter(row=>row.kind==='source')];",
+      "70": "await Bun.write(join(taskRoot,'onchain-interval-integration-plan.json'),JSON.stringify({capturedAt:new Date().toISOString(),rows:ordered},null,2)+'\\n');",
+      "71": "for (const row of ordered) insist(await hashAt(join(liveRoot,row.path)) === row.before, `final_precheck_drift:${row.path}`);",
+      "72": "insist(await hashAt(join(liveRoot,manifestPath)) === null, 'final_manifest_target_exists');",
+      "73": "const written = [];",
+      "74": "for (const row of ordered) {",
+      "75": "  if (row.before === row.after) continue;",
+      "76": "  const bytes = await bytesAt(join(candidateRoot,row.path));",
+      "77": "  insist(bytes !== null && sha(bytes) === row.after, `candidate_write_drift:${row.path}`);",
+      "78": "  insist(await hashAt(join(liveRoot,row.path)) === row.before, `immediate_precheck_drift:${row.path}`);",
+      "79": "  mkdirSync(dirname(join(liveRoot,row.path)),{recursive:true});",
+      "80": "  await Bun.write(join(liveRoot,row.path),bytes);",
+      "81": "  insist(await hashAt(join(liveRoot,row.path)) === row.after, `postwrite_drift:${row.path}`);",
+      "82": "  written.push(row);",
+      "83": "  await Bun.write(join(taskRoot,'onchain-interval-integration-progress.json'),JSON.stringify({status:'partial',written},null,2)+'\\n');",
+      "84": "}",
+      "85": "const manifest = {version:1,integratedAt:new Date().toISOString(),sourceRows:rows.filter(row=>row.kind==='source'),written,verification:'pending',concurrentWriterLockClaim:false};",
+      "86": "insist(await hashAt(join(liveRoot,manifestPath)) === null, 'manifest_target_exists');",
+      "87": "await Bun.write(join(candidateRoot,manifestPath),JSON.stringify(manifest,null,2)+'\\n');",
+      "88": "await Bun.write(join(liveRoot,manifestPath),Bun.file(join(candidateRoot,manifestPath)));",
+      "89": "await Bun.write(join(taskRoot,'onchain-interval-integration-progress.json'),JSON.stringify({...manifest,status:'integrated'},null,2)+'\\n');",
+      "90": "console.log(JSON.stringify({mode,status:'integrated',changedSources:2,written:written.length,manifest:manifestPath}));"
+    },
+    "plan_sha256": "524dea78a07b91dcd0a5bc6662e47f5369df32cbe990e10bda9514cdf0e2c05a",
+    "progress_sha256": "37721212c19015c4f2611d8e21f2ca8f1c17bb296906b9601980384f460e6f98",
+    "plan_captured_at": "2026-10-13T18:58:43.254Z",
+    "plan_rows": 26,
+    "manifest_written_rows": 24,
+    "progress_status": "integrated",
+    "progress_written_matches_manifest": true,
+    "plan_mutated_rows_equal_manifest_written": true,
+    "first_four_written_are_preimages": true,
+    "source_writes_only_client_and_tests": true,
+    "concurrent_writer_lock_claim": false,
+    "cas_limit": "Immediate precondition hash check and postwrite check are evidenced in helper; check/write is not an atomic writer lock."
+  },
+  "reported_test_inventory": {
+    "budget.test.ts": "46a399b09db9a6da67b21bd913b5b1b3c2262bc3a8c22b09eaa0780b885241a0",
+    "cache.test.ts": "421c52ddf814abc6120f6d90767df7ef15b21509be55fa1675a38aaac42148ac",
+    "catalog.test.ts": "76032f8c254e8633f8afc806bf557940b239a4d8621a961149222b2eb487abb5",
+    "client.test.ts": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65",
+    "f2-routes.test.ts": "3342c0b7aa613ffab0d14cf5546085c5d80b6895d40d877fd66c19e565fb9197",
+    "gateway.test.ts": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+    "http.test.ts": "8dcd04686494095f59f3c348b0c4e01f7179dc702f73204e6f0134e96c31bfa4",
+    "leak.test.ts": "27c51ee02ba12f7a7e2c4ef25318e3e48862e7b9edaf5809930b569e840f37b0",
+    "probe.test.ts": "3f6d95ba318d3650f915fa02e2a45a63217020a228aa42d07af8a4805784e4b2",
+    "routes/wallet.test.ts": "6a69d7aa74d2c6d3b13f371a8563766d89c4d8197272de9927e434a8e2d20a19",
+    "sign.test.ts": "48f4604f5f57cbdd3f7bb06d382888b40a7460652589ec6b28d874fc4a29c59f",
+    "web-fixture-drift.test.ts": "6fce25288fff9fa245c67f49c75c386b892263cc06638e00d9772aba434c39d3"
+  },
+  "current_operational_limit": "Writes limited to exclusive research prefix. Historical rejected reviews and their operational deviations are preserved; this audit grants no retroactive approval."
+}

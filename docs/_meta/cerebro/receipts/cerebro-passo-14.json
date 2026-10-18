@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-14",
+    "specHash": "1968f822882a09d7af92c3e41163c6b76688624545ae146e781749b88c74f152",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "skills_to_nodes",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "skills_to_nodes",
+          "index_to_nodes",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "skills_to_nodes",
+              "index_to_nodes",
+              "stop"
+            ],
+            "probs": {
+              "skills_to_nodes": 0.76,
+              "index_to_nodes": 0.03,
+              "stop": 0.2,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "index_to_nodes",
+              "stop",
+              "skills_to_nodes"
+            ],
+            "probs": {
+              "index_to_nodes": 0.12,
+              "stop": 0.23,
+              "skills_to_nodes": 0.64,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "stop",
+              "skills_to_nodes",
+              "index_to_nodes"
+            ],
+            "probs": {
+              "stop": 0.2,
+              "skills_to_nodes": 0.77,
+              "index_to_nodes": 0.02,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "skills_to_nodes": 0.7233,
+          "index_to_nodes": 0.0567,
+          "stop": 0.21
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.5133,
+        "leader": "skills_to_nodes",
+        "railProb": {
+          "skills_to_nodes": 0.09,
+          "index_to_nodes": 0.27,
+          "stop": 0.03
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "skills_to_nodes",
+          "index_to_nodes",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "skills_to_nodes",
+              "index_to_nodes",
+              "stop"
+            ],
+            "probs": {
+              "skills_to_nodes": 0.76,
+              "index_to_nodes": 0.03,
+              "stop": 0.2,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "index_to_nodes",
+              "stop",
+              "skills_to_nodes"
+            ],
+            "probs": {
+              "index_to_nodes": 0.14,
+              "stop": 0.21,
+              "skills_to_nodes": 0.64,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "stop",
+              "skills_to_nodes",
+              "index_to_nodes"
+            ],
+            "probs": {
+              "stop": 0.2,
+              "skills_to_nodes": 0.77,
+              "index_to_nodes": 0.02,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "skills_to_nodes": 0.7233,
+          "index_to_nodes": 0.0633,
+          "stop": 0.2033
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.52,
+        "leader": "skills_to_nodes",
+        "railProb": {
+          "skills_to_nodes": 0.09,
+          "index_to_nodes": 0.27,
+          "stop": 0.03
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 7589,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

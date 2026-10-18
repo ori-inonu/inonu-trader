@@ -1,0 +1,65 @@
+{
+  "status": "abstained",
+  "receiptId": "521b780b-48ac-446b-985c-6fc4504919f9",
+  "questionIds": [
+    "next_deployment_slice"
+  ],
+  "inputDigest": "cd5efa734d458f6df5e381981aae9991d6684181b105a9da55bc6b57246bb2b5",
+  "rubricVersion": "batch-2026-09-26.2",
+  "policies": {
+    "next_deployment_slice": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    }
+  },
+  "authority": "advisory_only",
+  "model": "jev-1.13.0",
+  "answers": {
+    "next_deployment_slice": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "bounded_public_probe",
+      "bestCandidate": "bounded_public_probe",
+      "probabilities": {
+        "bounded_public_probe": 0.72,
+        "record_artifact_dependency": 0.07,
+        "insufficient_evidence": 0.21
+      },
+      "confidence": 0.58,
+      "disposition": "abstained",
+      "reasonCode": "low_confidence",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "reasonCode": "low_confidence",
+  "usage": {
+    "input_tokens": 719,
+    "output_tokens": 56
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-11T20:45:49.558Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-11T20:45:49.827Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a12cb801207df1a9611f057c522e9a",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null
+  },
+  "latencyMs": 302,
+  "receiptPersisted": true,
+  "approved_by": null,
+  "human_response": false,
+  "billedCost": null,
+  "advisoryOnly": true,
+  "dependentImplementationDeferred": true
+}

@@ -1,0 +1,69 @@
+{
+  "status": "assessed",
+  "receiptId": "bde3b625-2909-4dce-b19c-497db7c2f919",
+  "questionIds": [
+    "next_g11_step"
+  ],
+  "inputDigest": "aa5e659a4c865fdb62bf1878440da768bfa0d45bf40636a90a4faeb39a5d058a",
+  "rubricVersion": "batch-2026-09-26.2",
+  "policies": {
+    "next_g11_step": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    }
+  },
+  "authority": "advisory_only",
+  "origin": {
+    "source": "mcp",
+    "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+    "agentId": "root"
+  },
+  "model": "jev-1.13.0",
+  "answers": {
+    "next_g11_step": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "official_source_research",
+      "bestCandidate": "official_source_research",
+      "probabilities": {
+        "official_source_research": 0.79,
+        "generic_abi_adapter": 0,
+        "dependency_checkpoint": 0.2,
+        "insufficient_evidence": 0.01
+      },
+      "confidence": 0.72,
+      "disposition": "recommendation",
+      "recommendation": "official_source_research",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 549,
+    "output_tokens": 67
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-11T20:35:13.936Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-11T20:35:14.201Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a12cae4e5776659c8368a47a836bf0",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null
+  },
+  "latencyMs": 284,
+  "receiptPersisted": true,
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billedCostUsd": null,
+  "appliedDecision": "official_source_research"
+}

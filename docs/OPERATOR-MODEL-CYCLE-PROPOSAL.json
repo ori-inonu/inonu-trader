@@ -1,0 +1,11 @@
+{
+  "id": "operator-r8-c5",
+  "summary": "Correct pending R8 C5 execution model/decision boundary as next part of full active central JEV objective; no financial actions or external publishing.",
+  "references": [
+    {
+      "sha256": "7cd7c31a2e9af8d04e807aaf63faa26ef90af2f1c99881f33a04f21c6cf0f701",
+      "path": "docs/OPERATOR-MODEL-BOUNDARY-SPEC.md",
+      "excerpt": "This next bounded delivery addresses R8 C5 only"
+    }
+  ]
+}

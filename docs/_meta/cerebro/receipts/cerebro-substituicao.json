@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-substituicao",
+    "specHash": "194e2f70d2a494535456810c6e1583108be85cd0ac5db7a8a990afe23adb9d76",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "supersede_command",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "supersede_command",
+          "lint_contradiction",
+          "keep_manual"
+        ],
+        "framings": [
+          {
+            "order": [
+              "supersede_command",
+              "lint_contradiction",
+              "keep_manual"
+            ],
+            "probs": {
+              "supersede_command": 0.95,
+              "lint_contradiction": 0,
+              "keep_manual": 0.04,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "lint_contradiction",
+              "keep_manual",
+              "supersede_command"
+            ],
+            "probs": {
+              "lint_contradiction": 0,
+              "keep_manual": 0.04,
+              "supersede_command": 0.96,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "keep_manual",
+              "supersede_command",
+              "lint_contradiction"
+            ],
+            "probs": {
+              "keep_manual": 0.09,
+              "supersede_command": 0.9,
+              "lint_contradiction": 0,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "supersede_command": 0.9367,
+          "lint_contradiction": 0,
+          "keep_manual": 0.0567
+        },
+        "noneFits": 0.0067,
+        "agreement": 1,
+        "margin": 0.88,
+        "leader": "supersede_command",
+        "railProb": {
+          "supersede_command": 0.05,
+          "lint_contradiction": 0.03,
+          "keep_manual": 0.04
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "supersede_command",
+          "lint_contradiction",
+          "keep_manual"
+        ],
+        "framings": [
+          {
+            "order": [
+              "supersede_command",
+              "lint_contradiction",
+              "keep_manual"
+            ],
+            "probs": {
+              "supersede_command": 0.95,
+              "lint_contradiction": 0,
+              "keep_manual": 0.04,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "lint_contradiction",
+              "keep_manual",
+              "supersede_command"
+            ],
+            "probs": {
+              "lint_contradiction": 0,
+              "keep_manual": 0.05,
+              "supersede_command": 0.95,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "keep_manual",
+              "supersede_command",
+              "lint_contradiction"
+            ],
+            "probs": {
+              "keep_manual": 0.07,
+              "supersede_command": 0.92,
+              "lint_contradiction": 0,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "supersede_command": 0.94,
+          "lint_contradiction": 0,
+          "keep_manual": 0.0533
+        },
+        "noneFits": 0.0067,
+        "agreement": 1,
+        "margin": 0.8867,
+        "leader": "supersede_command",
+        "railProb": {
+          "supersede_command": 0.05,
+          "lint_contradiction": 0.03,
+          "keep_manual": 0.04
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 18,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 22997,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

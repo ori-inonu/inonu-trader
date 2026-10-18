@@ -1,0 +1,35 @@
+{
+  "id": "rc-primeira-etapa",
+  "goal": "Depois da pesquisa sobre retorno composto por ciclo de 1 minuto, escolher qual deve ser a PRIMEIRA etapa de implementacao do plano. Tudo comeca em sombra, sem dinheiro real, sem mudar o executor nem limites de risco. A meta de 0,5% a 1% por ciclo e hipotese a medir, nao promessa.",
+  "facts": {
+    "atrito_medido": "Atrito de ida e volta medido: 0,42% em ativo liquido (6 pares de um ativo), 1,8% a 2,1% em raso; 0 de 7 voltas positivas, -0,41% bruto",
+    "movimento_1min": "Movimento absoluto mediano de 1 minuto: 0,38% (16 tokens, amostras sobrepostas, sem direcao)",
+    "jev_latencia": "Jev responde em 0,37 s de mediana; teto local de 720 consultas por dia; ciclo medido de 37,5 s; pior caso antes do modelo 170 s pelo codigo",
+    "funil": "57% dos candidatos de compra fecham antes de chegar ao Jev; o modelo escolhe compra em 1,86% das linhas de escolha do modelo",
+    "cota_onchainos": "OnchainOS Free: 100 mil chamadas Basic e 100 mil Premium por mes, sem WebSocket; Basic projeta acima do teto no ritmo atual",
+    "feed_cex": "Feed publico OKX: 1965 instrumentos em uma conexao, sem chave, cerca de 3870 a 4100 mensagens por segundo em tickers; cobre so bolsa, nao tokens Solana fora dela",
+    "meta_matematica": "0,5% por ciclo composto da 1316 vezes por dia; 10 vezes por dia exige cerca de 0,16% liquido por minuto",
+    "termos_okx": "OKX API Agreement 9.4 proibe raspadores e bots para extrair Market Data em escala excessiva, inclusive em endpoints publicos"
+  },
+  "rails": [
+    "Dinheiro real, ordens, carteira e live trading so por autorizacao do dono",
+    "Nenhuma mudanca de limite de risco, segredo, credencial ou dependencia paga sem o dono",
+    "Nao prometer lucro; resultado so por medicao com custo real",
+    "A etapa deve ser reversivel e comecar em sombra"
+  ],
+  "options": [
+    { "id": "medir_primeiro", "label": "Instrumentar e medir em sombra", "what": "Carimbo de tempo por etapa do ciclo, decomposicao do custo de cada preenchimento (taxa do pool, impacto, rede, prioridade, gorjeta) e medicao das tres classes de distorcao do ADENDO-E, sem mudar decisao nem executor." },
+    { "id": "filtro_custo", "label": "Portao de custo antes do Jev", "what": "Descartar candidatos cujo atrito de ida e volta estimado supera o movimento esperado e levar a taxa de rede medida ao Brief antes da decisao do Jev." },
+    { "id": "feed_cex", "label": "Estado local pelo feed publico da bolsa", "what": "Camada de estado em memoria alimentada pelo WebSocket publico da OKX para os 1965 instrumentos, em sombra, sem cota OnchainOS." },
+    { "id": "ciclo_evento", "label": "Ciclo por evento com prova de consumo", "what": "Materialidade gera evento que aciona o Jev fora do relogio de 2 minutos, com hash do fato no Brief e teto de consultas." },
+    { "id": "pools_solana", "label": "Estado de pools Solana por RPC", "what": "Ler contas de pool por accountSubscribe e decodificar localmente para o conjunto negociado, validando contra a cotacao da OnchainOS." },
+    { "id": "governador_cota", "label": "Governador de cota por rota", "what": "Contador de chamadas por rota e cache por idade na OnchainOS para caber mais ciclos no plano gratuito." },
+    { "id": "raspagem_site", "label": "Raspar o site OKX Wallet e OnchainOS", "what": "Coletar dados de paginas do site como fonte sem cota." },
+    { "id": "plano_pago_ws", "label": "Assinar WebSocket pago da OnchainOS", "what": "Plano Starter a partir de US$ 99 por mes para dados em tempo real." }
+  ],
+  "forbidden": ["raspagem_site", "plano_pago_ws"],
+  "unknowns": [
+    { "id": "cota_jev", "ask": "Qual e a cota real da organizacao no console da TypeSafe (requisicoes e tokens)?" },
+    { "id": "custo_real", "ask": "Qual e o custo all-in medido por ida e volta com pelo menos 30 execucoes por classe de liquidez?" }
+  ]
+}

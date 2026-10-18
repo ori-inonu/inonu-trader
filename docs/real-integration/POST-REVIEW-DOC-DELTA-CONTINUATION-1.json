@@ -1,0 +1,34 @@
+{
+  "kind": "status-documents-edited-after-independent-offline-g14-review",
+  "observedAt": "2026-10-11T21:57:21.946619+00:00",
+  "documents": [
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\CHECKPOINT.md",
+      "previousSha256": "c03b54f3b2f1e813ebc0e2c3c420ba89bc72daf2e4db787f1136517e0f5ce8e8",
+      "sha256": "3c1670813b9194c78c1a739c55549335fd37fdcf91b94249514e5e93501f5842"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\MATRIZ-G01-G17.md",
+      "previousSha256": "b702034cb1e336465ef45abcbba593cdd2fc254f75ff79c4ebbc943b66fc258e",
+      "sha256": "d7949df2a563078f389f25fe4fe7ccc11dfed233fe73a88c948cef88f8d7de5d"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\VERIFICACAO.md",
+      "previousSha256": "7c1000827d3dbf48ccfb3084f690672785f4b0a6875ada3aef83e37cfb038d43",
+      "sha256": "eed6d2aeeb3c4c938b7df6bc16bd5bbc20584cb189c69cb62f66dbcb4c3754c3"
+    },
+    {
+      "path": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\VERIFICACAO.json",
+      "previousSha256": "ca3fc3aff4a907061af332eca488d538630ea8a13c4df42361cef8d3d329990a",
+      "sha256": "11ed132bdc85b7dbf881b07674cf9586e090a824cac247dc519ed6ea81f514c3"
+    }
+  ],
+  "reviewLinkPath": "C:\\Users\\gabri\\.codex\\worktrees\\okx-real-integration\\jev-trader\\docs\\real-integration\\REVIEW-G14-CONTINUATION-1-LINK.json",
+  "reviewLinkSha256": "20bc22a90700641d3ce244ca3e1573df95ea769613d64d7aba4a0e29948e1c27",
+  "editsApprovedByIndependentReview": false,
+  "productSourceUnchanged": true,
+  "frozenAcceptanceChanged": false,
+  "fullG14Approved": false,
+  "fullG17Approved": false,
+  "wholeGoalComplete": false
+}

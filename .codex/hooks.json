@@ -1,0 +1,60 @@
+{
+  "description": "Hooks determinísticos do INONU TRADER para o Codex. Ver AGENTS.md e docs/specs/_template.md.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/session_start.ts",
+            "commandWindows": "bun .codex\\hooks\\session_start.ts",
+            "timeoutSec": 30,
+            "statusMessage": "Lendo estado do git"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/pre_bash_policy.ts",
+            "commandWindows": "bun .codex\\hooks\\pre_bash_policy.ts",
+            "timeoutSec": 30,
+            "statusMessage": "Checando política do comando"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/post_format.ts",
+            "commandWindows": "bun .codex\\hooks\\post_format.ts",
+            "timeoutSec": 60,
+            "statusMessage": "Formatando arquivo editado (opcional)"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun .codex/hooks/stop_verify.ts",
+            "commandWindows": "bun .codex\\hooks\\stop_verify.ts",
+            "timeoutSec": 600,
+            "statusMessage": "Rodando typecheck do projeto"
+          }
+        ]
+      }
+    ]
+  }
+}

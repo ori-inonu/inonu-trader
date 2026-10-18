@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-regras-no-grafo",
+    "specHash": "950f78e67f6ac451f7f6f53552d257092b2c01b382f25fc489dfff5b1fbf91e0",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "keep_safety_inline",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "graph_bootstrap",
+          "keep_safety_inline",
+          "status_quo"
+        ],
+        "framings": [
+          {
+            "order": [
+              "graph_bootstrap",
+              "keep_safety_inline",
+              "status_quo"
+            ],
+            "probs": {
+              "graph_bootstrap": 0.27,
+              "keep_safety_inline": 0.7,
+              "status_quo": 0.02,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "keep_safety_inline",
+              "status_quo",
+              "graph_bootstrap"
+            ],
+            "probs": {
+              "keep_safety_inline": 0.9,
+              "status_quo": 0.01,
+              "graph_bootstrap": 0.08,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "status_quo",
+              "graph_bootstrap",
+              "keep_safety_inline"
+            ],
+            "probs": {
+              "status_quo": 0.04,
+              "graph_bootstrap": 0.26,
+              "keep_safety_inline": 0.69,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "graph_bootstrap": 0.2033,
+          "keep_safety_inline": 0.7633,
+          "status_quo": 0.0233
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.56,
+        "leader": "keep_safety_inline",
+        "railProb": {
+          "graph_bootstrap": 0.13,
+          "keep_safety_inline": 0.01,
+          "status_quo": 0.03
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "graph_bootstrap",
+          "keep_safety_inline",
+          "status_quo"
+        ],
+        "framings": [
+          {
+            "order": [
+              "graph_bootstrap",
+              "keep_safety_inline",
+              "status_quo"
+            ],
+            "probs": {
+              "graph_bootstrap": 0.18,
+              "keep_safety_inline": 0.79,
+              "status_quo": 0.02,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "keep_safety_inline",
+              "status_quo",
+              "graph_bootstrap"
+            ],
+            "probs": {
+              "keep_safety_inline": 0.8,
+              "status_quo": 0.02,
+              "graph_bootstrap": 0.16,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "status_quo",
+              "graph_bootstrap",
+              "keep_safety_inline"
+            ],
+            "probs": {
+              "status_quo": 0.03,
+              "graph_bootstrap": 0.24,
+              "keep_safety_inline": 0.71,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "graph_bootstrap": 0.1933,
+          "keep_safety_inline": 0.7667,
+          "status_quo": 0.0233
+        },
+        "noneFits": 0.0167,
+        "agreement": 1,
+        "margin": 0.5734,
+        "leader": "keep_safety_inline",
+        "railProb": {
+          "graph_bootstrap": 0.13,
+          "keep_safety_inline": 0.01,
+          "status_quo": 0.03
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 24,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 12904,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

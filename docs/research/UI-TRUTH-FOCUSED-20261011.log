@@ -1,0 +1,30 @@
+bun test v1.3.14 (0d9b296a)
+
+src\lib\rail-render.test.tsx:
+(pass) Rail rendering > keeps connection and execution evidence separate (0) [18.15ms]
+(pass) Rail rendering > keeps connection and execution evidence separate (1) [4.00ms]
+(pass) Rail rendering > keeps connection and execution evidence separate (2) [1.23ms]
+(pass) Rail rendering > keeps connection and execution evidence separate (3) [0.70ms]
+(pass) Rail rendering > keeps connection and execution evidence separate (4) [0.71ms]
+(pass) Rail rendering > names the public brand mark and keeps decorative marks hidden [0.49ms]
+(pass) Rail rendering > shows the INONU TRADER wordmark [0.80ms]
+(pass) Rail rendering > carries the presentFeed labels through unchanged [1.48ms]
+(pass) Rail rendering > offers the wallet for copying and disables it when there is none [1.44ms]
+(pass) Rail rendering > shows a static reconnect notice without a pulsing indicator [1.03ms]
+(pass) Rail rendering > shows the block counter and the observed time the parent owns [1.24ms]
+
+src\lib\command-center-render.test.tsx:
+(pass) preserves individual observed order and fill states (0) [12.77ms]
+(pass) preserves individual observed order and fill states (1) [1.42ms]
+(pass) preserves individual observed order and fill states (2) [1.25ms]
+(pass) preserves individual observed order and fill states (3) [1.51ms]
+(pass) preserves individual observed order and fill states (4) [1.47ms]
+(pass) preserves individual observed order and fill states (5) [1.55ms]
+(pass) preserves individual observed order and fill states (6) [1.59ms]
+(pass) preserves individual observed order and fill states (7) [1.58ms]
+(pass) describes observed activity without promising an order or measured cadence [1.60ms]
+
+ 20 pass
+ 0 fail
+ 79 expect() calls
+Ran 20 tests across 2 files. [356.00ms]

@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "research_date": "2026-10-10",
+  "created_at_utc": "2026-10-10T12:51:14.933Z",
+  "objective": "Public documented discovery/listing/benefit-estimation interfaces for OKX Wallet Rewards, Cryptopedia and swap campaigns.",
+  "scope": "Bounded independent document research; no implementation or live qualification.",
+  "configured_runtime": {
+    "model": "GPT-6.1 Sol",
+    "reasoning": "xhigh",
+    "effective_model": null,
+    "effective_tier": null,
+    "effective_sandbox": null
+  },
+  "advisory_receipt": {
+    "id": "0741f4e6-677d-4c9e-b730-a0a991cc5906",
+    "confidence": 0.98,
+    "provided_by_parent": true,
+    "human_response": false,
+    "authority": "advisory only",
+    "cost": null,
+    "usage": null
+  },
+  "discovery_budget": {
+    "limit": 6,
+    "used": 6,
+    "searches": 3,
+    "pages": 3,
+    "retrieval_for_hashes": "same three URLs, no expanded discovery"
+  },
+  "searches": [
+    {
+      "query": "site:okx.com/help Cryptopedia rewards eligibility wallet campaign swap",
+      "date": "2026-10-10",
+      "result_used": "Official Season36 URL; historical campaign selected for concrete rules",
+      "result_body_retained": false,
+      "hash": null
+    },
+    {
+      "query": "site:web3.okx.com/onchainos/dev-docs Cryptopedia Rewards API",
+      "date": "2026-10-10",
+      "result_used": "No directly relevant campaign API contract returned in reviewed results",
+      "result_body_retained": false,
+      "hash": null
+    },
+    {
+      "query": "site:web3.okx.com rewards \"swap\" OR site:okx.com/help \"DEX\" \"trading rewards\"",
+      "date": "2026-10-10",
+      "result_used": "Results mainly unrelated dYdX/Velodrome/CEX material; not used as Wallet campaign evidence",
+      "result_body_retained": false,
+      "hash": null
+    }
+  ],
+  "negative_claim_limit": "Only no campaign API/CLI contract found in consulted surface, never no API exists.",
+  "findings": {
+    "wallet_campaign_api_or_cli_contract": "not_found_in_consulted_surface",
+    "wallet_rewards_current_catalog": "unverified",
+    "cryptopedia_interface": "documented Wallet app UI and verification in expired example",
+    "swap_bonus_active": null,
+    "personal_eligibility": null,
+    "personal_expected_benefit": null,
+    "account_access": null,
+    "account_tier": null,
+    "quota": null,
+    "total_costs": null,
+    "feed_or_redistribution_rights": null,
+    "adjacent_official_deFi_skill": "catalog states product discovery and claim rewards; exact contract not reviewed",
+    "live_behavior_observed": false
+  },
+  "eligible_local_inference": {
+    "shape": "Manual local document registry with provenance and explicit unknowns",
+    "acceptance": [
+      "No authenticated calls, wallet identifiers or private state",
+      "Each entry cites its own current official rules and dates",
+      "Expired campaigns are marked historical",
+      "Pool totals are never presented as individual benefit",
+      "API adapter remains dependent on an exact official method/path/schema and independent review"
+    ]
+  },
+  "constraints_observed": {
+    "repository_or_ticket_written": false,
+    "harness_mutated": false,
+    "git_used": false,
+    "credentials_read": false,
+    "code_or_transcript_transmitted": false,
+    "subagents_spawned": false,
+    "installations": 0,
+    "signatures": 0,
+    "claims": 0,
+    "trades": 0
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Attempted Wallet Rewards entry",
+      "url": "https://web3.okx.com/rewards",
+      "kind": "unsuccessful_public_page_retrieval",
+      "excerpts": [
+        {
+          "quote": "We couldn’t find what you’re looking for",
+          "location": "404 page"
+        }
+      ],
+      "claims_supported": [
+        "Attempted URL returned 404; not a verified Rewards catalog."
+      ],
+      "claims_not_supported": [
+        "No API exists",
+        "Rewards absent",
+        "All Wallet campaigns are public",
+        "Any current swap bonus"
+      ],
+      "retrieved_at_utc": "2026-10-10T12:51:14.472Z",
+      "final_url": "https://web3.okx.com/rewards",
+      "http_status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 59875,
+      "body_sha256": "7d9492a9407892bd673b02a2b39647819379a6b3f13d71b5dbfd735232459754",
+      "hash_scope": "HTTP response bytes after transport decoding; no source body retained"
+    },
+    {
+      "id": "S2",
+      "title": "OKX Wallet to Launch Cryptopedia Season 36",
+      "url": "https://www.okx.com/en-us/help/okx-wallet-to-launch-cryptopedia-season-36",
+      "kind": "official_historical_campaign_rules_currently_accessible",
+      "published_date": "2025-06-25",
+      "campaign_period": {
+        "start": "2025-06-25 15:00 UTC+8",
+        "end": "2025-08-24 15:00 UTC+8",
+        "active_on_research_date": false
+      },
+      "excerpts": [
+        {
+          "quote": "Quests that have been completed but not verified will not be eligible for potential rewards.",
+          "location": "Additional Notes; web-rendered line 129"
+        },
+        {
+          "quote": "gas fees and transaction costs",
+          "location": "Disclaimers; web-rendered line 170"
+        }
+      ],
+      "facts": {
+        "participation_interface": "OKX Wallet app > Discover > Cryptopedia > campaign > Verify",
+        "wallet_required_for_documented_flow": true,
+        "individual_eligibility_observed": false,
+        "api_methods_paths_schemas_documented": false,
+        "swap_task": "Momentum specific-pair trading task with lottery selection",
+        "liquidity_tasks": "specific vault/pool, amount/duration and OKX DeFi route requirements",
+        "verification_delay": "general note says >=10 minutes; individual task notes say 10–20 seconds / up to30 seconds",
+        "rewards_distribution": "after event or TGE, according to campaign terms",
+        "benefit_estimate_current": null,
+        "organiser_rights": "exclude wallets, withhold/revoke rewards for abuse, modify/suspend/cancel/terminate campaign",
+        "participant_costs": "taxes, fees, costs, gas and transaction expenses",
+        "risks": "volatile/illiquid assets, possible total loss; reward value may change",
+        "published_total_discrepancy": "Main rules 1,015,000 USDT versus Terms and Conditions 935,000 USDT",
+        "non_generalizable": "Amounts, dates, wallet minimums, fees and lottery selection belong to this expired campaign only."
+      },
+      "retrieved_at_utc": "2026-10-10T12:51:14.891Z",
+      "final_url": "https://www.okx.com/en-us/help/okx-wallet-to-launch-cryptopedia-season-36",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 77274,
+      "body_sha256": "5c333cfd3385c1ce8d8da1f13a0604e62383ccf7bc3879178a304bf30fd8a35f",
+      "hash_scope": "HTTP response bytes after transport decoding; no source body retained"
+    },
+    {
+      "id": "S3",
+      "title": "onchainos Skills official catalog",
+      "url": "https://raw.githubusercontent.com/okx/onchainos-skills/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/README.md",
+      "permalink": "https://github.com/okx/onchainos-skills/blob/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/README.md",
+      "kind": "pinned_official_cli_skill_catalog",
+      "commit_sha": "cfbb0bafa71898e50762cd9fa77f026b4a8caa1b",
+      "excerpts": [
+        {
+          "quote": "OKX-aggregated DeFi: product discovery, deposit, withdraw, claim rewards",
+          "location": "Available Skills / okx-defi",
+          "line": 12
+        }
+      ],
+      "facts": {
+        "documented_rewards_related_surface": "okx-defi product discovery and claim rewards across lending/staking/AMM protocols",
+        "exact_developer_endpoint_or_command_schema_reviewed": false,
+        "wallet_campaign_catalog_contract_found": false,
+        "cryptopedia_catalog_contract_found": false,
+        "wallet_swap_bonus_estimate_contract_found": false,
+        "absence_scope": "Available Skills and listed workflow/composite CLI commands in this README; not entire repository or all public OKX docs."
+      },
+      "retrieved_at_utc": "2026-10-10T12:51:14.932Z",
+      "final_url": "https://raw.githubusercontent.com/okx/onchainos-skills/cfbb0bafa71898e50762cd9fa77f026b4a8caa1b/README.md",
+      "http_status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 5644,
+      "body_sha256": "2d94899ee1f5e9424fd3b4c785b3e53e568dc2299a39a79652074c9387324d3d",
+      "hash_scope": "HTTP response bytes after transport decoding; no source body retained",
+      "git_blob_sha1": "e3ef0892c6b6f209bdd2f65d070ce4e7a8433c0c"
+    }
+  ],
+  "artifact": {
+    "research_md_word_count": 468,
+    "research_md_sha256": "20a3f05d0e7dd2cd3c6f776d3c1c892f16841035c30883fdd7a4e33d19d2cdf9"
+  }
+}

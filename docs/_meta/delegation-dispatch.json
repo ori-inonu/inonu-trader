@@ -1,0 +1,31 @@
+{
+  "format": "docs-wiki-delegation-dispatch-v1",
+  "dispatched_at_local": "2026-10-13T10:56:36-03:00",
+  "requested_parallel_agents": 15,
+  "observed_dispatch_count": 15,
+  "delegation_id": "deleg_6e7c6418",
+  "state": "completed_outputs_read_and_integrated",
+  "snapshot": "docs/_meta/project-state-20261013.json",
+  "contract": "docs/_meta/delegation-contract.md",
+  "subagents": [
+    {"id":"sa-0-8515b461","owner":"carteira-e-patrimonio"},
+    {"id":"sa-1-feb2c5dc","owner":"defi-e-oportunidades"},
+    {"id":"sa-2-61e3fedd","owner":"fita-e-decisao-jev"},
+    {"id":"sa-3-2f6abdd5","owner":"governanca-e-historico"},
+    {"id":"sa-4-292b27ae","owner":"grafico-e-analytics"},
+    {"id":"sa-5-c85bf54d","owner":"instalavel-e-inonu"},
+    {"id":"sa-6-36eb3d2d","owner":"integracao-real-e-piloto"},
+    {"id":"sa-7-68aee65b","owner":"interface-e-central"},
+    {"id":"sa-8-27653d65","owner":"laboratorio-e-paper"},
+    {"id":"sa-9-908dfe1f","owner":"mercado-e-dados"},
+    {"id":"sa-10-18c6dd0a","owner":"onchainos-e-configuracoes"},
+    {"id":"sa-11-2e98abd7","owner":"operador-e-execucao"},
+    {"id":"sa-12-c3590ff7","owner":"relatorios-e-evidencias"},
+    {"id":"sa-13-ed92362e","owner":"seguranca-e-qualificacao"},
+    {"id":"sa-14-cc97dbaa","owner":"manutencao-da-documentacao"}
+  ],
+  "billed_cost": null,
+  "completion_evidence": "Async notification deleg_6e7c6418 reported 15 completed children; integrator read all 15 local pages and JSON receipts. Timestamp comes from the notification, not an estimate.",
+  "integration_receipt": "docs/_meta/integration-review.json",
+  "limits": "Completion and document integration do not certify product runtime, exhaustive code correctness, paid API usage, orders, CI or merge. Billed cost is unknown."
+}

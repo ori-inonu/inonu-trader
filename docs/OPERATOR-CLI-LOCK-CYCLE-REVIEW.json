@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "kind": "sdd_cycle_review",
+  "proposal_id": "operator-cli-lock",
+  "proposal_sha256": "6a9da3c09253687ad66b67d22a426d7fe06f8016ed6641bae1052025b32fb4d1",
+  "objective_sha256": "9e54db028141cdfdfefa10537fb31183c43691863cf1bab7fbcceff3573e9650",
+  "constraints_sha256": "67701b75b742abc9b809bdc93134cab091f98d87fece9cef09715ed7b5b6ae21",
+  "implementer_id": "codex-inonu-system-one-safety",
+  "reviewer_id": "01a12ada-91d7-7ce0-b6ea-e1556d234224",
+  "decision": "approve",
+  "scope_assessment": "within_authorized_objective",
+  "scope_reason": "Independent scope approval from the human task and public GOAL-INONU-TRADER: reconciliation, journal, idempotency and real-funds preservation. L1-L6 unchanged. Common interval before ledger/history read through all CLI writes, including synthetic state/journal, fits that objective; help/read-only remain usable. CLI:128-144 confirms bypass/pre-lock read; cycle:219-226 confirms synthetic writes. Raw reconciliation receipt 07f2a4afad786a98db488c02e2a60f74d1c4818bfaf04e3f8e5b603262288a85 verified: CLI exit0 changed ledger under live owner, lock unchanged, 26-name allowlist matched, --no-env-file, guard0 attempts. Prior init RED retained. Public subprocess/filesystem seam agrees with user-attested Jev e2024034-268c-49c8-8364-8694b0d98a42 (cli_subprocess p/conf0.99), corroborating SPEC receipt1d850106 common_writers p0.72/conf0.63; cost unknown, advice not human approval. Require GREEN rejection/nonzero diagnostic and byte/owner preservation; cleanup for returns/errors/signals; one-time init, corrupt/missing fail-closed behavior, unrelated fields; synthetic contention/help, ordering, affected checks and independent review/audit. Coherent shared paths mandatory; loop contention accepted; no stale-lock auto-removal or two-file atomicity claim. Ledger primitive changes require verified need; preserve economic/model/signing guards. CONTRIBUTING internal receipts stay outside source commits. Exact source/docs/raw hashes: operator-cli-lock-cycle-fixture-20261011/copy-manifest.json. Objective/constraints bindings preserved from template, not independently rederived; semantic authority is the human task/public goal, no private state imported. Distinct reviewer/no implementation authorship. Requested Sol/xhigh; effective model/tier unknown; ordinary exclusive copy, OS read-only not enforced. No implementation, merge/live or whole-goal approval; GREEN/full acceptance pending."
+}

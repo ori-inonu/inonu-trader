@@ -1,0 +1,37 @@
+{
+  "origin": "synthetic_fixture",
+  "code": "0",
+  "data": [
+    {
+      "chainIndex": "501",
+      "change": "6.59",
+      "decimal": "8",
+      "explorerUrl": "https://example.invalid/explorer",
+      "holders": "22447",
+      "liquidity": "3492546.00711048141155477039737838",
+      "marketCap": "51095303.595316825571569398",
+      "price": "381.228119807066217995",
+      "tagList": { "communityRecognized": true },
+      "tokenContractAddress": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
+      "tokenLogoUrl": "https://example.invalid/logo.png",
+      "tokenName": "Tesla xStock",
+      "tokenSymbol": "TSLAx",
+      "cursor": "0"
+    },
+    {
+      "chainIndex": "501",
+      "change": "6.19",
+      "decimal": "9",
+      "holders": "133",
+      "liquidity": "",
+      "marketCap": "7747.288131154003818",
+      "price": "380.833333",
+      "tagList": { "communityRecognized": true },
+      "tokenContractAddress": "KeGv7bsfR4MheC1CkmnAVceoApjrkvBhHYjWb67ondo",
+      "tokenName": "Tesla (Ondo Tokenized)",
+      "tokenSymbol": "TSLAon",
+      "cursor": "1"
+    }
+  ],
+  "msg": ""
+}

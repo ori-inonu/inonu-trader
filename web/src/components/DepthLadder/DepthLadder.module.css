@@ -1,0 +1,253 @@
+/* Turbopack scopes animation names declared or referenced inside a CSS module, so a module
+   must carry its own copy of the keyframes it uses. globals.css keeps the canonical copies for
+   the global .meshLayer and .scanline hooks. */
+@keyframes jev-ladder-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jev-bar-grow {
+  from {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  to {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+/* Same bounds as the stream so the two panels match exactly whether they share a row or stack. */
+.panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  min-block-size: 340px;
+  max-block-size: 560px;
+  flex-direction: column;
+  gap: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  padding: var(--s4);
+  background: var(--bg-deck);
+  box-shadow: var(--elev-1);
+}
+
+.header {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+/* break-word, not anywhere: a narrow column shortens the heading, it does not split words. */
+.eyebrow,
+.title {
+  overflow-wrap: break-word;
+}
+
+.heading {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.eyebrow {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.title {
+  color: var(--ink);
+  font: var(--fs-md);
+}
+
+.badge {
+  flex: none;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 2px var(--s2);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.availability {
+  min-width: 0;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+}
+
+/* The stage row is auto sized, so this min-height is what gives the shared row its height. It is
+   chosen so the stream beside it gets a list deep enough to read while the ladder still fits
+   inside the 560px cap the two panels share. */
+.frame {
+  position: relative;
+  min-width: 0;
+  min-height: 320px;
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-well);
+}
+
+/* Taken out of flow on purpose. In flow, the viewBox aspect ratio becomes the frame's intrinsic
+   height, the frame grows, the measured viewBox grows and the panel feeds back on itself. Absolute
+   positioning makes the frame the only thing that decides the height. */
+.svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The mid spine: the vertical reference both sides grow away from. */
+.spine {
+  stroke: var(--edge-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.plane {
+  transform-origin: left center;
+  animation-delay: calc(var(--stagger-step) * var(--stagger-index, 0));
+}
+
+.planeIn {
+  animation: jev-ladder-in var(--dur-base) var(--ease-out-expo) both;
+}
+
+/* The front face unfurls from the edge that touches the spine: right for a bid, left for an ask. */
+.bar {
+  transform-box: fill-box;
+  animation: jev-bar-grow var(--dur-slow) var(--ease-out-expo) both;
+  fill: var(--edge-strong);
+}
+
+.bid .bar {
+  transform-origin: right center;
+  fill: var(--buy);
+  fill-opacity: 0.34;
+}
+
+.ask .bar {
+  transform-origin: left center;
+  fill: var(--sell);
+  fill-opacity: 0.34;
+}
+
+.mid .bar {
+  fill: var(--hold);
+  fill-opacity: 0.5;
+}
+
+/* The top face carries the arm hue solid, so depth reads even in greyscale. */
+.cap {
+  fill: var(--ink-4);
+}
+
+.bid .cap {
+  fill: var(--buy);
+}
+
+.ask .cap {
+  fill: var(--sell);
+}
+
+.mid .cap {
+  fill: var(--hold);
+}
+
+.price {
+  fill: var(--ink-2);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.size {
+  fill: var(--ink-4);
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The word beside each slab. Colour is never the only thing separating a bid from an ask. */
+.side {
+  fill: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.legend {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 2px var(--s3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.legend .bid {
+  color: var(--buy);
+}
+
+.legend .ask {
+  color: var(--sell);
+}
+
+.legend .mid {
+  color: var(--hold);
+}
+
+.empty {
+  color: var(--ink-4);
+}
+
+.still .plane,
+.still .bar,
+.still .cap {
+  animation: none;
+}
+
+@media (max-width: 899.98px) {
+  .frame {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 379.98px) {
+  .panel {
+    padding: var(--s3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plane,
+  .bar,
+  .cap {
+    animation: none;
+  }
+}

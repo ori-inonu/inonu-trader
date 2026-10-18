@@ -1,0 +1,462 @@
+/* Dock card shell. The radius, edge, header padding and content padding here are the same numbers
+   WalletPanel and MultichainPanel use, so the three cards read as one system in the dock row. */
+.center {
+  container-type: inline-size;
+  container-name: card;
+  min-width: 0;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-lg);
+  background: var(--bg-deck);
+  color: var(--ink);
+}
+
+.header {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s5) var(--s5) var(--s3);
+  border-bottom: 1px solid var(--edge);
+}
+
+.headingGroup {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Single-line micro label. Wrapping here was what made the DecisionCenter header taller than
+   its two siblings in the dock row. */
+.eyebrow {
+  margin: 0;
+  overflow: hidden;
+  color: var(--signal);
+  font: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The title is held to two lines so every card header resolves to the same height in the dock
+   row. The full title stays reachable through the title attribute. */
+.title {
+  display: -webkit-box;
+  min-block-size: 2lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
+  color: var(--ink);
+  font: var(--fs-md);
+  font-weight: 600;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* All four cards reserve the same three lines and clamp to them, so the dock row reads as one
+   header band. The full sentence stays reachable through the title attribute. */
+.description {
+  display: -webkit-box;
+  min-block-size: 3lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* flex-basis auto with no shrink: as a shrinkable sibling it was squeezed to a few pixels wide
+   at narrow card widths and wrapped one character per line, which broke the header height. */
+.status {
+  display: flex;
+  flex: 0 0 auto;
+  max-inline-size: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s2);
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.statusDot {
+  width: var(--s2);
+  height: var(--s2);
+  flex: none;
+  border-radius: var(--r-pill);
+  background: var(--ink-3);
+}
+
+.statusLive {
+  background: var(--buy);
+}
+
+.statusStale {
+  color: var(--hold);
+}
+
+.body {
+  display: grid;
+  min-width: 0;
+  gap: var(--s4);
+  padding: var(--s4) var(--s5) var(--s5);
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+  gap: var(--s3);
+}
+
+.kpi {
+  display: grid;
+  min-width: 0;
+  gap: var(--s1);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck-2);
+}
+
+.kpiLabel {
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.kpiValue {
+  font: var(--fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Prose values (execution status, decision kind) never take the mono ramp: at 18px mono they
+   broke mid word and pushed the KPI tiles to different heights. */
+.kpiValueText {
+  color: var(--ink);
+  font: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.kpiMeta {
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: var(--s4);
+}
+
+.block {
+  display: grid;
+  min-width: 0;
+  gap: var(--s3);
+  align-content: start;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.subtitleDivided {
+  padding-top: var(--s4);
+  border-top: 1px solid var(--edge);
+}
+
+.rows {
+  display: grid;
+  gap: var(--s2);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr) 46px;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.rowLabel {
+  min-width: 0;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  overflow-wrap: anywhere;
+}
+
+.track {
+  min-width: 0;
+  height: 10px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--track);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--edge-strong);
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+.fillChosen {
+  background: var(--signal);
+}
+
+.dailyTotal {
+  display: grid;
+  gap: var(--s1);
+}
+
+.dailyTotalHead {
+  display: flex;
+  min-width: 0;
+  justify-content: space-between;
+  gap: var(--s3);
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  overflow-wrap: anywhere;
+}
+
+/* Mono is the identifier ramp. Right alignment is opt in through .num so a time or a symbol
+   in the same class does not get pushed to the far edge of its column. */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.num {
+  text-align: right;
+}
+
+.pos {
+  color: var(--buy);
+}
+
+.neg {
+  color: var(--sell);
+}
+
+.note,
+.footer,
+.warn,
+.cellMeta {
+  margin: 0;
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.warn {
+  color: var(--hold);
+}
+
+.cellTitle {
+  display: block;
+  color: var(--ink);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.tableWrap {
+  min-width: 0;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  scrollbar-color: var(--edge-strong) var(--bg-well);
+}
+
+.table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+}
+
+.table th,
+.table td {
+  padding: var(--s2) var(--s3);
+  border-bottom: 1px solid var(--edge);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--bg-deck-2);
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table th.num {
+  text-align: right;
+}
+
+.table td.num {
+  text-align: right;
+}
+
+/* Rejected rows lose emphasis through ink, not opacity: dimming the whole row pushed the
+   muted cell text under the contrast floor. */
+.rowRejected td {
+  color: var(--ink-3);
+}
+
+.rowRejected .cellTitle {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.rowEligible td:first-child {
+  box-shadow: inset var(--s1) 0 0 var(--buy);
+}
+
+.risk {
+  display: inline-flex;
+  min-height: 20px;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  padding: 0 var(--s2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.risk_baixo {
+  border-color: var(--buy);
+  color: var(--buy);
+}
+
+.risk_medio {
+  border-color: var(--hold);
+  color: var(--hold);
+}
+
+.risk_alto {
+  border-color: var(--sell);
+  color: var(--sell);
+}
+
+.risk_desconhecido {
+  border-color: var(--edge-strong);
+  color: var(--ink-3);
+}
+
+.chains,
+.timeline {
+  display: grid;
+  gap: var(--s2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chain {
+  display: grid;
+  min-width: 0;
+  gap: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+}
+
+.chainHead {
+  display: flex;
+  min-width: 0;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.chainHead > :first-child {
+  min-width: 0;
+}
+
+.assets {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: var(--s1) var(--s4);
+}
+
+.asset {
+  display: inline-flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+.timelineRow {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1.4fr) minmax(0, 1.6fr) 92px;
+  align-items: baseline;
+  gap: var(--s3);
+  font-size: var(--fs-sm);
+}
+
+.spark {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 1;
+  color: var(--signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}
+
+/* The dock collapses to one column below 1280px; the wide layout of the probability rows and
+   the timeline only applies when the card itself has room for it. */
+@container card (max-width: 700px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) 46px;
+  }
+
+  .row .track {
+    grid-column: 1 / -1;
+  }
+
+  .timelineRow {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .timelineRow > :nth-child(n+3) {
+    grid-column: 2;
+  }
+}

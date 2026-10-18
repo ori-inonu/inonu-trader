@@ -1,0 +1,72 @@
+bun test v1.3.14 (0d9b296a)
+
+src\lib\inonu\naming-scan.test.ts:
+(pass) the displayed name of the assistant > no screen in scope says Jev except as the provenance of the model [364.40ms]
+(pass) the displayed name of the assistant > the provenance is still there: the card of the answer and the chart tooltip say which model answered [0.75ms]
+
+src\lib\inonu\portfolio.test.ts:
+(pass) manual portfolio preparation sends observed asset identities without wallet identifiers or raw RPC [1.87ms]
+(pass) expired, future and mismatched observations cannot be consulted [0.31ms]
+(pass) only the explicitly focused candidate from the same network joins the partial list [0.56ms]
+(pass) portfolio parser rejects invented identities, absent-position sales and invented total value [6.38ms]
+(pass) manual client preserves the validated portfolio and uses the existing intent endpoint [5.86ms]
+
+src\lib\inonu\client.test.ts:
+(pass) parseAnswer > reads a valid answer into a typed outcome [0.30ms]
+(pass) parseAnswer > hold has no candidate, a refusal has no decision [0.22ms]
+(pass) parseAnswer > anything off the contract is null: a wrong status, an action that is not buy/sell/hold, advisory or execution changed [0.29ms]
+(pass) the filter answer (RAS-5) > is read field by field, with the sort the table understands [0.63ms]
+(pass) the filter answer (RAS-5) > a filter off the closed shape makes the whole answer null: an unknown field, a bad market, a bad sort, a string where a number goes [0.61ms]
+(pass) the filter answer (RAS-5) > a refusal has no filter, and the request for a filter carries the sentence and nothing else [1.28ms]
+(pass) parseStatus > model configured, today, and the warm-up of the engine [1.41ms]
+(pass) parseStatus > an engine that is off reads as no feed [0.82ms]
+(pass) parseStatus > garbage is null [0.48ms]
+(pass) the client > ask posts the request with the intent header and returns the parsed answer [1.14ms]
+(pass) the client > a refusal answered with an HTTP error status is still read as the refusal it is [0.78ms]
+(pass) the client > transport failures become named outcomes, not exceptions: no server route, refused origin, unreachable, garbled [4.51ms]
+(pass) the client > cancel sends DELETE with the intent header and tells whether the server knew the id [1.45ms]
+(pass) the client > status is null when the server has no such route [0.84ms]
+
+src\lib\settings\client.test.ts:
+(pass) settings client > preserves verified key origins while dropping secret fragments and unknown fields [12.65ms]
+(pass) settings client > get calls /settings with the guard header and no credentials [0.82ms]
+(pass) settings client > a vault that did not answer is carried to the screen, and a healthy answer has no such field [2.80ms]
+(pass) settings client > setSecret PUTs only id and value as json [2.30ms]
+(pass) settings client > clearSecret issues DELETE on the id path [1.84ms]
+(pass) settings client > setPrefs PUTs the patch and returns prefs [1.60ms]
+(pass) settings client > test endpoints use POST and return ok plus code [1.65ms]
+(pass) settings client > a network failure maps to the constant network error [1.42ms]
+(pass) settings client > an http error carries status and the constant server code [0.99ms]
+(pass) settings client > a malformed snapshot is rejected instead of shown as real [0.92ms]
+
+src\lib\settings\settings-view-render.test.tsx:
+(pass) a vault that did not answer > the screen says the keys could not be read and were not erased, instead of showing them as simply not configured [15.35ms]
+(pass) a vault that did not answer > a healthy vault shows no such notice [8.31ms]
+(pass) SettingsScreen > empty state: all four fields present, okx absent [6.28ms]
+(pass) SettingsScreen > incomplete okx shows the state and the saved tail only where allowed [7.27ms]
+(pass) SettingsScreen > complete okx shows Completa [6.75ms]
+(pass) SettingsScreen > network error names the server url [7.00ms]
+(pass) SettingsScreen > loading renders a placeholder line and no fabricated status [6.61ms]
+(pass) SettingsScreen > no secret value or tail appears in the rendered html [7.03ms]
+(pass) SettingsScreen > budget section renders per-tier meters with month and projection [11.59ms]
+(pass) SettingsScreen > clock skew line appears only when the offset is at least 20 s, with the direction word [31.35ms]
+(pass) SettingsScreen > clockSkewLine thresholds and TEST_TEXT maps clock_skew [0.38ms]
+(pass) SettingsScreen > default network selector lists the catalog chains plus Nenhuma and selects the stored one [9.72ms]
+(pass) SettingsScreen > usage error names the server; refused-value note is constant [6.39ms]
+(pass) SettingsScreen in the installed app (secrets live in the Windows vault) > it says the vault, not files in data/ or a jev-read producer that does not exist there [0.37ms]
+(pass) SettingsScreen in the installed app (secrets live in the Windows vault) > the model is named as the model, with Jev only as what it is [0.11ms]
+(pass) SettingsScreen in the installed app (secrets live in the Windows vault) > the typography rules still hold [0.41ms]
+(pass) SettingsScreen in the installed app (secrets live in the Windows vault) > the file store preserves its location and explains automatic runtime detection [4.41ms]
+
+src\lib\mesa\layout.test.ts:
+(pass) layout preference (chart mode) > only the chart mode is stored; anything else is the full desk and never throws [3.97ms]
+(pass) layout preference (chart mode) > applying sets the attribute the stylesheet reads and stores it; the full desk clears both [0.87ms]
+(pass) layout preference (chart mode) > the labels say each state in words [1.33ms]
+(pass) layout preference (chart mode) > on a phone the chart mode leaves the dock sections whole: the rule that folds the dock to its tab strip is wide-window only [1.28ms]
+(pass) layout preference (chart mode) > the boot script is tiny, guarded and sets only the known mode before paint [0.27ms]
+(pass) layout preference (chart mode) > the stylesheet hides the book, tape, watchlist and flow wings only in chart mode and only above the phone breakpoint [1.15ms]
+
+ 54 pass
+ 0 fail
+ 245 expect() calls
+Ran 54 tests across 6 files. [2.25s]

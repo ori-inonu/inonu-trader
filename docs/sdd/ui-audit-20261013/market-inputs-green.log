@@ -1,0 +1,19 @@
+bun test v1.3.14 (0d9b296a) 1x PARALLEL
+
+src\lib\mesa\market-inputs.test.tsx:
+(pass) focused market display > bar header never inherits exchange values for an empty on-chain source [24.57ms]
+(pass) focused market display > compact header never inherits exchange values for an empty on-chain source [2.42ms]
+(pass) focused market display > a partial on-chain response cannot fill its missing instrument or book from the exchange [0.56ms]
+(pass) focused market display > without on-chain focus it preserves the exchange slices and derivatives [0.09ms]
+
+src\lib\desk\ui\instrument-header-render.test.tsx:
+(pass) InstrumentHeader > a live spot ticker shows the hero price, the change pill, both ends of the range with the marker, and the figures [10.14ms]
+(pass) InstrumentHeader > the first render of an instrument is flat: no direction colour before a second print exists [2.12ms]
+(pass) InstrumentHeader > without a ticker it waits for the OKX data and prints no figure as a value [2.51ms]
+(pass) InstrumentHeader > old data is marked and named, never shown as current [1.40ms]
+(pass) InstrumentHeader > a perpetual shows its own funding, coloured by sign, and the compact variant keeps the same figures [1.71ms]
+
+ 9 pass
+ 0 fail
+ 77 expect() calls
+Ran 9 tests across 2 files. [489.00ms]

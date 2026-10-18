@@ -1,0 +1,66 @@
+---
+title: "Fontes: documentos-raiz (4)"
+created: "2026-10-15"
+updated: "2026-10-15"
+type: "summary"
+tags: ["documentacao", "governanca"]
+sources: ["docs/OPERATOR-PERSISTENCE-FINAL-EVIDENCE-20261011.md", "docs/OPERATOR-PERSISTENCE-INTEGRATION-CHECKPOINT-20261011.md", "docs/OPERATOR-PERSISTENCE-MAIN-CHECKPOINT-20261011.md", "docs/OPERATOR-PERSISTENCE-REVIEW-RECOVERY-20261011.md", "docs/OPERATOR-PERSISTENCE-SCOPE-REVIEW.md", "docs/OPERATOR-PERSISTENCE-SPEC.md", "docs/OPERATOR-ROUNDTRIP-AMOUNT-SCOPE-REVIEW-20261011.md", "docs/OPERATOR-ROUNDTRIP-AMOUNT-SPEC.md", "docs/OPERATOR-ROUNDTRIP-CONTRACT-RESEARCH-20261011.md", "docs/OPERATOR-ROUTER-PROOF-RESEARCH-20261011.md", "docs/OPPORTUNITY-ARCHITECTURE.md", "docs/PAPER-CAPITAL.md", "docs/PAPER-SUPERVISOR.md", "docs/PAYMENTS-MATRIX-DELTA-INDEPENDENT-REVIEW-20261011.md", "docs/POLITICA-DE-LIMITES.md", "docs/PROFIT-SPEC.md", "docs/PROXIMAS-ETAPAS-JEV-20261011-ACCEPTANCE.json", "docs/PROXIMAS-ETAPAS-JEV-20261011-CHECKPOINT.md", "docs/PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json", "docs/PROXIMAS-ETAPAS-JEV-20261011-FRESHNESS.json", "docs/PROXIMAS-ETAPAS-JEV-20261011-JEV.json", "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW-COORDINATION.json", "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW-RECOVERY.json", "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW.json", "docs/PROXIMAS-ETAPAS-JEV-20261011-REVIEW.md", "docs/PROXIMAS-ETAPAS-JEV-20261011-SPEC.md", "docs/PROXIMAS-ETAPAS-JEV-20261011-VERIFICATION.json", "docs/PROXIMAS-ETAPAS-JEV-20261011.md", "docs/PUBLIC-MARKET-CAPTURE.md", "docs/READINESS-SPEC.md", "docs/RELEASE-v0.0.2.md", "docs/REMOTE-BRANCH-INTEGRATION-20261011.md", "docs/REPORTS-SERVER.md", "docs/RISCO-E-BACKTEST.md", "docs/SYSTEM-ONE-EXPOSURE-CHECKPOINT.md", "docs/SYSTEM-ONE-EXPOSURE-DECIMAL-CHECKPOINT.md", "docs/SYSTEM-ONE-EXPOSURE-DECIMAL-VERIFICATION.md", "docs/SYSTEM-ONE-EXPOSURE-FINAL-AUDIT.md", "docs/SYSTEM-ONE-EXPOSURE-REVIEW-AUDIT.md", "docs/SYSTEM-ONE-EXPOSURE-SPEC.md", "docs/SYSTEM-ONE.md", "docs/UI-EXECUTION-TRUTH-CHECKPOINT-20261011.md", "docs/UI-EXECUTION-TRUTH-CYCLE-PROPOSAL.json", "docs/UI-EXECUTION-TRUTH-CYCLE-REVIEW.json", "docs/UI-EXECUTION-TRUTH-CYCLE-TEMPLATE.json", "docs/UI-EXECUTION-TRUTH-SPEC.md", "docs/UI-EXECUTION-TRUTH-VERIFICATION-20261011.md", "docs/UI-TRUTH-FINAL-AUDIT-FOLLOWUP-20261011.md", "docs/UI-TRUTH-INDEPENDENT-REVIEW-20261011.md", "docs/UI-TRUTH-INTEGRATION-CHECKPOINT-20261011.md"]
+confidence: "medium"
+---
+
+# Fontes: documentos-raiz (4)
+
+[[_meta/evolucao/catalogo/catalogo-de-fontes|Catálogo]] | [[concepts/evolucao-do-projeto]]
+
+Inventário completo desta área; classificação antiga não é revalidação semântica atual.
+
+- [OPERATOR-PERSISTENCE-FINAL-EVIDENCE-20261011.md](../../../OPERATOR-PERSISTENCE-FINAL-EVIDENCE-20261011.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-PERSISTENCE-INTEGRATION-CHECKPOINT-20261011.md](../../../OPERATOR-PERSISTENCE-INTEGRATION-CHECKPOINT-20261011.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-PERSISTENCE-MAIN-CHECKPOINT-20261011.md](../../../OPERATOR-PERSISTENCE-MAIN-CHECKPOINT-20261011.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-PERSISTENCE-REVIEW-RECOVERY-20261011.md](../../../OPERATOR-PERSISTENCE-REVIEW-RECOVERY-20261011.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-PERSISTENCE-SCOPE-REVIEW.md](../../../OPERATOR-PERSISTENCE-SCOPE-REVIEW.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-PERSISTENCE-SPEC.md](../../../OPERATOR-PERSISTENCE-SPEC.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-ROUNDTRIP-AMOUNT-SCOPE-REVIEW-20261011.md](../../../OPERATOR-ROUNDTRIP-AMOUNT-SCOPE-REVIEW-20261011.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-ROUNDTRIP-AMOUNT-SPEC.md](../../../OPERATOR-ROUNDTRIP-AMOUNT-SPEC.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-ROUNDTRIP-CONTRACT-RESEARCH-20261011.md](../../../OPERATOR-ROUNDTRIP-CONTRACT-RESEARCH-20261011.md) | revisao_anterior_nao_revalidada
+- [OPERATOR-ROUTER-PROOF-RESEARCH-20261011.md](../../../OPERATOR-ROUTER-PROOF-RESEARCH-20261011.md) | revisao_anterior_nao_revalidada
+- [OPPORTUNITY-ARCHITECTURE.md](../../../OPPORTUNITY-ARCHITECTURE.md) | revisao_anterior_nao_revalidada
+- [PAPER-CAPITAL.md](../../../PAPER-CAPITAL.md) | revisao_anterior_nao_revalidada
+- [PAPER-SUPERVISOR.md](../../../PAPER-SUPERVISOR.md) | revisao_anterior_nao_revalidada
+- [PAYMENTS-MATRIX-DELTA-INDEPENDENT-REVIEW-20261011.md](../../../PAYMENTS-MATRIX-DELTA-INDEPENDENT-REVIEW-20261011.md) | revisao_anterior_nao_revalidada
+- [POLITICA-DE-LIMITES.md](../../../POLITICA-DE-LIMITES.md) | revisao_anterior_nao_revalidada
+- [PROFIT-SPEC.md](../../../PROFIT-SPEC.md) | revisao_anterior_nao_revalidada
+- [PROXIMAS-ETAPAS-JEV-20261011-ACCEPTANCE.json](../../../PROXIMAS-ETAPAS-JEV-20261011-ACCEPTANCE.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011-CHECKPOINT.md](../../../PROXIMAS-ETAPAS-JEV-20261011-CHECKPOINT.md) | revisao_anterior_nao_revalidada
+- [PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json](../../../PROXIMAS-ETAPAS-JEV-20261011-EVIDENCE.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011-FRESHNESS.json](../../../PROXIMAS-ETAPAS-JEV-20261011-FRESHNESS.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011-JEV.json](../../../PROXIMAS-ETAPAS-JEV-20261011-JEV.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011-REVIEW-COORDINATION.json](../../../PROXIMAS-ETAPAS-JEV-20261011-REVIEW-COORDINATION.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011-REVIEW-RECOVERY.json](../../../PROXIMAS-ETAPAS-JEV-20261011-REVIEW-RECOVERY.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011-REVIEW.json](../../../PROXIMAS-ETAPAS-JEV-20261011-REVIEW.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011-REVIEW.md](../../../PROXIMAS-ETAPAS-JEV-20261011-REVIEW.md) | revisao_anterior_nao_revalidada
+- [PROXIMAS-ETAPAS-JEV-20261011-SPEC.md](../../../PROXIMAS-ETAPAS-JEV-20261011-SPEC.md) | revisao_anterior_nao_revalidada
+- [PROXIMAS-ETAPAS-JEV-20261011-VERIFICATION.json](../../../PROXIMAS-ETAPAS-JEV-20261011-VERIFICATION.json) | nao_revisado_semanticamente
+- [PROXIMAS-ETAPAS-JEV-20261011.md](../../../PROXIMAS-ETAPAS-JEV-20261011.md) | revisao_anterior_nao_revalidada
+- [PUBLIC-MARKET-CAPTURE.md](../../../PUBLIC-MARKET-CAPTURE.md) | revisao_anterior_nao_revalidada
+- [READINESS-SPEC.md](../../../READINESS-SPEC.md) | revisao_anterior_nao_revalidada
+- [RELEASE-v0.0.2.md](../../../RELEASE-v0.0.2.md) | revisao_anterior_nao_revalidada
+- [REMOTE-BRANCH-INTEGRATION-20261011.md](../../../REMOTE-BRANCH-INTEGRATION-20261011.md) | revisao_anterior_nao_revalidada
+- [REPORTS-SERVER.md](../../../REPORTS-SERVER.md) | revisao_anterior_nao_revalidada
+- [RISCO-E-BACKTEST.md](../../../RISCO-E-BACKTEST.md) | revisao_anterior_nao_revalidada
+- [SYSTEM-ONE-EXPOSURE-CHECKPOINT.md](../../../SYSTEM-ONE-EXPOSURE-CHECKPOINT.md) | revisao_anterior_nao_revalidada
+- [SYSTEM-ONE-EXPOSURE-DECIMAL-CHECKPOINT.md](../../../SYSTEM-ONE-EXPOSURE-DECIMAL-CHECKPOINT.md) | revisao_anterior_nao_revalidada
+- [SYSTEM-ONE-EXPOSURE-DECIMAL-VERIFICATION.md](../../../SYSTEM-ONE-EXPOSURE-DECIMAL-VERIFICATION.md) | revisao_anterior_nao_revalidada
+- [SYSTEM-ONE-EXPOSURE-FINAL-AUDIT.md](../../../SYSTEM-ONE-EXPOSURE-FINAL-AUDIT.md) | revisao_anterior_nao_revalidada
+- [SYSTEM-ONE-EXPOSURE-REVIEW-AUDIT.md](../../../SYSTEM-ONE-EXPOSURE-REVIEW-AUDIT.md) | revisao_anterior_nao_revalidada
+- [SYSTEM-ONE-EXPOSURE-SPEC.md](../../../SYSTEM-ONE-EXPOSURE-SPEC.md) | revisao_anterior_nao_revalidada
+- [SYSTEM-ONE.md](../../../SYSTEM-ONE.md) | revisao_anterior_nao_revalidada
+- [UI-EXECUTION-TRUTH-CHECKPOINT-20261011.md](../../../UI-EXECUTION-TRUTH-CHECKPOINT-20261011.md) | revisao_anterior_nao_revalidada
+- [UI-EXECUTION-TRUTH-CYCLE-PROPOSAL.json](../../../UI-EXECUTION-TRUTH-CYCLE-PROPOSAL.json) | nao_revisado_semanticamente
+- [UI-EXECUTION-TRUTH-CYCLE-REVIEW.json](../../../UI-EXECUTION-TRUTH-CYCLE-REVIEW.json) | nao_revisado_semanticamente
+- [UI-EXECUTION-TRUTH-CYCLE-TEMPLATE.json](../../../UI-EXECUTION-TRUTH-CYCLE-TEMPLATE.json) | nao_revisado_semanticamente
+- [UI-EXECUTION-TRUTH-SPEC.md](../../../UI-EXECUTION-TRUTH-SPEC.md) | revisao_anterior_nao_revalidada
+- [UI-EXECUTION-TRUTH-VERIFICATION-20261011.md](../../../UI-EXECUTION-TRUTH-VERIFICATION-20261011.md) | revisao_anterior_nao_revalidada
+- [UI-TRUTH-FINAL-AUDIT-FOLLOWUP-20261011.md](../../../UI-TRUTH-FINAL-AUDIT-FOLLOWUP-20261011.md) | revisao_anterior_nao_revalidada
+- [UI-TRUTH-INDEPENDENT-REVIEW-20261011.md](../../../UI-TRUTH-INDEPENDENT-REVIEW-20261011.md) | revisao_anterior_nao_revalidada
+- [UI-TRUTH-INTEGRATION-CHECKPOINT-20261011.md](../../../UI-TRUTH-INTEGRATION-CHECKPOINT-20261011.md) | revisao_anterior_nao_revalidada

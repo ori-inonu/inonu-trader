@@ -1,0 +1,185 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-passo-7",
+    "specHash": "23fa945bc7564461f4662e7381fd0242b037b162c84cbe24b6903f3cf392bd7c",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "retract_stale",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "retract_stale",
+          "migrate_specs",
+          "migrate_research",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "retract_stale",
+              "migrate_specs",
+              "migrate_research",
+              "stop"
+            ],
+            "probs": {
+              "retract_stale": 0.86,
+              "migrate_specs": 0.07,
+              "migrate_research": 0.01,
+              "stop": 0.05,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_specs",
+              "migrate_research",
+              "stop",
+              "retract_stale"
+            ],
+            "probs": {
+              "migrate_specs": 0.09,
+              "migrate_research": 0.01,
+              "stop": 0.04,
+              "retract_stale": 0.85,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_research",
+              "stop",
+              "retract_stale",
+              "migrate_specs"
+            ],
+            "probs": {
+              "migrate_research": 0.02,
+              "stop": 0.04,
+              "retract_stale": 0.81,
+              "migrate_specs": 0.12,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "retract_stale": 0.84,
+          "migrate_specs": 0.0933,
+          "migrate_research": 0.0133,
+          "stop": 0.0433
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.7467,
+        "leader": "retract_stale",
+        "railProb": {
+          "retract_stale": 0.03,
+          "migrate_specs": 0.16,
+          "migrate_research": 0.22,
+          "stop": 0
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "retract_stale",
+          "migrate_specs",
+          "migrate_research",
+          "stop"
+        ],
+        "framings": [
+          {
+            "order": [
+              "retract_stale",
+              "migrate_specs",
+              "migrate_research",
+              "stop"
+            ],
+            "probs": {
+              "retract_stale": 0.84,
+              "migrate_specs": 0.1,
+              "migrate_research": 0.01,
+              "stop": 0.04,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_specs",
+              "migrate_research",
+              "stop",
+              "retract_stale"
+            ],
+            "probs": {
+              "migrate_specs": 0.09,
+              "migrate_research": 0.01,
+              "stop": 0.04,
+              "retract_stale": 0.85,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "migrate_research",
+              "stop",
+              "retract_stale",
+              "migrate_specs"
+            ],
+            "probs": {
+              "migrate_research": 0.02,
+              "stop": 0.04,
+              "retract_stale": 0.83,
+              "migrate_specs": 0.1,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "retract_stale": 0.84,
+          "migrate_specs": 0.0967,
+          "migrate_research": 0.0133,
+          "stop": 0.04
+        },
+        "noneFits": 0.01,
+        "agreement": 1,
+        "margin": 0.7433,
+        "leader": "retract_stale",
+        "railProb": {
+          "retract_stale": 0.03,
+          "migrate_specs": 0.16,
+          "migrate_research": 0.22,
+          "stop": 0
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 10,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 10,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 8795,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

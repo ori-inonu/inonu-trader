@@ -1,0 +1,169 @@
+{
+  "owner": "manutencao-da-documentacao",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T11:04:34-03:00",
+  "page": "docs/concepts/manutencao-da-documentacao.md",
+  "documents": [],
+  "code_inspected": [
+    "docs/_meta/tools/verify.py"
+  ],
+  "repo_reference_files_inspected": [
+    "docs/_meta/delegation-contract.md",
+    "docs/_meta/organization-spec.md",
+    "docs/SCHEMA.md",
+    "docs/README.md",
+    "docs/index.md",
+    "docs/log.md",
+    "docs/_meta/project-state-20261013.json",
+    "docs/_meta/topic-map.md",
+    "docs/_meta/catalog.json",
+    "docs/_meta/tools/verify.py",
+    "docs/_meta/catalogs/carteira-e-patrimonio-documentos-01.md",
+    "docs/_meta/catalogs/integracao-real-e-piloto-artefatos-01.md",
+    "docs/_meta/catalogs/relatorios-e-evidencias-artefatos-07.md",
+    "docs/_meta/source-manifest-20261013.json"
+  ],
+  "outside_repo_guidance_inspected": [
+    "C:/Users/gabri/.agents/sdd-multiagent/PLAYBOOK.md",
+    "skill:llm-wiki"
+  ],
+  "inspection_counts": {
+    "assigned_documents_classified": 0,
+    "repo_reference_files_inspected": 14,
+    "code_files_inspected": 1,
+    "catalog_pages_fully_read": 3,
+    "catalog_pages_checked_read_only": 36
+  },
+  "claims": [
+    {
+      "statement": "A atribuição deste owner tem source_paths, document_paths e artifact_paths vazios e reserva somente uma página e um recibo exclusivos.",
+      "source_path": "docs/_meta/project-state-20261013.json",
+      "lines": "17393-17398"
+    },
+    {
+      "statement": "collect_checks abre source-manifest, catalog e generated-files antes de verificar arquivos; o recibo generated-files ausente bloqueia a execução completa.",
+      "source_path": "docs/_meta/tools/verify.py",
+      "symbol": "collect_checks",
+      "lines": "65-73"
+    },
+    {
+      "statement": "O verificador compara arquivos originais com hashes do manifesto, detecta caminhos fora da allowlist e confere cobertura, unicidade e totais declarados do catálogo.",
+      "source_path": "docs/_meta/tools/verify.py",
+      "symbol": "collect_checks",
+      "lines": "74-91"
+    },
+    {
+      "statement": "A validação de frontmatter verifica apenas um subconjunto de campos e existência dos caminhos em sources; o regex de proveniência aceita prefixo docs/.",
+      "source_path": "docs/_meta/tools/verify.py",
+      "symbol": "frontmatter, PROVENANCE, collect_checks",
+      "lines": "14-18,29-49,103-121"
+    },
+    {
+      "statement": "A validação de wikilinks usa páginas geradas, resolve destinos por stem, exige dois destinos distintos, e a checagem de entrada no índice usa substring.",
+      "source_path": "docs/_meta/tools/verify.py",
+      "symbol": "collect_checks",
+      "lines": "94-100,122-150"
+    },
+    {
+      "statement": "A manutenção legada conta Markdown grande, hashes duplicados, links locais não resolvidos e rotação do log, mas declara limites quanto a âncoras, URLs e verdade técnica.",
+      "source_path": "docs/_meta/tools/verify.py",
+      "symbol": "collect_checks",
+      "lines": "157-173"
+    },
+    {
+      "statement": "--output grava diretamente no caminho fornecido; o modo padrão imprime JSON no terminal.",
+      "source_path": "docs/_meta/tools/verify.py",
+      "symbol": "main",
+      "lines": "176-187"
+    },
+    {
+      "statement": "O catálogo declarado contém 983 caminhos, 407 documentos Markdown e 576 artefatos; os totais correspondem ao manifesto visível excluindo cinco arquivos ocultos.",
+      "source_path": "docs/_meta/catalog.json",
+      "lines": "4-8"
+    },
+    {
+      "statement": "O source-manifest, catalog JSON e verificador não aparecem como entradas na lista de arquivos do próprio source-manifest.",
+      "source_path": "docs/_meta/source-manifest-20261013.json",
+      "symbol": "files path set checked read-only"
+    },
+    {
+      "statement": "A varredura read-only das 36 páginas paginadas encontrou 983 links únicos resolvíveis, cobertura exata dos originais visíveis, zero duplicatas, e entre 1 e 50 linhas de entrada por página.",
+      "source_path": "docs/_meta/catalogs/relatorios-e-evidencias-artefatos-07.md",
+      "symbol": "offline read-only scan of all docs/_meta/catalogs/*.md; derived counts also summarized in static_checks"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "path": "docs/SCHEMA.md",
+      "classification": "needs_review",
+      "lines": "87-91",
+      "reason": "O comando documentado depende de docs/_meta/generated-files.json, ausente na observação. A instrução deve permanecer bloqueada até o integrador fornecer o recibo e registrar os outputs.",
+      "code_refs": ["docs/_meta/tools/verify.py:65-73"]
+    },
+    {
+      "path": "docs/_meta/tools/verify.py",
+      "classification": "needs_review",
+      "lines": "67-81,94-100,142-173,176-186",
+      "reason": "O código não valida integridade do próprio manifesto, não impõe o teto de 50 entradas por catálogo, não sinaliza wikilinks repetidos, trata navegação por substring e não protege janela de leitura concorrente nem destino de --output.",
+      "code_refs": ["docs/SCHEMA.md:39-41", "docs/_meta/organization-spec.md:23-32"]
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "static_checks": {
+    "full_verifier_run": false,
+    "full_verifier_blocker": "docs/_meta/generated-files.json missing; the documented preflight returned BLOCKED",
+    "manifest_original_files": 988,
+    "manifest_visible_files": 983,
+    "manifest_lists_itself": false,
+    "manifest_lists_catalog_json": false,
+    "manifest_lists_verifier": false,
+    "manifest_missing_current_files": 0,
+    "manifest_hash_drift_count": 3,
+    "manifest_hash_drift_paths": [
+      "docs/.obsidian/graph.json",
+      "docs/.obsidian/workspace.json",
+      "docs/sdd/inonu-desktop-v1/TASKS.md"
+    ],
+    "catalog_pages": 36,
+    "catalog_declared_entries": 983,
+    "catalog_unique_paths": 983,
+    "catalog_coverage_matches_visible_manifest": true,
+    "catalog_declared_documents": 407,
+    "catalog_declared_artifacts": 576,
+    "catalog_rendered_links_checked": 983,
+    "catalog_rendered_unique_targets": 983,
+    "catalog_duplicate_rendered_links": 0,
+    "catalog_broken_local_links": 0,
+    "catalog_page_entries_min": 1,
+    "catalog_page_entries_max": 50,
+    "page_preflight_output": "BLOCKED: docs/_meta/generated-files.json is missing",
+    "docs_tree_file_counts_during_two_read_only_scans": [1040, 1041]
+  },
+  "source_drift": [
+    {
+      "path": "docs/.obsidian/graph.json",
+      "expected_sha256": "9351cf41491b894bc788b702493a9e6d78edb7669d73b61398e05f175a9482df",
+      "observed_sha256": "b88b1aca32de5634f2ef8499c5eb68187837a710b2189f5af7ecb779140c3101"
+    },
+    {
+      "path": "docs/.obsidian/workspace.json",
+      "expected_sha256": "7ed59974c2011cc7eed2fb00152f72e852a2063698efb310473ba71f2aff6bbc",
+      "observed_sha256": "b6fac8b6b921baa15d899669496eada475b8b28b43896cb1ff5891b2e0b9176d"
+    },
+    {
+      "path": "docs/sdd/inonu-desktop-v1/TASKS.md",
+      "expected_sha256": "b721e0c0792d54842e9f53407cedfde0899db9fa0e8c8837a87c6cb8552d1019",
+      "observed_sha256": "e50d43231bfb7895fd1428aacaa4a47065d2b7eb351ba4075a47497dbd98a3f3"
+    }
+  ],
+  "unverified": [
+    "As causas e a autorização para os três hash drifts não foram verificadas.",
+    "Não foi feita auditoria semântica das 983 fontes nem de runtime/produto.",
+    "A varredura de links nos catálogos não verifica âncoras, URLs externas, conteúdo histórico ou classificação.",
+    "A árvore docs mudou de 1040 para 1041 arquivos entre leituras; os resultados são observações pontuais, não snapshot atômico.",
+    "A configuração e o conteúdo dos cinco arquivos .obsidian não foram lidos.",
+    "Nenhum teste de produto nem o verificador completo foi executado."
+  ],
+  "billed_cost": null
+}

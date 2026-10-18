@@ -1,0 +1,210 @@
+{
+  "conversation": "01a135ff-362e-7cf0-ac4f-ef678d322188",
+  "writer": "/root/portfolio_slice",
+  "workspace": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/portfolio-slice",
+  "state": "implementation verified locally; independent review and integration belong to root",
+  "acceptance": {
+    "path": "docs/sdd/mesa-decisao-20261013/SPEC.md",
+    "sha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298",
+    "criteria": [
+      "PORT-1",
+      "PORT-2",
+      "PORT-3",
+      "SYS-1"
+    ]
+  },
+  "approvedSeam": {
+    "source": "jev_delegated",
+    "receipt": "c2e60c81-7da3-41bd-b3ef-40dbd2581fcf",
+    "choice": "extend_ask",
+    "authority": "advisory only; scope remains the observed user request"
+  },
+  "applicationFiles": [
+    {
+      "path": "src/inonu/ask.ts",
+      "sha256": "d77525275f7067a6bffa17e6a1cffa83222f844663135de1c21839cb2a7318f8"
+    },
+    {
+      "path": "src/inonu/ask.test.ts",
+      "sha256": "e2d82c8855727b511c0f49097f2ed89c93b2aff793b9727fb7fdcf3043760fa3"
+    },
+    {
+      "path": "src/inonu/jev-model.ts",
+      "sha256": "5d4fdebd1a90b488ce1f827317a8d6a98ba7528ea9591fd6b759c437b60a9010"
+    },
+    {
+      "path": "src/inonu/jev-model.test.ts",
+      "sha256": "a49166216623c5c98d7672ecea5cc6e881db447c1b469cd9aac16b8daa74748a"
+    },
+    {
+      "path": "src/inonu/portfolio.ts",
+      "sha256": "bf1bd4ffad461faa01c1a8c2f929998a358e5f933c8e49024787ca9926bcdb20"
+    },
+    {
+      "path": "src/inonu/portfolio.test.ts",
+      "sha256": "c9116171635fca7c6874777561d5e3638832918907e1363270cfc67ef48141c5"
+    }
+  ],
+  "tddObserved": [
+    {
+      "command": "bun --no-env-file test ./src/inonu/portfolio.test.ts",
+      "red": {
+        "exit": 1,
+        "summary": "Cannot find module './portfolio'; 0 pass, 1 fail, 1 error"
+      },
+      "green": {
+        "exit": 0,
+        "summary": "1 pass, 0 fail, 6 expect"
+      }
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu/ask.test.ts --test-name-pattern 'manual portfolio click'",
+      "red": {
+        "exit": 1,
+        "summary": "Expected respondido, received erro; pedido_invalido; 0 pass, 49 filtered, 1 fail"
+      },
+      "green": {
+        "exit": 0,
+        "summary": "1 pass, 0 fail, 5 expect"
+      }
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu/jev-model.test.ts --test-name-pattern 'portfolio asks'",
+      "red": {
+        "exit": 1,
+        "summary": "Expected asset_0 and asset_1 questions; received decision; 0 pass, 18 filtered, 1 fail"
+      },
+      "green": {
+        "exit": 0,
+        "summary": "1 pass, 0 fail, 9 expect"
+      }
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu/portfolio.test.ts",
+      "red": {
+        "exit": 1,
+        "summary": "Wrong-chain evidence remained onchainos; six-candidate Brief exceeded 2048 bytes; 1 pass, 2 fail, 7 expect"
+      },
+      "green": {
+        "exit": 0,
+        "summary": "3 pass, 0 fail, 14 expect"
+      }
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu/ask.test.ts --test-name-pattern 'real adapter seam'",
+      "red": {
+        "exit": 1,
+        "summary": "Candidate/Brief ordering mismatch; expected respondido, received erro; 0 pass, 50 filtered, 1 fail"
+      },
+      "green": {
+        "exit": 0,
+        "summary": "1 pass, 0 fail, 4 expect"
+      }
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu/portfolio.test.ts --test-name-pattern 'partition fails'",
+      "red": {
+        "exit": 1,
+        "summary": "Expected onchainosCalls 9, received 8; 0 pass, 5 filtered, 1 fail"
+      },
+      "green": {
+        "exit": 0,
+        "summary": "6 pass, 0 fail, 25 expect (entire source test file)"
+      }
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu/ask.test.ts --test-name-pattern 'single flight shares identical'",
+      "red": {
+        "exit": 1,
+        "summary": "Changed balance shared old respondido instead of em_andamento; 0 pass, 51 filtered, 1 fail"
+      },
+      "green": {
+        "exit": 0,
+        "summary": "1 pass, 0 fail, 4 expect"
+      }
+    }
+  ],
+  "verification": [
+    {
+      "command": "bun --no-env-file test ./src/inonu/ask.test.ts ./src/inonu/portfolio.test.ts ./src/inonu/jev-model.test.ts",
+      "exit": 0,
+      "tests": 84,
+      "failed": 0,
+      "expect": 412,
+      "elapsedSeconds": 8.98,
+      "scope": "before addition of the existing-source composition test"
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu/portfolio.test.ts --test-name-pattern 'existing OnchainOS source'",
+      "exit": 0,
+      "tests": 1,
+      "failed": 0,
+      "expect": 6,
+      "scope": "existing source + normalized injected gateway results; measured flow .75, risk 4, age 5000, missing quote, no direction score"
+    },
+    {
+      "command": "bun --no-env-file test ./src/inonu",
+      "wrapper": "RTK + Headroom adapter_cli.py run --profile test",
+      "exit": 0,
+      "tests": 345,
+      "failed": 0,
+      "expect": 1293,
+      "elapsedSeconds": 13.13,
+      "stdout": {
+        "path": "portfolio-verification.stdout.log",
+        "bytes": 28,
+        "sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6"
+      },
+      "stderr": {
+        "path": "portfolio-verification.stderr.log",
+        "bytes": 45441,
+        "sha256": "291122241d88c33116fd7233e56d6ecb5ddfe1159b64a9a6c6aae227f723ea7c"
+      },
+      "adapterPassReason": "command_not_allowlisted; streams preserved, no compression or savings claim"
+    },
+    {
+      "command": "bun --no-env-file run tsc --ignoreConfig --noEmit --strict --module Preserve --moduleResolution bundler --target ESNext --lib ESNext --types bun --skipLibCheck --noUncheckedIndexedAccess --allowImportingTsExtensions --verbatimModuleSyntax src/inonu/ask.ts src/inonu/ask.test.ts src/inonu/portfolio.ts src/inonu/portfolio.test.ts src/inonu/jev-model.ts src/inonu/jev-model.test.ts",
+      "exit": 0,
+      "output": "",
+      "scope": "six exclusive application files and their dependency graph"
+    },
+    {
+      "command": "bun --no-env-file run typecheck",
+      "exit": 1,
+      "scope": "partial isolated copy omits scripts and web dependencies",
+      "remainingDiagnostics": [
+        "src/lab-jev/purity.test.ts(4,29): error TS2307: Cannot find module '../../scripts/jev-lab-real.ts' or its corresponding type declarations.",
+        "src/lab-jev/purity.test.ts(5,28): error TS2307: Cannot find module '../../scripts/jev-lab.ts' or its corresponding type declarations.",
+        "src/lab/purity.test.ts(4,22): error TS2307: Cannot find module '../../scripts/jev-lab.ts' or its corresponding type declarations.",
+        "src/mobile-decision-report/export.ts(51,30): error TS7006: Parameter 'leg' implicitly has an 'any' type.",
+        "src/mobile-decision-report/export.ts(51,35): error TS7006: Parameter 'i' implicitly has an 'any' type.",
+        "src/mobile-decision-report/fixtures.ts(1,38): error TS2307: Cannot find module '../../web/src/lib/dex-report-example' or its corresponding type declarations.",
+        "src/mobile-decision-report/report.test.ts(2,38): error TS2307: Cannot find module '../../web/src/lib/dex-report-example' or its corresponding type declarations.",
+        "src/mobile-decision-report/report.test.ts(3,32): error TS2307: Cannot find module '../../web/src/lib/dex-report' or its corresponding type declarations.",
+        "src/mobile-decision-report/report.ts(2,58): error TS2307: Cannot find module '../../web/src/lib/dex-report' or its corresponding type declarations.",
+        "src/onchain-read/web-fixture-drift.test.ts(8,67): error TS2307: Cannot find module '../../scripts/make-onchain-web-fixtures' or its corresponding type declarations.",
+        "src/onchainos/isolation.test.ts(5,24): error TS2307: Cannot find module '../../scripts/onchainos-capture.ts' or its corresponding type declarations.",
+        "src/quant/touch.test.ts(2,99): error TS2307: Cannot find module './touch' or its corresponding type declarations."
+      ]
+    }
+  ],
+  "integration": {
+    "request": "{modo:'carteira',carteira:{chainIndex,observedAtMs,coverage:'partial',profile:'conservative_no_leverage',assets:[{contract:'native'|0x40hex,symbol:uppercase1..12,balance:exact_decimal_string|null}]}}",
+    "source": "withSentCount(createPortfolioSource({token:createOnchainSource({gateway:counted.gateway,now}),now}),counted)",
+    "noNestedCounter": "Do not wrap nested token source with withSentCount; parent counter wraps the whole portfolio request.",
+    "freshnessMaxAgeMs": 60000,
+    "identity": "token:<chainIndex>:<lowercase contract or native>; same-chain candidate contract identity is mandatory",
+    "singleflight": "Identical sanitized composition and observedAtMs share a pending promise; changed observations receive em_andamento without an old portfolio.",
+    "positionsEmpty": "false if any observed balance is positive; true only if all candidate balances are known zero; null if no positive balance and any candidate balance is unknown.",
+    "native": "Never invent a wrapped mapping. Origin unavailable, age/flow/risk null, native_market_unavailable gap. Jev may buy/hold/abstain; selling still requires exact positive observed balance.",
+    "cancellation": "UI owns account/network revision cancellation; server discards late canceled responses and records the spent call honestly.",
+    "parser": "evidence.gaps <=24 strings <=80; flow null or {buyShare:0..1|null,tradeCount:null}; risk finite number|string<=80|null; netWorthUsd null."
+  },
+  "limits": [
+    "Synthetic tests do not qualify real Jev recommendation quality, billing, model performance, Windows key discovery or live exchange connectivity.",
+    "Only 2-6 same-chain native/token candidates, conservative no-leverage profile and partial observed balances; no whole-wallet or whole-market claim.",
+    "No collector, wallet address, valuation, PnL, allocation sizing, measured confidence, leveraged instruments or trade execution is added.",
+    "Per-token source plans share at most 15 calls; six tokens obtain at most two planned reads each and missing flow/risk remain gaps.",
+    "Independent root integration/review is pending; no selfapproval or global completion claim."
+  ]
+}

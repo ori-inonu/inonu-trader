@@ -1,0 +1,256 @@
+{
+  "version": 1,
+  "repository": "https://github.com/okx/okx-dex-sdk",
+  "commit": "6be0a98ae467a942795b7576b373ff912f20bb82",
+  "tree": "9da47aeb6ad7fbe4ae5c72bdd6fe1a267668ccf0",
+  "captureContractSha256": "e7cf500e97863d5f0b91cfdb2dabca238a05f6e9214a82b420a074610f27fc3c",
+  "sourcePlanSha256": "afa9a0c963b65bbe54fc0e3e59190078b23c57c109afa684692cd38fbe294f63",
+  "records": [
+    {
+      "id": "github-commit",
+      "repositoryPath": null,
+      "bodyFile": "github-commit.body",
+      "metadataFile": "github-commit.json",
+      "metadataSha256": "a14746fe51b012c409821b67b94fb9d47f133d356b056ff8d649b9ebc236888d",
+      "name": "github-commit",
+      "requestedUrl": "https://api.github.com/repos/okx/okx-dex-sdk/commits?sha=main&per_page=1",
+      "finalUrl": "https://api.github.com/repos/okx/okx-dex-sdk/commits?sha=main&per_page=1",
+      "status": 200,
+      "ok": true,
+      "startedAt": "2026-10-10T18:57:29.558Z",
+      "endedAt": "2026-10-10T18:57:29.946Z",
+      "bytes": 3558,
+      "sha256": "716430871495d3a1ce192074e2e7de177eb96f6cfffd34a7109fb2ae142f17ac",
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sat, 10 Oct 2026 18:58:35 GMT",
+        "etag": "W/\"c9f86b269c7f7c818eb840a2fbb0ce7c38a0e039c300d2e55595ea8c2a77e35c\"",
+        "last-modified": "Tue, 14 Jul 2026 13:29:32 GMT",
+        "content-length": "854",
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "59"
+      },
+      "gitBlob": null,
+      "lines": null
+    },
+    {
+      "id": "github-tree",
+      "repositoryPath": null,
+      "bodyFile": "github-tree.body",
+      "metadataFile": "github-tree.json",
+      "metadataSha256": "33e1e5c617aa0724cf5bfd5cc78f27c636d43e4b896bd8fe932dbbc5e2d2f897",
+      "name": "github-tree",
+      "requestedUrl": "https://api.github.com/repos/okx/okx-dex-sdk/git/trees/9da47aeb6ad7fbe4ae5c72bdd6fe1a267668ccf0?recursive=1",
+      "finalUrl": "https://api.github.com/repos/okx/okx-dex-sdk/git/trees/9da47aeb6ad7fbe4ae5c72bdd6fe1a267668ccf0?recursive=1",
+      "status": 200,
+      "ok": true,
+      "startedAt": "2026-10-10T18:57:29.952Z",
+      "endedAt": "2026-10-10T18:57:30.191Z",
+      "bytes": 21142,
+      "sha256": "6351b26065341a55efd3f491dbba3a1264a5297d0248680b0e12a21d7167fd5a",
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sat, 10 Oct 2026 18:58:36 GMT",
+        "etag": "W/\"a2def99b3985f6fd90962486c8845a3670479c2baca4a511b787bd1253ed542d\"",
+        "last-modified": "Mon, 07 Sep 2026 01:22:21 GMT",
+        "content-length": null,
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "58"
+      },
+      "gitBlob": null,
+      "lines": null
+    },
+    {
+      "id": "sdk-dex",
+      "repositoryPath": "src/okx/api/dex.ts",
+      "bodyFile": "sdk-dex.body",
+      "metadataFile": "sdk-dex.json",
+      "metadataSha256": "6e3edb280fa0affa9c12f684f3b637bcfd4adfd58a75719455c6ec4290cbd0d2",
+      "name": "sdk-dex",
+      "requestedUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/api/dex.ts",
+      "finalUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/api/dex.ts",
+      "status": 200,
+      "ok": true,
+      "startedAt": "2026-10-10T18:57:53.441Z",
+      "endedAt": "2026-10-10T18:57:53.753Z",
+      "bytes": 23467,
+      "sha256": "15a34bde07bb5dd2bf05be9ee313f124bb46672b4a23e8c9220ae7caea6f0637",
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "date": "Sat, 10 Oct 2026 18:58:59 GMT",
+        "etag": "W/\"2781df43800fe07a4bae121bc8498a90892b345fe540260abfd06503ff08dad5\"",
+        "last-modified": null,
+        "content-length": "4049",
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null
+      },
+      "gitBlob": "58d54e70af4d6c7d35f9b3f2ddf6d96397d57357",
+      "lines": 687
+    },
+    {
+      "id": "sdk-types",
+      "repositoryPath": "src/okx/types/index.ts",
+      "bodyFile": "sdk-types.body",
+      "metadataFile": "sdk-types.json",
+      "metadataSha256": "de4ebc39d5448633330ea620696470f7589ee118936627bc68af7889449db4b3",
+      "name": "sdk-types",
+      "requestedUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/types/index.ts",
+      "finalUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/types/index.ts",
+      "status": 200,
+      "ok": true,
+      "startedAt": "2026-10-10T18:57:53.756Z",
+      "endedAt": "2026-10-10T18:57:53.956Z",
+      "bytes": 9500,
+      "sha256": "a48daca41a5f47e7d2cb4644d52f2fa2b46b77943bfb3aafebed4176d78b71da",
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "date": "Sat, 10 Oct 2026 18:59:00 GMT",
+        "etag": "W/\"484f0be9ac0ffa8530adf387cc35c4deaa7b8a17d065812584cbc1bf20582528\"",
+        "last-modified": null,
+        "content-length": "2189",
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null
+      },
+      "gitBlob": "bb1bf438c8e2e6238437271f1ff35663f29c2a63",
+      "lines": 429
+    },
+    {
+      "id": "sdk-amount",
+      "repositoryPath": "src/okx/utils/amount.ts",
+      "bodyFile": "sdk-amount.body",
+      "metadataFile": "sdk-amount.json",
+      "metadataSha256": "cd4a1851636e492602dcc67bc911262190ee6d11f979f769e4f2486ba46f768d",
+      "name": "sdk-amount",
+      "requestedUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/utils/amount.ts",
+      "finalUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/utils/amount.ts",
+      "status": 200,
+      "ok": true,
+      "startedAt": "2026-10-10T18:57:53.959Z",
+      "endedAt": "2026-10-10T18:57:54.172Z",
+      "bytes": 574,
+      "sha256": "49c051d02d87f7e5b7be22f5a27bb7f911fbb4aa0465f306d8be5fb6a3000408",
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "date": "Sat, 10 Oct 2026 18:59:00 GMT",
+        "etag": "W/\"860ef30cff5fe88e3edc2d0d8de448132944977166afdfd2a9ab37f8a7a8d0e6\"",
+        "last-modified": null,
+        "content-length": "266",
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null
+      },
+      "gitBlob": "bc8ab4eb65d2279a0c0f7af2b067585bc111b8c4",
+      "lines": 19
+    },
+    {
+      "id": "sdk-http",
+      "repositoryPath": "src/okx/core/http-client.ts",
+      "bodyFile": "sdk-http.body",
+      "metadataFile": "sdk-http.json",
+      "metadataSha256": "2cab738f22a752f355ef7dd393df2c7bf0208ae3ee6a9851e48c0b12ce062416",
+      "name": "sdk-http",
+      "requestedUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/core/http-client.ts",
+      "finalUrl": "https://raw.githubusercontent.com/okx/okx-dex-sdk/6be0a98ae467a942795b7576b373ff912f20bb82/src/okx/core/http-client.ts",
+      "status": 200,
+      "ok": true,
+      "startedAt": "2026-10-10T18:57:54.176Z",
+      "endedAt": "2026-10-10T18:57:54.387Z",
+      "bytes": 5250,
+      "sha256": "390c5aa2f7920467e2b57bcfdf53fd3278447f8931ef0eebfc44a4445bc04f5f",
+      "headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "date": "Sat, 10 Oct 2026 18:59:00 GMT",
+        "etag": "W/\"50e84c99994d12c48d4241daa920872feb604950a80f494de0da4e21b512e3b2\"",
+        "last-modified": null,
+        "content-length": "1575",
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null
+      },
+      "gitBlob": "e936b0c27c70dfeb667af57d057a400bfd0f1771",
+      "lines": 154
+    }
+  ],
+  "locators": [
+    {
+      "id": "Q1",
+      "source": "sdk-dex",
+      "start": 364,
+      "end": 370,
+      "exact": "\"/api/v6/dex/aggregator/quote\""
+    },
+    {
+      "id": "Q2",
+      "source": "sdk-dex",
+      "start": 347,
+      "end": 362,
+      "exact": "apiParams[key] = String(value);"
+    },
+    {
+      "id": "H1",
+      "source": "sdk-http",
+      "start": 25,
+      "end": 31,
+      "exact": "baseUrl: 'https://web3.okx.com'"
+    },
+    {
+      "id": "H2",
+      "source": "sdk-http",
+      "start": 116,
+      "end": 133,
+      "exact": "return data as T;"
+    },
+    {
+      "id": "T1",
+      "source": "sdk-types",
+      "start": 77,
+      "end": 93,
+      "exact": "toTokenAmount: string;"
+    },
+    {
+      "id": "T2",
+      "source": "sdk-types",
+      "start": 34,
+      "end": 48,
+      "exact": "fromTokenAmount: string;"
+    },
+    {
+      "id": "T3",
+      "source": "sdk-types",
+      "start": 4,
+      "end": 12,
+      "exact": "decimal: string;"
+    },
+    {
+      "id": "A1",
+      "source": "sdk-amount",
+      "start": 1,
+      "end": 19,
+      "exact": "return lamportsNum / 1e9;"
+    }
+  ],
+  "negativeChecks": [
+    {
+      "source": "sdk-dex",
+      "terms": [
+        "toTokenAmount",
+        "fromTokenAmount",
+        "lamportsToSol",
+        "solToLamports"
+      ],
+      "absent": true
+    },
+    {
+      "source": "sdk-amount",
+      "terms": [
+        "getQuote",
+        "toTokenAmount",
+        "fromTokenAmount",
+        "/api/v6/dex/aggregator/quote"
+      ],
+      "absent": true
+    }
+  ],
+  "outputUnit": "unknown",
+  "liveQualified": false,
+  "financialQualification": false,
+  "billedCost": null
+}

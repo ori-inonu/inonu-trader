@@ -1,0 +1,330 @@
+{
+  "productSourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "files": [
+    {
+      "path": "docs/real-integration/AUDIT-R8.json",
+      "sha256": "b16f81d1367176ac9f5e5d101f009f2d18ce66e97493fdd086584b1ae509ae1b"
+    },
+    {
+      "path": "docs/real-integration/BROWSER-CONTROL-STATUS-R8.json",
+      "sha256": "834ca5311da5adf84413fd1476d7951564c29a978646ef627a8f24afc9e0f7bb"
+    },
+    {
+      "path": "docs/real-integration/BROWSER-DECISION.json",
+      "sha256": "0ada09378867debfa686fc5ac94cfc244f1412145f134ad2ebb8061b7f4dbe96"
+    },
+    {
+      "path": "docs/real-integration/BROWSER-EVIDENCE-R8.json",
+      "sha256": "f7bb3b40f307674a6fb854977f6a7b61356c7efccafc8e3762a6db4e18d3ffe6"
+    },
+    {
+      "path": "docs/real-integration/BUILD-DECISIONS.json",
+      "sha256": "a88d9d805084b8c03220d7ae7aed1c920540bf43fc4014edd9aa471e04561b17"
+    },
+    {
+      "path": "docs/real-integration/CHECKPOINT.md",
+      "sha256": "bacc1d45f2848fb61fb54a36ec542a3dcb8e1821f9d1093cce3fa3e0b0f180fb"
+    },
+    {
+      "path": "docs/real-integration/CLOCK-EVIDENCE.json",
+      "sha256": "cabf77286702e3d53bfbe7859416238ffca004bd7a7536e1d81d2ef51ede472e"
+    },
+    {
+      "path": "docs/real-integration/concurrent-baseline.json",
+      "sha256": "7ba6cfe2b340c3c8a7835ca6e9e0b8d5d81277ab2b46fdb326cc8e4f3bea3229"
+    },
+    {
+      "path": "docs/real-integration/CONSOLE-COLLISION-FAILED.json",
+      "sha256": "64f18a2874fd3456bff9403b0f9c1cd2f2acf34612feee4e45ac8d49815b7da7"
+    },
+    {
+      "path": "docs/real-integration/CONSOLE-LIVE-R7.json",
+      "sha256": "d15711eeecb2a3a89784dfcc077c9af50e24db5bcbefdb57101904e7ec98db3c"
+    },
+    {
+      "path": "docs/real-integration/CONSOLE-LIVE-R8.json",
+      "sha256": "fd01d35accf21e1d7fd2854e4ece862c76cefafaa3cf961847bbc6900606a164"
+    },
+    {
+      "path": "docs/real-integration/CONSOLE-LIVE.json",
+      "sha256": "543f5f6e4e4875affe9ecd7c94e71ce7ce01dc21190731f6895c81290bc0ab49"
+    },
+    {
+      "path": "docs/real-integration/CONTRAST-AUDIT-DECISION.json",
+      "sha256": "4b61aa8f4b0f29dc467a1223e1459ae6d601d582d330fb455d16d5fb6d49d513"
+    },
+    {
+      "path": "docs/real-integration/CONTRAST-SOURCE-R8.json",
+      "sha256": "05257fbf07c82ec1eb714c6a4eb748de21342868a10536d0f420f05b2dcf24a5"
+    },
+    {
+      "path": "docs/real-integration/CONTRAST-SOURCE-R8.md",
+      "sha256": "a33065c0084a8e3c317f7a871ac5c7b064ad935bdf11d51d1a044a1f29cc2366"
+    },
+    {
+      "path": "docs/real-integration/CORE-IMPLEMENTATION.md",
+      "sha256": "e1ee5453ed82cca402507317b681c3aeb138da3145d5eba070bcf15f1aadd23f"
+    },
+    {
+      "path": "docs/real-integration/DECISIONS.json",
+      "sha256": "82f16e5aca46b8465fe2afc5949e044d855b0e222b6573ba342b1b2409af011b"
+    },
+    {
+      "path": "docs/real-integration/ESTADO-ATUAL.md",
+      "sha256": "08336dcf288ced1c608998699841dea0d7ea8133c3557f9993f0e8c593a086a3"
+    },
+    {
+      "path": "docs/real-integration/EXECUTION-DECISIONS.json",
+      "sha256": "5fb4f9a62bbb4dfc714c6b8390af2e2bd4cd396a5d2e8e860207add3f883c7a0"
+    },
+    {
+      "path": "docs/real-integration/EXECUTION-SPEC.md",
+      "sha256": "eeb6ab8d9e4adf990600a8806bceaeb7774a5eefe1ae3bbe7daba70e590290ef"
+    },
+    {
+      "path": "docs/real-integration/EXTENSIONS-CONFIG-DECISION.json",
+      "sha256": "427f9f2cdc9a375bf55b5be27f0361aea4f1d86f45f403301d09e83938824a53"
+    },
+    {
+      "path": "docs/real-integration/EXTENSIONS-SPEC.md",
+      "sha256": "7855fbe4ea438bc50c9377071cd36cfc770a9e058ff56b4361c82739cd2460d3"
+    },
+    {
+      "path": "docs/real-integration/EXTENSIONS-TASK-DECISION.json",
+      "sha256": "efed3f22ae509a9fbca55319eb686b6966d70ac6b8fdd0faa17af7eff9f77572"
+    },
+    {
+      "path": "docs/real-integration/FINAL-DOC-REVIEW-DECISION.json",
+      "sha256": "da0f296fc6e9fa175997ca5c7a27ea24345fbc1a672080f5a7d35870020f9a15"
+    },
+    {
+      "path": "docs/real-integration/FINAL-SEQUENCE-DECISION.json",
+      "sha256": "633005f2804d531efda19bd74b82ab9d5ebff3ecc259b15c27af48d263bd2b9b"
+    },
+    {
+      "path": "docs/real-integration/G11-IPFS-RETRIEVAL.json",
+      "sha256": "510fa9c0fa08279b6161d1086735eacb4612b373fe58a35b4f0d46759ae557b7"
+    },
+    {
+      "path": "docs/real-integration/G11-METADATA-CONCLUSION.md",
+      "sha256": "f938c5c0cd145b74629f92e14a09c17c93cdbac2a4bc71bf5075a4cee8867dcd"
+    },
+    {
+      "path": "docs/real-integration/G11-METADATA-RESEARCH-DECISION.json",
+      "sha256": "5fe8fb277ebf4f077235009661fd468d702b1530f45f3a898a0d64dc08b39377"
+    },
+    {
+      "path": "docs/real-integration/G11-PROBE-STRATEGY-ABSTENTION.json",
+      "sha256": "e1cef466a835c876e0410d1240327db182230139ea841c31b5775d29fc09e6bc"
+    },
+    {
+      "path": "docs/real-integration/G11-PUBLIC-METADATA-READ.json",
+      "sha256": "e73c0a92cc3309043859074481a2564da15efd50353b4135ffeeb39d9ea547a0"
+    },
+    {
+      "path": "docs/real-integration/G11-PUBLIC-ROUTER-READ.json",
+      "sha256": "2746f73b797cf3c3bf82f0a77faaffb94f5ccf3a08696d4cf5a9e3633ca6033b"
+    },
+    {
+      "path": "docs/real-integration/G11-RESEARCH-DECISION.json",
+      "sha256": "bf9767bb77f0ebf073d0b6795aa6246d1e1c2115a871c207b1fef5a9d7d43e17"
+    },
+    {
+      "path": "docs/real-integration/G11-SOURCE-RESEARCH.md",
+      "sha256": "fe8155bbd38c72f32202340c5ecec351fe0064de94016f92b7c3374316f58b5c"
+    },
+    {
+      "path": "docs/real-integration/G11-SOURCIFY-LOOKUP.json",
+      "sha256": "19f4498eb99c443716a3788dd7c03c5e72ab563f4f8e6b9e9452010cfc599198"
+    },
+    {
+      "path": "docs/real-integration/GUIA-LOCAL.md",
+      "sha256": "c0e7fc7788ec5f862c9ea5a03d6a95c4835ebd59ce4f6e2be82a3e89ccea2244"
+    },
+    {
+      "path": "docs/real-integration/INSTRUCAO-DO-OBJETIVO.md",
+      "sha256": "cfa90cac735e9a838a0c4bc593276c83757905e7c5fedcd2414e499b1dad9e08"
+    },
+    {
+      "path": "docs/real-integration/INTEGRATION-SEAMS-SPEC.md",
+      "sha256": "4909eb3ef9135c0f11057dc9e3b316882ce26a40c932651841bca3567f2c4b77"
+    },
+    {
+      "path": "docs/real-integration/INVENTARIO-ESPECIFICACOES.md",
+      "sha256": "6cfef30a327b0ef403de4ade41087b2a5d7819fcfda528ba26d552c4656c0725"
+    },
+    {
+      "path": "docs/real-integration/LIVE-FINAL.json",
+      "sha256": "7c311d37af29f94ba30f577774e5be9233e0c305e653fff53fa93514aaadff5d"
+    },
+    {
+      "path": "docs/real-integration/LIVE-SERVICES.json",
+      "sha256": "d7fcef0f153ce1b9a48b72ea4536900f3e5657f0e12f7756e48d0226524f8a1e"
+    },
+    {
+      "path": "docs/real-integration/MATRIZ-G01-G17.md",
+      "sha256": "372912212d1ced145ec629c777d0dd14ff6e276e8570195e88601d669bb10d20"
+    },
+    {
+      "path": "docs/real-integration/PESQUISA-OKX.md",
+      "sha256": "ac7e1d07a40a2c1cd5c240dc05e241993711f9b601c20eb64902cfe8137694ff"
+    },
+    {
+      "path": "docs/real-integration/POST-REVIEW-DOC-DELTA-R8.json",
+      "sha256": "def33dea855c729f18de305cb31631e15c9761069f100b5e8109d462b5dcd7d7"
+    },
+    {
+      "path": "docs/real-integration/PUBLIC-CADENCE-DECISION.json",
+      "sha256": "0a9bc91dfff12f0ce21c19c7be0ca41ba256e324dd7eedffb42aeac810ff6887"
+    },
+    {
+      "path": "docs/real-integration/PUBLIC-CADENCE-SPEC.md",
+      "sha256": "9869b3e1c357f6cfc004889c4a9ac3ac61d7560678766135f6cccd06fa92b6e0"
+    },
+    {
+      "path": "docs/real-integration/PUBLIC-CLOCK-DECISION.json",
+      "sha256": "f2d126755692c5bfbb790eb813cfe5d2ef9059e5ae0a3001af83c091d2bef738"
+    },
+    {
+      "path": "docs/real-integration/PUBLIC-IMPLEMENTATION.md",
+      "sha256": "3240149f7ee91aff3163bb33db9144851857ec1875b574cbd194387927a1db09"
+    },
+    {
+      "path": "docs/real-integration/R6-REGRESSION-EVIDENCE.json",
+      "sha256": "5728e1867f550dd78817e146716330ce878341214d4d919c16b149bb11e7c2dc"
+    },
+    {
+      "path": "docs/real-integration/READINESS-DECISION.json",
+      "sha256": "25efcf4438a24578e0871bad87b76411638f457b6c67c9865a94fc1f452aaca7"
+    },
+    {
+      "path": "docs/real-integration/real.env.example",
+      "sha256": "0add4fabb3e5a8642a8914b1387a94552a3bdd24dca9e254cdc403ca0daf4697"
+    },
+    {
+      "path": "docs/real-integration/REMAINING-STRATEGY-DECISION.json",
+      "sha256": "935c35fc9747769c11f014c65bd9c59ac25da424b5f7cb14b84e3c41127bbb45"
+    },
+    {
+      "path": "docs/real-integration/research/fetch-okx-ipfs-g11-01a12b5f.ts",
+      "sha256": "cfe1487b078f8c6230ae6f611b72a7eb2e38160306fc42d2c05b1c0d7377fb45"
+    },
+    {
+      "path": "docs/real-integration/research/fetch-okx-sourcify-g11-01a12b5f.ts",
+      "sha256": "0c570b5826e8f756c18582392d899763c68cd3258b5d816dacdafa95eb2a8c7d"
+    },
+    {
+      "path": "docs/real-integration/research/probe-okx-metadata-g11-01a12b5f.ts",
+      "sha256": "cd4875033832f1dc3f1afc28e90c5d69f27296199b9581d669299c6479a072a0"
+    },
+    {
+      "path": "docs/real-integration/research/probe-okx-router-g11-01a12b5f.ts",
+      "sha256": "21bf1784cfb21bba8551616130c380073ab9a6515a40290ff9dd5b1bd5acadc1"
+    },
+    {
+      "path": "docs/real-integration/REVIEW-MANIFEST.json",
+      "sha256": "16c9fb7efb323c70d7fc8ad93a94f71568677b31297719ab11f13e2ee33fd1d3"
+    },
+    {
+      "path": "docs/real-integration/REVIEW-R7.md",
+      "sha256": "ab5e1ca80f5ed3d47e2eb8a2c31a50e7832138212242c0bff272532c59c05684"
+    },
+    {
+      "path": "docs/real-integration/REVIEW-R8.md",
+      "sha256": "85340b26dce722d56bb292caea6be8a3ff480f113da2b8ee1d708d9a7599b75c"
+    },
+    {
+      "path": "docs/real-integration/router-runtime-143.hex",
+      "sha256": "8c43df13583eb5fa911ff74d190b36ad3dc75fc3d16bc55dab5b2f5d116c8b10"
+    },
+    {
+      "path": "docs/real-integration/router-runtime-196.hex",
+      "sha256": "58c99c83f0a181397997b7c8f687941f033f7aac9a6fe6281ca1495983fb6581"
+    },
+    {
+      "path": "docs/real-integration/router-sourcify-143.json",
+      "sha256": "8a00ffebe9bcc0c920b72e0c858a6cb9708af39f5b216da57b7128d51ef9b060"
+    },
+    {
+      "path": "docs/real-integration/router-sourcify-196.json",
+      "sha256": "7bbe871ca5a6e0c1140cb3050aef5cd5daaa5edddd2daaa80e476778b58ec0f9"
+    },
+    {
+      "path": "docs/real-integration/RPC-READ-SPEC.md",
+      "sha256": "7cc6625fa2281966647afd93ec1f5f204c508d5b678fb565af53b1a942fdf6b6"
+    },
+    {
+      "path": "docs/real-integration/SEMANTIC-PROOF.md",
+      "sha256": "049f33263039ad2a6aed36ecbd1bc4c629d2bed0e9684c2639647d46424889b6"
+    },
+    {
+      "path": "docs/real-integration/source-inventory.json",
+      "sha256": "19ba3a43f21c9362ad90d3507656c1ee54758227d7e10121b14cd62159a1e680"
+    },
+    {
+      "path": "docs/real-integration/UI-IMPLEMENTATION.md",
+      "sha256": "223fabee28294db594fa72b2f60f47492ce170d5fadcd9b6c35296defaaa4caf"
+    },
+    {
+      "path": "docs/real-integration/VERIFICACAO-HISTORICA-R7.json",
+      "sha256": "6e1e998edb5d92aca8ebdde832831b43c4cf454dea9be00f70accd94393dbf71"
+    },
+    {
+      "path": "docs/real-integration/VERIFICACAO.json",
+      "sha256": "ca3fc3aff4a907061af332eca488d538630ea8a13c4df42361cef8d3d329990a"
+    },
+    {
+      "path": "docs/real-integration/VERIFICACAO.md",
+      "sha256": "0202c1b97f12de7d29fc81365698e4f8d1e52b9396151d5b573f0076c3332393"
+    },
+    {
+      "path": "docs/real-integration/visual/BROWSER-EVIDENCE.json",
+      "sha256": "0abdb2da69ef4f621716e89fa10f43626f3266429c801ddaf8e4b3b4581f781e"
+    },
+    {
+      "path": "docs/real-integration/visual/desktop-1440x900.jpg",
+      "sha256": "edab051a946a54da18666f7aa62419012b6b276a33db450e13139723abecd26a"
+    },
+    {
+      "path": "docs/real-integration/visual/desktop-final-1440x900.jpg",
+      "sha256": "f8ff8a3ef57320a91cbdeb6045762dc763ab887389dbbd060d07e7fcfa1763d8"
+    },
+    {
+      "path": "docs/real-integration/visual/mobile-360x800.jpg",
+      "sha256": "11559b61bb80802f81d80b546c34e22b86875a0e39cafd9223b375b8bbdcde91"
+    },
+    {
+      "path": "docs/real-integration/visual/mobile-390-capabilities.jpg",
+      "sha256": "bc58c83845a7d45c8e2202ac26901d5fc2b015487c0756d9e18202d703724f7f"
+    },
+    {
+      "path": "docs/real-integration/visual/mobile-390x844.jpg",
+      "sha256": "9c2d4752a2db9d9951840fc5f9668110db944d45ec913424ab5567404997c28b"
+    },
+    {
+      "path": "docs/real-integration/visual/public-provenance.jpg",
+      "sha256": "d6d629dcad29e4aaaff2c3f8819ec0be52f1cbc1474d2d43e0d78de308e6940c"
+    },
+    {
+      "path": "docs/real-integration/visual/r8-desktop-1440.png",
+      "sha256": "0b15b5459ca87f42a7ee1eeb1a8e04af93097287a1fcb2ded661ab5a45c55894"
+    },
+    {
+      "path": "docs/real-integration/visual/r8-desktop-final.png",
+      "sha256": "1c82631b5f0288ae8167fb5d3f38b4623fac09ab462f82026b88a393c2420c69"
+    },
+    {
+      "path": "docs/real-integration/visual/r8-mobile-360-details.png",
+      "sha256": "b69d56e72f5e4fad5213775c76ca3b60710e8b646779e58f976117204f150249"
+    },
+    {
+      "path": "docs/real-integration/visual/r8-mobile-360-provenance.png",
+      "sha256": "ec94af31e6a4c40554c8244f1621927f45b15fd0db9f6363c214535e7cf07e62"
+    },
+    {
+      "path": "docs/real-integration/visual/r8-mobile-390.png",
+      "sha256": "61002fe626d90a77f122bfd101f048a50930bf2bb3b52424754e1f4120566148"
+    }
+  ],
+  "wholeGoalApproved": false
+}

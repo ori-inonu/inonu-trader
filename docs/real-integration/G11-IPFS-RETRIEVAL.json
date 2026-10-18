@@ -1,0 +1,37 @@
+{
+  "scope": "public-ipfs-metadata-research",
+  "singleRequestPerCid": true,
+  "retryCount": 0,
+  "executionEnabled": false,
+  "abiQualified": false,
+  "rows": [
+    {
+      "chainIndex": "196",
+      "cid": "QmaMFkyRVcsTKzLjb825J2L1i7YVXW6uwf3G5T51nmWEcB",
+      "url": "https://ipfs.io/ipfs/QmaMFkyRVcsTKzLjb825J2L1i7YVXW6uwf3G5T51nmWEcB?format=raw",
+      "requestedAtMs": 1791752120395,
+      "httpStatus": null,
+      "contentType": null,
+      "bytes": null,
+      "blockSha256": null,
+      "blockHashMatched": false,
+      "metadataRetrieved": false,
+      "error": "The operation timed out.",
+      "receivedAtMs": 1791752135437
+    },
+    {
+      "chainIndex": "143",
+      "cid": "QmRSQr7vAMQJBLL6JS6zBayPgejyvUc8f3Lg5BrEo8KtU4",
+      "url": "https://ipfs.io/ipfs/QmRSQr7vAMQJBLL6JS6zBayPgejyvUc8f3Lg5BrEo8KtU4?format=raw",
+      "requestedAtMs": 1791752120396,
+      "httpStatus": null,
+      "contentType": null,
+      "bytes": null,
+      "blockSha256": null,
+      "blockHashMatched": false,
+      "metadataRetrieved": false,
+      "error": "The operation timed out.",
+      "receivedAtMs": 1791752135437
+    }
+  ]
+}

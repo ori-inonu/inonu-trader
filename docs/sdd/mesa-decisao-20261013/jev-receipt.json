@@ -1,0 +1,133 @@
+{
+  "status": "assessed",
+  "receiptId": "c2e60c81-7da3-41bd-b3ef-40dbd2581fcf",
+  "questionIds": [
+    "design",
+    "portfolio_seam",
+    "credential_seam"
+  ],
+  "inputDigest": "6dd9ee4d86886362620339bddbcc74afe4bb84b00ddcbadae4a1df7256fa3640",
+  "rubricVersion": "batch-2026-09-26.2",
+  "policies": {
+    "design": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "portfolio_seam": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    },
+    "credential_seam": {
+      "version": "decision-policy-2026-09-26.1",
+      "mode": "conservative",
+      "minConfidence": 0.6,
+      "minProbability": 0.6,
+      "calibration": "not_locally_calibrated"
+    }
+  },
+  "authority": "advisory_only",
+  "origin": {
+    "source": "mcp",
+    "chatId": "01a135ff-362e-7cf0-ac4f-ef678d322188",
+    "agentId": "root"
+  },
+  "correlation": {
+    "rootTaskId": "01a135ff-362e-7cf0-ac4f-ef678d322188"
+  },
+  "model": "jev-1.13.0",
+  "answers": {
+    "design": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "decision_desk",
+      "bestCandidate": "decision_desk",
+      "probabilities": {
+        "decision_desk": 0.96,
+        "more_panels": 0,
+        "chart_only": 0,
+        "abstain": 0.02,
+        "insufficient_evidence": 0.02
+      },
+      "confidence": 0.95,
+      "disposition": "recommendation",
+      "recommendation": "decision_desk",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "portfolio_seam": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "extend_ask",
+      "bestCandidate": "extend_ask",
+      "probabilities": {
+        "extend_ask": 0.97,
+        "separate_service": 0,
+        "ui_rank": 0,
+        "abstain": 0,
+        "insufficient_evidence": 0.03
+      },
+      "confidence": 0.96,
+      "disposition": "recommendation",
+      "recommendation": "extend_ask",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "credential_seam": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "server_fallback",
+      "bestCandidate": "server_fallback",
+      "probabilities": {
+        "server_fallback": 0.97,
+        "import_windows": 0,
+        "browser_key": 0,
+        "abstain": 0.02,
+        "insufficient_evidence": 0.01
+      },
+      "confidence": 0.96,
+      "disposition": "recommendation",
+      "recommendation": "server_fallback",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 1311,
+    "output_tokens": 201
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-13T16:19:34.760Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-13T16:19:35.064Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a1360febf5748fbe3d9affd062d79f",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null,
+    "credentialFingerprint": "342dcdc859f5a81f75e795f9ea3d99e2a827128c12d249f50c047811facda71a"
+  },
+  "latencyMs": 349,
+  "receiptPersisted": true,
+  "billedCostUsd": null
+}

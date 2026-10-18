@@ -1,0 +1,31 @@
+{
+  "sourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "regression": "Rollback/invalid time must hide expired core and derived UI data; restoring wall time must not revive it.",
+  "records": [
+    {
+      "phase": "red",
+      "path": "C:\\Users\\gabri\\.codex\\tmp\\real-r6-red-01a12b5f.txt",
+      "sha256": "df3b8a9283302d8e5d68bbf241f65b3361701a884efe30a1d227525700d1b624"
+    },
+    {
+      "phase": "green",
+      "path": "C:\\Users\\gabri\\.codex\\tmp\\real-r6-green-01a12b5f.txt",
+      "sha256": "6f23eb2c8ffed3bd25e0ab98ee0583c25ecbbc30b220f0c735360a67c11d2baf"
+    }
+  ],
+  "finalVerification": "VERIFICACAO.json",
+  "independentReviewPending": false,
+  "independentReview": {
+    "path": "REVIEW-R8.md",
+    "sha256": "85340b26dce722d56bb292caea6be8a3ff480f113da2b8ee1d708d9a7599b75c",
+    "localFixesApproved": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6"
+    ],
+    "goalApproved": false
+  }
+}

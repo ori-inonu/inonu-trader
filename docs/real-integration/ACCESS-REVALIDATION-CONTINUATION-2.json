@@ -1,0 +1,54 @@
+{
+  "kind": "bounded-current-access-revalidation",
+  "observedAt": "2026-10-11T22:05:40.574888+00:00",
+  "goalTurnNumber": 3,
+  "scope": "Only four authorized project directories and required names in inherited process environment; no global secret search.",
+  "workspaceConfigurations": [
+    {
+      "path": "C:\\Users\\gabri\\jev-trader\\.env",
+      "configuredNamesOnly": {
+        "OKX_WEB3_API_KEY": false,
+        "OKX_WEB3_API_SECRET": false,
+        "OKX_WEB3_API_PASSPHRASE": false,
+        "TYPESAFE_AI_API_KEY": true,
+        "REAL_JEV_CONSUMPTION_AUTHORIZED": false
+      }
+    }
+  ],
+  "processConfiguredNamesOnly": {
+    "OKX_WEB3_API_KEY": false,
+    "OKX_WEB3_API_SECRET": false,
+    "OKX_WEB3_API_PASSPHRASE": false,
+    "TYPESAFE_AI_API_KEY": false,
+    "REAL_JEV_CONSUMPTION_AUTHORIZED": false
+  },
+  "presenceOnlyDoesNotProveAuthorization": true,
+  "sameConfigurationPresenceAsContinuation1": true,
+  "credentialValuesEmitted": false,
+  "credentialsCopied": false,
+  "credentialNetworkRequests": 0,
+  "accessEntitlementProven": false,
+  "ownerWalletConsentProven": false,
+  "appConsumptionAuthorizationProven": false,
+  "financialExecutionEnabled": false,
+  "productFilesChecked": 447,
+  "productFilesChanged": [],
+  "productSourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "criteriaSha256": "cfa90cac735e9a838a0c4bc593276c83757905e7c5fedcd2414e499b1dad9e08",
+  "statusDocumentsPreserved": {
+    "CHECKPOINT.md": "3c1670813b9194c78c1a739c55549335fd37fdcf91b94249514e5e93501f5842",
+    "MATRIZ-G01-G17.md": "d7949df2a563078f389f25fe4fe7ccc11dfed233fe73a88c948cef88f8d7de5d",
+    "VERIFICACAO.md": "eed6d2aeeb3c4c938b7df6bc16bd5bbc20584cb189c69cb62f66dbcb4c3754c3",
+    "VERIFICACAO.json": "11ed132bdc85b7dbf881b07674cf9586e090a824cac247dc519ed6ea81f514c3"
+  },
+  "stagedFiles": [],
+  "consolePortsAcceptingConnections": {
+    "4130": false,
+    "4131": false
+  },
+  "priorAccessObservedAt": "2026-10-11T21:25:56.599238+00:00",
+  "previousShutdownEvidence": "CONSOLE-G14-CONTINUATION-1.json",
+  "newCoreCyclesObserved": 0,
+  "newAuthenticatedServiceRequests": 0,
+  "wholeGoalComplete": false
+}

@@ -1,0 +1,42 @@
+{
+  "id": "rc3-d3-captura-443",
+  "goal": "Objetivo do projeto: o agente de carteira tomar as melhores decisoes para o melhor retorno liquido, compondo a cada ciclo de 1 minuto. Tudo comeca em sombra e e reversivel; a meta e uma hipotese a medir com custo real, nao uma promessa. O modulo src/public-market-capture ainda usa o WebSocket da OKX na porta 8443, que deixa de funcionar em 2026-10-31. Como migrar para a porta 443?",
+  "facts": {
+    "onde": "a URL com a porta 8443 esta em plan.ts, node-adapter.ts, capture.test.ts e docs/PUBLIC-MARKET-CAPTURE.md",
+    "recibos": "os recibos de acesso gravam a URL exata; os existentes foram emitidos na 8443",
+    "feito": "o feed vivo, o navegador e o manifesto de provedores ja migraram para a 443 com testes",
+    "prova": "a porta 443 aceita o mesmo WebSocket publico (verificado); o modulo so le dados publicos, sem chave",
+    "termos": "o acordo de API da OKX (9.4) proibe raspadores e extracao em escala excessiva de dados de mercado, inclusive em endpoints publicos"
+  },
+  "rails": [
+    "Dinheiro real, ordens, carteira e live trading so por autorizacao do dono",
+    "Nenhuma mudanca de limite de risco, segredo, credencial, migracao de dados ou dependencia paga",
+    "Nao apagar branches, nao reescrever historico e nao fazer push",
+    "Nao prometer lucro; resultado so por medicao com custo real",
+    "Somente endpoints publicos, sem credenciais, em volume pequeno"
+  ],
+  "options": [
+    {
+      "id": "migrar_codigo_recibos_pendentes",
+      "label": "Migrar o codigo e marcar recibos",
+      "what": "Trocar a URL nos arquivos, testes e documento; registrar que os recibos antigos foram emitidos na 8443 e que a reemissao fica pendente, sem captura nova."
+    },
+    {
+      "id": "esperar_dono",
+      "label": "Esperar o dono",
+      "what": "Nao mexer ate o dono decidir; o risco e perder o prazo de 2026-10-31."
+    },
+    {
+      "id": "migrar_e_recapturar",
+      "label": "Migrar e recapturar",
+      "what": "Migrar e emitir recibos novos com uma captura publica curta e real na porta 443."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "recibo_exigido",
+      "ask": "Algum portao exige recibo novo na 443 antes de usar o modulo?"
+    }
+  ]
+}

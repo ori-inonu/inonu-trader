@@ -1,0 +1,46 @@
+{
+  "origin": "synthetic_fixture",
+  "code": "0",
+  "data": [
+    {
+      "amountUsd": "669.455417761799554132",
+      "chainIndex": "501",
+      "price": "0.000122496972899498",
+      "soldRatioPercent": "64.29",
+      "timestamp": "1774364940575",
+      "token": {
+        "holders": "445",
+        "logo": "https://example.invalid/logo.png",
+        "marketCapUsd": "64466.670905193533007211",
+        "name": "Van Cleef Memes",
+        "symbol": "VanCleef",
+        "tokenAddress": "FN9ZSeNDdPV6bBF9DeDYxvqYK4JvFKeF7DBrhGGXJZ3Q",
+        "top10HolderPercent": "17.9547"
+      },
+      "triggerWalletAddress": "5jds1qi6nYu2JTZv5YTczPwyaq1RAkNkjbpsma8xSTem,4YzpSZpxDdjNf3unjkCtdWEsz2FL5mok7e5XQaDNqry8",
+      "triggerWalletCount": "3",
+      "walletType": "1",
+      "cursor": "1774364940575!@#123"
+    },
+    {
+      "amountUsd": "1912.742277985131470193",
+      "chainIndex": "501",
+      "price": "0.000043905847119596",
+      "soldRatioPercent": "74.73",
+      "timestamp": "1774350239648",
+      "token": {
+        "holders": "1112",
+        "marketCapUsd": "127139.702497190490981742",
+        "name": "The Sandwich Heist",
+        "symbol": "Sandwich",
+        "tokenAddress": "AytNmHWe8uXfgBACLnvhyKWrecAcYFywLK2nXbegpump",
+        "top10HolderPercent": "18.4131"
+      },
+      "triggerWalletAddress": "As7HjL7dzzvbRbaD3WCun47robib2kmAKRXMvjHkSMB5,719sfKUjiMThumTt2u39VMGn612BZyCcwbM5Pe8SqFYz",
+      "triggerWalletCount": "6",
+      "walletType": "2",
+      "cursor": "1774350239648!@#123"
+    }
+  ],
+  "msg": ""
+}

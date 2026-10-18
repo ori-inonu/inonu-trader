@@ -1,0 +1,204 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "curadoria-3cdc3d81ade9",
+    "specHash": "58db8ded532bb72de39d26fb5483fc393e4dbc3ee4df637e64370c1b7267df08",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "sem_consenso",
+    "leader": null,
+    "implement": false,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "forget",
+          "keep"
+        ],
+        "framings": [
+          {
+            "order": [
+              "forget",
+              "keep"
+            ],
+            "probs": {
+              "forget": 0.61,
+              "keep": 0.21,
+              "none_fits": 0.18
+            }
+          },
+          {
+            "order": [
+              "keep",
+              "forget"
+            ],
+            "probs": {
+              "keep": 0.23,
+              "forget": 0.59,
+              "none_fits": 0.18
+            }
+          },
+          {
+            "order": [
+              "forget",
+              "keep"
+            ],
+            "probs": {
+              "forget": 0.64,
+              "keep": 0.2,
+              "none_fits": 0.16
+            }
+          }
+        ],
+        "means": {
+          "forget": 0.6133,
+          "keep": 0.2133
+        },
+        "noneFits": 0.1733,
+        "agreement": 1,
+        "margin": 0.4,
+        "leader": "forget",
+        "railProb": {
+          "forget": 0.37,
+          "keep": 0.06
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 2,
+        "options": [
+          "forget",
+          "keep"
+        ],
+        "framings": [
+          {
+            "order": [
+              "forget",
+              "keep"
+            ],
+            "probs": {
+              "forget": 0.61,
+              "keep": 0.21,
+              "none_fits": 0.18
+            }
+          },
+          {
+            "order": [
+              "keep",
+              "forget"
+            ],
+            "probs": {
+              "keep": 0.23,
+              "forget": 0.6,
+              "none_fits": 0.17
+            }
+          },
+          {
+            "order": [
+              "forget",
+              "keep"
+            ],
+            "probs": {
+              "forget": 0.63,
+              "keep": 0.22,
+              "none_fits": 0.15
+            }
+          }
+        ],
+        "means": {
+          "forget": 0.6133,
+          "keep": 0.22
+        },
+        "noneFits": 0.1667,
+        "agreement": 1,
+        "margin": 0.3933,
+        "leader": "forget",
+        "railProb": {
+          "forget": 0.37,
+          "keep": 0.06
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 3,
+        "options": [
+          "forget",
+          "keep"
+        ],
+        "framings": [
+          {
+            "order": [
+              "forget",
+              "keep"
+            ],
+            "probs": {
+              "forget": 0.62,
+              "keep": 0.21,
+              "none_fits": 0.17
+            }
+          },
+          {
+            "order": [
+              "keep",
+              "forget"
+            ],
+            "probs": {
+              "keep": 0.23,
+              "forget": 0.57,
+              "none_fits": 0.2
+            }
+          },
+          {
+            "order": [
+              "forget",
+              "keep"
+            ],
+            "probs": {
+              "forget": 0.62,
+              "keep": 0.21,
+              "none_fits": 0.17
+            }
+          }
+        ],
+        "means": {
+          "forget": 0.6033,
+          "keep": 0.2167
+        },
+        "noneFits": 0.18,
+        "agreement": 1,
+        "margin": 0.3866,
+        "leader": "forget",
+        "railProb": {
+          "forget": 0.37,
+          "keep": 0.06
+        },
+        "consensusHere": false
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 11,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 11,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 8796,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

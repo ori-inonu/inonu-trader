@@ -1,0 +1,1410 @@
+{
+  "schemaVersion": 1,
+  "reviewKind": "Standards",
+  "decision": "approved",
+  "conclusion": "Approved only for bounded local five-file delivery; no documented breach. One nonblocking possible P3 smell. Not a Spec/final audit/integration/financial/live certification.",
+  "reviewer": {
+    "reviewer_id": "01a13658-31bc-76d0-a75b-1d07b5928bd3",
+    "root_conversation_id": "01a1362a-b876-7fa0-9b66-b45202296099",
+    "implementer_id": "root-01a1362a",
+    "independent": true,
+    "reviewedOwnImplementation": false,
+    "configuredModel": "GPT-6.1 Sol",
+    "configuredReasoning": "xhigh",
+    "effectiveModel": null,
+    "effectiveTier": null
+  },
+  "runtime": {
+    "sandbox": "danger-full-access",
+    "reviewCopy": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+    "isolatedCopySupplied": true,
+    "readonlyAttributesObserved": true,
+    "readonlyEnforcementProven": false,
+    "networkOrPaidApiCalled": false,
+    "environmentFilesLoaded": false
+  },
+  "baseline": {
+    "sha": "00a593bcabe25dbb6d83795268533551098f645b",
+    "commits": [],
+    "authoredFilesNewAtBaseline": true,
+    "results": [
+      {
+        "name": "baseline-identity",
+        "argv": [
+          "git",
+          "-C",
+          "C:/Users/gabri/jev-trader",
+          "show",
+          "--no-patch",
+          "--format=%H",
+          "00a593bcabe25dbb6d83795268533551098f645b"
+        ],
+        "exitCode": 0,
+        "stdout": {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-identity.stdout.bin",
+          "sha256": "9e92600e5656c5f0945366181f3ea5aa5f99ab5140580e5e5ced29c39e7b8c05",
+          "bytes": 41
+        },
+        "stderr": {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-identity.stderr.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      {
+        "name": "baseline-paths",
+        "argv": [
+          "git",
+          "-C",
+          "C:/Users/gabri/jev-trader",
+          "ls-tree",
+          "-r",
+          "--name-only",
+          "00a593bcabe25dbb6d83795268533551098f645b",
+          "--",
+          "src/decision-evidence/weights.ts",
+          "src/decision-evidence/weights.test.ts",
+          "docs/sdd/decision-weight-provenance/requirements.md",
+          "docs/sdd/decision-weight-provenance/USAGE.md",
+          "docs/sdd/decision-weight-provenance/VERIFICATION.md"
+        ],
+        "exitCode": 0,
+        "stdout": {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-paths.stdout.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "stderr": {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-paths.stderr.bin",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    ]
+  },
+  "candidate": {
+    "manifest": {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/CANDIDATE.json",
+      "sha256": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+      "start_line": 1,
+      "end_line": 200,
+      "excerpt": "{\n  \"version\": 1,\n  \"baseline\": \"00a593bcabe25dbb6d83795268533551098f645b\",\n  \"implementer_id\": \"root-01a1362a\",\n  \"conversation\": \"01a1362a-b876-7fa0-9b66-b45202296099\",\n  \"authored\": [\n    {\n      \"path\": \"src/decision-evidence/weights.ts\",\n      \"sha256\": \"3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf\",\n      \"bytes\": 4573\n    },\n    {\n      \"path\": \"src/decision-evidence/weights.test.ts\",\n      \"sha256\": \"fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f\",\n      \"bytes\": 10653\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/requirements.md\",\n      \"sha256\": \"4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977\",\n      \"bytes\": 6169\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/USAGE.md\",\n      \"sha256\": \"57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3\",\n      \"bytes\": 2522\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/VERIFICATION.md\",\n      \"sha256\": \"688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f\",\n      \"bytes\": 1741\n    }\n  ],\n  \"readonly_sources\": [\n    {\n      \"path\": \"sources/decide.ts\",\n      \"sha256\": \"3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0\",\n      \"bytes\": 10830\n    },\n    {\n      \"path\": \"sources/types.ts\",\n      \"sha256\": \"7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc\",\n      \"bytes\": 7958\n    },\n    {\n      \"path\": \"sources/public-view.ts\",\n      \"sha256\": \"9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515\",\n      \"bytes\": 6716\n    },\n    {\n      \"path\": \"frozen/AGENTS.md\",\n      \"sha256\": \"17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34\",\n      \"bytes\": 3954\n    },\n    {\n      \"path\": \"frozen/CONTRIBUTING.md\",\n      \"sha256\": \"491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6\",\n      \"bytes\": 1459\n    }\n  ],\n  \"frozen_specification\": {\n    \"path\": \"frozen/SPEC.md\",\n    \"sha256\": \"6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f\",\n    \"bytes\": 9679,\n    \"acceptance_sha256\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\"\n  },\n  \"delivery_patch\": {\n    \"path\": \"DELIVERY.patch\",\n    \"sha256\": \"5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469\",\n    \"bytes\": 27215\n  },\n  \"commits\": [],\n  \"excluded_local_records\": [\n    \"docs/sdd/decision-weight-provenance/SPEC.md\",\n    \"docs/sdd/decision-weight-provenance/decision-receipts.json\",\n    \"docs/sdd/decision-weight-provenance/local-records/**\"\n  ]\n}\n"
+    },
+    "patch": {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/DELIVERY.patch",
+      "sha256": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+      "start_line": 1,
+      "end_line": 5,
+      "excerpt": "diff --git a/src/decision-evidence/weights.ts b/src/decision-evidence/weights.ts\nnew file mode 100644\nindex 0000000..1e3c8f7\n--- /dev/null\n+++ b/src/decision-evidence/weights.ts"
+    },
+    "spec": {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+      "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+      "start_line": 44,
+      "end_line": 81,
+      "excerpt": "## Critérios imutáveis propostos\n\n### PP-1: anotação isolada e invariância\nA função retorna somente os cinco campos listados, sem alterar entradas, decisão, ação, pesos, status ou campos legados. Não lê ambiente/arquivos, não usa rede, não consulta modelos e não decide buy/sell. Entradas congeladas e comparação antes/depois devem comprovar ausência de mutação.\n\n### PP-2: origem exige evidência compatível\nCom decisão de status ok, resposta contemporânea válida com raw.probabilities informado como objeto válido, choice igual à ação e pesos normalizados iguais aos da decisão, origin é provider_reported. Ausência de raw.probabilities em uma resposta válida gera adapter_choice_fallback somente quando a decisão tem status ok e é o vetor unitário correspondente. Resposta inválida com a decisão canônica malformed/hold, ou falha error/timeout com hold canônico e status correspondente, gera adapter_safety_fallback. Resposta válida exige decisão de status ok; divergência de status gera unknown. Evidência ausente, histórica, malformada ou incompatível gera unknown. Nunca inferir origem apenas pelo vetor.\n\nO contrato de normalização observado é: buy/sell/hold; choice válida; probabilities ausente significa fallback; objeto informado usa peso ausente ou null como zero; pesos finitos não negativos; soma finita positiva; peso bruto da escolha positivo; cada valor dividido pela soma; todos os pesos normalizados finitos e peso normalizado da escolha positivo. Objeto null/array, peso negativo/não finito, soma inválida ou escolha de peso zero antes ou após normalização são respostas inválidas. Não exigir que a ação seja argmax. Comparações de vetores normalizados usam tolerância absoluta de 1e-12 por componente; nenhuma diferença maior é reparada.\n\n### PP-3: números e estados conservadores\nDecisão válida tem action buy/sell/hold, status ok/error/timeout/malformed, três pesos finitos em [0,1] e soma dentro de 1e-12 de 1. Status ok exige peso selecionado positivo; outro status exige action hold. selectedWeight é o peso da ação apenas para status ok; caso contrário é null. reportedSelectedWeight só é numérico para provider_reported com status ok; todas as outras origens recebem null. financialCalibration é sempre not_established. Texto ou número desconhecido nunca vira zero nem certeza.\n\n### PP-4: compatibilidade histórica e sanitização\nRegistro histórico válido continua anotável sem resposta original: origin unknown, selectedWeight preservado para status ok, reportedSelectedWeight null. Provedor pode reportar um vetor unitário legítimo: esse caso recebe provider_reported somente com prova contemporânea compatível. Campos extras e texto livre nunca atravessam a projeção de saída. Não migrar schema/journal/public-view/dashboard, nem adicionar thresholds ou usar a anotação para ordens.\n\n### PP-5: exemplos literais e TDD\nExecutar fixtures sintéticas explícitas pela API pública nova, com resultados literais:\n\n| Decisão e evidência | Origem | selectedWeight | reportedSelectedWeight |\n| --- | --- | --- | --- |\n| buy, (1,0,0), ok; response choice buy sem probabilities | adapter_choice_fallback | 1 | null |\n| buy, (1,0,0), ok; response choice buy com (1,0,0) | provider_reported | 1 | 1 |\n| buy, (0.5,0.25,0.25), ok; response choice buy com (2,1,1) | provider_reported | 0.5 | 0.5 |\n| buy, (0.2,0.8,0), ok; response choice buy com (1,4,0) | provider_reported | 0.2 | 0.2 |\n| buy, (1,0,0), ok; historical_record | unknown | 1 | null |\n| hold, (0,0,1), malformed; response choice buy com pesos todos zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response choice buy com (Number.MIN_VALUE,2,0), cujo peso buy normalizado vira zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response válida choice hold com (0,0,1) | unknown | null | null |\n| hold, (0,0,1), timeout; observed_failure timeout | adapter_safety_fallback | null | null |\n| buy, (1,0,0), ok; response choice sell com (0,1,0) | unknown | 1 | null |\n\nTambém comprovar decisão inválida -> null; evidence inválida -> unknown; error/timeout/status divergente -> unknown; probabilities null/array e pesos negativos/NaN/infinito; todos os tipos de ação/status; limites da tolerância; repetibilidade; entradas imutáveis; saída allowlist sem payload bruto; null no peso selecionado para status não ok. Testes não chamam APIs nem usam contas reais.\n\n### PP-6: arquivos, verificação e revisão\nEntrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação.\n\n## Plano mínimo da fase posterior"
+    },
+    "authored": [
+      {
+        "path": "src/decision-evidence/weights.ts",
+        "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "bytes": 4573
+      },
+      {
+        "path": "src/decision-evidence/weights.test.ts",
+        "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+        "bytes": 10653
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/requirements.md",
+        "sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+        "bytes": 6169
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+        "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+        "bytes": 2522
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+        "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+        "bytes": 1741
+      }
+    ],
+    "readonly_sources": [
+      {
+        "path": "sources/decide.ts",
+        "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "bytes": 10830
+      },
+      {
+        "path": "sources/types.ts",
+        "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+        "bytes": 7958
+      },
+      {
+        "path": "sources/public-view.ts",
+        "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+        "bytes": 6716
+      },
+      {
+        "path": "frozen/AGENTS.md",
+        "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "bytes": 3954
+      },
+      {
+        "path": "frozen/CONTRIBUTING.md",
+        "sha256": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "bytes": 1459
+      }
+    ],
+    "excluded_local_records": [
+      "docs/sdd/decision-weight-provenance/SPEC.md",
+      "docs/sdd/decision-weight-provenance/decision-receipts.json",
+      "docs/sdd/decision-weight-provenance/local-records/**"
+    ]
+  },
+  "integrity": {
+    "before": [
+      {
+        "path": "src/decision-evidence/weights.ts",
+        "expected": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "actual": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "bytes": 4573,
+        "matches": true
+      },
+      {
+        "path": "src/decision-evidence/weights.test.ts",
+        "expected": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+        "actual": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+        "bytes": 10653,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/requirements.md",
+        "expected": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+        "actual": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+        "bytes": 6169,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+        "expected": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+        "actual": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+        "bytes": 2522,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+        "expected": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+        "actual": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+        "bytes": 1741,
+        "matches": true
+      },
+      {
+        "path": "sources/decide.ts",
+        "expected": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "actual": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "bytes": 10830,
+        "matches": true
+      },
+      {
+        "path": "sources/types.ts",
+        "expected": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+        "actual": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+        "bytes": 7958,
+        "matches": true
+      },
+      {
+        "path": "sources/public-view.ts",
+        "expected": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+        "actual": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+        "bytes": 6716,
+        "matches": true
+      },
+      {
+        "path": "frozen/AGENTS.md",
+        "expected": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "actual": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "bytes": 3954,
+        "matches": true
+      },
+      {
+        "path": "frozen/CONTRIBUTING.md",
+        "expected": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "actual": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "bytes": 1459,
+        "matches": true
+      },
+      {
+        "path": "frozen/SPEC.md",
+        "expected": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "actual": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "bytes": 9679,
+        "matches": true
+      },
+      {
+        "path": "DELIVERY.patch",
+        "expected": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+        "actual": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+        "bytes": 27215,
+        "matches": true
+      },
+      {
+        "path": "CANDIDATE.json",
+        "expected": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+        "actual": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+        "bytes": 2522,
+        "matches": true
+      }
+    ],
+    "after": [
+      {
+        "path": "src/decision-evidence/weights.ts",
+        "expected": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "actual": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "bytes": 4573,
+        "matches": true
+      },
+      {
+        "path": "src/decision-evidence/weights.test.ts",
+        "expected": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+        "actual": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+        "bytes": 10653,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/requirements.md",
+        "expected": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+        "actual": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+        "bytes": 6169,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+        "expected": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+        "actual": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+        "bytes": 2522,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+        "expected": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+        "actual": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+        "bytes": 1741,
+        "matches": true
+      },
+      {
+        "path": "sources/decide.ts",
+        "expected": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "actual": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "bytes": 10830,
+        "matches": true
+      },
+      {
+        "path": "sources/types.ts",
+        "expected": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+        "actual": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+        "bytes": 7958,
+        "matches": true
+      },
+      {
+        "path": "sources/public-view.ts",
+        "expected": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+        "actual": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+        "bytes": 6716,
+        "matches": true
+      },
+      {
+        "path": "frozen/AGENTS.md",
+        "expected": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "actual": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "bytes": 3954,
+        "matches": true
+      },
+      {
+        "path": "frozen/CONTRIBUTING.md",
+        "expected": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "actual": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "bytes": 1459,
+        "matches": true
+      },
+      {
+        "path": "frozen/SPEC.md",
+        "expected": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "actual": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "bytes": 9679,
+        "matches": true
+      },
+      {
+        "path": "DELIVERY.patch",
+        "expected": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+        "actual": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+        "bytes": 27215,
+        "matches": true
+      },
+      {
+        "path": "CANDIDATE.json",
+        "expected": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+        "actual": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+        "bytes": 2522,
+        "matches": true
+      }
+    ],
+    "final": [
+      {
+        "path": "src/decision-evidence/weights.ts",
+        "expected": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "actual": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "bytes": 4573,
+        "matches": true
+      },
+      {
+        "path": "src/decision-evidence/weights.test.ts",
+        "expected": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+        "actual": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+        "bytes": 10653,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/requirements.md",
+        "expected": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+        "actual": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+        "bytes": 6169,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+        "expected": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+        "actual": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+        "bytes": 2522,
+        "matches": true
+      },
+      {
+        "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+        "expected": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+        "actual": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+        "bytes": 1741,
+        "matches": true
+      },
+      {
+        "path": "sources/decide.ts",
+        "expected": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "actual": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "bytes": 10830,
+        "matches": true
+      },
+      {
+        "path": "sources/types.ts",
+        "expected": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+        "actual": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+        "bytes": 7958,
+        "matches": true
+      },
+      {
+        "path": "sources/public-view.ts",
+        "expected": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+        "actual": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+        "bytes": 6716,
+        "matches": true
+      },
+      {
+        "path": "frozen/AGENTS.md",
+        "expected": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "actual": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "bytes": 3954,
+        "matches": true
+      },
+      {
+        "path": "frozen/CONTRIBUTING.md",
+        "expected": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "actual": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "bytes": 1459,
+        "matches": true
+      },
+      {
+        "path": "frozen/SPEC.md",
+        "expected": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "actual": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "bytes": 9679,
+        "matches": true
+      },
+      {
+        "path": "DELIVERY.patch",
+        "expected": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+        "actual": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+        "bytes": 27215,
+        "matches": true
+      },
+      {
+        "path": "CANDIDATE.json",
+        "expected": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+        "actual": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+        "bytes": 2522,
+        "matches": true
+      }
+    ],
+    "all13Match": true,
+    "acceptance": {
+      "acceptance": {
+        "byteEquivalent": true,
+        "sha256": "3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8",
+        "expected": "3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8",
+        "extraction": "From ### PP-1: through the newline immediately before the next ## heading"
+      },
+      "excludedLocalRecords": [
+        "docs/sdd/decision-weight-provenance/SPEC.md",
+        "docs/sdd/decision-weight-provenance/decision-receipts.json",
+        "docs/sdd/decision-weight-provenance/local-records/**"
+      ],
+      "excludedNotDelivered": true
+    },
+    "patch": {
+      "exactManifestScope": true,
+      "files": [
+        {
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "bytes": 4573,
+          "newFile": true,
+          "hunk": "@@ -0,0 +1,96 @@",
+          "reconstructedExact": true
+        },
+        {
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "bytes": 10653,
+          "newFile": true,
+          "hunk": "@@ -0,0 +1,216 @@",
+          "reconstructedExact": true
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/requirements.md",
+          "sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+          "bytes": 6169,
+          "newFile": true,
+          "hunk": "@@ -0,0 +1,48 @@",
+          "reconstructedExact": true
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+          "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+          "bytes": 2522,
+          "newFile": true,
+          "hunk": "@@ -0,0 +1,31 @@",
+          "reconstructedExact": true
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+          "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+          "bytes": 1741,
+          "newFile": true,
+          "hunk": "@@ -0,0 +1,25 @@",
+          "reconstructedExact": true
+        }
+      ],
+      "privacyScans": [
+        {
+          "path": "src/decision-evidence/weights.ts",
+          "matches": []
+        },
+        {
+          "path": "src/decision-evidence/weights.test.ts",
+          "matches": []
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/requirements.md",
+          "matches": []
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+          "matches": []
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+          "matches": []
+        }
+      ]
+    },
+    "initialAcceptanceExtractionBoundary": "Initial patch-scope-check omitted one boundary LF. acceptance-exact-check records canonical extraction including that newline; criteria byte-equivalence was unchanged.",
+    "coordinatorPatchCheck": {
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/WEIGHTS-PATCH-CHECK-v2.json",
+        "sha256": "ef7fac1e3340e0486f8c4ad97730faf34cd4293588be9c8dd9efc7ba0bd0919a",
+        "start_line": 1,
+        "end_line": 200,
+        "excerpt": "{\n  \"baseline\": \"00a593bcabe25dbb6d83795268533551098f645b\",\n  \"delivery_patch\": {\n    \"path\": \"DELIVERY.patch\",\n    \"sha256\": \"5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469\",\n    \"bytes\": 27215\n  },\n  \"commands\": [\n    {\n      \"argv\": [\n        \"git\",\n        \"-c\",\n        \"core.autocrlf=false\",\n        \"-c\",\n        \"core.eol=lf\",\n        \"init\",\n        \"--quiet\"\n      ],\n      \"exitCode\": 0,\n      \"stdout\": {\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n        \"bytes\": 0\n      },\n      \"stderr\": {\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n        \"bytes\": 0\n      }\n    },\n    {\n      \"argv\": [\n        \"git\",\n        \"-c\",\n        \"core.autocrlf=false\",\n        \"-c\",\n        \"core.eol=lf\",\n        \"apply\",\n        \"--check\",\n        \"C:\\\\Users\\\\gabri\\\\.codex\\\\tmp\\\\inonu-innovation-01a1362a\\\\weights-candidate-v1\\\\DELIVERY.patch\"\n      ],\n      \"exitCode\": 0,\n      \"stdout\": {\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n        \"bytes\": 0\n      },\n      \"stderr\": {\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n        \"bytes\": 0\n      }\n    },\n    {\n      \"argv\": [\n        \"git\",\n        \"-c\",\n        \"core.autocrlf=false\",\n        \"-c\",\n        \"core.eol=lf\",\n        \"apply\",\n        \"C:\\\\Users\\\\gabri\\\\.codex\\\\tmp\\\\inonu-innovation-01a1362a\\\\weights-candidate-v1\\\\DELIVERY.patch\"\n      ],\n      \"exitCode\": 0,\n      \"stdout\": {\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n        \"bytes\": 0\n      },\n      \"stderr\": {\n        \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n        \"bytes\": 0\n      }\n    }\n  ],\n  \"authored\": [\n    {\n      \"path\": \"src/decision-evidence/weights.ts\",\n      \"sha256\": \"3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf\",\n      \"bytes\": 4573,\n      \"applied_sha256\": \"3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf\",\n      \"worktree_sha256\": \"3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf\",\n      \"frozen_sha256\": \"3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf\"\n    },\n    {\n      \"path\": \"src/decision-evidence/weights.test.ts\",\n      \"sha256\": \"fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f\",\n      \"bytes\": 10653,\n      \"applied_sha256\": \"fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f\",\n      \"worktree_sha256\": \"fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f\",\n      \"frozen_sha256\": \"fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f\"\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/requirements.md\",\n      \"sha256\": \"4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977\",\n      \"bytes\": 6169,\n      \"applied_sha256\": \"4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977\",\n      \"worktree_sha256\": \"4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977\",\n      \"frozen_sha256\": \"4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977\"\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/USAGE.md\",\n      \"sha256\": \"57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3\",\n      \"bytes\": 2522,\n      \"applied_sha256\": \"57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3\",\n      \"worktree_sha256\": \"57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3\",\n      \"frozen_sha256\": \"57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3\"\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/VERIFICATION.md\",\n      \"sha256\": \"688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f\",\n      \"bytes\": 1741,\n      \"applied_sha256\": \"688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f\",\n      \"worktree_sha256\": \"688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f\",\n      \"frozen_sha256\": \"688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f\"\n    }\n  ],\n  \"readonly_sources\": [\n    {\n      \"path\": \"sources/decide.ts\",\n      \"sha256\": \"3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0\",\n      \"bytes\": 10830,\n      \"current_sha256\": \"3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0\"\n    },\n    {\n      \"path\": \"sources/types.ts\",\n      \"sha256\": \"7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc\",\n      \"bytes\": 7958,\n      \"current_sha256\": \"7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc\"\n    },\n    {\n      \"path\": \"sources/public-view.ts\",\n      \"sha256\": \"9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515\",\n      \"bytes\": 6716,\n      \"current_sha256\": \"9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515\"\n    },\n    {\n      \"path\": \"frozen/AGENTS.md\",\n      \"sha256\": \"17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34\",\n      \"bytes\": 3954,\n      \"current_sha256\": \"17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34\"\n    },\n    {\n      \"path\": \"frozen/CONTRIBUTING.md\",\n      \"sha256\": \"491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6\",\n      \"bytes\": 1459,\n      \"current_sha256\": \"491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6\"\n    }\n  ],\n  \"authored_hashes_match\": true,\n  \"source_hashes_match\": true,\n  \"tracked_diff_exit_code\": 0,\n  \"staged_diff_exit_code\": 0,\n  \"root_integration\": false,\n  \"financial_evaluation\": false\n}\n"
+      },
+      "executedByReviewer": false,
+      "independentlyReconstructedPatchFiles": true,
+      "note": "Coordinator applied/check with per-command core.autocrlf=false/core.eol=lf after initial global-CRLF conversion; no global config/source edit. Reviewer parsed additions in memory and compared all five full bytes/hashes."
+    }
+  },
+  "executions": [
+    {
+      "name": "tests",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "test",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "wrapperArgv": [
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py",
+        "run",
+        "--cwd",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+        "--timeout",
+        "120",
+        "--rtk",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe",
+        "--headroom-python",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "--store",
+        "C:/Users/gabri/.codex/rtk-headroom-data",
+        "--profile",
+        "test",
+        "--metrics",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests-metrics.json",
+        "--",
+        "bun",
+        "--no-env-file",
+        "test",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+      "startedAt": "2026-10-13T19:15:02.495Z",
+      "finishedAt": "2026-10-13T19:15:03.134Z",
+      "durationMs": 639.8019,
+      "exitCode": 0,
+      "stdout": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stdout.bin",
+        "sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6",
+        "bytes": 28
+      },
+      "stderr": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stderr.bin",
+        "sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+        "bytes": 1186
+      }
+    },
+    {
+      "name": "types",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--skipLibCheck",
+        "--noUncheckedIndexedAccess",
+        "--target",
+        "ESNext",
+        "--module",
+        "Preserve",
+        "--moduleResolution",
+        "Bundler",
+        "--types",
+        "bun",
+        "src/decision-evidence/weights.ts",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "wrapperArgv": [
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py",
+        "run",
+        "--cwd",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+        "--timeout",
+        "120",
+        "--rtk",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe",
+        "--headroom-python",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "--store",
+        "C:/Users/gabri/.codex/rtk-headroom-data",
+        "--profile",
+        "build",
+        "--metrics",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/types-metrics.json",
+        "--",
+        "bun",
+        "--no-env-file",
+        "node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--skipLibCheck",
+        "--noUncheckedIndexedAccess",
+        "--target",
+        "ESNext",
+        "--module",
+        "Preserve",
+        "--moduleResolution",
+        "Bundler",
+        "--types",
+        "bun",
+        "src/decision-evidence/weights.ts",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "cwd": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+      "startedAt": "2026-10-13T19:15:03.135Z",
+      "finishedAt": "2026-10-13T19:15:04.079Z",
+      "durationMs": 943.9785999999999,
+      "exitCode": 0,
+      "stdout": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/types.stdout.bin",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/types.stderr.bin",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ],
+  "metrics": [
+    {
+      "name": "tests",
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests-metrics.json",
+        "sha256": "caa8d8d77a80ca7e3f866ba1b22ac4d5a285cd47204ba65ac48ba33b662a35a7",
+        "start_line": 1,
+        "end_line": 200,
+        "excerpt": "{\"adapter_version\": \"0.1.0\", \"archive_id\": null, \"delivered_bytes\": 28, \"delivered_sha256\": \"d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6\", \"duration_ms\": 247.38220003200695, \"headroom_version\": \"0.40.0\", \"pass_reason\": \"command_not_allowlisted\", \"rtk_version\": \"0.51.0\", \"stderr_bytes\": 1186, \"stderr_sha256\": \"83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54\", \"stdout_bytes\": 28, \"stdout_sha256\": \"d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6\"}"
+      },
+      "value": {
+        "adapter_version": "0.1.0",
+        "archive_id": null,
+        "delivered_bytes": 28,
+        "delivered_sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6",
+        "duration_ms": 247.38220003200695,
+        "headroom_version": "0.40.0",
+        "pass_reason": "command_not_allowlisted",
+        "rtk_version": "0.51.0",
+        "stderr_bytes": 1186,
+        "stderr_sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+        "stdout_bytes": 28,
+        "stdout_sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6"
+      }
+    },
+    {
+      "name": "types",
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/types-metrics.json",
+        "sha256": "a1ec25e6edf2b8c8312645d4b3adbbfb1dc6fba6de072c70bc1126b180c463ac",
+        "start_line": 1,
+        "end_line": 200,
+        "excerpt": "{\"adapter_version\": \"0.1.0\", \"archive_id\": null, \"delivered_bytes\": 0, \"delivered_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"duration_ms\": 600.0015999889001, \"headroom_version\": \"0.40.0\", \"pass_reason\": \"command_not_allowlisted\", \"rtk_version\": \"0.51.0\", \"stderr_bytes\": 0, \"stderr_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"stdout_bytes\": 0, \"stdout_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}"
+      },
+      "value": {
+        "adapter_version": "0.1.0",
+        "archive_id": null,
+        "delivered_bytes": 0,
+        "delivered_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "duration_ms": 600.0015999889001,
+        "headroom_version": "0.40.0",
+        "pass_reason": "command_not_allowlisted",
+        "rtk_version": "0.51.0",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "standards": [
+    {
+      "rule": "Bun and bun:test",
+      "source": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/AGENTS.md",
+        "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "start_line": 27,
+        "end_line": 32,
+        "excerpt": "## Testing\r\n\r\nUse `bun test` to run tests.\r\n\r\n```ts#index.test.ts\r\nimport { test, expect } from \"bun:test\";"
+      },
+      "evidence": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 1,
+          "end_line": 2,
+          "excerpt": "import { expect, test } from \"bun:test\";\nimport { annotateDecisionWeights } from \"./weights\";"
+        }
+      ],
+      "conclusion": "no_violation; actual commands use Bun --no-env-file"
+    },
+    {
+      "rule": "Core Jev decision, live dashboard and Kuru block cadence; no forbidden rendered punctuation or blink/pulse",
+      "source": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/AGENTS.md",
+        "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "start_line": 125,
+        "end_line": 125,
+        "excerpt": "Non-negotiables: Jev makes the buy/sell call (not code), from the price feed; real trades from a real wallet; an order placed on Kuru's on-chain book every 300 ms block; the demo is the live dashboard. Never decide every N blocks. No middle dots, em dashes or en dashes in any rendered text. No blinking or pulsing indicators."
+      },
+      "evidence": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 81,
+          "end_line": 96,
+          "excerpt": "export function annotateDecisionWeights(\n  decision: unknown,\n  evidence: unknown,\n): DecisionWeightAnnotation | null {\n  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };\n}"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/docs/sdd/decision-weight-provenance/USAGE.md",
+          "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+          "start_line": 29,
+          "end_line": 31,
+          "excerpt": "O chamador deve vincular a resposta contemporânea correta à decisão. A função verifica compatibilidade estrutural e numérica, não autentica transporte. Ela segue o contrato observado do adaptador, incluindo tolerância absoluta de 1e-12 e ação escolhida sem exigência de argmax.\n\nEsta entrega não conecta a anotação ao journal ou dashboard, não migra schema e não modifica prompts, modelos, risco, alavancagem, carteira, ordens ou cadência. `financialCalibration: \"not_established\"` significa que não foi demonstrada uma relação entre peso e resultado financeiro. O peso não é uma probabilidade de lucro."
+        }
+      ],
+      "conclusion": "no_violation in concrete patch; no UI or runtime importer changes and annotation never selects an action; no delivered middle dot/em/en dash"
+    },
+    {
+      "rule": "Private records/accounts remain outside diff",
+      "source": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/CONTRIBUTING.md",
+        "sha256": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "start_line": 5,
+        "end_line": 5,
+        "excerpt": "Create a branch for one bounded change and explain its observable behavior. Keep credentials, wallet keys, personal balances, captures of real accounts and internal agent records out of the diff. Do not combine a visual change with live trading or a financial permission change."
+      },
+      "evidence": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/docs/sdd/decision-weight-provenance/USAGE.md",
+          "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+          "start_line": 17,
+          "end_line": 31,
+          "excerpt": "\n| origin | Evidência necessária |\n| --- | --- |\n| provider_reported | Resposta contemporânea com pesos explícitos válidos e compatíveis com a decisão ok |\n| adapter_choice_fallback | Resposta contemporânea válida sem pesos, compatível com a escolha unitária ok |\n| adapter_safety_fallback | Resposta inválida com hold canônico malformed, ou falha error/timeout com hold canônico e status correspondente |\n| unknown | Registro histórico, evidência ausente, malformada ou incompatível |\n\nPara registros históricos, forneça `{ kind: \"historical_record\" }`. Um peso histórico igual a 1 preserva `selectedWeight: 1`, mas não comprova origem do provedor. Falhas observadas usam `{ kind: \"observed_failure\", status: \"error\" | \"timeout\" }`.\n\nDecisão inválida retorna `null`. Estados não ok têm `selectedWeight: null`. `reportedSelectedWeight` só é numérico para `provider_reported`; nos demais casos é null. A saída contém somente os cinco campos do exemplo. Campos adicionais, textos e payload bruto não são copiados.\n\nO chamador deve vincular a resposta contemporânea correta à decisão. A função verifica compatibilidade estrutural e numérica, não autentica transporte. Ela segue o contrato observado do adaptador, incluindo tolerância absoluta de 1e-12 e ação escolhida sem exigência de argmax.\n\nEsta entrega não conecta a anotação ao journal ou dashboard, não migra schema e não modifica prompts, modelos, risco, alavancagem, carteira, ordens ou cadência. `financialCalibration: \"not_established\"` significa que não foi demonstrada uma relação entre peso e resultado financeiro. O peso não é uma probabilidade de lucro."
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/acceptance-exact-check.json",
+          "sha256": "778e5ebb63cbae8ec82d36fd3fd6294431097fb552a511739b61ca40619269c5",
+          "start_line": 1,
+          "end_line": 200,
+          "excerpt": "{\n  \"acceptance\": {\n    \"byteEquivalent\": true,\n    \"sha256\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\",\n    \"expected\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\",\n    \"extraction\": \"From ### PP-1: through the newline immediately before the next ## heading\"\n  },\n  \"excludedLocalRecords\": [\n    \"docs/sdd/decision-weight-provenance/SPEC.md\",\n    \"docs/sdd/decision-weight-provenance/decision-receipts.json\",\n    \"docs/sdd/decision-weight-provenance/local-records/**\"\n  ],\n  \"excludedNotDelivered\": true\n}"
+        }
+      ],
+      "conclusion": "no_violation; exact five-file patch reviewed and exclusion checked; credentials, account captures, conversation IDs, lease and decision receipts absent"
+    },
+    {
+      "rule": "Synthetic data and limitations are explicit",
+      "source": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/CONTRIBUTING.md",
+        "sha256": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+        "start_line": 18,
+        "end_line": 18,
+        "excerpt": "Check the affected interactions at desktop and small mobile widths. Describe fixture data explicitly as synthetic, and distinguish a passing provider test from a connection to a real extension. State any browser, accessibility or execution limitation in the pull request."
+      },
+      "evidence": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/docs/sdd/decision-weight-provenance/USAGE.md",
+          "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+          "start_line": 17,
+          "end_line": 31,
+          "excerpt": "\n| origin | Evidência necessária |\n| --- | --- |\n| provider_reported | Resposta contemporânea com pesos explícitos válidos e compatíveis com a decisão ok |\n| adapter_choice_fallback | Resposta contemporânea válida sem pesos, compatível com a escolha unitária ok |\n| adapter_safety_fallback | Resposta inválida com hold canônico malformed, ou falha error/timeout com hold canônico e status correspondente |\n| unknown | Registro histórico, evidência ausente, malformada ou incompatível |\n\nPara registros históricos, forneça `{ kind: \"historical_record\" }`. Um peso histórico igual a 1 preserva `selectedWeight: 1`, mas não comprova origem do provedor. Falhas observadas usam `{ kind: \"observed_failure\", status: \"error\" | \"timeout\" }`.\n\nDecisão inválida retorna `null`. Estados não ok têm `selectedWeight: null`. `reportedSelectedWeight` só é numérico para `provider_reported`; nos demais casos é null. A saída contém somente os cinco campos do exemplo. Campos adicionais, textos e payload bruto não são copiados.\n\nO chamador deve vincular a resposta contemporânea correta à decisão. A função verifica compatibilidade estrutural e numérica, não autentica transporte. Ela segue o contrato observado do adaptador, incluindo tolerância absoluta de 1e-12 e ação escolhida sem exigência de argmax.\n\nEsta entrega não conecta a anotação ao journal ou dashboard, não migra schema e não modifica prompts, modelos, risco, alavancagem, carteira, ordens ou cadência. `financialCalibration: \"not_established\"` significa que não foi demonstrada uma relação entre peso e resultado financeiro. O peso não é uma probabilidade de lucro."
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/docs/sdd/decision-weight-provenance/VERIFICATION.md",
+          "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+          "start_line": 25,
+          "end_line": 25,
+          "excerpt": "Não foram utilizados feed real, contas reais, inferência paga, ordens ou carteira. Esta verificação local não demonstra calibração, retorno financeiro ou funcionamento em produção."
+        }
+      ],
+      "conclusion": "no_violation; transport authenticity, calibration and live financial results not claimed"
+    },
+    {
+      "rule": "Frozen acceptance is not weakened; unknown is not zero",
+      "source": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "start_line": 49,
+          "excerpt": "### PP-2: origem exige evidência compatível\nCom decisão de status ok, resposta contemporânea válida com raw.probabilities informado como objeto válido, choice igual à ação e pesos normalizados iguais aos da decisão, origin é provider_reported. Ausência de raw.probabilities em uma resposta válida gera adapter_choice_fallback somente quando a decisão tem status ok e é o vetor unitário correspondente. Resposta inválida com a decisão canônica malformed/hold, ou falha error/timeout com hold canônico e status correspondente, gera adapter_safety_fallback. Resposta válida exige decisão de status ok; divergência de status gera unknown. Evidência ausente, histórica, malformada ou incompatível gera unknown. Nunca inferir origem apenas pelo vetor.\n\nO contrato de normalização observado é: buy/sell/hold; choice válida; probabilities ausente significa fallback; objeto informado usa peso ausente ou null como zero; pesos finitos não negativos; soma finita positiva; peso bruto da escolha positivo; cada valor dividido pela soma; todos os pesos normalizados finitos e peso normalizado da escolha positivo. Objeto null/array, peso negativo/não finito, soma inválida ou escolha de peso zero antes ou após normalização são respostas inválidas. Não exigir que a ação seja argmax. Comparações de vetores normalizados usam tolerância absoluta de 1e-12 por componente; nenhuma diferença maior é reparada.\n"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "start_line": 54,
+          "excerpt": "### PP-3: números e estados conservadores\nDecisão válida tem action buy/sell/hold, status ok/error/timeout/malformed, três pesos finitos em [0,1] e soma dentro de 1e-12 de 1. Status ok exige peso selecionado positivo; outro status exige action hold. selectedWeight é o peso da ação apenas para status ok; caso contrário é null. reportedSelectedWeight só é numérico para provider_reported com status ok; todas as outras origens recebem null. financialCalibration é sempre not_established. Texto ou número desconhecido nunca vira zero nem certeza.\n"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+          "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+          "start_line": 78,
+          "excerpt": "### PP-6: arquivos, verificação e revisão\nEntrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação.\n"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 85,
+          "end_line": 95,
+          "excerpt": "  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/acceptance-exact-check.json",
+          "sha256": "778e5ebb63cbae8ec82d36fd3fd6294431097fb552a511739b61ca40619269c5",
+          "start_line": 1,
+          "end_line": 200,
+          "excerpt": "{\n  \"acceptance\": {\n    \"byteEquivalent\": true,\n    \"sha256\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\",\n    \"expected\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\",\n    \"extraction\": \"From ### PP-1: through the newline immediately before the next ## heading\"\n  },\n  \"excludedLocalRecords\": [\n    \"docs/sdd/decision-weight-provenance/SPEC.md\",\n    \"docs/sdd/decision-weight-provenance/decision-receipts.json\",\n    \"docs/sdd/decision-weight-provenance/local-records/**\"\n  ],\n  \"excludedNotDelivered\": true\n}"
+        }
+      ],
+      "conclusion": "no_violation; byte-equivalent acceptance and explicit raw-response PP-2 null exception"
+    },
+    {
+      "rule": "Canonical wallet documentation/concurrent source ownership",
+      "source": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/AGENTS.md",
+        "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+        "start_line": 129,
+        "end_line": 129,
+        "excerpt": "Requirements, real-state inventory, the evidence contract and the task plan for verifiable manual portfolio management live in one folder: `docs/sdd/carteira-evidencia/` (`requirements.md`, `design.md`, `tasks.md`). Read `tasks.md` first for what to do next and which paths are reserved by concurrent sessions; do not copy its content elsewhere."
+      },
+      "evidence": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/CANDIDATE.json",
+          "sha256": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+          "start_line": 1,
+          "end_line": 200,
+          "excerpt": "{\n  \"version\": 1,\n  \"baseline\": \"00a593bcabe25dbb6d83795268533551098f645b\",\n  \"implementer_id\": \"root-01a1362a\",\n  \"conversation\": \"01a1362a-b876-7fa0-9b66-b45202296099\",\n  \"authored\": [\n    {\n      \"path\": \"src/decision-evidence/weights.ts\",\n      \"sha256\": \"3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf\",\n      \"bytes\": 4573\n    },\n    {\n      \"path\": \"src/decision-evidence/weights.test.ts\",\n      \"sha256\": \"fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f\",\n      \"bytes\": 10653\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/requirements.md\",\n      \"sha256\": \"4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977\",\n      \"bytes\": 6169\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/USAGE.md\",\n      \"sha256\": \"57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3\",\n      \"bytes\": 2522\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/VERIFICATION.md\",\n      \"sha256\": \"688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f\",\n      \"bytes\": 1741\n    }\n  ],\n  \"readonly_sources\": [\n    {\n      \"path\": \"sources/decide.ts\",\n      \"sha256\": \"3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0\",\n      \"bytes\": 10830\n    },\n    {\n      \"path\": \"sources/types.ts\",\n      \"sha256\": \"7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc\",\n      \"bytes\": 7958\n    },\n    {\n      \"path\": \"sources/public-view.ts\",\n      \"sha256\": \"9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515\",\n      \"bytes\": 6716\n    },\n    {\n      \"path\": \"frozen/AGENTS.md\",\n      \"sha256\": \"17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34\",\n      \"bytes\": 3954\n    },\n    {\n      \"path\": \"frozen/CONTRIBUTING.md\",\n      \"sha256\": \"491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6\",\n      \"bytes\": 1459\n    }\n  ],\n  \"frozen_specification\": {\n    \"path\": \"frozen/SPEC.md\",\n    \"sha256\": \"6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f\",\n    \"bytes\": 9679,\n    \"acceptance_sha256\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\"\n  },\n  \"delivery_patch\": {\n    \"path\": \"DELIVERY.patch\",\n    \"sha256\": \"5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469\",\n    \"bytes\": 27215\n  },\n  \"commits\": [],\n  \"excluded_local_records\": [\n    \"docs/sdd/decision-weight-provenance/SPEC.md\",\n    \"docs/sdd/decision-weight-provenance/decision-receipts.json\",\n    \"docs/sdd/decision-weight-provenance/local-records/**\"\n  ]\n}\n"
+        }
+      ],
+      "conclusion": "no_violation; no canonical wallet docs or existing consumer changed"
+    }
+  ],
+  "documentedViolations": [],
+  "possibleSmells": [
+    {
+      "id": "STANDARDS-P3-1",
+      "severity": "P3",
+      "kind": "possible_smell_not_documented_violation",
+      "heuristics": [
+        "Duplicated Code",
+        "Shotgun Surgery"
+      ],
+      "candidate": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+        "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+        "start_line": 52,
+        "excerpt": "buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total"
+      },
+      "comparison": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/sources/decide.ts",
+        "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+        "start_line": 50,
+        "excerpt": "buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total"
+      },
+      "observation": "Normalization shape duplicates adapter contract. A future compatibility change may require two edits.",
+      "disposition": "non_blocking; independent PP-6 isolation explains current repetition; no demand to edit reserved consumer or change frozen behavior",
+      "source": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "start_line": 78,
+        "excerpt": "### PP-6: arquivos, verificação e revisão\nEntrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação.\n"
+      }
+    }
+  ],
+  "heuristicReview": [
+    {
+      "name": "Mysterious Name",
+      "finding": null,
+      "observation": "Names readDecision/readResponse/readOrigin/equalWeights reveal purpose."
+    },
+    {
+      "name": "Duplicated Code",
+      "finding": "STANDARDS-P3-1"
+    },
+    {
+      "name": "Feature Envy",
+      "finding": null,
+      "observation": "Pure parsers operate on bounded DTOs; no behavioral owner displaced."
+    },
+    {
+      "name": "Data Clumps",
+      "finding": null,
+      "observation": "Buy/sell/hold fields are bundled in Weights/Decision; no repeated travelling scalar parameter list."
+    },
+    {
+      "name": "Primitive Obsession",
+      "finding": null,
+      "observation": "Action/status/origin have finite literal unions; numeric tolerance validates domain weights."
+    },
+    {
+      "name": "Repeated Switches",
+      "finding": null,
+      "observation": "One origin discriminator; no repeated same-type cascade."
+    },
+    {
+      "name": "Shotgun Surgery",
+      "finding": "STANDARDS-P3-1"
+    },
+    {
+      "name": "Divergent Change",
+      "finding": null,
+      "observation": "Module serves one annotation contract."
+    },
+    {
+      "name": "Speculative Generality",
+      "finding": null,
+      "observation": "No unspecced extension hooks or abstraction hierarchy."
+    },
+    {
+      "name": "Message Chains",
+      "finding": null,
+      "observation": "Shallow record access; no long navigation chains."
+    },
+    {
+      "name": "Middle Man",
+      "finding": null,
+      "observation": "Helpers validate/normalize/classify, not mostly delegate."
+    },
+    {
+      "name": "Refused Bequest",
+      "finding": null,
+      "observation": "No inheritance."
+    }
+  ],
+  "acceptanceCoverage": [
+    {
+      "id": "PP-1",
+      "conclusion": "verified_local",
+      "criterion": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "start_line": 46,
+        "excerpt": "### PP-1: anotação isolada e invariância\nA função retorna somente os cinco campos listados, sem alterar entradas, decisão, ação, pesos, status ou campos legados. Não lê ambiente/arquivos, não usa rede, não consulta modelos e não decide buy/sell. Entradas congeladas e comparação antes/depois devem comprovar ausência de mutação.\n"
+      },
+      "implementation": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 1,
+          "end_line": 7,
+          "excerpt": "export interface DecisionWeightAnnotation {\n  schemaVersion: 1;\n  origin: \"provider_reported\" | \"adapter_choice_fallback\" | \"adapter_safety_fallback\" | \"unknown\";\n  selectedWeight: number | null;\n  reportedSelectedWeight: number | null;\n  financialCalibration: \"not_established\";\n}"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 81,
+          "end_line": 96,
+          "excerpt": "export function annotateDecisionWeights(\n  decision: unknown,\n  evidence: unknown,\n): DecisionWeightAnnotation | null {\n  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };\n}"
+        }
+      ],
+      "tests": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 4,
+          "end_line": 23,
+          "excerpt": "test(\"historical unit weights retain their value without implying provider provenance\", () => {\n  const decision = Object.freeze({\n    action: \"buy\",\n    probabilities: Object.freeze({ buy: 1, sell: 0, hold: 0 }),\n    status: \"ok\",\n    confidence: 1,\n    privateText: \"must not escape\",\n  });\n  const evidence = Object.freeze({ kind: \"historical_record\" });\n  const before = JSON.stringify({ decision, evidence });\n\n  expect(annotateDecisionWeights(decision, evidence)).toEqual({\n    schemaVersion: 1,\n    origin: \"unknown\",\n    selectedWeight: 1,\n    reportedSelectedWeight: null,\n    financialCalibration: \"not_established\",\n  });\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n});"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 142,
+          "end_line": 162,
+          "excerpt": "test(\"repeated annotations of frozen provider evidence remain pure and exclude extra fields\", () => {\n  const decision = Object.freeze({\n    action: \"sell\", status: \"ok\", probabilities: Object.freeze({ buy: 0.25, sell: 0.5, hold: 0.25 }),\n    confidence: 0.5, model: \"fixture-model\", text: \"fixture private text\",\n  });\n  const evidence = Object.freeze({ kind: \"observed_response\", raw: Object.freeze({\n    choice: \"sell\", probabilities: Object.freeze({ buy: 1, sell: 2, hold: 1 }),\n    token: \"synthetic-token\", text: \"untrusted instruction\",\n  }) });\n  const before = JSON.stringify({ decision, evidence });\n  const expected = {\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 0.5,\n    reportedSelectedWeight: 0.5, financialCalibration: \"not_established\",\n  } as const;\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n  expect(Object.keys(annotateDecisionWeights(decision, evidence)!)).toEqual([\n    \"schemaVersion\", \"origin\", \"selectedWeight\", \"reportedSelectedWeight\", \"financialCalibration\",\n  ]);\n});"
+        }
+      ],
+      "outputs": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stderr.bin",
+          "sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+          "start_line": 15,
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [148.00ms]"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/commands-results.json",
+          "sha256": "88ea5826e4fa88f9b0236f9023814b807428e17a96baf1938124082350f0975c",
+          "start_line": 38,
+          "excerpt": "\"exitCode\": 0"
+        }
+      ],
+      "observation": "Pure exported annotation; no imports, environment, filesystem, network, action selection or mutation. Frozen synthetic inputs retain JSON values."
+    },
+    {
+      "id": "PP-2",
+      "conclusion": "verified_local",
+      "criterion": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "start_line": 49,
+        "excerpt": "### PP-2: origem exige evidência compatível\nCom decisão de status ok, resposta contemporânea válida com raw.probabilities informado como objeto válido, choice igual à ação e pesos normalizados iguais aos da decisão, origin é provider_reported. Ausência de raw.probabilities em uma resposta válida gera adapter_choice_fallback somente quando a decisão tem status ok e é o vetor unitário correspondente. Resposta inválida com a decisão canônica malformed/hold, ou falha error/timeout com hold canônico e status correspondente, gera adapter_safety_fallback. Resposta válida exige decisão de status ok; divergência de status gera unknown. Evidência ausente, histórica, malformada ou incompatível gera unknown. Nunca inferir origem apenas pelo vetor.\n\nO contrato de normalização observado é: buy/sell/hold; choice válida; probabilities ausente significa fallback; objeto informado usa peso ausente ou null como zero; pesos finitos não negativos; soma finita positiva; peso bruto da escolha positivo; cada valor dividido pela soma; todos os pesos normalizados finitos e peso normalizado da escolha positivo. Objeto null/array, peso negativo/não finito, soma inválida ou escolha de peso zero antes ou após normalização são respostas inválidas. Não exigir que a ação seja argmax. Comparações de vetores normalizados usam tolerância absoluta de 1e-12 por componente; nenhuma diferença maior é reparada.\n"
+      },
+      "implementation": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 35,
+          "end_line": 79,
+          "excerpt": "function readResponse(value: unknown): { action: Action; probabilities: Weights; reported: boolean } | null {\n  if (!isRecord(value) || !isAction(value.choice)) return null;\n  if (value.probabilities === undefined) {\n    return { action: value.choice, probabilities: {\n      buy: value.choice === \"buy\" ? 1 : 0,\n      sell: value.choice === \"sell\" ? 1 : 0,\n      hold: value.choice === \"hold\" ? 1 : 0,\n    }, reported: false };\n  }\n  if (!isRecord(value.probabilities)) return null;\n  const buy = value.probabilities.buy ?? 0;\n  const sell = value.probabilities.sell ?? 0;\n  const hold = value.probabilities.hold ?? 0;\n  if (![buy, sell, hold].every(weight => typeof weight === \"number\" && Number.isFinite(weight) && weight >= 0)) return null;\n  const weights = { buy, sell, hold } as Weights;\n  const total = weights.buy + weights.sell + weights.hold;\n  if (!Number.isFinite(total) || total <= 0 || weights[value.choice] <= 0) return null;\n  const normalized = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };\n  if (!Object.values(normalized).every(Number.isFinite) || normalized[value.choice] <= 0) return null;\n  return { action: value.choice, probabilities: normalized, reported: true };\n}\n\nfunction equalWeights(a: Weights, b: Weights): boolean {\n  return Math.abs(a.buy - b.buy) <= TOLERANCE\n    && Math.abs(a.sell - b.sell) <= TOLERANCE\n    && Math.abs(a.hold - b.hold) <= TOLERANCE;\n}\n\nfunction readOrigin(decision: Decision, evidence: unknown): DecisionWeightAnnotation[\"origin\"] {\n  if (!isRecord(evidence)) return \"unknown\";\n  const canonicalHold = decision.action === \"hold\" && decision.probabilities.buy === 0\n    && decision.probabilities.sell === 0 && decision.probabilities.hold === 1;\n  if (evidence.kind === \"observed_failure\") {\n    return canonicalHold && (evidence.status === \"error\" || evidence.status === \"timeout\")\n      && decision.status === evidence.status ? \"adapter_safety_fallback\" : \"unknown\";\n  }\n  if (evidence.kind !== \"observed_response\" || !(\"raw\" in evidence)) return \"unknown\";\n  const response = readResponse(evidence.raw);\n  if (!response && canonicalHold && decision.status === \"malformed\") return \"adapter_safety_fallback\";\n  if (response && decision.status === \"ok\" && response.action === decision.action\n    && equalWeights(response.probabilities, decision.probabilities)) {\n    return response.reported ? \"provider_reported\" : \"adapter_choice_fallback\";\n  }\n  return \"unknown\";\n}"
+        }
+      ],
+      "tests": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 25,
+          "end_line": 139,
+          "excerpt": "test(\"reported weights are normalized without requiring the chosen action to be the largest\", () => {\n  for (const fixture of [\n    { probabilities: { buy: 0.5, sell: 0.25, hold: 0.25 }, raw: { buy: 2, sell: 1, hold: 1 }, selected: 0.5 },\n    { probabilities: { buy: 0.2, sell: 0.8, hold: 0 }, raw: { buy: 1, sell: 4, hold: 0 }, selected: 0.2 },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: \"buy\", probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: fixture.selected,\n      reportedSelectedWeight: fixture.selected, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"compatible explicit vectors are supported for every action, including missing or null unused weights\", () => {\n  for (const fixture of [\n    { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, raw: { buy: 3, sell: null } },\n    { action: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 }, raw: { sell: 3, hold: null } },\n    { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, raw: { hold: 3, buy: null } },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: fixture.action, probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: fixture.action, probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n      reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"missing, historical or malformed evidence cannot establish origin\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const evidence of [\n    undefined, null, [], \"observed_response\", {}, { kind: \"historical_record\" },\n    { kind: \"other\", raw: { choice: \"buy\" } }, { kind: \"observed_response\" },\n    { kind: \"observed_failure\" }, { kind: \"observed_failure\", status: \"malformed\" },\n  ]) {\n    expect(annotateDecisionWeights(decision, evidence)).toEqual({\n      schemaVersion: 1, origin: \"unknown\", selectedWeight: 1,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"choice, vector and status mismatches keep origin unknown\", () => {\n  const buy = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const raw of [\n    { choice: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: null },\n  ]) {\n    expect(annotateDecisionWeights(buy, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"unknown\", selectedWeight: 1,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"malformed\", \"error\", \"timeout\"]) {\n    const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status };\n    for (const evidence of [\n      { kind: \"observed_response\", raw: { choice: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 } } },\n      { kind: \"observed_failure\", status: \"ok\" },\n      { kind: \"observed_failure\", status: status === \"timeout\" ? \"error\" : \"timeout\" },\n    ]) {\n      expect(annotateDecisionWeights(decision, evidence)).toEqual({\n        schemaVersion: 1, origin: \"unknown\", selectedWeight: null,\n        reportedSelectedWeight: null, financialCalibration: \"not_established\",\n      });\n    }\n  }\n  expect(annotateDecisionWeights(\n    { action: \"hold\", probabilities: { buy: 0.1, sell: 0, hold: 0.9 }, status: \"error\" },\n    { kind: \"observed_failure\", status: \"error\" },\n  )?.origin).toBe(\"unknown\");\n});\n\ntest(\"malformed response values match the observed adapter validation contract\", () => {\n  const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    undefined, null, [], \"buy\", {}, { choice: \"wait\" },\n    { choice: \"buy\", probabilities: null },\n    { choice: \"buy\", probabilities: [1, 0, 0] },\n    { choice: \"buy\", probabilities: { buy: \"1\" } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: -1 } },\n    { choice: \"buy\", probabilities: { buy: NaN } },\n    { choice: \"buy\", probabilities: { buy: Infinity } },\n    { choice: \"buy\", probabilities: { buy: 1, hold: -Infinity } },\n    { choice: \"buy\", probabilities: { buy: Number.MAX_VALUE, sell: Number.MAX_VALUE } },\n    { choice: \"buy\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: {} },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"vector comparisons accept the absolute boundary and do not repair larger differences\", () => {\n  const raw = { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } } };\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 1e-12, sell: 1e-12, hold: 0 }, status: \"ok\" }, raw,\n  )).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1 - 1e-12,\n    reportedSelectedWeight: 1 - 1e-12, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 2e-12, sell: 2e-12, hold: 0 }, status: \"ok\" }, raw,\n  )?.origin).toBe(\"unknown\");\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 0.5e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )?.selectedWeight).toBe(1);\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 2e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )).toBeNull();"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 164,
+          "end_line": 195,
+          "excerpt": "test(\"invalid responses and observed matching failures identify only canonical safety holds\", () => {\n  const malformed = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    { choice: \"buy\", probabilities: { buy: 0, sell: 0, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: Number.MIN_VALUE, sell: 2, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(malformed, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"error\", \"timeout\"]) {\n    expect(annotateDecisionWeights({ ...malformed, status }, { kind: \"observed_failure\", status })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  expect(annotateDecisionWeights(decision, {\n    kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } },\n  })).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n    reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw: { choice: \"buy\" } })).toEqual({\n    schemaVersion: 1, origin: \"adapter_choice_fallback\", selectedWeight: 1,\n    reportedSelectedWeight: null, financialCalibration: \"not_established\",\n  });\n});"
+        }
+      ],
+      "outputs": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stderr.bin",
+          "sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+          "start_line": 15,
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [148.00ms]"
+        }
+      ],
+      "observation": "Observed response/failure discriminants; valid normalization and selected-action compatibility with absolute 1e-12 tolerance; absent vector choice fallback; canonical malformed/error/timeout safety fallback; mismatch or absent evidence unknown. Missing/null unused raw weights become zero only under the frozen PP-2 exception."
+    },
+    {
+      "id": "PP-3",
+      "conclusion": "verified_local",
+      "criterion": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "start_line": 54,
+        "excerpt": "### PP-3: números e estados conservadores\nDecisão válida tem action buy/sell/hold, status ok/error/timeout/malformed, três pesos finitos em [0,1] e soma dentro de 1e-12 de 1. Status ok exige peso selecionado positivo; outro status exige action hold. selectedWeight é o peso da ação apenas para status ok; caso contrário é null. reportedSelectedWeight só é numérico para provider_reported com status ok; todas as outras origens recebem null. financialCalibration é sempre not_established. Texto ou número desconhecido nunca vira zero nem certeza.\n"
+      },
+      "implementation": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 23,
+          "end_line": 33,
+          "excerpt": "function readDecision(value: unknown): Decision | null {\n  if (!isRecord(value) || !isAction(value.action) || !isRecord(value.probabilities)) return null;\n  const { status, probabilities } = value;\n  if (status !== \"ok\" && status !== \"error\" && status !== \"timeout\" && status !== \"malformed\") return null;\n  const { buy, sell, hold } = probabilities;\n  if (![buy, sell, hold].every(weight => typeof weight === \"number\" && Number.isFinite(weight) && weight >= 0 && weight <= 1)) return null;\n  const weights = { buy, sell, hold } as Weights;\n  if (Math.abs(weights.buy + weights.sell + weights.hold - 1) > TOLERANCE) return null;\n  if (status === \"ok\" ? weights[value.action] <= 0 : value.action !== \"hold\") return null;\n  return { action: value.action, probabilities: weights, status };\n}"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 85,
+          "end_line": 95,
+          "excerpt": "  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };"
+        }
+      ],
+      "tests": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 4,
+          "end_line": 23,
+          "excerpt": "test(\"historical unit weights retain their value without implying provider provenance\", () => {\n  const decision = Object.freeze({\n    action: \"buy\",\n    probabilities: Object.freeze({ buy: 1, sell: 0, hold: 0 }),\n    status: \"ok\",\n    confidence: 1,\n    privateText: \"must not escape\",\n  });\n  const evidence = Object.freeze({ kind: \"historical_record\" });\n  const before = JSON.stringify({ decision, evidence });\n\n  expect(annotateDecisionWeights(decision, evidence)).toEqual({\n    schemaVersion: 1,\n    origin: \"unknown\",\n    selectedWeight: 1,\n    reportedSelectedWeight: null,\n    financialCalibration: \"not_established\",\n  });\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n});"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 197,
+          "end_line": 215,
+          "excerpt": "test(\"invalid decisions return null instead of inventing weights or status\", () => {\n  const valid = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const decision of [\n    null, [], \"buy\", {},\n    { ...valid, action: \"wait\" },\n    { ...valid, status: \"unknown\" },\n    { ...valid, status: \"error\" },\n    { ...valid, probabilities: null },\n    { ...valid, probabilities: [1, 0, 0] },\n    { ...valid, probabilities: { buy: 1, sell: 0 } },\n    { ...valid, probabilities: { buy: \"1\", sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: NaN, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: Infinity, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: 1.1, sell: -0.1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0.9, sell: 0, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"historical_record\" })).toBeNull();\n  }"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 164,
+          "end_line": 181,
+          "excerpt": "test(\"invalid responses and observed matching failures identify only canonical safety holds\", () => {\n  const malformed = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    { choice: \"buy\", probabilities: { buy: 0, sell: 0, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: Number.MIN_VALUE, sell: 2, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(malformed, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"error\", \"timeout\"]) {\n    expect(annotateDecisionWeights({ ...malformed, status }, { kind: \"observed_failure\", status })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});"
+        }
+      ],
+      "outputs": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stderr.bin",
+          "sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+          "start_line": 15,
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [148.00ms]"
+        }
+      ],
+      "observation": "Invalid normalized decisions return null. selectedWeight only for status ok; reportedSelectedWeight only when origin provider_reported. No unknown-null coercion. financialCalibration always not_established."
+    },
+    {
+      "id": "PP-4",
+      "conclusion": "verified_local",
+      "criterion": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "start_line": 57,
+        "excerpt": "### PP-4: compatibilidade histórica e sanitização\nRegistro histórico válido continua anotável sem resposta original: origin unknown, selectedWeight preservado para status ok, reportedSelectedWeight null. Provedor pode reportar um vetor unitário legítimo: esse caso recebe provider_reported somente com prova contemporânea compatível. Campos extras e texto livre nunca atravessam a projeção de saída. Não migrar schema/journal/public-view/dashboard, nem adicionar thresholds ou usar a anotação para ordens.\n"
+      },
+      "implementation": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 1,
+          "end_line": 7,
+          "excerpt": "export interface DecisionWeightAnnotation {\n  schemaVersion: 1;\n  origin: \"provider_reported\" | \"adapter_choice_fallback\" | \"adapter_safety_fallback\" | \"unknown\";\n  selectedWeight: number | null;\n  reportedSelectedWeight: number | null;\n  financialCalibration: \"not_established\";\n}"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 63,
+          "end_line": 79,
+          "excerpt": "function readOrigin(decision: Decision, evidence: unknown): DecisionWeightAnnotation[\"origin\"] {\n  if (!isRecord(evidence)) return \"unknown\";\n  const canonicalHold = decision.action === \"hold\" && decision.probabilities.buy === 0\n    && decision.probabilities.sell === 0 && decision.probabilities.hold === 1;\n  if (evidence.kind === \"observed_failure\") {\n    return canonicalHold && (evidence.status === \"error\" || evidence.status === \"timeout\")\n      && decision.status === evidence.status ? \"adapter_safety_fallback\" : \"unknown\";\n  }\n  if (evidence.kind !== \"observed_response\" || !(\"raw\" in evidence)) return \"unknown\";\n  const response = readResponse(evidence.raw);\n  if (!response && canonicalHold && decision.status === \"malformed\") return \"adapter_safety_fallback\";\n  if (response && decision.status === \"ok\" && response.action === decision.action\n    && equalWeights(response.probabilities, decision.probabilities)) {\n    return response.reported ? \"provider_reported\" : \"adapter_choice_fallback\";\n  }\n  return \"unknown\";\n}"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "start_line": 85,
+          "end_line": 96,
+          "excerpt": "  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };\n}"
+        }
+      ],
+      "tests": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 4,
+          "end_line": 23,
+          "excerpt": "test(\"historical unit weights retain their value without implying provider provenance\", () => {\n  const decision = Object.freeze({\n    action: \"buy\",\n    probabilities: Object.freeze({ buy: 1, sell: 0, hold: 0 }),\n    status: \"ok\",\n    confidence: 1,\n    privateText: \"must not escape\",\n  });\n  const evidence = Object.freeze({ kind: \"historical_record\" });\n  const before = JSON.stringify({ decision, evidence });\n\n  expect(annotateDecisionWeights(decision, evidence)).toEqual({\n    schemaVersion: 1,\n    origin: \"unknown\",\n    selectedWeight: 1,\n    reportedSelectedWeight: null,\n    financialCalibration: \"not_established\",\n  });\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n});"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 142,
+          "end_line": 162,
+          "excerpt": "test(\"repeated annotations of frozen provider evidence remain pure and exclude extra fields\", () => {\n  const decision = Object.freeze({\n    action: \"sell\", status: \"ok\", probabilities: Object.freeze({ buy: 0.25, sell: 0.5, hold: 0.25 }),\n    confidence: 0.5, model: \"fixture-model\", text: \"fixture private text\",\n  });\n  const evidence = Object.freeze({ kind: \"observed_response\", raw: Object.freeze({\n    choice: \"sell\", probabilities: Object.freeze({ buy: 1, sell: 2, hold: 1 }),\n    token: \"synthetic-token\", text: \"untrusted instruction\",\n  }) });\n  const before = JSON.stringify({ decision, evidence });\n  const expected = {\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 0.5,\n    reportedSelectedWeight: 0.5, financialCalibration: \"not_established\",\n  } as const;\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n  expect(Object.keys(annotateDecisionWeights(decision, evidence)!)).toEqual([\n    \"schemaVersion\", \"origin\", \"selectedWeight\", \"reportedSelectedWeight\", \"financialCalibration\",\n  ]);\n});"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 183,
+          "end_line": 195,
+          "excerpt": "test(\"a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  expect(annotateDecisionWeights(decision, {\n    kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } },\n  })).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n    reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw: { choice: \"buy\" } })).toEqual({\n    schemaVersion: 1, origin: \"adapter_choice_fallback\", selectedWeight: 1,\n    reportedSelectedWeight: null, financialCalibration: \"not_established\",\n  });\n});"
+        }
+      ],
+      "outputs": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stderr.bin",
+          "sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+          "start_line": 15,
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [148.00ms]"
+        }
+      ],
+      "observation": "Historical one-hot remains unknown without contemporary evidence; legitimate explicit one-hot provider origin is preserved. Exact allowlist excludes raw input/private free text. Concrete patch has no journal/schema/public projection/UI/runtime migration."
+    },
+    {
+      "id": "PP-5",
+      "conclusion": "verified_current_suite_with_historical_limit",
+      "criterion": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "start_line": 60,
+        "excerpt": "### PP-5: exemplos literais e TDD\nExecutar fixtures sintéticas explícitas pela API pública nova, com resultados literais:\n\n| Decisão e evidência | Origem | selectedWeight | reportedSelectedWeight |\n| --- | --- | --- | --- |\n| buy, (1,0,0), ok; response choice buy sem probabilities | adapter_choice_fallback | 1 | null |\n| buy, (1,0,0), ok; response choice buy com (1,0,0) | provider_reported | 1 | 1 |\n| buy, (0.5,0.25,0.25), ok; response choice buy com (2,1,1) | provider_reported | 0.5 | 0.5 |\n| buy, (0.2,0.8,0), ok; response choice buy com (1,4,0) | provider_reported | 0.2 | 0.2 |\n| buy, (1,0,0), ok; historical_record | unknown | 1 | null |\n| hold, (0,0,1), malformed; response choice buy com pesos todos zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response choice buy com (Number.MIN_VALUE,2,0), cujo peso buy normalizado vira zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response válida choice hold com (0,0,1) | unknown | null | null |\n| hold, (0,0,1), timeout; observed_failure timeout | adapter_safety_fallback | null | null |\n| buy, (1,0,0), ok; response choice sell com (0,1,0) | unknown | 1 | null |\n\nTambém comprovar decisão inválida -> null; evidence inválida -> unknown; error/timeout/status divergente -> unknown; probabilities null/array e pesos negativos/NaN/infinito; todos os tipos de ação/status; limites da tolerância; repetibilidade; entradas imutáveis; saída allowlist sem payload bruto; null no peso selecionado para status não ok. Testes não chamam APIs nem usam contas reais.\n"
+      },
+      "implementation": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 1,
+          "end_line": 23,
+          "excerpt": "import { expect, test } from \"bun:test\";\nimport { annotateDecisionWeights } from \"./weights\";\n\ntest(\"historical unit weights retain their value without implying provider provenance\", () => {\n  const decision = Object.freeze({\n    action: \"buy\",\n    probabilities: Object.freeze({ buy: 1, sell: 0, hold: 0 }),\n    status: \"ok\",\n    confidence: 1,\n    privateText: \"must not escape\",\n  });\n  const evidence = Object.freeze({ kind: \"historical_record\" });\n  const before = JSON.stringify({ decision, evidence });\n\n  expect(annotateDecisionWeights(decision, evidence)).toEqual({\n    schemaVersion: 1,\n    origin: \"unknown\",\n    selectedWeight: 1,\n    reportedSelectedWeight: null,\n    financialCalibration: \"not_established\",\n  });\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n});"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "start_line": 25,
+          "end_line": 215,
+          "excerpt": "test(\"reported weights are normalized without requiring the chosen action to be the largest\", () => {\n  for (const fixture of [\n    { probabilities: { buy: 0.5, sell: 0.25, hold: 0.25 }, raw: { buy: 2, sell: 1, hold: 1 }, selected: 0.5 },\n    { probabilities: { buy: 0.2, sell: 0.8, hold: 0 }, raw: { buy: 1, sell: 4, hold: 0 }, selected: 0.2 },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: \"buy\", probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: fixture.selected,\n      reportedSelectedWeight: fixture.selected, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"compatible explicit vectors are supported for every action, including missing or null unused weights\", () => {\n  for (const fixture of [\n    { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, raw: { buy: 3, sell: null } },\n    { action: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 }, raw: { sell: 3, hold: null } },\n    { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, raw: { hold: 3, buy: null } },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: fixture.action, probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: fixture.action, probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n      reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"missing, historical or malformed evidence cannot establish origin\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const evidence of [\n    undefined, null, [], \"observed_response\", {}, { kind: \"historical_record\" },\n    { kind: \"other\", raw: { choice: \"buy\" } }, { kind: \"observed_response\" },\n    { kind: \"observed_failure\" }, { kind: \"observed_failure\", status: \"malformed\" },\n  ]) {\n    expect(annotateDecisionWeights(decision, evidence)).toEqual({\n      schemaVersion: 1, origin: \"unknown\", selectedWeight: 1,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"choice, vector and status mismatches keep origin unknown\", () => {\n  const buy = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const raw of [\n    { choice: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: null },\n  ]) {\n    expect(annotateDecisionWeights(buy, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"unknown\", selectedWeight: 1,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"malformed\", \"error\", \"timeout\"]) {\n    const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status };\n    for (const evidence of [\n      { kind: \"observed_response\", raw: { choice: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 } } },\n      { kind: \"observed_failure\", status: \"ok\" },\n      { kind: \"observed_failure\", status: status === \"timeout\" ? \"error\" : \"timeout\" },\n    ]) {\n      expect(annotateDecisionWeights(decision, evidence)).toEqual({\n        schemaVersion: 1, origin: \"unknown\", selectedWeight: null,\n        reportedSelectedWeight: null, financialCalibration: \"not_established\",\n      });\n    }\n  }\n  expect(annotateDecisionWeights(\n    { action: \"hold\", probabilities: { buy: 0.1, sell: 0, hold: 0.9 }, status: \"error\" },\n    { kind: \"observed_failure\", status: \"error\" },\n  )?.origin).toBe(\"unknown\");\n});\n\ntest(\"malformed response values match the observed adapter validation contract\", () => {\n  const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    undefined, null, [], \"buy\", {}, { choice: \"wait\" },\n    { choice: \"buy\", probabilities: null },\n    { choice: \"buy\", probabilities: [1, 0, 0] },\n    { choice: \"buy\", probabilities: { buy: \"1\" } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: -1 } },\n    { choice: \"buy\", probabilities: { buy: NaN } },\n    { choice: \"buy\", probabilities: { buy: Infinity } },\n    { choice: \"buy\", probabilities: { buy: 1, hold: -Infinity } },\n    { choice: \"buy\", probabilities: { buy: Number.MAX_VALUE, sell: Number.MAX_VALUE } },\n    { choice: \"buy\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: {} },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"vector comparisons accept the absolute boundary and do not repair larger differences\", () => {\n  const raw = { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } } };\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 1e-12, sell: 1e-12, hold: 0 }, status: \"ok\" }, raw,\n  )).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1 - 1e-12,\n    reportedSelectedWeight: 1 - 1e-12, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 2e-12, sell: 2e-12, hold: 0 }, status: \"ok\" }, raw,\n  )?.origin).toBe(\"unknown\");\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 0.5e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )?.selectedWeight).toBe(1);\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 2e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )).toBeNull();\n});\n\ntest(\"repeated annotations of frozen provider evidence remain pure and exclude extra fields\", () => {\n  const decision = Object.freeze({\n    action: \"sell\", status: \"ok\", probabilities: Object.freeze({ buy: 0.25, sell: 0.5, hold: 0.25 }),\n    confidence: 0.5, model: \"fixture-model\", text: \"fixture private text\",\n  });\n  const evidence = Object.freeze({ kind: \"observed_response\", raw: Object.freeze({\n    choice: \"sell\", probabilities: Object.freeze({ buy: 1, sell: 2, hold: 1 }),\n    token: \"synthetic-token\", text: \"untrusted instruction\",\n  }) });\n  const before = JSON.stringify({ decision, evidence });\n  const expected = {\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 0.5,\n    reportedSelectedWeight: 0.5, financialCalibration: \"not_established\",\n  } as const;\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n  expect(Object.keys(annotateDecisionWeights(decision, evidence)!)).toEqual([\n    \"schemaVersion\", \"origin\", \"selectedWeight\", \"reportedSelectedWeight\", \"financialCalibration\",\n  ]);\n});\n\ntest(\"invalid responses and observed matching failures identify only canonical safety holds\", () => {\n  const malformed = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    { choice: \"buy\", probabilities: { buy: 0, sell: 0, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: Number.MIN_VALUE, sell: 2, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(malformed, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"error\", \"timeout\"]) {\n    expect(annotateDecisionWeights({ ...malformed, status }, { kind: \"observed_failure\", status })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  expect(annotateDecisionWeights(decision, {\n    kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } },\n  })).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n    reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw: { choice: \"buy\" } })).toEqual({\n    schemaVersion: 1, origin: \"adapter_choice_fallback\", selectedWeight: 1,\n    reportedSelectedWeight: null, financialCalibration: \"not_established\",\n  });\n});\n\ntest(\"invalid decisions return null instead of inventing weights or status\", () => {\n  const valid = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const decision of [\n    null, [], \"buy\", {},\n    { ...valid, action: \"wait\" },\n    { ...valid, status: \"unknown\" },\n    { ...valid, status: \"error\" },\n    { ...valid, probabilities: null },\n    { ...valid, probabilities: [1, 0, 0] },\n    { ...valid, probabilities: { buy: 1, sell: 0 } },\n    { ...valid, probabilities: { buy: \"1\", sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: NaN, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: Infinity, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: 1.1, sell: -0.1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0.9, sell: 0, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"historical_record\" })).toBeNull();\n  }"
+        }
+      ],
+      "outputs": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stderr.bin",
+          "sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+          "start_line": 15,
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [148.00ms]"
+        }
+      ],
+      "observation": "All ten frozen examples and malformed/mismatch/status/action/tolerance/subnormal/immutability/allowlist cases have literal fixtures; own sequential run 11 pass/0 fail/76 expects. TDD red/green logs inspected, intermediate historical sources not reconstructed or rerun."
+    },
+    {
+      "id": "PP-6",
+      "conclusion": "verified_delivered_scope_and_current_checks_with_historical_limit",
+      "criterion": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "start_line": 78,
+        "excerpt": "### PP-6: arquivos, verificação e revisão\nEntrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação.\n"
+      },
+      "implementation": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/CANDIDATE.json",
+          "sha256": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+          "start_line": 1,
+          "end_line": 200,
+          "excerpt": "{\n  \"version\": 1,\n  \"baseline\": \"00a593bcabe25dbb6d83795268533551098f645b\",\n  \"implementer_id\": \"root-01a1362a\",\n  \"conversation\": \"01a1362a-b876-7fa0-9b66-b45202296099\",\n  \"authored\": [\n    {\n      \"path\": \"src/decision-evidence/weights.ts\",\n      \"sha256\": \"3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf\",\n      \"bytes\": 4573\n    },\n    {\n      \"path\": \"src/decision-evidence/weights.test.ts\",\n      \"sha256\": \"fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f\",\n      \"bytes\": 10653\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/requirements.md\",\n      \"sha256\": \"4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977\",\n      \"bytes\": 6169\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/USAGE.md\",\n      \"sha256\": \"57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3\",\n      \"bytes\": 2522\n    },\n    {\n      \"path\": \"docs/sdd/decision-weight-provenance/VERIFICATION.md\",\n      \"sha256\": \"688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f\",\n      \"bytes\": 1741\n    }\n  ],\n  \"readonly_sources\": [\n    {\n      \"path\": \"sources/decide.ts\",\n      \"sha256\": \"3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0\",\n      \"bytes\": 10830\n    },\n    {\n      \"path\": \"sources/types.ts\",\n      \"sha256\": \"7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc\",\n      \"bytes\": 7958\n    },\n    {\n      \"path\": \"sources/public-view.ts\",\n      \"sha256\": \"9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515\",\n      \"bytes\": 6716\n    },\n    {\n      \"path\": \"frozen/AGENTS.md\",\n      \"sha256\": \"17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34\",\n      \"bytes\": 3954\n    },\n    {\n      \"path\": \"frozen/CONTRIBUTING.md\",\n      \"sha256\": \"491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6\",\n      \"bytes\": 1459\n    }\n  ],\n  \"frozen_specification\": {\n    \"path\": \"frozen/SPEC.md\",\n    \"sha256\": \"6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f\",\n    \"bytes\": 9679,\n    \"acceptance_sha256\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\"\n  },\n  \"delivery_patch\": {\n    \"path\": \"DELIVERY.patch\",\n    \"sha256\": \"5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469\",\n    \"bytes\": 27215\n  },\n  \"commits\": [],\n  \"excluded_local_records\": [\n    \"docs/sdd/decision-weight-provenance/SPEC.md\",\n    \"docs/sdd/decision-weight-provenance/decision-receipts.json\",\n    \"docs/sdd/decision-weight-provenance/local-records/**\"\n  ]\n}\n"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1/docs/sdd/decision-weight-provenance/VERIFICATION.md",
+          "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+          "start_line": 1,
+          "end_line": 25,
+          "excerpt": "# Verificação da anotação de pesos\n\nBaseline: `00a593bcabe25dbb6d83795268533551098f645b`.\n\nComando de comportamento:\n\n```powershell\nbun --no-env-file test src/decision-evidence/weights.test.ts\n```\n\nResultado observado: exit 0, 11 pass, 0 fail, 76 expect() calls. As fixtures sintéticas exercitam os dez exemplos dos requisitos, normalização sem argmax, pesos ausentes/null, overflow e underflow, evidência incompatível, ações/status, tolerâncias, entradas congeladas, repetibilidade e projeção de cinco campos.\n\nComando de tipos:\n\n```powershell\nbun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/decision-evidence/weights.ts src/decision-evidence/weights.test.ts\n```\n\nResultado observado: exit 0. O escopo inclui somente o módulo novo e seus testes; não certifica outros módulos do projeto.\n\nO ciclo TDD iniciou com import ausente. Outros testes falharam antes de implementar a validação de decisões, a distinção entre pesos explícitos e fallback da escolha, e a identificação de fallback de segurança. Cada etapa voltou a passar antes da seguinte. Os testes adicionais verificaram as fronteiras do comportamento já implementado.\n\nA inspeção do módulo não encontrou imports, leitura de ambiente, arquivos, rede ou consultas a modelos. Nenhum importador existente foi alterado. As fontes do adaptador usadas no contrato mantiveram os hashes registrados nos requisitos.\n\nNão foram utilizados feed real, contas reais, inferência paga, ordens ou carteira. Esta verificação local não demonstra calibração, retorno financeiro ou funcionamento em produção."
+        }
+      ],
+      "outputs": [
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/tests.stderr.bin",
+          "sha256": "83d928b412fc3bd4d0f41752864b0d6bb4b657754f08c23fae2873d54c6a4f54",
+          "start_line": 15,
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [148.00ms]"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/commands-results.json",
+          "sha256": "88ea5826e4fa88f9b0236f9023814b807428e17a96baf1938124082350f0975c",
+          "start_line": 38,
+          "excerpt": "\"exitCode\": 0"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-results.json",
+          "sha256": "e5f32f2631ac818dec94b2c0b4cdfc23f03325851c71534cdff05d694b800e90",
+          "start_line": 1,
+          "end_line": 200,
+          "excerpt": "[\n  {\n    \"name\": \"baseline-identity\",\n    \"argv\": [\n      \"git\",\n      \"-C\",\n      \"C:/Users/gabri/jev-trader\",\n      \"show\",\n      \"--no-patch\",\n      \"--format=%H\",\n      \"00a593bcabe25dbb6d83795268533551098f645b\"\n    ],\n    \"exitCode\": 0,\n    \"stdout\": {\n      \"path\": \"C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-identity.stdout.bin\",\n      \"sha256\": \"9e92600e5656c5f0945366181f3ea5aa5f99ab5140580e5e5ced29c39e7b8c05\",\n      \"bytes\": 41\n    },\n    \"stderr\": {\n      \"path\": \"C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-identity.stderr.bin\",\n      \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"bytes\": 0\n    }\n  },\n  {\n    \"name\": \"baseline-paths\",\n    \"argv\": [\n      \"git\",\n      \"-C\",\n      \"C:/Users/gabri/jev-trader\",\n      \"ls-tree\",\n      \"-r\",\n      \"--name-only\",\n      \"00a593bcabe25dbb6d83795268533551098f645b\",\n      \"--\",\n      \"src/decision-evidence/weights.ts\",\n      \"src/decision-evidence/weights.test.ts\",\n      \"docs/sdd/decision-weight-provenance/requirements.md\",\n      \"docs/sdd/decision-weight-provenance/USAGE.md\",\n      \"docs/sdd/decision-weight-provenance/VERIFICATION.md\"\n    ],\n    \"exitCode\": 0,\n    \"stdout\": {\n      \"path\": \"C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-paths.stdout.bin\",\n      \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"bytes\": 0\n    },\n    \"stderr\": {\n      \"path\": \"C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/baseline-paths.stderr.bin\",\n      \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n      \"bytes\": 0\n    }\n  }\n]"
+        },
+        {
+          "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1/acceptance-exact-check.json",
+          "sha256": "778e5ebb63cbae8ec82d36fd3fd6294431097fb552a511739b61ca40619269c5",
+          "start_line": 1,
+          "end_line": 200,
+          "excerpt": "{\n  \"acceptance\": {\n    \"byteEquivalent\": true,\n    \"sha256\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\",\n    \"expected\": \"3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8\",\n    \"extraction\": \"From ### PP-1: through the newline immediately before the next ## heading\"\n  },\n  \"excludedLocalRecords\": [\n    \"docs/sdd/decision-weight-provenance/SPEC.md\",\n    \"docs/sdd/decision-weight-provenance/decision-receipts.json\",\n    \"docs/sdd/decision-weight-provenance/local-records/**\"\n  ],\n  \"excludedNotDelivered\": true\n}"
+        }
+      ],
+      "observation": "Only two new TS sources and three public docs delivered; five paths absent at fixed baseline. Authored/readonly/spec/manifest/patch hashes match before and after. Own Bun tests and exact tsc ran sequentially on isolated copy. Existing importers and readonly copies excluded. Preimplementation historical hashes/order not independently replayed; separate Spec and audit gates remain outside this Standards verdict."
+    }
+  ],
+  "historicalTdd": [
+    {
+      "phase": "red",
+      "cycle": 1,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-01.log",
+        "sha256": "58f961185852872711bf3c373a485055fadaf3e1e07d08aa7749bd7dedc50cc6",
+        "start_line": 8,
+        "excerpt": "\r\n\r\n\r\n 0 pass\r\n 1 fail\r\n 1 error\r\nRan 1 test across 1 file. [68.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    },
+    {
+      "phase": "green",
+      "cycle": 1,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-01.log",
+        "sha256": "aa6bc6cc8d95e5b9ffbe7414d5c7f33c4907ca96d1efc16d4aeb7323d9eb8b52",
+        "start_line": 4,
+        "excerpt": "\r\n\r\n 1 pass\r\n 0 fail\r\n 2 expect() calls\r\nRan 1 test across 1 file. [55.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    },
+    {
+      "phase": "red",
+      "cycle": 2,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-02.log",
+        "sha256": "4e6572a4675bd63c0fcf51476c439cd878de78a514bf90b946cf357af1bfe364",
+        "start_line": 23,
+        "excerpt": "\r\n\r\n 1 pass\r\n 1 fail\r\n 8 expect() calls\r\nRan 2 tests across 1 file. [68.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    },
+    {
+      "phase": "green",
+      "cycle": 2,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-02.log",
+        "sha256": "83eeb957abf63cd5be7c2d94511af6060ca517422e3a085833bf38da9239278c",
+        "start_line": 5,
+        "excerpt": "\r\n\r\n 2 pass\r\n 0 fail\r\n 18 expect() calls\r\nRan 2 tests across 1 file. [63.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    },
+    {
+      "phase": "red",
+      "cycle": 3,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-03.log",
+        "sha256": "50a002b06bde9d7f37cc889cf6541baceee8107b9e3092c337efe4470def5953",
+        "start_line": 29,
+        "excerpt": "\r\n\r\n 2 pass\r\n 1 fail\r\n 19 expect() calls\r\nRan 3 tests across 1 file. [66.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    },
+    {
+      "phase": "green",
+      "cycle": 3,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-03.log",
+        "sha256": "a185905d1abb2a3ddcb78514ab664d695c440b32568d3fc028ae120d9184dda1",
+        "start_line": 6,
+        "excerpt": "\r\n\r\n 3 pass\r\n 0 fail\r\n 20 expect() calls\r\nRan 3 tests across 1 file. [71.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    },
+    {
+      "phase": "red",
+      "cycle": 4,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-04.log",
+        "sha256": "298d6d8c7770e14d91884b162732bdb2c7147e0a4b672374572ede619c737a22",
+        "start_line": 29,
+        "excerpt": "\r\n\r\n 3 pass\r\n 1 fail\r\n 21 expect() calls\r\nRan 4 tests across 1 file. [75.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    },
+    {
+      "phase": "green",
+      "cycle": 4,
+      "ref": {
+        "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-04.log",
+        "sha256": "e75da80d36010ccb3f49804bca86a7d33120b84930d929d5fa1cf061886fe3a2",
+        "start_line": 7,
+        "excerpt": "\r\n\r\n 4 pass\r\n 0 fail\r\n 24 expect() calls\r\nRan 4 tests across 1 file. [63.00ms]"
+      },
+      "independentlyExecuted": false,
+      "interpretation": "Historical implementer execution log inspected; not replayed by this reviewer."
+    }
+  ],
+  "limitations": [
+    "ReadOnly attribute and isolated copy do not enforce a readonly sandbox in danger-full-access.",
+    "Effective model/tier and transport authenticity are not evidenced.",
+    "Historical intermediate sources/preimplementation timing not independently replayed.",
+    "No existing importer/root integration, real feed/account/API/trade, financial calibration, profitability or production operation was exercised.",
+    "Separate Spec review and final audit are not approved by this Standards report."
+  ],
+  "authorization": {
+    "exclusiveWrites": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-standards-review-v1",
+    "sourceEdits": false,
+    "acceptanceEdits": false,
+    "gitMutations": false,
+    "staging": false,
+    "commits": false,
+    "push": false,
+    "externalPublication": false,
+    "install": false,
+    "accounts": false,
+    "trades": false,
+    "transfers": false,
+    "newGoals": false
+  }
+}

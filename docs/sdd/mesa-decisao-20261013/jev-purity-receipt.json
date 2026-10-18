@@ -1,0 +1,39 @@
+{
+  "receiptId": "3e5f4f52-bed7-4bec-832a-fedbd5e03c88",
+  "model": "jev-1.13.0",
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "authority": "advisory_only",
+  "inputDigest": "eadda14d4d6307face47001cb6944069656f54e115375db3353ed8d6002baa77",
+  "answers": {
+    "seam": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "live_module",
+      "bestCandidate": "live_module",
+      "probabilities": {
+        "live_module": 0.79,
+        "defer": 0.01,
+        "extract_shared": 0,
+        "abstain": 0.05,
+        "insufficient_evidence": 0.15
+      },
+      "confidence": 0.74,
+      "disposition": "recommendation",
+      "recommendation": "live_module",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 528,
+    "output_tokens": 65
+  },
+  "usd": null,
+  "receiptPersisted": true
+}

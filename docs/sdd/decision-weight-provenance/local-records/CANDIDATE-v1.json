@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "baseline": "00a593bcabe25dbb6d83795268533551098f645b",
+  "implementer_id": "root-01a1362a",
+  "conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "authored": [
+    {
+      "path": "src/decision-evidence/weights.ts",
+      "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+      "bytes": 4573
+    },
+    {
+      "path": "src/decision-evidence/weights.test.ts",
+      "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+      "bytes": 10653
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/requirements.md",
+      "sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+      "bytes": 6169
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+      "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+      "bytes": 2522
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+      "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+      "bytes": 1741
+    }
+  ],
+  "readonly_sources": [
+    {
+      "path": "sources/decide.ts",
+      "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+      "bytes": 10830
+    },
+    {
+      "path": "sources/types.ts",
+      "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+      "bytes": 7958
+    },
+    {
+      "path": "sources/public-view.ts",
+      "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+      "bytes": 6716
+    },
+    {
+      "path": "frozen/AGENTS.md",
+      "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+      "bytes": 3954
+    },
+    {
+      "path": "frozen/CONTRIBUTING.md",
+      "sha256": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+      "bytes": 1459
+    }
+  ],
+  "frozen_specification": {
+    "path": "frozen/SPEC.md",
+    "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+    "bytes": 9679,
+    "acceptance_sha256": "3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8"
+  },
+  "delivery_patch": {
+    "path": "DELIVERY.patch",
+    "sha256": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+    "bytes": 27215
+  },
+  "commits": [],
+  "excluded_local_records": [
+    "docs/sdd/decision-weight-provenance/SPEC.md",
+    "docs/sdd/decision-weight-provenance/decision-receipts.json",
+    "docs/sdd/decision-weight-provenance/local-records/**"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "rc-dec-04-como-medir-a-causa-dos-4",
+  "goal": "Como medir a causa dos 411 candidatos de compra fechados antes da escolha do Jev? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "fechados_antes_do_jev": "411 chaves unicas de 1023 linhas em 262 consultas (audits.jsonl)",
+    "marca_minimo": "387 de 411 (94,2%); origem legada em sizing.ts:140, minimo US$ 10",
+    "marca_sem_historico": "97 de 411 (23,6%); null de timingFacts por janela velha, buraco, curta ou timeout",
+    "marca_entrada_esticada": "22 de 411 (5,4%)",
+    "sem_marca_de_bloqueio": "4 de 411 (1,0%)",
+    "minimo_de_compra_atual": "0 (candidates.ts:34)",
+    "limite_de_defasagem_de_velas": "3 h (timing.ts:88)",
+    "registro_sem_caixa": "audits.jsonl não guarda cap, caixa por rede nem idade do timing"
+  },
+  "rails": [
+    "Codigo atual nao fecha compra por sem_historico (candidates.ts:273); dados antigos nao representam o funil atual.",
+    "Registros sem cap, caixa por rede e idade do timing: a causa exata nao e recuperavel dos dados existentes.",
+    "Retirar marca minimo ja esta feito (candidates.ts:34); mudar dimensionamento e decisao do dono.",
+    "Mudar src/decision-review/** e zona do Codex."
+  ],
+  "options": [
+    {
+      "id": "classificar-audits-existente",
+      "label": "Classificar o audits existente",
+      "what": "Script de leitura sobre data/decision-review/audits.jsonl que classifica por marca, sem mudar regra nem journal. Evidencia: 387 com marca minimo, 97 sem_historico, 22 entrada_esticada, 4 sem marca (T04); dados de 14 e 15/10, anteriores ao codigo atual."
+    },
+    {
+      "id": "contador-em-memoria",
+      "label": "Contador em memoria",
+      "what": "Contador por causa durante uma janela de auditoria em sombra, sem gravar no journal. Evidencia: Ponto de medicao em cycle.ts:800 e timingFacts; zona src/decision-review/** e do Codex."
+    },
+    {
+      "id": "markout-fechados",
+      "label": "Markout dos fechados",
+      "what": "Markout sem ordem para os fechados por sem_historico e entrada_esticada, dentro de teto fixo de consultas. Evidencia: Placar nao cobre candidatos fechados antes do modelo (T02, T04)."
+    },
+    {
+      "id": "adiar-funil",
+      "label": "Manter o funil e adiar",
+      "what": "Manter o funil atual ate a causa ser medida. Evidencia: Sem causa exata, qualquer mudanca pode fechar o filtro errado (T04)."
+    }
+  ]
+}

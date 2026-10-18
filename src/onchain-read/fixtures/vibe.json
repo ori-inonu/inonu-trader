@@ -1,0 +1,33 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": {
+    "summary": {
+      "engagement": "5384",
+      "engagementChangeRate": "957.76",
+      "impressions": "330991",
+      "impressionsChangeRate": "1410.82",
+      "mentionsCount": "14",
+      "mentionsCountChangeRate": "27.27",
+      "score": "57.57757814783334",
+      "scoreChangeRate": "4.17",
+      "scoreRange": "0-100",
+      "scoreType": "dex_vibe_hotness",
+      "supportFirstMentioned": false
+    },
+    "timeline": [
+      { "kols": [], "mentionCount": "", "score": "55.080158537181006", "ts": "1791763200000" },
+      {
+        "kols": [
+          { "followers": "58389", "handle": "jackduval", "nickname": "Jack Duval" },
+          { "followers": "4943", "handle": "bonk_inu_zh", "nickname": "BONK zh" }
+        ],
+        "mentionCount": "2",
+        "score": "56.22541672625139",
+        "ts": "1791766800000"
+      },
+      { "kols": [], "mentionCount": "1", "score": "not-a-score", "ts": "1791770400000" }
+    ]
+  },
+  "msg": ""
+}

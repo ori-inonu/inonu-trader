@@ -1,0 +1,379 @@
+/* Sits inside a Disclosure. The disclosure owns the outer frame, so this panel drops its own
+   radius and border and only supplies the internal rhythm. */
+.panel {
+  container-type: inline-size;
+  container-name: report;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bg-deck-2);
+  color: var(--ink);
+}
+
+.header {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s4) 0 0;
+}
+
+.headingGroup {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Single-line micro label. Wrapping here was what made the DecisionCenter header taller than
+   its two siblings in the dock row. */
+.eyebrow {
+  margin: 0;
+  overflow: hidden;
+  color: var(--signal);
+  font: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: var(--track-micro);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The title is held to two lines so every card header resolves to the same height in the dock
+   row. The full title stays reachable through the title attribute. */
+.title {
+  display: -webkit-box;
+  min-block-size: 2lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
+  color: var(--ink);
+  font: var(--fs-md);
+  font-weight: 600;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* All four cards reserve the same three lines and clamp to them, so the dock row reads as one
+   header band. The full sentence stays reachable through the title attribute. */
+.description {
+  display: -webkit-box;
+  min-block-size: 3lh;
+  margin: var(--s1) 0 0;
+  overflow: hidden;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.badge {
+  display: inline-flex;
+  flex: none;
+  min-height: 24px;
+  align-items: center;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 0 var(--s2);
+  color: var(--hold);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.content {
+  display: grid;
+  min-width: 0;
+  gap: var(--s3);
+  padding: var(--s4) 0 var(--s5);
+}
+
+.status,
+.loading,
+.note,
+.help,
+.age,
+.safety,
+.error {
+  margin: 0;
+  font: var(--fs-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.status,
+.loading {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.note,
+.help,
+.age {
+  color: var(--ink-3);
+}
+
+.safety {
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck);
+  color: var(--ink-2);
+}
+
+.error {
+  color: var(--sell);
+}
+
+.controls {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--s2);
+}
+
+.fileLabel {
+  display: flex;
+  min-width: 0;
+  min-height: 44px;
+  grid-column: 1 / -1;
+  align-items: center;
+  color: var(--ink);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.fileInput {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  grid-column: 1 / -1;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+
+.fileInput::file-selector-button {
+  min-width: 44px;
+  min-height: 44px;
+  margin-right: var(--s2);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  padding: 0 var(--s3);
+  background: var(--bg-deck);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-snap), background-color var(--dur-fast) var(--ease-snap);
+}
+
+.fileInput::file-selector-button:hover {
+  border-color: var(--signal);
+  background: var(--bg-deck-3);
+}
+
+.help {
+  grid-column: 1 / -1;
+}
+
+.primaryButton,
+.secondaryButton {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--r-sm);
+  padding: var(--s2) var(--s3);
+  cursor: pointer;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  transition: background-color var(--dur-fast) var(--ease-snap), border-color var(--dur-fast) var(--ease-snap), color var(--dur-fast) var(--ease-snap);
+}
+
+.primaryButton {
+  border: 1px solid var(--signal);
+  background: var(--signal);
+  color: var(--bg-well);
+}
+
+.secondaryButton {
+  border: 1px solid var(--edge-strong);
+  background: var(--bg-deck);
+  color: var(--ink);
+}
+
+.primaryButton:hover {
+  background: color-mix(in srgb, var(--signal) 82%, var(--ink));
+}
+
+.secondaryButton:hover {
+  border-color: var(--signal);
+  background: var(--bg-deck-3);
+}
+
+/* One focus treatment for every control in the panel, including the native file selector. */
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible,
+.fileInput:focus-visible,
+.fileInput::file-selector-button:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.report {
+  display: grid;
+  min-width: 0;
+  gap: var(--s3);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--edge);
+}
+
+.badges {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.reportBadge {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 24px;
+  align-items: center;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-pill);
+  padding: 0 var(--s2);
+  color: var(--ink-2);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.reportBadgeWarn {
+  border-color: color-mix(in srgb, var(--hold) 55%, var(--edge));
+  color: var(--hold);
+}
+
+.details {
+  display: grid;
+  min-width: 0;
+  gap: var(--s2);
+  margin: 0;
+  padding: var(--s3) 0;
+  border-top: 1px solid var(--edge);
+  border-bottom: 1px solid var(--edge);
+}
+
+.detailRow {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: baseline;
+  gap: var(--s3);
+}
+
+.detailRow dt,
+.detailRow dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.detailRow dt {
+  color: var(--ink-3);
+  font: var(--fs-sm);
+}
+
+/* Identifiers, amounts and instants take the mono ramp; declared prose takes the sans ramp. */
+.detailRow dd {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.detailRow dd.prose {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+}
+
+.deltaRow dt,
+.deltaRow dd {
+  color: var(--hold);
+  font-weight: 600;
+}
+
+.subsection {
+  display: grid;
+  min-width: 0;
+  gap: var(--s2);
+}
+
+.subheading {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.legs,
+.reasons {
+  display: grid;
+  min-width: 0;
+  gap: var(--s3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leg {
+  display: grid;
+  min-width: 0;
+  gap: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  background: var(--bg-deck);
+}
+
+.reasons li {
+  min-width: 0;
+  color: var(--ink-2);
+  font: var(--fs-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Two side by side buttons with these labels stop fitting well before the disclosure body runs out. */
+@container report (max-width: 420px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .detailRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryButton,
+  .secondaryButton,
+  .fileInput::file-selector-button {
+    transition: none;
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "scope": "OR-04 interval repair within frozen OR-01..04",
+  "specSha256": "4ef3aadfbb0baec1c9fdd4fb262312fd425864d53718abad9d9ba6fe94735ec3",
+  "sources": [
+    {
+      "path": "src/onchain-read/client.ts",
+      "preimage": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "candidate": "4475897af74b7ffec9d28396f05ec669832438c2c0ee7e94431178e97034f999"
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "preimage": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "candidate": "80cae12cdecfe2d914582e444c1a34d06d8393da97db254b16070c07a535785f"
+    },
+    {
+      "path": "src/onchain-read/gateway.ts",
+      "preimage": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "candidate": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42"
+    },
+    {
+      "path": "src/onchain-read/gateway.test.ts",
+      "preimage": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "candidate": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "verification/onchain-live-tests.log",
+      "sha256": "9db21bf243246facca5737ce690bdca65192a23d7ca5a0e42d73fc741d87f70a"
+    },
+    {
+      "path": "verification/onchain-interval-red.log",
+      "sha256": "e5a225f07dae9dc2ceb7e1fba50648c383c261d54c14ea2f8b20685ba39bcbd1"
+    },
+    {
+      "path": "verification/onchain-interval-green.log",
+      "sha256": "d4e73cfbed99af998f322583eb3f491f88360bc9b057c364fec5cdf9c1bef398"
+    },
+    {
+      "path": "verification/onchain-interval-full.log",
+      "sha256": "eb2fa5984c4ead0f5fce811e7931d882959dd0297a30eb270b4b47165477c324"
+    },
+    {
+      "path": "verification/onchain-interval-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "diagnosisSha256": "e9253abca718575cf16bfd85f005b357fa69789b93a65e2c7ca06f383506cdfe"
+}

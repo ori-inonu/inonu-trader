@@ -1,0 +1,598 @@
+{
+  "format": "docs-wiki-verification-v1",
+  "checked_at": "2026-10-13T16:18:52.788046-03:00",
+  "ok": false,
+  "navigation_ok": true,
+  "preservation_ok": false,
+  "drift_inventory_ok": false,
+  "checks": {
+    "original_files": 1244,
+    "original_files_unchanged": 1224,
+    "registered_original_drifts": 18,
+    "unregistered_original_drifts": 1,
+    "sensitive_sources_unverified": 1,
+    "sensitive_source_paths": [
+      "docs/sdd/mesa-decisao-20261013/credential-evidence.md"
+    ],
+    "source_files_catalogued": 1239,
+    "markdown_sources": 476,
+    "supporting_artifacts": 763,
+    "hidden_files_excluded_from_navigation": 5,
+    "generated_files": 110,
+    "generated_markdown_pages": 68,
+    "thematic_pages": 17,
+    "links_checked": 1986,
+    "rendered_catalog_source_links": 1239,
+    "log_entries": 3
+  },
+  "errors": [
+    {
+      "code": "original_hash_drift",
+      "paths": [
+        "docs/sdd/inonu-desktop-v1/evidence/T3.12-rotas-da-carteira.md"
+      ]
+    }
+  ],
+  "warnings": [
+    {
+      "code": "registered_original_hash_drift",
+      "paths": [
+        "docs/.obsidian/graph.json",
+        "docs/.obsidian/workspace.json",
+        "docs/SYSTEM-ONE.md",
+        "docs/sdd/dados-quant/REPORT.md",
+        "docs/sdd/dados-quant/SPEC.md",
+        "docs/sdd/dados-quant/evidence/calibration-latest.json",
+        "docs/sdd/dados-quant/evidence/calibration-train30.json",
+        "docs/sdd/dados-quant/evidence/calibration-train300bars.json",
+        "docs/sdd/inonu-desktop-v1/CHECKPOINT.md",
+        "docs/sdd/inonu-desktop-v1/OWNERSHIP.md",
+        "docs/sdd/inonu-desktop-v1/TASKS.md",
+        "docs/sdd/inonu-desktop-v1/evidence/T5.7-T6.4-T6.5-camada-do-grafico.md",
+        "docs/sdd/inonu-desktop-v1/evidence/T7.10-T7.11-T10.3-descoberta-alertas-aceitar.md",
+        "docs/sdd/inonu-desktop-v1/evidence/T8.2-T8.4-universo-onchain.md",
+        "docs/sdd/inonu-desktop-v1/evidence/T9.5-T9.7-escada-e-ticket.md",
+        "docs/sdd/inteligencia-decisao/evidence/C1-ao-vivo.md",
+        "docs/sdd/mesa-decisao-20261013/REPORT.md",
+        "docs/sdd/mesa-decisao-20261013/change-manifest.json"
+      ],
+      "note": "Current bytes differ from the immutable initial manifest; each change is recorded, but this is not byte-for-byte preservation."
+    },
+    {
+      "code": "sensitive_source_not_hashed",
+      "paths": [
+        "docs/sdd/mesa-decisao-20261013/credential-evidence.md"
+      ],
+      "note": "Only path existence is checked; contents and current hashes are deliberately not read."
+    },
+    {
+      "code": "quality_review",
+      "path": "docs/concepts/instalavel-e-inonu.md"
+    },
+    {
+      "code": "quality_review",
+      "path": "docs/concepts/inteligencia-e-resultados.md"
+    },
+    {
+      "code": "quality_review",
+      "path": "docs/concepts/interface-e-central.md"
+    }
+  ],
+  "legacy_maintenance": {
+    "large_markdown_sources": [
+      {
+        "path": "docs/portfolio-evidence-v1/REPORT.md",
+        "lines": 240
+      },
+      {
+        "path": "docs/sdd/carteira-evidencia/design.md",
+        "lines": 410
+      },
+      {
+        "path": "docs/wallet-opportunity-research.md",
+        "lines": 213
+      },
+      {
+        "path": "docs/JEV-TAPE-DATA-F1-F4-SPEC-V2-20261011.md",
+        "lines": 286
+      },
+      {
+        "path": "docs/research/R7-okx-agentic-wallet.md",
+        "lines": 429
+      },
+      {
+        "path": "docs/sdd/dados-quant/REPORT.md",
+        "lines": 252
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/onchainos-coverage.md",
+        "lines": 617
+      },
+      {
+        "path": "docs/sdd/inonu-desktop-v1/SPEC.md",
+        "lines": 402
+      },
+      {
+        "path": "docs/real-integration/INVENTARIO-ESPECIFICACOES.md",
+        "lines": 273
+      },
+      {
+        "path": "docs/real-integration/SEMANTIC-PROOF.md",
+        "lines": 353
+      },
+      {
+        "path": "docs/sdd/frontend-ux-20261013/frontend-research.md",
+        "lines": 364
+      },
+      {
+        "path": "docs/JEV-LAB-JEV-REAL.md",
+        "lines": 224
+      },
+      {
+        "path": "docs/JEV-LABORATORIO-DE-DECISAO.md",
+        "lines": 525
+      },
+      {
+        "path": "docs/OKX-DERIVATIVES-SPEC.md",
+        "lines": 261
+      },
+      {
+        "path": "docs/okx-dex-v2/ROOT-47-VERIFICATION.md",
+        "lines": 300
+      },
+      {
+        "path": "docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+        "lines": 203
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/OKX-AUDIT.md",
+        "lines": 251
+      },
+      {
+        "path": "docs/OKX-ONCHAINOS-DADOS-SPEC.md",
+        "lines": 409
+      },
+      {
+        "path": "docs/research/R6-onchain-os-inventario.md",
+        "lines": 310
+      },
+      {
+        "path": "docs/sdd/config-onchain-smartmoney/fase-2/SPEC.md",
+        "lines": 251
+      },
+      {
+        "path": "docs/JEV-OKX-SDD-THREAT-MODEL-20261009.md",
+        "lines": 218
+      },
+      {
+        "path": "docs/LIVE-QUALIFICATION.md",
+        "lines": 362
+      },
+      {
+        "path": "docs/POLITICA-DE-LIMITES.md",
+        "lines": 240
+      },
+      {
+        "path": "docs/research/R2-carteira-permissoes-delegacao.md",
+        "lines": 251
+      },
+      {
+        "path": "docs/research/R3-estrategias-e-alavancagem.md",
+        "lines": 299
+      },
+      {
+        "path": "docs/research/R9-system-one-alavancagem-onchainos.md",
+        "lines": 349
+      }
+    ],
+    "exact_markdown_duplicate_groups": [
+      [
+        "docs/research/codex-operator-c4-research-20261011/docs-research-defi-endpoint-coverage-20261011.md",
+        "docs/research/OKX-DEFI-ENDPOINT-COVERAGE-20261011.md"
+      ],
+      [
+        "docs/JEV-READ-INDEPENDENT-STANDARDS-REVIEW-4a1d9e9.md",
+        "docs/research/codex-operator-c4-research-20261011/concurrent-jev-read-standards-review-20261011.md"
+      ],
+      [
+        "docs/JEV-TAPE-DATA-F1-F4-INDEPENDENT-SPEC-V2-REVIEW-20261011.md",
+        "docs/research/codex-operator-c4-research-20261011/jev-tape-data-f1-f4-independent-spec-v2-review-20261011.md"
+      ],
+      [
+        "docs/OPERATOR-CLI-LOCK-FINAL-AUDIT-20261011.md",
+        "docs/research/codex-operator-c4-research-20261011/operator-cli-lock-final-audit.md"
+      ],
+      [
+        "docs/OPERATOR-ROUNDTRIP-CONTRACT-RESEARCH-20261011.md",
+        "docs/research/codex-operator-c4-research-20261011/operator-roundtrip-contract-research.md"
+      ],
+      [
+        "docs/OPERATOR-ROUTER-PROOF-RESEARCH-20261011.md",
+        "docs/research/codex-operator-c4-research-20261011/operator-router-proof-research.md"
+      ],
+      [
+        "docs/research/codex-operator-c4-research-20261011/operator-cli-lock-reconciliation-research.md",
+        "docs/research/OPERATOR-CLI-LOCK-RECONCILIATION-20261011.md"
+      ]
+    ],
+    "unresolved_local_markdown_links": [
+      {
+        "path": "docs/OPERATOR-PERSISTENCE-FINAL-AUDIT.md",
+        "target": "persistence-final-verification.md"
+      },
+      {
+        "path": "docs/OPERATOR-PERSISTENCE-FINAL-AUDIT.md",
+        "target": "../inonu-system-one-review-standards-20261011/persistence-final-review.md"
+      },
+      {
+        "path": "docs/UI-TRUTH-INDEPENDENT-REVIEW-20261011.md",
+        "target": "ui-truth-fixture-20261011/candidate-preservation.result.json"
+      },
+      {
+        "path": "docs/UI-TRUTH-INDEPENDENT-REVIEW-20261011.md",
+        "target": "ui-truth-fixture-20261011/candidate-focused.result.json"
+      },
+      {
+        "path": "docs/UI-TRUTH-INDEPENDENT-REVIEW-20261011.md",
+        "target": "ui-truth-fixture-20261011/baseline-red-focused.result.json"
+      },
+      {
+        "path": "docs/okx-portfolio-v1/CONTRACT-COMPARISON.md",
+        "target": "/C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/RESEARCH.md"
+      },
+      {
+        "path": "docs/okx-portfolio-v1/CONTRACT-COMPARISON.md",
+        "target": "/C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/SOURCES.json"
+      },
+      {
+        "path": "docs/real-integration/ESTADO-ATUAL.md",
+        "target": "baseline-fontes.json"
+      },
+      {
+        "path": "docs/real-integration/ESTADO-ATUAL.md",
+        "target": "status-checkout.txt"
+      },
+      {
+        "path": "docs/real-integration/ESTADO-ATUAL.md",
+        "target": "runtime-observado.json"
+      },
+      {
+        "path": "docs/real-integration/ESTADO-ATUAL.md",
+        "target": "decisao-escopo.json"
+      },
+      {
+        "path": "docs/real-integration/ESTADO-ATUAL.md",
+        "target": "REVISAO-INDEPENDENTE.md"
+      },
+      {
+        "path": "docs/real-integration/INSTRUCAO-DO-OBJETIVO.md",
+        "target": "decisao-escopo.json"
+      },
+      {
+        "path": "docs/research/OPERATOR-CLI-LOCK-RECONCILIATION-20261011.md",
+        "target": "./operator-cli-lock-reconcile-20261011-aaf75939/source-manifest.json"
+      },
+      {
+        "path": "docs/research/OPERATOR-CLI-LOCK-RECONCILIATION-20261011.md",
+        "target": "./operator-cli-lock-reconcile-20261011-aaf75939/trial-strict-allowlist/receipt.json"
+      },
+      {
+        "path": "docs/research/OPERATOR-CLI-LOCK-RECONCILIATION-20261011.md",
+        "target": "./operator-cli-lock-reconcile-20261011-aaf75939/terminal-evidence.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/c4-research.md",
+        "target": "R8.md"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/c4-research.md",
+        "target": "operator-config.ts"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/c4-research.md",
+        "target": "okx-operator.ts"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/c4-research.md",
+        "target": "trader-config.ts"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/c4-research.md",
+        "target": "package.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-identity-spec-review-20261011.md",
+        "target": "./identity-spec-review-20261011-07c900d3274a/evidence-manifest.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/jev-tape-data-lifecycle-spec-review-20261011.md",
+        "target": "./lifecycle-spec-review-20261011-270c41827a14/evidence-manifest.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-cli-lock-reconciliation-research.md",
+        "target": "./operator-cli-lock-reconcile-20261011-aaf75939/source-manifest.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-cli-lock-reconciliation-research.md",
+        "target": "./operator-cli-lock-reconcile-20261011-aaf75939/trial-strict-allowlist/receipt.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-cli-lock-reconciliation-research.md",
+        "target": "./operator-cli-lock-reconcile-20261011-aaf75939/terminal-evidence.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/candidates.ts:159"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/executor.ts:246"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/okx-wallet/trade.ts:153"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/types.ts:35"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/plan.ts:45"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/ledger.ts:162"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/docs/research/R8-re-revisao-operador-f1-f8-20261011.md:73"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/docs/OPERATOR-MODEL-BOUNDARY-SPEC.md:15"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/docs/OPERATOR-CLI-LOCK-SPEC.md:31"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source-manifest.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/verification.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/probe.ts"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/operator.test.ts:108"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/executor.expiry.test.ts:71"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/source/src/operator/executor.approval-identity.test.ts:129"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/run-receipt.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/probe-result.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/stdout.raw.log"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/stderr.raw.log"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/operator-second-leg-amount-research.md",
+        "target": "operator-second-leg-20261011-d113f5f-v2/network-guard.jsonl"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "../inonu-system-one-review-spec-20261011/src/operator/ledger.ts"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "../inonu-system-one-review-spec-20261011/persistence-diagnosis.md"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "persistence-probe.mjs"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "persistence-runner.ps1"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "persistence-release-probe.mjs"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "persistence-release-runner.ps1"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "persistence-results/run-manifest.json"
+      },
+      {
+        "path": "docs/research/codex-operator-c4-research-20261011/persistence-experiment.md",
+        "target": "persistence-results/release-manifest.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-before-hashes.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-after-hashes.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-comparisons.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-suite-execution.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-types-execution.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-probes-execution.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-probes.test.ts"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-probe-observations-1a40fb13-e863-48bf-80f0-b6c79c6c5a52.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-runner.py"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-inspect.py"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-suite.stdout.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-suite.stderr.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-probes.stdout.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-final-spec-review-probes.stderr.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-hashes-before.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-hashes-after.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-diff-baseline.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-diff-review-standards.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-diff-review-interval-standards.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-counterexamples.test.ts"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-url.test.ts"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-run.py"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-artifacts.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-FINAL-STANDARDS-REVIEW.md",
+        "target": "onchain-interval-final-standards-review-author-evidence.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-hashes.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-final-hashes.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-suite-execution.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-types-execution.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-probes-execution.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-residual-execution.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-suite.stdout.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-suite.stderr.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-probes.stdout.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-probes.stderr.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-residual.stdout.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-residual.stderr.log"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-probe-observations-232954d4-1f6d-46ca-8e2d-08c5269758d6.json"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-residual.test.ts"
+      },
+      {
+        "path": "docs/sdd/backend-audit-20261013/ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+        "target": "onchain-interval-spec-review-initial-tool-returns.json"
+      }
+    ],
+    "limits": "File-target scan only, not anchor/external-URL verification or technical truth audit. Historical links may intentionally refer to external archived work."
+  }
+}

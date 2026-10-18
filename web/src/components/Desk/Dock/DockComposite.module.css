@@ -1,0 +1,182 @@
+/* The composite tabs of the bottom dock: a row of view chips over one body, and the two tables that come from the flow engine.
+   Same visual language as DockTabs.module.css and OnchainTabs.module.css; nothing animates. */
+.composite {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chips {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s1) var(--s3);
+  border-bottom: 1px solid var(--edge);
+  background: var(--bg-deck-2);
+}
+.chip {
+  height: 22px;
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--edge-strong); color: var(--ink); }
+.chip[aria-pressed="true"] {
+  border-color: var(--signal);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--signal) 14%, transparent);
+}
+.chip:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+.pane {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.fill {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  font: var(--fs-xs);
+}
+.fill[data-stale="true"] { opacity: 0.55; }
+
+.status {
+  flex: none;
+  margin: 0;
+  padding: var(--s1) var(--s3);
+  border-bottom: 1px solid var(--edge);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+.empty {
+  display: grid;
+  min-height: 0;
+  flex: 1 1 auto;
+  place-items: center;
+  padding: var(--s4);
+  color: var(--ink-3);
+  font: var(--fs-sm);
+  text-align: center;
+}
+
+.table {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+.scroll {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 24px;
+  flex: none;
+  border-bottom: 1px solid var(--edge);
+  background: var(--bg-deck-2);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+/* Fluxo: label, value, note. A value wraps instead of being cut: it is the whole point of the row. */
+.frow {
+  display: grid;
+  grid-template-columns: minmax(120px, 170px) minmax(0, 1fr) minmax(60px, 140px);
+  align-items: baseline;
+  gap: var(--s3);
+  min-height: 22px;
+  padding: 3px var(--s3);
+  border-bottom: 1px solid color-mix(in srgb, var(--edge) 55%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.flabel { color: var(--ink-3); }
+.fvalue { min-width: 0; color: var(--ink); overflow-wrap: anywhere; }
+.fnote { color: var(--ink-3); text-align: right; }
+@media (max-width: 820px) {
+  .frow { grid-template-columns: minmax(96px, 120px) minmax(0, 1fr); column-gap: var(--s2); }
+  .fnote { grid-column: 2; text-align: left; }
+  .fnote:empty { display: none; }
+}
+
+/* Zonas: side, band, score, factors, age, state, invalidation. Seven columns need room: on a narrow tab the table scrolls sideways
+   (header included, so the columns stay aligned) instead of clipping a number. */
+.scrollWide { width: max-content; min-width: 100%; }
+.zrow {
+  display: grid;
+  grid-template-columns: 84px minmax(110px, 1.2fr) 52px minmax(70px, 1fr) 76px 76px minmax(80px, 1fr);
+  align-items: center;
+  gap: var(--s3);
+  min-width: 560px;
+  min-height: 22px;
+  padding: 0 var(--s3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.zrow > span { overflow: hidden; text-overflow: ellipsis; }
+.zrow[data-lado="demanda"] .zside { color: var(--buy); font-weight: 600; }
+.zrow[data-lado="oferta"] .zside { color: var(--sell); font-weight: 600; }
+.more {
+  margin: 0;
+  padding: var(--s1) var(--s3);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+}
+
+/* Radar, Noticias: the section from OnchainDeskTabs brings its own blocks; this pane only scrolls them. */
+.news {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font: var(--fs-xs);
+  scrollbar-width: thin;
+}
+
+/* DAT-2: where the data of the chosen view comes from and how old it is, at the end of the chip row. */
+.source {
+  margin-left: auto;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  white-space: nowrap;
+}

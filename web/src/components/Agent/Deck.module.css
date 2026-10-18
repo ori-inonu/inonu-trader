@@ -1,0 +1,802 @@
+/* The result deck and the decision center. Motion here is one transition from a value to the next (a bar growing, a line being drawn, a card lifting under the pointer), started by a change of data or by the
+   first paint: nothing loops, nothing blinks, nothing runs without a change behind it. Tokens of the desk only; text without accents. */
+
+.deck {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: var(--s6);
+  align-items: stretch;
+}
+
+.panel {
+  position: relative;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 3%, var(--bg-deck)) 0%, var(--bg-deck) 55%);
+  box-shadow: var(--elev-1), inset 0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.panelHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s4);
+  flex-wrap: wrap;
+}
+
+.panelTitle {
+  margin: 0;
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.panelNote {
+  font: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s6);
+  min-width: 0;
+}
+
+/* ---- the curve of the wallet's value */
+
+.bigRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s4);
+  flex-wrap: wrap;
+}
+
+.bigValue {
+  font: var(--fs-hero);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 2px var(--s3);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--edge-strong);
+  font: var(--fs-sm);
+  font-family: var(--font-mono);
+  transition: color var(--dur-base) var(--ease-snap), border-color var(--dur-base) var(--ease-snap), background-color var(--dur-base) var(--ease-snap);
+}
+
+.deltaUp {
+  color: var(--buy);
+  border-color: color-mix(in srgb, var(--buy) 55%, transparent);
+  background: color-mix(in srgb, var(--buy) 10%, transparent);
+}
+
+.deltaDown {
+  color: var(--sell);
+  border-color: color-mix(in srgb, var(--sell) 55%, transparent);
+  background: color-mix(in srgb, var(--sell) 10%, transparent);
+}
+
+.deltaFlat {
+  color: var(--ink-3);
+}
+
+.chartWrap {
+  position: relative;
+  width: 100%;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.grid {
+  stroke: var(--edge);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+
+.axisText {
+  fill: var(--ink-4);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.areaFill {
+  opacity: 0;
+  transition: opacity var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.areaShown {
+  opacity: 1;
+}
+
+.curve {
+  fill: none;
+  stroke: var(--signal);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1100ms var(--ease-out-expo);
+}
+
+.curveShown {
+  stroke-dashoffset: 0;
+}
+
+.marker {
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(0.2);
+  transition: opacity var(--dur-slow) var(--ease-out-back), transform var(--dur-slow) var(--ease-out-back);
+  cursor: default;
+}
+
+.markerShown {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.marker:hover {
+  transform: scale(1.5);
+}
+
+.markerBuy {
+  fill: var(--bg-void);
+  stroke: var(--buy);
+}
+
+.markerSell {
+  fill: var(--bg-void);
+  stroke: var(--sell);
+}
+
+.legend {
+  display: flex;
+  gap: var(--s4);
+  flex-wrap: wrap;
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--ink-3);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--s6) 0;
+  color: var(--ink-3);
+  font: var(--fs-base);
+}
+
+/* ---- the meters */
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.metricRow {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s3);
+  font: var(--fs-sm);
+}
+
+.metricLabel {
+  color: var(--ink-2);
+}
+
+.metricValue {
+  font-family: var(--font-mono);
+  color: var(--ink);
+  text-align: right;
+  min-width: 64px;
+}
+
+.track {
+  position: relative;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: var(--r-pill);
+  background: var(--ink-3);
+  transition: width var(--dur-cinematic) var(--ease-out-expo), background-color var(--dur-base) var(--ease-snap);
+}
+
+.toneGood { background: var(--buy); }
+.toneWarn { background: var(--sell); }
+.toneMid { background: var(--hold); }
+.toneDim { background: var(--ink-4); }
+.toneCalm { background: var(--signal-deep); }
+.toneSell { background: var(--sell); }
+.toneBuy { background: var(--buy); }
+
+.textGood { color: var(--buy); }
+.textWarn { color: var(--sell); }
+.textDim { color: var(--ink-4); }
+
+.fine {
+  margin: 0;
+  font: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.stack {
+  display: flex;
+  height: 14px;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  background: var(--track);
+}
+
+.stackPart {
+  height: 100%;
+  width: 0;
+  transition: width var(--dur-cinematic) var(--ease-out-expo);
+}
+
+/* ---- the decision center */
+
+.center {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+
+.centerHead {
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 3px var(--s3);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--edge-strong);
+  font: var(--fs-xs);
+  color: var(--ink-2);
+  transition: color var(--dur-base) var(--ease-snap), border-color var(--dur-base) var(--ease-snap);
+}
+
+.badgeDefensiva { color: var(--hold); border-color: color-mix(in srgb, var(--hold) 60%, transparent); }
+.badgeNeutra { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 60%, transparent); }
+.badgeOfensiva { color: var(--buy); border-color: color-mix(in srgb, var(--buy) 60%, transparent); }
+
+.spacer {
+  flex: 1;
+}
+
+.flowGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--s6);
+  align-items: start;
+}
+
+.funnel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.funnelRow {
+  display: grid;
+  grid-template-columns: 138px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: var(--s3);
+  font: var(--fs-sm);
+}
+
+.funnelBar {
+  height: 18px;
+  border-radius: var(--r-xs);
+  background: var(--track);
+  overflow: hidden;
+  position: relative;
+}
+
+.funnelFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: var(--r-xs);
+  background: linear-gradient(90deg, var(--signal-deep), var(--signal));
+  transition: width var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.funnelFillClosed { background: linear-gradient(90deg, color-mix(in srgb, var(--hold) 55%, var(--bg-deck)), var(--hold)); }
+.funnelFillAct { background: linear-gradient(90deg, color-mix(in srgb, var(--buy) 55%, var(--bg-deck)), var(--buy)); }
+
+.reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  margin-top: var(--s1);
+}
+
+.reason {
+  display: inline-flex;
+  gap: var(--s2);
+  padding: 2px var(--s3);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--edge-strong);
+  font: var(--fs-xs);
+  color: var(--ink-2);
+}
+
+.reason b {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--hold);
+}
+
+.risk {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+
+.riskLevels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s2);
+}
+
+.riskLevel {
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  padding: var(--s3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg-well);
+  transition: border-color var(--dur-base) var(--ease-snap), background-color var(--dur-base) var(--ease-snap);
+}
+
+.riskLevelOn {
+  border-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 8%, var(--bg-well));
+}
+
+.riskName {
+  font: var(--fs-xs);
+  color: var(--ink-3);
+  text-transform: capitalize;
+}
+
+.riskCount {
+  font: var(--fs-readout);
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.riskCountZero {
+  color: var(--ink-4);
+}
+
+.riskHint {
+  font: var(--fs-micro);
+  color: var(--ink-4);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--s4);
+}
+
+.cand {
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: var(--bg-hull);
+  padding: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--dur-slow) var(--ease-out-expo), transform var(--dur-slow) var(--ease-out-expo), border-color var(--dur-base) var(--ease-snap), box-shadow var(--dur-base) var(--ease-snap);
+}
+
+.candShown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cand:hover,
+.cand:focus-within {
+  border-color: var(--edge-focus);
+  box-shadow: var(--elev-2);
+}
+
+.candTop {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.candName {
+  font: var(--fs-md);
+  color: var(--ink);
+}
+
+.candChain {
+  font: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.role {
+  padding: 1px var(--s2);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--edge-strong);
+  font: var(--fs-micro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.roleBuy { color: var(--buy); border-color: color-mix(in srgb, var(--buy) 50%, transparent); }
+.roleHold { color: var(--hold); border-color: color-mix(in srgb, var(--hold) 50%, transparent); }
+
+.verdict {
+  margin-left: auto;
+  font: var(--fs-sm);
+  color: var(--ink);
+  text-align: right;
+}
+
+.verdictClosed {
+  color: var(--ink-3);
+}
+
+.closedWhy {
+  margin: 0;
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.probRow {
+  display: flex;
+  height: 22px;
+  border-radius: var(--r-xs);
+  overflow: hidden;
+  background: var(--track);
+  gap: 2px;
+}
+
+.probSeg {
+  position: relative;
+  min-width: 0;
+  width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--fs-micro);
+  font-family: var(--font-mono);
+  color: var(--bg-void);
+  overflow: hidden;
+  transition: width var(--dur-cinematic) var(--ease-out-expo), opacity var(--dur-base) var(--ease-snap), filter var(--dur-base) var(--ease-snap);
+  opacity: 0.5;
+}
+
+.probSegChosen {
+  opacity: 1;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ink) 80%, transparent);
+}
+
+.probLegend {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s2);
+  font: var(--fs-micro);
+  color: var(--ink-4);
+}
+
+.probLegendChosen {
+  color: var(--ink);
+}
+
+.facets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.facetRow {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: var(--s2);
+  font: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.facetValue {
+  font-family: var(--font-mono);
+  text-align: right;
+  color: var(--ink-2);
+}
+
+.expand {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--signal);
+  font: var(--fs-xs);
+  cursor: pointer;
+}
+
+.expand:hover {
+  text-decoration: underline;
+}
+
+.chev {
+  display: inline-block;
+  margin-left: var(--s1);
+  transition: transform var(--dur-base) var(--ease-snap);
+}
+
+.chevOpen {
+  transform: rotate(90deg);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.tag {
+  padding: 1px var(--s2);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--edge);
+  font: var(--fs-micro);
+  color: var(--ink-3);
+}
+
+.tagMark {
+  color: var(--hold);
+  border-color: color-mix(in srgb, var(--hold) 45%, transparent);
+}
+
+.orders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+
+/* ---- the map of the decision */
+
+.mapRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  gap: var(--s6);
+  align-items: stretch;
+}
+
+.mapWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--signal) 7%, var(--bg-well)) 0%, var(--bg-well) 70%);
+  padding: var(--s3) var(--s3) var(--s4);
+  min-width: 0;
+}
+
+.mapSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.mapRing {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 1;
+  stroke-dasharray: 2 6;
+}
+
+.mapLink {
+  stroke: var(--signal);
+  stroke-width: 1.4;
+  opacity: 0;
+  transition: opacity var(--dur-cinematic) var(--ease-out-expo);
+}
+
+.mapCoreRing {
+  fill: none;
+  stroke: var(--signal);
+  stroke-width: 1.5;
+  opacity: 0.5;
+}
+
+.mapCoreDot {
+  fill: color-mix(in srgb, var(--signal) 30%, var(--bg-void));
+  stroke: var(--signal);
+  stroke-width: 1.5;
+}
+
+.mapCoreText {
+  fill: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.mapNode {
+  opacity: 0;
+  transition: transform 900ms var(--ease-out-expo), opacity var(--dur-slow) var(--ease-out-expo);
+  cursor: default;
+}
+
+.mapNodeShown {
+  opacity: 1;
+}
+
+.mapDot {
+  stroke-width: 2;
+  transition: stroke-width var(--dur-base) var(--ease-snap), fill var(--dur-base) var(--ease-snap);
+}
+
+.mapNode:hover .mapDot {
+  stroke-width: 3.5;
+}
+
+.mapLabel {
+  fill: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+}
+
+.mapNode:hover .mapLabel {
+  fill: var(--ink);
+}
+
+.nodeSell .mapDot { fill: color-mix(in srgb, var(--sell) 45%, var(--bg-void)); stroke: var(--sell); }
+.nodeBuy .mapDot { fill: color-mix(in srgb, var(--buy) 45%, var(--bg-void)); stroke: var(--buy); }
+.nodeHold .mapDot { fill: color-mix(in srgb, var(--hold) 40%, var(--bg-void)); stroke: var(--hold); }
+.nodeOpen .mapDot { fill: color-mix(in srgb, var(--signal) 30%, var(--bg-void)); stroke: var(--signal); }
+.nodeClosed .mapDot { fill: var(--bg-deck-3); stroke: var(--ink-4); }
+
+.legendDot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.legendDot.nodeSell { background: var(--sell); }
+.legendDot.nodeBuy { background: var(--buy); }
+.legendDot.nodeHold { background: var(--hold); }
+.legendDot.nodeOpen { background: var(--signal); }
+.legendDot.nodeClosed { background: var(--ink-4); }
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: var(--bg-hull);
+  padding: var(--s4);
+  min-width: 0;
+}
+
+.stripBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 120px;
+  padding-top: var(--s2);
+  border-bottom: 1px solid var(--edge);
+}
+
+.stripBar {
+  flex: 1;
+  min-width: 4px;
+  height: 0;
+  border-radius: 3px 3px 0 0;
+  background: var(--signal-deep);
+  transition: height var(--dur-cinematic) var(--ease-out-expo), background-color var(--dur-base) var(--ease-snap);
+}
+
+.stripBar:hover {
+  background: var(--signal);
+}
+
+.stripAct { background: var(--buy); }
+.stripWait { background: var(--hold); }
+.stripBad { background: var(--sell); }
+
+@media (max-width: 1100px) {
+  .mapRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .deck,
+  .flowGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .funnelRow {
+    grid-template-columns: 112px minmax(0, 1fr) 30px;
+  }
+  .facetRow {
+    grid-template-columns: 108px minmax(0, 1fr) 32px;
+  }
+  .bigValue {
+    font: var(--fs-readout);
+    font-family: var(--font-mono);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .areaFill,
+  .curve,
+  .marker,
+  .fill,
+  .stackPart,
+  .funnelFill,
+  .cand,
+  .probSeg,
+  .chev,
+  .mapNode,
+  .mapLink,
+  .stripBar {
+    transition: none;
+  }
+  .curve { stroke-dashoffset: 0; }
+  .areaFill,
+  .marker,
+  .cand {
+    opacity: 1;
+    transform: none;
+  }
+}

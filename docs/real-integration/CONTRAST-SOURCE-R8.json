@@ -1,0 +1,160 @@
+{
+  "scope": "source-token-contrast-only",
+  "observedAt": "2026-10-11T20:45:12.309863+00:00",
+  "sourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "sourceFiles": [
+    {
+      "path": "web/src/app/globals.css",
+      "sha256": "ac50734ac598a304ab1864f70b0cd3911a2c740889846243d7bc391e384d1712"
+    },
+    {
+      "path": "web/src/components/RealPipeline/RealPipeline.module.css",
+      "sha256": "15242c8df4b444cb82407faa5f325531f80fc46b69e9a690391c5b01f4bea767"
+    }
+  ],
+  "allCheckedPairsPass": true,
+  "checkedPairs": [
+    {
+      "element": "texto base",
+      "foregroundToken": "--ink",
+      "foreground": "#e9f1fa",
+      "backgroundToken": "--bg-deck",
+      "background": "#0d1622",
+      "ratio": 15.954686452283363,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "texto secundário",
+      "foregroundToken": "--ink-2",
+      "foreground": "#b6c8dc",
+      "backgroundToken": "--bg-deck",
+      "background": "#0d1622",
+      "ratio": 10.63588688180664,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "identificação do painel",
+      "foregroundToken": "--signal",
+      "foreground": "#4fd6e8",
+      "backgroundToken": "--bg-deck",
+      "background": "#0d1622",
+      "ratio": 10.490541944661503,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "badge hold",
+      "foregroundToken": "--hold",
+      "foreground": "#f2c14e",
+      "backgroundToken": "--bg-deck",
+      "background": "#0d1622",
+      "ratio": 10.834382638625371,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "dependência",
+      "foregroundToken": "--hold",
+      "foreground": "#f2c14e",
+      "backgroundToken": "--bg-well",
+      "background": "#070c14",
+      "ratio": 11.675993865049925,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "texto de dependência/consentimento/erro",
+      "foregroundToken": "--ink",
+      "foreground": "#e9f1fa",
+      "backgroundToken": "--bg-well",
+      "background": "#070c14",
+      "ratio": 17.194041169593685,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "cabeçalho de tabela/proveniência",
+      "foregroundToken": "--ink-2",
+      "foreground": "#b6c8dc",
+      "backgroundToken": "--bg-well",
+      "background": "#070c14",
+      "ratio": 11.46207902410722,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "botão ativo",
+      "foregroundToken": "--ink",
+      "foreground": "#e9f1fa",
+      "backgroundToken": "--bg-deck-2",
+      "background": "#121d2b",
+      "ratio": 14.904585274346745,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "botão hover",
+      "foregroundToken": "--ink",
+      "foreground": "#e9f1fa",
+      "backgroundToken": "--bg-deck-3",
+      "background": "#1a2739",
+      "ratio": 13.22647074583622,
+      "required": 4.5,
+      "pass_": true
+    },
+    {
+      "element": "foco no painel",
+      "foregroundToken": "--signal",
+      "foreground": "#4fd6e8",
+      "backgroundToken": "--bg-deck",
+      "background": "#0d1622",
+      "ratio": 10.490541944661503,
+      "required": 3.0,
+      "pass_": true
+    },
+    {
+      "element": "foco no controle",
+      "foregroundToken": "--signal",
+      "foreground": "#4fd6e8",
+      "backgroundToken": "--bg-deck-2",
+      "background": "#121d2b",
+      "ratio": 9.800078331588995,
+      "required": 3.0,
+      "pass_": true
+    },
+    {
+      "element": "foco no consentimento",
+      "foregroundToken": "--signal",
+      "foreground": "#4fd6e8",
+      "backgroundToken": "--bg-well",
+      "background": "#070c14",
+      "ratio": 11.305443740766517,
+      "required": 3.0,
+      "pass_": true
+    },
+    {
+      "element": "borda de erro",
+      "foregroundToken": "--sell",
+      "foreground": "#ff6b81",
+      "backgroundToken": "--bg-well",
+      "background": "#070c14",
+      "ratio": 7.158626317689398,
+      "required": 3.0,
+      "pass_": true
+    }
+  ],
+  "limitations": [
+    "Não certifica contraste integral da página, herança/CSS computada em todos os estados ou elementos nativos.",
+    "Toque físico, preferência reduced motion em runtime e leitor de tela não exercitados.",
+    "Bordas estruturais decorativas não foram tratadas como único identificador de controle; foco e erro foram medidos."
+  ],
+  "sources": [
+    "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html",
+    "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+    "https://www.w3.org/WAI/WCAG21/Understanding/target-size.html"
+  ],
+  "targetSizeNote": "44×44 é SC 2.5.5 nível AAA na WCAG 2.1, não prova de AA. O projeto conserva seu requisito de alvos confortáveis independentemente dessa classificação.",
+  "goalG14Complete": false
+}

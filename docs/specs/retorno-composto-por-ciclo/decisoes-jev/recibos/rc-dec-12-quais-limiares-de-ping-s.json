@@ -1,0 +1,184 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-12-quais-limiares-de-ping-s",
+    "specHash": "f5f37ebfc6c486d0e12d7f8229aa62f3eacac8271ea816c210beca90d8613449",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "teste-2h-canal-quieto",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "teste-2h-canal-quieto",
+          "ping15-corte25",
+          "medir-24h-manter-limites",
+          "idade-pela-incerteza"
+        ],
+        "framings": [
+          {
+            "order": [
+              "teste-2h-canal-quieto",
+              "ping15-corte25",
+              "medir-24h-manter-limites",
+              "idade-pela-incerteza"
+            ],
+            "probs": {
+              "teste-2h-canal-quieto": 0.87,
+              "ping15-corte25": 0.05,
+              "medir-24h-manter-limites": 0.08,
+              "idade-pela-incerteza": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "ping15-corte25",
+              "medir-24h-manter-limites",
+              "idade-pela-incerteza",
+              "teste-2h-canal-quieto"
+            ],
+            "probs": {
+              "ping15-corte25": 0.1,
+              "medir-24h-manter-limites": 0.19,
+              "idade-pela-incerteza": 0,
+              "teste-2h-canal-quieto": 0.71,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "medir-24h-manter-limites",
+              "idade-pela-incerteza",
+              "teste-2h-canal-quieto",
+              "ping15-corte25"
+            ],
+            "probs": {
+              "medir-24h-manter-limites": 0.23,
+              "idade-pela-incerteza": 0,
+              "teste-2h-canal-quieto": 0.64,
+              "ping15-corte25": 0.12,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "teste-2h-canal-quieto": 0.74,
+          "ping15-corte25": 0.09,
+          "medir-24h-manter-limites": 0.1667,
+          "idade-pela-incerteza": 0
+        },
+        "noneFits": 0.0033,
+        "agreement": 1,
+        "margin": 0.5733,
+        "leader": "teste-2h-canal-quieto",
+        "railProb": {
+          "teste-2h-canal-quieto": 0,
+          "ping15-corte25": 0.14,
+          "medir-24h-manter-limites": 0.01,
+          "idade-pela-incerteza": 0.07
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "teste-2h-canal-quieto",
+          "ping15-corte25",
+          "medir-24h-manter-limites",
+          "idade-pela-incerteza"
+        ],
+        "framings": [
+          {
+            "order": [
+              "teste-2h-canal-quieto",
+              "ping15-corte25",
+              "medir-24h-manter-limites",
+              "idade-pela-incerteza"
+            ],
+            "probs": {
+              "teste-2h-canal-quieto": 0.86,
+              "ping15-corte25": 0.04,
+              "medir-24h-manter-limites": 0.1,
+              "idade-pela-incerteza": 0,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "ping15-corte25",
+              "medir-24h-manter-limites",
+              "idade-pela-incerteza",
+              "teste-2h-canal-quieto"
+            ],
+            "probs": {
+              "ping15-corte25": 0.09,
+              "medir-24h-manter-limites": 0.2,
+              "idade-pela-incerteza": 0,
+              "teste-2h-canal-quieto": 0.71,
+              "none_fits": 0
+            }
+          },
+          {
+            "order": [
+              "medir-24h-manter-limites",
+              "idade-pela-incerteza",
+              "teste-2h-canal-quieto",
+              "ping15-corte25"
+            ],
+            "probs": {
+              "medir-24h-manter-limites": 0.28,
+              "idade-pela-incerteza": 0,
+              "teste-2h-canal-quieto": 0.6,
+              "ping15-corte25": 0.11,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "teste-2h-canal-quieto": 0.7233,
+          "ping15-corte25": 0.08,
+          "medir-24h-manter-limites": 0.1933,
+          "idade-pela-incerteza": 0
+        },
+        "noneFits": 0.0033,
+        "agreement": 1,
+        "margin": 0.53,
+        "leader": "teste-2h-canal-quieto",
+        "railProb": {
+          "teste-2h-canal-quieto": 0,
+          "ping15-corte25": 0.14,
+          "medir-24h-manter-limites": 0.01,
+          "idade-pela-incerteza": 0.07
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 10,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 10,
+    "failed": 0,
+    "inputTokens": 14592,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

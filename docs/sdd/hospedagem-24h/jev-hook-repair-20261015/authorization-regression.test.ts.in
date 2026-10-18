@@ -1,0 +1,149 @@
+import { test, expect, afterAll } from "bun:test";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { Store, sha } from "../runtime/store";
+import { lifecycle } from "../runtime/lifecycle";
+import { gate as originalGate, stopParser, type Inspection } from "../runtime/policy";
+
+const temp = () => mkdtempSync(join(tmpdir(), "jev-authorization-regression-"));
+const form = (answers: unknown[]) => `<send_user_message_question_reply>\n${JSON.stringify(answers)}\n</send_user_message_question_reply>`;
+const inspection: Inspection = { commands: ["bun"], scripts: [], scriptHash: sha("fixture"), network: false, unapprovedNetwork: false, writes: true, destructive: false, sensitiveRead: false, dynamic: true, outsideWrites: [], parseErrors: 0 };
+const fixture = () => { const store = new Store(temp()), workspace = temp(), session = store.session("native", store.scope(workspace)); return { store, workspace, session }; };
+const gate: typeof originalGate = (store, workspace, session, command, options = {}) => originalGate(store, workspace, session, command, { judge: (async () => ({ choice: "ask" })) as any, ...options });
+afterAll(stopParser);
+
+test("Codex answer envelope approves only the exact answer field", () => {
+  const { store, session } = fixture();
+  try {
+    const id = store.pendingGrant(session, "command", "script");
+    expect(store.approveFromHumanPrompt(session, form([{ questionItemId: "request", question: "Confirmar?", answer: `Autorizar Jev ${id}` }]))).toBe(true);
+  } finally { store.close(); }
+});
+
+test("several exact answers can approve several independent requests", () => {
+  const { store, session } = fixture();
+  try {
+    const a = store.pendingGrant(session, "a", "v1"), b = store.pendingGrant(session, "b", "v1");
+    expect(store.approveFromHumanPrompt(session, form([{ answer: `Autorizar Jev ${a}` }, { answer: `Autorizar Jev ${b}` }]))).toBe(true);
+    expect(store.consumeGrant(session, "a", "v1")).toBe(true);
+    expect(store.consumeGrant(session, "b", "v1")).toBe(true);
+    expect(store.consumeGrant(session, "a", "v1")).toBe(false);
+    expect(store.consumeGrant(session, "b", "v1")).toBe(false);
+  } finally { store.close(); }
+});
+
+test("question text, quoted prose, nested objects and malformed envelopes grant nothing", () => {
+  const { store, session } = fixture();
+  try {
+    const id = store.pendingGrant(session, "c", "v");
+    for (const prompt of [form([{ question: `Autorizar Jev ${id}`, answer: "nao" }]), form([{ answer: { text: `Autorizar Jev ${id}` } }]), `> Autorizar Jev ${id}`, `Ele disse Autorizar Jev ${id}`, JSON.stringify([{ answer: `Autorizar Jev ${id}` }]), `<send_user_message_question_reply>[invalid]</send_user_message_question_reply>`]) {
+      expect(store.approveFromHumanPrompt(session, prompt)).toBe(false);
+    }
+    expect(store.consumeGrant(session, "c", "v")).toBe(false);
+  } finally { store.close(); }
+});
+
+test("wrong session, expired request and changed script remain unauthorized", () => {
+  const { store, workspace, session } = fixture();
+  try {
+    const id = store.pendingGrant(session, "c", "v1"), other = store.session("other", store.scope(workspace));
+    expect(store.approveFromHumanPrompt(other, form([{ answer: `Autorizar Jev ${id}` }]))).toBe(false);
+    expect(store.approveFromHumanPrompt(session, `Autorizar Jev ${id}`)).toBe(true);
+    expect(store.consumeGrant(session, "c", "v2")).toBe(false);
+    store.db.query("UPDATE grants SET expires=? WHERE id=?").run(Date.now() - 1, id);
+    expect(store.approveFromHumanPrompt(session, form([{ answer: `Autorizar Jev ${id}` }]))).toBe(false);
+    expect(store.consumeGrant(session, "c", "v1")).toBe(false);
+  } finally { store.close(); }
+});
+
+test("same pending command keeps its challenge until expiry or revision change", () => {
+  const { store, session } = fixture();
+  try {
+    const id = store.pendingGrant(session, "c", "v1");
+    expect(store.pendingGrant(session, "c", "v1")).toBe(id);
+    expect(store.pendingGrant(session, "c", "v2")).not.toBe(id);
+    store.db.query("UPDATE grants SET expires=? WHERE id=?").run(Date.now() - 1, id);
+    expect(store.pendingGrant(session, "c", "v1")).not.toBe(id);
+  } finally { store.close(); }
+});
+
+test("unrecognized or expired approval does not replace the engineering goal", async () => {
+  const { store, workspace, session } = fixture();
+  try {
+    store.saveGoal(session, "Validate authorized local changes");
+    const result: any = await lifecycle({ hook_event_name: "UserPromptSubmit", cwd: workspace, session_id: "native", prompt: form([{ answer: "Autorizar Jev abcdef123456" }]) }, { store });
+    expect(store.getSession(session).goal).toBe("Validate authorized local changes");
+    const context = JSON.parse(result.hookSpecificOutput.additionalContext);
+    expect(context.authorization).toEqual({ recognized: 1, approvedAny: false });
+  } finally { store.close(); }
+});
+
+test("dynamic inspection does not spend a model request which cannot authorize it", async () => {
+  const { store, workspace, session } = fixture(); let calls = 0;
+  try {
+    const result = await gate(store, workspace, session, "bun --no-env-file test fixture.test.ts", { inspection, judge: (async () => { calls++; throw Error("No paid API permitted"); }) as any });
+    expect(result.decision).toBe("ask"); expect(calls).toBe(0);
+  } finally { store.close(); }
+});
+
+test("exact command approval cannot be reused under another working directory", async () => {
+  const { store, workspace, session } = fixture();
+  try {
+    const command = "bun --no-env-file test fixture.test.ts";
+    const first = await gate(store, workspace, session, command, { inspection });
+    expect(store.approveFromHumanPrompt(session, `Autorizar Jev ${first.requestId}`)).toBe(true);
+    expect((await gate(store, temp(), session, command, { inspection })).decision).toBe("ask");
+    // The hook lifecycle may inspect the grant, but only its post-instruction path may consume it.
+    const pending = await gate(store, workspace, session, command, { inspection, consumeApproval: false });
+    expect(pending.decision).toBe("ask"); expect(pending.approvalPending).toBe(true);
+    expect((await gate(store, workspace, session, command, { inspection })).decision).toBe("ask");
+    expect((await gate(store, workspace, session, command, { inspection, consumeApproval: true })).decision).toBe("allow");
+    expect((await gate(store, workspace, session, command, { inspection })).decision).toBe("ask");
+  } finally { store.close(); }
+});
+
+test("new instructions block an approved dynamic command before grant consumption", async () => {
+  const { store, workspace, session } = fixture();
+  try {
+    writeFileSync(join(workspace, "AGENTS.md"), "Synthetic instruction for this isolated test only");
+    const command = "synthetic read", first = await gate(store, workspace, session, command, { inspection: { ...inspection, writes: false } });
+    store.approveFromHumanPrompt(session, `Autorizar Jev ${first.requestId}`);
+    const event = { hook_event_name: "PreToolUse", cwd: workspace, session_id: "native", tool_name: "Bash", tool_input: { command }, tool_use_id: "fixture-dynamic" };
+    const injectedGate = ((s: Store, w: string, id: string, c: string, options: any) => gate(s, w, id, c, { ...options, inspection: { ...inspection, writes: false } })) as typeof gate;
+    const before: any = await lifecycle(event, { store, gate: injectedGate });
+    expect(before.hookSpecificOutput.permissionDecision).toBe("deny");
+    const after: any = await lifecycle(event, { store, gate: injectedGate });
+    expect(after.hookSpecificOutput.permissionDecision).toBeUndefined();
+    const third: any = await lifecycle(event, { store, gate: injectedGate });
+    expect(third.hookSpecificOutput.permissionDecision).toBe("deny");
+  } finally { store.close(); }
+});
+
+test("credential denial wins even if a human approved the matching dynamic command", async () => {
+  const { store, workspace, session } = fixture();
+  try {
+    const command = "synthetic", first = await gate(store, workspace, session, command, { inspection });
+    store.approveFromHumanPrompt(session, `Autorizar Jev ${first.requestId}`);
+    const denied = await gate(store, workspace, session, command, { inspection: { ...inspection, sensitiveRead: true } });
+    expect(denied.decision).toBe("deny");
+  } finally { store.close(); }
+});
+
+test("instruction reload before execution does not burn an approved one-use request", async () => {
+  const { store, workspace, session } = fixture();
+  try {
+    writeFileSync(join(workspace, "AGENTS.md"), "Synthetic instruction for this isolated test only");
+    const command = "synthetic write", first = await gate(store, workspace, session, command, { inspection });
+    store.approveFromHumanPrompt(session, `Autorizar Jev ${first.requestId}`);
+    // First call loads the synthetic applicable instruction and refuses before execution.
+    const event = { hook_event_name: "PreToolUse", cwd: workspace, session_id: "native", tool_name: "Bash", tool_input: { command }, tool_use_id: "fixture" };
+    const injectedGate = ((s: Store, w: string, id: string, c: string, options: any) => gate(s, w, id, c, { ...options, inspection })) as typeof gate;
+    const before: any = await lifecycle(event, { store, gate: injectedGate });
+    expect(before.hookSpecificOutput.permissionDecision).toBe("deny");
+    const after: any = await lifecycle(event, { store, gate: injectedGate });
+    expect(after.hookSpecificOutput.permissionDecision).toBeUndefined();
+    const third: any = await lifecycle(event, { store, gate: injectedGate });
+    expect(third.hookSpecificOutput.permissionDecision).toBe("deny");
+  } finally { store.close(); }
+});

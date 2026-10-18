@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "scope": "Residual URL and fetch lookup preparation within unchanged OR-01..04",
+  "specSha256": "4ef3aadfbb0baec1c9fdd4fb262312fd425864d53718abad9d9ba6fe94735ec3",
+  "sources": [
+    {
+      "path": "src/onchain-read/client.ts",
+      "preimage": "7f48c71f45b317482325eb506626c8dbe930e3f50827b81a851f7d5d67fd1138",
+      "candidate": "35b8862b67d448e4eb104fb5353825d95839e311c62d92e127ac17367aa08e93"
+    },
+    {
+      "path": "src/onchain-read/client.test.ts",
+      "preimage": "3dbb7c31fc14ffd71b2bb2c5f2378e404fc54f85bd0dd3ba786a55e943f3c958",
+      "candidate": "6b57c61efe134aec6d7b7f9afbb06c1b67c85ca36b483405547f0ba97efa6c65"
+    },
+    {
+      "path": "src/onchain-read/gateway.ts",
+      "preimage": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42",
+      "candidate": "62b3a8110719f4896d7b08a8da86e6f71080c25fa76e26b0451db7c62f59be42"
+    },
+    {
+      "path": "src/onchain-read/gateway.test.ts",
+      "preimage": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648",
+      "candidate": "9ad74d46714a5747432ffc812e8dab39c5f0f652aa02b5da304a4d006da61648"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "evidence/onchain-url-red.log",
+      "sha256": "a803b027ffc035c7e637f9f3afc2603903ed2ed39898802fa4b30f99aebed0f0"
+    },
+    {
+      "path": "evidence/onchain-lookup-red.log",
+      "sha256": "ef96f69b8a461a8ac797ca133df78989503f25307a1f23d47ec164b8bddfc2a9"
+    },
+    {
+      "path": "evidence/onchain-interval-final-full.log",
+      "sha256": "a82ed66f8b38e1a354496842235eaa4279a48d42b054b5bc30ff041190999ebc"
+    },
+    {
+      "path": "evidence/onchain-interval-final-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "historicalReviews": [
+    {
+      "path": "ONCHAIN-INTERVAL-SPEC-REVIEW.md",
+      "sha256": "77d3139a57a5512fe836a4b029aa4d1050b4705f2877f1a949b41f6e77fc81bb",
+      "decision": "reject OR-04, superseded candidate"
+    },
+    {
+      "path": "ONCHAIN-INTERVAL-STANDARDS-REVIEW.md",
+      "sha256": "3f68fac4086574e55660b12d1f16ab774a01e17766b913d5867532986bf0a2b5",
+      "decision": "reject OR-04, superseded candidate"
+    }
+  ]
+}

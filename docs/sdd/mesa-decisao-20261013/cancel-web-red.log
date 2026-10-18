@@ -1,0 +1,57 @@
+bun test v1.3.14 (0d9b296a)
+
+src\lib\inonu\client.test.ts:
+ 6 | test("the caller owns cancellation before the POST response without changing the request body", async () => {
+ 7 |   const requestId = "b9eb24df-248c-440c-b3fd-287a5507fedf";
+ 8 |   const { calls, f } = fakeFetch({ ok: true });
+ 9 |   const client = createInonuClient("", f);
+10 |   await client.ask({ modo: "ativo", alvo: { instId: "BTC-USDT" } }, undefined, requestId);
+11 |   expect(calls[0]!.init!.headers?.["x-inonu-request-id"]).toBe(requestId);
+                                                               ^
+error: expect(received).toBe(expected)
+
+Expected: "b9eb24df-248c-440c-b3fd-287a5507fedf"
+Received: undefined
+
+      at <anonymous> (C:\Users\gabri\jev-trader\web\src\lib\inonu\client.test.ts:11:59)
+(fail) the caller owns cancellation before the POST response without changing the request body [3.98ms]
+(pass) parseAnswer > reads a valid answer into a typed outcome [0.62ms]
+(pass) parseAnswer > hold has no candidate, a refusal has no decision [0.44ms]
+(pass) parseAnswer > anything off the contract is null: a wrong status, an action that is not buy/sell/hold, advisory or execution changed [0.36ms]
+(pass) the filter answer (RAS-5) > is read field by field, with the sort the table understands [6.00ms]
+(pass) the filter answer (RAS-5) > a filter off the closed shape makes the whole answer null: an unknown field, a bad market, a bad sort, a string where a number goes [3.99ms]
+(pass) the filter answer (RAS-5) > a refusal has no filter, and the request for a filter carries the sentence and nothing else [1.70ms]
+(pass) parseStatus > model configured, today, and the warm-up of the engine [1.99ms]
+(pass) parseStatus > an engine that is off reads as no feed [0.25ms]
+(pass) parseStatus > garbage is null [0.19ms]
+(pass) the client > ask posts the request with the intent header and returns the parsed answer [0.95ms]
+(pass) the client > a refusal answered with an HTTP error status is still read as the refusal it is [0.86ms]
+(pass) the client > transport failures become named outcomes, not exceptions: no server route, refused origin, unreachable, garbled [1.87ms]
+(pass) the client > cancel sends DELETE with the intent header and tells whether the server knew the id [4.87ms]
+(pass) the client > status is null when the server has no such route [1.47ms]
+
+src\lib\inonu\portfolio.test.ts:
+(pass) manual portfolio preparation sends observed asset identities without wallet identifiers or raw RPC [2.45ms]
+(pass) expired, future and mismatched observations cannot be consulted [0.29ms]
+(pass) only the explicitly focused candidate from the same network joins the partial list [0.53ms]
+40 |   expect(other.ok && other.candidateIncluded).toBe(false);
+41 | });
+42 | 
+43 | test("symbols and decimal lengths match the server's bounded contract", () => {
+44 |   const result = preparePortfolio(snapshot, 110_000, { chainIndex: "143", address: "0x" + "c".repeat(40), symbol: "USDC.E", name: null });
+45 |   expect(result.ok && result.candidateIncluded).toBe(false);
+                                                     ^
+error: expect(received).toBe(expected)
+
+Expected: false
+Received: true
+
+      at <anonymous> (C:\Users\gabri\jev-trader\web\src\lib\inonu\portfolio.test.ts:45:49)
+(fail) symbols and decimal lengths match the server's bounded contract [0.81ms]
+(pass) portfolio parser rejects invented identities, absent-position sales and invented total value [3.08ms]
+(pass) manual client preserves the validated portfolio and uses the existing intent endpoint [1.95ms]
+
+ 19 pass
+ 2 fail
+ 81 expect() calls
+Ran 21 tests across 2 files. [264.00ms]

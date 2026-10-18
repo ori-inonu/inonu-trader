@@ -1,0 +1,1118 @@
+{
+  "capturedAt": "2026-10-11T18:29:51.3335563+00:00",
+  "backend": "http://127.0.0.1:3010",
+  "ui": "http://127.0.0.1:3011",
+  "health": {
+    "mode": "paper",
+    "executionEnabled": false,
+    "services": {
+      "onchainos": {
+        "configured": false,
+        "access": "blocked",
+        "missing": [
+          "OKX_WEB3_API_KEY",
+          "OKX_WEB3_API_SECRET",
+          "OKX_WEB3_API_PASSPHRASE"
+        ]
+      },
+      "jev": {
+        "credentialPresent": false,
+        "authorized": false,
+        "model": "jev-latest",
+        "costUsdPerMillion": null,
+        "maxCalls": 10
+      },
+      "worker": {
+        "running": true,
+        "intervalMs": 5000,
+        "lastCycleAtMs": 1791743391862,
+        "fatal": null,
+        "recoveredTailBytes": 0
+      },
+      "publicMarket": {
+        "running": true,
+        "intervalMs": 60000,
+        "lastCollectionAtMs": 1791743354381,
+        "lastError": null,
+        "source": "okx-public-v5"
+      }
+    },
+    "networks": [
+      {
+        "chainIndex": "196",
+        "name": "X Layer"
+      },
+      {
+        "chainIndex": "143",
+        "name": "Monad"
+      }
+    ],
+    "quotePairConfigured": false,
+    "web3Origin": "https://web3.okx.com",
+    "ttlMs": {
+      "quote": 15000,
+      "market": 60000,
+      "inventory": 60000
+    },
+    "dependencies": [
+      "Configure OKX_WEB3_API_KEY no ambiente local do aplicativo",
+      "Configure OKX_WEB3_API_SECRET no ambiente local do aplicativo",
+      "Configure OKX_WEB3_API_PASSPHRASE no ambiente local do aplicativo",
+      "Configure TYPESAFE_AI_API_KEY do aplicativo",
+      "Consumo Jev do aplicativo ainda não autorizado na configuração",
+      "Autorize a consulta Web3 da carteira conectada",
+      "Configure o par e a quantidade em unidades mínimas para consultar DEX"
+    ],
+    "quota": {
+      "calls": {
+        "free": 0,
+        "basic": 0,
+        "premium": 0,
+        "unknown": 0,
+        "public": 0
+      },
+      "attempts": {
+        "free": 0,
+        "basic": 0,
+        "premium": 0,
+        "unknown": 0,
+        "public": 0
+      },
+      "retries": 0,
+      "totalAttempts": 0,
+      "costKnown": true
+    },
+    "worker": {
+      "running": true,
+      "intervalMs": 5000,
+      "lastCycleAtMs": 1791743391862,
+      "fatal": null,
+      "recoveredTailBytes": 0
+    },
+    "walletConsent": {
+      "active": false,
+      "identityKey": null,
+      "chainIndex": null,
+      "revision": null
+    },
+    "jevCalls": {
+      "reserved": 0,
+      "limit": 10
+    },
+    "capabilities": [
+      {
+        "id": "market:196:/api/v6/dex/market/price",
+        "family": "market",
+        "chainIndex": "196",
+        "endpoint": "/api/v6/dex/market/price",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": true,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+        "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+      },
+      {
+        "id": "balance:196:/api/v6/dex/balance/all-token-balances-by-address",
+        "family": "balance",
+        "chainIndex": "196",
+        "endpoint": "/api/v6/dex/balance/all-token-balances-by-address",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": true,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+        "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+      },
+      {
+        "id": "dex:196:/api/v6/dex/aggregator/quote",
+        "family": "dex",
+        "chainIndex": "196",
+        "endpoint": "/api/v6/dex/aggregator/quote",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": true,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+        "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+      },
+      {
+        "id": "simulation:196:/api/v6/dex/pre-transaction/simulate",
+        "family": "simulation",
+        "chainIndex": "196",
+        "endpoint": "/api/v6/dex/pre-transaction/simulate",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": false,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "not-implemented",
+        "reason": "Whitelist, método e contrato de simulação ainda não qualificados.",
+        "nextRequirement": "Whitelist, método e contrato de simulação ainda não qualificados."
+      },
+      {
+        "id": "defi:196:/api/v6/defi/product/search",
+        "family": "defi",
+        "chainIndex": "196",
+        "endpoint": "/api/v6/defi/product/search",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Leitura existente; integração, suporte e risco de lending não qualificados.",
+        "nextRequirement": "Leitura existente; integração, suporte e risco de lending não qualificados."
+      },
+      {
+        "id": "signals:196:/api/v6/dex/market/signal/list",
+        "family": "signals",
+        "chainIndex": "196",
+        "endpoint": "/api/v6/dex/market/signal/list",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Leitura existente; suporte por rede e entitlement premium desconhecidos.",
+        "nextRequirement": "Leitura existente; suporte por rede e entitlement premium desconhecidos."
+      },
+      {
+        "id": "signals:196:/api/v6/dex/market/leaderboard/list",
+        "family": "signals",
+        "chainIndex": "196",
+        "endpoint": "/api/v6/dex/market/leaderboard/list",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Leaderboard existente; suporte e entitlement desconhecidos.",
+        "nextRequirement": "Leaderboard existente; suporte e entitlement desconhecidos."
+      },
+      {
+        "id": "market:143:/api/v6/dex/market/price",
+        "family": "market",
+        "chainIndex": "143",
+        "endpoint": "/api/v6/dex/market/price",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": true,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+        "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+      },
+      {
+        "id": "balance:143:/api/v6/dex/balance/all-token-balances-by-address",
+        "family": "balance",
+        "chainIndex": "143",
+        "endpoint": "/api/v6/dex/balance/all-token-balances-by-address",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": true,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+        "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+      },
+      {
+        "id": "dex:143:/api/v6/dex/aggregator/quote",
+        "family": "dex",
+        "chainIndex": "143",
+        "endpoint": "/api/v6/dex/aggregator/quote",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": true,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados.",
+        "nextRequirement": "Credenciais Web3 ausentes; acesso e suporte por rede não comprovados."
+      },
+      {
+        "id": "simulation:143:/api/v6/dex/pre-transaction/simulate",
+        "family": "simulation",
+        "chainIndex": "143",
+        "endpoint": "/api/v6/dex/pre-transaction/simulate",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": false,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "not-implemented",
+        "reason": "Whitelist, método e contrato de simulação ainda não qualificados.",
+        "nextRequirement": "Whitelist, método e contrato de simulação ainda não qualificados."
+      },
+      {
+        "id": "defi:143:/api/v6/defi/product/search",
+        "family": "defi",
+        "chainIndex": "143",
+        "endpoint": "/api/v6/defi/product/search",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Leitura existente; integração, suporte e risco de lending não qualificados.",
+        "nextRequirement": "Leitura existente; integração, suporte e risco de lending não qualificados."
+      },
+      {
+        "id": "signals:143:/api/v6/dex/market/signal/list",
+        "family": "signals",
+        "chainIndex": "143",
+        "endpoint": "/api/v6/dex/market/signal/list",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Leitura existente; suporte por rede e entitlement premium desconhecidos.",
+        "nextRequirement": "Leitura existente; suporte por rede e entitlement premium desconhecidos."
+      },
+      {
+        "id": "signals:143:/api/v6/dex/market/leaderboard/list",
+        "family": "signals",
+        "chainIndex": "143",
+        "endpoint": "/api/v6/dex/market/leaderboard/list",
+        "source": "onchainos-rest-v6",
+        "documented": true,
+        "implemented": true,
+        "integrated": false,
+        "exercisedReal": false,
+        "financiallyQualified": false,
+        "status": "blocked",
+        "reason": "Leaderboard existente; suporte e entitlement desconhecidos.",
+        "nextRequirement": "Leaderboard existente; suporte e entitlement desconhecidos."
+      },
+      {
+        "id": "funding.public-btc",
+        "family": "funding",
+        "source": "okx-public-v5",
+        "documented": true,
+        "implemented": true,
+        "exercisedReal": true,
+        "integrated": true,
+        "financiallyQualified": false,
+        "status": "ready",
+        "reason": null,
+        "nextRequirement": "Qualificar acesso Exchange, taxas, margem e liquidação antes de qualquer elegibilidade financeira.",
+        "chainIndex": "exchange",
+        "endpoint": "/api/v5/public/funding-rate"
+      }
+    ]
+  },
+  "publicMarket": {
+    "source": "okx-public-v5",
+    "mode": "real",
+    "status": "ready",
+    "observedAtMs": 1791743354381,
+    "expiresAtMs": 1791743412036,
+    "instrument": {
+      "instType": "SWAP",
+      "instId": "BTC-USDT-SWAP",
+      "state": "live",
+      "baseCcy": null,
+      "quoteCcy": null,
+      "settleCcy": "USDT",
+      "ctValCcy": "BTC",
+      "ctType": "linear",
+      "ctVal": "0.01",
+      "ctMult": "1",
+      "tickSz": "0.1",
+      "lotSz": "0.01",
+      "minSz": "0.01",
+      "maxLeverage": 100,
+      "listTimeMs": 1573557408000,
+      "expTimeMs": null
+    },
+    "funding": {
+      "instId": "BTC-USDT-SWAP",
+      "method": "current_period",
+      "fundingRate": "-0.0000114288785713",
+      "nextFundingRate": null,
+      "fundingTimeMs": 1791763200000,
+      "nextFundingTimeMs": 1791792000000,
+      "prevFundingTimeMs": 1791734400000,
+      "intervalMs": 28800000,
+      "minFundingRate": "-0.00375",
+      "maxFundingRate": "0.00375",
+      "premium": "-0.0004387533681476",
+      "settState": "settled",
+      "settFundingRate": "-0.0000000008035808",
+      "tsMs": 1791743422150
+    },
+    "mark": {
+      "instId": "BTC-USDT-SWAP",
+      "markPx": "83837",
+      "tsMs": 1791743423686
+    },
+    "capability": {
+      "id": "funding.public-btc",
+      "family": "funding",
+      "source": "okx-public-v5",
+      "documented": true,
+      "implemented": true,
+      "exercisedReal": true,
+      "integrated": true,
+      "financiallyQualified": false,
+      "status": "ready",
+      "reason": null,
+      "nextRequirement": "Qualificar acesso Exchange, taxas, margem e liquidação antes de qualquer elegibilidade financeira."
+    },
+    "dependencies": [],
+    "requests": [
+      {
+        "method": "GET",
+        "endpoint": "/api/v5/public/instruments",
+        "httpStatus": 200,
+        "code": "0",
+        "requestedAtMs": 1791743352042,
+        "receivedAtMs": 1791743352362
+      },
+      {
+        "method": "GET",
+        "endpoint": "/api/v5/public/funding-rate",
+        "httpStatus": 200,
+        "code": "0",
+        "requestedAtMs": 1791743352364,
+        "receivedAtMs": 1791743353376
+      },
+      {
+        "method": "GET",
+        "endpoint": "/api/v5/public/mark-price",
+        "httpStatus": 200,
+        "code": "0",
+        "requestedAtMs": 1791743353376,
+        "receivedAtMs": 1791743354380
+      }
+    ],
+    "clock": {
+      "source": "okx-public-v5",
+      "endpoint": "/api/v5/public/time",
+      "transport": "production-https",
+      "status": "ready",
+      "requestedAtMs": 1791743351668,
+      "receivedAtMs": 1791743352036,
+      "serverAtMs": 1791743421333,
+      "dateHeaderAtMs": 1791743421000,
+      "httpStatus": 200,
+      "code": "0",
+      "offsetMs": 69481,
+      "uncertaintyMs": 184.91044999999997,
+      "expiresAtMs": 1791743412036,
+      "reason": null
+    }
+  },
+  "latest": {
+    "cycle": {
+      "id": "c4b55686-9d39-46a2-8587-743e42d07111",
+      "sequence": 536,
+      "startedAtMs": 1791743391861,
+      "finishedAtMs": 1791743391862,
+      "mode": "paper",
+      "core": null,
+      "decision": {
+        "choice": "hold",
+        "status": "blocked",
+        "model": null,
+        "latencyMs": null,
+        "inputTokens": null,
+        "costUsd": null,
+        "called": false,
+        "reasons": [
+          "Consentimento Web3 ausente"
+        ]
+      },
+      "realizedPnlUsd": null,
+      "executionEnabled": false
+    },
+    "history": [
+      {
+        "id": "c4b55686-9d39-46a2-8587-743e42d07111",
+        "sequence": 536,
+        "startedAtMs": 1791743391861,
+        "finishedAtMs": 1791743391862,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "d93509d7-a744-4162-b5a5-005522de3c49",
+        "sequence": 535,
+        "startedAtMs": 1791743386805,
+        "finishedAtMs": 1791743386805,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "4f861420-52c3-4238-aacd-16a11d55dfb6",
+        "sequence": 534,
+        "startedAtMs": 1791743381799,
+        "finishedAtMs": 1791743381799,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "c51eb715-6615-47aa-81e8-11d6baa38d93",
+        "sequence": 533,
+        "startedAtMs": 1791743376784,
+        "finishedAtMs": 1791743376784,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "dff6990b-852b-4293-9088-c2bcbb4ad2ec",
+        "sequence": 532,
+        "startedAtMs": 1791743371756,
+        "finishedAtMs": 1791743371757,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "db16f7c8-d6bf-4baa-99fb-0af43f944e5b",
+        "sequence": 531,
+        "startedAtMs": 1791743366735,
+        "finishedAtMs": 1791743366735,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "52570802-6346-4193-aabe-df57cff7b7d0",
+        "sequence": 530,
+        "startedAtMs": 1791743361703,
+        "finishedAtMs": 1791743361703,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "59acb88e-714d-4983-a0f1-670f92df0197",
+        "sequence": 529,
+        "startedAtMs": 1791743356674,
+        "finishedAtMs": 1791743356674,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "e9d45adf-3b73-4427-a277-954622bc3873",
+        "sequence": 528,
+        "startedAtMs": 1791743351652,
+        "finishedAtMs": 1791743351654,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "e4f71c22-607a-4510-ac49-6f94b891b0c1",
+        "sequence": 527,
+        "startedAtMs": 1791743273539,
+        "finishedAtMs": 1791743273539,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "bba6e883-eeda-4a08-9714-cec13157e354",
+        "sequence": 526,
+        "startedAtMs": 1791743268507,
+        "finishedAtMs": 1791743268507,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "888903c4-784a-42bb-82b8-646e1e10e874",
+        "sequence": 525,
+        "startedAtMs": 1791743263475,
+        "finishedAtMs": 1791743263475,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "ec2aa6df-53f0-4ce7-836e-edd28bc5b9a5",
+        "sequence": 524,
+        "startedAtMs": 1791743258462,
+        "finishedAtMs": 1791743258462,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "fa241e21-cd99-4184-a714-b3cf1530e080",
+        "sequence": 523,
+        "startedAtMs": 1791743253411,
+        "finishedAtMs": 1791743253411,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "4cf4e046-f7b6-49ad-88a8-e6a84a1381f6",
+        "sequence": 522,
+        "startedAtMs": 1791743248378,
+        "finishedAtMs": 1791743248378,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "a1bf69ac-08f7-450e-947b-3d3b014f1b81",
+        "sequence": 521,
+        "startedAtMs": 1791743243354,
+        "finishedAtMs": 1791743243354,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "11e3e907-7658-4729-8c60-f2b41969be72",
+        "sequence": 520,
+        "startedAtMs": 1791743238336,
+        "finishedAtMs": 1791743238336,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "ff39f671-7f47-4a85-9d86-4d9a38a601c6",
+        "sequence": 519,
+        "startedAtMs": 1791743233330,
+        "finishedAtMs": 1791743233330,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "b46a0aec-fe5f-4fbe-bfb6-a8d11ff7f90b",
+        "sequence": 518,
+        "startedAtMs": 1791743228314,
+        "finishedAtMs": 1791743228315,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "0d225789-8a81-4b18-860b-fdd12f2cfb1b",
+        "sequence": 517,
+        "startedAtMs": 1791743223278,
+        "finishedAtMs": 1791743223278,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "f63c7d64-8e2f-44ba-9453-300d140d6631",
+        "sequence": 516,
+        "startedAtMs": 1791743218260,
+        "finishedAtMs": 1791743218260,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "d23718c2-874f-441b-ad24-db4a91f528d4",
+        "sequence": 515,
+        "startedAtMs": 1791743213240,
+        "finishedAtMs": 1791743213240,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "da0c549a-9c88-4a46-acbe-238b565c9091",
+        "sequence": 514,
+        "startedAtMs": 1791743208185,
+        "finishedAtMs": 1791743208185,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "2615bea2-4ea5-4912-8422-ccbea33fd6fc",
+        "sequence": 513,
+        "startedAtMs": 1791743203120,
+        "finishedAtMs": 1791743203120,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "b4edb182-a14d-4dc7-8e49-9490b7050ba0",
+        "sequence": 512,
+        "startedAtMs": 1791743198092,
+        "finishedAtMs": 1791743198092,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "8ad51b08-9d15-4f63-a42f-75df915c536e",
+        "sequence": 511,
+        "startedAtMs": 1791743193034,
+        "finishedAtMs": 1791743193034,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "5d3c372a-2197-4eae-a27d-9dbe32aaa988",
+        "sequence": 510,
+        "startedAtMs": 1791743187817,
+        "finishedAtMs": 1791743187817,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "79d7a46c-1dd3-47a2-be36-e30dc8c44f1f",
+        "sequence": 509,
+        "startedAtMs": 1791743182702,
+        "finishedAtMs": 1791743182702,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "92a90107-61ed-4fee-8f58-cf59ebfb43b1",
+        "sequence": 508,
+        "startedAtMs": 1791743177656,
+        "finishedAtMs": 1791743177656,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      },
+      {
+        "id": "aa07d4fb-b0d6-4024-bd9d-ba55d2055896",
+        "sequence": 507,
+        "startedAtMs": 1791743172627,
+        "finishedAtMs": 1791743172627,
+        "mode": "paper",
+        "core": null,
+        "decision": {
+          "choice": "hold",
+          "status": "blocked",
+          "model": null,
+          "latencyMs": null,
+          "inputTokens": null,
+          "costUsd": null,
+          "called": false,
+          "reasons": [
+            "Consentimento Web3 ausente"
+          ]
+        },
+        "realizedPnlUsd": null,
+        "executionEnabled": false
+      }
+    ]
+  }
+}

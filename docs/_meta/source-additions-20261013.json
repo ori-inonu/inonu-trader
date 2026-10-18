@@ -1,0 +1,17 @@
+{
+  "format": "docs-source-additions-v1",
+  "captured": "2026-10-13T10:53:03.109798-03:00",
+  "baseline": "docs/_meta/source-manifest-20261013.json",
+  "reason": "Sources created by concurrent project sessions after initial inventory; not authored by this documentation task. Original baseline remains immutable.",
+  "files": [
+    {
+      "path": "docs/sdd/inonu-desktop-v1/spikes/T1.1.md",
+      "sha256": "7dee6a537930be42592dd756f6a9113d903f32a5d5a0d270b3dcfa996b419823",
+      "bytes": 2755,
+      "extension": ".md",
+      "owner": "instalavel-e-inonu",
+      "role": "fonte-nova-concorrente",
+      "hidden": false
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+/* The three onchain dock tabs: the same wide-table language as the other dock bodies (fixed
+   header inside the scroll, min-width columns with horizontal scroll instead of clipped numbers),
+   plus a compact toolbar of chips and the OKX OnchainOS origin line. */
+/* The controls of a tab wrap onto a second line when the tab is narrow: nothing is cut off and nothing needs a sideways scroll to be found. */
+.toolbar {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s1) var(--s3);
+  min-height: 30px;
+  padding: var(--s1) var(--s3);
+  border-bottom: 1px solid var(--edge);
+  background: var(--bg-deck-2);
+}
+.toolbar > * { flex: none; }
+
+.head {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-left: auto;
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+}
+.head[data-stale="true"] .source { color: var(--hold); }
+.source { text-transform: uppercase; }
+.tierBadge {
+  padding: 1px var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  color: var(--ink-2);
+  text-transform: uppercase;
+}
+.budget { color: var(--ink-4); }
+
+.reload,
+.filterChip,
+.chainChip,
+.chainMore {
+  height: 22px;
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font: var(--fs-xs);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.reload:hover,
+.filterChip:hover,
+.chainChip:hover:not(:disabled),
+.chainMore:hover { border-color: var(--edge-strong); color: var(--ink); }
+.filterChip[aria-pressed="true"],
+.chainMore[aria-expanded="true"] {
+  border-color: var(--signal);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--signal) 14%, transparent);
+}
+.reload:focus-visible,
+.filterChip:focus-visible,
+.chainChip:focus-visible,
+.chainMore:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+.reload:disabled { opacity: 0.45; cursor: default; }
+
+.note {
+  flex: none;
+  margin: 0;
+  padding: var(--s1) var(--s3);
+  border-bottom: 1px solid var(--edge);
+  color: var(--ink-3);
+  font: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.chipRow { display: inline-flex; align-items: center; gap: var(--s1); }
+
+/* Chain chips: badge + name, disabled chips stay visible and quiet. */
+.chainWrap { position: relative; display: inline-flex; align-items: center; min-width: 0; }
+.chainRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+}
+.chainChip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--s1);
+  white-space: nowrap;
+}
+.chainChip[aria-checked="true"] {
+  border-color: var(--signal);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--signal) 14%, transparent);
+}
+.chainChip:disabled { opacity: 0.45; cursor: default; }
+.chainShort {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 9px;
+  color: var(--ink-3);
+}
+.chainChip[aria-checked="true"] .chainShort { color: var(--signal); }
+.chainName { font: var(--fs-xs); }
+/* The panel of every network: a search box and a grid of logo plus name, scrolling inside itself. */
+.chainBackdrop { position: fixed; inset: 0; z-index: 99; }
+.chainPanel {
+  position: fixed;
+  z-index: 100;
+  display: grid;
+  gap: var(--s2);
+  width: min(560px, 90vw);
+  max-height: 340px;
+  overflow-y: auto;
+  padding: var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: var(--bg-deck);
+}
+.chainSearch {
+  position: sticky;
+  top: 0;
+  padding: 4px var(--s3);
+  border: 1px solid var(--edge-focus);
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+}
+.chainSearch:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 1px; }
+.chainGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--s1); }
+.chainGrid .chainChip { justify-content: flex-start; min-width: 0; }
+.chainGrid .chainName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chainEmpty { margin: 0; padding: var(--s2); color: var(--ink-3); font-size: 12px; }
+
+/* Tables: min-width columns sized for full values; narrow tabs scroll horizontally. */
+.srow,
+.lrow,
+.wrow,
+.krow {
+  display: grid;
+  align-items: center;
+  gap: var(--s3);
+  min-height: 20px;
+  padding: 0 var(--s3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.srow { grid-template-columns: 72px minmax(90px, 1fr) 72px minmax(100px, 1fr) 96px minmax(100px, 1fr); min-width: 520px; }
+
+/* The decision of the Radar: the question and the Inonu's answer, above the list it was made from. */
+.decision { display: grid; gap: var(--s2); padding: var(--s2) var(--s3); border-bottom: 1px solid var(--edge); }
+.decisionLead { margin: 0; color: var(--ink-2); font-size: 12px; line-height: 16px; }
+.lrow { grid-template-columns: 110px minmax(96px, 1fr) 76px 72px minmax(96px, 1fr) 56px 110px minmax(140px, 1.4fr); min-width: 800px; }
+.wrow { grid-template-columns: 110px 90px minmax(96px, 1fr) minmax(110px, 1fr) minmax(96px, 1fr) minmax(96px, 1fr); min-width: 640px; }
+.krow { grid-template-columns: 90px minmax(140px, 1.4fr) minmax(90px, 1fr) 80px minmax(100px, 1fr); min-width: 560px; }
+.srow > span,
+.lrow > span,
+.wrow > span,
+.krow > span { overflow: hidden; text-align: right; text-overflow: ellipsis; }
+.srow[data-token="true"] { cursor: pointer; }
+.srow[data-token="true"]:hover { background: color-mix(in srgb, var(--signal) 8%, transparent); }
+.srow[data-token="true"]:focus-visible,
+.krow:focus-visible { outline: 2px solid var(--signal); outline-offset: -2px; }
+.krow { cursor: pointer; }
+.krow:hover { background: color-mix(in srgb, var(--signal) 8%, transparent); }
+
+.cellLeft { text-align: left !important; }
+.cellSymbol { color: var(--ink); font-weight: 600; }
+.cellMono { font-family: var(--font-mono); }
+
+/* Error and search states. */
+.errorBox {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--s3);
+  margin: var(--s3);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--bg-deck) 90%, transparent);
+}
+.errorText { margin: 0; color: var(--ink); font: var(--fs-sm); }
+.errorLink { color: var(--signal); font: var(--fs-xs); text-decoration: underline; }
+.staleBadge {
+  padding: 2px var(--s2);
+  border: 1px solid var(--hold);
+  border-radius: var(--r-pill);
+  color: var(--hold);
+  font: var(--fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cached { display: flex; min-height: 0; flex: 1 1 auto; flex-direction: column; opacity: 0.6; }
+
+.holdersEmpty { display: flex; min-height: 0; flex: 1 1 auto; flex-direction: column; }
+.holdersEmpty > .note { border-bottom: none; }
+
+/* B1 surfaces: on-chain tape, liquidity, risk card and news rows share the wide-table language. */
+.trowOc,
+.winRow,
+.poolRow,
+.newsRow,
+.kolRow {
+  display: grid;
+  align-items: center;
+  gap: var(--s3);
+  min-height: 20px;
+  padding: 0 var(--s3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.trowOc { grid-template-columns: 64px 72px minmax(90px, 1fr) minmax(90px, 1fr) minmax(80px, 0.9fr) 110px; min-width: 560px; }
+/* Column tracks are sized so the header words fit whole at every dock width; narrower than the
+   minimum the table scrolls horizontally instead of clipping a label. */
+.winRow { grid-template-columns: 56px minmax(88px, 0.9fr) minmax(96px, 1fr) minmax(94px, 0.9fr); min-width: 350px; }
+.poolRow { grid-template-columns: minmax(120px, 1.2fr) minmax(80px, 0.8fr) minmax(96px, 1fr) 64px; min-width: 390px; }
+.newsRow { grid-template-columns: 72px minmax(98px, 0.6fr) minmax(200px, 2fr) 90px; min-width: 500px; }
+.kolRow { grid-template-columns: minmax(110px, 1.2fr) 84px 64px 90px minmax(96px, 1fr); min-width: 470px; }
+.trowOc > span,
+.winRow > span,
+.poolRow > span,
+.newsRow > span,
+.kolRow > span { overflow: hidden; text-align: right; text-overflow: ellipsis; }
+.trowOc .cellSide,
+.cellSide { display: inline-flex; justify-content: flex-end; }
+.trowOc[data-side="buy"] .cellSide,
+.winRow [data-tone="buy"],
+.riskLine [data-tone="buy"] { color: var(--buy); }
+.trowOc[data-side="sell"] .cellSide,
+.winRow [data-tone="sell"],
+.riskLine [data-tone="sell"] { color: var(--sell); }
+
+/* Metric line of the Liquidez tab and the compact stat grids of the risk card. */
+.metricLine {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s5);
+  padding: var(--s2) var(--s3);
+  border-bottom: 1px solid var(--edge);
+}
+.metric { font: var(--fs-sm); color: var(--ink); white-space: nowrap; }
+.metricLabel { color: var(--ink-3); font: var(--fs-micro); letter-spacing: var(--track-micro); text-transform: uppercase; }
+
+.split { display: grid; flex: 1 1 auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); min-height: 0; }
+.splitCol { display: flex; min-width: 0; min-height: 0; flex-direction: column; }
+.splitCol + .splitCol { border-left: 1px solid var(--edge); }
+
+.riskCard { display: flex; flex: none; flex-direction: column; border-bottom: 1px solid var(--edge); }
+.riskBody { padding: var(--s2) var(--s3); }
+.riskBody[data-stale="true"] { opacity: 0.6; }
+.riskLine { margin: 0 0 var(--s2); font: var(--fs-sm); color: var(--ink); }
+.riskLine strong[data-tone="buy"] { color: var(--buy); }
+.riskLine strong[data-tone="sell"] { color: var(--sell); }
+.tagRow { display: flex; flex-wrap: wrap; gap: var(--s1); margin-bottom: var(--s2); }
+.tagChip {
+  padding: 1px var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  color: var(--ink-2);
+  font: var(--fs-micro);
+}
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--s1) var(--s3);
+  margin-bottom: var(--s2);
+}
+.statCell { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); font: var(--fs-xs); color: var(--ink); }
+
+.ecoNews { display: flex; flex: none; flex-direction: column; border-bottom: 1px solid var(--edge); }
+.ecoNews .table { max-height: 180px; }
+
+@media (max-width: 700px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .splitCol + .splitCol { border-left: none; border-top: 1px solid var(--edge); }
+  .statGrid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
+.searchForm { display: flex; align-items: center; gap: var(--s2); padding: var(--s2) var(--s3); }
+.searchInput {
+  height: 24px;
+  width: 240px;
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--ink);
+  font: var(--fs-xs);
+}
+.searchInput:focus-visible { outline: 2px solid var(--signal); outline-offset: 1px; }
+.tokenHead { display: inline-flex; align-items: center; gap: var(--s2); font: var(--fs-sm); }
+
+@media (max-width: 700px) {
+  .searchInput { width: 160px; }
+}

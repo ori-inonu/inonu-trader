@@ -1,0 +1,1677 @@
+{
+  "schema": "local_spec_source_inventory_v1",
+  "capturedAtUtc": "2026-10-11T14:54:46.2895104Z",
+  "workspace": "C:/Users/gabri/jev-trader",
+  "nativeConversationId": "01a12b61-5e42-71b1-8092-c5c1220ed3f6",
+  "sessionId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+  "scope": "research_only_no_repo_changes_no_tests_no_authenticated_calls",
+  "markdownCount": 135,
+  "markdownReadExtentDisclaimer": "Full-text or selected extracts as individually declared; no claim all 135 were read in full. Current-end hashes were not all captured before first read.",
+  "sources": [
+    {
+      "path": "CLAUDE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/CLAUDE.md",
+      "sha256": "5f6d2f4a727726f78697402ee4777794165e3bea86cef8319a4eb9ec0394307d",
+      "bytes": 3555,
+      "lineCount": 126,
+      "title": "---",
+      "status": "Instrucao local; expectativa herdada de 300 ms em conflito explicito com prioridade safety",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/CONTRIBUTING.md",
+      "sha256": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+      "bytes": 1459,
+      "lineCount": 23,
+      "title": "# Contributing to Inonu Trader",
+      "status": "Contrato local de contribuicao/instrucoes; nao concede publicacao ou fundos",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/ARQUITETURA-CENTRAL-DE-OPERACOES.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/ARQUITETURA-CENTRAL-DE-OPERACOES.md",
+      "sha256": "76d2ed0448d49489bac6ec09c9a0a9faf997b4e92cb647adb149918ebefc4fa2",
+      "bytes": 16883,
+      "lineCount": 134,
+      "title": "# Central de operações do Jev: decisões de arquitetura",
+      "status": "Arquitetura/direcao; proposicoes e partes superadas por codigo/evidencia posterior",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/AUDITORIA-OBJETIVOS.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/AUDITORIA-OBJETIVOS.md",
+      "sha256": "db393a81f00d28d3d556901de537ea417194e42dac5a2796591d10b8c85875ac",
+      "bytes": 5286,
+      "lineCount": 36,
+      "title": "# Auditoria dos objetivos: Jev como operador financeiro da carteira OKX",
+      "status": "Auditoria/diagnostico historico; fatias integradas nao provam entrega inteira",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/BACKTEST-EVIDENCE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/BACKTEST-EVIDENCE.md",
+      "sha256": "97bea3ec9bb7bd6d1b8b41f4147205065f9da2a0ee6533422cd8d0f0d1e70b57",
+      "bytes": 5329,
+      "lineCount": 52,
+      "title": "# INONU TRADER — evidência do replay",
+      "status": "Evidencia historica de paper/release; replay nao e rerun/OOS/24h/live",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-ACCEPTANCE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-ACCEPTANCE.md",
+      "sha256": "20e1558da58ceae78332020f1e4f84277eacdb694748d28b9ea599dc30808054",
+      "bytes": 1712,
+      "lineCount": 19,
+      "title": "# Central Jev: aceite da integração",
+      "status": "C1-C6 preservados; C3/C6 documentalmente pendentes",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-CHECKPOINT.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-CHECKPOINT.md",
+      "sha256": "b2a075f540465a34c1026b8c1bfe6fea881a3731d4b2b2373be1ade5eef12a59",
+      "bytes": 5925,
+      "lineCount": 43,
+      "title": "# Checkpoint da central Jev — 2026-10-11",
+      "status": "Checkpoint declara parent incompleto, preview bloqueado e C3/C6 pendentes",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-FINANCIAL-REVIEW.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-FINANCIAL-REVIEW.md",
+      "sha256": "6e6b1646104717bc668218aeff70ef068983829f16218d0dd19bb813dd7f6b64",
+      "bytes": 3241,
+      "lineCount": 27,
+      "title": "Parecer independente — patch financeiro, baseline informado 055a637.",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-INTEGRATION-78ae090.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-INTEGRATION-78ae090.md",
+      "sha256": "6a5e9804f9d1310abe501a78683462247d1b80b78750256fa8d8518f9f8c0237",
+      "bytes": 2603,
+      "lineCount": 14,
+      "title": "# Verificação da integração 78ae090 — 2026-10-11",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-OPERATOR-INTEGRATION-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-OPERATOR-INTEGRATION-SPEC.md",
+      "sha256": "793f407d70cdfbc24a84327bee4754a0481e5682e13c4f3fe77674e69b34aa46",
+      "bytes": 3045,
+      "lineCount": 27,
+      "title": "# Integração do delta de segurança do operador — 2026-10-11",
+      "status": "Contrato limitado de integracao/reparo; nao amplia aceitação nem autoriza live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-OPERATOR-REVIEW-7bce1e8.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-OPERATOR-REVIEW-7bce1e8.md",
+      "sha256": "5656b3a1e517b1becf72116dc2c8a4bcc08094b230c4c1decb3fb2cb296cf0af",
+      "bytes": 4970,
+      "lineCount": 55,
+      "title": "# Revisão independente — operator 7bce1e8",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-OPERATOR-VERIFICATION-7bce1e8.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-OPERATOR-VERIFICATION-7bce1e8.md",
+      "sha256": "7f0d64eaf3b3a31213ed4b3cd9fa06bdb43fe50b0ee71e47e9297802352d9650",
+      "bytes": 2701,
+      "lineCount": 16,
+      "title": "# Verificação da integração do operador — 2026-10-11",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-AUDIT-2ed0324.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-REMOTE-AUDIT-2ed0324.md",
+      "sha256": "05def869eec955a3324490054e008c4e8466489ebb04be3adde27733e5b4a5e8",
+      "bytes": 7685,
+      "lineCount": 52,
+      "title": "# Reconciliação de branches remotas — 2026-10-11",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-INTEGRATION-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-REMOTE-INTEGRATION-SPEC.md",
+      "sha256": "f7395f11adfc236a90258f4d7a13587cbe480d84ef3b1d42980777ad1ca20cb7",
+      "bytes": 2830,
+      "lineCount": 16,
+      "title": "# Integração dos remotos: Central Jev",
+      "status": "Contrato limitado de integracao/reparo; nao amplia aceitação nem autoriza live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-VERIFICATION-2ed0324.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-REMOTE-VERIFICATION-2ed0324.md",
+      "sha256": "dcfc1c7dbe94c66da0845a37e0f482f1c7862080b93878bb1eeaaf2f2f653047",
+      "bytes": 2396,
+      "lineCount": 16,
+      "title": "# Verificação do candidato remoto 2ed0324",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REVIEW-1c50fdf.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-REVIEW-1c50fdf.md",
+      "sha256": "de48c4a3dffb87eef0225d6b7d9fa9a73ca4bde6e3b9bf0ec7dbdd9779280d13",
+      "bytes": 7059,
+      "lineCount": 60,
+      "title": "Parecer independente de 2026-10-11: **nenhum bloqueador encontrado no delta das quatro correções e regressão de teto zero em 1c50fdf.** O P2 de 66dad45 foi corrigido. Este parecer não aprova conclusão global, merge realizado, preview servido ou execução live.",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REVIEW-FIX-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-REVIEW-FIX-SPEC.md",
+      "sha256": "bb3825d5b039d68837c0f94be8ff979709b28ca12bd528a420d8feae1700f732",
+      "bytes": 3661,
+      "lineCount": 31,
+      "title": "# Correções da revisão independente da Central Jev",
+      "status": "Contrato limitado de integracao/reparo; nao amplia aceitação nem autoriza live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-REVIEW.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-REVIEW.md",
+      "sha256": "bc95fecda13172b9041a8076023d0d5933d95a589e2c18d46c57a95eb2cb941f",
+      "bytes": 3756,
+      "lineCount": 30,
+      "title": "# Parecer independente — GrowthDeck e ajuste de testes CLI",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-VERIFICATION-1c50fdf.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-VERIFICATION-1c50fdf.md",
+      "sha256": "0cb6bf04c0533d4ce62cd3d1694aab66181fe81de92a8e81a159a31dff73c33a",
+      "bytes": 2901,
+      "lineCount": 31,
+      "title": "# Verificação do candidato final da Central Jev",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CENTRAL-JEV-ZERO-CEILING-REGRESSION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CENTRAL-JEV-ZERO-CEILING-REGRESSION.md",
+      "sha256": "cde320f8fe11c04b38eac1418eeb10d372c72440aa62ee50b7331d3dafed13fe",
+      "bytes": 1451,
+      "lineCount": 12,
+      "title": "# Regressão de leitura da fase de observação",
+      "status": "Verificacao/revisao limitada de snapshot; nao fecha C1-C6 global ou qualifica live",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/CONTRIBUICAO.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/CONTRIBUICAO.md",
+      "sha256": "51b9dc6f9d242cc32434f7a16fd210e995eda1bf4395b4744ec8ff5de1305ee5",
+      "bytes": 1344,
+      "lineCount": 23,
+      "title": "# Contribuir com Inonu Trader",
+      "status": "Contrato local de contribuicao/instrucoes; nao concede publicacao ou fundos",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/FUNDING-RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/FUNDING-RESEARCH.md",
+      "sha256": "7d68fdd273f4b92451cf44f30975b9bc75d0f6e4c22860ed4cc34f2718ae213b",
+      "bytes": 22884,
+      "lineCount": 115,
+      "title": "# jev-trader - carteira, Pix e circuito de entrada/saída",
+      "status": "Pesquisa/acesso/operacao historicos; elegibilidade pessoal e lucro desconhecidos",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/GOAL-INONU-TRADER.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/GOAL-INONU-TRADER.md",
+      "sha256": "968b888890679baa5b0d2d358c36d5bb7fc8ecce690e455fdcddf6da891a35fc",
+      "bytes": 2556,
+      "lineCount": 14,
+      "title": "# INONU TRADER — meta de engenharia vigente",
+      "status": "Direcao ampla vigente; descoberta e gates; sem autorizacao financeira",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/INONU-DESIGN-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/INONU-DESIGN-SPEC.md",
+      "sha256": "184d31ac33e0b83734047d9d73f8cf2b7b4c46dafc9cabf9379ba8b8af6016a7",
+      "bytes": 18156,
+      "lineCount": 134,
+      "title": "# Inonu Trader: especificação visual e de interação",
+      "status": "Aceitacao visual D1-D8; entrega visual atual ainda precisa prova servida",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/INONU-PROPOSAL.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/INONU-PROPOSAL.md",
+      "sha256": "07ae8d6a6a0d08340d2b3726deb83a7e8cc49bab90bafdc5d28aff54c414445a",
+      "bytes": 1915,
+      "lineCount": 12,
+      "title": "# Inonu Trader: identidade e contribuição",
+      "status": "Historico/proposta de origem; alcance atual e gates posteriores prevalecem",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/JEV-DECISAO-ONCHAIN-OS.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/JEV-DECISAO-ONCHAIN-OS.md",
+      "sha256": "46c9a77493ebe53c24e7f82fc02c6abe9ca9e823559fa1505a95c3cfb10635c4",
+      "bytes": 11500,
+      "lineCount": 115,
+      "title": "# Tomada de decisão do Jev sobre o Onchain OS: como construir",
+      "status": "Registro historico de decisao/configuracao local; nao prova estado ou custo atuais",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/JEV-LABORATORIO-DE-DECISAO.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/JEV-LABORATORIO-DE-DECISAO.md",
+      "sha256": "1d71a02220c608d3453b9cf8b1b0986a4d25b69d334362401ef2fe5cf991f40b",
+      "bytes": 62753,
+      "lineCount": 524,
+      "title": "# Jev Decision Lab: laboratório de descoberta de vantagem com estatística honesta",
+      "status": "LB1-LB27 sombra/estatistica; recommendation permanece fase0; nao lucro/live",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/JEV-WINDOWS.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/JEV-WINDOWS.md",
+      "sha256": "de0d0aa364017a3e617648a884ebc4e0f32f4aa1444b1f82a8a7acf2ac9db5cc",
+      "bytes": 4216,
+      "lineCount": 49,
+      "title": "# Jev configurado no Windows",
+      "status": "Registro historico de decisao/configuracao local; nao prova estado ou custo atuais",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/LIVE-QUALIFICATION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/LIVE-QUALIFICATION.md",
+      "sha256": "90775aa469b370de2213607b02de71a5dd73142507aab344296aa8cb889e008a",
+      "bytes": 36788,
+      "lineCount": 363,
+      "title": "# Qualificação para execução real em Kuru/Monad",
+      "status": "Checklist read-only; readyForOwnerReview nao e autorizacao; owner-only live separado",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/LOCALHOST-INTEGRATION-DIAGNOSIS-20261010.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/LOCALHOST-INTEGRATION-DIAGNOSIS-20261010.md",
+      "sha256": "a692e4b49c1fec41cc197faa2bf2429debd42a4b3f564728b00ffc2b452a3c73",
+      "bytes": 5296,
+      "lineCount": 48,
+      "title": "# Diagnóstico da integração local",
+      "status": "Auditoria/diagnostico historico; fatias integradas nao provam entrega inteira",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-alpha-radar-v1/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-alpha-radar-v1/RESEARCH.md",
+      "sha256": "e37a405dbccd914ccf620911d1c51376eba14c0c513afc80003d92ddc412b38d",
+      "bytes": 4520,
+      "lineCount": 25,
+      "title": "# Alpha Radar — contrato público delimitado",
+      "status": "Pesquisa; API publica adequada nao localizada no escopo; acesso pessoal desconhecido",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-defi-v1/AUDITORIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-defi-v1/AUDITORIA.md",
+      "sha256": "de358c483f5999c4a2c4f8282f4f0dccffe91b25b3838cf73998d0b2f95e71fa",
+      "bytes": 2929,
+      "lineCount": 25,
+      "title": "# Escopo da auditoria DeFi offline",
+      "status": "DeFi observacional implementado/revisado por snapshot; APY/capacidade nao autorizam investimento",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-defi-v1/GUIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-defi-v1/GUIA.md",
+      "sha256": "987b7003b5e8438815db8444f7cce4ef8ac544dcdac59054962ae8dcd71fe7fd",
+      "bytes": 5182,
+      "lineCount": 91,
+      "title": "# Produtos DeFi da OKX no GEV",
+      "status": "DeFi observacional implementado/revisado por snapshot; APY/capacidade nao autorizam investimento",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-defi-v1/PROPOSTA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-defi-v1/PROPOSTA.md",
+      "sha256": "bc3d243e4a0a760ceedf0cedf0ed280d4a259770c49dc8301cda73f71ec6aa19",
+      "bytes": 4984,
+      "lineCount": 31,
+      "title": "# Proposta observacional DeFi",
+      "status": "Rascunho historico anterior a SPEC e integracao posterior",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-defi-v1/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-defi-v1/RESEARCH.md",
+      "sha256": "a1b3d9834417f55a862e2b03093b3dc0550b7724ffd2aadac0e5b31de1bdc4be",
+      "bytes": 4394,
+      "lineCount": 15,
+      "title": "Pesquisa pública delimitada: há documentação oficial de descoberta de produtos DeFi com APY na API v6. Este recorte trata produtos de investimento e resgate; campanhas Wallet Rewards ficaram fora dele. Não houve implementação ou acesso a conta/carteira.",
+      "status": "DeFi observacional implementado/revisado por snapshot; APY/capacidade nao autorizam investimento",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-defi-v1/SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-defi-v1/SPEC.md",
+      "sha256": "6b0ccced23bd76e39586a402b762c3301b21f9ae054a967745171955f761ea99",
+      "bytes": 14040,
+      "lineCount": 76,
+      "title": "# Observações DeFi offline V1",
+      "status": "D1-D8 DeFi congelados; cabecalho candidato historico, verificacao posterior declara implementado",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-defi-v1/VERIFICACAO.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-defi-v1/VERIFICACAO.md",
+      "sha256": "43dc376cbc75104a3f644363ae1e56511a8ceba9744ea94370f1fc683cdbdb27",
+      "bytes": 3290,
+      "lineCount": 26,
+      "title": "# Verificação do módulo DeFi offline",
+      "status": "DeFi observacional implementado/revisado por snapshot; APY/capacidade nao autorizam investimento",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-DERIVATIVES-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-DERIVATIVES-SPEC.md",
+      "sha256": "8a0b02e2b82f49bbfb3eb96adaf3b0448c6362fbca1a4a3957f08f45cc1922c2",
+      "bytes": 38044,
+      "lineCount": 262,
+      "title": "# Avaliador offline de derivativos perpétuos OKX V1",
+      "status": "Derivativos offline/arithmetic; custos/MMR/acesso desconhecidos impedem elegibilidade",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-derivatives-v1/GUIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-derivatives-v1/GUIA.md",
+      "sha256": "0a22067d4aff1d97223e23420dda19d816daaaa6e8f8dc965ac571c403baccde",
+      "bytes": 11091,
+      "lineCount": 97,
+      "title": "# Derivativos perpétuos da OKX: avaliador offline",
+      "status": "Derivativos offline/arithmetic; custos/MMR/acesso desconhecidos impedem elegibilidade",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-sdk-units-v1/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-sdk-units-v1/RESEARCH.md",
+      "sha256": "a237f8944430b99b1806d58b3ad826ea15590d65ea5287b8b449a487d2e4efdc",
+      "bytes": 4333,
+      "lineCount": 28,
+      "title": "# Unidade da cotação no SDK oficial OKX",
+      "status": "Pesquisa posterior de unidades: outputUnit unknown; nao destrava segunda quote autenticada",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-units-v3/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-units-v3/RESEARCH.md",
+      "sha256": "f51e61d8c4c975e0638f66eccbffe2783c8e0f65bd2a3c63659944d4323b7610",
+      "bytes": 4093,
+      "lineCount": 18,
+      "title": "# Unidade da cotação DEX OKX — 10/10/2026",
+      "status": "Pesquisa posterior de unidades: outputUnit unknown; nao destrava segunda quote autenticada",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-QUOTE-CONTRACT-20261009.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/OKX-DEX-QUOTE-CONTRACT-20261009.md",
+      "sha256": "4ce9b26ed0dd15e6cb52bd8057f0a6f9186a2ad7f8c970e81a984817febe87cb",
+      "bytes": 18157,
+      "lineCount": 162,
+      "title": "# Contrato factual DEX quote — 2026-10-09",
+      "status": "Plano/contrato/evidencia/revisao DEX por snapshot; unidade e qualificacao live nao demonstradas",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-GUIDE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/OKX-DEX-V2-GUIDE.md",
+      "sha256": "8a6aaba1f5dacb35597176e1483d2018a13d09356d00a6458c10957126648c73",
+      "bytes": 6541,
+      "lineCount": 38,
+      "title": "# Consultas DEX do Inonu Trader",
+      "status": "Guia posterior: max uma quote autenticada raw A-B, outputUnit unknown; demo two-leg synthetic",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-PLAN.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/OKX-DEX-V2-PLAN.md",
+      "sha256": "307d9a749c4b16ae191a1b8022afc5534216792abe5bb0bbf41c9654f296c4dd",
+      "bytes": 2333,
+      "lineCount": 12,
+      "title": "# Plano mínimo de implementação DEX V2",
+      "status": "Plano/contrato/evidencia/revisao DEX por snapshot; unidade e qualificacao live nao demonstradas",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V2-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/OKX-DEX-V2-SPEC.md",
+      "sha256": "b6cdb5629a1899e22d7d54f0461d75fa4d56fd4a16284ce872f271981d2f469b",
+      "bytes": 9354,
+      "lineCount": 48,
+      "title": "# SPEC do ciclo DEX V2 — leitura de cotações",
+      "status": "D1-D8 frozen historico; barreiras posteriores do guia/reparo nao podem ser removidas",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/OKX-DEX-V4-INDEPENDENT-REVIEW.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/OKX-DEX-V4-INDEPENDENT-REVIEW.md",
+      "sha256": "df641e8de3efc1b70585aaa76d6829266e1d834fbeea33e6234a7e6b97467015",
+      "bytes": 6830,
+      "lineCount": 44,
+      "title": "# Revisão independente — OKX DEX V4 recovery",
+      "status": "Plano/contrato/evidencia/revisao DEX por snapshot; unidade e qualificacao live nao demonstradas",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-47-VERIFICATION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/ROOT-47-VERIFICATION.md",
+      "sha256": "8e6d147dda461c35b591d68be409df13d4bf3626c6dd2160e61e9fc5db166c89",
+      "bytes": 20449,
+      "lineCount": 300,
+      "title": "# Verificacao de execucao da integracao DEX",
+      "status": "Plano/contrato/evidencia/revisao DEX por snapshot; unidade e qualificacao live nao demonstradas",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-INTEGRATION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/ROOT-INTEGRATION.md",
+      "sha256": "578915ef13d2e59259b9fd886db67cfc63380b94243c04e0e0b93b77d63cf0b9",
+      "bytes": 2003,
+      "lineCount": 18,
+      "title": "# Integração local das cotações OKX DEX — V4",
+      "status": "Plano/contrato/evidencia/revisao DEX por snapshot; unidade e qualificacao live nao demonstradas",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-dex-v2/SCHEMA-REGRESSION-COMPARISON.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-dex-v2/SCHEMA-REGRESSION-COMPARISON.md",
+      "sha256": "815c94c0fba92ec7d8b2422cc1aa1c1d6e0bd2da71ee704d946aa68025b5ac61",
+      "bytes": 11080,
+      "lineCount": 160,
+      "title": "# Schema regression comparison",
+      "status": "Plano/contrato/evidencia/revisao DEX por snapshot; unidade e qualificacao live nao demonstradas",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-EARN-RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-EARN-RESEARCH.md",
+      "sha256": "7aa6c1229724dff806307cbaf0b77648cc0f02cdd5c0ffe70079faa75e621e53",
+      "bytes": 14282,
+      "lineCount": 71,
+      "title": "# OKX Earn, On-chain Earn e DeFi Earn — pesquisa para SDD",
+      "status": "Pesquisa/acesso/operacao historicos; elegibilidade pessoal e lucro desconhecidos",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-PLAN.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-ECOSYSTEM-PLAN.md",
+      "sha256": "6d9e3edbad5ae26edcfc414763786b76d93b798bec500af2a2530cf0d310e409",
+      "bytes": 1971,
+      "lineCount": 12,
+      "title": "# Plano da entrega E1–E8",
+      "status": "E1-E8 scanner read-only; implementacao/revisoes locais separadas de acesso real",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-ECOSYSTEM-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-ECOSYSTEM-SPEC.md",
+      "sha256": "c0c0ca088fed47c7e37d495134d53ebd1e63e7360bdaddbc2ce2f08235525946",
+      "bytes": 6161,
+      "lineCount": 37,
+      "title": "# OKX Web3: descoberta e triagem de oportunidades",
+      "status": "E1-E8 scanner read-only; implementacao/revisoes locais separadas de acesso real",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-ecosystem-v1/DATA-INTEGRATION-AUDIT.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-ecosystem-v1/DATA-INTEGRATION-AUDIT.md",
+      "sha256": "6eaf37d2775371f954d4bf9261dbb5d148229e9e4f4c75e3d484b5b255b61785",
+      "bytes": 7474,
+      "lineCount": 53,
+      "title": "# Auditoria da integração de dados OKX/Web3",
+      "status": "Auditoria documental 2026-10-11: clientes existem, adaptacao raw/report/captura ausente",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-ecosystem-v1/GUIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-ecosystem-v1/GUIA.md",
+      "sha256": "f7bbf5c1d2173134fc891b81f1d5b488aef8ff88f6bd5d3d7d3939bf4eeb962c",
+      "bytes": 3327,
+      "lineCount": 36,
+      "title": "# Consulta unificada de pesquisa OKX",
+      "status": "EC1-EC7 especificados/revisados, NAO implementados; okx:ecosystem indisponivel",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-ecosystem-v1/SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-ecosystem-v1/SPEC.md",
+      "sha256": "11b0d190dab6fc68d7f884d91ca925626e1c086f85e51f93256e557921a15401",
+      "bytes": 4629,
+      "lineCount": 29,
+      "title": "# Consulta local do ecossistema OKX — v1",
+      "status": "EC1-EC7 especificados/revisados, NAO implementados; okx:ecosystem indisponivel",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-ecosystem/GUIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-ecosystem/GUIA.md",
+      "sha256": "b66fcc92f90dba1ae3bb6e5f6da602ae8711395d0fde25a711d719b1631263dc",
+      "bytes": 6307,
+      "lineCount": 45,
+      "title": "# Integrações OKX Wallet no GEV",
+      "status": "Guia de capacidades distintas implementadas/propostas; nao unificacao EC entregue",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-evidence-v1/AUDITORIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-evidence-v1/AUDITORIA.md",
+      "sha256": "c97447110140ea145cc019204f7d910b46c4aefe7c23dec3a025b2a1fe8ad9f1",
+      "bytes": 1667,
+      "lineCount": 14,
+      "title": "# Auditoria da comparação offline OKX",
+      "status": "Modulo join integrado/revisado por snapshot; dados declarados nao autenticados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-evidence-v1/CYCLE-REVIEW.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-evidence-v1/CYCLE-REVIEW.md",
+      "sha256": "6fff2a8c3832b1dee73a6c9d8cdec5c6555727528ff39c25bc1d22549c26daab",
+      "bytes": 3037,
+      "lineCount": 21,
+      "title": "Parecer independente de escopo: **approve**, `within_authorized_objective`, limitado à proposta `offline_evidence_join`. Não implementei a proposta. Identidade real observada do revisor: `01a125a9-632d-7c62-b920-da886d69a180`.",
+      "status": "Modulo join integrado/revisado por snapshot; dados declarados nao autenticados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-evidence-v1/GUIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-evidence-v1/GUIA.md",
+      "sha256": "ef140832bbc76d033e0fd621d8cea833c4592592cfb4f54b144b104f72246d88",
+      "bytes": 3020,
+      "lineCount": 28,
+      "title": "# Comparar evidências OKX",
+      "status": "Modulo join integrado/revisado por snapshot; dados declarados nao autenticados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-evidence-v1/PROPOSTA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-evidence-v1/PROPOSTA.md",
+      "sha256": "121eaa5632154b4f2ce57f261316a9005d9e402dd86bcafd12469e973525da95",
+      "bytes": 2997,
+      "lineCount": 28,
+      "title": "# Reunir evidências de sinais e Meme Pump",
+      "status": "Modulo join integrado/revisado por snapshot; dados declarados nao autenticados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-evidence-v1/SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-evidence-v1/SPEC.md",
+      "sha256": "7b33b878cfeccb543b1ae01e7fa06aa92dc6994d24086cfe29a05e6a6e5200d8",
+      "bytes": 8371,
+      "lineCount": 26,
+      "title": "# Evidências OKX reunidas para pesquisa offline",
+      "status": "E1-E8 join offline; tudo non_qualified; sem ranking financeiro",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-evidence-v1/VERIFICACAO.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-evidence-v1/VERIFICACAO.md",
+      "sha256": "2b5ef0a251f048fb2194e861c3246316858c9650d894598b0a56a7597e2efb3b",
+      "bytes": 1669,
+      "lineCount": 18,
+      "title": "# Verificação da comparação offline OKX",
+      "status": "Modulo join integrado/revisado por snapshot; dados declarados nao autenticados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-exit-security-v1/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-exit-security-v1/RESEARCH.md",
+      "sha256": "3c4da0b6a6ed6d00bba9dc0cacba4382b5602916406e3e740e8991318e74606b",
+      "bytes": 3872,
+      "lineCount": 24,
+      "title": "# Segurança e possibilidade de saída no ecossistema OKX",
+      "status": "Pesquisa; semantica/unidades/enablement de simulation e exit nao qualificadas",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-HISTORICAL-ARCHIVES.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-HISTORICAL-ARCHIVES.md",
+      "sha256": "e4b33f54fc9339d001b4a2742f78a158bee2c1fdd7ef865b27f7c6fa69334b25",
+      "bytes": 7627,
+      "lineCount": 73,
+      "title": "# OKX historical archive metadata discovery",
+      "status": "Descoberta metadata raw arquivos publicos; sem download, extracao, cobertura ou vantagem",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-INVESTIGACAO.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-INVESTIGACAO.md",
+      "sha256": "7fc01773dbc3553f8312132d92e6c87370406897e3835d11e9bdf8b7d9979286",
+      "bytes": 9381,
+      "lineCount": 60,
+      "title": "# OKX, integração e potencial de retorno",
+      "status": "Pesquisa/acesso/operacao historicos; elegibilidade pessoal e lucro desconhecidos",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-leaderboard-v1/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-leaderboard-v1/RESEARCH.md",
+      "sha256": "cd93cd6171cd1fc473039c19645e92490bd99784e10d17d95edf8a3658523a5e",
+      "bytes": 4870,
+      "lineCount": 34,
+      "title": "# Leaderboard de carteiras OKX — pesquisa de integração",
+      "status": "Pesquisa; relatorio especifico nao iniciado; cliente read existente e cobertura parcial",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-IDENTITY-FIX.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-API-IDENTITY-FIX.md",
+      "sha256": "70e8e34c4867e17323b4603bd302e78cbdac72c58e9141681417b576e278750b",
+      "bytes": 2684,
+      "lineCount": 30,
+      "title": "# OKX API identity mismatch fix",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-TDD-EVIDENCE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-API-TDD-EVIDENCE.md",
+      "sha256": "a552f27fae21111d6393da6a33c29f785ff5a53e60ddf8b890091f5fd2ef7310",
+      "bytes": 7020,
+      "lineCount": 45,
+      "title": "# Evidência TDD — cliente OKX somente leitura",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-CONFIGURATION-READINESS.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-CONFIGURATION-READINESS.md",
+      "sha256": "f40f4032cc071f5323744b2203aa429cde967cc1baa7af3f82e2a0fbf0c2ca3c",
+      "bytes": 2246,
+      "lineCount": 15,
+      "title": "# Configuração observada — 9 de outubro de 2026",
+      "status": "Prontidao historica por presenca; nao prova ativacao, conexao, custo ou credencial atual",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-DEX-V2-CONTRACT-AMENDMENT-DRAFT-20261009.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-DEX-V2-CONTRACT-AMENDMENT-DRAFT-20261009.md",
+      "sha256": "3a3814a3e22e1f438e4b54c81454218d64d31f5051888feecf94b81bf83a96b7",
+      "bytes": 5785,
+      "lineCount": 41,
+      "title": "# Emenda candidata ao contrato DEX V2",
+      "status": "Emenda documental DRAFT; unidade output desconhecida nao vira segunda perna",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-15-WORKSTREAMS-20261009.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-ECOSYSTEM-15-WORKSTREAMS-20261009.md",
+      "sha256": "526839556c01b6523cab6669292f0067564d75b237198c2e85aa08af5e30c27e",
+      "bytes": 11864,
+      "lineCount": 70,
+      "title": "# Síntese dos 15 workstreams OKX e JEV",
+      "status": "Workstreams/advisoria historicos; nao execucao ou autorizacao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-BASELINE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-ECOSYSTEM-V1-BASELINE.md",
+      "sha256": "e7db0940523893e7ec8510fc590fccda3e8a03a3e2cbed7214058dff82018aa7",
+      "bytes": 1123,
+      "lineCount": 11,
+      "title": "# Baseline da primeira entrega",
+      "status": "Baseline historico anterior a implementacao; nao estado atual",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-CONTRACT-ERRATA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-ECOSYSTEM-V1-CONTRACT-ERRATA.md",
+      "sha256": "ccb28dfc2935a03034edc60780d0cfc6f7567d0e189f4138f0f1eedfff1b9da9",
+      "bytes": 1339,
+      "lineCount": 10,
+      "title": "# Correção factual do contrato de transporte",
+      "status": "Errata factual advanced-info object; preserva E1-E8",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-ECOSYSTEM-V1-SPEC.md",
+      "sha256": "13ba216cca87b8fd139d95895cd84a30df536788602fa4679201b8307aa856cb",
+      "bytes": 11017,
+      "lineCount": 62,
+      "title": "# Inonu Trader — primeira integração OKX Web3 verificável",
+      "status": "E1-E8 scanner read-only; implementacao/revisoes locais separadas de acesso real",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-INTEGRATION-RESEARCH-20261009.md",
+      "sha256": "c83291232ea82f0a9505f647e0caeff14a4a494fce44f11392159c5eb69fdfa0",
+      "bytes": 28081,
+      "lineCount": 204,
+      "title": "# Pesquisa de integração OKX — Inonu Trader",
+      "status": "Pesquisa historica; afirmacao antiga de output atomic corrigida por pesquisa/guia posterior",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-LONG-GOAL-CHECKPOINT.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-LONG-GOAL-CHECKPOINT.md",
+      "sha256": "eb67fe455a1543c94408f1464fd5a3b04bb580c42481ae328f6fa05d2309754b",
+      "bytes": 6458,
+      "lineCount": 26,
+      "title": "# Checkpoint da conversa — ecossistema Inonu Trader",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-INTEGRATION-VERIFICATION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-SCANNER-INTEGRATION-VERIFICATION.md",
+      "sha256": "6be2e675ab1614259f61bd69d9eb6ed4718a4037aa949dbb284faa4627d12ea9",
+      "bytes": 2807,
+      "lineCount": 27,
+      "title": "# Verificação da integração do scanner",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-LAYOUT-ADDENDUM.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-SCANNER-LAYOUT-ADDENDUM.md",
+      "sha256": "9d4982cf930fc0c7ecab3b2bfbb4f0ac575074701399c951df16b99518806469",
+      "bytes": 1513,
+      "lineCount": 10,
+      "title": "# Integração sem sobrescrever trabalho concorrente",
+      "status": "Addendum namespace src/okx-market; comportamento/aceitacao preservados",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-TDD-EVIDENCE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-SCANNER-TDD-EVIDENCE.md",
+      "sha256": "bacf9e6bd60745dd5b8f96bfc6f64ede505180257170f2fba9a2b2f647ad87c4",
+      "bytes": 6238,
+      "lineCount": 51,
+      "title": "# Evidência TDD — scanner OKX Web3",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-WEB3-INTEGRATION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/OKX-WEB3-INTEGRATION.md",
+      "sha256": "3659778d374ca4cf863c5aa3624c784a65f0a9b70f5175f07b573de48079ed06",
+      "bytes": 10393,
+      "lineCount": 76,
+      "title": "# Inonu Trader — integrações OKX Web3",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/REVIEW-V3.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/REVIEW-V3.md",
+      "sha256": "740bcfe7737dcc348d5e288c740a290c3153c4d8e55dbc389199785d6ee369d0",
+      "bytes": 6557,
+      "lineCount": 42,
+      "title": "# Revisão independente V3 — scanner OKX Web3",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-REVIEW-CORRECTED.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/ROOT-INTEGRATION-REVIEW-CORRECTED.md",
+      "sha256": "b12bada9a4a126d64260aee88a7f1db7a742ac0a06f52b91e67fc1a1d0700c71",
+      "bytes": 8665,
+      "lineCount": 63,
+      "title": "# Revisão independente da integração no checkout principal",
+      "status": "Revisao corrigida de snapshot prevalece sobre relatorio original; nao live",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-REVIEW.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-market-v1/ROOT-INTEGRATION-REVIEW.md",
+      "sha256": "5d4ab5fc5e9b8222f3e75d226371fd9b09af752905a615683df4787444df3511",
+      "bytes": 7772,
+      "lineCount": 59,
+      "title": "# Revisão independente da integração no checkout principal",
+      "status": "Evidencia/guia/revisao do scanner por snapshot; leitura real/custos e integracao inteira nao certificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-ONCHAINOS-DADOS-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-ONCHAINOS-DADOS-SPEC.md",
+      "sha256": "8a0755607de629b2e927413dbe7b61537c3d534ce7693c9f0c29aba3f184ef81",
+      "bytes": 56556,
+      "lineCount": 410,
+      "title": "# Camada de dados do OKX Onchain OS: clientes somente leitura e gravador de captura",
+      "status": "D1-D27 modulos dados read-only; autenticacao/RPS/tier/regiao nao qualificados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-OPERADOR-JEV.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-OPERADOR-JEV.md",
+      "sha256": "e7eedc5351be70f6deb728118ce7d2bcc5f1c75ee8e9aecac7f318ae9d672ad3",
+      "bytes": 15132,
+      "lineCount": 126,
+      "title": "# Jev como operador financeiro da carteira OKX (multichain)",
+      "status": "Guia operador parcialmente superado; realized por saldo e quote trustflag contradizem auditorias atuais",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-portfolio-v1/CAPITAL-BOUNDARY-AUDIT.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/CAPITAL-BOUNDARY-AUDIT.md",
+      "sha256": "aecb9ee00872aefcac6eddd783d3c205481e45315a376a9ecbe0695bab12b0ac",
+      "bytes": 16249,
+      "lineCount": 83,
+      "title": "# Fronteira patrimonial para integração OKX/GEV",
+      "status": "Auditoria documental de capital; realized null, reconciliation_required; sem nova implementacao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-portfolio-v1/CONTRACT-COMPARISON.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/CONTRACT-COMPARISON.md",
+      "sha256": "7b1998956a0f29e511b2ab75a0099c7be5589e56b20674399f677f6574558ea0",
+      "bytes": 11956,
+      "lineCount": 79,
+      "title": "# Comparação de contratos patrimoniais — rascunhos V e T",
+      "status": "Pesquisa/comparacao de alternativas V/T; nenhum contrato escolhido/implementado aqui",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-portfolio-v1/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/RESEARCH.md",
+      "sha256": "3e15783a382e34a6017378064d91bcb4301e74a7eeaeac042c01a2d80092ca13",
+      "bytes": 6030,
+      "lineCount": 26,
+      "title": "# Contratos públicos OKX para patrimônio e retorno observado",
+      "status": "Pesquisa/comparacao de alternativas V/T; nenhum contrato escolhido/implementado aqui",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-portfolio-v1/VALUATION-DIAGNOSTICS-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-portfolio-v1/VALUATION-DIAGNOSTICS-SPEC.md",
+      "sha256": "abc0628c97031e7bf203385ece7eaacaa3a344f0980603a4936042ff8df8076a",
+      "bytes": 18375,
+      "lineCount": 98,
+      "title": "# Diagnóstico patrimonial da OKX Wallet — SPEC",
+      "status": "WVD1-WVD6 SPEC documental NAO implementada; todo valor financeiro derivado null",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-PROPOSAL.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-PROPOSAL.md",
+      "sha256": "00a4da44b59584d3b3d1e6b35ce1cb21286e4dc6f26a054933a54cc75a2f5e41",
+      "bytes": 3930,
+      "lineCount": 29,
+      "title": "# Proposta de integração OKX, 2026-10-09",
+      "status": "Historico/proposta de origem; alcance atual e gates posteriores prevalecem",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-rewards-v1/RESEARCH.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-rewards-v1/RESEARCH.md",
+      "sha256": "20a3f05d0e7dd2cd3c6f776d3c1c892f16841035c30883fdd7a4e33d19d2cdf9",
+      "bytes": 3968,
+      "lineCount": 21,
+      "title": "# Rewards OKX Wallet: superfície documentada — 10/10/2026",
+      "status": "Pesquisa; API publica adequada nao localizada no escopo; acesso pessoal desconhecido",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-signals-v1/AUDITORIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-signals-v1/AUDITORIA.md",
+      "sha256": "b1d9d777fe0f1f353eb4af585b9c986b27335adeb229a2bb2610d91f1d100f2f",
+      "bytes": 2578,
+      "lineCount": 27,
+      "title": "Parecer independente: **approve** para a integração local S8. Zero achados de fidelidade, padrões ou critérios. Não implementei a entrega nem alterei a SPEC.",
+      "status": "Modulo Signals integrado/testado em snapshot; sem certificacao authenticated/live/recomendacao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-signals-v1/GUIA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-signals-v1/GUIA.md",
+      "sha256": "a586f8282536dfd4abe96a2d12b73c68444ab31984477ac7df7528d38b56c25c",
+      "bytes": 8069,
+      "lineCount": 66,
+      "title": "# Sinais OKX no GEV",
+      "status": "Modulo Signals integrado/testado em snapshot; sem certificacao authenticated/live/recomendacao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-signals-v1/SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-signals-v1/SPEC.md",
+      "sha256": "b24bbe99a962220fe3fffd93d705fc441576d9100478bea001836594e287f70f",
+      "bytes": 5443,
+      "lineCount": 29,
+      "title": "# Sinais OKX: observações históricas para pesquisa",
+      "status": "S1-S8 offline/explicit limited live; origem/custo/retorno desconhecidos",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/okx-signals-v1/VERIFICACAO.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/okx-signals-v1/VERIFICACAO.md",
+      "sha256": "a352662bc9d8b79fd014892aa5a6dbe52a22da8522a1d3cebfa17e9f62f215a6",
+      "bytes": 3765,
+      "lineCount": 38,
+      "title": "# Verificação dos sinais OKX",
+      "status": "Modulo Signals integrado/testado em snapshot; sem certificacao authenticated/live/recomendacao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OKX-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OKX-SPEC.md",
+      "sha256": "09b01feac2e94cf7b7461ef0295155ce41cebb07b368caefdad44592777edabd",
+      "bytes": 7069,
+      "lineCount": 35,
+      "title": "# OKX Web3: conexão local de leitura",
+      "status": "Contrato Wallet O/W/A read-only; duas cadeias e cobertura finita; provider real nao certificado",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OPERACAO-BRASIL.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OPERACAO-BRASIL.md",
+      "sha256": "53d4ba133a29cfa42caa5882203ec27f4b1e475fd3760476c701996451591d2d",
+      "bytes": 5934,
+      "lineCount": 44,
+      "title": "# Configuração e operação no Brasil",
+      "status": "Pesquisa/acesso/operacao historicos; elegibilidade pessoal e lucro desconhecidos",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OPERATOR-DECISION-BOUNDARY.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OPERATOR-DECISION-BOUNDARY.md",
+      "sha256": "9b77895e71ed60cec44a19a23399f00c451f9175725edb47844f5a5e359b5fa7",
+      "bytes": 3469,
+      "lineCount": 31,
+      "title": "# INONU TRADER: contrato da decisão do operador",
+      "status": "Contrato Jev tipado elegivel/hold; prazo e custo desconhecido separados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/OPPORTUNITY-ARCHITECTURE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/OPPORTUNITY-ARCHITECTURE.md",
+      "sha256": "0846a394b945d7006a87393b099a50d0a31e34c722ec29b1c23c2bfb72a112c7",
+      "bytes": 12267,
+      "lineCount": 103,
+      "title": "# Evolução do INONU TRADER: inventário e oportunidades",
+      "status": "Arquitetura/direcao; proposicoes e partes superadas por codigo/evidencia posterior",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/PAPER-CAPITAL.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/PAPER-CAPITAL.md",
+      "sha256": "8563f986b5fff078b00350fdbea08c9eca066b0e4584cd347b0dfaaee15dae31",
+      "bytes": 4921,
+      "lineCount": 43,
+      "title": "# Paper capital accounting",
+      "status": "Capital/supervisor synthetic; persistencia nao prova wallet recon ou funcionamento 24h",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/PAPER-SUPERVISOR.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/PAPER-SUPERVISOR.md",
+      "sha256": "d8e3cf4c3c628b1b89657f59b017e068702e1e50090e326baf84154053f0120b",
+      "bytes": 4186,
+      "lineCount": 40,
+      "title": "# Offline paper supervisor",
+      "status": "Capital/supervisor synthetic; persistencia nao prova wallet recon ou funcionamento 24h",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/POLITICA-DE-LIMITES.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/POLITICA-DE-LIMITES.md",
+      "sha256": "38c42350a0645896f5d49e820c05650970c5bda1d7d1ef92b963e9f1f1d29854",
+      "bytes": 31959,
+      "lineCount": 241,
+      "title": "# Política de limites por fase: o envelope de risco como código",
+      "status": "L1-L27 modulo puro; fase0 default; ok nao concede permissao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/PROFIT-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/PROFIT-SPEC.md",
+      "sha256": "268e005d5891a53b7f540faa2c34da3fef440f207e2fefcac6ae113cd5bb52a8",
+      "bytes": 1422,
+      "lineCount": 10,
+      "title": "# Economic qualification addendum",
+      "status": "Aceitacao base congelada; prioridade expressa sobre demo historico",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/PUBLIC-MARKET-CAPTURE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/PUBLIC-MARKET-CAPTURE.md",
+      "sha256": "dd8e213c404042bdefa5ec28513095e51e491c86870ce2f3d3a810ea8bf3136c",
+      "bytes": 14243,
+      "lineCount": 125,
+      "title": "# Public market capture",
+      "status": "Captura offline; adaptador Node HTTPS/WS runtime_capability_unqualified recusa antes de I/O",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/READINESS-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/READINESS-SPEC.md",
+      "sha256": "a21f516ff056656db1b4e6579e10f1c38184b0f26f4aecca4886cae4b623af41",
+      "bytes": 5112,
+      "lineCount": 32,
+      "title": "# Trading readiness and evidence specification",
+      "status": "Aceitacao base congelada; prioridade expressa sobre demo historico",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/RELEASE-v0.0.2.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/RELEASE-v0.0.2.md",
+      "sha256": "11a8f23d19c98d6560b99ce482701f6854fc8c008447b4a8b4ae943c21336641",
+      "bytes": 6000,
+      "lineCount": 67,
+      "title": "# v0.0.2 release candidate",
+      "status": "Evidencia historica de paper/release; replay nao e rerun/OOS/24h/live",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R1-onchain-os-capacidades.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R1-onchain-os-capacidades.md",
+      "sha256": "f850eb44f9413842da01b3c67b2c9832c6de8adf1973fad9f53f8d4de8e6bba6",
+      "bytes": 51727,
+      "lineCount": 152,
+      "title": "# R1: Capacidades do OKX Onchain OS (OKX DEX API e Web3 API) para descobrir oportunidades e agir em carteira",
+      "status": "Pesquisa primaria historica de capacidades/permissoes/estrategias; nao live ou retorno comprovado",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R2-carteira-permissoes-delegacao.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R2-carteira-permissoes-delegacao.md",
+      "sha256": "3bc6392d64f08846602079e885b1a3912f07b0dac94aac139ca2ba9d63fbbf49",
+      "bytes": 43811,
+      "lineCount": 252,
+      "title": "# R2: carteira, permissões e delegação para um assinador guiado por IA",
+      "status": "Pesquisa primaria historica de capacidades/permissoes/estrategias; nao live ou retorno comprovado",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R3-estrategias-e-alavancagem.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R3-estrategias-e-alavancagem.md",
+      "sha256": "17e1d74f1c049f80f262816506e59b31a766d1671148f2f8dc3c13894e92595c",
+      "bytes": 45507,
+      "lineCount": 300,
+      "title": "# R3: Modalidades alcançáveis a partir do ecossistema OKX e a matemática da alavancagem",
+      "status": "Pesquisa primaria historica de capacidades/permissoes/estrategias; nao live ou retorno comprovado",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R4-revisao-seguranca-operador-20261010.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R4-revisao-seguranca-operador-20261010.md",
+      "sha256": "2de7592738af4b0cbb84f0ea4d74ea23cef9cad9e66304458f52ff9251d4218d",
+      "bytes": 5070,
+      "lineCount": 32,
+      "title": "# R4: revisao de seguranca do executor do operador (snapshot de 2026-10-10)",
+      "status": "Revisao seguranca: limites/calldata/ledger incompletos, manter dry-run",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R5-revisao-operador-codigo-final-20261010.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R5-revisao-operador-codigo-final-20261010.md",
+      "sha256": "755ed4d1f7491787aaa9ede6c33ccbf923a081ddc395a3c4830d66f04a2870d2",
+      "bytes": 29169,
+      "lineCount": 119,
+      "title": "# R5: revisão independente do operador no código final (2026-10-10)",
+      "status": "Revisao veto estagio3: F1-F8; aprovacoes posteriores somente por delta",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R6-onchain-os-inventario.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R6-onchain-os-inventario.md",
+      "sha256": "2c861a47f88b1637afe4118d9b8c4700226f5791852f9be2c81572a2a061b717",
+      "bytes": 35574,
+      "lineCount": 303,
+      "title": "# R6: inventário de páginas e endpoints do OKX Onchain OS (nível de página)",
+      "status": "Inventario primario historico 444 capacidades/18familias; capacidade nao significa acesso ou implementacao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R7-okx-agentic-wallet.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R7-okx-agentic-wallet.md",
+      "sha256": "ab0b9c4125f3eacc55a2e54eea7232c8b8428522fa17a2dc2b16b12adc8fb410",
+      "bytes": 52004,
+      "lineCount": 428,
+      "title": "# R7: OKX Onchain OS e Agentic Wallet: fluxo agêntico, catálogo de APIs e plano de integração",
+      "status": "Pesquisa Agentic Wallet: custody/rate/chain/Brasil/enforcement desconhecidos, sem ativacao",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R8-re-revisao-operador-f1-f8-20261011.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R8-re-revisao-operador-f1-f8-20261011.md",
+      "sha256": "1b128ed5f136d4bd5d0b94f5fbf6ae61cfcdd582f0c86ed175d245df0b45de9f",
+      "bytes": 34984,
+      "lineCount": 160,
+      "title": "# R8: re-revisão independente do operador sobre main 2fbe4e0, condições F1 a F8 (2026-10-11)",
+      "status": "Re-revisao veto estagio3; F1 PASS, F2-F8 PARTIAL; achados devem ser rechecados no hash atual",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/research/R9-system-one-alavancagem-onchainos.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/research/R9-system-one-alavancagem-onchainos.md",
+      "sha256": "33a5f3b69f877b4d7136df6a974b820caf3c7b9cfd136110bed6da9dfa9c6f7f",
+      "bytes": 50374,
+      "lineCount": 350,
+      "title": "# R9: System One do Jev: camada rapida de decisao de alavancagem sobre o ecossistema OKX Onchain OS",
+      "status": "Pesquisa System One/leverage: dados nao sao executor margin; fases com gates separados",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/RISCO-E-BACKTEST.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/RISCO-E-BACKTEST.md",
+      "sha256": "b96f0a9813eac46536161d632b89af3a5ef13fea9f2a5bf9ec4574c98ed36718",
+      "bytes": 6503,
+      "lineCount": 54,
+      "title": "# Risco, resultado medido e melhoria da decisão",
+      "status": "Evidencia historica de paper/release; replay nao e rerun/OOS/24h/live",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-09-okx-readonly.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/superpowers/plans/2026-10-09-okx-readonly.md",
+      "sha256": "872e88aa914939d26405f7f8c6010e4327a6a03e58750c2cbee4bd6641e3710a",
+      "bytes": 6558,
+      "lineCount": 67,
+      "title": "# OKX Read-only Integration Implementation Plan",
+      "status": "Plano historico OKX readonly; contratos/gates e estado posteriores prevalecem",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/SYSTEM-ONE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/SYSTEM-ONE.md",
+      "sha256": "6355d18f030203b206a9a3e171f06fbda63e46f9b51dc4fd693bf76879ad371e",
+      "bytes": 4167,
+      "lineCount": 32,
+      "title": "# System One: a camada rapida de decisao de alavancagem do Jev",
+      "status": "Laco mock/public/shadow implementado/documentado; capital configurado; dry_run/blocked",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/VERIFICACAO.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/VERIFICACAO.md",
+      "sha256": "de0fb45b7af1f9a9d7bfd61a197013509eb25e606921b91cea3fb5ed2919ada5",
+      "bytes": 3521,
+      "lineCount": 26,
+      "title": "# Verificação local",
+      "status": "Evidencia historica de paper/release; replay nao e rerun/OOS/24h/live",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WALLET-FINITE-VALUATION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WALLET-FINITE-VALUATION.md",
+      "sha256": "795fd1cd1fa375a99f89277cc4d18b36a35f2eafd9e6d177a969373aef2baa5c",
+      "bytes": 2562,
+      "lineCount": 24,
+      "title": "# INONU TRADER: valores finitos da carteira",
+      "status": "Barreira finitude/unknown/null; subtotal nao e patrimonio completo",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WALLET-OPPORTUNITIES-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WALLET-OPPORTUNITIES-SPEC.md",
+      "sha256": "2f36fdaa60961851afa2f39cf6eb969872dd3fc7c1b3c9252119c35c6c22dff8",
+      "bytes": 8181,
+      "lineCount": 51,
+      "title": "# Carteira X Layer e arquitetura de oportunidades",
+      "status": "Contrato Wallet O/W/A read-only; duas cadeias e cobertura finita; provider real nao certificado",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/wallet-opportunity-research.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/wallet-opportunity-research.md",
+      "sha256": "21a2d58636f38cdbdabb9fa53e745122974f4e7623918745cc3ccae4d4ce2205",
+      "bytes": 31803,
+      "lineCount": 213,
+      "title": "# Pesquisa: patrimônio Web3 e classes de oportunidade",
+      "status": "Pesquisa primaria historica; nao demonstra permissao, custo, saldo ou unidades totais",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WALLET-TRANSACTION-PREFLIGHT.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WALLET-TRANSACTION-PREFLIGHT.md",
+      "sha256": "f4f42eee549c5382cf663109bed80d7796af13cbc54357f0bfe0dafc3a7f9215",
+      "bytes": 6433,
+      "lineCount": 77,
+      "title": "# Conferência de propostas na sessão OKX Web3",
+      "status": "Contrato preflight read-only implementado/documentado; executionQualified false",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-DELIVERY-SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WEB3-INTEGRATION-DELIVERY-SPEC.md",
+      "sha256": "dce6610f5fdaffbe98cadd2de35f1bf84cd8a274566657e3a5d163a1d9431515",
+      "bytes": 4666,
+      "lineCount": 39,
+      "title": "# Web3 integration verification and delivery",
+      "status": "I1-I7 congelados; parent incompleto; sem autorizacao financeira/publicacao",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-READINESS.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WEB3-INTEGRATION-READINESS.md",
+      "sha256": "9a1484954ed5e7d4a5ccaabdc4fc65d954d30b7b73f3b8ab30f06a8c94f6105f",
+      "bytes": 33423,
+      "lineCount": 152,
+      "title": "# INONU TRADER: Web3 integration readiness",
+      "status": "Readiness/remediacoes/revisoes de snapshots; cadeia autonoma nao demonstrada",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-REVIEW-CYCLE-2.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WEB3-INTEGRATION-REVIEW-CYCLE-2.md",
+      "sha256": "5aeebb2cc7a61a90ad535a814ac0afe40ec9253f3685d91c1949d9a8882d5a90",
+      "bytes": 8570,
+      "lineCount": 44,
+      "title": "# Web3 integration: second bounded follow-up repair cycle",
+      "status": "Readiness/remediacoes/revisoes de snapshots; cadeia autonoma nao demonstrada",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-REVIEW-FOLLOWUP.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WEB3-INTEGRATION-REVIEW-FOLLOWUP.md",
+      "sha256": "b72c150d49ff8066bde579aad6167222e086e0cd66e939fd47f92e321d79e2ce",
+      "bytes": 10619,
+      "lineCount": 58,
+      "title": "# Post-remediation review follow-up",
+      "status": "Readiness/remediacoes/revisoes de snapshots; cadeia autonoma nao demonstrada",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "docs/WEB3-INTEGRATION-REVIEW-REMEDIATION.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/docs/WEB3-INTEGRATION-REVIEW-REMEDIATION.md",
+      "sha256": "fd14cc486f22b7cfc8c60c5e51fb36aceaf93d7612affe3b47d41576b016402d",
+      "bytes": 10081,
+      "lineCount": 52,
+      "title": "# Exact-snapshot review remediation",
+      "status": "Readiness/remediacoes/revisoes de snapshots; cadeia autonoma nao demonstrada",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "IDEA.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/IDEA.md",
+      "sha256": "bb519f74e58ce1551329d6b61b70b87492b0cf30d94bb03c0612dcd0a6649949",
+      "bytes": 585,
+      "lineCount": 10,
+      "title": "# inonu-trader",
+      "status": "Historico/proposta de origem; alcance atual e gates posteriores prevalecem",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "README.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/README.md",
+      "sha256": "dfca4da978f78402ed3af4f74207653070d9479489c6c1eaaaf6385ac19c2ff7",
+      "bytes": 15409,
+      "lineCount": 97,
+      "title": "# INONU TRADER",
+      "status": "Mapa atual declarado de comandos e limites; testes/live nao reexecutados nesta pesquisa",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "SPEC.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/SPEC.md",
+      "sha256": "4aa2ab6b4746915eb32804ebcfbfb9b1ec4f0b3d3cb084d82adb3f27d48a6d3a",
+      "bytes": 6144,
+      "lineCount": 101,
+      "title": "# Jev Trader — Product Spec",
+      "status": "Historico/proposta de origem; alcance atual e gates posteriores prevalecem",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "web/AGENTS.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/web/AGENTS.md",
+      "sha256": "ec1b6e023814ae1a510b02ea62229e5eb035d75e39e3335d5ea7f5ce5654d567",
+      "bytes": 687,
+      "lineCount": 10,
+      "title": "# This is NOT the Next.js you know",
+      "status": "Contrato local de contribuicao/instrucoes; nao concede publicacao ou fundos",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "web/CLAUDE.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/web/CLAUDE.md",
+      "sha256": "d631d88045f74623d568adfb4783b72e3d1b732330d749bc6c72e6648d4581d3",
+      "bytes": 12,
+      "lineCount": 2,
+      "title": "@AGENTS.md",
+      "status": "Contrato local de contribuicao/instrucoes; nao concede publicacao ou fundos",
+      "readExtent": "full_text_reviewed",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "web/OKX-WALLET.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/web/OKX-WALLET.md",
+      "sha256": "f277a67e021981def73f5be79694c5f5124ad381d04af7b0625d16d31319b342",
+      "bytes": 2620,
+      "lineCount": 34,
+      "title": "# OKX Wallet: rede e saldos",
+      "status": "Guia Wallet finita/provider/cobertura; nao saldo Exchange ou patrimonio total",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    },
+    {
+      "path": "web/README.md",
+      "absolutePath": "C:/Users/gabri/jev-trader/web/README.md",
+      "sha256": "d4b4490108840c20f1f8e842f6869692d1ad62cfeaa36c9d8501737701f5b1cc",
+      "bytes": 2291,
+      "lineCount": 35,
+      "title": "# INONU TRADER dashboard",
+      "status": "Guia frontend; instrucoes locais sao contexto, nao prova de servico observado",
+      "readExtent": "selected_contract_status_and_heading_extracts",
+      "evidenceQualification": "documentary_only_not_current_runtime_certification"
+    }
+  ],
+  "machineCatalogSources": [
+    {
+      "path": "docs/research/R6-onchain-os-catalogo.json",
+      "sha256": "d252c4eb66c06de073714b952e62874c0365cee8199cf7893a49751240238d41",
+      "readExtent": "top_level_keys_counts_item_schema_only",
+      "observedItems": 444,
+      "observedSources": 358
+    }
+  ],
+  "jsonSourcesInventoriedOnly": [
+    {
+      "path": "docs/CENTRAL-JEV-REMOTE-VERIFICATION-2ed0324.json",
+      "sha256": "d3da5dfd6c8945303739afdb7baa86a410613c45876f97c63b23e2754e9f526d",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-alpha-radar-v1/SOURCES.json",
+      "sha256": "1761e8b2e9c3740ca1e3b649fd525c24591b8427d3f73021776f1594512a2074",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-defi-v1/BASELINE.json",
+      "sha256": "1982b48aafae0a59f971fa50a22fbd5982e5923af99fbca52c6a987cac0b06e8",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-defi-v1/DECISAO-CONTRATO.json",
+      "sha256": "fac4335433dd95f277c6f571a00739aba1d5fe4f798596a4afc2edbe475dc70e",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-defi-v1/DECISAO-V2.json",
+      "sha256": "130dc764c7c2b0434177927dbbb15a17ae96d1d1dfea4eab6769e2fc9a711dd5",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-defi-v1/SOURCES.json",
+      "sha256": "ebdee85ee3adef260118c332e12eeeca79ecd215ce84423b5a641528d26690c3",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-dex-sdk-units-v1/SOURCES.json",
+      "sha256": "3d65c227887a7685358e60690094b16976ba9614ac01e2643f7d579d6659c651",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-dex-units-v3/SOURCES.json",
+      "sha256": "b2e560e8ee15b47b65192f829ee31b0472f379d384200e6e9020ce9a0c3e340b",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-47-TEST-MANIFEST.json",
+      "sha256": "d4d0aeb1722264e651fed37d7e64b94a309eeaf1adb7bbd409d2fd00242615e6",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-COMPLETE-MANIFEST.json",
+      "sha256": "5349ed3f2b7fc79190fd3db83d52f57ef1ee5551cb18e01f04f43f851da4a325",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-dex-v2/ROOT-INTEGRATED-MANIFEST.json",
+      "sha256": "891df564d744d84802b0793773fb7b8826c89a71275595225353b30ce42f94c0",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-dex-v2/SYNTHETIC-REPORT.json",
+      "sha256": "c88ad1f7f56cdeabc5f9fe58c2d91856193247f98b6f85f94c2d1245e8acc049",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-ecosystem/DECISAO.json",
+      "sha256": "52f22d359d0887d25ef614831e0852f679180cbe8058fef63a12c27a978d8333",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-evidence-v1/BASELINE.json",
+      "sha256": "6aa00ce4be4f48d1dc97ff697929f03828150a708bca89645e588b4e557d9681",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-evidence-v1/CYCLE-REVIEW.json",
+      "sha256": "db65a0c41f2e0d8ba007051daa6c894dec2875ea65d91bb18f14e3be3864942c",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-evidence-v1/DECISAO.json",
+      "sha256": "edfab912da851f4a799e3c63a2c7a001b1f3356069bd9d8b623b7f4700f74c4e",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-evidence-v1/DESIGN-DECISION.json",
+      "sha256": "54bf2d9717352ed60149325f3ba1511d2f6bbc77b589c60d1e211060dea84bbd",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-exit-security-v1/SOURCES.json",
+      "sha256": "6cc88f12c4d2d6f12c5f349b77d47d95a1017e7c484125ce2621a7fff854bb27",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-API-FIX-DECISION.json",
+      "sha256": "6bc4dd45c7645128a198e7808ec59618b3eeebad94952d769894eec6f30a7eec",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-DECISIONS.json",
+      "sha256": "8dd21c70d5cf36a829739814958794687c930b4d53411f392cf7827c38ea5760",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-DELEGATION.json",
+      "sha256": "2f528680228305d325ed85a04ce56d377310ba4f037cce6b77b2251430aff52b",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-ECOSYSTEM-V1-PROTOCOL-SCOPE.json",
+      "sha256": "6d68492503992216be3f874e20118fe6dcffac285addb3ae1f68067996ecabad",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-IDENTITY-REPAIR-DECISION.json",
+      "sha256": "74ff50ce8762cb98e0d0833618529408ab9dcf0cfe24a53c4867a16fbecba425",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-INTEGRATION-DECISION.json",
+      "sha256": "272f6771682dceb4b03331d575d57d0912b8c4d32607c02306d4bd6df6edc977",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-NAMESPACE-DECISION.json",
+      "sha256": "1f8498c8340a72cf75544705e80f59b0d5ad167f1fb255f0eee5d5a3e2600b19",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-SCANNER-REVIEW-DECISION.json",
+      "sha256": "583372b1e0b9a24201117bb2a0f66f06e4f62aef4dbfc1052cfd94bcd1d102d1",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/REVIEW-MANIFEST.json",
+      "sha256": "5bf978da1ab411b134c1a67b1cc8477b8bfc94ad464e98853a3627b6732d505d",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-market-v1/ROOT-INTEGRATION-PRESERVED-MANIFEST.json",
+      "sha256": "9908b8568d8da425058c628071642756f2c23e8e17d5e842aa71735b493f2140",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-portfolio-v1/CONTRACT-COMPARISON.json",
+      "sha256": "84740f2ef9911c93ba07eae64a3dbcb14412ed3d8736b7b95817d8744ceb21fb",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-portfolio-v1/SOURCES.json",
+      "sha256": "eaeae2a59ca6a1bda12aeb64f3e1f11a121b3cf2d730d932dfe470e116572ef9",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-rewards-v1/SOURCES.json",
+      "sha256": "825e1aa5b407e12e55ac00a78efd4495087d7888bbb5383728c9ca6173d88ae6",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    },
+    {
+      "path": "docs/okx-signals-v1/BASELINE.json",
+      "sha256": "a718f2cf0555d8fc697fd0c3b729705e2e3363b97767cbf7c2b362b630780b58",
+      "readExtent": "filename_inventory_only_not_content_reviewed"
+    }
+  ],
+  "instructionSources": [
+    {
+      "absolutePath": "C:/Users/gabri/.codex/skills/codex-desktop-harness/SKILL.md",
+      "sha256": "4d438885fe9c0646725bc82652cec4309baed5a1a570be73c0ed2b7141399b11",
+      "readExtent": "full_text_reviewed"
+    }
+  ],
+  "excluded": "Secrets .env credentials binary evidence and large raw logs; no private state copied into repository",
+  "parentDependency": "Integrator verifies current hashes and obtains independent review; documentary evidence is not authorization or runtime activation"
+}

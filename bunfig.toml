@@ -1,2 +1,5 @@
 [install]
 minimumReleaseAge = 0
+
+[test]
+preload = ["./scripts/test-timeout-preload.ts"]

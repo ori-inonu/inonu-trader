@@ -1,0 +1,95 @@
+{
+  "request": {
+    "mode": "evaluate",
+    "state": {
+      "objective": "Local real public market dashboard; preserve 60-second source TTL and execution disabled.",
+      "observed": "A valid public funding sample expires about 36 seconds after collection while worker polls every60seconds, leaving a visible stale gap. Refresh UI currently reloads stored snapshot.",
+      "constraints": "Only fixed keyless public GET endpoints; no retries or private data; serial collection and server-origin checks retained.",
+      "quota": "Public time official limit10requests/2seconds/IP; existing transport serial1request/second."
+    },
+    "questions": {
+      "cadence": {
+        "type": "choice",
+        "domain": "strategy",
+        "instructions": "Choose a bounded acquisition policy; stale data must remain blocked; minimize needless calls and gaps.",
+        "candidates": [
+          {
+            "id": "adaptive",
+            "description": "Keep maximum60second interval but refresh halfway through remaining source TTL, minimum15seconds; expose real manual refresh with serial coalescing."
+          },
+          {
+            "id": "fixed15",
+            "description": "Use fixed15second interval plus real manual refresh."
+          },
+          {
+            "id": "defer",
+            "description": "Abstain if documentation/evidence does not justify a change."
+          }
+        ]
+      }
+    }
+  },
+  "response": {
+    "status": "assessed",
+    "receiptId": "28839d1d-6b6b-4934-8878-1f88aa1471ae",
+    "questionIds": [
+      "cadence"
+    ],
+    "inputDigest": "ba937c8d7e13903cf71d979869097516838c4d7b64119f9c10d396556279880a",
+    "rubricVersion": "batch-2026-09-26.2",
+    "policies": {
+      "cadence": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "authority": "advisory_only",
+    "model": "jev-1.13.0",
+    "answers": {
+      "cadence": {
+        "type": "choice",
+        "domain": "strategy",
+        "providerChoice": "adaptive",
+        "bestCandidate": "adaptive",
+        "probabilities": {
+          "adaptive": 0.91,
+          "fixed15": 0.07,
+          "defer": 0.01,
+          "insufficient_evidence": 0.01
+        },
+        "confidence": 0.88,
+        "disposition": "recommendation",
+        "recommendation": "adaptive",
+        "policy": {
+          "version": "decision-policy-2026-09-26.1",
+          "mode": "conservative",
+          "minConfidence": 0.6,
+          "minProbability": 0.6,
+          "calibration": "not_locally_calibrated"
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 540,
+      "output_tokens": 55
+    },
+    "transport": {
+      "requestStartedAt": "2026-10-11T18:36:17.523Z",
+      "fetchInvoked": true,
+      "responseReceivedAt": "2026-10-11T18:36:17.796Z",
+      "responseStatus": 200,
+      "validatedResponse": true,
+      "providerRequestId": "req_01a12c416ab173228ab08fb1a737037a",
+      "providerRequestIdHeader": "x-typesafe-request-id",
+      "retryAfter": null
+    },
+    "latencyMs": 302,
+    "receiptPersisted": true
+  },
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billedCost": null
+}

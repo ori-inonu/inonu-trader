@@ -1,0 +1,31 @@
+bun test v1.3.14 (0d9b296a)
+
+src\onchain-read\gateway.test.ts:
+42 | describe("onchain gateway", () => {
+43 |   test("concurrent different keys cannot exceed the remaining cap", async () => {
+44 |     const { gateway, calls } = setup({ cap: 1, next: () => ({ ok: false, error: "provider_error", sent: true }) });
+45 |     const results = await Promise.all(["0xab", "0xac", "0xad"].map((token) =>
+46 |       gateway.callInternal("/onchain/price", { chainIndex: "66", token }, "user")));
+47 |     expect(calls).toHaveLength(1);
+                       ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 3
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\gateway.test.ts:47:19)
+(fail) onchain gateway > concurrent different keys cannot exceed the remaining cap [15.43ms]
+(pass) onchain gateway > happy path returns the single envelope with budget meta [4.98ms]
+(pass) onchain gateway > records only calls actually sent [4.29ms]
+(pass) onchain gateway > unknown route and bad params are refused before any call [2.70ms]
+(pass) onchain gateway > credential states short-circuit [3.03ms]
+(pass) onchain gateway > provider failure serves stale cache marked stale:true [6.29ms]
+(pass) onchain gateway > budget exhausted blocks the call before the network [5.01ms]
+(pass) onchain gateway > no cache + provider failure returns the error [5.10ms]
+(pass) onchain gateway > schema failure on a response serves stale too [7.31ms]
+(pass) onchain gateway > status exposes credential state without secrets [2.09ms]
+
+ 9 pass
+ 1 fail
+ 31 expect() calls
+Ran 10 tests across 1 file. [154.00ms]

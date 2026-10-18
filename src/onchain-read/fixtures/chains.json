@@ -1,0 +1,10 @@
+{
+  "origin": "synthetic_fixture",
+  "code": "0",
+  "data": [
+    { "chainIndex": "1", "chainName": "Ethereum", "chainSymbol": "ETH", "chainLogoUrl": "https://example.invalid/eth.png" },
+    { "chainIndex": "501", "chainName": "Solana", "chainSymbol": "SOL", "chainLogoUrl": "https://example.invalid/sol.png" },
+    { "chainIndex": "196", "chainName": "X Layer", "chainSymbol": "OKB" }
+  ],
+  "msg": ""
+}

@@ -1,0 +1,57 @@
+{
+  "status": "assessed",
+  "receiptId": "7b37bf2c-a9ac-4a31-bc34-71df6cc775d1",
+  "evidenceIds": [
+    "checks",
+    "g14"
+  ],
+  "inputDigest": "583a8e03169700caf6af7254e051e0492e78e3661230f6f81eb568117b4d87ed",
+  "rubricVersion": "decision-2026-09-26.2",
+  "policy": {
+    "version": "decision-policy-2026-09-26.1",
+    "mode": "conservative",
+    "minConfidence": 0.6,
+    "minProbability": 0.6,
+    "calibration": "not_locally_calibrated"
+  },
+  "authority": "advisory_only",
+  "origin": {
+    "source": "mcp",
+    "chatId": "01a12b5f-ca2a-7ff1-a131-07933705d3e8",
+    "agentId": "root"
+  },
+  "model": "jev-1.13.0",
+  "confidence": 0.89,
+  "probabilities": {
+    "contrast_audit": 0.93,
+    "wait_research": 0.06,
+    "insufficient_evidence": 0.01
+  },
+  "usage": {
+    "input_tokens": 924,
+    "output_tokens": 51
+  },
+  "transport": {
+    "requestStartedAt": "2026-10-11T20:43:28.395Z",
+    "fetchInvoked": true,
+    "responseReceivedAt": "2026-10-11T20:43:28.674Z",
+    "responseStatus": 200,
+    "validatedResponse": true,
+    "providerRequestId": "req_01a12cb5d9bd723ba041d6b701986271",
+    "providerRequestIdHeader": "x-typesafe-request-id",
+    "retryAfter": null
+  },
+  "signals": {},
+  "choice": "contrast_audit",
+  "providerChoice": "contrast_audit",
+  "bestCandidate": "contrast_audit",
+  "domain": "task",
+  "disposition": "recommendation",
+  "recommendation": "contrast_audit",
+  "latencyMs": 308,
+  "receiptPersisted": true,
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billedCost": null,
+  "advisoryOnly": true
+}

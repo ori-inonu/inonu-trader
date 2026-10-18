@@ -1,0 +1,1329 @@
+{
+  "version": 1,
+  "review_kind": "independent_spec_implementation_review",
+  "reviewer_id": "01a13658-c294-7fc0-8b26-1e3f28c2945f",
+  "reviewer_task": "/root/spec_review",
+  "root_conversation": "01a1362a-b876-7fa0-9b66-b45202296099",
+  "implementer_id": "root-01a1362a",
+  "baseline": "00a593bcabe25dbb6d83795268533551098f645b",
+  "commits": [],
+  "verdict": "approved_implementation_local",
+  "status": "approved",
+  "findings": [],
+  "certification_scope": "Five new delivered files and the pure annotation API against immutable PP-1..PP-6; independent implementation review, not planning certification.",
+  "isolation": {
+    "candidate_root": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+    "review_output_root": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-spec-review-v1",
+    "actual_sandbox": "danger-full-access",
+    "input_readonly_attributes_verified": true,
+    "enforced_readonly_sandbox_demonstrated": false,
+    "write_scope": "Exclusive private reviewer directory only; candidate, worktrees, main and prior reports preserved.",
+    "configured_model": "GPT-6.1 Sol",
+    "configured_reasoning": "xhigh",
+    "effective_model": null,
+    "effective_tier": null
+  },
+  "evidence_bases": {
+    "candidate": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+    "review_outputs": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-spec-review-v1"
+  },
+  "immutable_spec": {
+    "path": "frozen/SPEC.md",
+    "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+    "criteria": [
+      "PP-1",
+      "PP-2",
+      "PP-3",
+      "PP-4",
+      "PP-5",
+      "PP-6"
+    ]
+  },
+  "candidate_manifest": {
+    "path": "CANDIDATE.json",
+    "sha256": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd"
+  },
+  "delivery_patch": {
+    "path": "DELIVERY.patch",
+    "sha256": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+    "new_file_count": 5,
+    "existing_file_modifications": 0,
+    "byte_reconstruction_result": {
+      "acceptance_byte_identical": true,
+      "acceptance_sha256": "3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8",
+      "acceptance_bytes": 4953,
+      "acceptance_manifest_sha256_equal": true,
+      "acceptance_lines": [
+        46,
+        80
+      ],
+      "new_authored_file_count": 5,
+      "patch_section_checks": [
+        {
+          "path": "src/decision-evidence/weights.ts",
+          "new_file": true,
+          "patch_body_bytes_equal": true,
+          "patch_body_sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "manifest_sha256_equal": true
+        },
+        {
+          "path": "src/decision-evidence/weights.test.ts",
+          "new_file": true,
+          "patch_body_bytes_equal": true,
+          "patch_body_sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "manifest_sha256_equal": true
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/requirements.md",
+          "new_file": true,
+          "patch_body_bytes_equal": true,
+          "patch_body_sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+          "manifest_sha256_equal": true
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+          "new_file": true,
+          "patch_body_bytes_equal": true,
+          "patch_body_sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+          "manifest_sha256_equal": true
+        },
+        {
+          "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+          "new_file": true,
+          "patch_body_bytes_equal": true,
+          "patch_body_sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+          "manifest_sha256_equal": true
+        }
+      ],
+      "patch_manifest_sha256_equal": true
+    },
+    "note": "Untracked authored files are represented by DELIVERY.patch; empty baseline...HEAD is not delivery evidence."
+  },
+  "acceptance_integrity": {
+    "canonical": {
+      "spec_lines_inclusive": [
+        46,
+        80
+      ],
+      "requirements_lines_inclusive": [
+        9,
+        43
+      ],
+      "bytes": 4953,
+      "sha256": "3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8",
+      "byte_identical": true,
+      "includes_final_blank_line": true,
+      "execution_log": "acceptance-and-patch-execution.json"
+    },
+    "historical_partial_extraction": {
+      "spec_start": "### PP-1:",
+      "spec_end_exclusive": "\\n## Plano mínimo",
+      "requirements_start": "### PP-1:",
+      "requirements_end_exclusive": "\\n## Fontes",
+      "bytes": 4952,
+      "sha256": "2e89c4cde77a2ec1c927ea2f544b51cfc236e6cbc0a769aa578a80f26213d6e3",
+      "byte_identical": true,
+      "includes_final_blank_line": false,
+      "canonical_acceptance_hash": false,
+      "execution_log": "acceptance-and-tdd-log-check.json",
+      "explanation": "Initial delimiter stops before the newline that constitutes the final blank line. Preserved historical result; canonical final check includes that byte and matches the frozen manifest."
+    }
+  },
+  "input_hashes_before_after": [
+    {
+      "path": "CANDIDATE.json",
+      "bytes": 2522,
+      "readonly": true,
+      "sha256": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+      "sha256_before": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+      "sha256_after": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+      "unchanged": true
+    },
+    {
+      "path": "DELIVERY.patch",
+      "bytes": 27215,
+      "readonly": true,
+      "sha256": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+      "sha256_before": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+      "sha256_after": "5f47dff8d634fc49df87c47ee86d195b1d64618bacb9488240c5077592208469",
+      "unchanged": true
+    },
+    {
+      "path": "frozen/SPEC.md",
+      "bytes": 9679,
+      "readonly": true,
+      "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+      "sha256_before": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+      "sha256_after": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+      "unchanged": true
+    },
+    {
+      "path": "src/decision-evidence/weights.ts",
+      "bytes": 4573,
+      "readonly": true,
+      "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+      "sha256_before": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+      "sha256_after": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+      "unchanged": true
+    },
+    {
+      "path": "src/decision-evidence/weights.test.ts",
+      "bytes": 10653,
+      "readonly": true,
+      "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+      "sha256_before": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+      "sha256_after": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+      "unchanged": true
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/requirements.md",
+      "bytes": 6169,
+      "readonly": true,
+      "sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+      "sha256_before": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+      "sha256_after": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+      "unchanged": true
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+      "bytes": 2522,
+      "readonly": true,
+      "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+      "sha256_before": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+      "sha256_after": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+      "unchanged": true
+    },
+    {
+      "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+      "bytes": 1741,
+      "readonly": true,
+      "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+      "sha256_before": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+      "sha256_after": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+      "unchanged": true
+    },
+    {
+      "path": "sources/decide.ts",
+      "bytes": 10830,
+      "readonly": true,
+      "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+      "sha256_before": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+      "sha256_after": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+      "unchanged": true
+    },
+    {
+      "path": "sources/types.ts",
+      "bytes": 7958,
+      "readonly": true,
+      "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+      "sha256_before": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+      "sha256_after": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+      "unchanged": true
+    },
+    {
+      "path": "sources/public-view.ts",
+      "bytes": 6716,
+      "readonly": true,
+      "sha256": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+      "sha256_before": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+      "sha256_after": "9d2390a1b0c29d7dfe573265113ed146ea6269a17ac75055f971db1fda553515",
+      "unchanged": true
+    },
+    {
+      "path": "frozen/AGENTS.md",
+      "bytes": 3954,
+      "readonly": true,
+      "sha256": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+      "sha256_before": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+      "sha256_after": "17c63ea3c3328fbbd5cf0cf3934af0dd6ee142b9e4bf6e3b5b58724277dfdc34",
+      "unchanged": true
+    },
+    {
+      "path": "frozen/CONTRIBUTING.md",
+      "bytes": 1459,
+      "readonly": true,
+      "sha256": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+      "sha256_before": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+      "sha256_after": "491e629c515cf69267528de649f19bcb0b3f4425a133d070487d7d4647d402f6",
+      "unchanged": true
+    }
+  ],
+  "auxiliary_input_hashes_before_after": [
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-01.log",
+      "bytes": 393,
+      "sha256_before": "58f961185852872711bf3c373a485055fadaf3e1e07d08aa7749bd7dedc50cc6",
+      "sha256_after": "58f961185852872711bf3c373a485055fadaf3e1e07d08aa7749bd7dedc50cc6",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-02.log",
+      "bytes": 1021,
+      "sha256_before": "4e6572a4675bd63c0fcf51476c439cd878de78a514bf90b946cf357af1bfe364",
+      "sha256_after": "4e6572a4675bd63c0fcf51476c439cd878de78a514bf90b946cf357af1bfe364",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-03.log",
+      "bytes": 1364,
+      "sha256_before": "50a002b06bde9d7f37cc889cf6541baceee8107b9e3092c337efe4470def5953",
+      "sha256_after": "50a002b06bde9d7f37cc889cf6541baceee8107b9e3092c337efe4470def5953",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-red-04.log",
+      "bytes": 1529,
+      "sha256_before": "298d6d8c7770e14d91884b162732bdb2c7147e0a4b672374572ede619c737a22",
+      "sha256_after": "298d6d8c7770e14d91884b162732bdb2c7147e0a4b672374572ede619c737a22",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-01.log",
+      "bytes": 244,
+      "sha256_before": "aa6bc6cc8d95e5b9ffbe7414d5c7f33c4907ca96d1efc16d4aeb7323d9eb8b52",
+      "sha256_after": "aa6bc6cc8d95e5b9ffbe7414d5c7f33c4907ca96d1efc16d4aeb7323d9eb8b52",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-02.log",
+      "bytes": 332,
+      "sha256_before": "83eeb957abf63cd5be7c2d94511af6060ca517422e3a085833bf38da9239278c",
+      "sha256_after": "83eeb957abf63cd5be7c2d94511af6060ca517422e3a085833bf38da9239278c",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-03.log",
+      "bytes": 454,
+      "sha256_before": "a185905d1abb2a3ddcb78514ab664d695c440b32568d3fc028ae120d9184dda1",
+      "sha256_after": "a185905d1abb2a3ddcb78514ab664d695c440b32568d3fc028ae120d9184dda1",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-tdd-green-04.log",
+      "bytes": 557,
+      "sha256_before": "e75da80d36010ccb3f49804bca86a7d33120b84930d929d5fa1cf061886fe3a2",
+      "sha256_after": "e75da80d36010ccb3f49804bca86a7d33120b84930d929d5fa1cf061886fe3a2",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/decision-weight-evidence/jev-trader/docs/sdd/decision-weight-provenance/local-records/TDD-v1.json",
+      "bytes": 1297,
+      "sha256_before": "686868f12ce8b83b6db0e09be47cf32dd26a8d9bc39ca6af3e2db22d2b47aa3f",
+      "sha256_after": "686868f12ce8b83b6db0e09be47cf32dd26a8d9bc39ca6af3e2db22d2b47aa3f",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/WEIGHTS-PATCH-CHECK-v2.json",
+      "bytes": 5528,
+      "sha256_before": "ef7fac1e3340e0486f8c4ad97730faf34cd4293588be9c8dd9efc7ba0bd0919a",
+      "sha256_after": "ef7fac1e3340e0486f8c4ad97730faf34cd4293588be9c8dd9efc7ba0bd0919a",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/decision-weight-evidence/jev-trader/docs/sdd/decision-weight-provenance/local-records/preflight.json",
+      "bytes": 885,
+      "sha256_before": "3a61757e05f875f4d9a3f01fb583bd32217f986dff8f43d2b9e4896dcd8ef3e3",
+      "sha256_after": "3a61757e05f875f4d9a3f01fb583bd32217f986dff8f43d2b9e4896dcd8ef3e3",
+      "unchanged": true,
+      "readonly_attribute": false
+    },
+    {
+      "path": "C:/Users/gabri/.codex/worktrees/decision-weight-evidence/jev-trader/docs/sdd/decision-weight-provenance/local-records/sdd-observed-review-input-v1.json",
+      "bytes": 8479,
+      "sha256_before": "ebea012da537c00dc709054d65c6642e3b6e6b29e3af45ff817dc6efb3f50cad",
+      "sha256_after": "ebea012da537c00dc709054d65c6642e3b6e6b29e3af45ff817dc6efb3f50cad",
+      "unchanged": true,
+      "readonly_attribute": false
+    }
+  ],
+  "unchanged_input_count": 25,
+  "requirements": [
+    {
+      "requirement_id": "PP-1",
+      "id": "PP-1",
+      "status": "pass",
+      "observed_requirement": "Anotação isolada de cinco campos; invariância de decisão, campos legados e evidência; nenhuma consulta externa.",
+      "specification": {
+        "base": "candidate",
+        "path": "frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 46,
+        "line_end": 47,
+        "excerpt": "### PP-1: anotação isolada e invariância\nA função retorna somente os cinco campos listados, sem alterar entradas, decisão, ação, pesos, status ou campos legados. Não lê ambiente/arquivos, não usa rede, não consulta modelos e não decide buy/sell. Entradas congeladas e comparação antes/depois devem comprovar ausência de mutação."
+      },
+      "evidence": [
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "line_start": 81,
+          "line_end": 96,
+          "excerpt": "export function annotateDecisionWeights(\n  decision: unknown,\n  evidence: unknown,\n): DecisionWeightAnnotation | null {\n  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };\n}"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 4,
+          "line_end": 22,
+          "excerpt": "test(\"historical unit weights retain their value without implying provider provenance\", () => {\n  const decision = Object.freeze({\n    action: \"buy\",\n    probabilities: Object.freeze({ buy: 1, sell: 0, hold: 0 }),\n    status: \"ok\",\n    confidence: 1,\n    privateText: \"must not escape\",\n  });\n  const evidence = Object.freeze({ kind: \"historical_record\" });\n  const before = JSON.stringify({ decision, evidence });\n\n  expect(annotateDecisionWeights(decision, evidence)).toEqual({\n    schemaVersion: 1,\n    origin: \"unknown\",\n    selectedWeight: 1,\n    reportedSelectedWeight: null,\n    financialCalibration: \"not_established\",\n  });\n  expect(JSON.stringify({ decision, evidence })).toBe(before);"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 142,
+          "line_end": 161,
+          "excerpt": "test(\"repeated annotations of frozen provider evidence remain pure and exclude extra fields\", () => {\n  const decision = Object.freeze({\n    action: \"sell\", status: \"ok\", probabilities: Object.freeze({ buy: 0.25, sell: 0.5, hold: 0.25 }),\n    confidence: 0.5, model: \"fixture-model\", text: \"fixture private text\",\n  });\n  const evidence = Object.freeze({ kind: \"observed_response\", raw: Object.freeze({\n    choice: \"sell\", probabilities: Object.freeze({ buy: 1, sell: 2, hold: 1 }),\n    token: \"synthetic-token\", text: \"untrusted instruction\",\n  }) });\n  const before = JSON.stringify({ decision, evidence });\n  const expected = {\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 0.5,\n    reportedSelectedWeight: 0.5, financialCalibration: \"not_established\",\n  } as const;\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n  expect(Object.keys(annotateDecisionWeights(decision, evidence)!)).toEqual([\n    \"schemaVersion\", \"origin\", \"selectedWeight\", \"reportedSelectedWeight\", \"financialCalibration\",\n  ]);"
+        },
+        {
+          "base": "review_outputs",
+          "path": "test-stderr.log",
+          "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371",
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [45.00ms]"
+        }
+      ],
+      "checks": [
+        "Módulo completo inspecionado: nenhum import, ambiente, arquivo, rede ou chamada de modelo; somente leituras locais e cálculos.",
+        "Entradas profundamente congeladas, igualdade JSON antes/depois e repetição passaram pela API pública."
+      ]
+    },
+    {
+      "requirement_id": "PP-2",
+      "id": "PP-2",
+      "status": "pass",
+      "observed_requirement": "Origem depende da evidência discriminada, status, escolha e vetor compatível; normalização idêntica à fonte, underflow rejeitado, comparação absoluta 1e-12, sem argmax.",
+      "specification": {
+        "base": "candidate",
+        "path": "frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 49,
+        "line_end": 52,
+        "excerpt": "### PP-2: origem exige evidência compatível\nCom decisão de status ok, resposta contemporânea válida com raw.probabilities informado como objeto válido, choice igual à ação e pesos normalizados iguais aos da decisão, origin é provider_reported. Ausência de raw.probabilities em uma resposta válida gera adapter_choice_fallback somente quando a decisão tem status ok e é o vetor unitário correspondente. Resposta inválida com a decisão canônica malformed/hold, ou falha error/timeout com hold canônico e status correspondente, gera adapter_safety_fallback. Resposta válida exige decisão de status ok; divergência de status gera unknown. Evidência ausente, histórica, malformada ou incompatível gera unknown. Nunca inferir origem apenas pelo vetor.\n\nO contrato de normalização observado é: buy/sell/hold; choice válida; probabilities ausente significa fallback; objeto informado usa peso ausente ou null como zero; pesos finitos não negativos; soma finita positiva; peso bruto da escolha positivo; cada valor dividido pela soma; todos os pesos normalizados finitos e peso normalizado da escolha positivo. Objeto null/array, peso negativo/não finito, soma inválida ou escolha de peso zero antes ou após normalização são respostas inválidas. Não exigir que a ação seja argmax. Comparações de vetores normalizados usam tolerância absoluta de 1e-12 por componente; nenhuma diferença maior é reparada."
+      },
+      "evidence": [
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "line_start": 35,
+          "line_end": 60,
+          "excerpt": "function readResponse(value: unknown): { action: Action; probabilities: Weights; reported: boolean } | null {\n  if (!isRecord(value) || !isAction(value.choice)) return null;\n  if (value.probabilities === undefined) {\n    return { action: value.choice, probabilities: {\n      buy: value.choice === \"buy\" ? 1 : 0,\n      sell: value.choice === \"sell\" ? 1 : 0,\n      hold: value.choice === \"hold\" ? 1 : 0,\n    }, reported: false };\n  }\n  if (!isRecord(value.probabilities)) return null;\n  const buy = value.probabilities.buy ?? 0;\n  const sell = value.probabilities.sell ?? 0;\n  const hold = value.probabilities.hold ?? 0;\n  if (![buy, sell, hold].every(weight => typeof weight === \"number\" && Number.isFinite(weight) && weight >= 0)) return null;\n  const weights = { buy, sell, hold } as Weights;\n  const total = weights.buy + weights.sell + weights.hold;\n  if (!Number.isFinite(total) || total <= 0 || weights[value.choice] <= 0) return null;\n  const normalized = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };\n  if (!Object.values(normalized).every(Number.isFinite) || normalized[value.choice] <= 0) return null;\n  return { action: value.choice, probabilities: normalized, reported: true };\n}\n\nfunction equalWeights(a: Weights, b: Weights): boolean {\n  return Math.abs(a.buy - b.buy) <= TOLERANCE\n    && Math.abs(a.sell - b.sell) <= TOLERANCE\n    && Math.abs(a.hold - b.hold) <= TOLERANCE;"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "line_start": 63,
+          "line_end": 78,
+          "excerpt": "function readOrigin(decision: Decision, evidence: unknown): DecisionWeightAnnotation[\"origin\"] {\n  if (!isRecord(evidence)) return \"unknown\";\n  const canonicalHold = decision.action === \"hold\" && decision.probabilities.buy === 0\n    && decision.probabilities.sell === 0 && decision.probabilities.hold === 1;\n  if (evidence.kind === \"observed_failure\") {\n    return canonicalHold && (evidence.status === \"error\" || evidence.status === \"timeout\")\n      && decision.status === evidence.status ? \"adapter_safety_fallback\" : \"unknown\";\n  }\n  if (evidence.kind !== \"observed_response\" || !(\"raw\" in evidence)) return \"unknown\";\n  const response = readResponse(evidence.raw);\n  if (!response && canonicalHold && decision.status === \"malformed\") return \"adapter_safety_fallback\";\n  if (response && decision.status === \"ok\" && response.action === decision.action\n    && equalWeights(response.probabilities, decision.probabilities)) {\n    return response.reported ? \"provider_reported\" : \"adapter_choice_fallback\";\n  }\n  return \"unknown\";"
+        },
+        {
+          "base": "candidate",
+          "path": "sources/decide.ts",
+          "sha256": "3002a86e3eb67614fd0cb511306fbbffecd66e2db122a67a44af9356d19aa0b0",
+          "line_start": 31,
+          "line_end": 52,
+          "excerpt": "export function validateTapeDecision(raw: unknown, model: string): TapeDecision {\r\n  const latency = isRecord(raw) && typeof raw.latencyMs === \"number\" && Number.isFinite(raw.latencyMs) && raw.latencyMs >= 0 ? raw.latencyMs : 0;\r\n  if (!isRecord(raw) || !isAction(raw.choice)) return holdOnly(model, latency, \"malformed\");\r\n  const action = raw.choice;\r\n\r\n  let probabilities: Record<TapeAction, number>;\r\n  if (raw.probabilities === undefined) {\r\n    probabilities = { buy: 0, sell: 0, hold: 0, [action]: 1 } as Record<TapeAction, number>;\r\n  } else {\r\n    if (!isRecord(raw.probabilities)) return holdOnly(model, latency, \"malformed\");\r\n    const weights = {} as Record<TapeAction, number>;\r\n    let total = 0;\r\n    for (const key of TAPE_ACTIONS) {\r\n      const value = raw.probabilities[key] ?? 0;\r\n      if (typeof value !== \"number\" || !Number.isFinite(value) || value < 0) return holdOnly(model, latency, \"malformed\");\r\n      weights[key] = value;\r\n      total += value;\r\n    }\r\n    if (!Number.isFinite(total) || !(total > 0) || !(weights[action] > 0)) return holdOnly(model, latency, \"malformed\");\r\n    probabilities = { buy: weights.buy / total, sell: weights.sell / total, hold: weights.hold / total };\r\n    if (!TAPE_ACTIONS.every((key) => Number.isFinite(probabilities[key])) || !(probabilities[action] > 0)) return holdOnly(model, latency, \"malformed\");\r\n  }"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 25,
+          "line_end": 52,
+          "excerpt": "test(\"reported weights are normalized without requiring the chosen action to be the largest\", () => {\n  for (const fixture of [\n    { probabilities: { buy: 0.5, sell: 0.25, hold: 0.25 }, raw: { buy: 2, sell: 1, hold: 1 }, selected: 0.5 },\n    { probabilities: { buy: 0.2, sell: 0.8, hold: 0 }, raw: { buy: 1, sell: 4, hold: 0 }, selected: 0.2 },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: \"buy\", probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: fixture.selected,\n      reportedSelectedWeight: fixture.selected, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"compatible explicit vectors are supported for every action, including missing or null unused weights\", () => {\n  for (const fixture of [\n    { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, raw: { buy: 3, sell: null } },\n    { action: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 }, raw: { sell: 3, hold: null } },\n    { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, raw: { hold: 3, buy: null } },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: fixture.action, probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: fixture.action, probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n      reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n    });"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 56,
+          "line_end": 98,
+          "excerpt": "test(\"missing, historical or malformed evidence cannot establish origin\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const evidence of [\n    undefined, null, [], \"observed_response\", {}, { kind: \"historical_record\" },\n    { kind: \"other\", raw: { choice: \"buy\" } }, { kind: \"observed_response\" },\n    { kind: \"observed_failure\" }, { kind: \"observed_failure\", status: \"malformed\" },\n  ]) {\n    expect(annotateDecisionWeights(decision, evidence)).toEqual({\n      schemaVersion: 1, origin: \"unknown\", selectedWeight: 1,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"choice, vector and status mismatches keep origin unknown\", () => {\n  const buy = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const raw of [\n    { choice: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: null },\n  ]) {\n    expect(annotateDecisionWeights(buy, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"unknown\", selectedWeight: 1,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"malformed\", \"error\", \"timeout\"]) {\n    const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status };\n    for (const evidence of [\n      { kind: \"observed_response\", raw: { choice: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 } } },\n      { kind: \"observed_failure\", status: \"ok\" },\n      { kind: \"observed_failure\", status: status === \"timeout\" ? \"error\" : \"timeout\" },\n    ]) {\n      expect(annotateDecisionWeights(decision, evidence)).toEqual({\n        schemaVersion: 1, origin: \"unknown\", selectedWeight: null,\n        reportedSelectedWeight: null, financialCalibration: \"not_established\",\n      });\n    }\n  }\n  expect(annotateDecisionWeights(\n    { action: \"hold\", probabilities: { buy: 0.1, sell: 0, hold: 0.9 }, status: \"error\" },\n    { kind: \"observed_failure\", status: \"error\" },\n  )?.origin).toBe(\"unknown\");"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 101,
+          "line_end": 119,
+          "excerpt": "test(\"malformed response values match the observed adapter validation contract\", () => {\n  const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    undefined, null, [], \"buy\", {}, { choice: \"wait\" },\n    { choice: \"buy\", probabilities: null },\n    { choice: \"buy\", probabilities: [1, 0, 0] },\n    { choice: \"buy\", probabilities: { buy: \"1\" } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: -1 } },\n    { choice: \"buy\", probabilities: { buy: NaN } },\n    { choice: \"buy\", probabilities: { buy: Infinity } },\n    { choice: \"buy\", probabilities: { buy: 1, hold: -Infinity } },\n    { choice: \"buy\", probabilities: { buy: Number.MAX_VALUE, sell: Number.MAX_VALUE } },\n    { choice: \"buy\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: {} },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 123,
+          "line_end": 139,
+          "excerpt": "test(\"vector comparisons accept the absolute boundary and do not repair larger differences\", () => {\n  const raw = { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } } };\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 1e-12, sell: 1e-12, hold: 0 }, status: \"ok\" }, raw,\n  )).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1 - 1e-12,\n    reportedSelectedWeight: 1 - 1e-12, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 2e-12, sell: 2e-12, hold: 0 }, status: \"ok\" }, raw,\n  )?.origin).toBe(\"unknown\");\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 0.5e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )?.selectedWeight).toBe(1);\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 2e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )).toBeNull();"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 164,
+          "line_end": 180,
+          "excerpt": "test(\"invalid responses and observed matching failures identify only canonical safety holds\", () => {\n  const malformed = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    { choice: \"buy\", probabilities: { buy: 0, sell: 0, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: Number.MIN_VALUE, sell: 2, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(malformed, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"error\", \"timeout\"]) {\n    expect(annotateDecisionWeights({ ...malformed, status }, { kind: \"observed_failure\", status })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 183,
+          "line_end": 194,
+          "excerpt": "test(\"a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  expect(annotateDecisionWeights(decision, {\n    kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } },\n  })).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n    reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw: { choice: \"buy\" } })).toEqual({\n    schemaVersion: 1, origin: \"adapter_choice_fallback\", selectedWeight: 1,\n    reportedSelectedWeight: null, financialCalibration: \"not_established\",\n  });"
+        },
+        {
+          "base": "review_outputs",
+          "path": "test-stderr.log",
+          "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371",
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [45.00ms]"
+        }
+      ],
+      "checks": [
+        "Provedor explícito, choice fallback, safety malformed/error/timeout e histórico/ausência/incompatibilidade exercitados.",
+        "Null de probabilities rejeitado; pesos ausentes/null viram zero somente dentro da normalização especificada; soma overflow e escolhido underflow rejeitados.",
+        "Ação de menor peso aceita; vetor diferente acima da tolerância permanece unknown."
+      ]
+    },
+    {
+      "requirement_id": "PP-3",
+      "id": "PP-3",
+      "status": "pass",
+      "observed_requirement": "Decisão valida ações/status e três pesos numéricos finitos, intervalo, soma e positividade; não ok hold com pesos selecionados null; calibração sempre não estabelecida.",
+      "specification": {
+        "base": "candidate",
+        "path": "frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 54,
+        "line_end": 55,
+        "excerpt": "### PP-3: números e estados conservadores\nDecisão válida tem action buy/sell/hold, status ok/error/timeout/malformed, três pesos finitos em [0,1] e soma dentro de 1e-12 de 1. Status ok exige peso selecionado positivo; outro status exige action hold. selectedWeight é o peso da ação apenas para status ok; caso contrário é null. reportedSelectedWeight só é numérico para provider_reported com status ok; todas as outras origens recebem null. financialCalibration é sempre not_established. Texto ou número desconhecido nunca vira zero nem certeza."
+      },
+      "evidence": [
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "line_start": 13,
+          "line_end": 32,
+          "excerpt": "const TOLERANCE = 1e-12;\ntype Action = \"buy\" | \"sell\" | \"hold\";\ntype Weights = Record<Action, number>;\ntype Status = \"ok\" | \"error\" | \"timeout\" | \"malformed\";\ninterface Decision { action: Action; probabilities: Weights; status: Status }\n\nfunction isAction(value: unknown): value is Action {\n  return value === \"buy\" || value === \"sell\" || value === \"hold\";\n}\n\nfunction readDecision(value: unknown): Decision | null {\n  if (!isRecord(value) || !isAction(value.action) || !isRecord(value.probabilities)) return null;\n  const { status, probabilities } = value;\n  if (status !== \"ok\" && status !== \"error\" && status !== \"timeout\" && status !== \"malformed\") return null;\n  const { buy, sell, hold } = probabilities;\n  if (![buy, sell, hold].every(weight => typeof weight === \"number\" && Number.isFinite(weight) && weight >= 0 && weight <= 1)) return null;\n  const weights = { buy, sell, hold } as Weights;\n  if (Math.abs(weights.buy + weights.sell + weights.hold - 1) > TOLERANCE) return null;\n  if (status === \"ok\" ? weights[value.action] <= 0 : value.action !== \"hold\") return null;\n  return { action: value.action, probabilities: weights, status };"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "line_start": 85,
+          "line_end": 95,
+          "excerpt": "  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 40,
+          "line_end": 52,
+          "excerpt": "test(\"compatible explicit vectors are supported for every action, including missing or null unused weights\", () => {\n  for (const fixture of [\n    { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, raw: { buy: 3, sell: null } },\n    { action: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 }, raw: { sell: 3, hold: null } },\n    { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, raw: { hold: 3, buy: null } },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: fixture.action, probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: fixture.action, probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n      reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n    });"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 82,
+          "line_end": 98,
+          "excerpt": "  for (const status of [\"malformed\", \"error\", \"timeout\"]) {\n    const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status };\n    for (const evidence of [\n      { kind: \"observed_response\", raw: { choice: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 } } },\n      { kind: \"observed_failure\", status: \"ok\" },\n      { kind: \"observed_failure\", status: status === \"timeout\" ? \"error\" : \"timeout\" },\n    ]) {\n      expect(annotateDecisionWeights(decision, evidence)).toEqual({\n        schemaVersion: 1, origin: \"unknown\", selectedWeight: null,\n        reportedSelectedWeight: null, financialCalibration: \"not_established\",\n      });\n    }\n  }\n  expect(annotateDecisionWeights(\n    { action: \"hold\", probabilities: { buy: 0.1, sell: 0, hold: 0.9 }, status: \"error\" },\n    { kind: \"observed_failure\", status: \"error\" },\n  )?.origin).toBe(\"unknown\");"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 123,
+          "line_end": 139,
+          "excerpt": "test(\"vector comparisons accept the absolute boundary and do not repair larger differences\", () => {\n  const raw = { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } } };\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 1e-12, sell: 1e-12, hold: 0 }, status: \"ok\" }, raw,\n  )).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1 - 1e-12,\n    reportedSelectedWeight: 1 - 1e-12, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 2e-12, sell: 2e-12, hold: 0 }, status: \"ok\" }, raw,\n  )?.origin).toBe(\"unknown\");\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 0.5e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )?.selectedWeight).toBe(1);\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 2e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )).toBeNull();"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 164,
+          "line_end": 180,
+          "excerpt": "test(\"invalid responses and observed matching failures identify only canonical safety holds\", () => {\n  const malformed = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    { choice: \"buy\", probabilities: { buy: 0, sell: 0, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: Number.MIN_VALUE, sell: 2, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(malformed, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"error\", \"timeout\"]) {\n    expect(annotateDecisionWeights({ ...malformed, status }, { kind: \"observed_failure\", status })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 197,
+          "line_end": 214,
+          "excerpt": "test(\"invalid decisions return null instead of inventing weights or status\", () => {\n  const valid = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const decision of [\n    null, [], \"buy\", {},\n    { ...valid, action: \"wait\" },\n    { ...valid, status: \"unknown\" },\n    { ...valid, status: \"error\" },\n    { ...valid, probabilities: null },\n    { ...valid, probabilities: [1, 0, 0] },\n    { ...valid, probabilities: { buy: 1, sell: 0 } },\n    { ...valid, probabilities: { buy: \"1\", sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: NaN, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: Infinity, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: 1.1, sell: -0.1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0.9, sell: 0, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"historical_record\" })).toBeNull();"
+        },
+        {
+          "base": "review_outputs",
+          "path": "test-stderr.log",
+          "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371",
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [45.00ms]"
+        }
+      ],
+      "checks": [
+        "Todas as ações e quatro status válidos cobertos; decisões inválidas retornaram null, sem coerção de strings/NaN/infinito.",
+        "selectedWeight só numérico em ok; reportedSelectedWeight só em provider_reported; financialCalibration literal constante."
+      ]
+    },
+    {
+      "requirement_id": "PP-4",
+      "id": "PP-4",
+      "status": "pass",
+      "observed_requirement": "Histórico preserva peso ok, origem unknown e reported null; unitário contemporâneo explícito pode ser provider; extras não saem, consumidores existentes preservados.",
+      "specification": {
+        "base": "candidate",
+        "path": "frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 57,
+        "line_end": 58,
+        "excerpt": "### PP-4: compatibilidade histórica e sanitização\nRegistro histórico válido continua anotável sem resposta original: origin unknown, selectedWeight preservado para status ok, reportedSelectedWeight null. Provedor pode reportar um vetor unitário legítimo: esse caso recebe provider_reported somente com prova contemporânea compatível. Campos extras e texto livre nunca atravessam a projeção de saída. Não migrar schema/journal/public-view/dashboard, nem adicionar thresholds ou usar a anotação para ordens."
+      },
+      "evidence": [
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 4,
+          "line_end": 22,
+          "excerpt": "test(\"historical unit weights retain their value without implying provider provenance\", () => {\n  const decision = Object.freeze({\n    action: \"buy\",\n    probabilities: Object.freeze({ buy: 1, sell: 0, hold: 0 }),\n    status: \"ok\",\n    confidence: 1,\n    privateText: \"must not escape\",\n  });\n  const evidence = Object.freeze({ kind: \"historical_record\" });\n  const before = JSON.stringify({ decision, evidence });\n\n  expect(annotateDecisionWeights(decision, evidence)).toEqual({\n    schemaVersion: 1,\n    origin: \"unknown\",\n    selectedWeight: 1,\n    reportedSelectedWeight: null,\n    financialCalibration: \"not_established\",\n  });\n  expect(JSON.stringify({ decision, evidence })).toBe(before);"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 142,
+          "line_end": 161,
+          "excerpt": "test(\"repeated annotations of frozen provider evidence remain pure and exclude extra fields\", () => {\n  const decision = Object.freeze({\n    action: \"sell\", status: \"ok\", probabilities: Object.freeze({ buy: 0.25, sell: 0.5, hold: 0.25 }),\n    confidence: 0.5, model: \"fixture-model\", text: \"fixture private text\",\n  });\n  const evidence = Object.freeze({ kind: \"observed_response\", raw: Object.freeze({\n    choice: \"sell\", probabilities: Object.freeze({ buy: 1, sell: 2, hold: 1 }),\n    token: \"synthetic-token\", text: \"untrusted instruction\",\n  }) });\n  const before = JSON.stringify({ decision, evidence });\n  const expected = {\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 0.5,\n    reportedSelectedWeight: 0.5, financialCalibration: \"not_established\",\n  } as const;\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n  expect(Object.keys(annotateDecisionWeights(decision, evidence)!)).toEqual([\n    \"schemaVersion\", \"origin\", \"selectedWeight\", \"reportedSelectedWeight\", \"financialCalibration\",\n  ]);"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 183,
+          "line_end": 194,
+          "excerpt": "test(\"a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  expect(annotateDecisionWeights(decision, {\n    kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } },\n  })).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n    reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw: { choice: \"buy\" } })).toEqual({\n    schemaVersion: 1, origin: \"adapter_choice_fallback\", selectedWeight: 1,\n    reportedSelectedWeight: null, financialCalibration: \"not_established\",\n  });"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "line_start": 63,
+          "line_end": 78,
+          "excerpt": "function readOrigin(decision: Decision, evidence: unknown): DecisionWeightAnnotation[\"origin\"] {\n  if (!isRecord(evidence)) return \"unknown\";\n  const canonicalHold = decision.action === \"hold\" && decision.probabilities.buy === 0\n    && decision.probabilities.sell === 0 && decision.probabilities.hold === 1;\n  if (evidence.kind === \"observed_failure\") {\n    return canonicalHold && (evidence.status === \"error\" || evidence.status === \"timeout\")\n      && decision.status === evidence.status ? \"adapter_safety_fallback\" : \"unknown\";\n  }\n  if (evidence.kind !== \"observed_response\" || !(\"raw\" in evidence)) return \"unknown\";\n  const response = readResponse(evidence.raw);\n  if (!response && canonicalHold && decision.status === \"malformed\") return \"adapter_safety_fallback\";\n  if (response && decision.status === \"ok\" && response.action === decision.action\n    && equalWeights(response.probabilities, decision.probabilities)) {\n    return response.reported ? \"provider_reported\" : \"adapter_choice_fallback\";\n  }\n  return \"unknown\";"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.ts",
+          "sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+          "line_start": 85,
+          "line_end": 95,
+          "excerpt": "  const valid = readDecision(decision);\n  if (!valid) return null;\n  const origin = readOrigin(valid, evidence);\n  const selectedWeight = valid.status === \"ok\" ? valid.probabilities[valid.action] : null;\n  return {\n    schemaVersion: 1,\n    origin,\n    selectedWeight,\n    reportedSelectedWeight: origin === \"provider_reported\" ? selectedWeight : null,\n    financialCalibration: \"not_established\",\n  };"
+        },
+        {
+          "base": "candidate",
+          "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+          "sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+          "line_start": 25,
+          "line_end": 31,
+          "excerpt": "Para registros históricos, forneça `{ kind: \"historical_record\" }`. Um peso histórico igual a 1 preserva `selectedWeight: 1`, mas não comprova origem do provedor. Falhas observadas usam `{ kind: \"observed_failure\", status: \"error\" | \"timeout\" }`.\n\nDecisão inválida retorna `null`. Estados não ok têm `selectedWeight: null`. `reportedSelectedWeight` só é numérico para `provider_reported`; nos demais casos é null. A saída contém somente os cinco campos do exemplo. Campos adicionais, textos e payload bruto não são copiados.\n\nO chamador deve vincular a resposta contemporânea correta à decisão. A função verifica compatibilidade estrutural e numérica, não autentica transporte. Ela segue o contrato observado do adaptador, incluindo tolerância absoluta de 1e-12 e ação escolhida sem exigência de argmax.\n\nEsta entrega não conecta a anotação ao journal ou dashboard, não migra schema e não modifica prompts, modelos, risco, alavancagem, carteira, ordens ou cadência. `financialCalibration: \"not_established\"` significa que não foi demonstrada uma relação entre peso e resultado financeiro. O peso não é uma probabilidade de lucro."
+        },
+        {
+          "base": "candidate",
+          "path": "sources/types.ts",
+          "sha256": "7160bed1c4a5ea1c4a798686fbad08d84c8e098359d59e68023445da696a21bc",
+          "line_start": 156,
+          "line_end": 165,
+          "excerpt": "export interface TapeDecision {\r\n  readonly action: TapeAction;\r\n  readonly probabilities: Readonly<Record<TapeAction, number>>;\r\n  /** The probability of the chosen action. It is a decision weight, not a win rate. */\r\n  readonly confidence: number | null;\r\n  readonly latencyMs: number;\r\n  readonly model: string;\r\n  readonly status: \"ok\" | \"error\" | \"timeout\" | \"malformed\";\r\n  /** null means the provider did not report usage; it is not a zero cost. */\r\n  readonly inputTokens: number | null;"
+        },
+        {
+          "base": "review_outputs",
+          "path": "test-stderr.log",
+          "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371",
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [45.00ms]"
+        }
+      ],
+      "checks": [
+        "Exatamente cinco campos na saída; confidence, modelo, token e textos extras permanecem excluídos.",
+        "Patch reconstruído contém somente cinco arquivos novos permitidos; nenhuma migração/importador runtime/ordem/threshold adicionada."
+      ]
+    },
+    {
+      "requirement_id": "PP-5",
+      "id": "PP-5",
+      "status": "pass",
+      "observed_requirement": "Dez fixtures literais pela API pública e regressões negativas, fronteiras, pureza, repetição e ausência de APIs/contas; ciclos TDD históricos conferidos.",
+      "specification": {
+        "base": "candidate",
+        "path": "frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 60,
+        "line_end": 76,
+        "excerpt": "### PP-5: exemplos literais e TDD\nExecutar fixtures sintéticas explícitas pela API pública nova, com resultados literais:\n\n| Decisão e evidência | Origem | selectedWeight | reportedSelectedWeight |\n| --- | --- | --- | --- |\n| buy, (1,0,0), ok; response choice buy sem probabilities | adapter_choice_fallback | 1 | null |\n| buy, (1,0,0), ok; response choice buy com (1,0,0) | provider_reported | 1 | 1 |\n| buy, (0.5,0.25,0.25), ok; response choice buy com (2,1,1) | provider_reported | 0.5 | 0.5 |\n| buy, (0.2,0.8,0), ok; response choice buy com (1,4,0) | provider_reported | 0.2 | 0.2 |\n| buy, (1,0,0), ok; historical_record | unknown | 1 | null |\n| hold, (0,0,1), malformed; response choice buy com pesos todos zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response choice buy com (Number.MIN_VALUE,2,0), cujo peso buy normalizado vira zero | adapter_safety_fallback | null | null |\n| hold, (0,0,1), malformed; response válida choice hold com (0,0,1) | unknown | null | null |\n| hold, (0,0,1), timeout; observed_failure timeout | adapter_safety_fallback | null | null |\n| buy, (1,0,0), ok; response choice sell com (0,1,0) | unknown | 1 | null |\n\nTambém comprovar decisão inválida -> null; evidence inválida -> unknown; error/timeout/status divergente -> unknown; probabilities null/array e pesos negativos/NaN/infinito; todos os tipos de ação/status; limites da tolerância; repetibilidade; entradas imutáveis; saída allowlist sem payload bruto; null no peso selecionado para status não ok. Testes não chamam APIs nem usam contas reais."
+      },
+      "evidence": [
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 1,
+          "line_end": 2,
+          "excerpt": "import { expect, test } from \"bun:test\";\nimport { annotateDecisionWeights } from \"./weights\";"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 15,
+          "line_end": 22,
+          "excerpt": "  expect(annotateDecisionWeights(decision, evidence)).toEqual({\n    schemaVersion: 1,\n    origin: \"unknown\",\n    selectedWeight: 1,\n    reportedSelectedWeight: null,\n    financialCalibration: \"not_established\",\n  });\n  expect(JSON.stringify({ decision, evidence })).toBe(before);"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 25,
+          "line_end": 52,
+          "excerpt": "test(\"reported weights are normalized without requiring the chosen action to be the largest\", () => {\n  for (const fixture of [\n    { probabilities: { buy: 0.5, sell: 0.25, hold: 0.25 }, raw: { buy: 2, sell: 1, hold: 1 }, selected: 0.5 },\n    { probabilities: { buy: 0.2, sell: 0.8, hold: 0 }, raw: { buy: 1, sell: 4, hold: 0 }, selected: 0.2 },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: \"buy\", probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: fixture.selected,\n      reportedSelectedWeight: fixture.selected, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"compatible explicit vectors are supported for every action, including missing or null unused weights\", () => {\n  for (const fixture of [\n    { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, raw: { buy: 3, sell: null } },\n    { action: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 }, raw: { sell: 3, hold: null } },\n    { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, raw: { hold: 3, buy: null } },\n  ]) {\n    expect(annotateDecisionWeights(\n      { action: fixture.action, probabilities: fixture.probabilities, status: \"ok\" },\n      { kind: \"observed_response\", raw: { choice: fixture.action, probabilities: fixture.raw } },\n    )).toEqual({\n      schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n      reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n    });"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 70,
+          "line_end": 98,
+          "excerpt": "test(\"choice, vector and status mismatches keep origin unknown\", () => {\n  const buy = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const raw of [\n    { choice: \"sell\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: null },\n  ]) {\n    expect(annotateDecisionWeights(buy, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"unknown\", selectedWeight: 1,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"malformed\", \"error\", \"timeout\"]) {\n    const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status };\n    for (const evidence of [\n      { kind: \"observed_response\", raw: { choice: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 } } },\n      { kind: \"observed_failure\", status: \"ok\" },\n      { kind: \"observed_failure\", status: status === \"timeout\" ? \"error\" : \"timeout\" },\n    ]) {\n      expect(annotateDecisionWeights(decision, evidence)).toEqual({\n        schemaVersion: 1, origin: \"unknown\", selectedWeight: null,\n        reportedSelectedWeight: null, financialCalibration: \"not_established\",\n      });\n    }\n  }\n  expect(annotateDecisionWeights(\n    { action: \"hold\", probabilities: { buy: 0.1, sell: 0, hold: 0.9 }, status: \"error\" },\n    { kind: \"observed_failure\", status: \"error\" },\n  )?.origin).toBe(\"unknown\");"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 101,
+          "line_end": 119,
+          "excerpt": "test(\"malformed response values match the observed adapter validation contract\", () => {\n  const decision = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    undefined, null, [], \"buy\", {}, { choice: \"wait\" },\n    { choice: \"buy\", probabilities: null },\n    { choice: \"buy\", probabilities: [1, 0, 0] },\n    { choice: \"buy\", probabilities: { buy: \"1\" } },\n    { choice: \"buy\", probabilities: { buy: 1, sell: -1 } },\n    { choice: \"buy\", probabilities: { buy: NaN } },\n    { choice: \"buy\", probabilities: { buy: Infinity } },\n    { choice: \"buy\", probabilities: { buy: 1, hold: -Infinity } },\n    { choice: \"buy\", probabilities: { buy: Number.MAX_VALUE, sell: Number.MAX_VALUE } },\n    { choice: \"buy\", probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { choice: \"buy\", probabilities: {} },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 123,
+          "line_end": 139,
+          "excerpt": "test(\"vector comparisons accept the absolute boundary and do not repair larger differences\", () => {\n  const raw = { kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } } };\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 1e-12, sell: 1e-12, hold: 0 }, status: \"ok\" }, raw,\n  )).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1 - 1e-12,\n    reportedSelectedWeight: 1 - 1e-12, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1 - 2e-12, sell: 2e-12, hold: 0 }, status: \"ok\" }, raw,\n  )?.origin).toBe(\"unknown\");\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 0.5e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )?.selectedWeight).toBe(1);\n  expect(annotateDecisionWeights(\n    { action: \"buy\", probabilities: { buy: 1, sell: 2e-12, hold: 0 }, status: \"ok\" }, undefined,\n  )).toBeNull();"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 142,
+          "line_end": 161,
+          "excerpt": "test(\"repeated annotations of frozen provider evidence remain pure and exclude extra fields\", () => {\n  const decision = Object.freeze({\n    action: \"sell\", status: \"ok\", probabilities: Object.freeze({ buy: 0.25, sell: 0.5, hold: 0.25 }),\n    confidence: 0.5, model: \"fixture-model\", text: \"fixture private text\",\n  });\n  const evidence = Object.freeze({ kind: \"observed_response\", raw: Object.freeze({\n    choice: \"sell\", probabilities: Object.freeze({ buy: 1, sell: 2, hold: 1 }),\n    token: \"synthetic-token\", text: \"untrusted instruction\",\n  }) });\n  const before = JSON.stringify({ decision, evidence });\n  const expected = {\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 0.5,\n    reportedSelectedWeight: 0.5, financialCalibration: \"not_established\",\n  } as const;\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(annotateDecisionWeights(decision, evidence)).toEqual(expected);\n  expect(JSON.stringify({ decision, evidence })).toBe(before);\n  expect(Object.keys(annotateDecisionWeights(decision, evidence)!)).toEqual([\n    \"schemaVersion\", \"origin\", \"selectedWeight\", \"reportedSelectedWeight\", \"financialCalibration\",\n  ]);"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 164,
+          "line_end": 194,
+          "excerpt": "test(\"invalid responses and observed matching failures identify only canonical safety holds\", () => {\n  const malformed = { action: \"hold\", probabilities: { buy: 0, sell: 0, hold: 1 }, status: \"malformed\" };\n  for (const raw of [\n    { choice: \"buy\", probabilities: { buy: 0, sell: 0, hold: 0 } },\n    { choice: \"buy\", probabilities: { buy: Number.MIN_VALUE, sell: 2, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(malformed, { kind: \"observed_response\", raw })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n  for (const status of [\"error\", \"timeout\"]) {\n    expect(annotateDecisionWeights({ ...malformed, status }, { kind: \"observed_failure\", status })).toEqual({\n      schemaVersion: 1, origin: \"adapter_safety_fallback\", selectedWeight: null,\n      reportedSelectedWeight: null, financialCalibration: \"not_established\",\n    });\n  }\n});\n\ntest(\"a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback\", () => {\n  const decision = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  expect(annotateDecisionWeights(decision, {\n    kind: \"observed_response\", raw: { choice: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 } },\n  })).toEqual({\n    schemaVersion: 1, origin: \"provider_reported\", selectedWeight: 1,\n    reportedSelectedWeight: 1, financialCalibration: \"not_established\",\n  });\n  expect(annotateDecisionWeights(decision, { kind: \"observed_response\", raw: { choice: \"buy\" } })).toEqual({\n    schemaVersion: 1, origin: \"adapter_choice_fallback\", selectedWeight: 1,\n    reportedSelectedWeight: null, financialCalibration: \"not_established\",\n  });"
+        },
+        {
+          "base": "candidate",
+          "path": "src/decision-evidence/weights.test.ts",
+          "sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+          "line_start": 197,
+          "line_end": 214,
+          "excerpt": "test(\"invalid decisions return null instead of inventing weights or status\", () => {\n  const valid = { action: \"buy\", probabilities: { buy: 1, sell: 0, hold: 0 }, status: \"ok\" };\n  for (const decision of [\n    null, [], \"buy\", {},\n    { ...valid, action: \"wait\" },\n    { ...valid, status: \"unknown\" },\n    { ...valid, status: \"error\" },\n    { ...valid, probabilities: null },\n    { ...valid, probabilities: [1, 0, 0] },\n    { ...valid, probabilities: { buy: 1, sell: 0 } },\n    { ...valid, probabilities: { buy: \"1\", sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: NaN, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: Infinity, sell: 0, hold: 0 } },\n    { ...valid, probabilities: { buy: 1.1, sell: -0.1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0, sell: 1, hold: 0 } },\n    { ...valid, probabilities: { buy: 0.9, sell: 0, hold: 0 } },\n  ]) {\n    expect(annotateDecisionWeights(decision, { kind: \"historical_record\" })).toBeNull();"
+        },
+        {
+          "base": "review_outputs",
+          "path": "test-stderr.log",
+          "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371",
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [45.00ms]"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-red-01.log",
+          "sha256": "58f961185852872711bf3c373a485055fadaf3e1e07d08aa7749bd7dedc50cc6",
+          "excerpt": "weights.test.ts:\r\n\r\n# Unhandled error between tests\r\n-------------------------------\r\nerror: Cannot find module './weights' from 'C:\\Users\\gabri\\.codex\\worktrees\\decision-weight-evidence\\jev-trader\\src\\decision-evidence\\weights.test.ts'\r\n-------------------------------\r\n\r\n\r\n 0 pass\r\n 1 fail\r\n 1 error\r\nRan 1 test across 1 file. [68.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-red-02.log",
+          "sha256": "4e6572a4675bd63c0fcf51476c439cd878de78a514bf90b946cf357af1bfe364",
+          "excerpt": "ialCalibration: \"not_established\",\r\n}\r\n\r\n      at <anonymous> (C:\\Users\\gabri\\.codex\\worktrees\\decision-weight-evidence\\jev-trader\\src\\decision-evidence\\weights.test.ts:44:78)\r\n(fail) invalid decisions return null instead of inventing weights or status [0.72ms]\r\n\r\n 1 pass\r\n 1 fail\r\n 8 expect() calls\r\nRan 2 tests across 1 file. [68.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-red-03.log",
+          "sha256": "50a002b06bde9d7f37cc889cf6541baceee8107b9e3092c337efe4470def5953",
+          "excerpt": "v-trader\\src\\decision-evidence\\weights.test.ts:31:7)\r\n(fail) a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback [0.61ms]\r\n(pass) invalid decisions return null instead of inventing weights or status [0.26ms]\r\n\r\n 2 pass\r\n 1 fail\r\n 19 expect() calls\r\nRan 3 tests across 1 file. [66.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-red-04.log",
+          "sha256": "298d6d8c7770e14d91884b162732bdb2c7147e0a4b672374572ede619c737a22",
+          "excerpt": "ilures identify only canonical safety holds [1.66ms]\r\n(pass) a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback [0.47ms]\r\n(pass) invalid decisions return null instead of inventing weights or status [0.77ms]\r\n\r\n 3 pass\r\n 1 fail\r\n 21 expect() calls\r\nRan 4 tests across 1 file. [75.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-green-01.log",
+          "sha256": "aa6bc6cc8d95e5b9ffbe7414d5c7f33c4907ca96d1efc16d4aeb7323d9eb8b52",
+          "excerpt": "bun test v1.3.14 (0d9b296a)\r\n\r\nsrc\\decision-evidence\\weights.test.ts:\r\n(pass) historical unit weights retain their value without implying provider provenance [0.32ms]\r\n\r\n 1 pass\r\n 0 fail\r\n 2 expect() calls\r\nRan 1 test across 1 file. [55.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-green-02.log",
+          "sha256": "83eeb957abf63cd5be7c2d94511af6060ca517422e3a085833bf38da9239278c",
+          "excerpt": "bun test v1.3.14 (0d9b296a)\r\n\r\nsrc\\decision-evidence\\weights.test.ts:\r\n(pass) historical unit weights retain their value without implying provider provenance [0.91ms]\r\n(pass) invalid decisions return null instead of inventing weights or status [0.39ms]\r\n\r\n 2 pass\r\n 0 fail\r\n 18 expect() calls\r\nRan 2 tests across 1 file. [63.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-green-03.log",
+          "sha256": "a185905d1abb2a3ddcb78514ab664d695c440b32568d3fc028ae120d9184dda1",
+          "excerpt": " value without implying provider provenance [0.75ms]\r\n(pass) a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback [0.35ms]\r\n(pass) invalid decisions return null instead of inventing weights or status [0.65ms]\r\n\r\n 3 pass\r\n 0 fail\r\n 20 expect() calls\r\nRan 3 tests across 1 file. [71.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-tdd-green-04.log",
+          "sha256": "e75da80d36010ccb3f49804bca86a7d33120b84930d929d5fa1cf061886fe3a2",
+          "excerpt": "ilures identify only canonical safety holds [0.33ms]\r\n(pass) a contemporaneous explicit unit vector is provider reported, while an absent vector is a choice fallback [0.10ms]\r\n(pass) invalid decisions return null instead of inventing weights or status [0.92ms]\r\n\r\n 4 pass\r\n 0 fail\r\n 24 expect() calls\r\nRan 4 tests across 1 file. [63.00ms]\r\n"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-TDD-v1.json",
+          "sha256": "686868f12ce8b83b6db0e09be47cf32dd26a8d9bc39ca6af3e2db22d2b47aa3f",
+          "excerpt": "{\n  \"cycles\": 4,\n  \"evidence\": [\n    {\n      \"path\": \"weights-tdd-red-01.log\",\n      \"sha256\": \"58f961185852872711bf3c373a485055fadaf3e1e07d08aa7749bd7dedc50cc6\",\n      \"bytes\": 393\n    },\n    {\n     "
+        }
+      ],
+      "literal_fixture_map": [
+        {
+          "spec_line": 65,
+          "test_lines": [
+            191,
+            194
+          ],
+          "result": "adapter_choice_fallback,1,null"
+        },
+        {
+          "spec_line": 66,
+          "test_lines": [
+            185,
+            190
+          ],
+          "result": "provider_reported,1,1"
+        },
+        {
+          "spec_line": 67,
+          "test_lines": [
+            27,
+            35
+          ],
+          "result": "provider_reported,0.5,0.5"
+        },
+        {
+          "spec_line": 68,
+          "test_lines": [
+            28,
+            35
+          ],
+          "result": "provider_reported,0.2,0.2"
+        },
+        {
+          "spec_line": 69,
+          "test_lines": [
+            4,
+            22
+          ],
+          "result": "unknown,1,null"
+        },
+        {
+          "spec_line": 70,
+          "test_lines": [
+            164,
+            174
+          ],
+          "result": "adapter_safety_fallback,null,null"
+        },
+        {
+          "spec_line": 71,
+          "test_lines": [
+            164,
+            174
+          ],
+          "result": "adapter_safety_fallback,null,null"
+        },
+        {
+          "spec_line": 72,
+          "test_lines": [
+            82,
+            92
+          ],
+          "result": "unknown,null,null"
+        },
+        {
+          "spec_line": 73,
+          "test_lines": [
+            175,
+            180
+          ],
+          "result": "adapter_safety_fallback,null,null"
+        },
+        {
+          "spec_line": 74,
+          "test_lines": [
+            70,
+            80
+          ],
+          "result": "unknown,1,null"
+        }
+      ],
+      "checks": [
+        "Replay independente atual: 11 pass, 0 fail, 76 expectativas; sem mocks do módulo ou chamadas externas.",
+        "Logs históricos reais mostram quatro ciclos red/green; inspecionados e hashes conferidos, não reencenados como execução do revisor.",
+        "Os oito logs históricos foram lidos e copiados byte a byte; quatro reds reais (import/validação/origem/fallback) seguidos de quatro greens, com hashes iguais ao registro TDD. História não foi tratada como execução deste revisor."
+      ]
+    },
+    {
+      "requirement_id": "PP-6",
+      "id": "PP-6",
+      "status": "pass",
+      "observed_requirement": "Entrega exclusiva de cinco arquivos novos; preflight e identidade próprios vinculados aos hashes congelados; fontes e entradas estáveis; TDD histórico inspecionado, testes/tipos reais e revisão independente em cópia isolada.",
+      "specification": {
+        "base": "candidate",
+        "path": "frozen/SPEC.md",
+        "sha256": "6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f",
+        "line_start": 78,
+        "line_end": 79,
+        "excerpt": "### PP-6: arquivos, verificação e revisão\nEntrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação."
+      },
+      "evidence": [
+        {
+          "base": "candidate",
+          "path": "CANDIDATE.json",
+          "sha256": "169d32241af78874aede8a4b44f21881f73279d226f66a7ae384c33cb1456bcd",
+          "line_start": 1,
+          "line_end": 8,
+          "excerpt": "{\n  \"version\": 1,\n  \"baseline\": \"00a593bcabe25dbb6d83795268533551098f645b\",\n  \"implementer_id\": \"root-01a1362a\",\n  \"conversation\": \"01a1362a-b876-7fa0-9b66-b45202296099\",\n  \"authored\": [\n    {\n      \"path\": \"src/decision-evidence/weights.ts\","
+        },
+        {
+          "base": "candidate",
+          "path": "docs/sdd/decision-weight-provenance/requirements.md",
+          "sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+          "line_start": 39,
+          "line_end": 42,
+          "excerpt": "Também comprovar decisão inválida -> null; evidence inválida -> unknown; error/timeout/status divergente -> unknown; probabilities null/array e pesos negativos/NaN/infinito; todos os tipos de ação/status; limites da tolerância; repetibilidade; entradas imutáveis; saída allowlist sem payload bruto; null no peso selecionado para status não ok. Testes não chamam APIs nem usam contas reais.\n\n### PP-6: arquivos, verificação e revisão\nEntrega futura exclusiva: `src/decision-evidence/weights.ts`, `src/decision-evidence/weights.test.ts` e documentação pública própria. Nenhum importador runtime existente será modificado. Revalidar arquivos livres, hashes de fontes e estado da própria conversa antes de implementar. TDD com Bun sem .env, typecheck focado e revisão independente em cópia isolada com hashes. A aprovação desta especificação não certifica implementação."
+        },
+        {
+          "base": "candidate",
+          "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+          "sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+          "line_start": 3,
+          "line_end": 25,
+          "excerpt": "Baseline: `00a593bcabe25dbb6d83795268533551098f645b`.\n\nComando de comportamento:\n\n```powershell\nbun --no-env-file test src/decision-evidence/weights.test.ts\n```\n\nResultado observado: exit 0, 11 pass, 0 fail, 76 expect() calls. As fixtures sintéticas exercitam os dez exemplos dos requisitos, normalização sem argmax, pesos ausentes/null, overflow e underflow, evidência incompatível, ações/status, tolerâncias, entradas congeladas, repetibilidade e projeção de cinco campos.\n\nComando de tipos:\n\n```powershell\nbun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/decision-evidence/weights.ts src/decision-evidence/weights.test.ts\n```\n\nResultado observado: exit 0. O escopo inclui somente o módulo novo e seus testes; não certifica outros módulos do projeto.\n\nO ciclo TDD iniciou com import ausente. Outros testes falharam antes de implementar a validação de decisões, a distinção entre pesos explícitos e fallback da escolha, e a identificação de fallback de segurança. Cada etapa voltou a passar antes da seguinte. Os testes adicionais verificaram as fronteiras do comportamento já implementado.\n\nA inspeção do módulo não encontrou imports, leitura de ambiente, arquivos, rede ou consultas a modelos. Nenhum importador existente foi alterado. As fontes do adaptador usadas no contrato mantiveram os hashes registrados nos requisitos.\n\nNão foram utilizados feed real, contas reais, inferência paga, ordens ou carteira. Esta verificação local não demonstra calibração, retorno financeiro ou funcionamento em produção."
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-preflight.json",
+          "sha256": "3a61757e05f875f4d9a3f01fb583bd32217f986dff8f43d2b9e4896dcd8ef3e3",
+          "excerpt": "\"moduleAbsentAtRootAndIsolatedWorkspace\": true"
+        },
+        {
+          "base": "review_outputs",
+          "path": "historical-preflight.json",
+          "sha256": "3a61757e05f875f4d9a3f01fb583bd32217f986dff8f43d2b9e4896dcd8ef3e3",
+          "excerpt": "\"specSha256\": \"6c4fcfacc34ec393daf3ab995320c1cbb7723ba83e38a29cd6003bd5ce7ef42f\""
+        },
+        {
+          "base": "review_outputs",
+          "path": "observed-sdd-review-input.json",
+          "sha256": "ebea012da537c00dc709054d65c6642e3b6e6b29e3af45ff817dc6efb3f50cad",
+          "excerpt": "\"implementer_id\": \"root-01a1362a\""
+        },
+        {
+          "base": "review_outputs",
+          "path": "observed-sdd-review-input.json",
+          "sha256": "ebea012da537c00dc709054d65c6642e3b6e6b29e3af45ff817dc6efb3f50cad",
+          "excerpt": "\"claimed_at\": \"2026-10-13T18:49:53.153Z\""
+        },
+        {
+          "base": "review_outputs",
+          "path": "observed-sdd-review-input.json",
+          "sha256": "ebea012da537c00dc709054d65c6642e3b6e6b29e3af45ff817dc6efb3f50cad",
+          "excerpt": "\"recorded_at\": \"2026-10-13T18:58:58.191Z\""
+        },
+        {
+          "base": "review_outputs",
+          "path": "acceptance-and-patch-execution.json",
+          "sha256": "61d7952536652b920bbac286ebf17585a17bc1abc2a6cbd32800a0de86845461",
+          "excerpt": "\"acceptance_manifest_sha256_equal\": true"
+        },
+        {
+          "base": "review_outputs",
+          "path": "acceptance-and-patch-execution.json",
+          "sha256": "61d7952536652b920bbac286ebf17585a17bc1abc2a6cbd32800a0de86845461",
+          "excerpt": "\"new_authored_file_count\": 5"
+        },
+        {
+          "base": "review_outputs",
+          "path": "typecheck-execution.json",
+          "sha256": "55cb2fdf5ed0693f54187030eb1cfefdb23a9fe297d5f49fc37d9a1b476192b0",
+          "excerpt": "\"exit_code\": 0"
+        },
+        {
+          "base": "review_outputs",
+          "path": "test-stderr.log",
+          "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371",
+          "excerpt": " 11 pass\n 0 fail\n 76 expect() calls\nRan 11 tests across 1 file. [45.00ms]"
+        }
+      ],
+      "checks": [
+        "Cinco arquivos novos reconstruídos byte a byte do patch, hashes do manifesto e todas as 13 entradas estáveis antes/depois.",
+        "Aceitação pública PP-1..PP-6 byte idêntica à SPEC (linhas 46..80), SHA256 3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8.",
+        "Testes e typecheck executados sequencialmente em cópia isolada, timeout 120, sem instalar dependências.",
+        "Sandbox danger-full-access; atributo readonly não equivale a enforcement.",
+        "Preflight histórico preserva not_started/pending e registra arquivos livres e hashes. A observação posterior do harness conserva lease/registro de pesquisa anteriores ao freeze e vincula implementador/SPEC; não retroage a captura nem prova transporte ou autoridade.",
+        "Manifesto declara a conversa raiz 01a1362a-b876-7fa0-9b66-b45202296099 e implementer root-01a1362a; reviewer_id observado distinto. Estado do harness é evidência auxiliar, não autorização."
+      ]
+    }
+  ],
+  "executions": [
+    {
+      "kind": "independent_test_replay",
+      "command": "bun --no-env-file test src/decision-evidence/weights.test.ts",
+      "actual_wrapper_argv": [
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py",
+        "run",
+        "--cwd",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+        "--timeout",
+        "120",
+        "--profile",
+        "test",
+        "--rtk",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe",
+        "--headroom-python",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "--store",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-spec-review-v1/rtk-store",
+        "--metrics",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-spec-review-v1/test-metrics.json",
+        "--",
+        "bun",
+        "--no-env-file",
+        "test",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "timeout_seconds": 120,
+      "profile": "test",
+      "exit_code": 0,
+      "result": "11 pass; 0 fail; 76 expect() calls; 45 ms",
+      "stdout": {
+        "path": "test-stdout.log",
+        "sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6",
+        "bytes": 28
+      },
+      "stderr": {
+        "path": "test-stderr.log",
+        "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371",
+        "bytes": 1185
+      },
+      "summary": {
+        "path": "test-execution.json",
+        "sha256": "5e478c3a427328f0cd2391e9d92f8440a34ef67bda45bffcf653bb2266cf7fcd"
+      },
+      "metrics": {
+        "path": "test-metrics.json",
+        "sha256": "6779db8e832d625603e7fa96ce90069d4c03999b88a4ab6d7509ee7cd92c5d4d"
+      },
+      "rtk_mode": "exact passthrough; command_not_allowlisted; uncompressed bytes retained"
+    },
+    {
+      "kind": "independent_focused_types",
+      "command": "bun --no-env-file node_modules/typescript/bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --noUncheckedIndexedAccess --target ESNext --module Preserve --moduleResolution Bundler --types bun src/decision-evidence/weights.ts src/decision-evidence/weights.test.ts",
+      "actual_wrapper_argv": [
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py",
+        "run",
+        "--cwd",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-candidate-v1",
+        "--timeout",
+        "120",
+        "--profile",
+        "build",
+        "--rtk",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe",
+        "--headroom-python",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "--store",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-spec-review-v1/rtk-store",
+        "--metrics",
+        "C:/Users/gabri/.codex/tmp/inonu-innovation-01a1362a/weights-spec-review-v1/typecheck-metrics.json",
+        "--",
+        "bun",
+        "--no-env-file",
+        "node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--skipLibCheck",
+        "--noUncheckedIndexedAccess",
+        "--target",
+        "ESNext",
+        "--module",
+        "Preserve",
+        "--moduleResolution",
+        "Bundler",
+        "--types",
+        "bun",
+        "src/decision-evidence/weights.ts",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "timeout_seconds": 120,
+      "profile": "build",
+      "exit_code": 0,
+      "result": "No diagnostics; stdout/stderr empty",
+      "stdout": {
+        "path": "typecheck-stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "typecheck-stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "summary": {
+        "path": "typecheck-execution.json",
+        "sha256": "55cb2fdf5ed0693f54187030eb1cfefdb23a9fe297d5f49fc37d9a1b476192b0"
+      },
+      "metrics": {
+        "path": "typecheck-metrics.json",
+        "sha256": "02251746d16c2115debc414dac1b2c6baab9fecf45d23ce9858cceda466c95e7"
+      },
+      "rtk_mode": "exact passthrough; command_not_allowlisted; uncompressed bytes retained"
+    },
+    {
+      "kind": "independent_byte_reconstruction_and_acceptance",
+      "exit_code": 0,
+      "result": {
+        "acceptance_byte_identical": true,
+        "acceptance_sha256": "3040d1d59d71ca4512d7838ed98cbcb068082a8b8d612215a9387871621ab6c8",
+        "acceptance_bytes": 4953,
+        "acceptance_manifest_sha256_equal": true,
+        "acceptance_lines": [
+          46,
+          80
+        ],
+        "new_authored_file_count": 5,
+        "patch_section_checks": [
+          {
+            "path": "src/decision-evidence/weights.ts",
+            "new_file": true,
+            "patch_body_bytes_equal": true,
+            "patch_body_sha256": "3d004c8ad5cebe34140f9a215df2d3647f70af6dbfa830aae44b92ada15d3acf",
+            "manifest_sha256_equal": true
+          },
+          {
+            "path": "src/decision-evidence/weights.test.ts",
+            "new_file": true,
+            "patch_body_bytes_equal": true,
+            "patch_body_sha256": "fccda66fa84b47e9d43de1efd904f2607aa954807d7a26675955076dd1f7ce7f",
+            "manifest_sha256_equal": true
+          },
+          {
+            "path": "docs/sdd/decision-weight-provenance/requirements.md",
+            "new_file": true,
+            "patch_body_bytes_equal": true,
+            "patch_body_sha256": "4f107c9d4134b2ffcf476ffa936d14fd631bf83398292b5ea18c1db91c001977",
+            "manifest_sha256_equal": true
+          },
+          {
+            "path": "docs/sdd/decision-weight-provenance/USAGE.md",
+            "new_file": true,
+            "patch_body_bytes_equal": true,
+            "patch_body_sha256": "57f2602a6ecac310fb467b8d6a4c26cde3e8f35955b9091e82e0f99ba71452a3",
+            "manifest_sha256_equal": true
+          },
+          {
+            "path": "docs/sdd/decision-weight-provenance/VERIFICATION.md",
+            "new_file": true,
+            "patch_body_bytes_equal": true,
+            "patch_body_sha256": "688bea56cea028782237998d362cebd28b84fb323d6a6ebe0586c196acb2804f",
+            "manifest_sha256_equal": true
+          }
+        ],
+        "patch_manifest_sha256_equal": true
+      },
+      "log": {
+        "path": "acceptance-and-patch-execution.json",
+        "sha256": "61d7952536652b920bbac286ebf17585a17bc1abc2a6cbd32800a0de86845461"
+      }
+    }
+  ],
+  "execution_log": {
+    "base": "review_outputs",
+    "path": "independent-execution-log.json",
+    "sha256": "02d25af6b4af9f4822ad790b1506fe01c123d1774ce323e45efb95de477aab7b",
+    "excerpt": "\"actual_executions\""
+  },
+  "execution_artifact_diagnostic": {
+    "windows_error_code": 206,
+    "stage": "Initial overlong command to write the execution log; process creation failed.",
+    "candidate_or_test_failure": false,
+    "recovery": "Bounded UTF-8 chunks; all five writes exited 0; tests were not rerun.",
+    "coverage_write_yield_recovery": {
+      "observation": "A chunk command returned a running session rather than an exit code. The initial collector treated undefined exit_code as failure; independent reads confirmed a stable 21000-character prefix already written. This was an artifact collector issue, not a candidate or test failure.",
+      "recovery": "Read-only checks completed with exit 0; remaining JSON applied only to the private review output, then full content and references are validated."
+    }
+  },
+  "limitations": [
+    "Readonly attributes and isolated copy do not prove filesystem sandbox enforcement; actual mode was danger-full-access.",
+    "Effective model/tier were not demonstrated; configuration only is stated.",
+    "Synthetic fixtures establish local contract behavior, not financial calibration, performance, feed/transport provenance, real-wallet execution or live integration.",
+    "Historical TDD and preflight are source records; their original executions were not independently replayed.",
+    "No network/API/model calls, accounts, trades, transfers, installs, .env loads, staging, commits, push or deploy performed.",
+    "Private execution/harness copies remain private reviewer outputs and are not delivery patch contents."
+  ],
+  "output_hashes": [
+    {
+      "path": "acceptance-and-patch-execution.json",
+      "bytes": 1685,
+      "sha256": "61d7952536652b920bbac286ebf17585a17bc1abc2a6cbd32800a0de86845461"
+    },
+    {
+      "path": "acceptance-and-tdd-log-check.json",
+      "bytes": 2465,
+      "sha256": "a1106fb6e81e92d5fcd35bb390554bd0620d50744e37852ad75dc69efdc776b7"
+    },
+    {
+      "path": "historical-preflight.json",
+      "bytes": 885,
+      "sha256": "3a61757e05f875f4d9a3f01fb583bd32217f986dff8f43d2b9e4896dcd8ef3e3"
+    },
+    {
+      "path": "historical-tdd-green-01.log",
+      "bytes": 244,
+      "sha256": "aa6bc6cc8d95e5b9ffbe7414d5c7f33c4907ca96d1efc16d4aeb7323d9eb8b52"
+    },
+    {
+      "path": "historical-tdd-green-02.log",
+      "bytes": 332,
+      "sha256": "83eeb957abf63cd5be7c2d94511af6060ca517422e3a085833bf38da9239278c"
+    },
+    {
+      "path": "historical-tdd-green-03.log",
+      "bytes": 454,
+      "sha256": "a185905d1abb2a3ddcb78514ab664d695c440b32568d3fc028ae120d9184dda1"
+    },
+    {
+      "path": "historical-tdd-green-04.log",
+      "bytes": 557,
+      "sha256": "e75da80d36010ccb3f49804bca86a7d33120b84930d929d5fa1cf061886fe3a2"
+    },
+    {
+      "path": "historical-tdd-red-01.log",
+      "bytes": 393,
+      "sha256": "58f961185852872711bf3c373a485055fadaf3e1e07d08aa7749bd7dedc50cc6"
+    },
+    {
+      "path": "historical-tdd-red-02.log",
+      "bytes": 1021,
+      "sha256": "4e6572a4675bd63c0fcf51476c439cd878de78a514bf90b946cf357af1bfe364"
+    },
+    {
+      "path": "historical-tdd-red-03.log",
+      "bytes": 1364,
+      "sha256": "50a002b06bde9d7f37cc889cf6541baceee8107b9e3092c337efe4470def5953"
+    },
+    {
+      "path": "historical-tdd-red-04.log",
+      "bytes": 1529,
+      "sha256": "298d6d8c7770e14d91884b162732bdb2c7147e0a4b672374572ede619c737a22"
+    },
+    {
+      "path": "historical-TDD-v1.json",
+      "bytes": 1297,
+      "sha256": "686868f12ce8b83b6db0e09be47cf32dd26a8d9bc39ca6af3e2db22d2b47aa3f"
+    },
+    {
+      "path": "independent-execution-log.json",
+      "bytes": 31881,
+      "sha256": "02d25af6b4af9f4822ad790b1506fe01c123d1774ce323e45efb95de477aab7b"
+    },
+    {
+      "path": "observed-sdd-review-input.json",
+      "bytes": 8479,
+      "sha256": "ebea012da537c00dc709054d65c6642e3b6e6b29e3af45ff817dc6efb3f50cad"
+    },
+    {
+      "path": "parent-patch-check-v2.json",
+      "bytes": 5528,
+      "sha256": "ef7fac1e3340e0486f8c4ad97730faf34cd4293588be9c8dd9efc7ba0bd0919a"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 2540,
+      "sha256": "79d1516671734d077261f8c23bcadcacc99360ba80e95f89682218ddf8980b4c"
+    },
+    {
+      "path": "test-execution.json",
+      "bytes": 988,
+      "sha256": "5e478c3a427328f0cd2391e9d92f8440a34ef67bda45bffcf653bb2266cf7fcd"
+    },
+    {
+      "path": "test-metrics.json",
+      "bytes": 502,
+      "sha256": "6779db8e832d625603e7fa96ce90069d4c03999b88a4ab6d7509ee7cd92c5d4d"
+    },
+    {
+      "path": "test-stderr.log",
+      "bytes": 1185,
+      "sha256": "e9205ec85c39b2f5cbfd3cbff9d822d5d9f1600f9818f1bb078784707cdbe371"
+    },
+    {
+      "path": "test-stdout.log",
+      "bytes": 28,
+      "sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6"
+    },
+    {
+      "path": "typecheck-execution.json",
+      "bytes": 1309,
+      "sha256": "55cb2fdf5ed0693f54187030eb1cfefdb23a9fe297d5f49fc37d9a1b476192b0"
+    },
+    {
+      "path": "typecheck-metrics.json",
+      "bytes": 498,
+      "sha256": "02251746d16c2115debc414dac1b2c6baab9fecf45d23ce9858cceda466c95e7"
+    },
+    {
+      "path": "typecheck-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "typecheck-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "report": {
+    "path": "REPORT.md",
+    "sha256": "79d1516671734d077261f8c23bcadcacc99360ba80e95f89682218ddf8980b4c",
+    "words": 251
+  },
+  "own_final_hashes": "Final REPORT.md and coverage.json hashes are recorded separately in review-output-hashes.json to avoid a self-referential coverage hash."
+}

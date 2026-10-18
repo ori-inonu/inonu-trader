@@ -1,0 +1,257 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-03-qual-fonte-e-qual-horizo",
+    "specHash": "d675312826a335ce754bc7e307b6f8eebeb378bcb0ec50a9215a72a61515ef28",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "sem_consenso",
+    "leader": null,
+    "implement": false,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "placar-existente",
+          "cotacao-rota-gratuita",
+          "janela-1min-fonte-fixada",
+          "adiar-markout"
+        ],
+        "framings": [
+          {
+            "order": [
+              "placar-existente",
+              "cotacao-rota-gratuita",
+              "janela-1min-fonte-fixada",
+              "adiar-markout"
+            ],
+            "probs": {
+              "placar-existente": 0.23,
+              "cotacao-rota-gratuita": 0.37,
+              "janela-1min-fonte-fixada": 0.17,
+              "adiar-markout": 0.16,
+              "none_fits": 0.07
+            }
+          },
+          {
+            "order": [
+              "cotacao-rota-gratuita",
+              "janela-1min-fonte-fixada",
+              "adiar-markout",
+              "placar-existente"
+            ],
+            "probs": {
+              "cotacao-rota-gratuita": 0.22,
+              "janela-1min-fonte-fixada": 0.16,
+              "adiar-markout": 0.11,
+              "placar-existente": 0.45999999999999996,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "janela-1min-fonte-fixada",
+              "adiar-markout",
+              "placar-existente",
+              "cotacao-rota-gratuita"
+            ],
+            "probs": {
+              "janela-1min-fonte-fixada": 0.2,
+              "adiar-markout": 0.05,
+              "placar-existente": 0.45999999999999996,
+              "cotacao-rota-gratuita": 0.25,
+              "none_fits": 0.04
+            }
+          }
+        ],
+        "means": {
+          "placar-existente": 0.3833,
+          "cotacao-rota-gratuita": 0.28,
+          "janela-1min-fonte-fixada": 0.1767,
+          "adiar-markout": 0.1067
+        },
+        "noneFits": 0.0533,
+        "agreement": 0.6667,
+        "margin": 0.1033,
+        "leader": "placar-existente",
+        "railProb": {
+          "placar-existente": 0.36,
+          "cotacao-rota-gratuita": 0.16,
+          "janela-1min-fonte-fixada": 0.16,
+          "adiar-markout": 0.47
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 2,
+        "options": [
+          "placar-existente",
+          "cotacao-rota-gratuita",
+          "janela-1min-fonte-fixada",
+          "adiar-markout"
+        ],
+        "framings": [
+          {
+            "order": [
+              "placar-existente",
+              "cotacao-rota-gratuita",
+              "janela-1min-fonte-fixada",
+              "adiar-markout"
+            ],
+            "probs": {
+              "placar-existente": 0.22,
+              "cotacao-rota-gratuita": 0.38,
+              "janela-1min-fonte-fixada": 0.21,
+              "adiar-markout": 0.14,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "cotacao-rota-gratuita",
+              "janela-1min-fonte-fixada",
+              "adiar-markout",
+              "placar-existente"
+            ],
+            "probs": {
+              "cotacao-rota-gratuita": 0.16,
+              "janela-1min-fonte-fixada": 0.16,
+              "adiar-markout": 0.13,
+              "placar-existente": 0.5,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "janela-1min-fonte-fixada",
+              "adiar-markout",
+              "placar-existente",
+              "cotacao-rota-gratuita"
+            ],
+            "probs": {
+              "janela-1min-fonte-fixada": 0.21,
+              "adiar-markout": 0.07,
+              "placar-existente": 0.45,
+              "cotacao-rota-gratuita": 0.23,
+              "none_fits": 0.04
+            }
+          }
+        ],
+        "means": {
+          "placar-existente": 0.39,
+          "cotacao-rota-gratuita": 0.2567,
+          "janela-1min-fonte-fixada": 0.1933,
+          "adiar-markout": 0.1133
+        },
+        "noneFits": 0.0467,
+        "agreement": 0.6667,
+        "margin": 0.1333,
+        "leader": "placar-existente",
+        "railProb": {
+          "placar-existente": 0.36,
+          "cotacao-rota-gratuita": 0.16,
+          "janela-1min-fonte-fixada": 0.16,
+          "adiar-markout": 0.47
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 3,
+        "options": [
+          "placar-existente",
+          "cotacao-rota-gratuita",
+          "janela-1min-fonte-fixada",
+          "adiar-markout"
+        ],
+        "framings": [
+          {
+            "order": [
+              "placar-existente",
+              "cotacao-rota-gratuita",
+              "janela-1min-fonte-fixada",
+              "adiar-markout"
+            ],
+            "probs": {
+              "placar-existente": 0.24,
+              "cotacao-rota-gratuita": 0.34,
+              "janela-1min-fonte-fixada": 0.22,
+              "adiar-markout": 0.12,
+              "none_fits": 0.08
+            }
+          },
+          {
+            "order": [
+              "cotacao-rota-gratuita",
+              "janela-1min-fonte-fixada",
+              "adiar-markout",
+              "placar-existente"
+            ],
+            "probs": {
+              "cotacao-rota-gratuita": 0.19,
+              "janela-1min-fonte-fixada": 0.14,
+              "adiar-markout": 0.11,
+              "placar-existente": 0.51,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "janela-1min-fonte-fixada",
+              "adiar-markout",
+              "placar-existente",
+              "cotacao-rota-gratuita"
+            ],
+            "probs": {
+              "janela-1min-fonte-fixada": 0.17,
+              "adiar-markout": 0.07,
+              "placar-existente": 0.48,
+              "cotacao-rota-gratuita": 0.23,
+              "none_fits": 0.05
+            }
+          }
+        ],
+        "means": {
+          "placar-existente": 0.41,
+          "cotacao-rota-gratuita": 0.2533,
+          "janela-1min-fonte-fixada": 0.1767,
+          "adiar-markout": 0.1
+        },
+        "noneFits": 0.06,
+        "agreement": 0.6667,
+        "margin": 0.1567,
+        "leader": "placar-existente",
+        "railProb": {
+          "placar-existente": 0.36,
+          "cotacao-rota-gratuita": 0.16,
+          "janela-1min-fonte-fixada": 0.16,
+          "adiar-markout": 0.47
+        },
+        "consensusHere": false
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 13,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 13,
+    "failed": 0,
+    "inputTokens": 19934,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

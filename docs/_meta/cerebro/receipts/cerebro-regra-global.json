@@ -1,0 +1,231 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "cerebro-regra-global",
+    "specHash": "20ba52979a796ac5287117d89b56ab15b73333d4585aab6bb7a8d867b9335bd0",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "sem_consenso",
+    "leader": null,
+    "implement": false,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "keep_rule",
+          "revert_rule",
+          "reword_rule"
+        ],
+        "framings": [
+          {
+            "order": [
+              "keep_rule",
+              "revert_rule",
+              "reword_rule"
+            ],
+            "probs": {
+              "keep_rule": 0.35,
+              "revert_rule": 0.24,
+              "reword_rule": 0.36,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "revert_rule",
+              "reword_rule",
+              "keep_rule"
+            ],
+            "probs": {
+              "revert_rule": 0.12,
+              "reword_rule": 0.56,
+              "keep_rule": 0.29,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "reword_rule",
+              "keep_rule",
+              "revert_rule"
+            ],
+            "probs": {
+              "reword_rule": 0.32,
+              "keep_rule": 0.43,
+              "revert_rule": 0.23,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "keep_rule": 0.3567,
+          "revert_rule": 0.1967,
+          "reword_rule": 0.4133
+        },
+        "noneFits": 0.0333,
+        "agreement": 0.6667,
+        "margin": 0.0566,
+        "leader": "reword_rule",
+        "railProb": {
+          "keep_rule": 0.05,
+          "revert_rule": 0.04,
+          "reword_rule": 0.01
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 2,
+        "options": [
+          "keep_rule",
+          "revert_rule",
+          "reword_rule"
+        ],
+        "framings": [
+          {
+            "order": [
+              "keep_rule",
+              "revert_rule",
+              "reword_rule"
+            ],
+            "probs": {
+              "keep_rule": 0.35,
+              "revert_rule": 0.25,
+              "reword_rule": 0.36,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "revert_rule",
+              "reword_rule",
+              "keep_rule"
+            ],
+            "probs": {
+              "revert_rule": 0.12,
+              "reword_rule": 0.5599999999999999,
+              "keep_rule": 0.26,
+              "none_fits": 0.06
+            }
+          },
+          {
+            "order": [
+              "reword_rule",
+              "keep_rule",
+              "revert_rule"
+            ],
+            "probs": {
+              "reword_rule": 0.38,
+              "keep_rule": 0.39,
+              "revert_rule": 0.21,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "keep_rule": 0.3333,
+          "revert_rule": 0.1933,
+          "reword_rule": 0.4333
+        },
+        "noneFits": 0.04,
+        "agreement": 0.6667,
+        "margin": 0.1,
+        "leader": "reword_rule",
+        "railProb": {
+          "keep_rule": 0.05,
+          "revert_rule": 0.04,
+          "reword_rule": 0.01
+        },
+        "consensusHere": false
+      },
+      {
+        "round": 3,
+        "options": [
+          "keep_rule",
+          "revert_rule",
+          "reword_rule"
+        ],
+        "framings": [
+          {
+            "order": [
+              "keep_rule",
+              "revert_rule",
+              "reword_rule"
+            ],
+            "probs": {
+              "keep_rule": 0.36,
+              "revert_rule": 0.33,
+              "reword_rule": 0.28,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "revert_rule",
+              "reword_rule",
+              "keep_rule"
+            ],
+            "probs": {
+              "revert_rule": 0.16,
+              "reword_rule": 0.55,
+              "keep_rule": 0.25,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "reword_rule",
+              "keep_rule",
+              "revert_rule"
+            ],
+            "probs": {
+              "reword_rule": 0.42,
+              "keep_rule": 0.34,
+              "revert_rule": 0.22,
+              "none_fits": 0.02
+            }
+          }
+        ],
+        "means": {
+          "keep_rule": 0.3167,
+          "revert_rule": 0.2367,
+          "reword_rule": 0.4167
+        },
+        "noneFits": 0.03,
+        "agreement": 0.6667,
+        "margin": 0.1,
+        "leader": "reword_rule",
+        "railProb": {
+          "keep_rule": 0.05,
+          "revert_rule": 0.04,
+          "reword_rule": 0.01
+        },
+        "consensusHere": false
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 12,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 40,
+    "sent": 12,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 9597,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

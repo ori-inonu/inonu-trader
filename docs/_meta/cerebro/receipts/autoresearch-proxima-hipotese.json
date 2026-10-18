@@ -1,0 +1,167 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "autoresearch-proxima-hipotese",
+    "specHash": "e27759c1c5df02cbbb959a328fd7afb2ec3ebfa211cca376769fe682c041dfbf",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "stop_campaign",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "stop_campaign",
+          "spot_confirm_perp",
+          "real_data_segment"
+        ],
+        "framings": [
+          {
+            "order": [
+              "stop_campaign",
+              "spot_confirm_perp",
+              "real_data_segment"
+            ],
+            "probs": {
+              "stop_campaign": 0.83,
+              "spot_confirm_perp": 0.07,
+              "real_data_segment": 0.05,
+              "none_fits": 0.05
+            }
+          },
+          {
+            "order": [
+              "spot_confirm_perp",
+              "real_data_segment",
+              "stop_campaign"
+            ],
+            "probs": {
+              "spot_confirm_perp": 0.13,
+              "real_data_segment": 0.05,
+              "stop_campaign": 0.78,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "real_data_segment",
+              "stop_campaign",
+              "spot_confirm_perp"
+            ],
+            "probs": {
+              "real_data_segment": 0.02,
+              "stop_campaign": 0.77,
+              "spot_confirm_perp": 0.16,
+              "none_fits": 0.05
+            }
+          }
+        ],
+        "means": {
+          "stop_campaign": 0.7933,
+          "spot_confirm_perp": 0.12,
+          "real_data_segment": 0.04
+        },
+        "noneFits": 0.0467,
+        "agreement": 1,
+        "margin": 0.6733,
+        "leader": "stop_campaign",
+        "railProb": {
+          "stop_campaign": 0.01,
+          "spot_confirm_perp": 0.02,
+          "real_data_segment": 0.09
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "stop_campaign",
+          "spot_confirm_perp",
+          "real_data_segment"
+        ],
+        "framings": [
+          {
+            "order": [
+              "stop_campaign",
+              "spot_confirm_perp",
+              "real_data_segment"
+            ],
+            "probs": {
+              "stop_campaign": 0.85,
+              "spot_confirm_perp": 0.07,
+              "real_data_segment": 0.04,
+              "none_fits": 0.04
+            }
+          },
+          {
+            "order": [
+              "spot_confirm_perp",
+              "real_data_segment",
+              "stop_campaign"
+            ],
+            "probs": {
+              "spot_confirm_perp": 0.14,
+              "real_data_segment": 0.05,
+              "stop_campaign": 0.79,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "real_data_segment",
+              "stop_campaign",
+              "spot_confirm_perp"
+            ],
+            "probs": {
+              "real_data_segment": 0.02,
+              "stop_campaign": 0.81,
+              "spot_confirm_perp": 0.12,
+              "none_fits": 0.04
+            }
+          }
+        ],
+        "means": {
+          "stop_campaign": 0.8167,
+          "spot_confirm_perp": 0.11,
+          "real_data_segment": 0.0367
+        },
+        "noneFits": 0.0333,
+        "agreement": 1,
+        "margin": 0.7067,
+        "leader": "stop_campaign",
+        "railProb": {
+          "stop_campaign": 0.01,
+          "spot_confirm_perp": 0.02,
+          "real_data_segment": 0.09
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 9,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": 18,
+    "sent": 9,
+    "refusedByCap": 0,
+    "failed": 0,
+    "inputTokens": 17961,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

@@ -1,0 +1,72 @@
+{
+  "runs": [
+    {
+      "name": "tests",
+      "argv": [
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/adapter/adapter_cli.py",
+        "run",
+        "--cwd",
+        "C:/Users/gabri/.codex/worktrees/decision-weight-evidence/jev-trader",
+        "--timeout",
+        "120",
+        "--profile",
+        "test",
+        "--rtk",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/bin/rtk.exe",
+        "--headroom-python",
+        "C:/Users/gabri/.codex/tools/rtk-headroom-20261010/venv/Scripts/python.exe",
+        "--store",
+        "C:/Users/gabri/.codex/rtk-headroom-data",
+        "--metrics",
+        "C:\\Users\\gabri\\.codex\\tmp\\inonu-innovation-01a1362a\\weights-verification-v1\\metrics.json",
+        "--",
+        "bun",
+        "--no-env-file",
+        "test",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "exitCode": 0,
+      "stdout": {
+        "sha256": "d6684989b8dd63b37d2f1954270826fbe1bd89a8debd12bcacf03ed1c6140ef6",
+        "bytes": 28
+      },
+      "stderr": {
+        "sha256": "398a07fd3b56585478fce3c1ca544f2513a29e7a2362d662341f7058dabb6d5b",
+        "bytes": 1185
+      }
+    },
+    {
+      "name": "types",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--skipLibCheck",
+        "--noUncheckedIndexedAccess",
+        "--target",
+        "ESNext",
+        "--module",
+        "Preserve",
+        "--moduleResolution",
+        "Bundler",
+        "--types",
+        "bun",
+        "src/decision-evidence/weights.ts",
+        "src/decision-evidence/weights.test.ts"
+      ],
+      "exitCode": 0,
+      "stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "origin": "real_probe_2026-10-12",
+  "code": "0",
+  "data": [
+    {
+      "avgBuyPrice": "0",
+      "avgSellPrice": "0",
+      "boughtAmount": "0",
+      "cursor": "0",
+      "fundingSource": "FundingPlaceholder11111111111111111111111111111",
+      "holdAmount": "7770515063166.431",
+      "holdPercent": "8.830696776587950700",
+      "holderWalletAddress": "WalletPlaceholder2222222222222222222222222222",
+      "nativeTokenBalance": "10572652.083864972",
+      "realizedPnlUsd": "0",
+      "totalPnlUsd": "0.000000000000000000000000000000000000000",
+      "totalSellAmount": "0",
+      "unrealizedPnlUsd": "0.000000000000000000000000000000000000000"
+    }
+  ],
+  "msg": ""
+}

@@ -1,0 +1,452 @@
+.root {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+}
+
+.toolbar {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px var(--s3);
+  padding: 2px var(--s3) 0;
+}
+
+.toolbarLeft {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.toolbarRight {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.bars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.barButton {
+  min-width: 28px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--r-xs);
+  padding: 0 6px;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+  font: 500 10.5px/20px var(--font-mono);
+  transition: background-color var(--dur-fast) linear, color var(--dur-fast) linear;
+}
+
+.barButton:hover:not(:disabled) {
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
+.barButton[aria-pressed="true"] {
+  background: var(--bg-deck-3);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--signal);
+}
+
+.barButton:disabled {
+  cursor: default;
+}
+
+.barButton:focus-visible {
+  outline-offset: -2px;
+}
+
+/* The legend of the chart sits right under the toolbar, in the same frame, with a hairline under it so the plot starts clean. */
+.legendSlot {
+  flex: none;
+  min-width: 0;
+  padding: var(--s2) var(--s3) var(--s2);
+  border-bottom: 1px solid var(--edge);
+}
+
+.change {
+  flex: none;
+  color: var(--ink-2);
+  font: 500 11px/20px var(--font-mono);
+  white-space: nowrap;
+}
+
+.change[data-tone="up"] {
+  color: var(--buy);
+}
+
+.change[data-tone="down"] {
+  color: var(--sell);
+}
+
+.micro {
+  color: var(--ink-4);
+  font: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* On-chain focus strip: a translucent band floated over the plot's top-left corner so the
+   provenance is always on the canvas without spending a layout line. */
+.onchainStrip {
+  position: absolute;
+  z-index: 2;
+  top: 2px;
+  left: 2px;
+  display: flex;
+  max-width: calc(100% - 4px);
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0 var(--s3);
+  overflow: hidden;
+  padding: 2px var(--s2);
+  border-radius: var(--r-xs);
+  background: color-mix(in srgb, var(--bg-deck) 82%, transparent);
+  color: var(--ink-3);
+  font: 500 10.5px/16px var(--font-sans);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.onchainBadge {
+  flex: none;
+  color: var(--signal);
+  font-weight: 600;
+}
+
+.staleBadge {
+  flex: none;
+  padding: 0 6px;
+  border-radius: 3px;
+  background: var(--hold);
+  color: #141a22;
+  font-weight: 600;
+}
+
+.onchainNote {
+  flex: none;
+  color: var(--ink-4);
+}
+
+.onchainBack {
+  flex: none;
+  pointer-events: auto;
+  margin-left: auto;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--fill-2, rgba(255, 255, 255, 0.07));
+  color: var(--ink-2);
+  cursor: pointer;
+  font: 600 10.5px/18px var(--font-sans);
+}
+
+.onchainBack:hover {
+  color: var(--ink);
+}
+
+.onchainBack:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+
+.walletNote {
+  flex: none;
+  color: var(--hold);
+  font: 500 10.5px/18px var(--font-sans);
+}
+
+.readout {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s3);
+  min-height: 17px;
+  padding: 0 var(--s3);
+  color: var(--ink-2);
+  font: 500 10.5px/17px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The Jev score line shares the readout row so it never takes extra plot height. */
+.jevLine {
+  flex: none;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--signal);
+  font: 500 10.5px/18px var(--font-sans);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ohlcv {
+  display: inline-flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s3);
+}
+
+.when {
+  color: var(--ink-3);
+}
+
+.k {
+  margin-right: 4px;
+  color: var(--ink-4);
+  font-weight: 600;
+}
+
+.delta {
+  font-weight: 600;
+}
+
+.delta[data-tone="up"] {
+  color: var(--buy);
+}
+
+.delta[data-tone="down"] {
+  color: var(--sell);
+}
+
+.forming {
+  color: var(--hold);
+  font: 600 10px/18px var(--font-sans);
+  letter-spacing: 0.04em;
+}
+
+.plot {
+  position: relative;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: none;
+  font-family: var(--font-mono);
+}
+
+.renkoControls {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.renkoSelect {
+  height: 20px;
+  border: 0;
+  border-radius: var(--r-xs);
+  padding: 0 4px;
+  background: var(--bg-deck-3);
+  color: var(--ink);
+  font: 500 10.5px/20px var(--font-mono);
+}
+
+.renkoSelect:focus-visible {
+  outline: 2px solid var(--edge-focus);
+  outline-offset: -2px;
+}
+
+.renkoSize {
+  color: var(--ink-3);
+  font: 500 10.5px/20px var(--font-mono);
+  white-space: nowrap;
+}
+
+.indicators {
+  position: relative;
+}
+
+.indBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+}
+
+.indPopover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  display: grid;
+  min-width: 190px;
+  padding: var(--s2);
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--bg-deck) 96%, transparent);
+  box-shadow: var(--elev-3);
+}
+
+.indOption {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 3px var(--s2);
+  border-radius: var(--r-xs);
+  color: var(--ink-2);
+  cursor: pointer;
+  font: 500 10.5px/16px var(--font-mono);
+  white-space: nowrap;
+}
+
+.indOption:hover {
+  background: var(--bg-deck-3);
+  color: var(--ink);
+}
+
+.indOption input {
+  accent-color: var(--signal);
+}
+
+.indGroup {
+  display: grid;
+  padding-bottom: var(--s2);
+}
+
+.indGroup + .indGroup {
+  border-top: 1px solid var(--edge);
+  padding-top: var(--s2);
+}
+
+.indGroupTitle {
+  padding: 2px var(--s2) 3px;
+  color: var(--ink-4);
+  font: 600 9px/12px var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.indSelect {
+  margin-left: auto;
+  padding: 1px 4px;
+  border: 1px solid var(--edge-strong);
+  border-radius: var(--r-xs);
+  background: var(--bg-well);
+  color: var(--ink-2);
+  font: 500 10px/14px var(--font-mono);
+}
+
+/* One strip: the smart money chips come first and stay; classic values that do not fit are clipped. */
+.legend {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  flex-wrap: nowrap;
+  gap: 0 var(--s3);
+  overflow: hidden;
+  padding: 0 var(--s3);
+  color: var(--ink-3);
+  font: 500 10px/12px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.legendItem {
+  flex: none;
+}
+
+.smcGroup {
+  display: flex;
+  flex: none;
+  gap: 0 var(--s2);
+}
+
+.smcChip {
+  flex: none;
+  padding: 0 5px;
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-3);
+  color: var(--ink-3);
+}
+
+.smcChip[data-tone="buy"] {
+  color: var(--buy);
+}
+
+.smcChip[data-tone="sell"] {
+  color: var(--sell);
+}
+
+.haTag {
+  margin-right: 2px;
+  padding: 0 4px;
+  border-radius: var(--r-xs);
+  background: var(--bg-deck-3);
+  color: var(--ink-3);
+  font: 600 9px/14px var(--font-sans);
+  letter-spacing: 0.06em;
+}
+
+.plot:focus-visible {
+  outline-offset: -2px;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-mono);
+}
+
+/* In a narrow panel (a phone) the right half of the toolbar, with the indicators button, the six
+   chart types and the 24h change, is wider than the panel. It takes its own row and scrolls
+   sideways, the way the dock tab strip does, so Renko and the change stay reachable instead of
+   being cut by the frame. */
+@container (max-width: 480px) {
+  .toolbarRight {
+    max-width: 100%;
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 2px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--edge-strong) transparent;
+  }
+
+  .toolbarRight > * {
+    flex: none;
+  }
+
+  /* Escape the scrolling toolbar while keeping all layers inside the viewport. */
+  .indPopover {
+    position: fixed;
+    top: 50%;
+    left: 12px;
+    right: 12px;
+    min-width: 0;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    transform: translateY(-50%);
+  }
+}
+
+@container (max-width: 340px) {
+  .readout {
+    gap: 0 var(--s2);
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barButton {
+    transition: none;
+  }
+}

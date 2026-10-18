@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "kind": "sdd_cycle_review",
+  "proposal_id": "wallet-connectivity",
+  "proposal_sha256": "2316a53bcc8071abac408288b680fbbc928ec00c15b9ed7a1d01867052bd3851",
+  "objective_sha256": "0866763ad5de1c2cce7b0b005fdf62c0970f83cfffc7538697adddc433474c6e",
+  "constraints_sha256": "b9271f3b807399dfe0cd9dae94add83c0bc1f209abf8ab137fb3150390c2b8c8",
+  "implementer_id": "root-audit-01a136cd",
+  "reviewer_id": "scope-review-01a136d9-995b-7630-8735-45866b737210",
+  "decision": "approve",
+  "scope_assessment": "within_authorized_objective",
+  "scope_reason": "Revisão independente somente do escopo, após leitura de tasks.md e da CONNECTIVITY-SPEC-20261013.md. A autorização humana posterior informada pelo coordenador e registrada na SPEC abrange reconhecimento da carteira, leitura automática de saldos, integração com o radar e simplificação local. A proposta permanece dentro desses limites: unifica a consulta existente, sincroniza conta e escopo de rede, cancela respostas obsoletas e encaminha candidatos do radar à preparação da análise Jev, preservando consentimentos existentes. WAL-01 a WAL-06 excluem polling, retry ou consulta de modelo automática, assinaturas, ordens financeiras autônomas e movimentação de fundos; preservam o operador Jev/Kuru/Monad, o ticket manual, contratos existentes e zonas concorrentes reservadas. A referência da SPEC e o hash canônico da proposta foram conferidos; os hashes vinculados do template foram preservados. Esta aprovação delimita o ciclo e não certifica implementação, cobertura completa do roteiro anterior, ganhos financeiros ou autorização para ações externas."
+}

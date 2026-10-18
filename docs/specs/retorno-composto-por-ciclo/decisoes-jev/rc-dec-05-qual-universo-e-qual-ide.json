@@ -1,0 +1,38 @@
+{
+  "id": "rc-dec-05-qual-universo-e-qual-ide",
+  "goal": "Qual universo e qual identidade por mint a sombra usa para cruzar bolsa e Solana? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "instrumentos_SPOT_OKX_live": "1184; 445 bases unicas; 443 com USDT",
+    "OKX_sem_endereco_de_contrato": "sim, nenhum campo de mint",
+    "Jupiter_verified": "4003 entradas; 3901 simbolos; 93 com mais de um mint",
+    "cruzamento_OKX_x_Jupiter_verified": "111 bases; 109 com USDT",
+    "mint_unico": "104; ambiguos 7 (AI, BABY, LUNA, MEGA, PEPE, SHIB, UNI)",
+    "mint_unico_com_tag_forte": "54 (strict, major ou moonshot-verified)",
+    "217_do_repo": "nao reproduzido; token.jup.ag/all sem resposta",
+    "confirmacao_por_emissor": "nenhuma nesta pesquisa",
+    "instrumentos_okx_vivos": "1965 (spot 1184, swap 509, futuros 272); 445 bases spot",
+    "verified_jupiter_T05": "111 exatos; 104 com mint único; 7 ambíguos; 54 com tag strict, major ou moonshot"
+  },
+  "rails": [
+    "Identidade por simbolo nao vira regra de compra sem fonte oficial do emissor.",
+    "Nenhuma opcao usa feed da OKX sem aceite de termos do dono.",
+    "Chave paga e RPC pago ficam fora (bloqueio)."
+  ],
+  "options": [
+    {
+      "id": "adiar-identidade",
+      "label": "Medir so dado da bolsa",
+      "what": "Medir movimento e atrito com dado de bolsa, sem cruzar mint nesta fase. Evidencia: Nenhum mint confirmado por emissor; OKX nao traz contrato; contagem 111/104/7/54 nao reproduzida (103/97/6/51 em uma leitura) (T05, T12)."
+    },
+    {
+      "id": "unico-strict-proxy",
+      "label": "54 simbolos como proxy",
+      "what": "54 simbolos de mint unico com tag forte, marcados como proxy e sem efeito em decisao. Evidencia: 54 de 104 unicos com tag strict, major ou moonshot; SHIB tem 3 mints (T05, T12)."
+    },
+    {
+      "id": "jupiter-free-54",
+      "label": "Cotacao Jupiter Free por mint",
+      "what": "Cotar 54 mints a 1 consulta por minuto na Jupiter Free, 90% da cota de 60 por minuto. Evidencia: 104 mints dariam 173% da cota; consultas de swap tambem consomem a cota (T12)."
+    }
+  ]
+}

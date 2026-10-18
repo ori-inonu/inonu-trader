@@ -1,0 +1,67 @@
+import { projectMobileDecisionReport, type MobileDecisionOptions } from "./report";
+
+function escape(value: string | number | boolean): string {
+  // Display punctuation follows the UI rules; projected JSON and financial strings stay exact.
+  return String(value).replace(/[\u00b7\u2013\u2014]/g, c => c === "\u00b7" ? "/" : "-")
+    .replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+}
+function shown(value: string | number | boolean | null | undefined): string { return value == null ? "Desconhecido" : escape(value); }
+function at(value: number | null | undefined): string { return value == null ? "Desconhecido" : `${escape(new Date(value).toISOString())} <small>${escape(value)} ms UTC</small>`; }
+function pair(label: string, value: string): string { return `<div class="pair"><dt>${escape(label)}</dt><dd>${value}</dd></div>`; }
+function strings(values: string[]): string { return values.length === 0 ? "<p>Nenhum contexto disponível.</p>" : `<ul>${values.map(value => `<li>${escape(value)}</li>`).join("")}</ul>`; }
+
+const ALERTS: Record<string, string> = {
+  source_time_missing: "Horário da fonte ausente. A coleta não estabelece a idade do dado.",
+  fetch_time_missing: "Horário de coleta ausente.",
+  source_stale: "Dado da fonte expirado para a janela declarada.",
+  source_future: "Horário da fonte está no futuro em relação à verificação.",
+  fetch_stale: "Coleta expirada para a janela declarada.",
+  fetch_future: "Horário de coleta está no futuro.",
+  source_after_fetch: "Contradição: horário da fonte posterior à coleta.",
+  report_after_fetch: "Contradição: relatório foi concluído depois da coleta declarada.",
+  report_not_quoted: "Relatório DEX bloqueado ou desconhecido.",
+  snapshot_replaced: "Snapshot substituído: identidade, revisão ou conteúdo mudaram.",
+  total_cost_coverage_unknown: "Cobertura total de custos desconhecida.",
+  quota_unknown: "Quota restante desconhecida.",
+  api_cost_unknown: "Custo da API desconhecido.",
+  jev_cost_unknown: "Custo da inferência JEV desconhecido.",
+  jev_not_evaluated: "Avaliação JEV não realizada para este snapshot.",
+  jev_binding_mismatch: "Contexto JEV não corresponde ao hash dos fatos.",
+  jev_future: "Horário do contexto JEV está no futuro.",
+  jev_stale: "Contexto JEV expirado.",
+  jev_before_fetch: "Contexto JEV antecede a coleta dos fatos.",
+  jev_snapshot_requires_review: "Contexto invalidado por problemas no snapshot de origem.",
+};
+const CSS = `
+:root{color-scheme:light;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#142334;background:#eef2f5;font-size:16px;line-height:1.5}
+*{box-sizing:border-box}body{margin:0}main{max-width:760px;margin:0 auto;padding:20px 16px 40px}h1{font-size:1.85rem;line-height:1.2;margin:8px 0 12px}h2{font-size:1.2rem;margin:0 0 12px}h3{font-size:1rem;margin:16px 0 8px}p{margin:8px 0}section,fieldset{min-width:0;background:#fff;border:1px solid #b8c4cf;border-radius:14px;padding:16px;margin:16px 0}fieldset{margin:0}legend{font-weight:700;padding:0 4px}dl,dd{margin:0}.pair{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:8px 0;border-bottom:1px solid #e0e6ec}.pair:last-child{border:0}dt{color:#3b4c5c;font-size:.86rem}dd{font-weight:600}dd,li,p,small,summary,legend,label,h1,h2,h3{overflow-wrap:anywhere}small{display:block;font-weight:400;color:#3b4c5c}.eyebrow{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700}.notice{background:#fff3c5;border:1px solid #a87700;border-radius:12px;padding:12px}.status{display:inline-block;background:#dce8f3;color:#183d61;border-radius:8px;padding:4px 8px;font-weight:600;font-size:.85rem;margin:4px 4px 4px 0}ul{padding-left:20px;margin:8px 0}li{margin:8px 0}details{border:1px solid #b8c4cf;border-radius:8px;padding:10px;margin:12px 0}summary{cursor:pointer;font-weight:600;min-height:32px}a{color:#134e84}:focus-visible{outline:3px solid #005fcc;outline-offset:3px}.skip{position:absolute;top:8px;left:8px;padding:10px;background:#fff;transform:translateY(-160%);z-index:1}.skip:focus{transform:translateY(0)}.choice{display:flex;align-items:flex-start;gap:10px;min-height:44px;padding:10px 0}.choice input{margin:5px 0 0;flex:none}textarea{display:block;width:100%;min-height:128px;padding:12px;border:1px solid #647688;border-radius:8px;font:inherit;color:inherit;background:#fff;resize:vertical}.notes-label{display:block;font-weight:600;margin:14px 0 8px}footer{font-size:.86rem;color:#3b4c5c;margin-top:20px}@media(min-width:600px){.pair{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px}}@media print{:root{background:#fff}.skip{display:none}section{break-inside:avoid}main{max-width:none;padding:0}}
+`;
+
+export function exportMobileDecisionJson(value: unknown, options: MobileDecisionOptions): string {
+  return JSON.stringify(projectMobileDecisionReport(value, options), null, 2) + "\n";
+}
+
+/** Standalone static HTML; only generated markup and escaped allowlisted text enter the document. */
+export function exportMobileDecisionHtml(value: unknown, options: MobileDecisionOptions): string {
+  const r = projectMobileDecisionReport(value, options), dex = r.observed.dex;
+  const evaluationLabel = r.evaluation.status === "not_evaluated" ? "Não avaliada" : r.evaluation.status === "invalidated" ? "Contexto invalidado" : "Contexto fornecido, não verificado";
+  const freshnessLabel = { fresh: "Recente na geração", stale: "Expirada na geração", future: "Horário futuro", unknown: "Desconhecida" }[r.clock.freshness];
+  const statusLabel = { snapshot_only: "Snapshot na geração", requires_review: "Exige revisão dos dados", invalidated: "Snapshot ou contexto invalidado" }[r.validity.status];
+  const facts = pair("Rede (chain index)", shown(r.identity.chain_index)) + pair("Token A (contrato)", shown(r.identity.token_a)) + pair("Decimais do token A", shown(dex.tokenA.decimals)) + pair("Token B (contrato)", shown(r.identity.token_b)) + pair("Decimais do token B", shown(dex.tokenB.decimals)) + pair("Entrada (token A, unidade atômica)", shown(dex.inputAtomic)) + pair("Saída cotada (token A, unidade atômica)", shown(dex.outputAtomic)) + pair("Delta bruto cotado (token A, unidade atômica)", shown(dex.quotedGrossDeltaAtomic)) + pair("Estado do relatório DEX", shown(dex.status)) + pair("Retorno líquido", "Não avaliado") + pair("Execução", "Não qualificada");
+  const legs = dex.legs.map((leg, i) => `<details><summary>Perna ${i + 1}: montantes e estimativas</summary><dl>${pair("Entrada (unidade atômica)", shown(leg.inputAtomic))}${pair("Saída (unidade atômica)", shown(leg.outputAtomic))}${pair("Impacto de preço (%)", shown(leg.priceImpactPercent))}${pair("Taxa do token de origem (fração)", shown(leg.fromTaxFraction))}${pair("Taxa do token de destino (fração)", shown(leg.toTaxFraction))}${pair("Taxa de trade estimada (USD)", shown(leg.networkEstimates.tradeFeeUsd))}${pair("Gas estimado (unidade nativa atômica)", shown(leg.networkEstimates.estimateGasFeeNativeAtomic))}${pair("Request iniciado", at(leg.requestedAt))}${pair("Resposta recebida", at(leg.receivedAt))}</dl></details>`).join("");
+  const clocks = pair("Horário da fonte (source_time)", at(r.clock.source_time_ms)) + pair("Horário de coleta (fetched_at)", at(r.clock.fetched_at_ms)) + pair("Idade da fonte na geração (ms)", shown(r.clock.source_age_ms)) + pair("Freshness da fonte", escape(freshnessLabel)) + pair("Janela declarada (ms)", shown(r.clock.max_age_ms)) + pair("Snapshot gerado/verificado em", at(r.validity.checked_at_ms)) + pair("Limite temporal do snapshot", at(r.validity.valid_until_ms));
+  const timing = dex.timing ? `<details><summary>Horários das requisições do relatório</summary><p>Estes horários não estabelecem source_time de um dado onchain.</p><dl>${pair("Início", at(dex.timing.startedAt))}${pair("Conclusão", at(dex.timing.completedAt))}${pair("Duração (ms)", shown(dex.timing.elapsedMs))}${pair("Consulta de cobertura", at(dex.timing.coverageRequestedAt))}${pair("Resposta de cobertura", at(dex.timing.coverageReceivedAt))}${pair("Máxima duração declarada (ms)", shown(dex.policy.maxElapsedMs))}${pair("Máximo impacto em magnitude (%)", shown(dex.policy.maxImpactMagnitudePercent))}</dl></details>` : "<p>Horários das requisições desconhecidos.</p>";
+  return `<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; form-action 'none'; base-uri 'none'"><title>Relatório offline para decisão humana</title><style>${CSS}</style></head>
+<body><a class="skip" href="#human-decision">Ir para decisão humana</a><main>
+<header><p class="eyebrow">JevTrader / Relatório offline v1</p><h1>Revisão humana do snapshot</h1><p class="notice">${r.snapshot.synthetic ? "Dados sintéticos: exemplo demonstrativo. Nenhuma integração real é comprovada por este arquivo." : "Dados importados: origem declarada e proveniência não verificadas por esta exportação."}</p><p><span class="status">${escape(statusLabel)}</span><span class="status">Execução não qualificada</span></p></header>
+<section aria-labelledby="facts-title"><h2 id="facts-title">Fatos observados</h2><p>Valores exatos do contrato DEX validado. Este relatório não representa saldo disponível da carteira.</p><dl>${facts}</dl>${legs}<details><summary>Razões declaradas pelo relatório</summary>${strings(dex.reasons)}</details></section>
+<section aria-labelledby="clocks-title"><h2 id="clocks-title">Horários e validade</h2><dl>${clocks}</dl><p>Reavalie este snapshot ao consumir o arquivo. O HTML estático não atualiza idade ou validade automaticamente. Mudanças de tempo, identidade, revisão ou conteúdo invalidam o contexto anterior.</p>${timing}</section>
+<section aria-labelledby="alerts-title"><h2 id="alerts-title">Alertas e lacunas</h2><ul>${r.alerts.map(code => `<li>${escape(ALERTS[code] ?? code)} <small>${escape(code)}</small></li>`).join("")}</ul></section>
+<section aria-labelledby="evaluation-title"><h2 id="evaluation-title">Avaliação contextual JEV</h2><p><strong>${escape(evaluationLabel)}</strong></p><p>Contexto separado dos fatos. Um recibo importado não comprova chamada real, autenticidade ou qualificação financeira.</p><dl>${pair("ID do contexto", shown(r.evaluation.id))}${pair("Modelo declarado", shown(r.evaluation.model))}${pair("Versão declarada", shown(r.evaluation.version))}${pair("Horário da avaliação", at(r.evaluation.evaluated_at_ms))}${pair("Hash dos fatos vinculado ao contexto", shown(r.evaluation.bound_facts_sha256))}${pair("Tokens de entrada reportados", shown(r.evaluation.usage.input_tokens))}${pair("Tokens de saída reportados", shown(r.evaluation.usage.output_tokens))}</dl><h3>Observações contextuais</h3>${strings(r.evaluation.observations)}<h3>Limitações fornecidas</h3>${strings(r.evaluation.limitations)}</section>
+<section aria-labelledby="costs-title"><h2 id="costs-title">Custos conhecidos e desconhecidos</h2><dl>${pair("API: custo reportado (USD)", shown(r.costs.api.amount_usd))}${pair("API: proveniência do custo", shown(r.costs.api.status))}${pair("JEV: custo reportado (USD)", shown(r.costs.jev.amount_usd))}${pair("JEV: proveniência do custo", shown(r.costs.jev.status))}${pair("Cobertura total de custos", "Desconhecida")}${pair("Quota restante", "Desconhecido")}</dl><p>Custos reportados não foram verificados. Custos nulos são desconhecidos, nunca zero. Estimativas de trade e gas estão nas pernas; nenhum custo total ou retorno líquido foi calculado.</p></section>
+<section aria-labelledby="sources-title"><h2 id="sources-title">Fontes, identidade e versão</h2><dl>${pair("Versão do contrato", shown(r.schema))}${pair("Snapshot ID", shown(r.snapshot.id))}${pair("Revisão", shown(r.snapshot.revision))}${pair("Origem declarada", shown(r.snapshot.origin))}${pair("Proveniência", "Não verificada")}${pair("SHA-256 dos fatos e envelope", shown(r.snapshot.facts_sha256))}${pair("Fonte dos metadados do token A", shown(dex.tokenA.metadataSource))}${pair("Fonte dos metadados do token B", shown(dex.tokenB.metadataSource))}${r.sources.map(source => pair(source.kind, `${escape(source.claim)} <small>${escape(source.verification)}</small>`)).join("")}</dl><p>O hash vincula conteúdo; não autentica o produtor. Este pacote reutiliza o parser DEX do projeto.</p></section>
+<section id="human-decision" tabindex="-1" aria-labelledby="decision-title"><h2 id="decision-title">Decisão humana</h2><p>Rascunho local no navegador: não é salvo nem enviado. A decisão não autoriza execução financeira.</p><fieldset><legend>Estado da revisão</legend><label class="choice"><input type="radio" name="human-decision" value="more-evidence">Preciso de novas evidências</label><label class="choice"><input type="radio" name="human-decision" value="discuss">Revisado para discussão</label><label class="choice"><input type="radio" name="human-decision" value="defer">Adiar decisão</label></fieldset><label class="notes-label" for="human-notes">Notas e evidências ainda necessárias</label><textarea id="human-notes" aria-describedby="draft-limit" spellcheck="false"></textarea><p id="draft-limit">As notas são descartadas ao fechar ou recarregar. Não inclua segredos.</p></section>
+<footer>Documento estático offline. Sem scripts, recursos externos, salvamento, wallet ou transmissão financeira.</footer>
+</main></body></html>\n`;
+}

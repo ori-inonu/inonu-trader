@@ -1,0 +1,184 @@
+{
+  "receipt": {
+    "v": 1,
+    "specId": "rc-dec-04-como-medir-a-causa-dos-4",
+    "specHash": "a1624d241d245c1fe9528f9e146045e4ab8a3903898d819f68bcc748752e2a97",
+    "removedByCode": [],
+    "policy": {
+      "framings": 3,
+      "rounds": 3,
+      "minMean": 0.5,
+      "minMargin": 0.2,
+      "minAgreement": 0.6666666666666666,
+      "maxRail": 0.2,
+      "maxNoneFits": 0.3,
+      "pruneBelow": 0.1,
+      "stableRounds": 2
+    },
+    "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit.",
+    "status": "consenso",
+    "leader": "contador-em-memoria",
+    "implement": true,
+    "rounds": [
+      {
+        "round": 1,
+        "options": [
+          "classificar-audits-existente",
+          "contador-em-memoria",
+          "markout-fechados",
+          "adiar-funil"
+        ],
+        "framings": [
+          {
+            "order": [
+              "classificar-audits-existente",
+              "contador-em-memoria",
+              "markout-fechados",
+              "adiar-funil"
+            ],
+            "probs": {
+              "classificar-audits-existente": 0.38,
+              "contador-em-memoria": 0.58,
+              "markout-fechados": 0,
+              "adiar-funil": 0.01,
+              "none_fits": 0.03
+            }
+          },
+          {
+            "order": [
+              "contador-em-memoria",
+              "markout-fechados",
+              "adiar-funil",
+              "classificar-audits-existente"
+            ],
+            "probs": {
+              "contador-em-memoria": 0.74,
+              "markout-fechados": 0,
+              "adiar-funil": 0.02,
+              "classificar-audits-existente": 0.23,
+              "none_fits": 0.01
+            }
+          },
+          {
+            "order": [
+              "markout-fechados",
+              "adiar-funil",
+              "classificar-audits-existente",
+              "contador-em-memoria"
+            ],
+            "probs": {
+              "markout-fechados": 0.05,
+              "adiar-funil": 0.01,
+              "classificar-audits-existente": 0.22,
+              "contador-em-memoria": 0.71,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "classificar-audits-existente": 0.2767,
+          "contador-em-memoria": 0.6767,
+          "markout-fechados": 0.0167,
+          "adiar-funil": 0.0133
+        },
+        "noneFits": 0.0167,
+        "agreement": 1,
+        "margin": 0.4,
+        "leader": "contador-em-memoria",
+        "railProb": {
+          "classificar-audits-existente": 0.03,
+          "contador-em-memoria": 0.16,
+          "markout-fechados": 0.18,
+          "adiar-funil": 0.03
+        },
+        "consensusHere": true
+      },
+      {
+        "round": 2,
+        "options": [
+          "classificar-audits-existente",
+          "contador-em-memoria",
+          "markout-fechados",
+          "adiar-funil"
+        ],
+        "framings": [
+          {
+            "order": [
+              "classificar-audits-existente",
+              "contador-em-memoria",
+              "markout-fechados",
+              "adiar-funil"
+            ],
+            "probs": {
+              "classificar-audits-existente": 0.31,
+              "contador-em-memoria": 0.66,
+              "markout-fechados": 0,
+              "adiar-funil": 0.01,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "contador-em-memoria",
+              "markout-fechados",
+              "adiar-funil",
+              "classificar-audits-existente"
+            ],
+            "probs": {
+              "contador-em-memoria": 0.73,
+              "markout-fechados": 0,
+              "adiar-funil": 0.02,
+              "classificar-audits-existente": 0.23,
+              "none_fits": 0.02
+            }
+          },
+          {
+            "order": [
+              "markout-fechados",
+              "adiar-funil",
+              "classificar-audits-existente",
+              "contador-em-memoria"
+            ],
+            "probs": {
+              "markout-fechados": 0.05,
+              "adiar-funil": 0.01,
+              "classificar-audits-existente": 0.24,
+              "contador-em-memoria": 0.6900000000000001,
+              "none_fits": 0.01
+            }
+          }
+        ],
+        "means": {
+          "classificar-audits-existente": 0.26,
+          "contador-em-memoria": 0.6933,
+          "markout-fechados": 0.0167,
+          "adiar-funil": 0.0133
+        },
+        "noneFits": 0.0167,
+        "agreement": 1,
+        "margin": 0.4333,
+        "leader": "contador-em-memoria",
+        "railProb": {
+          "classificar-audits-existente": 0.03,
+          "contador-em-memoria": 0.16,
+          "markout-fechados": 0.18,
+          "adiar-funil": 0.03
+        },
+        "consensusHere": true
+      }
+    ],
+    "askUser": null,
+    "calls": {
+      "asked": 10,
+      "failed": 0
+    }
+  },
+  "meter": {
+    "maxCalls": null,
+    "sent": 10,
+    "failed": 0,
+    "inputTokens": 13016,
+    "callsWithoutUsage": 0
+  },
+  "disclaimer": "A recommendation of the judge, with a receipt: it does not authorize an order, a restart or any change to the live agent; implementation only follows through the gates of the code and the decision of the owner. It does not prove profit."
+}

@@ -1,0 +1,62 @@
+{
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "billedCost": null,
+  "decisions": {
+    "resume": {
+      "status": "assessed",
+      "receiptId": "6df8bb72-2c11-403d-bbee-4b0fedd7e296",
+      "recommendation": "resume_verify",
+      "choice": "resume_verify",
+      "model": "jev-1.13.0",
+      "confidence": 0.95,
+      "usage": {
+        "input_tokens": 777,
+        "output_tokens": 47
+      },
+      "latencyMs": 322,
+      "inputDigest": "c20b254cb06e7308ae60acdcd47e97e381fa6480f60778f5d6d28b5161bb1b48",
+      "authority": "advisory_only",
+      "receiptPersisted": true
+    },
+    "publicTask": {
+      "status": "assessed",
+      "receiptId": "e822174b-190d-4cde-9484-63081ebc6ab3",
+      "recommendation": "isolated_leaf",
+      "choice": "isolated_leaf",
+      "model": "jev-1.13.0",
+      "confidence": 0.96,
+      "usage": {
+        "input_tokens": 807,
+        "output_tokens": 57
+      },
+      "latencyMs": 333,
+      "inputDigest": "564e240749c8b353985f233d146fef8830205e3d9dde01b1456543c2766d7b4e",
+      "authority": "advisory_only",
+      "receiptPersisted": true
+    },
+    "primaryUI": {
+      "status": "assessed",
+      "receiptId": "d14e06eb-d3dd-4e9b-9b13-cf23e87829ff",
+      "recommendation": "disclosure",
+      "choice": "disclosure",
+      "model": "jev-1.13.0",
+      "confidence": 0.89,
+      "usage": {
+        "input_tokens": 812,
+        "output_tokens": 49
+      },
+      "latencyMs": 390,
+      "inputDigest": "4d5c04092bb1376682adb7324b9744b0ce9e96f869870d41015bcc228e212387",
+      "authority": "advisory_only",
+      "receiptPersisted": true
+    }
+  },
+  "earlierIntegration": {
+    "receiptId": "eac9cd12-5d01-4dbe-b25a-8e97ef96c52d",
+    "status": "assessed",
+    "recommendation": "integrate_validate",
+    "usage": null,
+    "billedCost": null
+  }
+}

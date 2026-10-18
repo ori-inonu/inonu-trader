@@ -1,0 +1,41 @@
+{
+  "id": "rc-dec-10-como-ler-uma-ordem-sem-r",
+  "goal": "Como ler uma ordem sem recibo (enviando ou incerta sem hash) enquanto ela esta em voo? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "ordem_com_hash": "liquida por recibo: SUCCESS executa; ERROR ou CANCELLED falha; PENDING espera (receipt.ts:10-16)",
+    "janela_sem_hash": "de enviando (fsync antes do envio) ate a resposta: ate 120 s (quote 30 s mais execute 90 s, wire.ts:419)",
+    "teto_de_consulta": "1 consulta por ordem a cada 60 s e 5 por passagem (reconcile.ts:30-31)",
+    "executada_direta": "nenhum caminho real grava executada sem recibo ou palavra da pessoa; a ferramenta devolve transmitida (cli.ts:597)",
+    "lock": "lido so na partida; release zera held; arquivo ilegivel e velho apos 5 s (lock.ts:34, 52-96)",
+    "reconcile_saldo": "deps.reconcile nao e passado ao criador do ciclo; cycle.ts:552 soma zero em producao",
+    "merge": "wire.ts tem marcadores (linhas 825, 832, 1228) e blocos duplicados de watch e before (911 e 1267)",
+    "estado_ilegivel": "vira desconectado (state.ts:121-122); escrita sem fsync (state.ts:185-190)"
+  },
+  "rails": [
+    "Nenhuma opcao libera caixa pendente, reenvia stop ou altera esperas internas (dono).",
+    "Merge de wire.ts com marcadores nas linhas 825, 832 e 1228 deve ser resolvido antes de qualquer mudanca (F0).",
+    "Sem nova gravacao no ledger (ORDER_STAGES, ledger.ts:29)."
+  ],
+  "options": [
+    {
+      "id": "adiar-so-medir",
+      "label": "Contar e medir sem mudar nada",
+      "what": "Contar por semana ordens enviando ou incertas sem recibo, com idade mediana e maxima, sem alterar tela nem fluxo. Evidencia: cli.ts:326 retorna null sem referencia; janela de cerca de 120 s (wire.ts:419)."
+    },
+    {
+      "id": "alerta-por-idade",
+      "label": "Alerta por idade",
+      "what": "Aviso visivel ao dono quando uma ordem sem recibo passa de 15 min, sem mudar caixa, token ou liquidacao. Evidencia: Mesmo teto de 15 min de cycle.ts:302."
+    },
+    {
+      "id": "revalidar-lock-por-ciclo",
+      "label": "Revalidar o LOCK a cada ciclo",
+      "what": "Revalidar o lock a cada ciclo, com teste novo que apague o LOCK com processo vivo. Evidencia: lock.ts:52-96 so checa na partida; lock.test.ts sem esse caso."
+    },
+    {
+      "id": "bloqueio-global-compra",
+      "label": "Bloqueio global de compra",
+      "what": "Bloquear qualquer compra enquanto houver ordem enviando ou incerta sem recibo. Evidencia: Bloqueio hoje so por token (cycle.ts:555, 804, 868); se o dono tratar como limite de risco, vira bloqueio."
+    }
+  ]
+}

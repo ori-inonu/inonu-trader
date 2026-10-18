@@ -1,0 +1,73 @@
+{
+  "id": "rc-t14-latencia-real-do-dado-da-bolsa-se",
+  "goal": "Qual politica de idade e de offset o Brief usa enquanto o atraso por canal nao e medido? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "livro_limite": "5 000 ms (src/jev-read/types.ts:193)",
+    "ticker_limite": "15 000 ms (src/jev-read/types.ts:194)",
+    "offset_erro_max": "1 250 ms pela regra de RTT 2 500 ms (src/system-one/clock.ts:17)",
+    "t03_a7_amostra": "primeiras 2000 mensagens por canal, com 1965 inscritos (pesquisa-t03:31)",
+    "trades_lag": "121 ms de mediana (pesquisa-t03:30)",
+    "rtt_http_medido": "380 a 450 ms (pesquisa-t03:14, endpoint de tickers)",
+    "ts_semantica": "nao verificada em fonte primaria",
+    "p99_atraso": "nao medido em 24 h"
+  },
+  "rails": [
+    "Nao muda limite de compra nem de risco; o limite de frescor so decide se um campo entra no Brief ou vira indisponivel.",
+    "O relogio local sem offset medido segue clock_unknown e o Jev nao e consultado, como hoje.",
+    "Mudanca em src/decision-review fica com o Codex e nao e tocada aqui.",
+    "Nenhum valor de limite novo pode ser escolhido sem p99 medido em 24 h."
+  ],
+  "options": [
+    {
+      "id": "medir_sombra_24h",
+      "label": "Medir 24 h antes de mudar",
+      "what": "Manter 5 s e 15 s e capturar em sombra p50 e p99 por canal, separando snapshot de evento, antes de qualquer mudanca. Evidencia: Nao ha p99 medido; a7 contaminada por snapshots (t03:31)."
+    },
+    {
+      "id": "manter_5s_15s",
+      "label": "Manter limites atuais",
+      "what": "Seguir com livro 5 s, ticker 15 s e offset de 3 amostras, sem medida nova, registrando como politica local. Evidencia: types.ts:193-194; clock.ts:18 (3 amostras)."
+    },
+    {
+      "id": "limite_pela_incerteza",
+      "label": "Limite pela incerteza do offset",
+      "what": "Trocar o limite fixo por incerteza do offset mais folga, usando o RTT minimo medido, e revisar com dado real. Evidencia: clock.ts:9-12 (incerteza de RTT/2) e a2 (RTT 380 a 450 ms)."
+    },
+    {
+      "id": "mais_amostras_offset",
+      "label": "Mais amostras de offset",
+      "what": "Subir de 3 para 7 amostras de /public/time e publicar o RTT minimo com a idade, reduzindo a incerteza do offset antes de mexer em limite. Evidencia: clock.ts:18 (3) e :67 (teto 7 amostras)."
+    },
+    {
+      "id": "relogio_local_sem_offset",
+      "label": "Relogio local sem offset",
+      "what": "Usar o relogio local como referencia quando o offset falhar, sem corrigir. Evidencia: Proibida pela regra de clock_unknown em state.ts:192."
+    },
+    {
+      "id": "fechar_brecha_sem_offset_em_book_e_ticke",
+      "label": "Book e ticker viram clock_unknown sem offset",
+      "what": "Fazer book e ticker sem offset medido virarem clock_unknown como candles, em vez de passarem pela checagem de idade de cache. Assim o Brief fica fail-closed em todos os campos de tempo, que e o que a decisao descreve como estado atual. Evidencia: state.ts:47 e state.ts:67 retornam verdadeiro com exchangeNowMs nulo; state.ts:192 cobre so candles; feed.ts:278 devolve idade nula sem relogio; state.te"
+    }
+  ],
+  "forbidden": [
+    "relogio_local_sem_offset"
+  ],
+  "unknowns": [
+    {
+      "id": "d1",
+      "ask": "Qual o p50 e p99 de (recebimento corrigido menos ts) por canal em 24 h, com o console ou o dashboard do dono rodando o feed?"
+    },
+    {
+      "id": "d2",
+      "ask": "Qual o RTT real ate /api/v5/public/time a partir da maquina do dono, em 1 h de amostragem?"
+    },
+    {
+      "id": "d3",
+      "ask": "O campo ts de tickers e books5 e a hora de geracao do dado ou a hora do envio, segundo a documentacao oficial da OKX?"
+    },
+    {
+      "id": "d4",
+      "ask": "Com que intervalo o ClockKeeper re-mede o offset em producao?"
+    }
+  ]
+}

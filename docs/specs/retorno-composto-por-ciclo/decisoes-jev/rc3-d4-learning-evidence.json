@@ -1,0 +1,41 @@
+{
+  "id": "rc3-d4-learning-evidence",
+  "goal": "Objetivo do projeto: o agente de carteira tomar as melhores decisoes para o melhor retorno liquido, compondo a cada ciclo de 1 minuto. Tudo comeca em sombra e e reversivel; a meta e uma hipotese a medir com custo real, nao uma promessa. O trabalho learning-evidence do Codex (35 arquivos, dataset de aprendizado com proveniencia a partir de outcomes) estava sem commit e esta preservado em branch propria. O que fazer com ele?",
+  "facts": {
+    "estado": "preservado na branch codex/learning-evidence-wip; base antiga; sem commit por 4 dias",
+    "conflito": "src/intel e src/outcomes nesse trabalho sao versoes antigas e divergem da main em 3 arquivos; sobre a main, 2 testes de 15 falham (invalid_snapshot e um de dataset)",
+    "valor": "um dataset de aprendizado com proveniencia da probabilidade ajuda a medir calibracao e markout, que e o que a F2 e a F3 do plano precisam",
+    "parecido": "o modulo irmao decision-evidence (pesos de decisao) foi integrado sem problema como modulo puro e nao ligado ao ciclo"
+  },
+  "rails": [
+    "Dinheiro real, ordens, carteira e live trading so por autorizacao do dono",
+    "Nenhuma mudanca de limite de risco, segredo, credencial, migracao de dados ou dependencia paga",
+    "Nao apagar branches, nao reescrever historico e nao fazer push",
+    "Nao prometer lucro; resultado so por medicao com custo real",
+    "Modulo puro e nao ligado ao ciclo; nenhuma mudanca em journals de producao"
+  ],
+  "options": [
+    {
+      "id": "manter_wip",
+      "label": "Manter na branch",
+      "what": "Deixar na branch de preservacao ate o dono decidir; nada entra na main."
+    },
+    {
+      "id": "reconciliar_agora",
+      "label": "Reconciliar e integrar agora",
+      "what": "Adaptar o modulo aos tipos atuais de src/intel e src/outcomes da main, corrigir os 2 testes, validar a suite e integrar como modulo puro nao ligado ao ciclo."
+    },
+    {
+      "id": "descartar",
+      "label": "Descartar",
+      "what": "Abandonar o trabalho; a branch de preservacao seria o unico registro."
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "intencao_codex",
+      "ask": "O dataset de learning-evidence foi aprovado pelo dono ou era so exploracao?"
+    }
+  ]
+}

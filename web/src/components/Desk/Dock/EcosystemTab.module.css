@@ -1,0 +1,119 @@
+/* "Ecossistema" of the Radar: the board of opportunities across networks. Same visual language as the top bar and the rest of the dock (pills, gradient outline for the one action, hairlines).
+   Nothing animates. */
+.toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s2) var(--s3);
+  border-bottom: 1px solid var(--edge);
+}
+
+/* The networks share one line that scrolls sideways, so the board keeps the height of a short dock. */
+.chains { display: flex; min-width: 0; flex: 1 1 auto; flex-wrap: nowrap; align-items: center; gap: var(--s1); overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; scrollbar-color: var(--edge-strong) transparent; }
+.chain {
+  display: inline-flex;
+  height: 24px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 var(--s3) 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-3);
+  font: var(--fs-xs);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--dur-fast) var(--ease-out-expo), background var(--dur-fast) var(--ease-out-expo), color var(--dur-fast) var(--ease-out-expo);
+}
+.chain:hover:not(:disabled) { border-color: var(--edge-strong); background: var(--bg-deck-3); color: var(--ink); }
+.chain[aria-pressed="true"] { border-color: color-mix(in srgb, var(--signal) 40%, var(--edge-strong)); background: color-mix(in srgb, var(--signal) 12%, var(--bg-deck-2)); color: var(--ink); }
+.chain:disabled { opacity: 0.5; cursor: default; }
+.chain:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 1px; }
+
+/* The one action of the tab: the gradient outline of the call to action of the top bar. */
+.scan {
+  flex: none;
+  height: 30px;
+  padding: 0 var(--s4);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--signal) 16%, var(--bg-deck-3)), color-mix(in srgb, var(--signal) 6%, var(--bg-deck-2))) padding-box,
+    linear-gradient(135deg, var(--signal), var(--signal-deep)) border-box;
+  color: var(--ink);
+  font: 600 12px/16px var(--font-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-out-expo), opacity var(--dur-fast) var(--ease-out-expo);
+}
+.scan:hover:not(:disabled) {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--signal) 26%, var(--bg-deck-3)), color-mix(in srgb, var(--signal) 12%, var(--bg-deck-2))) padding-box,
+    linear-gradient(135deg, var(--signal), var(--signal-deep)) border-box;
+}
+.scan:disabled { opacity: 0.6; cursor: default; }
+.scan:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+
+.note { margin: 0; padding: var(--s1) var(--s3); color: var(--ink-2); font-size: 11px; line-height: 15px; }
+.problems { margin: 0; padding: var(--s1) var(--s3); border-top: 1px solid var(--edge); color: var(--hold); font-size: 11px; line-height: 15px; }
+.caveat { margin: 0; padding: var(--s1) var(--s3); color: var(--ink-3); font-size: 11px; line-height: 15px; }
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(170px, 1.3fr) minmax(250px, 2.2fr) minmax(64px, 0.5fr) minmax(86px, 0.7fr) minmax(86px, 0.7fr) minmax(190px, 1.7fr);
+  align-items: center;
+  min-width: 860px;
+  min-height: 32px;
+  border-bottom: 1px solid var(--edge);
+  font: 500 12px/16px var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.row > span { min-width: 0; padding: 3px var(--s2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.row > .left { text-align: left; }
+.row[data-marked="true"] { box-shadow: inset 2px 0 0 var(--edge-strong); }
+.row:not(.thead):hover { background: color-mix(in srgb, var(--bg-deck-3) 55%, transparent); }
+
+.token { display: flex; align-items: center; gap: var(--s2); }
+.tokenText { display: grid; min-width: 0; gap: 0; }
+.tokenText small { overflow: hidden; color: var(--ink-3); font: 11px/14px var(--font-sans); text-overflow: ellipsis; }
+.symbol { color: var(--ink); font-weight: 700; }
+.pick {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--edge-strong);
+  cursor: pointer;
+}
+.pick:hover { text-decoration-color: var(--signal); }
+.pick:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+
+/* The three readings: lit when it holds, a faint outline when it does not, so the eye sees the count before it reads a word. */
+.evidence { display: flex !important; flex-wrap: nowrap; align-items: center; gap: var(--s1); }
+.pill {
+  display: inline-flex;
+  height: 20px;
+  align-items: center;
+  padding: 0 var(--s2);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-pill);
+  color: var(--ink-3);
+  font: 600 10.5px/14px var(--font-sans);
+  letter-spacing: 0.02em;
+}
+.pill[data-on="true"] { border-color: color-mix(in srgb, var(--signal) 45%, var(--edge)); background: color-mix(in srgb, var(--signal) 14%, var(--bg-deck)); color: var(--ink); }
+
+.num[data-tone="up"] { color: var(--buy); }
+.num[data-tone="down"] { color: var(--sell); }
+
+.marks { font: 11px/15px var(--font-sans); color: var(--ink-2); }
+.none { color: var(--ink-3); }
+
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

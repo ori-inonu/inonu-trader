@@ -1,0 +1,45 @@
+{
+  "cycles": 4,
+  "evidence": [
+    {
+      "path": "weights-tdd-red-01.log",
+      "sha256": "58f961185852872711bf3c373a485055fadaf3e1e07d08aa7749bd7dedc50cc6",
+      "bytes": 393
+    },
+    {
+      "path": "weights-tdd-green-01.log",
+      "sha256": "aa6bc6cc8d95e5b9ffbe7414d5c7f33c4907ca96d1efc16d4aeb7323d9eb8b52",
+      "bytes": 244
+    },
+    {
+      "path": "weights-tdd-red-02.log",
+      "sha256": "4e6572a4675bd63c0fcf51476c439cd878de78a514bf90b946cf357af1bfe364",
+      "bytes": 1021
+    },
+    {
+      "path": "weights-tdd-green-02.log",
+      "sha256": "83eeb957abf63cd5be7c2d94511af6060ca517422e3a085833bf38da9239278c",
+      "bytes": 332
+    },
+    {
+      "path": "weights-tdd-red-03.log",
+      "sha256": "50a002b06bde9d7f37cc889cf6541baceee8107b9e3092c337efe4470def5953",
+      "bytes": 1364
+    },
+    {
+      "path": "weights-tdd-green-03.log",
+      "sha256": "a185905d1abb2a3ddcb78514ab664d695c440b32568d3fc028ae120d9184dda1",
+      "bytes": 454
+    },
+    {
+      "path": "weights-tdd-red-04.log",
+      "sha256": "298d6d8c7770e14d91884b162732bdb2c7147e0a4b672374572ede619c737a22",
+      "bytes": 1529
+    },
+    {
+      "path": "weights-tdd-green-04.log",
+      "sha256": "e75da80d36010ccb3f49804bca86a7d33120b84930d929d5fa1cf061886fe3a2",
+      "bytes": 557
+    }
+  ]
+}

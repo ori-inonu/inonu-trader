@@ -1,0 +1,82 @@
+bun test v1.3.14 (0d9b296a)
+
+src\onchain-read\client.test.ts:
+28 |     const { calls, f } = fakeFetch(() => calls.length === 1
+29 |       ? code === 429 ? new Response("x", { status: 429 }) : errBody("50011")
+30 |       : okBody());
+31 |     const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+32 |     const results = await Promise.all([client.call(REQ, "free"), client.call(REQ, "basic"), client.call(REQ, "premium")]);
+33 |     expect(calls).toHaveLength(1);
+                       ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 3
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:33:19)
+(fail) onchain client > queued calls observe newly opened cooldown %s [313.06ms]
+28 |     const { calls, f } = fakeFetch(() => calls.length === 1
+29 |       ? code === 429 ? new Response("x", { status: 429 }) : errBody("50011")
+30 |       : okBody());
+31 |     const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: () => t, minIntervalMs: 0 });
+32 |     const results = await Promise.all([client.call(REQ, "free"), client.call(REQ, "basic"), client.call(REQ, "premium")]);
+33 |     expect(calls).toHaveLength(1);
+                       ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 3
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:33:19)
+(fail) onchain client > queued calls observe newly opened cooldown %s [1.98ms]
+(pass) onchain client > sends OK-ACCESS headers with a signature computed over the exact request [1.98ms]
+64 |     });
+65 |     const client = createOnchainClient({ credentials: () => CREDS, fetch: f, now: Date.now, minIntervalMs: 40 });
+66 |     await Promise.all([client.call(REQ, "free"), client.call(REQ, "free"), client.call(REQ, "free")]);
+67 |     expect(calls).toHaveLength(3);
+68 |     expect(sentAt[1]! - sentAt[0]!).toBeGreaterThanOrEqual(38); // 2ms timer slack
+69 |     expect(sentAt[2]! - sentAt[1]!).toBeGreaterThanOrEqual(38);
+                                         ^
+error: expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 38
+Received: 0
+
+      at <anonymous> (C:\Users\gabri\.codex\tmp\backend-01a1361d-v2\implementation\src\onchain-read\client.test.ts:69:37)
+(fail) onchain client > global queue: at most one request per interval [331.09ms]
+(pass) onchain client > no credentials -> no_credentials, never touches fetch [0.91ms]
+(pass) onchain client > maps 401 to %s [257.28ms]
+(pass) onchain client > maps 403 to %s [0.75ms]
+(pass) onchain client > maps 429 to %s [0.21ms]
+(pass) onchain client > maps 500 to %s [0.11ms]
+(pass) onchain client > maps code 50111 to %s [3.55ms]
+(pass) onchain client > maps code 50114 to %s [1.09ms]
+(pass) onchain client > maps code 50011 to %s [39.99ms]
+(pass) onchain client > maps code 99999 to %s [1.91ms]
+(pass) onchain client > network throw, timeout and invalid JSON are provider_error [243.98ms]
+(pass) onchain client > envelope without data -> schema; oversized body refused [2.44ms]
+(pass) onchain client > 402 blocks the tier for an hour; 429 cools down for 30s; status exposes codes [1.33ms]
+(pass) onchain client > 429 opens a 30s cooldown that short-circuits later calls [1.26ms]
+(pass) onchain client > provider msg never propagates and credentials never appear in results [35.66ms]
+(pass) clock skew handling > learns the offset from the Date header and retries 50102 once in the same slot [46.27ms]
+(pass) clock skew handling > a second 50102 inside the same call reports clock_skew, not unauthorized [1.60ms]
+(pass) clock skew handling > 50102 with a Date near the used offset reports clock_skew without retrying [3.44ms]
+(pass) clock skew handling > 401 with an auth code stays provider_unauthorized [5.62ms]
+(pass) clock skew handling > 401 with a non-JSON body stays provider_unauthorized [1.51ms]
+(pass) clock skew handling > body code 50103 maps to provider_unauthorized [1.54ms]
+(pass) clock skew handling > body code 50104 maps to provider_unauthorized [0.29ms]
+(pass) clock skew handling > body code 50105 maps to provider_unauthorized [0.20ms]
+(pass) clock skew handling > body code 50112 maps to provider_unauthorized [0.10ms]
+(pass) clock skew handling > body code 50113 maps to provider_unauthorized [0.06ms]
+(pass) clock skew handling > body code 50038 maps to unsupported_chain [1.04ms]
+(pass) clock skew handling > a small measured skew is not applied and clockOffsetMs is still reported [1.48ms]
+
+3 tests failed:
+(fail) onchain client > queued calls observe newly opened cooldown %s [313.06ms]
+(fail) onchain client > queued calls observe newly opened cooldown %s [1.98ms]
+(fail) onchain client > global queue: at most one request per interval [331.09ms]
+
+ 27 pass
+ 3 fail
+ 87 expect() calls
+Ran 30 tests across 1 file. [2.55s]

@@ -1,0 +1,34 @@
+# OKX Web3: conexão local de leitura
+
+Data: 2026-10-09. Objetivo e limites em `OKX-PROPOSAL.md`. Implementação sem SDK novo, contas custodiais ou assinatura. Decisão técnica real Jev `dc29d05b-d9ad-426f-b81c-4ded2c1bb07b`: `injected_session`, `explicit_switch`, `session_boundary`. `approved_by=jev_delegated`, `human_response=false`; custo faturado desconhecido. Evidência de funcionamento requer testes e revisão, não confiança da decisão.
+
+## Aceitação imutável
+
+- **O1 Descoberta e consentimento.** No navegador, usar o caminho documentado `window.okxwallet` como âncora de provider. Anúncio EIP-6963 pode selecionar somente a mesma referência ancorada, sem confiar em nome/rdns autodeclarado ou `window.ethereum` genérico. Nenhum pedido de conta em mount/descoberta. Botão explícito solicita `eth_requestAccounts`; ausência da extensão, conta vazia, resposta inválida e rejeição recebem estados compreensíveis. Sem assumir que instalação no celular injeta provider no desktop. Dados de nome/ícone anunciados não são executados ou renderizados como HTML.
+- **O2 Conta e rede.** Validar endereço EVM completo e chainId antes de saldo. Esperado Monad 143 (`0x8f`); rede diferente bloqueia leitura MON/USDC. Um botão separado pode solicitar apenas `wallet_switchEthereumChain` para `0x8f`, nunca automaticamente. Rejeição/rede não adicionada resultam em orientação manual. Não adicionar rede nem inferir que a troca foi aceita sem reler chainId.
+- **O3 Saldo exato e falha fechada.** Ler MON e USDC nativo `0x754704Bc059F8C67012fEd69BC8A327a5aafb603`, decimais 18/6, na mesma altura de bloco confirmada. Hex e conversão usam inteiros exatos e strings, sem Number para dinheiro. Falha, timeout ou resposta inválida não vira saldo zero nem saldo conectado utilizável; sem loop de retries. Prazo de consulta é limitado. Nenhum preço BRL, saldo da corretora, margem Kuru ou banca disponível é inventado a partir desses saldos.
+- **O4 Ciclo de sessão.** `accountsChanged`, `chainChanged` e `disconnect` invalidam imediatamente saldos anteriores. Consulta antiga não restaura conta/rede/saldo após evento, reconexão, desconexão local ou descarte. Atualização posterior relê contas e rede sem novo prompt. Descarte remove listeners; desconectar localmente apaga a sessão, não afirma revogação das permissões da extensão. Provider que perde conta ou conexão não provoca pedido automático de autorização.
+- **O5 Separação e privacidade.** O painel mostra conta/rede/saldos da carteira Web3 e informa que conectar não habilita o executor. Método permitido é leitura, autorização de conta ou troca explícita de rede; nenhum método de assinatura, envio de transação, aprovação ERC20, ordem, depósito ou retirada. Sem seed/chave privada/API no cliente e sem persistir ou transmitir endereço/saldo ao backend, analytics ou logs. Valores de teste são fictícios e identificados como tal na evidência, nunca saldo real do usuário.
+- **O6 Operação local e interface.** Feed padrão aponta para backend local `http://127.0.0.1:3000`; URL pública explícita continua possível via variável existente. Frontend local usa porta 3001 para evitar conflito. Painel funciona com backend desconectado, é navegável por teclado, tem botões/estados de erro legíveis e cabe em desktop e celular. Não declarar operação real pelo estado live do feed. Preservar estilo existente e ausência de animação piscante.
+- **O7 Pesquisa e orientação.** Documento em português explica Pix/corretora/Web3, saída Nubank condicionada à titularidade e disponibilidade autenticada, ativos/rede/gas e limites desta conexão. Compara Kuru spot, OKX spot/API/demo e derivativos/margem com elegibilidade desconhecida. Inclui custos, funding, liquidação e teste fora da amostra; R$400 para R$4000 exige +900%, não lucro constante garantido. Documentação anterior deixa de dizer que a chave Jev está ausente; preserva evidência histórica e resultados sem fills.
+- **O8 Verificação e revisão.** TDD vertical no limite público da sessão/provider: consentimento/ausência, rede errada/troca, saldos exatos, respostas inválidas/rejeição/timeout, eventos durante consulta e descarte. Build/typecheck frontend, testes/typecheck backend e verificação visual dos estados afetados. Revisor independente usa cópia isolada sem segredos, baseline e esta SPEC, executa verificações pertinentes e cobre O1-O8. Testes sintéticos não qualificam conexão nativa, saldo do usuário ou dinheiro real.
+
+## Contrato observável e plano mínimo
+
+A sessão pública oferece conectar, atualizar, trocar para Monad, desconectar localmente, observar snapshot e descartar. Não expõe um executor arbitrário de métodos ao componente. O provider EIP-1193 é fronteira externa de teste; o teste controla respostas/eventos dessa fronteira e observa snapshots/requests, não helpers privados. Descoberta deve aceitar uma superfície de eventos equivalente à do navegador, permitindo teste sem React interno.
+
+1. Registrar pesquisa, baseline e decisão. Congelar O1-O8 antes de produto novo.
+2. Implementador em cópia isolada possui exclusivamente `web/src/lib/okx-wallet.ts`, `web/src/lib/okx-wallet.test.ts`, `web/src/lib/useOkxWallet.ts`, `web/src/components/WalletPanel/WalletPanel.tsx` e CSS correspondente. Primeiro teste falha; um comportamento público por ciclo red/green. Reportar comandos/resultados reais.
+3. Integrador possui somente ligação `web/src/app/page.tsx`, ajuste de layout se necessário, `web/package.json`, `web/.env.example`, README e documentos locais desta entrega. Não alterar signatário, live gate ou configuração privada.
+4. Integrar arquivos exclusivos, verificar candidato e revisão isolada. Reparos preservam critérios; não reduzir testes para aprovar.
+
+## Referências primárias
+
+- [OKX EVM provider](https://web3.okx.com/onchainos/dev-docs/wallet/dapp-connect/chains/evm/provider), [contas EVM](https://web3.okx.com/onchainos/dev-docs/wallet/dapp-connect/chains/evm/web-access-user-accounts) e [rede EVM](https://web3.okx.com/onchainos/dev-docs/wallet/dapp-connect/chains/evm/web-add-network).
+- [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193), [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963).
+- [Monad network information](https://docs.monad.xyz/developer-essentials/network-information), [Circle USDC contracts](https://developers.circle.com/stablecoins/usdc-contract-addresses).
+- Rotas e links autenticados são analisados em `OKX-INVESTIGACAO.md`. Guias Next distribuídos localmente orientam client boundary e variáveis públicas.
+
+## Limites que continuam abertos
+
+O R$400 é relato do usuário, não saldo observado pelo projeto. Esta entrega não executa trade e não fornece acesso remoto a uma carteira somente móvel. Jev já responde em paper; margem/signatário/reconciliação, eficácia da estratégia e disponibilidade real da conta exigem evidência separada. Nenhum backtest anterior constitui validação causal de alavancagem ou melhoria do modelo.

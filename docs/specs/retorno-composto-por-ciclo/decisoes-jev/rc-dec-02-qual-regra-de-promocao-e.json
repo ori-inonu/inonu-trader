@@ -1,0 +1,41 @@
+{
+  "id": "rc-dec-02-qual-regra-de-promocao-e",
+  "goal": "Qual regra de promocao E1 fixar antes da coleta: unidade, N minimo, IC, holdout e falha de amostra? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "delta_E1": "0,1% por ciclo liquido, efeito minimo que a regra E1 pretende detectar",
+    "n_iid": "784 unidades para 0,1% com sigma 1%; 32 para 0,5%",
+    "cadencia_medida": "135,6 s de mediana; 120 s nominal e 300 s frio",
+    "horas_784": "29,5 h a 135,6 s; 13 h so se fosse 1 min",
+    "fator_rho": "rho lag 1 de 0,3 multiplica N por 1,86",
+    "linha_base": "7 voltas, 0 positivas, -0,41% bruto",
+    "sigma_medido": "nao medido; 1% por ciclo e premissa"
+  },
+  "rails": [
+    "Holdout cronologico congelado antes da coleta; a fracao de 30 por cento e premissa, sem fonte no repo.",
+    "Falha de amostra (cobertura baixa, N efetivo abaixo do minimo, cadencia diferente da declarada, variante nao registrada) gera INCONCLUSIVO.",
+    "Nenhuma regra autoriza dinheiro (G4).",
+    "Contador de variantes em arquivo novo; gravar em journal e migracao bloqueada."
+  ],
+  "options": [
+    {
+      "id": "calibrar-antes",
+      "label": "Calibrar antes de fixar N",
+      "what": "Log de sombra de 48 h para medir sigma, rho e cadencia antes de travar H e N. Evidencia: Sigma 1% e rho 0,3 sao premissas nao medidas; cadencia medida de 135,6 s, nao 60 s (T03)."
+    },
+    {
+      "id": "bootstrap-blocos",
+      "label": "H fixo, N com bootstrap de blocos",
+      "what": "H fixo a justificar, N minimo recalculado com rho medido, IC por bootstrap estacionario de blocos e correcao Holm para E1 a E5. Evidencia: N = 784 x (1+rho)/(1-rho), cerca de 1.460 com rho 0,3; N de 800 so vale com rho proximo de zero (T03)."
+    },
+    {
+      "id": "hac-n800",
+      "label": "N de 800 com IC Newey-West",
+      "what": "Mesmo N de 800 com IC HAC, sem bootstrap. Evidencia: Se houver vies para baixo na autocorrelacao, o IC fica estreito e E1 pode dar falso positivo (T03)."
+    },
+    {
+      "id": "adiar-regra",
+      "label": "Adiar a regra",
+      "what": "Nao fixar regra de promocao; so medir em sombra. Evidencia: Sem regra, nenhuma promocao e possivel; custo e atraso (T03)."
+    }
+  ]
+}

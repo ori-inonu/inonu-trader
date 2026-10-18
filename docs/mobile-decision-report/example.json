@@ -1,0 +1,162 @@
+{
+  "schema": "mobile_human_decision_report_v1",
+  "snapshot": {
+    "id": "synthetic-mobile-fresh",
+    "revision": "1",
+    "origin": "synthetic_fixture",
+    "synthetic": true,
+    "generated_at_ms": 1791504000100,
+    "facts_sha256": "f0ddc9d8889ac0d9becd453ea75d139412d49b72fed16d50915455ca47a57d14",
+    "provenance": "unverified"
+  },
+  "identity": {
+    "chain_index": "1",
+    "token_a": "0x0000000000000000000000000000000000000001",
+    "token_b": "0x0000000000000000000000000000000000000002"
+  },
+  "observed": {
+    "dex": {
+      "schemaVersion": 1,
+      "source": "synthetic",
+      "chainIndex": "1",
+      "tokenA": {
+        "address": "0x0000000000000000000000000000000000000001",
+        "decimals": 6,
+        "metadataSource": "synthetic-fixture-only"
+      },
+      "tokenB": {
+        "address": "0x0000000000000000000000000000000000000002",
+        "decimals": 6,
+        "metadataSource": "synthetic-fixture-only"
+      },
+      "inputAtomic": "1000000",
+      "outputAtomic": "995000",
+      "quotedGrossDeltaAtomic": "-5000",
+      "status": "quoted_gross_delta",
+      "reasons": [
+        "quoted_output_unit_inferred",
+        "total_cost_coverage_unknown"
+      ],
+      "legs": [
+        {
+          "inputAtomic": "1000000",
+          "outputAtomic": "1010000",
+          "priceImpactPercent": -0.1,
+          "fromTaxFraction": 0,
+          "toTaxFraction": 0,
+          "networkEstimates": {
+            "tradeFeeUsd": null,
+            "estimateGasFeeNativeAtomic": null
+          },
+          "requestedAt": 1791504000003,
+          "receivedAt": 1791504000004
+        },
+        {
+          "inputAtomic": "1010000",
+          "outputAtomic": "995000",
+          "priceImpactPercent": -0.1,
+          "fromTaxFraction": 0,
+          "toTaxFraction": 0,
+          "networkEstimates": {
+            "tradeFeeUsd": null,
+            "estimateGasFeeNativeAtomic": null
+          },
+          "requestedAt": 1791504000005,
+          "receivedAt": 1791504000006
+        }
+      ],
+      "execution": "not_qualified",
+      "liveQualified": false,
+      "netAtomic": null,
+      "netStatus": "net_not_evaluated",
+      "costsCoverage": "unknown",
+      "costUsd": null,
+      "quotaRemaining": null,
+      "policy": {
+        "maxElapsedMs": 5000,
+        "maxImpactMagnitudePercent": 1
+      },
+      "timing": {
+        "startedAt": 1791504000000,
+        "completedAt": 1791504000007,
+        "elapsedMs": 7,
+        "coverageRequestedAt": 1791504000001,
+        "coverageReceivedAt": 1791504000002
+      }
+    }
+  },
+  "clock": {
+    "source_time_ms": 1791503999900,
+    "fetched_at_ms": 1791504000050,
+    "source_age_ms": 200,
+    "freshness": "fresh",
+    "max_age_ms": 60000
+  },
+  "costs": {
+    "api": {
+      "amount_usd": null,
+      "status": "unknown"
+    },
+    "jev": {
+      "amount_usd": null,
+      "status": "unknown"
+    },
+    "total_coverage": "unknown",
+    "quota_remaining": null
+  },
+  "evaluation": {
+    "status": "not_evaluated",
+    "provenance": "unavailable",
+    "id": null,
+    "model": null,
+    "version": null,
+    "evaluated_at_ms": null,
+    "bound_facts_sha256": null,
+    "observations": [],
+    "limitations": [],
+    "usage": {
+      "input_tokens": null,
+      "output_tokens": null
+    }
+  },
+  "alerts": [
+    "total_cost_coverage_unknown",
+    "quota_unknown",
+    "api_cost_unknown",
+    "jev_not_evaluated",
+    "jev_cost_unknown"
+  ],
+  "sources": [
+    {
+      "kind": "dex_report",
+      "claim": "synthetic",
+      "verification": "unverified"
+    },
+    {
+      "kind": "source_clock",
+      "claim": "producer_supplied",
+      "verification": "unverified"
+    },
+    {
+      "kind": "jev_context",
+      "claim": "not_evaluated",
+      "verification": "unavailable"
+    }
+  ],
+  "validity": {
+    "status": "snapshot_only",
+    "checked_at_ms": 1791504000100,
+    "valid_until_ms": 1791504059900,
+    "execution": "not_qualified",
+    "invalidated_by": [
+      "time_expired",
+      "identity_changed",
+      "revision_changed",
+      "content_changed"
+    ]
+  },
+  "human_decision": {
+    "status": "pending",
+    "grants_execution": false
+  }
+}

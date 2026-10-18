@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "jev-consensus": {
+      "command": "bun",
+      "args": ["--no-env-file", "run", "scripts/jev-consensus-mcp.ts"]
+    }
+  }
+}

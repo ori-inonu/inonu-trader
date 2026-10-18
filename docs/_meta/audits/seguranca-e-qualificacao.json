@@ -1,0 +1,743 @@
+{
+  "owner": "seguranca-e-qualificacao",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T11:46:45-03:00",
+  "page": "docs/concepts/seguranca-e-qualificacao.md",
+  "documents": [
+    {
+      "path": "docs/BRANCH-READINESS-CHECKPOINT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/BRANCH-READINESS-REVIEW.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-DIAGNOSIS-CHECKPOINT-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-IMPLEMENTATION-CHECKPOINT-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "scripts/http-preview.test.ts",
+        "scripts/http-preview.ts",
+        "src/server.ts"
+      ]
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-INTEGRATED-RUNTIME-CHECKPOINT-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "scripts/http-preview.ts"
+      ]
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-MAIN-1F08E6E-CHECKPOINT-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-MAIN-1F08E6E-INDEPENDENT-AUDIT-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-SCOPE-REVIEW-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "scripts/okx-operator.test.ts",
+        "src/config.ts",
+        "src/index.ts",
+        "src/operator/http.ts",
+        "src/server.ts",
+        "src/system-one/http.ts",
+        "web/src/lib/presentation.ts",
+        "web/src/lib/useFeed.ts"
+      ]
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-SPEC-20261011.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "O documento declara proposta e aprovação pendente; separar o plano da implementação local observada e do runtime não verificado.",
+      "code_refs": [
+        "scripts/http-preview.test.ts",
+        "scripts/http-preview.ts",
+        "src/server.ts"
+      ]
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-VISUAL-CAPABILITY-RECHECK-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/HTTP-PREVIEW-VISUAL-FOLLOWUP-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/JEV-OKX-SDD-THREAT-MODEL-20261009.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/LIVE-QUALIFICATION.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Critério ou especificação com aceite e avisos explícitos; tratado como contrato, não como autorização ou evidência de execução.",
+      "code_refs": [
+        "scripts/bench-read.ts",
+        "scripts/doctor.ts",
+        "scripts/dry-encode.ts",
+        "scripts/qualify-live.ts",
+        "src/backtest.ts",
+        "src/config.ts",
+        "src/index.ts",
+        "src/live-qualification.test.ts",
+        "src/live-qualification.ts",
+        "src/market.receipt.test.ts",
+        "src/market.ts",
+        "src/trader.receipt.test.ts",
+        "src/trader.ts"
+      ]
+    },
+    {
+      "path": "docs/LOCALHOST-INTEGRATION-DIAGNOSIS-20261010.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/index.ts",
+        "src/market.ts",
+        "src/server.ts",
+        "web/src/lib/presentation.ts",
+        "web/src/lib/useFeed.ts",
+        "web/src/lib/useOkxWallet.ts"
+      ]
+    },
+    {
+      "path": "docs/LOCALHOST-MAIN-STARTUP-RESEARCH-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "scripts/http-preview.ts",
+        "scripts/okx-operator.test.ts",
+        "src/chain.ts",
+        "src/config.ts",
+        "src/index.ts",
+        "src/market.ts",
+        "src/model.ts",
+        "src/operator/http.ts",
+        "src/operator/insights.ts",
+        "src/server.ts",
+        "src/system-one/http.ts",
+        "src/system-one/public-view.ts",
+        "src/system-one/types.ts",
+        "src/trader.ts",
+        "src/trades.ts",
+        "web/src/lib/okx-solana.ts",
+        "web/src/lib/okx-wallet.ts",
+        "web/src/lib/operator-center.ts",
+        "web/src/lib/presentation.ts",
+        "web/src/lib/system-one.ts",
+        "web/src/lib/useFeed.ts",
+        "web/src/lib/useOkxSolana.ts",
+        "web/src/lib/useOkxWallet.ts"
+      ]
+    },
+    {
+      "path": "docs/LOCALHOST-ORIGIN-DIAGNOSIS-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/okx-market-v1/OKX-CONFIGURATION-READINESS.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/config.ts"
+      ]
+    },
+    {
+      "path": "docs/OKX-SESSION-READINESS-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/OKX-WALLET-AUTHORITY-RESEARCH-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/operator/executor.ts",
+        "web/src/lib/okx-wallet.ts"
+      ]
+    },
+    {
+      "path": "docs/POLITICA-DE-LIMITES.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Critério ou especificação com aceite e avisos explícitos; tratado como contrato, não como autorização ou evidência de execução.",
+      "code_refs": [
+        "scripts/policy-envelope.test.ts",
+        "scripts/policy-envelope.ts",
+        "src/economics.ts",
+        "src/policy/envelope.test.ts",
+        "src/policy/envelope.ts",
+        "src/risk.ts"
+      ]
+    },
+    {
+      "path": "docs/PROFIT-SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Critério ou especificação com aceite e avisos explícitos; tratado como contrato, não como autorização ou evidência de execução.",
+      "code_refs": [
+        "src/economics.ts"
+      ]
+    },
+    {
+      "path": "docs/READINESS-SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Critério ou especificação com aceite e avisos explícitos; tratado como contrato, não como autorização ou evidência de execução.",
+      "code_refs": [
+        "scripts/backtest.ts",
+        "src/backtest.test.ts",
+        "src/backtest.ts",
+        "src/config.ts",
+        "src/market.ts",
+        "src/model.ts",
+        "src/risk.ts",
+        "src/trader.ts"
+      ]
+    },
+    {
+      "path": "docs/research/OKX-AUTH-CUSTODY-MATRIX-20261011.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/okx-api.ts",
+        "src/okx-market/okx-api.ts",
+        "src/operator/executor.ts",
+        "web/src/lib/central/ecosystem-catalog.ts",
+        "web/src/lib/central/permission-tiers.ts",
+        "web/src/lib/okx-wallet.ts"
+      ]
+    },
+    {
+      "path": "docs/research/R2-carteira-permissoes-delegacao.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/config.ts",
+        "src/market.ts",
+        "web/src/lib/okx-wallet.ts"
+      ]
+    },
+    {
+      "path": "docs/research/R3-estrategias-e-alavancagem.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/config.ts",
+        "src/trader.ts"
+      ]
+    },
+    {
+      "path": "docs/research/R9-system-one-alavancagem-onchainos.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "scripts/jev-lab.ts",
+        "scripts/okx-operator.ts",
+        "scripts/onchainos-capture.ts",
+        "scripts/policy-envelope.ts",
+        "scripts/qualify-live.ts",
+        "src/lab/journal.ts",
+        "src/lab/outcomes.ts",
+        "src/lab/policies.ts",
+        "src/lab/purity.test.ts",
+        "src/lab/run.ts",
+        "src/lab/stats.ts",
+        "src/lab/types.ts",
+        "src/market.ts",
+        "src/okx-wallet/chains.ts",
+        "src/okx-wallet/portfolio.ts",
+        "src/okx-wallet/valuation.test.ts",
+        "src/onchainos/capture.ts",
+        "src/onchainos/defi-read.ts",
+        "src/onchainos/endpoints.ts",
+        "src/onchainos/gateway.ts",
+        "src/onchainos/market-price.ts",
+        "src/onchainos/market-token.ts",
+        "src/onchainos/public-okx.ts",
+        "src/onchainos/signals.ts",
+        "src/onchainos/social.ts",
+        "src/operator/config.ts",
+        "src/operator/executor.ts",
+        "src/operator/funding.ts",
+        "src/operator/insights.ts",
+        "src/operator/jev-selector.ts",
+        "src/operator/ledger.ts",
+        "src/operator/plan.ts",
+        "src/operator/risk-gate.ts",
+        "src/policy/envelope.ts",
+        "src/system-one/brief.ts",
+        "src/trader.ts"
+      ]
+    },
+    {
+      "path": "docs/RISCO-E-BACKTEST.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/SYSTEM-ONE-EXPOSURE-CHECKPOINT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/system-one/system-one.test.ts"
+      ]
+    },
+    {
+      "path": "docs/SYSTEM-ONE-EXPOSURE-DECIMAL-CHECKPOINT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/SYSTEM-ONE-EXPOSURE-DECIMAL-VERIFICATION.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/SYSTEM-ONE-EXPOSURE-FINAL-AUDIT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual."
+    },
+    {
+      "path": "docs/SYSTEM-ONE-EXPOSURE-REVIEW-AUDIT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Registro datado de pesquisa, checkpoint, revisão ou runtime; preserva o que aquela sessão observou e não certifica o estado atual.",
+      "code_refs": [
+        "src/system-one/brief.ts",
+        "src/system-one/system-one.test.ts"
+      ]
+    },
+    {
+      "path": "docs/SYSTEM-ONE-EXPOSURE-SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Critério ou especificação com aceite e avisos explícitos; tratado como contrato, não como autorização ou evidência de execução.",
+      "code_refs": [
+        "src/system-one/types.ts"
+      ]
+    },
+    {
+      "path": "docs/SYSTEM-ONE.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Referência de fronteira coerente com o código lido; não demonstra saldo, sessão, servidor ou operação atual.",
+      "code_refs": [
+        "src/onchainos/public-okx.ts",
+        "src/policy/envelope.ts",
+        "src/system-one/brief.ts",
+        "src/system-one/cycle.ts",
+        "src/system-one/decide.ts",
+        "src/system-one/readings.ts",
+        "src/system-one/volatility.ts"
+      ]
+    },
+    {
+      "path": "docs/WALLET-TRANSACTION-PREFLIGHT.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Referência de fronteira coerente com o código lido; não demonstra saldo, sessão, servidor ou operação atual."
+    }
+  ],
+  "code_inspected": [
+    "src/index.ts",
+    "src/market.ts",
+    "src/book.ts",
+    "src/chain.ts",
+    "src/trader.ts",
+    "src/trades.ts",
+    "src/model.ts",
+    "src/config.ts",
+    "src/risk.ts",
+    "src/economics.ts",
+    "src/policy/envelope.ts",
+    "src/server.ts",
+    "src/live-qualification.ts",
+    "scripts/qualify-live.ts",
+    "scripts/doctor.ts",
+    "scripts/http-preview.ts",
+    "scripts/system-one.ts",
+    "scripts/policy-envelope.ts",
+    "scripts/okx-derivatives.ts",
+    "web/src/lib/system-one.ts",
+    "src/system-one/cycle.ts",
+    "src/system-one/decide.ts",
+    "src/system-one/types.ts",
+    "src/system-one/readings.ts",
+    "src/system-one/http.ts",
+    "src/system-one/public-view.ts",
+    "src/system-one/brief.ts",
+    "src/system-one/clock.ts",
+    "src/system-one/volatility.ts",
+    "src/okx-derivatives/adapter.ts",
+    "src/okx-derivatives/book.ts",
+    "src/okx-derivatives/canonical.ts",
+    "src/okx-derivatives/contract.ts",
+    "src/okx-derivatives/decimal.ts",
+    "src/okx-derivatives/fees.ts",
+    "src/okx-derivatives/fixture.ts",
+    "src/okx-derivatives/freshness.ts",
+    "src/okx-derivatives/funding.ts",
+    "src/okx-derivatives/gate.ts",
+    "src/okx-derivatives/legs.ts",
+    "src/okx-derivatives/local-file.ts",
+    "src/okx-derivatives/margin.ts",
+    "src/okx-derivatives/report.ts",
+    "src/okx-derivatives/snapshot.ts",
+    "src/okx-derivatives/types.ts",
+    "src/okx-derivatives/carry.ts",
+    "src/okx-derivatives/directional.ts",
+    "src/operator/http.ts",
+    "src/jev-read/http.ts",
+    "src/onchainos/public-okx.ts",
+    "src/lab/outcomes.ts"
+  ],
+  "code_inspection_detail": [
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "scope": "import declarations inspected to trace shared decimal and schema helpers"
+    },
+    {
+      "path": "src/lab/outcomes.ts",
+      "scope": "derivatives-margin import inspected to distinguish shared math from order-path integration"
+    }
+  ],
+  "claims": [
+    {
+      "statement": "O entrypoint recusa misturar journal, chama Market.init antes de criar Trader e inicia a fita de blocos depois.",
+      "source_path": "src/index.ts",
+      "lines": "10-16,22-46"
+    },
+    {
+      "statement": "Market cria wallet somente fora de dry run; init lança com wallet presente, enquanto send tem ramos de simulação e assinatura/broadcast.",
+      "source_path": "src/market.ts",
+      "lines": "82-113,153-162,235-250"
+    },
+    {
+      "statement": "A configuração padrão usa modelo mock, dry run, economic gate, intervalo de cotação de 100 blocos e prazo de decisão de 1500 ms; o perfil every-block é calculado separadamente.",
+      "source_path": "src/config.ts",
+      "lines": "14-24,58-64"
+    },
+    {
+      "statement": "Trader condiciona cotação a risco, intervalo, economia, prazo, confiança e posição; recibo pendente e limites de perda/gasto param novas cotações.",
+      "source_path": "src/trader.ts",
+      "lines": "126-170,219-226,548-556"
+    },
+    {
+      "statement": "SpotLedger mede uma conta spot financiada; makerEconomics é um teste hipotético no mesmo livro e não uma previsão.",
+      "source_path": "src/risk.ts",
+      "lines": "1-33",
+      "additional_source": "src/economics.ts:1-8"
+    },
+    {
+      "statement": "O envelope por fase é puro, fase 0 parte sem exposição, campos necessários ausentes permanecem desconhecidos e ok não concede permissão; Trader importa outra camada de risco.",
+      "source_path": "src/policy/envelope.ts",
+      "lines": "8-15,68-87,555-594,737-741",
+      "additional_source": "src/trader.ts:1-8"
+    },
+    {
+      "statement": "O relatório de qualificação marca grantsPermission false e anuncia que o gate de Market.init permanece separado e inalterado.",
+      "source_path": "src/live-qualification.ts",
+      "lines": "261-270,1213-1254"
+    },
+    {
+      "statement": "O CLI de qualificação lê configuração e evidências locais, não usa rede/RPC e código zero significa relatório completo, não checklist aprovada.",
+      "source_path": "scripts/qualify-live.ts",
+      "lines": "1-7,230-255,260-279,287-315"
+    },
+    {
+      "statement": "Doctor permite apenas métodos RPC de leitura e fixa investmentReady false; nesta auditoria não foi executado.",
+      "source_path": "scripts/doctor.ts",
+      "lines": "1-15,44-57"
+    },
+    {
+      "statement": "O ciclo System One chama o modelo apenas com candidatos elegíveis e sempre retorna execução dry_run ou blocked.",
+      "source_path": "src/system-one/cycle.ts",
+      "lines": "32-86"
+    },
+    {
+      "statement": "Candidatos System One são bloqueados por fase, alavancagem, liquidação, sigma/frescor, funding, inventário incompleto, flip e exposição.",
+      "source_path": "src/system-one/brief.ts",
+      "lines": "5-12,75-113"
+    },
+    {
+      "statement": "Leitura pública OKX usa endpoints de mark, funding e candles; carteira configurada não é saldo e tem valor incompleto.",
+      "source_path": "src/system-one/readings.ts",
+      "lines": "119-160"
+    },
+    {
+      "statement": "O script System One usa mock por padrão, exige flag explícita para Jev ou mercado público e grava estado/journal quando executado.",
+      "source_path": "scripts/system-one.ts",
+      "lines": "4-13,81-125"
+    },
+    {
+      "statement": "A projeção HTTP System One aceita apenas status blocked ou dry_run e valida a consistência entre candidato e escolha.",
+      "source_path": "src/system-one/public-view.ts",
+      "lines": "21-50"
+    },
+    {
+      "statement": "O adaptador de derivativos declara leitura offline, sem rede, credencial, signer ou método de ordem.",
+      "source_path": "src/okx-derivatives/adapter.ts",
+      "lines": "6-18,40-63"
+    },
+    {
+      "statement": "O relatório de derivativos fixa externalAccessObserved, liveQualified e financiallyAuthorized como false e execution como not_qualified.",
+      "source_path": "src/okx-derivatives/report.ts",
+      "lines": "226-264"
+    },
+    {
+      "statement": "O avaliador de derivativos aceita somente arquivo JSON local estrito e bounded; a CLI usa fixture sintética sem argumento.",
+      "source_path": "src/okx-derivatives/local-file.ts",
+      "lines": "4-10,35-70",
+      "additional_source": "scripts/okx-derivatives.ts:7-16,50-60"
+    },
+    {
+      "statement": "A SPEC HTTP descreve uma proposta; o código de preview atual usa bind loopback, GET/OPTIONS, sem handlers settings/onchain e token nulo.",
+      "source_path": "src/server.ts",
+      "lines": "27-47,70-93",
+      "additional_source": "scripts/http-preview.ts:3-23"
+    },
+    {
+      "statement": "No preview, operator permite ausência de Origin e token opcional; System One e Jev Read exigem origem permitida; CORS não autentica processo local.",
+      "source_path": "src/operator/http.ts",
+      "lines": "51-87",
+      "additional_source": "src/system-one/http.ts:1-27; src/jev-read/http.ts:17-43"
+    },
+    {
+      "statement": "O servidor preview expõe /jev-read além da lista P4 enumerada na SPEC HTTP, ficando a compatibilidade de escopo para revisão.",
+      "source_path": "src/server.ts",
+      "lines": "90-93",
+      "additional_source": "docs/HTTP-PREVIEW-SPEC-20261011.md:13-18"
+    }
+  ],
+  "documentation_findings": [
+    {
+      "finding": "A tabela de estágio 0 em LIVE-QUALIFICATION ancora seu estado em um commit de 2026-10-09; preservá-la como fotografia histórica. O requisito p95 de 300 ms no perfil every-block continua explícito, mas não é prova de desempenho atual.",
+      "classification": "historical_evidence",
+      "document_paths": [
+        "docs/LIVE-QUALIFICATION.md"
+      ],
+      "current_refs": [
+        "src/live-qualification.ts:65-70,484-485",
+        "src/config.ts:58-62"
+      ]
+    },
+    {
+      "finding": "HTTP-PREVIEW-SPEC-20261011 declara proposta e produção sem mudanças; no snapshot de 2026-10-13 scripts/http-preview.ts e src/server.ts já implementam o modo read-only. Isso atualiza a síntese, não prova servidor ativo ou aceite de runtime.",
+      "classification": "proposal",
+      "document_paths": [
+        "docs/HTTP-PREVIEW-SPEC-20261011.md",
+        "docs/HTTP-PREVIEW-IMPLEMENTATION-CHECKPOINT-20261011.md",
+        "docs/HTTP-PREVIEW-INTEGRATED-RUNTIME-CHECKPOINT-20261011.md"
+      ],
+      "current_refs": [
+        "scripts/http-preview.ts:3-23",
+        "src/server.ts:27-47,70-93"
+      ]
+    },
+    {
+      "finding": "P4 da SPEC lista root, history, events, operator e System One; o servidor atual também publica /jev-read. Confirmar se essa rota pertence ao escopo de preview; nenhuma alteração ou runtime test foi feito.",
+      "classification": "needs_review",
+      "document_paths": [
+        "docs/HTTP-PREVIEW-SPEC-20261011.md",
+        "docs/HTTP-PREVIEW-SCOPE-REVIEW-20261011.md"
+      ],
+      "current_refs": [
+        "src/server.ts:90-93",
+        "src/jev-read/http.ts:13-43"
+      ]
+    },
+    {
+      "finding": "O envelope policy é usado por System One e ferramentas de laboratório, mas Trader importa SpotLedger/economics/config/Market e não importa policy/envelope. Se a política por fase deveria limitar ordens Kuru, a ligação não foi observada e requer decisão do dono; não alterada.",
+      "classification": "needs_review",
+      "document_paths": [
+        "docs/POLITICA-DE-LIMITES.md",
+        "docs/READINESS-SPEC.md"
+      ],
+      "current_refs": [
+        "src/trader.ts:1-8",
+        "src/system-one/brief.ts:14-16",
+        "src/policy/envelope.ts:8-15"
+      ]
+    },
+    {
+      "finding": "Checkpoints de branch, HTTP, localhost, exposição, sessão OKX e threat model registram datas, hashes ou processos próprios; mantidos como evidência histórica, sem extrapolar para runtime presente.",
+      "classification": "historical_evidence",
+      "document_paths": [
+        "docs/BRANCH-READINESS-CHECKPOINT.md",
+        "docs/BRANCH-READINESS-REVIEW.md",
+        "docs/HTTP-PREVIEW-INTEGRATED-RUNTIME-CHECKPOINT-20261011.md",
+        "docs/LOCALHOST-ORIGIN-DIAGNOSIS-20261011.md",
+        "docs/SYSTEM-ONE-EXPOSURE-CHECKPOINT.md",
+        "docs/OKX-SESSION-READINESS-20261011.md",
+        "docs/JEV-OKX-SDD-THREAT-MODEL-20261009.md"
+      ],
+      "current_refs": [
+        "docs/HTTP-PREVIEW-SPEC-20261011.md:3-18",
+        "scripts/http-preview.ts:16-23"
+      ]
+    }
+  ],
+  "tests_run": [],
+  "verification_scope": "static_source_and_document_inspection",
+  "unverified": [
+    "Runtime, .env, credentials in session, wallet/account state, RPC connectivity and current OKX data were not inspected or exercised.",
+    "No System One or Jev model inference, HTTP preview process, browser, doctor, order, signature, deposit or other financial action was run.",
+    "No product tests, typecheck, build, deployment check or performance/latency measurement was run; dated test/runtime reports remain historical.",
+    "No profitability, fill quality, out-of-sample edge, current deployment or current server/port ownership is certified."
+  ],
+  "source_drift": [],
+  "billed_cost": null,
+  "classification_counts": {
+    "historical_evidence": 27,
+    "proposal": 1,
+    "frozen_contract": 5,
+    "current_reference": 2
+  },
+  "snapshot_verification": {
+    "snapshot_captured": "2026-10-13T10:53:03.109798-03:00",
+    "snapshot_branch": "main",
+    "current_head": "00a593bcabe25dbb6d83795268533551098f645b",
+    "current_branch": "main",
+    "owner_code_paths": 107,
+    "owner_code_sha256_matches": 107,
+    "owner_document_paths": 35,
+    "owner_document_sha256_matches": 35,
+    "additional_inspected_source_checks": [
+      {
+        "path": "src/server.ts",
+        "snapshot_sha256": "83025cbd897f5fc54842ab055f9e7ae1d60e93268c6cac51a0031a517d66bcf4",
+        "current_sha256": "83025cbd897f5fc54842ab055f9e7ae1d60e93268c6cac51a0031a517d66bcf4",
+        "matches_snapshot": true
+      },
+      {
+        "path": "src/operator/http.ts",
+        "snapshot_sha256": "2d3efbd93d9169dcef70a8f3f4c26cb0274aac65007247fa8d21f47ce8545aee",
+        "current_sha256": "2d3efbd93d9169dcef70a8f3f4c26cb0274aac65007247fa8d21f47ce8545aee",
+        "matches_snapshot": true
+      },
+      {
+        "path": "src/jev-read/http.ts",
+        "snapshot_sha256": "b93d1ed7020e59c4cf848730993ac2efd8792126a5f06eabbb2816917349af3c",
+        "current_sha256": "b93d1ed7020e59c4cf848730993ac2efd8792126a5f06eabbb2816917349af3c",
+        "matches_snapshot": true
+      },
+      {
+        "path": "scripts/okx-derivatives.ts",
+        "snapshot_sha256": "c0b96948519046440c5eaecf32b6ebc6ed2bec11ea6c9545dd75daa085a337c2",
+        "current_sha256": "c0b96948519046440c5eaecf32b6ebc6ed2bec11ea6c9545dd75daa085a337c2",
+        "matches_snapshot": true
+      },
+      {
+        "path": "src/onchainos/public-okx.ts",
+        "snapshot_sha256": "2380e0397ac7a53c9bc7d96a51039cdc487d1737ce658f030099e821197542c0",
+        "current_sha256": "2380e0397ac7a53c9bc7d96a51039cdc487d1737ce658f030099e821197542c0",
+        "matches_snapshot": true
+      },
+      {
+        "path": "src/lab/outcomes.ts",
+        "snapshot_sha256": "db845a899566ea98947972339f4f9268569d56e123093576cac03228145a46b6",
+        "current_sha256": "db845a899566ea98947972339f4f9268569d56e123093576cac03228145a46b6",
+        "matches_snapshot": true
+      }
+    ],
+    "additional_document_checks": [
+      {
+        "path": "docs/OKX-DERIVATIVES-SPEC.md",
+        "exists": true,
+        "snapshot_sha256": "8a0b02e2b82f49bbfb3eb96adaf3b0448c6362fbca1a4a3957f08f45cc1922c2",
+        "current_sha256": "8a0b02e2b82f49bbfb3eb96adaf3b0448c6362fbca1a4a3957f08f45cc1922c2",
+        "matches_snapshot": true
+      },
+      {
+        "path": "docs/okx-derivatives-v1/GUIA.md",
+        "exists": true,
+        "snapshot_sha256": "0a22067d4aff1d97223e23420dda19d816daaaa6e8f8dc965ac571c403baccde",
+        "current_sha256": "0a22067d4aff1d97223e23420dda19d816daaaa6e8f8dc965ac571c403baccde",
+        "matches_snapshot": true
+      }
+    ],
+    "worktree_status_path_count_before_this_receipt_write": 183,
+    "worktree_paths_before_either_output_write": 182
+  },
+  "additional_documents_read": [
+    {
+      "path": "docs/SCHEMA.md",
+      "read_mode": "full"
+    },
+    {
+      "path": "docs/index.md",
+      "read_mode": "full"
+    },
+    {
+      "path": "docs/log.md",
+      "read_mode": "full"
+    },
+    {
+      "path": "docs/_meta/delegation-contract.md",
+      "read_mode": "full"
+    },
+    {
+      "path": "docs/_meta/organization-spec.md",
+      "read_mode": "full"
+    },
+    {
+      "path": "docs/OKX-DERIVATIVES-SPEC.md",
+      "read_mode": "full"
+    },
+    {
+      "path": "docs/okx-derivatives-v1/GUIA.md",
+      "read_mode": "full"
+    }
+  ],
+  "scope_note": "Somente a página de conceito e este recibo foram escritos; fontes, index.md, log.md e documentos atribuídos permaneceram somente leitura."
+}

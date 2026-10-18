@@ -1,0 +1,106 @@
+/* The alerts panel speaks the vocabulary of the other topbar panels: --bg-deck wells, --edge borders, --ink text, one lit
+   border for the focused field. No animation: the badge is a still number, never a pulse. */
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.heading { color: var(--ink-3); font: var(--fs-micro); letter-spacing: var(--track-micro); text-transform: uppercase; }
+
+.badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  display: grid;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  place-items: center;
+  border-radius: var(--r-pill);
+  background: var(--hold);
+  color: var(--bg-deck);
+  font: 700 10px/16px var(--font-mono);
+}
+
+.form { display: flex; flex-direction: column; gap: var(--s2); }
+.label { color: var(--ink-2); font: var(--fs-sm); }
+.row { display: flex; gap: var(--s2); }
+
+.input {
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 32px;
+  padding: 0 var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-well);
+  color: var(--ink);
+  font: var(--fs-sm);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.input::placeholder { color: var(--ink-3); }
+.input:hover:not(:disabled) { border-color: var(--edge-strong); }
+.input:focus-visible { border-color: var(--edge-focus); outline: 2px solid var(--edge-focus); outline-offset: 1px; }
+.input:disabled { cursor: not-allowed; opacity: 0.7; }
+
+.create {
+  flex: none;
+  height: 32px;
+  padding: 0 var(--s3);
+  border: 1px solid color-mix(in srgb, var(--signal) 45%, var(--edge));
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--signal) 14%, var(--bg-deck));
+  color: var(--ink);
+  cursor: pointer;
+  font: var(--fs-xs);
+  transition: border-color var(--dur-fast) var(--ease-out-expo), background var(--dur-fast) var(--ease-out-expo);
+}
+.create:hover:not(:disabled) { border-color: var(--signal); background: color-mix(in srgb, var(--signal) 22%, var(--bg-deck)); }
+.create:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+.create:disabled { border-color: var(--edge); background: var(--bg-deck); color: var(--ink-3); cursor: not-allowed; }
+
+.preview { color: var(--ink-3); font: var(--fs-sm); }
+.preview[data-kind="invalido"], .preview[data-kind="igual"], .preview[data-kind="sem-preco"] { color: var(--hold); }
+
+.empty, .note { color: var(--ink-3); font: var(--fs-sm); }
+
+.list { display: flex; max-height: 220px; flex-direction: column; gap: var(--s1); padding: 0; overflow-y: auto; list-style: none; }
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s2) var(--s3);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--bg-deck);
+}
+.item[data-state="fired"] { border-color: color-mix(in srgb, var(--hold) 45%, var(--edge)); }
+.itemText { display: flex; min-width: 0; flex: 1 1 auto; flex-direction: column; }
+.itemTitle { color: var(--ink); font: var(--fs-xs); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.itemState { color: var(--ink-3); font: var(--fs-micro); letter-spacing: 0.04em; }
+.item[data-state="fired"] .itemState { color: var(--hold); }
+
+.remove {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+.remove:hover { border-color: var(--edge-strong); color: var(--ink); }
+.remove:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }
+
+.clear {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--signal);
+  cursor: pointer;
+  font: var(--fs-xs);
+}
+.clear:hover { text-decoration: underline; }
+.clear:focus-visible { outline: 2px solid var(--edge-focus); outline-offset: 2px; }

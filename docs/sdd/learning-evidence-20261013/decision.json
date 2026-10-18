@@ -1,0 +1,59 @@
+{
+  "receiptId": "8c7ecc79-479d-40be-b187-b4181a570f7f",
+  "model": "jev-1.13.0",
+  "answers": {
+    "design": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "bounded",
+      "bestCandidate": "bounded",
+      "probabilities": {
+        "bounded": 1,
+        "broad": 0,
+        "abstain": 0,
+        "insufficient_evidence": 0
+      },
+      "confidence": 1,
+      "disposition": "recommendation",
+      "recommendation": "bounded",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    },
+    "seam": {
+      "type": "choice",
+      "domain": "strategy",
+      "providerChoice": "public",
+      "bestCandidate": "public",
+      "probabilities": {
+        "public": 0.73,
+        "internal": 0.01,
+        "abstain": 0.13,
+        "insufficient_evidence": 0.13
+      },
+      "confidence": 0.64,
+      "disposition": "recommendation",
+      "recommendation": "public",
+      "policy": {
+        "version": "decision-policy-2026-09-26.1",
+        "mode": "conservative",
+        "minConfidence": 0.6,
+        "minProbability": 0.6,
+        "calibration": "not_locally_calibrated"
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 822,
+    "output_tokens": 105
+  },
+  "costUsd": null,
+  "authority": "advisory_only",
+  "approved_by": "jev_delegated",
+  "human_response": false,
+  "inputDigest": "0bf8e7567eb8966e8842a38fea09c45d8fdac159e47eb1fc01fd46a18935bce6"
+}

@@ -1,0 +1,151 @@
+{
+ "contradicoes": [
+  "Orcamento do Jev: t03 cita 144 por dia (src/agent/budget.ts:18), t05 cita 288 por dia para intervalo de 5 min, t06 e t07 confirmam 144 em budget.ts:18 com capacidade de 720 no perfil arrojado, e a nota de viabilidade cita 720. Um ciclo de 1 min pede 1.440. Nao existe numero unico de consultas por dia.",
+  "Limites da OKX DEX: t02, t03 e t08 dizem que o limite por segundo nao esta publicado. t11 cita a pagina trade/api-fee com trial de 1 RPS (ate 5 RPS com aprovacao) e faixa Start-up de 2 a 50 RPS. Se t11 estiver certo, t02, t03 e t08 estao desatualizados nesse ponto.",
+  "Limite de 20 req/2 s em tickers da OKX: t09 e t10 dizem que tickers publicos tem 20 req/2 s por IP; t11 diz que o numero 20/2 s aparece so no endpoint privado Get instruments, e t03 o marca como parcial. Confirma-se apenas o limite de 3 req/s por IP para conexao WebSocket publica.",
+  "Limite de WebSocket: t02 registra 3 requisicoes por segundo por API KEY no OnchainOS (plano pago). t09 e t10 registram 3 req/s por IP no WebSocket publico da OKX. Sao provedores diferentes, e os textos nao deixam claro a qual se aplica cada numero.",
+  "Ciclo atual: t01 e t05 afirmam ciclo de 2 min quente, mas a correcao de t01 mostra que com OPERATOR_INTERVAL_MS=60000 o ciclo quente permanece em 1 min (min(ritmo, 2 min)), e t11 nao encontrou caminho de codigo com 1 min. Dentro de t07, a mediana de 135,6 s convive com um ciclo medido de 37,5 s.",
+  "Atrito por operacao: t01 usa 0,5% como piso de ida e volta com duas pernas de 0,25%; t07 mede 0,42% em ativos liquidos e 1,8% a 2,1% em rasos; t08 mede 0,17% a 0,56% em seis pares de um ativo. Os tres numeros nao batem, e a base de fills (fills.jsonl) nao esta no repo, portanto nao verificada.",
+  "Taxa de rede: t08 cita cotacao de 0,0005 USD contra 0,0103 USD no recibo (cerca de 20 vezes). Nenhum topico decompos a diferenca em taxa base, prioridade e assinaturas extras. O impacto em US$ 121 e pequeno (0,017% no round trip), mas a estimativa de custo do repo esta errada.",
+  "Capital de referencia: t01, t02, t03 e t07 usam US$ 121. t12 registra 118 medido em 15/10 (118,17 a 118,80) como base mais recente, 100 em so-latest.json e 126 em design.md. A meta de US$ 1.180 de ANALISE-10X usa 118.",
+  "Premium e excedente OnchainOS: o resumo de t02 diz premium de 58.949 no mes e sem excedente, mas a correcao a10 mostra 133.238 por mes a 1 min, com excedente de 33.238 chamadas (cerca de US$ 6,65). Basic a 1 min sobe de 157 mil para 257 mil a 357 mil por mes, com excedente de 15,75 a 25,71 USD.",
+  "Slot Solana: o repo usa 300 ms (LIVE-QUALIFICATION.md:285 cita bloco de 300 ms) e t08 usa cerca de 400 ms. Nenhuma fonte primaria foi lida para decidir.",
+  "Pump.fun: o resumo de t09 diz taxa de graduacao de 1,4% a 2%, mas a correcao registra 1,4% a 6,7% conforme o periodo (mecanismo BOOST, julho de 2026), e retira a mediana de 4,9 min. O resumo nao refletiu a correcao.",
+  "Custo do Jev: t07 usa 13,8 mil a 15,6 mil tokens por consulta, com custo diario de US$ 0,44 a 0,94, mas CADENCIA registra 7.799 tokens numa consulta real. A faixa de custo depende de qual tamanho de Brief e o padrao.",
+  "Coverage doc OnchainOS: t02 confirma que o 402 do provedor e pagamento exigido, enquanto onchainos-coverage.md:33 diz que 402 vira cota esgotada. O documento do repo precisa de correcao, e o codigo (http.ts:438-439) segue a leitura de t02."
+ ],
+ "lacunas": [
+  {
+   "pergunta": "Qual o limite oficial por segundo e por minuto da OKX DEX (OnchainOS) e da API publica OKX v5 por conta, com o codigo HTTP e o cabecalho de throttling devolvidos quando o limite estoura?",
+   "por_que": "Decide se leituras por ciclo de 1 min cabem em qualquer plano. t11 diz que a pagina trade/api-fee publica 1 RPS trial e 2 a 50 RPS Start-up, enquanto t02, t03 e t08 dizem que nao ha limite publicado. A contradicao muda o desenho de cota.",
+   "topico_relacionado": "t02, t03, t08, t11"
+  },
+  {
+   "pergunta": "Qual o custo all-in medido por round trip (taxa de pool, slippage, price impact, taxa de rede, prioridade e gorjeta Jito) em pelo menos 30 execucoes reais, separado por ativo liquido e raso, e onde estao os fills.jsonl?",
+   "por_que": "A meta de 0,5% a 1% por ciclo depende quase inteiramente desse numero. Hoje existem tres valores (0,42%, 0,17% a 0,56%, 1,8% a 2,1%) sem base de fills no repo. Sem isso, nenhuma arquitetura pode ser comparada com a meta.",
+   "topico_relacionado": "t01, t07, t08, t12"
+  },
+  {
+   "pergunta": "Qual a latencia p50 e p95 de uma decisao completa do Jev, carimbada por etapa (leitura do livro, fatos, ecossistema, modelo, ordem), e qual o teto de consultas por dia contratado com a TypeSafe AI (144, 288, 720 ou 1.440)?",
+   "por_que": "Sem essas duas medidas nao se sabe se um ciclo de 1 min e viavel. A mediana de 37,5 s (t07) e o teto somado de 170 s antes do modelo (t07) conflitam, e o orcamento de consultas limita a cadencia independentemente da fonte de dados. Medir sem chamar o Jev nesta fase.",
+   "topico_relacionado": "t05, t07, t03, t06"
+  },
+  {
+   "pergunta": "E possivel ler o estado de pools Solana (Raydium CP e CLMM, Orca Whirlpool, Meteora) por RPC WebSocket com decodificador validado contra o IDL oficial, e quantos pools por segundo cabem num plano pago de Helius, Triton ou QuickNode, a que custo mensal?",
+   "por_que": "E a unica alternativa a OnchainOS para dados de token Solana fora da CEX. t04 e t09 nao confirmaram limites de Triton e QuickNode, nem os IDLs oficiais, e t04 deixou o custo de getProgramAccounts sem fonte. Sem isso a opcao de dados proprios fica sem numero.",
+   "topico_relacionado": "t04, t08, t09"
+  },
+  {
+   "pergunta": "Os termos de uso integrais da OKX Web3 (secoes 2.7, 4.10 e 5.7, e o trecho a partir do caractere 100.000) e a OKX Web3 Build API Terms permitem coleta automatizada de paginas do OKX Wallet e do OnchainOS?",
+   "por_que": "Define se a raspagem, a opcao de maior ganho de cota, entra ou sai do ranking. Ausencia de clausula nao e permissao, e a secao 4.10 cita agentes de IA e script automatizado. A decisao final de risco de termos fica com o dono, conforme a regra de termos e cobranca.",
+   "topico_relacionado": "t05, t07, t10, t02"
+  }
+ ],
+ "ranking_oportunidades": [
+  {
+   "titulo": "Medir custo all-in e latencia em sombra antes de qualquer mudanca (E0 e replay de ciclo)",
+   "ganho": "Define se a meta de 0,5% a 1% por ciclo e alcancavel com custos reais. Sem isso nenhuma das outras oportunidades tem numero de retorno. Nao promete lucro.",
+   "esforco": "baixo a medio",
+   "risco": "baixo, somente leitura e sombra",
+   "prioridade": 1,
+   "topicos": "t01, t07, t08, t10, t11, t12"
+  },
+  {
+   "titulo": "Filtrar candidatos por custo de ida e volta antes da decisao do Jev",
+   "ganho": "Evita compras cujo atrito supera o movimento esperado, que e o gargalo que t12 mostra (0 de 7 voltas positivas, perda na perna de caixa).",
+   "esforco": "baixo a medio",
+   "risco": "baixo",
+   "prioridade": 2,
+   "topicos": "t07, t08, t12"
+  },
+  {
+   "titulo": "Feed publico da OKX para o universo CEX como fonte de preco, sem cota OnchainOS",
+   "ganho": "Troca leituras REST de 15 s por fluxo WebSocket de tickers (cerca de 3.870 msg/s medidos, 1.965 instrumentos) e libera a cota Basic para o que so a OnchainOS entrega. Cobre CEX, nao token Solana.",
+   "esforco": "medio",
+   "risco": "baixo, API publica oficial; limite de conexao ainda nao publicado",
+   "prioridade": 3,
+   "topicos": "t03, t05, t09, t10"
+  },
+  {
+   "titulo": "Cadencia por evento com prova de consumo e gatilho para o Jev (E3)",
+   "ganho": "Reduz o atraso entre o movimento e a decisao sem multiplicar as consultas. Respeita o teto de 144 a 720 por dia e a cota de OnchainOS.",
+   "esforco": "medio",
+   "risco": "medio, depende de medir a cota real do Jev",
+   "prioridade": 4,
+   "topicos": "t01, t06, t07, t12"
+  },
+  {
+   "titulo": "Cache por idade e governador de cota por tipo de leitura, no lugar do corte global",
+   "ganho": "Viabiliza mais ciclos dentro da cota gratuita de 100 mil Basic e 100 mil Premium por mes (cerca de 2,24 chamadas por minuto em toda a conta).",
+   "esforco": "baixo",
+   "risco": "baixo; cache hit pode nao contar na cota, ainda nao confirmado",
+   "prioridade": 5,
+   "topicos": "t02, t07, t12"
+  },
+  {
+   "titulo": "Cotacao de Jupiter separada da leitura, como segunda opiniao antes da execucao",
+   "ganho": "Reduz a dependencia da OnchainOS na etapa de cotacao e de execucao. Limites pagos da Jupiter ainda sem preco lido.",
+   "esforco": "medio",
+   "risco": "medio, nova dependencia de fornecedor",
+   "prioridade": 6,
+   "topicos": "t04, t08"
+  },
+  {
+   "titulo": "Reconciliacao de execucao em voo, pre-criacao e fechamento de contas de token",
+   "ganho": "Evita ordem duplicada, o risco de maior perda em carteira pequena. Ganho pequeno em percentual, relevante em capital de US$ 121.",
+   "esforco": "baixo",
+   "risco": "baixo",
+   "prioridade": 7,
+   "topicos": "t08"
+  },
+  {
+   "titulo": "Execucao com bundles Jito e protecao contra sanduiche em tokens rasos",
+   "ganho": "Reduz perda por sanduiche em ativos rasos, valor ainda nao medido. Gorjeta minima de 1.000 lamports por bundle, limite de 1 req/s por IP por regiao.",
+   "esforco": "medio",
+   "risco": "medio",
+   "prioridade": 8,
+   "topicos": "t01, t04, t08, t09"
+  },
+  {
+   "titulo": "Leitura local de pools Solana por RPC WebSocket como camada de dados primaria",
+   "ganho": "Elimina o teto de consultas para preco de tokens Solana e cobre tokens que a OKX nao lista. Ganho depende de limites de Helius, Triton ou QuickNode ainda nao lidos.",
+   "esforco": "alto",
+   "risco": "alto, decodificadores por DEX e reconexao",
+   "prioridade": 9,
+   "topicos": "t04, t08, t09, t10"
+  },
+  {
+   "titulo": "Enriquecimento Premium direcionado a poucos candidatos",
+   "ganho": "Sinais de concentracao e detentores sem consumir a cota Basic perto do teto; custo do Premium excedente (cerca de US$ 6,65 por mes a 1 min) precisa entrar na conta.",
+   "esforco": "medio",
+   "risco": "baixo a medio",
+   "prioridade": 10,
+   "topicos": "t02, t12"
+  },
+  {
+   "titulo": "WebSocket pago do OnchainOS (Starter, US$ 99 por mes) para dados em tempo real",
+   "ganho": "Canal de preco continuo sem cota REST. O custo fixo equivale a cerca de 82% do capital de US$ 121 por mes, o que pesa mais que o ganho ate medir o retorno.",
+   "esforco": "baixo",
+   "risco": "alto, custo fixo e cobranca bloqueada para decisao do dono",
+   "prioridade": 11,
+   "topicos": "t02, t06, t08"
+  },
+  {
+   "titulo": "Terceiros licenciados de dados de mercado cripto com API ou WebSocket",
+   "ganho": "Cobertura ampla com termos claros, sem risco de raspagem.",
+   "esforco": "medio",
+   "risco": "medio, custo mensal bloqueado para decisao do dono",
+   "prioridade": 12,
+   "topicos": "t05"
+  },
+  {
+   "titulo": "Raspagem do site OKX Wallet e OnchainOS",
+   "ganho": "Dados de mercado sem consumo da cota oficial, se a fonte for permitida e estavel. Nao verificado nos termos.",
+   "esforco": "alto (headless, anti-bot, manutencao)",
+   "risco": "muito alto, risco de bloqueio da carteira ou conta e de violacao de termos; a regra do projeto bloqueia nova dependencia para decisao do dono",
+   "prioridade": 13,
+   "topicos": "t02, t05, t07, t10, t12"
+  }
+ ],
+ "observacoes": "Critica feita somente sobre o resumo entregue, sem chamadas de ferramenta, sem edicao do repo e sem chamadas pagas. Varias correcoes das verificacoes (t01, t07, t09, t02) nao chegaram ao resumo; quando citadas, foram aplicadas aqui. Os numeros de ganho do ranking sao qualitativos porque nenhum topico mediu retorno liquido por ciclo. As cinco lacunas devem seguir para a decisao Jev (jev-consensus) conforme a regra global, e nao foram enviadas nesta passagem. Nenhum arquivo foi criado ou alterado."
+}

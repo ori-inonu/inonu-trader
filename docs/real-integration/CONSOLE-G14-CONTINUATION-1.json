@@ -1,0 +1,24 @@
+{
+  "observation": "actual-local-processes-for-bounded-ui-review",
+  "sourceDigest": "5c0949bc33e20ac9ccad02697e7ef4623ecac22a990e281c76fd7d9dea41f323",
+  "startedAtMs": 1791754325584,
+  "stopRequestedAtMs": 1791755140493,
+  "finishedAtMs": 1791755140645,
+  "childPid": 20068,
+  "backend": "http://127.0.0.1:4130",
+  "frontend": "http://127.0.0.1:4131",
+  "journal": "data/real/g14-continuation-1-4130.jsonl",
+  "exitCode": 0,
+  "portsClosed": {
+    "backend": true,
+    "frontend": true
+  },
+  "lockAbsent": true,
+  "executionEnabled": false,
+  "authenticatedWeb3Exercised": false,
+  "appJevExercised": false,
+  "completeCoreCycles": 0,
+  "stdout": "{\"mode\":\"paper\",\"executionEnabled\":false,\"backend\":\"http://127.0.0.1:4130\",\"ui\":\"http://127.0.0.1:4131\",\"uiMode\":\"production\"}\n▲ Next.js 16.3.4\n- Local:         http://127.0.0.1:4131\n- Network:       http://127.0.0.1:4131\n✓ Ready in 426ms\n{\"mode\":\"paper\",\"executionEnabled\":false,\"url\":\"http://127.0.0.1:4130/api/real/health\",\"intervalMs\":60000,\"dependencies\":[\"Configure OKX_WEB3_API_KEY no ambiente local do aplicativo\",\"Configure OKX_WEB3_API_SECRET no ambiente local do aplicativo\",\"Configure OKX_WEB3_API_PASSPHRASE no ambiente local do aplicativo\",\"Configure TYPESAFE_AI_API_KEY do aplicativo\",\"Consumo Jev do aplicativo ainda não autorizado na configuração\",\"Autorize a consulta Web3 da carteira conectada\",\"Configure o par e a quantidade em unidades mínimas para consultar DEX\"]}\n✓ Running next.config.ts took 167ms\n{\"event\":\"console-closed\",\"resourcesClosed\":true,\"forced\":false,\"unexpectedExit\":false}\n",
+  "stderr": "",
+  "shutdownReceipt": "{\"event\":\"console-closed\",\"resourcesClosed\":true,\"forced\":false,\"unexpectedExit\":false}"
+}

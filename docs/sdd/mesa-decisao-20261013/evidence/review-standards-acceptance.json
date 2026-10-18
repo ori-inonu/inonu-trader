@@ -1,0 +1,285 @@
+{
+  "reviewer": "01a13637-811f-70d0-be0c-4f717d4105e8",
+  "role": "independent standards/code correctness",
+  "applicationEdits": false,
+  "acceptanceEdits": false,
+  "providerCalls": false,
+  "scope": {
+    "candidate": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-candidate",
+    "baseline": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/baseline",
+    "isolatedTests": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-standards-workspace",
+    "comparison": "37 manifested paths against exact pre-task baseline, not HEAD; two concurrent dependencies reviewed separately"
+  },
+  "manifestSha256": "e95cf6f907d9fad9184de72f396e5f605f9a7d2c0d1de8ec477a5ea76e300ecb",
+  "specSha256": "d7ee2282f6178cee183dea745698f3fa86ff27e49b55f24fcd115fd6088f8298",
+  "hashEvidence": [
+    "final-hashes-after.json",
+    "final-integrity-close.json",
+    "final-mobile-integrity.json",
+    "final-mobile-evidence-hashes.json"
+  ],
+  "independentRuns": [
+    {
+      "cwd": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-standards-workspace",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "test",
+        "--timeout",
+        "15000",
+        "./src/settings/runtime-key.test.ts",
+        "./src/settings/store.test.ts",
+        "./src/settings/http.test.ts",
+        "./src/desktop/vault.test.ts",
+        "./src/inonu/ask.test.ts",
+        "./src/inonu/jev-model.test.ts",
+        "./src/inonu/portfolio.test.ts",
+        "./src/inonu/http.test.ts",
+        "./src/outcomes/decision-log.test.ts",
+        "./reviewer-cancel-final.test.ts"
+      ],
+      "pass": 223,
+      "fail": 0,
+      "assertions": 1505,
+      "files": 10,
+      "exitCode": 0,
+      "log": "final-root-tests-qualified.log",
+      "qualification": "Before final visual/concurrent sync; key/ask/portfolio/HTTP sources unchanged. Modified decision-log dependency and tests superseded by final 44-test run."
+    },
+    {
+      "cwd": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-standards-workspace/web",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "test",
+        "--timeout",
+        "15000",
+        "./src/lib/inonu/client.test.ts",
+        "./src/lib/inonu/portfolio.test.ts",
+        "./src/lib/settings/client.test.ts",
+        "./src/lib/settings/settings-view-render.test.tsx"
+      ],
+      "pass": 48,
+      "fail": 0,
+      "assertions": 220,
+      "files": 4,
+      "exitCode": 0,
+      "log": "final-web-tests-qualified.log"
+    },
+    {
+      "cwd": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-standards-workspace",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "test",
+        "--timeout",
+        "15000",
+        "./src/outcomes/live-costs.test.ts",
+        "./src/outcomes/wire.test.ts",
+        "./web/src/lib/purity-bundle.test.ts"
+      ],
+      "pass": 20,
+      "fail": 0,
+      "assertions": 62,
+      "files": 3,
+      "exitCode": 0,
+      "log": "final-purity-independent.log",
+      "qualification": "Before final concurrent sync; wire/purity qualified again in final 44-test run."
+    },
+    {
+      "cwd": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-standards-workspace/web",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "test",
+        "--timeout",
+        "15000",
+        "./src/lib/mesa/layout.test.ts",
+        "./src/lib/mesa/dock-layout.test.ts",
+        "./src/lib/purity-bundle.test.ts"
+      ],
+      "pass": 26,
+      "fail": 0,
+      "assertions": 95,
+      "files": 3,
+      "exitCode": 0,
+      "log": "final-mobile-web.log"
+    },
+    {
+      "cwd": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-standards-workspace",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "test",
+        "--timeout",
+        "15000",
+        "./src/outcomes/decision-log.test.ts",
+        "./src/outcomes/wire.test.ts",
+        "./src/outcomes/live-costs.test.ts",
+        "./web/src/lib/purity-bundle.test.ts",
+        "./reviewer-cancel-final.test.ts"
+      ],
+      "pass": 44,
+      "fail": 0,
+      "assertions": 144,
+      "files": 5,
+      "exitCode": 0,
+      "log": "final-concurrent-independent.log"
+    },
+    {
+      "cwd": "C:/Users/gabri/.codex/visualizations/2026/10/13/01a135ff-362e-7cf0-ac4f-ef678d322188/review-standards-workspace",
+      "argv": [
+        "bun",
+        "--no-env-file",
+        "--no-install",
+        "x",
+        "tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ],
+      "exitCode": 0,
+      "log": "final-concurrent-types-existing-config.log",
+      "qualification": "Unmodified candidate tsconfig.json; package typecheck first failed TS5058 because tsconfig.verification.json is absent from isolated copy. Failed attempt retained; coordinator full-config typecheck is secondary evidence."
+    }
+  ],
+  "independentCrossLayer": {
+    "test": "reviewer-cancel-final.test.ts",
+    "includedInRootRun": true,
+    "cases": [
+      "owned DELETE before POST prevents collection, model and ledger",
+      "Request abort plus owned DELETE during blocked collection prevents model",
+      "foreign UUID DELETE leaves owner's consultation untouched"
+    ],
+    "mockedProvider": true,
+    "egress": false
+  },
+  "acceptance": {
+    "UI-1": {
+      "sourceVerified": true,
+      "independentTests": [
+        "layout",
+        "dock-layout",
+        "original purity gates"
+      ],
+      "secondaryBrowser": "Coordinator verify-chart-ui.mjs SHAe8ca19f0b691c22a9b4fa5902e5886d967464271946d78667ac9de2e8b4a92c1; chart-ui-results.json SHA34dfacc7cb59063288afc757f7ec6a935d4e7159879fc19794c23820667b33c9, actual production build at1440x900 and390x844",
+      "verified": "Flat chart priority; visible expand/restore in desktop and mobile; interval5m, Linha style, selected ETH/BTC and all16 layers retained. Desktop1122x488 to1408x688; mobile366x568 to366x618 then original. First and last indicator checkbox clicked without force; last elementFromPoint centerVisible true. Visible2px solid focus; no horizontal overflow/JS errors/pulse/blink/forbidden text.",
+      "resolved": "MesaView.tsx477 now contains mobile labelled LayoutButton; MesaView.module.css98-99 creates real mobile expansion without remounting chart; PriceChart.module.css421-429 fixes clipped mobile menu; pre-menu SHA916670a862909d12061b0199eb3b57807fda821a04d95ff15b01d8ba9b07976b confirms concurrent CSS preservation",
+      "open": null
+    },
+    "UI-2": {
+      "sourceVerified": true,
+      "independentTests": [
+        "portfolio client",
+        "settings render"
+      ],
+      "secondaryBrowser": "wallet-ui-results.json with synthetic EIP1193 wallet and intercepted model",
+      "verified": "partial/network/age read states; read/quote/execution distinct; connect/refresh without POST; no implicit trade authorization"
+    },
+    "KEY-1": {
+      "sourceVerified": true,
+      "independentTests": [
+        "runtime-key",
+        "store",
+        "settings http",
+        "vault"
+      ],
+      "verified": "fixed environment key allowlist, canonical/alias, process/User/Machine fallback with doubles; local/vault precedence, origin and presence only, Jev last4 null, no Windows mutations; presence not authentication"
+    },
+    "PORT-1": {
+      "sourceVerified": true,
+      "independentTests": [
+        "portfolio",
+        "portfolio client",
+        "ask"
+      ],
+      "verified": "minimal no-address composition, canonical contract/network identity, 2-6 candidates, conservative profile, partial/unknown null, valid observation only, observed empty distinction"
+    },
+    "PORT-2": {
+      "sourceVerified": true,
+      "independentTests": [
+        "ask",
+        "model",
+        "portfolio",
+        "http",
+        "decision-log",
+        "reviewer cross-layer"
+      ],
+      "verified": "single-flight/cooldown/caps/ledger and owned UUID cancellation/tombstones; one mock Jev decision boundary, validation only, no absent-position sell/leverage/direction score, evidence origin/age/gaps"
+    },
+    "PORT-3": {
+      "sourceVerified": true,
+      "independentTests": [
+        "portfolio client",
+        "ask",
+        "model",
+        "reviewer cross-layer"
+      ],
+      "secondaryBrowser": "wallet-ui-results.json",
+      "verified": "manual consent with minimal sharing notice; answer costs/gaps/coverage/advisory; session/generation/age invalidation; no wallet address/key/RPC/transaction/model execution by reviewer"
+    },
+    "SYS-1": {
+      "sourceVerified": true,
+      "hashEvidence": "sys-preservation-hashes.json and final-hashes-after.json; final-mobile-integrity.json and final-mobile-evidence-hashes.json",
+      "verified": "trader.ts, chain.ts, model.ts, config.ts and index.ts unchanged from baseline; concurrent outcomes delta preserved, live-costs pure seam and original eight gates pass; new concurrent InsightBox/wire/decision-log/judge read and copied only to reviewer workspace, 44 tests and source-config typecheck pass; portfolio early-return and owned cancellation forwarding preserved",
+      "limit": "preservation of source does not certify live trading/block cadence"
+    },
+    "EVID-1": {
+      "sourceVerified": true,
+      "report": "candidate REPORT.md",
+      "verified": "primary source comparison and documented/code/live distinctions; Oxa Visuality unconfirmed, OnchainOS/wallet boundaries and lack of ML/profit gain claims explicit",
+      "limit": "reviewer did not re-browse sources or certify provider integration",
+      "reportSha256": "defd40a15577f67e853654dec1c660f5f481bb7ca71c0128ce7528a46c540779"
+    }
+  },
+  "standards": {
+    "sources": [
+      "candidate AGENTS.md",
+      "frozen SPEC"
+    ],
+    "heuristics": "Fowler bounded baseline; no additional actionable introduced heuristic issue"
+  },
+  "resolvedPriorFindings": [
+    "early/global-ID cancellation race replaced by owned UUID and bounded server tombstones",
+    "settings Jev last4 fixture corrected to null",
+    "concurrent purity import corrected via independently tested pure live-costs; eight existing gates unmodified",
+    "UI-1 visible mobile expand/restore control and real height expansion now qualified",
+    "mobile indicators clipping resolved; first and last checkbox clicks verified by coordinator",
+    "two stale candidate files synchronized to already-pinned37-file manifest; concurrent additions and dependencies preserved"
+  ],
+  "secondaryEvidence": {
+    "parentTests": {
+      "root": "490/0,2493 asserts,27 files before final concurrent sync; final concurrent41/0,131 asserts,4 files",
+      "web": "2589/0,47231 asserts,177 files final-web-mobile.log",
+      "build": "final-build-mobile.log successful isolated8-page build",
+      "typecheck": "coordinator root/full verification config and web exit0 including post-concurrent root"
+    },
+    "browserExecutedBy": "coordinator, not reviewer",
+    "documentIntegrity": "Final REPORT and verification.md read from candidate; concurrent-sync ledger matches exact4 synchronized files."
+  },
+  "limitations": [
+    "no live auth/provider credential qualification",
+    "no live private wallet signing/orders/trading",
+    "no profit/ML gain or 300ms live cadence certification",
+    "no application/candidate/private-state mutation",
+    "Browser executed by coordinator, reviewed script/results independently; reviewer did not run browser or re-browse primary sources.",
+    "Independent typecheck uses unmodified candidate tsconfig.json; broader coordinator verification config absent from isolated copy."
+  ],
+  "independentRunsNote": "Separate overlapping runs, not unique test totals.",
+  "currentIntegrity": {
+    "manifestedFiles": 37,
+    "candidateBaselineOwnCopyMatch": 37,
+    "issues": [],
+    "concurrentDependencies": [
+      {
+        "path": "src/outcomes/decision-log.ts",
+        "sha256": "316f923a065db751660d225d824e485c7b8e5a48b7063d11941b49dd501411b0"
+      },
+      {
+        "path": "src/verdict/judge.ts",
+        "sha256": "5d5a9fb8e5b85143e463eac9d7998cbcecaeab28c59d84927d542f69770987c4"
+      }
+    ]
+  },
+  "conclusion": "No actionable introduced correctness, hard-standard or Fowler finding remains in reviewed bounded candidate; all8acceptance IDs qualified with stated independent/secondary limits."
+}

@@ -1,0 +1,13 @@
+{
+  "format": "docs-source-additions-v1",
+  "captured": "2026-10-13T13:05:03.598995-03:00",
+  "origin": "concurrent_ticket_source_after_first_integration_snapshot",
+  "files": [
+    {
+      "path": "docs/sdd/inonu-desktop-v1/evidence/T9.5-T9.7-escada-e-ticket.md",
+      "bytes": 6043,
+      "sha256": "99e014be12212129e5e57b3e271f038c860d2b80c5c14a752233fc9dab6abf42",
+      "hidden": false
+    }
+  ]
+}

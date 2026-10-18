@@ -1,0 +1,50 @@
+[
+  {
+    "path": "src/components/Desk/MesaView.tsx",
+    "input_sha256": "526b69a8bf88e6329189a3eba396f3ebaab0cf2d71cf3e289e58d87008a53748",
+    "output_sha256": "81470f59b93493eeaf14c856627be461dc2df0a8849509237e79c05aee2e1e12",
+    "kind": "separable_three_way_merge"
+  },
+  {
+    "path": "src/components/Desk/MesaView.module.css",
+    "input_sha256": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+    "output_sha256": "5e735abb8fbdab8e936ccb5350df01ec5a5e434adf68d554b09854128b056098",
+    "kind": "separable_three_way_merge"
+  },
+  {
+    "path": "src/components/Desk/Dock/DockPanel.module.css",
+    "input_sha256": "fd7b04297a8914bb9cfd8e2d19651f67f4056e9fb8f926fb81dbc91d80fed24a",
+    "output_sha256": "47e55ce36cf3f3ea9d4ae2fc75b887254dae301159209681057359684fb7ec42",
+    "kind": "separable_three_way_merge"
+  },
+  {
+    "path": "src/components/Desk/InstrumentHeader.tsx",
+    "input_sha256": "476ad3ea55a6f2e44ab5a9695f84f5ea5198af0596569bf6a4201cb6a9b8abbd",
+    "output_sha256": "476ad3ea55a6f2e44ab5a9695f84f5ea5198af0596569bf6a4201cb6a9b8abbd",
+    "kind": "concurrent_dependency_copy"
+  },
+  {
+    "path": "src/components/Desk/InstrumentHeader.module.css",
+    "input_sha256": "8068a99915504cdea2f5e0e1398cffcc365021b7b412ab8253db0ba7d3101355",
+    "output_sha256": "8068a99915504cdea2f5e0e1398cffcc365021b7b412ab8253db0ba7d3101355",
+    "kind": "concurrent_dependency_copy"
+  },
+  {
+    "path": "src/lib/desk/ui/instrument-header.ts",
+    "input_sha256": "294b26aa5833ab9b9a7e777118b06ac48f0e0858c524daa9832a859d82c0265c",
+    "output_sha256": "294b26aa5833ab9b9a7e777118b06ac48f0e0858c524daa9832a859d82c0265c",
+    "kind": "concurrent_dependency_copy"
+  },
+  {
+    "path": "src/lib/desk/ui/instrument-header.test.ts",
+    "input_sha256": "686e4f3a65e75297203428c129533b058fb415cd8dc250c3834f5fb6771b7a1c",
+    "output_sha256": "686e4f3a65e75297203428c129533b058fb415cd8dc250c3834f5fb6771b7a1c",
+    "kind": "concurrent_dependency_copy"
+  },
+  {
+    "path": "src/lib/desk/ui/instrument-header-render.test.tsx",
+    "input_sha256": "fea301519efc6ce1c112f1f22a874ca6b69194e2139c50f55389592df6bf5a2b",
+    "output_sha256": "fea301519efc6ce1c112f1f22a874ca6b69194e2139c50f55389592df6bf5a2b",
+    "kind": "concurrent_dependency_copy"
+  }
+]

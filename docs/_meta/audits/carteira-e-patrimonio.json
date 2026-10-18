@@ -1,0 +1,419 @@
+{
+  "owner": "carteira-e-patrimonio",
+  "snapshot_head": "00a593bcabe25dbb6d83795268533551098f645b",
+  "observed_at": "2026-10-13T11:50:48-03:00",
+  "page": {
+    "path": "docs/concepts/carteira-e-patrimonio.md",
+    "absolute_path": "C:\\Users\\gabri\\jev-trader\\docs\\concepts\\carteira-e-patrimonio.md",
+    "sha256": "34477ea8a4f226a6d3628082258457f94406886076f1c0b3c2532c0e800dffc1",
+    "lines": 68,
+    "bytes": 14555,
+    "frontmatter_source_count": 42,
+    "relative_links_checked": 60,
+    "line_anchors_checked": 45,
+    "wikilinks": [
+      "defi-e-oportunidades",
+      "operador-e-execucao",
+      "governanca-e-historico",
+      "manutencao-da-documentacao"
+    ]
+  },
+  "receipt_path": "docs/_meta/audits/carteira-e-patrimonio.json",
+  "receipt_absolute_path": "C:\\Users\\gabri\\jev-trader\\docs\\_meta\\audits\\carteira-e-patrimonio.json",
+  "documents": [
+    {
+      "path": "docs/FUNDING-RESEARCH.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa de 2026-10-09 sobre uma rota documental Pix/corretora/carteira; não demonstra acesso, elegibilidade, taxas atuais ou operação de conta específica.",
+      "code_refs": []
+    },
+    {
+      "path": "docs/okx-portfolio-v1/CAPITAL-BOUNDARY-AUDIT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Auditoria explicitamente baseada em HEAD 055a637f e em superfícies operator/paper daquele recorte; preserva distinções econômicas, mas não é inventário atual do módulo portfolio-evidence.",
+      "code_refs": [
+        "src/portfolio-evidence/evidence.ts:49-74",
+        "src/portfolio-evidence/reconcile.ts:89-127",
+        "src/okx-wallet/portfolio.ts:213-307"
+      ]
+    },
+    {
+      "path": "docs/okx-portfolio-v1/CONTRACT-COMPARISON.md",
+      "read_mode": "full",
+      "classification": "proposal",
+      "reason": "Documento declara que nenhuma alternativa foi selecionada ou aprovada; requisitos e verificações são propostas, não autorização nem contrato implementado.",
+      "code_refs": [
+        "src/portfolio-evidence/types.ts:19-30",
+        "src/portfolio-evidence/evidence.ts:49-74"
+      ]
+    },
+    {
+      "path": "docs/okx-portfolio-v1/RESEARCH.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa de contratos públicos datada de 2026-10-10; descreve exemplos e limites documentais, sem chamada de endpoint de dados live.",
+      "code_refs": [
+        "src/portfolio-evidence/adapters/okx-endpoints.ts:24-34",
+        "src/portfolio-evidence/adapters/okx-read.ts:1-8"
+      ]
+    },
+    {
+      "path": "docs/okx-portfolio-v1/VALUATION-DIAGNOSTICS-SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "SPEC do diagnóstico local; a função existe, e a busca do símbolo buildWalletValuationDiagnostics encontrou definição, testes e SPEC, sem consumidor de produção no recorte pesquisado.",
+      "code_refs": [
+        "src/okx-wallet/valuation-diagnostics.ts:172-178",
+        "src/okx-wallet/valuation-diagnostics.ts:217-232"
+      ]
+    },
+    {
+      "path": "docs/portfolio-evidence-v1/REPORT.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Relata implementação, revisões e resultados de testes de 2026-10-11/12; a suíte do módulo passou agora, mas isso não certifica runtime, cobertura live ou todos os critérios do relatório.",
+      "code_refs": [
+        "src/portfolio-evidence/collector.ts:225-247",
+        "src/portfolio-evidence/reconcile.ts:89-127",
+        "src/portfolio-evidence/evidence.ts:77-120"
+      ]
+    },
+    {
+      "path": "docs/portfolio-evidence-v1/SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Contrato reservado para estados, identidade, cobertura, escopo read-only, reconciliação e aceitação; a leitura não converte seus critérios em aprovação live.",
+      "code_refs": [
+        "src/portfolio-evidence/types.ts:19-43",
+        "src/portfolio-evidence/evidence.ts:49-74",
+        "src/portfolio-evidence/reconcile.ts:89-127"
+      ]
+    },
+    {
+      "path": "docs/sdd/carteira-evidencia/design.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Design SDD contém o contrato canônico, mas seu inventário e instruções de estado citam main@14cbb7b; esses fatos datados não foram tratados como estado atual.",
+      "code_refs": [
+        "src/portfolio-evidence/types.ts:19-43",
+        "src/portfolio-evidence/evidence.ts:49-120"
+      ]
+    },
+    {
+      "path": "docs/sdd/carteira-evidencia/requirements.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "Requisitos, aceites, fora de escopo e decisões do usuário permanecem fonte canônica e reservada; não foram reescritos como resultado de implementação.",
+      "code_refs": [
+        "src/portfolio-evidence/types.ts:19-30",
+        "src/portfolio-evidence/reconcile.ts:89-127",
+        "src/portfolio-evidence/history.ts:210-230"
+      ]
+    },
+    {
+      "path": "docs/sdd/carteira-evidencia/tasks.md",
+      "read_mode": "full",
+      "classification": "stale_reference",
+      "reason": "Linha 3 afirma que nenhuma tarefa de código foi iniciada; o working tree contém módulos de evidência, coletores, adaptadores, CLI e reconciliação. A existência desses módulos não conclui O1-O8, e o plano canônico não foi alterado.",
+      "code_refs": [
+        "src/portfolio-evidence/collector.ts:225-247",
+        "src/portfolio-evidence/main.ts:12-29",
+        "src/portfolio-evidence/reconcile.ts:89-127"
+      ]
+    },
+    {
+      "path": "docs/WALLET-FINITE-VALUATION.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Resultados reportados vieram de cópias isoladas e descrevem representação finita, não saldo real, precisão exata, cotação atual ou retorno; testes não foram repetidos.",
+      "code_refs": [
+        "src/okx-wallet/portfolio.ts:254-307"
+      ]
+    },
+    {
+      "path": "docs/WALLET-OPPORTUNITIES-SPEC.md",
+      "read_mode": "full",
+      "classification": "frozen_contract",
+      "reason": "SPEC imutável de autorização e aceitação para Monad/X Layer; o painel multichain é uma superfície de leitura separada e não amplia unilateralmente esse contrato.",
+      "code_refs": [
+        "web/src/components/WalletPanel/WalletPanel.tsx:33-57",
+        "web/src/components/MultichainPanel/MultichainPanel.tsx:82-99",
+        "web/src/lib/evm-multichain.ts:25-59"
+      ]
+    },
+    {
+      "path": "docs/wallet-opportunity-research.md",
+      "read_mode": "full",
+      "classification": "historical_evidence",
+      "reason": "Pesquisa de 2026-10-09, com fontes públicas e relato do usuário distinguido de observação onchain; não prova saldo privado, cobertura total nem retorno.",
+      "code_refs": [
+        "web/src/lib/evm-multichain.ts:25-59",
+        "web/src/lib/okx-solana.ts:122-149"
+      ]
+    },
+    {
+      "path": "docs/WALLET-PROPOSAL-REVIEW.md",
+      "read_mode": "full",
+      "classification": "current_reference",
+      "reason": "Descrição do preflight manual continua alinhada ao código: valida formato/identidade/prazo e declara execução não qualificada; nenhum sign/send ocorre nesse fluxo.",
+      "code_refs": [
+        "web/src/lib/wallet-transaction-preflight.ts:17-19",
+        "web/src/lib/wallet-transaction-preflight.ts:25-55",
+        "web/src/lib/wallet-proposal-review.ts:3-15"
+      ]
+    },
+    {
+      "path": "web/OKX-WALLET.md",
+      "read_mode": "full",
+      "classification": "needs_review",
+      "reason": "A cobertura descrita para WalletPanel continua válida no escopo daquela tela, mas o guia não cobre MultichainPanel, que hoje consulta oito EVM e uma sessão Solana separada.",
+      "code_refs": [
+        "web/src/components/WalletPanel/WalletPanel.tsx:33-57",
+        "web/src/components/MultichainPanel/MultichainPanel.tsx:74-99",
+        "web/src/lib/evm-multichain.ts:25-59",
+        "web/src/lib/okx-solana.ts:122-149"
+      ]
+    }
+  ],
+  "code_inspected": [
+    "src/portfolio-evidence/address-analysis.ts",
+    "src/portfolio-evidence/adapters/okx-endpoints.ts",
+    "src/portfolio-evidence/adapters/okx-read.ts",
+    "src/portfolio-evidence/balances.ts",
+    "src/portfolio-evidence/canonical.ts",
+    "src/portfolio-evidence/cli.ts",
+    "src/portfolio-evidence/collector.ts",
+    "src/portfolio-evidence/decimal.ts",
+    "src/portfolio-evidence/evidence.ts",
+    "src/portfolio-evidence/history.ts",
+    "src/portfolio-evidence/identity.ts",
+    "src/portfolio-evidence/main.ts",
+    "src/portfolio-evidence/market.ts",
+    "src/portfolio-evidence/reconcile.ts",
+    "src/portfolio-evidence/report.ts",
+    "src/portfolio-evidence/state.ts",
+    "src/portfolio-evidence/store.ts",
+    "src/portfolio-evidence/types.ts",
+    "src/okx-wallet/chains.ts",
+    "src/okx-wallet/defi.ts",
+    "src/okx-wallet/portfolio.ts",
+    "src/okx-wallet/solana-signer.ts",
+    "src/okx-wallet/trade.ts",
+    "src/okx-wallet/valuation-diagnostics.ts",
+    "web/src/components/MultichainPanel/MultichainPanel.tsx",
+    "web/src/components/WalletPanel/WalletPanel.tsx",
+    "web/src/components/WalletProposalReview/WalletProposalReview.tsx",
+    "web/src/lib/evm-multichain.ts",
+    "web/src/lib/okx-solana.ts",
+    "web/src/lib/okx-wallet.ts",
+    "web/src/lib/onchain/wallet-marks.ts",
+    "web/src/lib/useOkxWallet.ts",
+    "web/src/lib/wallet-freshness.ts",
+    "web/src/lib/wallet-proposal-review.ts",
+    "web/src/lib/wallet-store.ts",
+    "web/src/lib/wallet-transaction-preflight.ts",
+    "scripts/okx-operator.ts"
+  ],
+  "claims": [
+    {
+      "statement": "O valor de patrimônio agregado é a soma de saldos ativos avaliados; PnL, histórico, custo de aquisição e posições DeFi são excluídos.",
+      "source_path": "src/portfolio-evidence/evidence.ts",
+      "symbol": "netWorthOf, buildWalletEvidence",
+      "lines": [49, 74, 77, 120]
+    },
+    {
+      "statement": "Identidade é rede mais contrato ou marcador nativo; estados ausentes e redes sem reporte não são zero.",
+      "source_path": "src/portfolio-evidence/types.ts",
+      "symbol": "STATE_KINDS, AssetIdentity, Coverage",
+      "lines": [19, 43, 81, 91]
+    },
+    {
+      "statement": "RC1 preserva delta entre total reportado e soma com causas candidatas; RC2 compara sinais históricos com saldo ativo sem promover ausência a valor.",
+      "source_path": "src/portfolio-evidence/reconcile.ts",
+      "symbol": "totalVsSum, reconcile",
+      "lines": [41, 82, 89, 127, 136, 160]
+    },
+    {
+      "statement": "A janela do histórico OKX é parcial, de até seis meses; custo não é calculado e permanece nulo com método desconhecido.",
+      "source_path": "src/portfolio-evidence/history.ts",
+      "symbol": "buildHistorySection, costBasisStatements",
+      "lines": [150, 177, 210, 230]
+    },
+    {
+      "statement": "Address Analysis mantém PnL reportado não verificado e sinais de negociação em janela separados do patrimônio.",
+      "source_path": "src/portfolio-evidence/address-analysis.ts",
+      "symbol": "signedStatement, netPositionFromTrades, buildAddressAnalysisSection",
+      "lines": [1, 7, 109, 143, 157, 171]
+    },
+    {
+      "statement": "O leitor EVM configura ativos conhecidos em oito redes e consulta cada uma por RPC pública; a UI declara cobertura parcial e ausência de total USD/capital operável. Solana é sessão e leitura RPC separadas.",
+      "source_path": "web/src/lib/evm-multichain.ts",
+      "symbol": "EVM_CHAINS, readChainBalances, readMultichainBalances",
+      "lines": [1, 5, 25, 59, 180, 220],
+      "related_refs": [
+        "web/src/components/MultichainPanel/MultichainPanel.tsx:82-99",
+        "web/src/lib/okx-solana.ts:122-149"
+      ]
+    },
+    {
+      "statement": "O preflight do browser retorna ready_for_review ou blocked, sempre com executionQualified false; não equivale a assinatura ou execução.",
+      "source_path": "web/src/lib/wallet-transaction-preflight.ts",
+      "symbol": "WalletTransactionPreflightResult, validateWalletTransactionProposal",
+      "lines": [17, 19, 25, 55]
+    },
+    {
+      "statement": "Fora do painel browser, existe um signatário Solana capaz de assinar e enviar uma transação; nenhum caminho foi executado.",
+      "source_path": "src/okx-wallet/solana-signer.ts",
+      "symbol": "SolanaSigner.signAndSend, createSolanaSigner",
+      "lines": [158, 179]
+    },
+    {
+      "statement": "O ramo live do script separado instancia clientes OKX com allowLiveRequests true e configura leitura de inventário e quotes; isso não foi executado nesta auditoria.",
+      "source_path": "scripts/okx-operator.ts",
+      "symbol": "runOperator mode live client setup",
+      "lines": [186, 201]
+    },
+    {
+      "statement": "O cabeçalho do MultichainPanel identifica OKX OnChain OS enquanto seu leitor EVM declara uso direto de RPC pública, uma divergência de rótulo a revisar.",
+      "source_path": "web/src/components/MultichainPanel/MultichainPanel.tsx",
+      "symbol": "MultichainPanelView",
+      "lines": [74, 78],
+      "related_refs": [
+        "web/src/lib/evm-multichain.ts:1-5",
+        "web/src/lib/evm-multichain.ts:180-219"
+      ]
+    }
+  ],
+  "documentation_findings": [
+    {
+      "path": "docs/sdd/carteira-evidencia/tasks.md",
+      "classification": "stale_reference",
+      "document_ref": "lines 1-3: o plano diz que nenhuma tarefa de código foi iniciada",
+      "current_refs": [
+        "src/portfolio-evidence/collector.ts:225-247",
+        "src/portfolio-evidence/main.ts:12-29",
+        "src/portfolio-evidence/reconcile.ts:89-127"
+      ],
+      "assessment": "O plano canônico não foi editado. Existência de código não demonstra conclusão dos objetivos SDD."
+    },
+    {
+      "path": "web/OKX-WALLET.md",
+      "classification": "needs_review",
+      "document_ref": "lines 13-22: cobertura documentada para Monad e X Layer no painel descrito",
+      "current_refs": [
+        "web/src/components/MultichainPanel/MultichainPanel.tsx:74-99",
+        "web/src/lib/evm-multichain.ts:25-59",
+        "web/src/lib/okx-solana.ts:122-149"
+      ],
+      "assessment": "Não é contradição se o texto se limitar a WalletPanel; está incompleto como guia geral da carteira browser."
+    },
+    {
+      "path": "web/src/components/MultichainPanel/MultichainPanel.tsx",
+      "classification": "needs_review",
+      "document_ref": "lines 74-78: badge OKX OnChain OS",
+      "current_refs": [
+        "web/src/lib/evm-multichain.ts:1-5",
+        "web/src/lib/evm-multichain.ts:180-219"
+      ],
+      "assessment": "O leitor descrito no código usa RPCs públicas por rede; revisar o rótulo de proveniência sem assumir API de portfolio OKX."
+    },
+    {
+      "path": "docs/sdd/carteira-evidencia/design.md",
+      "classification": "historical_evidence",
+      "document_ref": "lines 3-5: mapa de estado baseado em main@14cbb7b",
+      "current_refs": [
+        "src/portfolio-evidence/types.ts:19-43",
+        "src/portfolio-evidence/evidence.ts:49-120"
+      ],
+      "assessment": "O design continua canônico como contrato; o inventário antigo não foi relido como status atual."
+    },
+    {
+      "path": "docs/portfolio-evidence-v1/REPORT.md",
+      "classification": "historical_evidence",
+      "document_ref": "lines 3-15 e seções de verificação/revisões: execução datada em 2026-10-11/12",
+      "current_refs": [
+        "src/portfolio-evidence/collector.ts:225-247",
+        "src/portfolio-evidence/reconcile.ts:89-127"
+      ],
+      "assessment": "Resultados registrados são históricos; 379 testes do módulo passaram agora, mas não revalidam runtime/live nem a totalidade dos critérios do relatório."
+    }
+  ],
+  "tests_run": [
+    {
+      "command": "bun run test",
+      "exit_code": 1,
+      "result": "4436 passed, 2 skipped, 1 failed across 4439 tests",
+      "failure": "src/inonu/source-ranking.test.ts:128 expected aquecimento, received undefined. The named test and the complete source-ranking.test.ts file passed when rerun in isolation. No product code was changed because it is outside this owner's write scope."
+    },
+    {
+      "command": "bun test --timeout 15000 --test-name-pattern \"a flow measure that is null says why\" src/inonu/source-ranking.test.ts",
+      "exit_code": 0,
+      "result": "1 passed, 11 filtered out"
+    },
+    {
+      "command": "bun test --timeout 15000 src/inonu/source-ranking.test.ts",
+      "exit_code": 0,
+      "result": "12 passed"
+    },
+    {
+      "command": "bun --no-env-file test --timeout 15000 ./src/portfolio-evidence",
+      "exit_code": 0,
+      "result": "379 passed across 11 files; 1425 expect calls"
+    },
+    {
+      "command": "bun run typecheck",
+      "exit_code": 0,
+      "result": "tsc --noEmit -p tsconfig.verification.json passed"
+    }
+  ],
+  "verification_scope": "static_source_and_document_inspection",
+  "verification": {
+    "assigned_unique_paths_checked": 85,
+    "assigned_paths_missing": 0,
+    "assigned_paths_without_snapshot_hash": 0,
+    "snapshot_hash_mismatches": 0,
+    "documents_classified": 15,
+    "classification_counts": {
+      "current_reference": 1,
+      "historical_evidence": 6,
+      "frozen_contract": 5,
+      "proposal": 1,
+      "stale_reference": 1,
+      "needs_review": 1
+    },
+    "code_files_inspected": 37,
+    "page_lines": 68,
+    "page_limit": 200,
+    "relative_links_valid": 60,
+    "line_anchors_valid": 45,
+    "wikilinks_valid": 4,
+    "frontmatter_source_paths_valid": 42,
+    "portfolio_evidence_tests_passed": 379,
+    "portfolio_evidence_tests_failed": 0,
+    "typecheck_passed": true,
+    "full_test_suite_passed": false,
+    "full_test_suite_counts": {
+      "passed": 4436,
+      "skipped": 2,
+      "failed": 1
+    }
+  },
+  "unverified": [
+    "A suíte completa bun run test teve uma falha em src/inonu/source-ranking.test.ts:128; o teste isolado e o arquivo inteiro passaram ao repetir. A causa da falha somente no conjunto completo não foi determinada, e nenhum código fora do escopo foi alterado.",
+    "A verificação global python docs/_meta/tools/verify.py não completou porque docs/_meta/generated-files.json não existe no working tree; o arquivo compartilhado não foi criado ou alterado.",
+    "Nenhuma API OKX, RPC, extensão/browser autenticado, conta privada, modelo ou dado pessoal foi consultado; nenhum .env foi lido.",
+    "Saldo real, cobertura total de ativos/DeFi/Exchange, frescor live, PnL líquido realizado, método/custo de aquisição, taxas faturadas, lucro e valor reinvestível permanecem desconhecidos.",
+    "Capacidade de assinatura/envio em módulos separados é constatação estática; ativação, configuração, gates e runtime não foram exercitados.",
+    "Busca de símbolos é evidência estática delimitada, não prova de inexistência de consumidor por reflexão ou configuração dinâmica.",
+    "Os quatro artifact_paths do owner não foram abertos nesta tarefa: docs/okx-portfolio-v1/CONTRACT-COMPARISON.json, docs/okx-portfolio-v1/SOURCES.json, docs/portfolio-evidence-v1/MANIFEST.sha256, docs/sdd/carteira-evidencia/verify-citations.ts."
+  ],
+  "source_drift": {
+    "snapshot_scope": "working-tree-with-uncommitted-and-untracked-files",
+    "assigned_unique_paths_checked": 85,
+    "mismatch_count": 0,
+    "mismatches": []
+  },
+  "billed_cost": null
+}

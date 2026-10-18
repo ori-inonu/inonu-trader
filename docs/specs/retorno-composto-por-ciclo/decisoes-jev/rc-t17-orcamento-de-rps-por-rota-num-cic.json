@@ -1,0 +1,72 @@
+{
+  "id": "rc-t17-orcamento-de-rps-por-rota-num-cic",
+  "goal": "Como o ciclo de 60 s deve limitar as chamadas por rota antes de a cota real ser medida? Tudo em sombra e reversivel; sem dinheiro real, sem mudar executor nem limites de risco; a meta de retorno por ciclo e hipotese a medir.",
+  "facts": {
+    "402": "bloqueia o tier ate o proximo mes UTC, onchainos/http.ts:427",
+    "trial_trade_rps": "1 RPS por padrao, ate 5 sob aprovacao, 60 dias (trade/api-fee)",
+    "market_rps": "nao publicado; cota mensal 100 mil Basic e Premium no Free",
+    "piso_trade_ms": "1100 ms entre inicios, okx-dex.ts:8, 55 inicios por janela de 60 s",
+    "piso_market": "1 RPS, burst 1, retry com limiter, onchainos/http.ts:508 e :411",
+    "retry_50102": "espera desde o ultimo envio antes da tentativa, onchain-read/client.ts:150",
+    "consultas_dia": "144 default (budget.ts:18); capacidade 720 do autopilot (autopilot.ts:51)",
+    "contador_rota": "inexistente; usage guarda totais por tier (api-budget.ts:3)"
+  },
+  "rails": [
+    "Market publica so cota mensal (100 mil Basic e 100 mil Premium no Free); RPS nao publicado (fato, market-api-fee).",
+    "Trade trial tem 1 RPS; o cliente local usa 1100 ms, 55 inicios por minuto (okx-dex.ts:8).",
+    "Nao existe contador por rota; o arquivo de uso guarda so totais por tier (scripts/api-budget.ts:3).",
+    "Um 402 bloqueia o tier inteiro ate o proximo mes UTC (src/onchainos/http.ts:427), entao a cota mensal e o risco mais caro.",
+    "Mudar o formato do arquivo de uso para guardar rota e migracao de journal: vedado ao Jev e fica como bloqueio do dono."
+  ],
+  "options": [
+    {
+      "id": "medir_primeiro",
+      "label": "Medir por rota antes de mudar",
+      "what": "Gravar rota, minuto, status e tentativa em arquivo novo, em sombra, sem mudar cadencia nem cache. Opcao conservadora. Evidencia: Uso guarda so totais por tier (scripts/api-budget.ts:3)"
+    },
+    {
+      "id": "cache_market_ttl",
+      "label": "Cache de Market de 60 s a 3 min",
+      "what": "Reaproveitar preco e token por candidato dentro do TTL, mantendo 1 RPS. Reduz chamadas Basic por ciclo. Evidencia: 2,24 Basic por ciclo (calculo); cache de 15 s a 30 min citado no repo"
+    },
+    {
+      "id": "teto_por_rota_minuto",
+      "label": "Teto local por rota antes do envio",
+      "what": "Recusar a chamada antes do fetch: Market no maximo 2 por tier por ciclo; Trade no maximo 55 por minuto. Evidencia: admitDispatch e pace_limited ja existem em onchain-read/client.ts"
+    },
+    {
+      "id": "cadencia_por_evento",
+      "label": "Jev so quando candidato passa o filtro",
+      "what": "Ciclo de 60 s le estado e consulta o Jev so para candidato que passa o filtro e tem consulta no dia. Evidencia: 720 por dia (autopilot.ts:51) equivale a 1 a cada 2 min"
+    },
+    {
+      "id": "manter_como_esta",
+      "label": "Manter a cadencia atual",
+      "what": "Nao mudar chamadas nem limites; aceitar o risco de cota mensal e de 402 ate ter medicao. Evidencia: Sem medicao por rota (A10); risco de 402 em A7"
+    },
+    {
+      "id": "trocar_fonte_de_preco",
+      "label": "Trocar parte da leitura de preco por fonte fora do Market",
+      "what": "Usar o WebSocket publico documentado da bolsa OKX (ja aceito em uma conexao, 1965 instrumentos, so spot da bolsa) ou leitura de pool por RPC para o preco de candidato, reservando o Market para o que so ele fornece. Precisa de decisao juridica do dono antes de qualquer uso, porque o OKX API Agreement 9.4 proibe raspagem de market data, mesmo de endpoint publico; a versao WebSocket oficial e distint"
+    }
+  ],
+  "forbidden": [],
+  "unknowns": [
+    {
+      "id": "rps_market",
+      "ask": "Qual o RPS vigente do Market na conta do dono, e por chave, IP ou conta? So o painel ou a OKX revelam."
+    },
+    {
+      "id": "faixa_conta",
+      "ask": "Em que faixa esta a conta do dono (trial ou Start-up) e ate quando vale a chave?"
+    },
+    {
+      "id": "cota_mensal_usada",
+      "ask": "Quantas chamadas Basic e Premium foram consumidas no mes pelo painel da OKX?"
+    },
+    {
+      "id": "cobranca_429_402",
+      "ask": "A OKX conta tentativas com 429 e 50011 na cota mensal, e qual codigo devolve a cota esgotada?"
+    }
+  ]
+}

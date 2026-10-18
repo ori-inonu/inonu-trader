@@ -1,0 +1,162 @@
+[
+  {
+    "path": "screenshots/console-1024.png",
+    "sha256": "2ee3f71c98c06b1bb492e14a87cfbcc483e3f387f0b7b4f1abfd1ae7eeb8de10",
+    "bytes": 52499
+  },
+  {
+    "path": "screenshots/console-1440.png",
+    "sha256": "90481f25696d6d166ef5160102de23822c4387df8a7ce4bc853dc29b82a75f85",
+    "bytes": 82806
+  },
+  {
+    "path": "screenshots/console-320-end.png",
+    "sha256": "09e13142b81c31facd63964e4016abfee49fb9a135a4cd1c201409d670fe2423",
+    "bytes": 21684
+  },
+  {
+    "path": "screenshots/console-390.png",
+    "sha256": "78a91c338aabcfe92d36e637e00ad2d6079e2a8f3c15cf91f3fe63e309a07338",
+    "bytes": 35992
+  },
+  {
+    "path": "screenshots/doctor-1024.png",
+    "sha256": "4ee8ba711d9b1e0a1b47f5ea35282567bde24345f10cd2a1422cbcf5fc770b73",
+    "bytes": 21307
+  },
+  {
+    "path": "screenshots/doctor-1440.png",
+    "sha256": "39ea981a5abc49da7ae1cc150470a9136d7c03cefa018af65ff0359cd21d6d4c",
+    "bytes": 24416
+  },
+  {
+    "path": "screenshots/doctor-320.png",
+    "sha256": "1a890bb35404ad0f3ea5a4bdc276c2fd2ef6ca2313b2f3a6e6c2ef5ff0910c7f",
+    "bytes": 15913
+  },
+  {
+    "path": "screenshots/doctor-390.png",
+    "sha256": "75bef0a561ecb94cdca466789ce2f0ac7f5e5bceae332dfdb5847954138be4c8",
+    "bytes": 16799
+  },
+  {
+    "path": "screenshots/final-wallet-1024.png",
+    "sha256": "0cfacd9e3194b20cdcf02dc1ea0beb040a156cf72b086b92c7b650a48c474035",
+    "bytes": 105540
+  },
+  {
+    "path": "screenshots/integrated-radar-320.png",
+    "sha256": "f7fab40be35547f0be198efe39866146a7d0b2cf012a193aa6e276f1581e1b6d",
+    "bytes": 28613
+  },
+  {
+    "path": "screenshots/integrated-wallet-1024.png",
+    "sha256": "35491236cc308f92039c77c9ff789a526309621488c56511c89ef9a39f835640",
+    "bytes": 109847
+  },
+  {
+    "path": "screenshots/integrated-wallet-320-end.png",
+    "sha256": "debb7880adc82a02bcef31d053aa509bef3a2d0857e0891d20f0a1dad6c9b9fd",
+    "bytes": 31226
+  },
+  {
+    "path": "screenshots/rastreador-1024.png",
+    "sha256": "3e25265f913484e513d8898e0e2b0c0b85cb635cf1668b648d61b052eb8af20a",
+    "bytes": 90869
+  },
+  {
+    "path": "screenshots/rastreador-1440-top.png",
+    "sha256": "deb2f6fa6b4a0424c1f91bf4d98c836f5fde2ddeab40ad64c70c2ccf3081855c",
+    "bytes": 108769
+  },
+  {
+    "path": "screenshots/rastreador-320-bottom.png",
+    "sha256": "f8b74ef93a85836ae8de8dde08d82cc97fe5c72758c2d426ec8bae09fa07c745",
+    "bytes": 27579
+  },
+  {
+    "path": "screenshots/rastreador-320.png",
+    "sha256": "7edf20d9fbeb80f0754e0c99dd6454376b4a0760ce9305a5fb31c0297eb9ad28",
+    "bytes": 25199
+  },
+  {
+    "path": "screenshots/rastreador-390.png",
+    "sha256": "ddd723e0960b6245136d8e38293f0d27c178e26039e027c003157566413b8bf1",
+    "bytes": 38282
+  },
+  {
+    "path": "screenshots/responsive-chart-390.png",
+    "sha256": "cedee3ddb622e0869e2f0c4b720f1ff15dbafd32b0b461b49f105af8714c0535",
+    "bytes": 49959
+  },
+  {
+    "path": "screenshots/responsive-console-320.png",
+    "sha256": "bd95ed9b218431257a1444d845805567202b49e8cad48156ec26e31fca2b6684",
+    "bytes": 28772
+  },
+  {
+    "path": "screenshots/responsive-radar-1440.png",
+    "sha256": "738a1a7e0f039f3bf35416515a1a505dd384c97b4228bd286196251f7071e8c5",
+    "bytes": 140555
+  },
+  {
+    "path": "screenshots/responsive-radar-320.png",
+    "sha256": "ae715795ed1669cbf7eee4928b77e31e352b255c7e28b458fe8d4f563301d415",
+    "bytes": 27792
+  },
+  {
+    "path": "screenshots/responsive-wallet-1024.png",
+    "sha256": "bed5000be300fcd4c99cf3e1dc160ab32b7034de6ee147039443586932d2f482",
+    "bytes": 106572
+  },
+  {
+    "path": "screenshots/responsive-wallet-320-end.png",
+    "sha256": "7720c408dae2cf59ce6a993d3dd0973aaaf9643cb2b5fbb0759b314e263e78d7",
+    "bytes": 32772
+  },
+  {
+    "path": "screenshots/responsive-wallet-390-bottom.png",
+    "sha256": "38d5c33cb744c78273bddca0da638733aa942d393eb8ce8d2b543c018639d82c",
+    "bytes": 48999
+  },
+  {
+    "path": "screenshots/responsive-wallet-390.png",
+    "sha256": "4da2cc4309fd69f05b52b12f1278facc055c940408f33cf23b4ade5ef42f461b",
+    "bytes": 48531
+  },
+  {
+    "path": "screenshots/responsive-wallet-821.png",
+    "sha256": "1b4197aa5a7a174ca2d36d25a1359870ed9cf8a70e12d2a6f1d43955f31fd15c",
+    "bytes": 93455
+  },
+  {
+    "path": "screenshots/settings-1024.png",
+    "sha256": "a8167644cd96d91f78269238d2ca7578346e78183feea4c3dd19743362cc70f2",
+    "bytes": 56238
+  },
+  {
+    "path": "screenshots/settings-1440-bottom.png",
+    "sha256": "e830819076fa1504e5c88042ecbf48f8514580de7270307dc2e977533699f7c8",
+    "bytes": 59797
+  },
+  {
+    "path": "screenshots/settings-1440.png",
+    "sha256": "393701e2f79dc0f2ea043943ec1dec0d209713d91a8da246b289efe3d0cd810a",
+    "bytes": 65203
+  },
+  {
+    "path": "screenshots/settings-320-bottom.png",
+    "sha256": "8d15f33615dab5ff985f06d1902d34040f5d99b9d318a5e31f2e87846a590917",
+    "bytes": 26311
+  },
+  {
+    "path": "screenshots/settings-320.png",
+    "sha256": "d7fabb42708fa076bb721d16987432a5653d03ecc2b75a107db83d84f94248d7",
+    "bytes": 25847
+  },
+  {
+    "path": "screenshots/settings-390.png",
+    "sha256": "26b159a1f3da6ff2c2c295beccab5f8fa8a1d090427fbc6364552bc8ca8129ce",
+    "bytes": 31757
+  }
+]
