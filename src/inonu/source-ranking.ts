@@ -16,7 +16,8 @@
  */
 import { BriefTooLarge, buildBrief, type BriefCandidate, type Json } from "../intel/brief";
 import { HOLD_CANDIDATE } from "../intel/candidates";
-import { RANKING_MAX, RANKING_MIN, SourceError, type AskRequest, type BriefSource, type BuiltBrief } from "./ask";
+import { SourceError } from "./source-error";
+import { RANKING_MAX, RANKING_MIN, type AskRequest, type BriefSource, type BuiltBrief } from "./ask";
 
 export interface RankingDeps {
   /** The single-instrument source: every chosen row is read through it, in the mode `ativo`. */

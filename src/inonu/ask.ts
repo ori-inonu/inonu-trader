@@ -18,6 +18,7 @@
  * The model, the data source and the ledger are injected: the tests use fakes and never reach the real model. The
  * envelope keeps `advisory: true` and `execution: "never"` in every answer. Free text from the model is never copied.
  */
+import { SourceError } from "./source-error";
 import { materialChange, type Brief, type BriefCandidate } from "../intel/brief";
 import { candidateIds, validateDecision, type Action } from "../intel/candidates";
 import { instTypeOf } from "./okx-public";
@@ -87,13 +88,7 @@ export interface BuiltBrief {
  readonly ecosystem?: EcoContext;
 }
 
-/** A refusal of the data source with a constant code the response may carry (never a message with a value in it). */
-export class SourceError extends Error {
- /** `onchainosCalls`: the provider calls the click had already spent when it refused; null when the source did not say. */
- constructor(readonly code: string, readonly onchainosCalls: number | null = null) {
-  super(code);
- }
-}
+export { SourceError } from "./source-error";
 
 export interface BriefSource {
  build(request: AskRequest, context: { readonly signal: AbortSignal; readonly maxOnchainosCalls: number; /** How many candidates the caller wants (the click wants the usual five; the agent asks for more so that enough of them are open); bounded by the source. */ readonly candidates?: number; readonly budgetIntent?: "user" | "background" }): Promise<BuiltBrief>;

@@ -20,7 +20,8 @@ import { boughtComponent, trailScore, unsoldComponent, walletsComponent } from "
 import { BRIEF_KEYS, briefItem, candidateOf, enters, familiesOf, type EcoCandidate, type EcoContext, type EcoFacts, type Saldo } from "../opportunity/ecosystem";
 import { bearishFlags } from "../opportunity/risk-tags";
 import type { InternalGatewayResult, OnchainGatewayInternal } from "../onchain-read/gateway";
-import { SourceError, type AskRequest, type BriefSource, type BuiltBrief } from "./ask";
+import { SourceError } from "./source-error";
+import type { AskRequest, BriefSource, BuiltBrief } from "./ask";
 import { MAX_ONCHAIN_CALLS } from "./onchain-plan";
 
 export interface EcosystemDeps {

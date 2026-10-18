@@ -23,7 +23,8 @@ import { buildOnchainDigest, type OnchainSources } from "../intel/onchain-digest
 import { classifyResult, type GatewayLike } from "../intel/onchain-nulos";
 import { boughtComponent, trailScore, unsoldComponent, walletsComponent } from "../intel/trail";
 import type { InternalGatewayResult, OnchainGatewayInternal } from "../onchain-read/gateway";
-import { SourceError, type AskRequest, type BriefSource, type BuiltBrief } from "./ask";
+import { SourceError } from "./source-error";
+import type { AskRequest, BriefSource, BuiltBrief } from "./ask";
 import { MAX_ONCHAIN_CALLS, cutPlan, planDiscoveryMode, type PlanItem } from "./onchain-plan";
 
 export interface DiscoveryDeps {
