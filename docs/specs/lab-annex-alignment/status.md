@@ -1,6 +1,6 @@
 # Estado
 
-Fase: implementacao, regressao focada, verificacao completa e revisao concluidas; publicacao preparada para o PR 5 em rascunho. O extrator defeituoso produziu 1 pass e 4 fail; o corrigido e os dois leitores produziram 43 pass e 0 fail em tres arquivos.
+Fase: implementacao, regressao focada, verificacao completa e revisao concluidas; publicada no PR 5 em rascunho, commit de codigo aeba0f8. Publicacao remota e estado aberto/em rascunho confirmados. O extrator defeituoso produziu 1 pass e 4 fail; o corrigido e os dois leitores produziram 43 pass e 0 fail em tres arquivos.
 
 ```
 bun --no-env-file run typecheck

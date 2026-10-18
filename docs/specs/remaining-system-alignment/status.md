@@ -1,6 +1,6 @@
 # Estado do alinhamento
 
-Fase: primeira limpeza publicada no PR 5 em rascunho; C2a verificada e revisada localmente, com publicacao preparada. Checkout original recuperado para compilar e passar nas suites. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
+Fase: limpeza e C2a publicadas no PR 5 em rascunho, com commit de codigo aeba0f8 confirmado. Auditoria documental complementar registrada. Checkout original recuperado para compilar e passar nas suites. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
 
 ## Saida dos checks
 
@@ -31,7 +31,7 @@ Os dois leitores agora calculam o indice no mesmo texto normalizado e recusam ma
 
 O teste do extrator defeituoso produziu 1 pass e 4 fail. A correcao passou em 43 testes focados, com equivalencia integral e links para LF e CRLF, alem das suites acima. Esse resultado corrige um problema real da proposta de migracao, sem executar o agente.
 
-Revisao de escopo e diff check passaram. Cerebro verify confirmou seq 1086, dois novos eventos append-only e artefatos congelados intactos. Nenhum achado bloqueante na fatia C2a. Publicacao preparada para o PR 5 em rascunho; promocao de main continua pendente.
+Revisao de escopo e diff check passaram. Cerebro verify confirmou seq 1086, dois novos eventos append-only e artefatos congelados intactos. Nenhum achado bloqueante na fatia C2a. PR 5 atualizado e commit de codigo aeba0f8 confirmado no remoto; promocao de main continua pendente.
 
 ## Observacao real
 
@@ -48,6 +48,12 @@ Goal1: 59 arquivos de comentarios/tipos, 113 de superficie de export, 53 de runt
 O inventario anterior do checkout original encontrou 25 de 37 deltas com o mesmo texto de main apos normalizar CRLF/LF. O comparador corrigido esta em .scratch/remaining-doc-root-audit-20261018-v2/result.json; o primeiro resultado misturava blobs Git com conversao de fim de linha e tem erratum explicito. Depois desse inventario, o ultimo conflito de scripts/jev-consensus.ts foi resolvido e as dependencias de main ausentes foram repostas. Tipos, core (8160 pass, 2 skip, 0 fail), lab (650 pass, 0 fail), tipos web e testes web (3821 pass, 0 fail) passaram na raiz. O merge local permanece aberto, sem commit ou alteracao de main. Ver bootstrap-root.md.
 
 Os oito artefatos v1 congelados permanecem byte-identicos na origem e sem exclusao rastreada. As 1146 exclusoes documentais exigem revisao dos destinos por pasta e anexos. document-contract-review.md registra os defeitos da proposta original; C2a corrige os dois leitores no candidato e preserva os contratos atuais. Ausencia de blob identico entre arquivos novos de ate 1 MiB nao demonstra perda de conteudo transformado.
+
+A auditoria complementar leu 694 Markdown novos/alterados e o grafo de 4,38 MB. Dos 611 Markdown excluidos, 15 corpos integrais foram encontrados apos normalizacao; tres sao anteriores a atualizacoes de main. Dois ja foram corrigidos no candidato C2a; o terceiro e o contrato AUT-3 do agente, que deve preservar a admissao previa de fallback. Os 596 nao encontrados integralmente exigem revisao semantica, sem inferir perda automatica.
+
+Foram encontrados 299 de 314 rotulos de fonte apontando ao proprio documento de tarefas e 98 ocorrencias de links locais sem destino em 7739 examinadas. A varredura lexical pode incluir exemplos; os casos foram registrados para revisao. O grafo foi lido como dado e sua contagem nao foi tratada como prova de arquivo integral das fontes. Origem preservada. Ver folder-document-provenance-review.md e .scratch/folder-document-provenance-20261018/result.json.
+
+O registro desta auditoria acrescentou dois eventos a cadeia anterior: cerebro verify passou em seq 1088, hash 5e4e5f15acf819bda42ac4d7af871df55be272ae027cabfcf494125ed612485d. O diff posterior ao commit de codigo afeta apenas documentacao e seu grafo; src, scripts, web, dependencias e configuracao de verificacao permanecem iguais ao candidato testado.
 
 Consolidacao API: contratos e consumidores nomeados foram revisados e 89 testes offline passaram na origem, com fetch global bloqueado e dados simulados. Os nove arquivos conferidos permaneceram intactos. O conjunto tambem muda validacao/copia de credenciais, caminho/corpo assinados e injecao do relogio; sua integracao fica bloqueada para decisao automatica. Ver api-consolidation-review.md. Os 89 testes nao representam o definition of done de goal1 nem uma consulta autenticada real.
 

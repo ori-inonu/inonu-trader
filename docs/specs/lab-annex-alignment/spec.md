@@ -1,6 +1,6 @@
 # Spec: contratos do laboratorio nos caminhos por pasta
 
-Estado: implementacao, regressao, verificacao completa e revisao concluidas; publicacao preparada para o PR 5. Fatia C2a de remaining-system-alignment. Nao conclui a reorganizacao documental integral.
+Estado: implementacao, regressao, verificacao completa e revisao concluidas; publicada no PR 5 em rascunho, commit aeba0f8. Fatia C2a de remaining-system-alignment. Nao conclui a reorganizacao documental integral.
 
 Os leitores propostos em goal1 calculam indices antes de normalizar CRLF. Seus anexos preservam a4a9ef5, mas main tem atualizacoes posteriores de HAC e do mapa de prompts. A integracao deve usar os contratos atuais e preservar as referencias existentes durante a transicao.
 

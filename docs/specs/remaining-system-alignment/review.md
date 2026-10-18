@@ -17,3 +17,9 @@ Os novos anexos derivam de main 2327a28, preservando HAC com lacunas e o mapa at
 43 testes focados, tipos, 8544 testes core (2 skips condicionais, 0 falhas) e 650 testes lab passaram. Nao ha alteracoes de runtime, web, dependencias, credenciais, risco ou journals nesta fatia. A revisao final confirmou os 16 caminhos previstos e as substituicoes literais nos dois consumidores. Git diff --check e cerebro verify passaram em seq 1086; dois eventos novos e historico anterior byte-identico. Sem achados bloqueantes no diff C2a. Evidencia local: .scratch/lab-annex-alignment-20261018/review.json.
 
 A revisao offline de C1 passou em 89 testes da origem, sem altera-la. O conjunto proposto modifica autenticacao e continua bloqueado para decisao automatica. Isso e uma pendencia de escopo e autorizacao, e nao um teste aprovado de acesso real. Nenhuma inferencia Jev nova foi afirmada.
+
+## Auditoria complementar de C2
+
+O auditor somente leu blobs e 694 destinos Markdown, incluindo o grafo maior que o limite anterior. Os resultados e limites estao em folder-document-provenance-review.md. O corpo de 15 fontes foi encontrado integralmente, tres anteriores a main; 299 registros de fonte usam o proprio destino e 98 ocorrencias de links locais nao resolvem. Isso exige revisao antes da migracao integral; nao implica perda automatica dos corpos nao encontrados.
+
+A publicacao de C2a foi confirmada no PR 5 em rascunho, commit de codigo aeba0f8. Depois desse commit, somente documentacao e grafo mudaram. Git diff --check e cerebro verify passaram; seq 1088 preserva os artefatos v1 e o prefixo dos eventos anteriores. Os checks completos do codigo seguem os mesmos, sem rerun por esta atualizacao exclusivamente documental.

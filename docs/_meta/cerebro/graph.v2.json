@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1086,
-  "headHash": "16cdd5571bc5ed021beb68778946971d1691d9a3405a02b5935c3868546d6c2b",
+  "headSeq": 1088,
+  "headHash": "5e4e5f15acf819bda42ac4d7af871df55be272ae027cabfcf494125ed612485d",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1742,6 +1742,11 @@
       "id": "iter-lab-annex-alignment-20261018",
       "type": "iteration",
       "text": "C2a: contratos atuais, links conciliados e recorte LF/CRLF corrigido; legados intactos. Passam tipos, 8544 core e 650 lab. C1: 89 testes offline passam na origem; autenticacao segue bloqueada. Decisao local sem-jev; conector indisponivel. Main e agente completo seguem pendentes."
+    },
+    {
+      "id": "iter-doc-provenance-audit-20261018",
+      "type": "iteration",
+      "text": "C2: 611 Markdown excluidos comparados a 694 destinos; 15 corpos integrais, tres anteriores a main. Registro tem 299 rotulos de fonte no proprio arquivo e 98 links locais ausentes. Origem intacta, exclusoes nao importadas. C2a publicada no PR 5; main e agente completo seguem pendentes."
     }
   ],
   "edges": [
@@ -4779,6 +4784,11 @@
       "from": "iter-root-bootstrap-20261018",
       "to": "iter-lab-annex-alignment-20261018",
       "seq": 1086
+    },
+    {
+      "from": "iter-lab-annex-alignment-20261018",
+      "to": "iter-doc-provenance-audit-20261018",
+      "seq": 1088
     }
   ],
   "retractions": [
