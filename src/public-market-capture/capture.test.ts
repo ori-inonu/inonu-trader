@@ -35,12 +35,12 @@ test("C10 a parent-linked new experiment declares its unobserved gap", async () 
 
 export function fixturePlan(root = mkdtempSync(join(tmpdir(), "inonu-capture-"))): any {
   return { version: 1, mode: "capture", experimentId: "fixture", parentExperimentId: null, outputRoot: root,
-    schema: "okx-public-v5-2026-10-10", region: "global", endpoints: { rest: "https://www.okx.com", websocket: "wss://ws.okx.com:8443/ws/v5/public" },
+    schema: "okx-public-v5-2026-10-10", region: "global", endpoints: { rest: "https://www.okx.com", websocket: "wss://ws.okx.com/ws/v5/public" },
     instruments: [{ id: "BTC-USDT", kind: "SPOT" }], streams: [{ channel: "books", instrument: "BTC-USDT" }],
     limits: { durationMs: 300000, messages: 10000, payloadBytes: 1048576, persistedBytes: 33554432, controlBytes: 2097152, segments: 32, connections: 3, metadataRequests: 3, attemptMs: 10000, ingressBytes: 8388608, pending: 16 } };
 }
 export const fixtureAccess: any = { version: 1, id: "fixture-access", evidence: "synthetic", issuedAt: 1000, expiresAt: 1000000,
-  schema: "okx-public-v5-2026-10-10", region: "global", endpoints: ["https://www.okx.com", "wss://ws.okx.com:8443/ws/v5/public"],
+  schema: "okx-public-v5-2026-10-10", region: "global", endpoints: ["https://www.okx.com", "wss://ws.okx.com/ws/v5/public"],
   terms: "qualified", regionAssessment: "qualified", authority: { status: "explicit", provenance: "offline test fixture; not a live authority" } };
 export const fixtureCapabilities: any = { version: 1, runtime: "offline-fixture", evidence: "synthetic", incrementalEncoded: true, incrementalDecoded: true, aggregateHeld: true, interruptible: true, sharedDeadline: true };
 export function fixtureDependencies(messages: any[], options: any = {}): any {

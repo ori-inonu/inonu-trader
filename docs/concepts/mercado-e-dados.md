@@ -61,7 +61,7 @@ Esta página separa contratos que usam nomes parecidos, mas têm origens, unidad
 
 | Superfície | Origem e dados | Limite principal |
 | --- | --- | --- |
-| Exchange pública V5 | REST `www.okx.com` e WebSocket público `ws.okx.com:8443` | Captura exige plano, recibo factual e runtime qualificado; o adaptador atual bloqueia antes do egress. |
+| Exchange pública V5 | REST `www.okx.com` e WebSocket público `ws.okx.com` (porta 443; a 8443 deixa de funcionar em 2026-10-31) | Captura exige plano, recibo factual e runtime qualificado; o adaptador atual bloqueia antes do egress. |
 | Mercado Web3 | `web3.okx.com/api/v6/dex/market/*` | Dados de tokens, autenticados por HMAC; não é o WebSocket público Exchange nem uma carteira. |
 | Agregador DEX | `web3.okx.com/api/v6/dex/aggregator/*` | Cobertura de rede e no máximo uma quote autenticada; unidade de saída não qualificada. |
 | Histórico Exchange | REST público de metadados | Lista arquivos, mas não baixa nem valida o conteúdo. |

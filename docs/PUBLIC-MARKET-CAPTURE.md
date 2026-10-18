@@ -40,7 +40,7 @@ This command currently refuses because the supplied runtime is unqualified. A ca
 | `parentExperimentId` | `null` or another valid identifier, different from this experiment |
 | `outputRoot` | Explicit absolute existing directory; no symlink/reparse escape |
 | `schema`, `region` | `"okx-public-v5-2026-10-10"`, `"global"` |
-| `endpoints` | Exactly `rest: "https://www.okx.com"` and `websocket: "wss://ws.okx.com:8443/ws/v5/public"` |
+| `endpoints` | Exactly `rest: "https://www.okx.com"` and `websocket: "wss://ws.okx.com/ws/v5/public"` |
 | `instruments` | One or two explicit `{id, kind}` entries; at most one `SPOT` and one `SWAP` |
 | `streams` | `{channel, instrument}` entries; one `books` stream for each instrument, optionally one `funding-rate` for the `SWAP` |
 | `limits` | All fields below, each a positive safe integer at or below its ceiling |
@@ -122,3 +122,7 @@ completeReceived + incompleteTransportAssemblies = persistedRaw + dropped
 Unknown crash counts stay `null` in recovery; no conservation claim uses unknown values. Outcome precedence is `not_started` before creation; then `failed_incomplete` for persistence/integrity/deadline failure, missing required evidence, unpersisted raw or no complete persisted payload; then `captured_with_gaps` for retained evidence with missing acknowledgement/observation/snapshot/metadata, rejected input, quarantine, reconnect or clock ambiguity; otherwise `captured_with_checked_continuity` for the observed local interval. Clean cancellation can qualify only its actual recorded interval.
 
 Every runtime report keeps `strategyQualified`, `executionQualified` and `profitEvidence` false. A checked sequence link, funding rate, hash or synthetic run cannot establish executable profit, a 24-hour result, ROI or compounding.
+
+## Nota de migração da porta (2026-10-17)
+
+A OKX deixa de aceitar o WebSocket público na porta 8443 em 2026-10-31; a porta 443 aceita o mesmo canal. O plano agora exige `wss://ws.okx.com/ws/v5/public` (decisão do Jev `rc3-d3-captura-443`, consenso). Recibos de acesso emitidos antes desta data trazem a URL da porta 8443 e passam a ser recusados na validação do plano; a reemissão dos recibos com a URL nova está **pendente** e não foi feita (nenhuma captura nova foi executada).
