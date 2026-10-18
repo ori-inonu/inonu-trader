@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1060,
-  "headHash": "85e5aae51db8d67a4789d5e2ad98f5c271d6fc6063f7c124754aa6707fd82de6",
+  "headSeq": 1074,
+  "headHash": "e6337f97eef059b6e1e0e7efd3834ce0bd0d515bb2744cfc8ef5c9dc64b9d71d",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1677,6 +1677,41 @@
       "id": "rc5-codex-r4-preservada",
       "type": "fact",
       "text": "R4 (learning-evidence, 35 arquivos) preservada na branch codex/learning-evidence-wip (12a5bfa) no worktree do Codex, fora da main: src/intel e src/outcomes antigos divergem da main e 2 testes falham sobre ela."
+    },
+    {
+      "id": "iter-rodada3-decisoes-jev-20261017",
+      "type": "iteration",
+      "text": "Rodada 3 (2026-10-17): as decisoes abertas foram ao Jev (5 specs, 50 chamadas, sem teto). Aplicadas: prompts reconstruidos, markout de 1 e 5 min, captura na porta 443, learning-evidence integrado, roteiro do checkout do dono."
+    },
+    {
+      "id": "rc6-d1-prompts",
+      "type": "fact",
+      "text": "Jev, consenso 0,84: reconstruir src/generated/prompts a partir dos literais originais e reaplicar 0147547. Feito, igualdade provada contra o original e texto fixado por hash em prompts.test.ts."
+    },
+    {
+      "id": "rc6-d2-markout",
+      "type": "fact",
+      "text": "Jev, sem consenso formal (margem 0,17) mas lider markout_1_5_min nas 3 rodadas (0,58 contra 0,42). Regra de menor risco: janelas de 1 e 5 min nos desfechos das compras, leitura a no maximo 2 min do instante; desconhecido fica desconhecido."
+    },
+    {
+      "id": "rc6-d3-captura-443",
+      "type": "fact",
+      "text": "Jev, consenso 0,74: migrar public-market-capture para a porta 443 e marcar recibos antigos como pendentes de reemissao, sem captura nova. Prazo da OKX: 2026-10-31."
+    },
+    {
+      "id": "rc6-d4-learning-evidence",
+      "type": "fact",
+      "text": "Jev, consenso 0,81: reconciliar learning-evidence com a main e integrar como modulo puro nao ligado ao ciclo; o construtor conta como features o snapshot cujo unico defeito e o vetor. 15 testes."
+    },
+    {
+      "id": "rc6-d5-checkout-dono",
+      "type": "fact",
+      "text": "Jev, consenso 0,98: roteiro verificado para o checkout do dono convergir para a main, sem executar nada; abortar o merge ficou proibido. Documento roteiro-checkout-do-dono.md."
+    },
+    {
+      "id": "rc6-bloqueios-dono",
+      "type": "fact",
+      "text": "Fora do Jev por regra, ficam para o dono: producao e modo real, limites de risco e alavancagem, dependencia fallow, alteracoes da goal1, apagar branches, push e defaults do breaker e do motor em sombra."
     }
   ],
   "edges": [
@@ -4649,6 +4684,41 @@
       "from": "iter-integracao-autoresearch-20261017",
       "to": "rc5-codex-r4-preservada",
       "seq": 1060
+    },
+    {
+      "from": "iter-integracao-autoresearch-20261017",
+      "to": "iter-rodada3-decisoes-jev-20261017",
+      "seq": 1062
+    },
+    {
+      "from": "iter-rodada3-decisoes-jev-20261017",
+      "to": "rc6-d1-prompts",
+      "seq": 1064
+    },
+    {
+      "from": "iter-rodada3-decisoes-jev-20261017",
+      "to": "rc6-d2-markout",
+      "seq": 1066
+    },
+    {
+      "from": "iter-rodada3-decisoes-jev-20261017",
+      "to": "rc6-d3-captura-443",
+      "seq": 1068
+    },
+    {
+      "from": "iter-rodada3-decisoes-jev-20261017",
+      "to": "rc6-d4-learning-evidence",
+      "seq": 1070
+    },
+    {
+      "from": "iter-rodada3-decisoes-jev-20261017",
+      "to": "rc6-d5-checkout-dono",
+      "seq": 1072
+    },
+    {
+      "from": "iter-rodada3-decisoes-jev-20261017",
+      "to": "rc6-bloqueios-dono",
+      "seq": 1074
     }
   ],
   "retractions": [
