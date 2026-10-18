@@ -1,6 +1,6 @@
 # Estado do alinhamento
 
-Fase: primeira limpeza publicada no PR 5 em rascunho; checkout original recuperado para compilar e passar nas suites. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
+Fase: primeira limpeza publicada no PR 5 em rascunho; C2a verificada e revisada localmente, com publicacao preparada. Checkout original recuperado para compilar e passar nas suites. Objetivo integral aberto. Main local/remota observadas em 2327a2885e9d513833a91e820b17d568be2c0303.
 
 ## Saida dos checks
 
@@ -10,20 +10,28 @@ $ tsc --noEmit -p tsconfig.verification.json
 exit 0
 
 bun --no-env-file run test
-8539 pass
+8544 pass
 2 skip
 0 fail
-1165451 expect() calls
-Ran 8541 tests across 541 files. [386.51s]
+1165518 expect() calls
+Ran 8546 tests across 542 files. [357.49s]
 
 bun --no-env-file run test:lab
 650 pass
 0 fail
-838159 expect() calls
-Ran 650 tests across 16 files. [38.07s]
+838161 expect() calls
+Ran 650 tests across 16 files. [29.76s]
 ```
 
-Os dois skips sao os testes condicionais de receipt-safety Market/Trader, que exigem RECEIPT_SAFETY_SOURCE. Saidas integrais locais: .scratch/remaining-cleanup-verify-20261018/. O verificador confirmou exatamente dez exports retirados em nove arquivos, preservando corpos, valores e imports. Git diff --check passou. Nenhuma fonte web mudou.
+Os dois skips sao os testes condicionais de receipt-safety Market/Trader, que exigem RECEIPT_SAFETY_SOURCE. Saidas integrais da verificacao atual: .scratch/lab-annex-alignment-20261018/. A fatia anterior retirou exatamente dez exports em nove arquivos, preservando corpos, valores e imports. C2a muda dois leitores de teste e acrescenta um extrator puro, sua regressao e dois anexos documentais atuais. Nenhuma fonte web mudou.
+
+## Contratos documentais C2a
+
+Os dois leitores agora calculam o indice no mesmo texto normalizado e recusam marcador ausente. Os anexos novos preservam os contratos de main 2327a28, incluindo HAC com lacunas e o mapa atual de prompts. Links relativos foram conciliados. Os dois documentos antigos permaneceram byte-identicos; os prefixos extensos e demais destinos de goal1 continuam aguardando revisao. Especificacao, tarefas e saida: ../lab-annex-alignment/.
+
+O teste do extrator defeituoso produziu 1 pass e 4 fail. A correcao passou em 43 testes focados, com equivalencia integral e links para LF e CRLF, alem das suites acima. Esse resultado corrige um problema real da proposta de migracao, sem executar o agente.
+
+Revisao de escopo e diff check passaram. Cerebro verify confirmou seq 1086, dois novos eventos append-only e artefatos congelados intactos. Nenhum achado bloqueante na fatia C2a. Publicacao preparada para o PR 5 em rascunho; promocao de main continua pendente.
 
 ## Observacao real
 
@@ -39,9 +47,11 @@ Goal1: 59 arquivos de comentarios/tipos, 113 de superficie de export, 53 de runt
 
 O inventario anterior do checkout original encontrou 25 de 37 deltas com o mesmo texto de main apos normalizar CRLF/LF. O comparador corrigido esta em .scratch/remaining-doc-root-audit-20261018-v2/result.json; o primeiro resultado misturava blobs Git com conversao de fim de linha e tem erratum explicito. Depois desse inventario, o ultimo conflito de scripts/jev-consensus.ts foi resolvido e as dependencias de main ausentes foram repostas. Tipos, core (8160 pass, 2 skip, 0 fail), lab (650 pass, 0 fail), tipos web e testes web (3821 pass, 0 fail) passaram na raiz. O merge local permanece aberto, sem commit ou alteracao de main. Ver bootstrap-root.md.
 
-Os oito artefatos v1 congelados permanecem byte-identicos na origem e sem exclusao rastreada. As 1146 exclusoes documentais exigem revisao dos destinos por pasta e anexos. Dois contratos foram conferidos: preservam a versao antiga a4a9ef5, mas precisam incorporar as atualizacoes de main, alem de corrigir o recorte de anexos com CRLF. Ver document-contract-review.md. Ausencia de blob identico entre arquivos novos de ate 1 MiB nao demonstra perda de conteudo transformado.
+Os oito artefatos v1 congelados permanecem byte-identicos na origem e sem exclusao rastreada. As 1146 exclusoes documentais exigem revisao dos destinos por pasta e anexos. document-contract-review.md registra os defeitos da proposta original; C2a corrige os dois leitores no candidato e preserva os contratos atuais. Ausencia de blob identico entre arquivos novos de ate 1 MiB nao demonstra perda de conteudo transformado.
 
-Consolidacao API, migracao documental, demais exports e divergencias exclusivas seguem pendentes. Autenticacao, segredos, risco, migracoes de dados e operacoes financeiras permanecem bloqueados para decisao automatica.
+Consolidacao API: contratos e consumidores nomeados foram revisados e 89 testes offline passaram na origem, com fetch global bloqueado e dados simulados. Os nove arquivos conferidos permaneceram intactos. O conjunto tambem muda validacao/copia de credenciais, caminho/corpo assinados e injecao do relogio; sua integracao fica bloqueada para decisao automatica. Ver api-consolidation-review.md. Os 89 testes nao representam o definition of done de goal1 nem uma consulta autenticada real.
+
+Migracao documental integral, demais exports e divergencias exclusivas seguem pendentes. Autenticacao, segredos, risco, migracoes de dados e operacoes financeiras permanecem bloqueados para decisao automatica.
 
 ## Jev e continuidade
 

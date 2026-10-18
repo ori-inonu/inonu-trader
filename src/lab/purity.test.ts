@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { main } from "../../scripts/jev-lab.ts";
+import { documentAnnex } from "../../scripts/test-support/document-annex.ts";
 import { CAPTURE_LIMITS, CaptureFormatError, parseCaptureLine } from "./capture-format.ts";
 import { JournalError, MemoryJournal, parseJournalText } from "./journal.ts";
 import { defaultRoster, describePolicy } from "./policies.ts";
@@ -20,13 +21,13 @@ import * as run from "./run.ts";
 import * as source from "./source.ts";
 import * as stats from "./stats.ts";
 
-// Spec: docs/JEV-LABORATORIO-DE-DECISAO.md sections 0, 10 and 14. Titles start with the acceptance id (LB26 to LB28).
+// Spec: src/lab/docs/spec.md annex sections 0, 10 and 14. Titles start with the acceptance id (LB26 to LB28).
 // These tests read the code as text: they prove what the lab does NOT do (no environment, network, clock, signer,
 // SDK, or disk write outside the journal) and that the documents, the code and the tests describe the same thing.
 
 const LAB_DIR = import.meta.dir;
 const ROOT = resolve(LAB_DIR, "..", "..");
-const DOC_PATH = join(ROOT, "docs", "JEV-LABORATORIO-DE-DECISAO.md");
+const DOC_PATH = join(LAB_DIR, "docs", "spec.md");
 const CLI_PATH = join(ROOT, "scripts", "jev-lab.ts");
 const CLI_TEST_PATH = join(ROOT, "scripts", "jev-lab.test.ts");
 
@@ -34,7 +35,7 @@ const MODULES = readdirSync(LAB_DIR).filter((name) => name.endsWith(".ts") && !n
 const TESTS = readdirSync(LAB_DIR).filter((name) => name.endsWith(".test.ts")).sort();
 const MODULE_PATHS = MODULES.map((name) => join(LAB_DIR, name));
 const TEST_PATHS = [...TESTS.map((name) => join(LAB_DIR, name)), CLI_TEST_PATH];
-const DOC = readFileSync(DOC_PATH, "utf8").replaceAll("\r\n", "\n");
+const DOC = documentAnnex(readFileSync(DOC_PATH, "utf8"), "## Anexo: JEV-LABORATORIO-DE-DECISAO");
 
 /** Executable code only: comments are dropped by the transpiler and whitespace is collapsed. */
 function codeOf(path: string): string {

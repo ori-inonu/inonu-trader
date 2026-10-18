@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1084,
-  "headHash": "b836129912530257f9b9b4fbcbab78a9afbead86140f9f31659f29d5c8c1a197",
+  "headSeq": 1086,
+  "headHash": "16cdd5571bc5ed021beb68778946971d1691d9a3405a02b5935c3868546d6c2b",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1737,6 +1737,11 @@
       "id": "iter-root-bootstrap-20261018",
       "type": "iteration",
       "text": "Raiz sem conflitos apos conciliar CLI e dependencias ja presentes em main. Passam tipos, 8160 core, 650 lab e 3821 web. Merge local segue aberto. Dois anexos pendentes exigem corrigir recorte CRLF e incorporar contratos atuais. Main e qualificacao real seguem pendentes."
+    },
+    {
+      "id": "iter-lab-annex-alignment-20261018",
+      "type": "iteration",
+      "text": "C2a: contratos atuais, links conciliados e recorte LF/CRLF corrigido; legados intactos. Passam tipos, 8544 core e 650 lab. C1: 89 testes offline passam na origem; autenticacao segue bloqueada. Decisao local sem-jev; conector indisponivel. Main e agente completo seguem pendentes."
     }
   ],
   "edges": [
@@ -4769,6 +4774,11 @@
       "from": "iter-cleanup-exports-20261018",
       "to": "iter-root-bootstrap-20261018",
       "seq": 1084
+    },
+    {
+      "from": "iter-root-bootstrap-20261018",
+      "to": "iter-lab-annex-alignment-20261018",
+      "seq": 1086
     }
   ],
   "retractions": [
