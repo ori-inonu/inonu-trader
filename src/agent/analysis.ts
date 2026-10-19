@@ -729,7 +729,7 @@ function consultOf(raw: unknown): Consult | null {
   if (cr === null || id === null || cr.kind !== "buy" || !Array.isArray(cr.stances)) continue;
   const probs = rec(verdicts?.[id]);
   let pBuy: number | null = null;
-  if (probs !== null && Object.keys(probs).length === cr.stances.length && cr.stances.every((stance: unknown) => typeof stance === "string" && Object.hasOwn(probs, stance)) && choiceConfidence(probs as Record<string, number>) !== null) {
+  if (probs !== null && Object.keys(probs).length === cr.stances.length && new Set(cr.stances).size === cr.stances.length && cr.stances.every((stance: unknown) => typeof stance === "string" && Object.hasOwn(probs, stance)) && choiceConfidence(probs as Record<string, number>) !== null) {
    for (const [k, v] of Object.entries(probs)) if (k.startsWith("buy")) pBuy = Math.max(pBuy ?? 0, v as number);
   }
   items.push({ id, open: cr.stances.length > 1, symbol: str(rec(compras?.[id])?.s), requested: str(requested?.[id]), applied: str(stances?.[id]), pBuy });

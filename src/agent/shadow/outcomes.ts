@@ -98,7 +98,7 @@ export function outcomesOf(answers: readonly AnswerRecord[], index: PathIndex): 
       if (key === null) continue;
       const path = index.get(key);
       const probs = item.probs;
-      const validProbs = probs !== null && Object.keys(probs).length === item.offered.length && item.offered.every((option) => Object.hasOwn(probs, option)) && choiceConfidence(probs) !== null;
+      const validProbs = probs !== null && Object.keys(probs).length === item.offered.length && new Set(item.offered).size === item.offered.length && item.offered.every((option) => Object.hasOwn(probs, option)) && choiceConfidence(probs) !== null;
       const buyProbs = !validProbs ? [] : Object.entries(probs).filter(([option]) => option.startsWith("buy")).map(([, p]) => p);
       const preference = probs === null || buyProbs.length === 0 ? null : Math.max(...buyProbs);
       const returns = Object.fromEntries(WINDOW_NAMES.map((w) => [w, forwardReturn(path, decisionAtMs, WINDOWS_MS[w]).ret])) as Record<WindowName, number | null>;

@@ -42,6 +42,12 @@ describe("the funnel from the item of purchase to the order that went out", () =
 });
 
 describe("how much the Jev wanted to buy", () => {
+  test("synthetic duplicate offered options never add an unoffered preference sample", () => {
+    const record = consult(1, { candidates: [cand("buy:a", ["skip", "skip"])], verdicts: { "buy:a": { skip: 0.2, buy_full: 0.8 } }, requested: { "buy:a": "skip" }, stances: { "buy:a": "skip" } });
+    const a = buildAnalysis(base({ briefs: [record] }));
+    expect({ samples: a.hist.all.reduce((n, count) => n + count, 0), asks: a.asks }).toEqual({ samples: 0, asks: [] });
+  });
+
   test("synthetic invalid or absent Choice weights never become histogram samples or zero-valued asks", () => {
     const invalid = [null, undefined, {}, { buy_full: 1 }, { skip: 0.4, buy_full: 0.6, extra: 0 },
       { skip: 0.1, buy_full: 0.1 }, { skip: 0.5, buy_full: 0.53 },
