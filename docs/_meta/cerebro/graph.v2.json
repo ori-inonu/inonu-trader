@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1126,
-  "headHash": "dc80a87888745f865a155038a0403bca9ba365c1e373da4f5cb3f80d11a9e2c8",
+  "headSeq": 1134,
+  "headHash": "7b95c7c92ffd8e6413301e3affe8a4fa662335c09f1db4eb77def35bf027a07c",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1837,6 +1837,26 @@
       "id": "iter-f10-links-proof-20261019",
       "type": "iteration",
       "text": "F10:22 links pesquisados e fontes conferidas.20 destinos historicos,2 caches ausentes. Diretorio ADR existe em main, corrigindo classificacao anterior. Lab antigo, catalogo variante e T17 separados.3557 fontes,1107 docs e3 indices preservados; nenhum reparo ou promocao."
+    },
+    {
+      "id": "iter-f11-main-merged-20261019",
+      "type": "iteration",
+      "text": "F11: PR5 merged. Main e8cff7b local/remota, arvore igual ao candidato030269c testado.1837 hashes conferidos; tipos/core8544(2skip)/web3821/lab650 sem falhas. Raiz/proposta preservadas. Dois commits de outras branches ainda pendentes. Sem deploy ou ordens."
+    },
+    {
+      "id": "iter-owner-cap16-20261019",
+      "type": "iteration",
+      "text": "Instrucao posterior do dono substituiu AGENTS: max_calls obrigatorio1..16 por invocacao, sem cota acumulada. F09 sem teto e historica. CLI atual plan/run com16 fez8 chamadas validas. Skill/MCP globais continuam ausentes. Risco e permissoes financeiras preservados."
+    },
+    {
+      "id": "iter-f12-choice-review-20261019",
+      "type": "iteration",
+      "text": "F12: commit Choice e058cdf revisado em dois eixos.61 testes puros passam. P3 duplicacao aceito; P3 ofertas duplicadas reproduzido em histograma sintetico. Fonte/indices/merge preservados. Core combinado ainda nao aprovado; sem inferir desempenho financeiro."
+    },
+    {
+      "id": "iter-f13-choice-tdd-20261019",
+      "type": "iteration",
+      "text": "F13: merge fonte preparado sem commit em branch codex de main. Regressao publica em analysis falhou e passou18; outcomes falhou e passou24. Unicidade adicionada somente as duas guardas; limiares intactos. Gates completos e revisao finais pendentes."
     }
   ],
   "edges": [
@@ -4979,6 +4999,26 @@
       "from": "iter-f09-concurrent-block-20261019",
       "to": "iter-f10-links-proof-20261019",
       "seq": 1126
+    },
+    {
+      "from": "iter-f10-links-proof-20261019",
+      "to": "iter-f11-main-merged-20261019",
+      "seq": 1128
+    },
+    {
+      "from": "iter-f11-main-merged-20261019",
+      "to": "iter-owner-cap16-20261019",
+      "seq": 1130
+    },
+    {
+      "from": "iter-owner-cap16-20261019",
+      "to": "iter-f12-choice-review-20261019",
+      "seq": 1132
+    },
+    {
+      "from": "iter-f12-choice-review-20261019",
+      "to": "iter-f13-choice-tdd-20261019",
+      "seq": 1134
     }
   ],
   "retractions": [

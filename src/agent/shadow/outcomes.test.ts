@@ -110,6 +110,12 @@ describe("the windows of the cycle: 1 and 5 minutes, read close to the two insta
 describe("every purchase the Jev was asked about gets an outcome, skipped or not, with its preference", () => {
   const index = buildPathIndex([row(T0 - 10_000, 1), row(T0 + 16 * MIN, 1.05), row(T0 + 61 * MIN, 1.1)]);
 
+  test("synthetic duplicate offered options retain an unknown preference", () => {
+    const a = answer({}, { skip: 0.2, buy_tenth: 0.8 });
+    const duplicate = { ...a, items: [{ ...a.items[0]!, offered: ["skip", "skip"] }] };
+    expect(outcomesOf([duplicate], index)[0]!.preference).toBeNull();
+  });
+
   test("a skipped purchase keeps what the Jev asked for and its preference, the highest probability of an option that buys", () => {
     const o = outcomesOf([answer()], index)[0]!;
     expect([o.requested, o.preference]).toEqual(["skip", 0.23]);
