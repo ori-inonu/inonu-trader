@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "outcome", "summary", "evidence", "acceptance_coverage", "reason", "decision_spec"],
+  "properties": {
+    "task_id": { "type": "string" },
+    "outcome": { "type": "string", "enum": ["completed", "blocked", "no_progress", "decision_required"] },
+    "summary": { "type": "string", "maxLength": 1200 },
+    "evidence": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["path", "sha256", "summary"], "properties": { "path": { "type": "string", "maxLength": 500 }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }, "summary": { "type": "string", "maxLength": 500 } } } },
+    "acceptance_coverage": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["criterion", "verification_indices", "evidence_paths"], "properties": { "criterion": { "type": "string", "maxLength": 500 }, "verification_indices": { "type": "array", "items": { "type": "integer", "minimum": 0 } }, "evidence_paths": { "type": "array", "items": { "type": "string", "maxLength": 500 } } } } },
+    "reason": { "type": ["string", "null"], "maxLength": 600 },
+    "decision_spec": { "type": ["object", "null"] }
+  }
+}
