@@ -150,3 +150,30 @@ test("recorded gate evidence preserves actual confidence and threshold separatel
   for (const invalid of [{ ...gate, conviction: 2 }, { ...gate, bar: -1 }, { ...gate, reason: "<script>trade</script>" }, { ...gate, asked: "buy_third" }])
     expect(auditConsult({ ...record, gates: { "synthetic:buy": invalid } })!.candidates[0]).toMatchObject({ gate: null });
 });
+
+test("entry-cost closures and zero-ceiling sem_dado bindings are recognized as observed blocks without inventing basis for narrowed plans", () => {
+  for (const mark of ["custo_de_entrada_alto", "gas_station_pendente", "sem_dado"]) {
+    const r = row();
+    r.candidates[0]!.marks = [mark];
+    const review = auditConsult(r)!;
+    expect(review.candidates[0]).toMatchObject({ source: "closed_before_choice", observedBlocks: [mark], missingBasis: false });
+    expect(review.findings).not.toContain("purchase_basis_missing");
+  }
+  const zeroSemDado = row();
+  zeroSemDado.candidates[0]!.marks = [];
+  const reviewSemDado = auditConsult({ ...zeroSemDado, candidates: [{ ...zeroSemDado.candidates[0]!, cap: { maxUsd: 0, binding: "sem_dado", sharePct: null } }] })!;
+  expect(reviewSemDado.candidates[0]).toMatchObject({ source: "closed_before_choice", observedBlocks: ["sem_dado"], missingBasis: false });
+  expect(reviewSemDado.findings).not.toContain("purchase_basis_missing");
+
+  const narrowedOnly = row();
+  narrowedOnly.candidates[0]!.marks = ["custo_de_entrada_limita_plano"];
+  const reviewNarrowed = auditConsult(narrowedOnly)!;
+  expect(reviewNarrowed.candidates[0]).toMatchObject({ source: "closed_before_choice", observedBlocks: [], missingBasis: true });
+  expect(reviewNarrowed.findings).toContain("purchase_basis_missing");
+
+  const positiveCapSemDado = row();
+  positiveCapSemDado.candidates[0]!.marks = [];
+  const reviewPositiveCap = auditConsult({ ...positiveCapSemDado, candidates: [{ ...positiveCapSemDado.candidates[0]!, cap: { maxUsd: 10, binding: "sem_dado", sharePct: null } }] })!;
+  expect(reviewPositiveCap.candidates[0]).toMatchObject({ source: "closed_before_choice", observedBlocks: [], missingBasis: true });
+  expect(reviewPositiveCap.findings).toContain("purchase_basis_missing");
+});

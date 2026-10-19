@@ -42,7 +42,7 @@ export interface ConsultAudit {
 
 const obj = (v: unknown): Record<string, unknown> | null => v !== null && typeof v === "object" && !Array.isArray(v) ? v as Record<string, unknown> : null;
 const strings = (v: unknown, max: number): v is string[] => Array.isArray(v) && v.length <= max && v.every(s => typeof s === "string" && s.length > 0 && s.length <= 160);
-const CLOSING = new Set(["entrada_esticada", "sem_historico", "sem_perfil", "estagnado", "sem_tamanho", "sem_saldo", "minimo", "risco", "reserva", "liquidez", "volume"]);
+const CLOSING = new Set(["entrada_esticada", "sem_historico", "sem_perfil", "estagnado", "sem_tamanho", "sem_saldo", "sem_dado", "minimo", "risco", "reserva", "liquidez", "volume", "custo_de_entrada_alto", "gas_station_pendente"]);
 const plainCode = (v: unknown): v is string => typeof v === "string" && /^[a-z][a-z0-9_]{0,63}$/.test(v);
 const variant = (v: unknown): string | null => typeof v === "string" && /^[a-z][a-z0-9-]{0,39}$/.test(v) ? v : null;
 
@@ -110,7 +110,7 @@ export function auditConsult(raw: unknown): ConsultAudit | null {
     const closed = c.kind === "buy" && c.stances.length === 1 && c.stances[0] === "skip";
     const blocks = c.marks.filter(m => CLOSING.has(m));
     const cap = obj(c.cap);
-    if (closed && cap !== null && typeof cap.maxUsd === "number" && Number.isFinite(cap.maxUsd) && cap.maxUsd === 0 && typeof cap.binding === "string" && ["minimo", "risco", "reserva", "liquidez", "volume", "sem_saldo"].includes(cap.binding) && !blocks.includes(cap.binding)) blocks.push(cap.binding);
+    if (closed && cap !== null && typeof cap.maxUsd === "number" && Number.isFinite(cap.maxUsd) && cap.maxUsd === 0 && typeof cap.binding === "string" && ["minimo", "risco", "reserva", "liquidez", "volume", "sem_saldo", "sem_dado"].includes(cap.binding) && !blocks.includes(cap.binding)) blocks.push(cap.binding);
     const p = obj(verdicts?.[c.id]);
     const probabilities = p !== null && Object.keys(p).length === c.stances.length && c.stances.every(s => typeof p[s] === "number") ? p as Record<string, number> : null;
     candidates.push({ id: c.id, kind: c.kind as "holding" | "buy", selected, requested, offered: [...c.stances], selectableAlternative: c.stances.length > 1,
