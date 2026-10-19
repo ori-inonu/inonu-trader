@@ -42,6 +42,34 @@ describe("the funnel from the item of purchase to the order that went out", () =
 });
 
 describe("how much the Jev wanted to buy", () => {
+  test("synthetic invalid or absent Choice weights never become histogram samples or zero-valued asks", () => {
+    const invalid = [null, undefined, {}, { buy_full: 1 }, { skip: 0.4, buy_full: 0.6, extra: 0 },
+      { skip: 0.1, buy_full: 0.1 }, { skip: 0.5, buy_full: 0.53 },
+      { skip: 1.1, buy_full: -0.1 }, { skip: 0.4, buy_full: NaN }, { skip: 0.4, buy_full: Infinity }];
+    for (const weights of invalid) {
+      const record = consult(1, { candidates: [cand("buy:a", ["skip", "buy_full"])], verdicts: { "buy:a": weights } });
+      const a = buildAnalysis(base({ briefs: [record] }));
+      expect(a.hist.all.reduce((sum, n) => sum + n, 0)).toBe(0);
+      expect(a.hist.fresh.reduce((sum, n) => sum + n, 0)).toBe(0);
+      expect(a.asks).toEqual([]);
+      expect(a.funnel).toMatchObject({ consults: 1, items: 1, open: 1, asked: 1, applied: 1 });
+      expect(a.timeline[0]).toMatchObject({ open: 1, asked: 1, applied: 1 });
+    }
+  });
+
+  test("synthetic valid zero and rounded multi-stance preferences retain their own samples", () => {
+    const records = [
+      consult(1, { candidates: [cand("buy:a", ["skip", "buy_full"])], verdicts: { "buy:a": { skip: 1, buy_full: 0 } } }),
+      consult(2, { candidates: [cand("buy:a", ["skip", "buy_third", "buy_full"])], verdicts: { "buy:a": { skip: 0.34, buy_third: 0.33, buy_full: 0.34 } } }),
+    ];
+    const a = buildAnalysis(base({ briefs: records }));
+    expect(a.asks.map(row => row.p)).toEqual([0, 0.34]);
+    expect(a.hist.all.reduce((sum, n) => sum + n, 0)).toBe(2);
+    expect(a.hist.all[0]).toBe(1);
+    expect(a.hist.all[6]).toBe(1);
+    expect(a.funnel).toMatchObject({ asked: 2, applied: 2 });
+  });
+
   test("a histogram over all the open candidates, in bins of five points, and the part from the new wording of the questions", () => {
     const briefs = [consult(1, { criteria: undefined }), consult(2)];
     const a = buildAnalysis(base({ briefs }));

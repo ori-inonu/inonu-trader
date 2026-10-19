@@ -1369,8 +1369,9 @@ describe("the money mode, end to end", () => {
     const a = svc.analysis!();
     expect(a.funnel.consults).toBe(1);
     expect(a.funnel.items).toBeGreaterThan(0);
-    expect(a.asks.length).toBeGreaterThan(0);
-    // this model sends no probabilities, so there is no preference to put in the histogram: it stays empty, never invented
+    expect(a.funnel.asked).toBeGreaterThan(0);
+    expect(a.asks).toEqual([]);
+    // This model sends no probabilities: count its requests, but invent no preference in asks or the histogram.
     expect(a.hist.all.reduce((x, y) => x + y, 0)).toBe(0);
     expect(svc.analysis!()).toBe(a);
     await svc.close();
