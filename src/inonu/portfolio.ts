@@ -66,7 +66,7 @@ export interface PortfolioContext extends Omit<PortfolioInput, "assets"> {
 }
 export interface PortfolioResult extends Omit<PortfolioContext, "assets"> { readonly assets: readonly (PortfolioPosition & { readonly action: PortfolioAction; readonly model: string })[] }
 /** The number the provider gives Solana: its contracts are base58 mints and their case is part of their identity. */
-export const PORTFOLIO_SOLANA_CHAIN = "501";
+const PORTFOLIO_SOLANA_CHAIN = "501";
 const EVM_CONTRACT = /^0x[0-9a-fA-F]{40}$/;
 const SOLANA_MINT = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 /** A contract as the consultation keeps it, or null: `native`; on Solana a mint exactly as given; anywhere else a hex contract in lower case. The two families never mix. */
@@ -76,7 +76,7 @@ const contractOf = (chainIndex: string, raw: string): string | null => {
   return EVM_CONTRACT.test(raw) ? raw.toLowerCase() : null;
 };
 /** Whether two spellings are the same contract: hex has no case, a mint does. */
-export const sameContract = (chainIndex: string, a: string, b: string): boolean => (chainIndex === PORTFOLIO_SOLANA_CHAIN ? a === b : a.toLowerCase() === b.toLowerCase());
+const sameContract = (chainIndex: string, a: string, b: string): boolean => (chainIndex === PORTFOLIO_SOLANA_CHAIN ? a === b : a.toLowerCase() === b.toLowerCase());
 const exactKeys = (obj: Record<string, unknown>, keys: readonly string[]): boolean => Object.keys(obj).length === keys.length && keys.every((key) => Object.hasOwn(obj, key));
 const record = (raw: unknown): Record<string, unknown> | null => raw !== null && typeof raw === "object" && !Array.isArray(raw) ? raw as Record<string, unknown> : null;
 const positive = (balance: string | null): boolean => balance !== null && /[1-9]/.test(balance);
@@ -121,7 +121,7 @@ function gapLabel(key: string, reason: string): string {
   const detail = /^[a-zA-Z0-9_:.-]{1,40}$/.test(reason) ? `:${reason}` : "";
   return `${kind}:${key}${detail}`.slice(0, 80);
 }
-export const portfolioCandidateId = (chainIndex: string, contract: string): string => `token:${chainIndex}:${contract}`;
+const portfolioCandidateId = (chainIndex: string, contract: string): string => `token:${chainIndex}:${contract}`;
 
 /** A closed schema deliberately rejects account, address, raw RPC, leverage and caller-written prose. */
 export function parsePortfolioInput(raw: unknown): PortfolioInput | null {

@@ -38,7 +38,7 @@ export const priceOnlyFacts = (priceUsd: number): HoldingFacts => ({ priceUsd, s
 
 export type TriggerId = "carteiras_venderam" | "saida_dificil" | "sinal_de_risco" | "queda_desde_a_entrada" | "ganho_a_proteger";
 
-export const TRIGGER_LABEL: Readonly<Record<TriggerId, string>> = {
+const TRIGGER_LABEL: Readonly<Record<TriggerId, string>> = {
  carteiras_venderam: "as carteiras rastreadas ja venderam metade ou mais",
  saida_dificil: "a posicao e grande para a liquidez do pool",
  sinal_de_risco: "a OKX marca risco alto ou um sinal de risco",
@@ -160,7 +160,7 @@ function unitsFloorCents(balanceMinor: string | null, decimals: number | null, d
  * sends dollars as units of that coin, so the cash offered is what THAT coin holds in whole units, cut down to the cent: never the sum of several coins, never the balance times a price above one, never a rounded-up cent.
  * A coin whose balance or decimals are not known exactly cannot pay (cash zero), and the native coin is never cash. What purchases already sent have spent and the wallet does not show yet comes off, never below zero.
  */
-export function executableCashByChain(book: Book, pending: PendingDebit = NO_PENDING): Record<string, number> {
+function executableCashByChain(book: Book, pending: PendingDebit = NO_PENDING): Record<string, number> {
  const best = new Map<string, Position>();
  for (const p of book.positions) {
   if (p.wallet !== "agente" || !p.isCash || p.address === "native" || p.usd === null || !(p.usd > 0)) continue;

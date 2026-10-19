@@ -13,7 +13,7 @@ import { bearishFlags } from "./risk-tags";
 import { allocate, BUY_SIZES, capFor, FRACTIONS, type Binding, type BuySize, type SizingCap, type SizingInput } from "./sizing";
 
 /** The families of evidence a candidate can have in its favour. Independent: they do not share an input. */
-export const FAMILIES = ["carteiras", "fluxo", "liquidez", "distribuicao", "tracao", "seguranca"] as const;
+const FAMILIES = ["carteiras", "fluxo", "liquidez", "distribuicao", "tracao", "seguranca"] as const;
 export type Family = (typeof FAMILIES)[number];
 
 export const FAMILY_LABEL: Readonly<Record<Family, string>> = {
@@ -26,7 +26,7 @@ export const FAMILY_LABEL: Readonly<Record<Family, string>> = {
 };
 
 /** The limit that puts a family in a candidate's favour. A choice of this code, not calibrated. */
-export const FAMILY_RULES = {
+const FAMILY_RULES = {
  carteiras: { minWallets: 2, maxSoldPct: 60 },
  fluxo: { minTxs: 100, minBuyShare: 0.55 },
  liquidez: { minUsd: 250_000 },
@@ -36,14 +36,14 @@ export const FAMILY_RULES = {
 } as const;
 
 /** The limit that puts a mark of care on a candidate. */
-export const MARK_RULES = { top10Pct: 50, devPct: 10, bundlePct: 20, liquidityUsd: 50_000, holders: 300, riskLevel: 4 } as const;
+const MARK_RULES = { top10Pct: 50, devPct: 10, bundlePct: 20, liquidityUsd: 50_000, holders: 300, riskLevel: 4 } as const;
 
 /** What a candidate has to have to be offered at all: a pool people can leave, and enough holders. */
-export const ENTRY_RULES = { minLiquidityUsd: 20_000, minHolders: 100 } as const;
+const ENTRY_RULES = { minLiquidityUsd: 20_000, minHolders: 100 } as const;
 
 export type MarkId = "concentracao" | "criador" | "bundlers" | "liquidez_baixa" | "poucos_detentores" | "risco_alto" | "sinal_de_risco";
 
-export const MARK_LABEL: Readonly<Record<MarkId, string>> = {
+const MARK_LABEL: Readonly<Record<MarkId, string>> = {
  concentracao: "as 10 maiores carteiras tem muito da oferta",
  criador: "o criador tem muito da oferta",
  bundlers: "bundlers com muito da oferta",
@@ -231,7 +231,7 @@ export function candidateOf(facts: EcoFacts, saldo: Saldo | null): EcoCandidate 
 }
 
 /** What the ceiling of a candidate is computed from. Exposed so the limit that held a ceiling down can be named after the fact (see `tightestLimit`). */
-export function capInput(facts: EcoFacts, saldo: Saldo, marks: readonly string[], heldUsd: number): SizingInput {
+function capInput(facts: EcoFacts, saldo: Saldo, marks: readonly string[], heldUsd: number): SizingInput {
  return {
   portfolioUsd: saldo.totalUsd,
   cashOnChainUsd: saldo.chains.find((c) => c.chainIndex === facts.chainIndex)?.cashUsd ?? 0,
@@ -247,11 +247,11 @@ export function capInput(facts: EcoFacts, saldo: Saldo, marks: readonly string[]
 
 /* ---------------------------------------------------------------- what the model may answer */
 
-export const STANCES = ["skip", "watch", ...BUY_SIZES] as const;
+const STANCES = ["skip", "watch", ...BUY_SIZES] as const;
 export type Stance = (typeof STANCES)[number];
 export const NO_FAMILY = "nenhuma";
 /** The ranks the model fills: first, second and third. */
-export const RANKS = 3;
+const RANKS = 3;
 
 /** The stances offered for a candidate: a size only where the code found a ceiling to take a fraction of. */
 export function offeredStances(c: EcoCandidate): readonly Stance[] {

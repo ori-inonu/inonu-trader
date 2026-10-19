@@ -6,7 +6,8 @@
  * positive close means "unknown", never zero: a zero sigma would make every leverage look safe.
  */
 
-export const DAY_MS = 86_400_000;
+import { DAY_MS } from "../quant/types";
+
 export const MIN_RETURNS = 20;
 
 export interface RealizedVolatility {

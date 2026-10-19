@@ -1,5 +1,5 @@
 /**
- * Jev Decision Lab with the REAL Jev, in SHADOW, under a hard cost cap. Specification: docs/JEV-LAB-JEV-REAL.md.
+ * Jev Decision Lab with the REAL Jev, in SHADOW, under a hard cost cap. Specification: src/lab-jev/docs/spec.md.
  *
  * This is the ONLY file of the lab family that reads the environment, and it reads exactly three variables:
  *   TYPESAFE_AI_API_KEY   the key of the provider (only checked for presence here; the SDK sends it, nothing prints it)
@@ -50,7 +50,7 @@ const USAGE = [
   `run: consulta o Jev real uma vez por época com candidatos. Recusa sem --allow-paid-inference, sem os dois tetos, com --max-usd acima de ${HARD_MAX_USD} USD ou --max-calls acima de ${HARD_MAX_CALLS}, sem a chave ou sem o preço.`,
   "     Imprime o custo estimado antes, faz uma consulta de pré-voo e para quando o teto ou a paciência com falhas acabar; o diário guarda tokens e custo por época e repetir o comando na mesma pasta continua dali.",
   "",
-  "A captura vem de fora (formato JSONL do laboratório, docs/JEV-LABORATORIO-DE-DECISAO.md, seção 3.4). O Jev só vê números, ids opacos e enumerações; nunca texto livre.",
+  "A captura vem de fora (formato JSONL do laboratório, src/lab/docs/spec.md, seção 3.4). O Jev só vê números, ids opacos e enumerações; nunca texto livre.",
   "Saída: relatório em JSON no stdout, resumo curto em português no stderr.",
   "Códigos de saída: 0 execução completa ou parada pelo teto; 2 uso incorreto ou recusa; 3 qualquer parada por erro.",
   "A chave nunca é impressa nem gravada. Nada aqui prova lucro e nada aqui concede permissão.",

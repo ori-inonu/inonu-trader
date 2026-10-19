@@ -20,10 +20,10 @@ const SHORT_WINDOW_MS = 15 * 60_000;
 /** For a short window the entry and the exit reads may be at most this far from the instants: about one cycle. A CHOICE of this code, not calibrated. */
 export const SHORT_TOLERANCE_MS = 2 * 60_000;
 /** How far from the decision the entry price may have been read, in ms, for the windows of 15 minutes or more. A CHOICE of this code, not calibrated. */
-export const ENTRY_TOLERANCE_MS = 5 * 60_000;
+const ENTRY_TOLERANCE_MS = 5 * 60_000;
 export const entryToleranceMs = (windowMs: number): number => (windowMs < SHORT_WINDOW_MS ? SHORT_TOLERANCE_MS : ENTRY_TOLERANCE_MS);
 /** How late after the end of a window the exit price may have been read: one cycle for a short window, else a quarter of the window, at least five minutes. */
-export const exitToleranceMs = (windowMs: number): number => (windowMs < SHORT_WINDOW_MS ? SHORT_TOLERANCE_MS : Math.max(5 * 60_000, Math.floor(windowMs / 4)));
+const exitToleranceMs = (windowMs: number): number => (windowMs < SHORT_WINDOW_MS ? SHORT_TOLERANCE_MS : Math.max(5 * 60_000, Math.floor(windowMs / 4)));
 
 export interface PricePoint {
   readonly atMs: number;

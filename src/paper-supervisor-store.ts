@@ -4,7 +4,6 @@ import { existsSync, lstatSync, mkdirSync, realpathSync, rmSync, statSync } from
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import {
   PaperSupervisorError,
-  assertByteEventCapacity,
   assertRecoveryCapacity,
   assertOwnedCapacity,
   canonicalJson,

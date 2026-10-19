@@ -179,7 +179,7 @@ export function createJournal(opts: { readonly dir: string; readonly name: strin
 }
 
 /** What one segment of either journal may weigh and how many are kept: about 48 MB of each in all. */
-export const RECORDING_LIMITS = { maxBytes: 8 * 1024 * 1024, keep: 5 } as const;
+const RECORDING_LIMITS = { maxBytes: 8 * 1024 * 1024, keep: 5 } as const;
 const STATUS_EVERY_MS = 60_000;
 
 export interface Recorders {

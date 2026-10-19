@@ -15,7 +15,7 @@ import { receiptForTxHash, type ReceiptStatus } from "./receipt";
 import { PROFILE_IDS, PROFILES, type ProfileId } from "./plans";
 import { quoteFactsOf, type QuoteFacts } from "./quote-facts";
 import type { EntryQuoteRequest } from "../decision-review/entry-quote";
-import { buildSwapArgs, buyCostCapPct, CHAIN_NAME, settlementFor, SLIPPAGE_CAP_PCT } from "./swap-args";
+import { buildSwapArgs, buyCostCapPct, CHAIN_NAME, settlementFor } from "./swap-args";
 import type { Book, PlannedOrder } from "./types";
 
 export interface CliResult {
@@ -289,7 +289,7 @@ function strings(value: unknown, into: string[] = [], depth = 0): string[] {
 }
 
 /** What the tool said, as plain text the page can show: cut, printable characters only, no markup. Null when there is nothing usable. */
-export function plainDetail(text: unknown): string | null {
+function plainDetail(text: unknown): string | null {
   if (typeof text !== "string") return null;
   const plain = text.replace(/[^A-Za-z0-9 .,:;()_'\/=+%-]/g, " ").replace(/\s+/g, " ").trim().slice(0, 160).trim();
   return plain.length === 0 ? null : plain;
@@ -299,7 +299,7 @@ export function plainDetail(text: unknown): string | null {
 const REF_KEYS = ["swapTxHash", "txHash", "txid", "signature"] as const;
 const EVM_HASH = /^0x[0-9a-fA-F]{64}$/;
 const SOLANA_SIGNATURE = /^[1-9A-HJ-NP-Za-km-z]{64,90}$/;
-export function txReferenceOf(data: unknown): string | null {
+function txReferenceOf(data: unknown): string | null {
   const o = oneRecord(data);
   if (o === null) return null;
   for (const key of REF_KEYS) {
@@ -674,5 +674,3 @@ export const readTextFile = (path: string): string | null => {
     return null;
   }
 };
-
-export { SLIPPAGE_CAP_PCT };

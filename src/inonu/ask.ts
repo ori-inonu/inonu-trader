@@ -26,13 +26,13 @@ import { buildFilterState, filterFromChoices, type ScreenerFilter } from "./scre
 import { isPortfolioFresh, parsePortfolioInput, validatePortfolioDecision, type PortfolioContext, type PortfolioInput, type PortfolioResult } from "./portfolio";
 import { isSaldoFresh, parseSaldo, validateEcosystem, type EcoContext, type EcoResult, type Saldo } from "../opportunity/ecosystem";
 
-export const MAX_ONCHAINOS_CALLS_PER_REQUEST = 15;
+const MAX_ONCHAINOS_CALLS_PER_REQUEST = 15;
 
 export type AskMode = "ativo" | "token" | "descoberta" | "filtro" | "ranking" | "carteira" | "ecossistema";
 const MODES: readonly string[] = ["ativo", "token", "descoberta", "filtro", "ranking", "carteira", "ecossistema"];
 
 /** The ecosystem mode reads at most this many networks (two reads each). */
-export const ECOSYSTEM_REDES_MAX = 4;
+const ECOSYSTEM_REDES_MAX = 4;
 
 /** An OKX instrument, an on-chain token, or (the discovery mode) a whole network. */
 export type AskTarget = { readonly instId: string } | { readonly chainIndex: string; readonly address: string } | { readonly chainIndex: string };

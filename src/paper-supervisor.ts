@@ -316,7 +316,7 @@ export function assertFreshIntakeCapacity(envelope: PaperSupervisorEnvelope): vo
   assertByteEventCapacity(envelope);
 }
 
-export function assertByteEventCapacity(envelope: PaperSupervisorEnvelope): void {
+function assertByteEventCapacity(envelope: PaperSupervisorEnvelope): void {
   const snapshot = PaperCapital.restore(envelope.capital).snapshot();
   const reserved = snapshot.plans.filter((plan) => plan.status === "reserved").length;
   const inflight = snapshot.plans.filter((plan) => plan.status === "inflight");
