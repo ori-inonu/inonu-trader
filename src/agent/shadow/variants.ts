@@ -34,7 +34,7 @@ export const HYPOTHESES: readonly Hypothesis[] = Object.freeze([
 // ---- H1: hold until the plan --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 /** The facts that break the thesis of a purchase: the provider marks a risk, leaving would be hard, or the tracked wallets already sold half. Registered before any data; a holding with one of them keeps every stance. */
-export const THESIS_BREAK = ["sinal_de_risco", "saida_dificil", "carteiras_venderam"] as const;
+const THESIS_BREAK = ["sinal_de_risco", "saida_dificil", "carteiras_venderam"] as const;
 export const H1_TRIGGER = "segurando_ate_o_plano";
 
 /** A holding the agent opened under a plan is offered only `hold`, with the trigger that says why, unless a fact of the thesis breaking is there. Anything else passes through untouched. The plan's own exits (target, stop, trailing, time) are the code's and never wait. */
@@ -47,7 +47,7 @@ export function holdUntilPlan(c: Candidate): Candidate {
 
 // ---- H2: enter the best -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-export const H2_DEFAULTS = { n: 3, floor: 0.2, minIdleShare: 0.5 } as const;
+const H2_DEFAULTS = { n: 3, floor: 0.2, minIdleShare: 0.5 } as const;
 
 /**
  * The preference of the Jev for buying a purchase: the highest probability its answer gives to an option that buys. It is the SAME definition the Placar (`analysis.ts`, `pBuy`), the closing of the purchase (`cycle.ts`,
@@ -153,7 +153,7 @@ export function entryCostOf(c: Candidate, input: EntryCostInput): EntryCostFact 
 }
 
 /** What the new Brief key says, for the legend of the variant. */
-export const H3_LEGEND = "ce = what entering costs in total: ft true when the wallet never held the token (the first buy opens its account), ac dollars of that account as measured on this wallet, fe dollars of the quoted fee, t total dollars, pct percent of each size on offer; null is unknown, never zero";
+const H3_LEGEND = "ce = what entering costs in total: ft true when the wallet never held the token (the first buy opens its account), ac dollars of that account as measured on this wallet, fe dollars of the quoted fee, t total dollars, pct percent of each size on offer; null is unknown, never zero";
 
 /** The median of a list of numbers (null for an empty list): used to MEASURE the account cost from the wallet's own first buys. */
 export function medianOf(values: readonly number[]): number | null {
@@ -179,7 +179,7 @@ export function preferExistingAccounts(buys: readonly Candidate[], hasAccount: (
  * The floor of H5 is registered at zero: the owner asked to test entering the best available without a bar. It is a parameter of the round like N, and changing it after the data are seen voids the round. N has NO
  * default on purpose: how many positions to hold is the owner's choice, registered per round, and nothing in this code or in ADENDO-G recommends a value.
  */
-export const H5_DEFAULTS = { floor: 0 } as const;
+const H5_DEFAULTS = { floor: 0 } as const;
 
 /**
  * What occupies a slot, registered before any data: every token position of the AGENT wallet that is not cash, not the native coin (that is the reserve) and has a known value above zero: the same population the

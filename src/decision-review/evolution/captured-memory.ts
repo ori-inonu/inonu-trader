@@ -5,7 +5,7 @@ import { buildExperienceMemory, type ExperienceEpisode, type ExperienceMemory, t
 import { DECISION_REFERENCE_JOURNALS, decisionMetadataReference, metadataReferenceAvailable } from "./metadata-reference";
 
 /** Resource protection for one requested payload, never trading/risk limits. */
-export const CAPTURED_MEMORY_LIMITS = Object.freeze({ requestedCycles: 512, eligibleVariantsPerNamespace: 128, eligiblePayloadBytes: 8 * 1024 * 1024, queries: 64 });
+const CAPTURED_MEMORY_LIMITS = Object.freeze({ requestedCycles: 512, eligibleVariantsPerNamespace: 128, eligiblePayloadBytes: 8 * 1024 * 1024, queries: 64 });
 export interface CapturedMemoryOptions {
   readonly store: ConsultCaptureStore;
   readonly arm: "A" | "B";

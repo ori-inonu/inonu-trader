@@ -33,7 +33,7 @@ export interface DerivativesVenueAdapter {
   inputSha256(): string;
 }
 
-export const API_VERSION = "okx_v5_normalized_snapshot_v1";
+const API_VERSION = "okx_v5_normalized_snapshot_v1";
 
 const BLOCKERS = Object.freeze(["execution_not_qualified", "no_credentials", "no_network_client", "no_signer", "offline_fixture_only"]);
 

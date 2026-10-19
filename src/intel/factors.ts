@@ -42,7 +42,7 @@ export interface Run {
 }
 
 /** The ratio in thousandths, or an error: more than three decimals would not compare exactly. */
-export function ratioMilli(x: number): number {
+function ratioMilli(x: number): number {
   if (!Number.isFinite(x) || x <= 1) throw new RangeError("the ratio must be greater than 1");
   const milli = Math.round(x * 1000);
   if (Math.abs(milli - x * 1000) > 1e-6) throw new RangeError("the ratio takes at most three decimals");

@@ -89,7 +89,7 @@ export class JevModel implements Model {
 }
 
 /** Deterministic stand-in: momentum + imbalance + mean reversion toward flat. */
-export class MockModel implements Model {
+class MockModel implements Model {
   readonly name = "mock";
 
   async decide(state: TradeState): Promise<Decision> {

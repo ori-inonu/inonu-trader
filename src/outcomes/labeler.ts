@@ -20,13 +20,13 @@ import type { Bar } from "../intel/features/types";
 import { HORIZON_MS, type Barrier, type Horizon, type IncompleteReason, type Label, type Snapshot, type StopBasis, type ZoneReaction, type ZoneRef } from "./types";
 
 export const LABEL_BAR_MS = 300_000;
-export const STOP_ATR = 1;
+const STOP_ATR = 1;
 /** The target is this many times the distance to the stop (1.5 ATR when the stop is one ATR). */
-export const TARGET_ATR = 1.5;
+const TARGET_ATR = 1.5;
 /** A snapshot taken this close after the open of a five minute bar belongs to that bar; later, to the next one. */
 export const ENTRY_TOLERANCE_MS = 60_000;
 /** The favourable move, in ATR above the upper limit of a demand zone (below the lower limit of a supply zone), that counts as a reaction. */
-export const REACTION_ATR = 1;
+const REACTION_ATR = 1;
 
 const bps = (value: number, base: number): number => Math.round(((value - base) / base) * 10_000 * 100) / 100 + 0;
 

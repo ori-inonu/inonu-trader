@@ -11,9 +11,9 @@ import type { BudgetEntry } from "./registry.ts";
 
 /** Nome da variável de ambiente da chave OKX. Só o nome; o valor nunca passa por aqui. */
 export const OKX_KEY_ENV = "OKX_WEB3_API_KEY";
-export const OKX_MARKET_FEE_URL = "https://web3.okx.com/onchainos/dev-docs/market/market-api-fee";
-export const OKX_TRADE_FEE_URL = "https://web3.okx.com/onchainos/dev-docs/trade/api-fee";
-export const OKX_CATALOG_SOURCE = "src/onchain-read/catalog.ts (faixa assumida; a página de custos não lista este endpoint)";
+const OKX_MARKET_FEE_URL = "https://web3.okx.com/onchainos/dev-docs/market/market-api-fee";
+const OKX_TRADE_FEE_URL = "https://web3.okx.com/onchainos/dev-docs/trade/api-fee";
+const OKX_CATALOG_SOURCE = "src/onchain-read/catalog.ts (faixa assumida; a página de custos não lista este endpoint)";
 
 export type OkxTier = "free" | "basic" | "premium";
 

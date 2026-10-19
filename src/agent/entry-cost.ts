@@ -26,13 +26,13 @@ export const ENTRY_COST_GAS_STATION = "gas_station_pendente";
 export const SALE_REFUSED_TRIGGER = "venda_recusada_por_impacto";
 
 /** How long a refusal for price impact keeps the same purchase narrowed and the same size of a sale off the list: the same half hour a failing sale already waits (cycle.ts). */
-export const IMPACT_BACKOFF_MS = 30 * 60_000;
+const IMPACT_BACKOFF_MS = 30 * 60_000;
 
 /** The probe: at most this many open purchases are quoted in one cycle, one at a time (the tool shares its home folder with the executor), each for at most `perMs` and all of them for at most `totalMs`; an answer is kept `ttlMs`, a failure `failTtlMs`. CHOICES of this code, not calibrated. */
 export const ENTRY_PROBE = { maxPerCycle: 3, perMs: 8_000, totalMs: 15_000, ttlMs: 5 * 60_000, failTtlMs: 60_000 } as const;
 
 /** The smallest purchase on offer (by dollars): the quote of it is the lower bound of the entry cost of every size offered. Null when none is offered. */
-export function smallestOffered(c: Candidate): { readonly stance: string; readonly usd: number } | null {
+function smallestOffered(c: Candidate): { readonly stance: string; readonly usd: number } | null {
   let best: { stance: string; usd: number } | null = null;
   for (const stance of AGENT_BUY_SIZES) {
     const usd = c.usdByStance[stance];

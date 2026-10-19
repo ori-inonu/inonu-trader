@@ -95,8 +95,8 @@ export function compactTapeState(value: unknown): unknown {
 
 const JEV_READ_PROMPT = PROMPTS["p-jev-read"];
 export const ANALYSIS_INPUTS_TEXT = JEV_READ_PROMPT.analysisInputsText;
-export const INPUTS_PLAIN = JEV_READ_PROMPT.direction.instructions.inputsPlain;
-export const INPUTS_WITH_ANALYSIS = JEV_READ_PROMPT.direction.instructions.inputsWithAnalysis;
+const INPUTS_PLAIN = JEV_READ_PROMPT.direction.instructions.inputsPlain;
+const INPUTS_WITH_ANALYSIS = JEV_READ_PROMPT.direction.instructions.inputsWithAnalysis;
 
 type TapeQuestionState = Pick<TapeState, "horizonMinutes" | "instId"> & { readonly analysis?: unknown };
 

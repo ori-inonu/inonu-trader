@@ -1,5 +1,5 @@
 /**
- * Jev Decision Lab CLI. Specification: docs/JEV-LABORATORIO-DE-DECISAO.md section 10.
+ * Jev Decision Lab CLI. Specification: src/lab/docs/spec.md section 10.
  *
  * SHADOW ONLY: it records hypothetical decisions and measures what they would have returned. It never executes,
  * signs, sends, approves or reads a key. It never reads process.env, never uses the network and writes only into the
@@ -47,7 +47,7 @@ function usage(deps?: LabCliDeps): string {
     "",
     "run: roda a grade de épocas, grava o diário em <pasta>/journal.jsonl (só anexa; repetir o comando retoma sem duplicar)",
     "     e imprime o relatório. --planted-edge planta, na fonte sintética, uma vantagem de <bps> por decisão.",
-    "     --capture lê uma captura no formato JSONL do laboratório (docs/JEV-LABORATORIO-DE-DECISAO.md, seção 3.4).",
+    "     --capture lê uma captura no formato JSONL do laboratório (src/lab/docs/spec.md, seção 3.4).",
     "report: reconstrói o relatório só a partir de um diário existente.",
     "",
     injected

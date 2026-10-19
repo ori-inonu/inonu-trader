@@ -30,13 +30,13 @@ export interface EcosystemDeps {
 }
 
 /** The networks read when the person did not choose and the balance does not say: where most tokens and tracked wallets are. */
-export const DEFAULT_ECOSYSTEM_CHAINS: readonly string[] = ["501", "8453", "56", "1"];
-export const ECOSYSTEM_MAX_CHAINS = 4;
+const DEFAULT_ECOSYSTEM_CHAINS: readonly string[] = ["501", "8453", "56", "1"];
+const ECOSYSTEM_MAX_CHAINS = 4;
 /** How many tokens have their risk read, and how many the model sees. */
 const RISK_READS = 6;
 export const ECOSYSTEM_CANDIDATES = 5;
 /** The most a caller may ask for: the cap of calls of a click (15) leaves room for the risk of about this many after the reads of one network. */
-export const ECOSYSTEM_MAX_CANDIDATES = 12;
+const ECOSYSTEM_MAX_CANDIDATES = 12;
 /** The Brief of this mode carries five candidates with their facts: it is allowed a little more than the 2 KB of the single instrument. */
 export const ECOSYSTEM_BRIEF_BYTES = 3584;
 

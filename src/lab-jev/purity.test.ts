@@ -3,11 +3,12 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import * as realScript from "../../scripts/jev-lab-real.ts";
 import * as labScript from "../../scripts/jev-lab.ts";
+import { documentAnnex } from "../../scripts/test-support/document-annex.ts";
 import * as chooser from "./jev-chooser.ts";
 import { PROMPTS } from "../generated/prompts";
 import * as plan from "./plan-chooser.ts";
 
-// Spec: docs/JEV-LAB-JEV-REAL.md sections 0, 2 and 11. Titles start with the acceptance id (LJ27 to LJ29).
+// Spec: src/lab-jev/docs/spec.md annex sections 0, 2 and 11. Titles start with the acceptance id (LJ27 to LJ29).
 // These tests read the code as text: they prove where the SDK is imported, where the environment is read, what the code
 // never does, and that the document, the code and the tests describe the same thing.
 
@@ -15,8 +16,8 @@ const DIR = import.meta.dir;
 const ROOT = resolve(DIR, "..", "..");
 const LAB_DIR = join(ROOT, "src", "lab");
 const SCRIPTS = join(ROOT, "scripts");
-const DOC_PATH = join(ROOT, "docs", "JEV-LAB-JEV-REAL.md");
-const DOC = readFileSync(DOC_PATH, "utf8").replaceAll("\r\n", "\n");
+const DOC_PATH = join(DIR, "docs", "spec.md");
+const DOC = documentAnnex(readFileSync(DOC_PATH, "utf8"), "## Anexo: JEV-LAB-JEV-REAL");
 
 const rel = (path: string): string => path.replace(`${ROOT}\\`, "").replace(`${ROOT}/`, "").replaceAll("\\", "/");
 

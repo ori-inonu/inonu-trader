@@ -5,7 +5,7 @@ import { chainByIndex, isAddressForChain } from "../../okx-wallet/chains";
  * External hashes/audit refs are not authenticated or fetched. Complete coverage
  * is a source's assertion plus a checked manifest, never inferred from no rows.
  * No price conversion, portfolio return, reward or promotion is performed. */
-export const FINANCIAL_EVIDENCE_SCHEMA = 1 as const;
+const FINANCIAL_EVIDENCE_SCHEMA = 1 as const;
 export interface FinancialUnit { readonly assetKey: string; readonly decimals: number }
 export interface FinancialSource {
   readonly id: string; readonly source: string;

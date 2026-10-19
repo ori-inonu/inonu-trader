@@ -80,7 +80,7 @@ export interface QualificationAssessment {
   readonly artifactQualificationHash: string | null;
   readonly sourceQualificationHash: string | null;
 }
-export const EVOLUTION_CODES = [
+const EVOLUTION_CODES = [
   "created", "state_invalid", "clock_invalid", "policy_invalid", "round_proposed", "round_invalid", "round_active", "round_missing", "round_id_reused", "hypothesis_reused", "hypothesis_change_invalid", "outcome_invalid", "outcome_recorded", "outcome_matured", "outcome_duplicate", "outcome_pending_stale", "outcome_conflict", "observation_capacity", "round_sealed", "round_already_sealed", "round_unsealed", "sealed", "assessment_invalid", "assessment_context_mismatch", "assessment_stale", "assessment_not_qualified", "comparison_incomplete", "evaluation_not_ready", "qualification_unresolved", "qualified", "boundary_invalid", "version_conflict", "boundary_busy", "boundary_reused", "promoted", "rejected", "rejection_invalid",
 ] as const;
 export type EvolutionCode = typeof EVOLUTION_CODES[number];

@@ -1,7 +1,7 @@
 import type { Limits, Opportunity, Portfolio } from "./types";
 
 /** Tolerância para uma cotação marcada ligeiramente no futuro por diferença de relógio entre fonte e motor. */
-export const MAX_QUOTE_FUTURE_MS = 1000;
+const MAX_QUOTE_FUTURE_MS = 1000;
 
 const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 const prob = (v: unknown): boolean => finite(v) && v >= 0 && v <= 1;

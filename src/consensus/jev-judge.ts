@@ -8,7 +8,7 @@ import { createTypeSafeAi } from "@ai-sdk/typesafe-ai";
 import { experimental_evaluate } from "ai";
 import type { Judge, JudgeAnswer, JudgeQuestion } from "./engine";
 
-export const JEV_JUDGE_DEFAULT_TIMEOUT_MS = 20_000;
+const JEV_JUDGE_DEFAULT_TIMEOUT_MS = 20_000;
 
 export type EvaluateFn = (args: { model: unknown; state: unknown; questions: unknown; maxRetries: number; abortSignal: AbortSignal }) => Promise<unknown>;
 

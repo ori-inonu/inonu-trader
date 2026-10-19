@@ -31,7 +31,7 @@ export interface Protection {
 export const holdingId = (p: Position): string => `hold:${p.id}@${p.wallet}`;
 
 /** A plan whose position has been gone from the managed wallet for this long is an orphan of a trade that already ended (sold, moved, or hidden by the provider): it is closed, so a new purchase of the same token does not inherit its entry and its clock. */
-export const ORPHAN_AFTER_MS = 60 * 60_000;
+const ORPHAN_AFTER_MS = 60 * 60_000;
 
 export function protect(input: ProtectionInput): Protection {
   const orders: PlannedOrder[] = [];

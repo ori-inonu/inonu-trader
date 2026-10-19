@@ -53,7 +53,7 @@ export interface TimingFacts {
 export type TimingMark = "esticado" | "parabolico" | "caindo" | "volatil";
 export type TimingFamily = "retracao" | "alta_com_folego";
 
-export const TIMING_MARK_LABEL: Readonly<Record<TimingMark, string>> = {
+const TIMING_MARK_LABEL: Readonly<Record<TimingMark, string>> = {
  esticado: "esticado: preco no topo da faixa e sobrecomprado",
  parabolico: "parabolico: subiu demais em pouco tempo",
  caindo: "caindo rapido: faca caindo",

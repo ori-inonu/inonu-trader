@@ -5,7 +5,7 @@ import type { Limits, Opportunity, Portfolio } from "./types";
 export const isClosing = (opp: Opportunity): boolean => opp.side === "sell" && opp.legs === 1;
 
 /** Posição aberta neste símbolo, em USD (nunca negativa). */
-export const heldUsd = (opp: Opportunity, port: Portfolio): number => Math.max(0, port.exposureUsd[opp.symbol] ?? 0);
+const heldUsd = (opp: Opportunity, port: Portfolio): number => Math.max(0, port.exposureUsd[opp.symbol] ?? 0);
 
 /** Espaço restante para a posição deste símbolo, em USD. Para quem fecha, o espaço é a própria posição. */
 export function positionRoomUsd(opp: Opportunity, port: Portfolio, limits: Limits): number {

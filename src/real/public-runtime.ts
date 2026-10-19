@@ -1,6 +1,6 @@
 import type { PublicMarketSnapshot } from './public-market';
 
-export type IntegratedPublicSnapshot = Omit<PublicMarketSnapshot, 'capability'> & { capability: Omit<PublicMarketSnapshot['capability'], 'integrated'> & { integrated: true } };
+type IntegratedPublicSnapshot = Omit<PublicMarketSnapshot, 'capability'> & { capability: Omit<PublicMarketSnapshot['capability'], 'integrated'> & { integrated: true } };
 
 /** Refresh halfway through remaining validity, with bounded source acquisition. */
 export function publicRefreshDelay(snapshot: Pick<PublicMarketSnapshot, 'status' | 'expiresAtMs'> | null, nowMs: number): number {

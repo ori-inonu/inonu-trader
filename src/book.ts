@@ -109,7 +109,7 @@ export function abiBytesPayload(abiHex: string): string {
 }
 
 /** Decode the getL2Book() return value (ABI-encoded bytes) into block number and raw levels. */
-export function decodeL2Book(abiHex: string, priceDec: number, sizeDec: number): L2Book {
+function decodeL2Book(abiHex: string, priceDec: number, sizeDec: number): L2Book {
   const data = abiBytesPayload(abiHex);
   const block = Number(BigInt("0x" + data.slice(2, 66)));
   let offset = 66;
@@ -161,7 +161,7 @@ export const log10 = (x: { toString(): string }) => x.toString().length - 1;
 const mulDivRound = (v: bigint, m: bigint, d: bigint) => (v * m + d / 2n) / d;
 
 /** Port of the SDK's getAmmPricesFromVaultParams (vault prices are 1e18-scaled). */
-export function ammLevels(v: VaultParams, sizeDec: number): { bids: Level[]; asks: Level[] } {
+function ammLevels(v: VaultParams, sizeDec: number): { bids: Level[]; asks: Level[] } {
   const bids: Level[] = [], asks: Level[] = [];
   if (!vaultActive(v)) return { bids, asks };
   const sc = v.spread / 10n;
@@ -192,7 +192,7 @@ function group(levels: Level[], key: (p: number) => number = (p) => p): Level[] 
 const desc = (a: Level, b: Level) => b[0] - a[0];
 
 /** Formatted levels exactly as Kuru.OrderBook.getFormattedL2OrderBook produces them (both sorted descending). */
-export function formatLevels(l2: L2Book, params: BookParams, vault?: VaultParams): { bids: Level[]; asks: Level[] } {
+function formatLevels(l2: L2Book, params: BookParams, vault?: VaultParams): { bids: Level[]; asks: Level[] } {
   const decimals = log10(params.pricePrecision) - log10(params.tickSize);
   const mult = 10 ** decimals;
   const floorTick = (p: number) => Math.floor(p * mult) / mult;

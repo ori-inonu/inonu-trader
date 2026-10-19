@@ -123,7 +123,7 @@ export function predictLogistic(model: LogisticModel, row: ArrayLike<number>): n
   return sigmoid(s);
 }
 
-export const logitOf = (model: LogisticModel, row: ArrayLike<number>): number => {
+const logitOf = (model: LogisticModel, row: ArrayLike<number>): number => {
   let s = model.weights[0]!;
   for (let j = 1; j < model.weights.length; j += 1) s += model.weights[j]! * row[j - 1]!;
   return s;

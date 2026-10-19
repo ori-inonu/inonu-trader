@@ -15,8 +15,8 @@ import type { JevRead } from "./types";
 /** A sample that keeps failing to refresh is not trusted forever: past this age the clock is unknown again. */
 export const MAX_SAMPLE_AGE_MS = 30 * 60_000;
 /** A quiet market pushes nothing for a while: past these ages a REST snapshot is taken before the read. */
-export const BOOK_REFRESH_AFTER_MS = 3_000;
-export const TICKER_REFRESH_AFTER_MS = 10_000;
+const BOOK_REFRESH_AFTER_MS = 3_000;
+const TICKER_REFRESH_AFTER_MS = 10_000;
 
 export interface ClockKeeperDeps {
   readonly measure: () => Promise<ClockSample | null>;

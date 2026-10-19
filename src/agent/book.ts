@@ -10,7 +10,7 @@ import type { Book, HoldingFacts, Position, WalletKind } from "./types";
  * The dollar coins the agent counts as CASH: the real contracts of the big issuers, by network. A name and a price near a dollar prove nothing (anyone can airdrop a token called USDC and price it at 1.00),
  * so cash is recognised by the contract only. A network that is not here has no cash the agent trusts, and its dollar coins are ordinary, unverified tokens until someone adds the contract after checking it.
  */
-export const DOLLAR_CONTRACTS: Readonly<Record<string, readonly string[]>> = {
+const DOLLAR_CONTRACTS: Readonly<Record<string, readonly string[]>> = {
  "1": ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xdac17f958d2ee523a2206206994597c13d831ec7", "0x6b175474e89094c44da98b954eedeac495271d0f"],
  "56": ["0x55d398326f99059ff775485246999027b3197955", "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"],
  "8453": ["0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"],

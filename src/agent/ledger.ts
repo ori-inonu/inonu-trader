@@ -26,7 +26,7 @@ export interface CycleRecord {
   readonly modelo: string | null;
 }
 
-export const ORDER_STAGES = ["preparada", "enviando", "executada", "falhou", "incerta"] as const;
+const ORDER_STAGES = ["preparada", "enviando", "executada", "falhou", "incerta"] as const;
 export type OrderStage = (typeof ORDER_STAGES)[number];
 
 import { parseQuoteFacts, type QuoteFacts } from "./quote-facts";

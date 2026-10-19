@@ -14,14 +14,14 @@
 import type { BuyStance } from "./types";
 
 /** The sizes of a purchase, as fractions of the executable maximum, from the smallest to the largest. */
-export const AGENT_FRACTIONS = { buy_tenth: 0.1, buy_third: 1 / 3, buy_two_thirds: 2 / 3, buy_full: 1 } as const satisfies Record<Exclude<BuyStance, "skip">, number>;
+const AGENT_FRACTIONS = { buy_tenth: 0.1, buy_third: 1 / 3, buy_two_thirds: 2 / 3, buy_full: 1 } as const satisfies Record<Exclude<BuyStance, "skip">, number>;
 /** The same fractions as a numerator and a denominator, so that the dollars are `ceiling * num / den`: a multiplication by a binary 0.1 or 1/3 would add noise in the last digits (37.125 would give 3.7125000000000004 for a tenth). */
-export const AGENT_FRACTION_PARTS = { buy_tenth: { num: 1, den: 10 }, buy_third: { num: 1, den: 3 }, buy_two_thirds: { num: 2, den: 3 }, buy_full: { num: 1, den: 1 } } as const satisfies Record<Exclude<BuyStance, "skip">, { readonly num: number; readonly den: number }>;
+const AGENT_FRACTION_PARTS = { buy_tenth: { num: 1, den: 10 }, buy_third: { num: 1, den: 3 }, buy_two_thirds: { num: 2, den: 3 }, buy_full: { num: 1, den: 1 } } as const satisfies Record<Exclude<BuyStance, "skip">, { readonly num: number; readonly den: number }>;
 export type AgentBuySize = keyof typeof AGENT_FRACTIONS;
 export const AGENT_BUY_SIZES = ["buy_tenth", "buy_third", "buy_two_thirds", "buy_full"] as const satisfies readonly AgentBuySize[];
 
 /** What share of the account's per-transaction limit a purchase may use: the account refuses an order at exactly its limit and the price moves between the quote and the signature (the same share as a sale, gate.ts). */
-export const PROVIDER_LIMIT_SHARE = 0.95;
+const PROVIDER_LIMIT_SHARE = 0.95;
 
 export type CeilingBinding = "caixa" | "limite_da_conta" | "sem_saldo" | "sem_dado";
 

@@ -53,17 +53,17 @@ import {
 // Constants
 // ---------------------------------------------------------------------------
 
-export const MAX_SEARCH_LIMIT = 100;
-export const MAX_HOLDERS_LIMIT = 100;
-export const MAX_HOT_TOKEN_LIMIT = 100;
-export const MAX_TOKENS_PER_BATCH = 100;
-export const MAX_POOLS = 5;
-export const MAX_CLUSTERS = 100;
+const MAX_SEARCH_LIMIT = 100;
+const MAX_HOLDERS_LIMIT = 100;
+const MAX_HOT_TOKEN_LIMIT = 100;
+const MAX_TOKENS_PER_BATCH = 100;
+const MAX_POOLS = 5;
+const MAX_CLUSTERS = 100;
 const MAX_ADDRESSES_PER_CLUSTER = 1_000;
 const MAX_SEARCH_CHAINS = 10;
 
 /** The tags documented by the advanced info page. A tag outside this list is counted and dropped. */
-export const ADVANCED_TAGS = [
+const ADVANCED_TAGS = [
   "rwaXstock",
   "rwaOndo",
   "rwaOndoStatusPreMarket",
@@ -91,14 +91,14 @@ export const ADVANCED_TAGS = [
 export type AdvancedTag = (typeof ADVANCED_TAGS)[number];
 
 /** Values seen in the cluster pages (description and example). Others are counted and dropped. */
-export const CLUSTER_TRENDS = ["buy", "sell", "neutral", "transfer", "transferIn"] as const;
+const CLUSTER_TRENDS = ["buy", "sell", "neutral", "transfer", "transferIn"] as const;
 export type ClusterTrend = (typeof CLUSTER_TRENDS)[number];
 
 /** 0 undefined (NOT safe), 1 low, 2 medium, 3 medium high, 4 high, 5 high (manual configuration). */
 export type RiskLevel = 0 | 1 | 2 | 3 | 4 | 5;
 
-export const HOT_TOKEN_RANK_BY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15] as const;
-export const HOT_TOKEN_RANGE_KEYS = [
+const HOT_TOKEN_RANK_BY = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15] as const;
+const HOT_TOKEN_RANGE_KEYS = [
   "priceChangePercent",
   "tradeAmount",
   "volume",

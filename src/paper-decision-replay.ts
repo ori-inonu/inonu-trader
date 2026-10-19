@@ -43,8 +43,8 @@ export interface PaperDecisionReplayResult {
   readonly capital: PaperSnapshot;
 }
 
-export const PAPER_REPLAY_MAX_FRAMES = 1_000;
-export const PAPER_REPLAY_MAX_CANDIDATES = 254;
+const PAPER_REPLAY_MAX_FRAMES = 1_000;
+const PAPER_REPLAY_MAX_CANDIDATES = 254;
 const ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,95}$/;
 const MODEL = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$/;
 const FRAME_KEYS = ["id", "atMs", "model", "isMock", "candidates", "choice", "receipt"];

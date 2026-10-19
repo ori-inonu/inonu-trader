@@ -61,7 +61,7 @@ const ALLOW_METHODS = "GET, POST, PUT, DELETE, OPTIONS";
 const MAX_USD_PER_MTOK = 10_000;
 const ALLOW_HEADERS = "content-type, x-inonu-intent, x-inonu-request-id";
 
-export function isInonuPath(pathname: string): boolean {
+function isInonuPath(pathname: string): boolean {
   return pathname.startsWith("/inonu/");
 }
 

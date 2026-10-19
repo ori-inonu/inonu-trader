@@ -12,7 +12,7 @@ import type { Look, Mandate, Reserve, Risk } from "./mandate";
 export const RISK_PCT: Readonly<Record<Risk, number>> = { cauteloso: 0.005, moderado: 0.01, agressivo: 0.02 };
 export const RESERVE_SHARE: Readonly<Record<Reserve, number>> = { baixa: 0.1, media: 0.2, alta: 0.35 };
 export const INTERVAL_MIN: Readonly<Record<Look, number>> = { rapido: 5, normal: 10, calmo: 20 };
-export const REFRESH_MIN: Readonly<Record<Look, number>> = { rapido: 30, normal: 60, calmo: 120 };
+const REFRESH_MIN: Readonly<Record<Look, number>> = { rapido: 30, normal: 60, calmo: 120 };
 
 /**
  * The owner's own risk profile. On 2026-10-14 the owner said, in the chat, that the profile is NOT conservative: it is bold (arrojado), the work is financial leverage and growth of capital, and nothing should

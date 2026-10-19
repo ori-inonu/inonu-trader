@@ -1,5 +1,5 @@
 /** Optional LLM context is interpretation of supplied public evidence. It never becomes a receipt, price, balance, order or profit probability. Pure and offline. */
-export const RESEARCH_CODES = ["identity_conflict", "identity_needs_verification", "scheduled_event", "contract_controls_changed", "liquidity_changed", "sources_disagree", "exit_quote_missing", "no_material_change"] as const;
+const RESEARCH_CODES = ["identity_conflict", "identity_needs_verification", "scheduled_event", "contract_controls_changed", "liquidity_changed", "sources_disagree", "exit_quote_missing", "no_material_change"] as const;
 export type ResearchCode = (typeof RESEARCH_CODES)[number];
 
 export interface PublicResearchSource {
@@ -15,7 +15,7 @@ export interface ResearchContext {
   readonly rejected: readonly { readonly assetKey: string; readonly reason: "source_unknown" | "identity_mismatch" | "source_stale" }[];
 }
 
-export const RESEARCH_JSON_SCHEMA = {
+const RESEARCH_JSON_SCHEMA = {
   type: "object", additionalProperties: false, required: ["version", "observations"],
   properties: {
     version: { type: "integer", enum: [1] },

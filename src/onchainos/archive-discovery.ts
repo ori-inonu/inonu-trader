@@ -3,7 +3,7 @@ import { OnchainosError } from "./errors.ts";
 import { MAX_EPOCH_MS } from "./values.ts";
 import { createTransport, TokenBucket, QuotaCounters, type FetchLike, type ReadMeta, type HttpInfo, type CallEvent } from "./http.ts";
 
-export const ARCHIVE_ENDPOINT = Object.freeze({ path: "/api/v5/public/market-data-history", tier: "public" as const });
+const ARCHIVE_ENDPOINT = Object.freeze({ path: "/api/v5/public/market-data-history", tier: "public" as const });
 export type ArchiveModule = "1" | "2" | "3" | "4" | "5" | "6" | "11";
 export type ArchiveInstType = "SPOT" | "FUTURES" | "SWAP" | "OPTION";
 export type ArchiveAggregation = "daily" | "monthly";

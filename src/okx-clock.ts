@@ -13,7 +13,7 @@
  */
 import { correctedClock, measureServerClockOffset, type ClockFetch, type ClockSample } from "./system-one/clock";
 
-export const OKX_CLOCK_APPLY_THRESHOLD_MS = 10_000;
+const OKX_CLOCK_APPLY_THRESHOLD_MS = 10_000;
 
 let correction: (() => number) | null = null;
 let lastSample: ClockSample | null = null;

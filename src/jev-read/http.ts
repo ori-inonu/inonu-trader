@@ -15,7 +15,7 @@ export function isJevReadPath(pathname: string): boolean {
 }
 
 /** Builds the response headers for a request, or null when its origin is not on the allowlist. */
-export function readHeaders(origin: string | null, allowed: ReadonlySet<string>): Record<string, string> | null {
+function readHeaders(origin: string | null, allowed: ReadonlySet<string>): Record<string, string> | null {
   if (origin === null || !allowed.has(origin)) return null;
   return {
     "content-type": "application/json",
@@ -27,7 +27,7 @@ export function readHeaders(origin: string | null, allowed: ReadonlySet<string>)
   };
 }
 
-export function parseOrigins(origins: readonly string[]): ReadonlySet<string> {
+function parseOrigins(origins: readonly string[]): ReadonlySet<string> {
   return new Set(origins.map((origin) => origin.trim()).filter(Boolean));
 }
 

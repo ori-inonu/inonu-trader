@@ -12,10 +12,10 @@
  * (which then fails closed, exactly as before).
  */
 
-export const OKX_PUBLIC_TIME_URL = "https://www.okx.com/api/v5/public/time";
+const OKX_PUBLIC_TIME_URL = "https://www.okx.com/api/v5/public/time";
 /** A round trip longer than this says nothing reliable about the offset (error up to half of it). */
-export const MAX_TRUSTED_ROUND_TRIP_MS = 2_500;
-export const DEFAULT_CLOCK_SAMPLES = 3;
+const MAX_TRUSTED_ROUND_TRIP_MS = 2_500;
+const DEFAULT_CLOCK_SAMPLES = 3;
 /** A real offset between a working machine and the exchange is seconds or minutes. Beyond an hour the sample is not trusted. */
 export const MAX_PLAUSIBLE_OFFSET_MS = 3_600_000;
 const DEFAULT_TIMEOUT_MS = 5_000;

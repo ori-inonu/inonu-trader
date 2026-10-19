@@ -41,19 +41,19 @@ import {
   type UsdAmount,
 } from "./values.ts";
 
-export const DEFI_SEARCH_PAGE_SIZE = 20;
+const DEFI_SEARCH_PAGE_SIZE = 20;
 const MAX_KEYWORDS = 10;
 const MAX_PAGE_NUM = 10_000;
 const MAX_SERIES_POINTS = 5_000;
 const MAX_LISTED = 1_000;
 
-export const DEFI_PRODUCT_GROUPS = ["SINGLE_EARN", "DEX_POOL", "LENDING"] as const;
+const DEFI_PRODUCT_GROUPS = ["SINGLE_EARN", "DEX_POOL", "LENDING"] as const;
 export type DefiProductGroup = (typeof DEFI_PRODUCT_GROUPS)[number];
-export const SERIES_TIME_RANGES = ["WEEK", "MONTH", "SEASON", "YEAR"] as const;
+const SERIES_TIME_RANGES = ["WEEK", "MONTH", "SEASON", "YEAR"] as const;
 export type SeriesTimeRange = (typeof SERIES_TIME_RANGES)[number];
-export const DEPTH_CHART_TYPES = ["DEPTH", "PRICE"] as const;
+const DEPTH_CHART_TYPES = ["DEPTH", "PRICE"] as const;
 export type DepthChartType = (typeof DEPTH_CHART_TYPES)[number];
-export const DEPTH_TIME_RANGES = ["DAY", "WEEK"] as const;
+const DEPTH_TIME_RANGES = ["DAY", "WEEK"] as const;
 export type DepthTimeRange = (typeof DEPTH_TIME_RANGES)[number];
 const RATE_KINDS = ["APY", "APR"] as const;
 export type RateKind = (typeof RATE_KINDS)[number];
@@ -282,7 +282,7 @@ export function parseDepthPrice(data: unknown, chartType: DepthChartType): Depth
   };
 }
 
-export function parseDefiChains(data: unknown): DefiChainRow[] {
+function parseDefiChains(data: unknown): DefiChainRow[] {
   const seen = new Set<string>();
   return asArray(data, "data", MAX_LISTED).map((raw, index) => {
     const item = asRecord(raw, "linha", index);
@@ -294,7 +294,7 @@ export function parseDefiChains(data: unknown): DefiChainRow[] {
   });
 }
 
-export function parseDefiPlatforms(data: unknown): DefiPlatformRow[] {
+function parseDefiPlatforms(data: unknown): DefiPlatformRow[] {
   return asArray(data, "data", MAX_LISTED).map((raw, index) => {
     const item = asRecord(raw, "linha", index);
     const analysisPlatformId = readNumericId(field(item, "analysisPlatformId"));

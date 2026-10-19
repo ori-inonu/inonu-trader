@@ -78,13 +78,13 @@ export const BAR_MS: Readonly<Record<Bar, number | null>> = Object.freeze({
 });
 
 export const MAX_CANDLES_PER_CALL = 299;
-export const DEFAULT_CANDLES_PER_CALL = 100;
-export const MAX_TRADES_PER_CALL = 500;
-export const DEFAULT_TRADES_PER_CALL = 100;
-export const MAX_TOKENS_PER_PRICE_CALL = 100;
-export const MAX_INDEX_POINTS_PER_CALL = 200;
-export const DEFAULT_INDEX_POINTS_PER_CALL = 50;
-export const INDEX_PERIODS = ["1m", "5m", "30m", "1h", "1d"] as const;
+const DEFAULT_CANDLES_PER_CALL = 100;
+const MAX_TRADES_PER_CALL = 500;
+const DEFAULT_TRADES_PER_CALL = 100;
+const MAX_TOKENS_PER_PRICE_CALL = 100;
+const MAX_INDEX_POINTS_PER_CALL = 200;
+const DEFAULT_INDEX_POINTS_PER_CALL = 50;
+const INDEX_PERIODS = ["1m", "5m", "30m", "1h", "1d"] as const;
 export type IndexPeriod = (typeof INDEX_PERIODS)[number];
 
 // ---------------------------------------------------------------------------
@@ -264,7 +264,7 @@ export function parseTrades(data: unknown, context: TradesContext): TradeRow[] {
   });
 }
 
-export function parseIndexHistory(data: unknown, maxPoints: number): IndexHistoryPage {
+function parseIndexHistory(data: unknown, maxPoints: number): IndexHistoryPage {
   const pages = asArray(data, "data", 1);
   const first = pages[0];
   if (first === undefined) return { cursor: null, points: [] };

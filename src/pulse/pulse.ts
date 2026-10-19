@@ -24,7 +24,7 @@ export interface PulseInstrument {
 }
 
 /** The reference markets: the market's anchor and the chain the agent trades on. */
-export const DEFAULT_PULSE_INSTRUMENTS: readonly PulseInstrument[] = [
+const DEFAULT_PULSE_INSTRUMENTS: readonly PulseInstrument[] = [
   { id: "BTC-USDT", key: "btc" },
   { id: "SOL-USDT", key: "sol" },
 ];

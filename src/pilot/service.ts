@@ -86,7 +86,7 @@ async function bounded<T>(run: () => Promise<T>, timeout: number, abort: AbortCo
     return value;
   } finally { clearTimeout(timer); }
 }
-export function validatePilotRequest(value: unknown): PilotRequest {
+function validatePilotRequest(value: unknown): PilotRequest {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("invalid_pilot_request");
   const r = value as Record<string, unknown>;
   if (!pilotNonceValid(r.sessionId) || !pilotNonceValid(r.requestId) || typeof r.account !== "string" || !/^0x[0-9a-fA-F]{40}$/.test(r.account) ||

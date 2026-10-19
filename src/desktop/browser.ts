@@ -28,7 +28,7 @@ export interface FsProbe {
   read(path: string): string | null;
 }
 
-export const realFs: FsProbe = {
+const realFs: FsProbe = {
   exists: (path) => existsSync(path),
   list: (dir) => {
     try {

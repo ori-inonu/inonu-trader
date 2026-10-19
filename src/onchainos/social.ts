@@ -39,9 +39,9 @@ import {
 // Constants
 // ---------------------------------------------------------------------------
 
-export const MAX_SENTIMENT_SYMBOLS = 20;
-export const MAX_TREND_POINTS = 100;
-export const MAX_KOLS = 50;
+const MAX_SENTIMENT_SYMBOLS = 20;
+const MAX_TREND_POINTS = 100;
+const MAX_KOLS = 50;
 const MAX_TIMELINE_BUCKETS = 400;
 
 export type SentimentTimeFrame = "1h" | "4h" | "24h";

@@ -12,7 +12,7 @@ import type { AssetRef, CostBreakdown, OperatorPolicy, OpportunityCandidate } fr
 
 /** OKX DEX uses these placeholders for the native coin. */
 export const EVM_NATIVE_PLACEHOLDER = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
-export const SOLANA_NATIVE_PLACEHOLDER = "11111111111111111111111111111111";
+const SOLANA_NATIVE_PLACEHOLDER = "11111111111111111111111111111111";
 
 export interface TradingPair {
   chainIndex: string;
@@ -186,7 +186,7 @@ export async function buildRoundTripCandidates(context: CandidateContext): Promi
   return candidates;
 }
 
-export async function buildBridgeCandidates(context: CandidateContext): Promise<OpportunityCandidate[]> {
+async function buildBridgeCandidates(context: CandidateContext): Promise<OpportunityCandidate[]> {
   const { inventory, policy, nowMs } = context;
   const quoter = context.bridgeQuoter;
   const home = context.homeChainIndex;
@@ -234,7 +234,7 @@ export async function buildBridgeCandidates(context: CandidateContext): Promise<
 }
 
 /** The existing every-block Kuru maker stays a mandate Jev can keep or hold back. */
-export function buildKuruMandate(context: CandidateContext): OpportunityCandidate[] {
+function buildKuruMandate(context: CandidateContext): OpportunityCandidate[] {
   const chain = context.inventory.chains.find((entry) => entry.chainIndex === "143");
   const pair = (context.pairs ?? DEFAULT_PAIRS).find((entry) => entry.chainIndex === "143");
   if (!chain || !pair) return [];
@@ -252,7 +252,7 @@ export function buildKuruMandate(context: CandidateContext): OpportunityCandidat
   }];
 }
 
-export async function buildYieldCandidates(context: CandidateContext): Promise<OpportunityCandidate[]> {
+async function buildYieldCandidates(context: CandidateContext): Promise<OpportunityCandidate[]> {
   const { inventory, policy, nowMs } = context;
   const source = context.defiSource;
   if (!source) return [];

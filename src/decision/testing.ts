@@ -4,7 +4,7 @@ import type { Costs, Limits, Opportunity, Portfolio } from "./types";
 export const NOW = 1_000_000;
 
 // Por perna: 15 + 10 + 2,5 + 2,5 = 30 bps. Spread cheio 10. Gas 1 USD e falha 0,1 x 0,5 USD por perna.
-export const costs: Costs = { dexFeeBps: 15, spreadBps: 10, slippageBps: 10, impactBps: 2.5, mevBps: 2.5, exitExtraBps: 0, gasUsd: 1, failProb: 0.1, failCostUsd: 0.5 };
+const costs: Costs = { dexFeeBps: 15, spreadBps: 10, slippageBps: 10, impactBps: 2.5, mevBps: 2.5, exitExtraBps: 0, gasUsd: 1, failProb: 0.1, failCostUsd: 0.5 };
 
 /** Bruto 200 bps; no teto de 1000 USD o custo é 95 bps e o líquido 105 bps. Passa em todo filtro. */
 export const opportunity = (id: string, patch: Partial<Opportunity> = {}): Opportunity => ({

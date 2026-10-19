@@ -1,7 +1,7 @@
 {
   "format": "jev-documentary-graph-v2",
-  "headSeq": 1080,
-  "headHash": "49fedd9aea4da07f62b93887246332ec926dce4888f2f1721a343e33369b8bd7",
+  "headSeq": 1126,
+  "headHash": "dc80a87888745f865a155038a0403bca9ba365c1e373da4f5cb3f80d11a9e2c8",
   "nodes": [
     {
       "id": "rule-less-code",
@@ -1727,6 +1727,116 @@
       "id": "iter-source-error-20261018",
       "type": "iteration",
       "text": "SourceError extraida para modulo puro, export legado preservado e sete consumidores atualizados. Tipos, testes de inonu, core e lab passam. Origem preservada. Sem mudanca de cadencia, limite, dependencias ou operacao."
+    },
+    {
+      "id": "iter-cleanup-exports-20261018",
+      "type": "iteration",
+      "text": "Dez exports internos removidos em nove modulos. Tipos, 8539 testes core e 650 lab passam. Coleta publica repetida 30/30 pronta; painel aberto com core indisponivel. Revisao integral e inferencia do agente ainda pendentes. Origens preservadas."
+    },
+    {
+      "id": "iter-root-bootstrap-20261018",
+      "type": "iteration",
+      "text": "Raiz sem conflitos apos conciliar CLI e dependencias ja presentes em main. Passam tipos, 8160 core, 650 lab e 3821 web. Merge local segue aberto. Dois anexos pendentes exigem corrigir recorte CRLF e incorporar contratos atuais. Main e qualificacao real seguem pendentes."
+    },
+    {
+      "id": "iter-lab-annex-alignment-20261018",
+      "type": "iteration",
+      "text": "C2a: contratos atuais, links conciliados e recorte LF/CRLF corrigido; legados intactos. Passam tipos, 8544 core e 650 lab. C1: 89 testes offline passam na origem; autenticacao segue bloqueada. Decisao local sem-jev; conector indisponivel. Main e agente completo seguem pendentes."
+    },
+    {
+      "id": "iter-doc-provenance-audit-20261018",
+      "type": "iteration",
+      "text": "C2: 611 Markdown excluidos comparados a 694 destinos; 15 corpos integrais, tres anteriores a main. Registro tem 299 rotulos de fonte no proprio arquivo e 98 links locais ausentes. Origem intacta, exclusoes nao importadas. C2a publicada no PR 5; main e agente completo seguem pendentes."
+    },
+    {
+      "id": "iter-export-surface-closure-20261018",
+      "type": "iteration",
+      "text": "Mais 133 exports internos em 68 arquivos, corpos/valores intactos. Passam tipos core/web, 8544 core, 650 lab e 3821 web. Adaptador Jev real: 5/5 HTTP 200 sobre contexto publico, p50 301 ms, sem carteira ou ordens. Main e agente completo seguem pendentes; fallback de design sem-jev."
+    },
+    {
+      "id": "iter-core-browser-validation-20261018",
+      "type": "iteration",
+      "text": "Validacao desktop com perfil vazio: build e tipos web passaram; HTTP e IAB reais, sem ciclos ou consultas. Filho encerrado, 2536 arquivos intactos. Limite global ausente, main integral pendente. Fallback sem-jev; docs/specs/core-browser-validation."
+    },
+    {
+      "id": "fato-porta-desktop-20261018",
+      "type": "fact",
+      "text": "Desktop: core.ts fixa loopback em 47321 e launcher.ts serve export e handlers na mesma origem. package.json start ainda chama src/index.ts legado. Diagnostico de perfil vazio em 2026-10-18 nao executou o agente. Ver docs/specs/core-browser-validation."
+    },
+    {
+      "id": "iter-export-consumer-alignment-20261018",
+      "type": "iteration",
+      "text": "Mais 16 exports em 14 arquivos, imports e corpos intactos; tipos/core/lab/web passam. Um export com consumidor foi preservado. Legado: 1145 de 1146 equivalentes apos CRLF; catalogo JSON diverge. Main e agente completo pendentes; fallback sem-jev."
+    },
+    {
+      "id": "fato-legado-conferido-20261018",
+      "type": "fact",
+      "text": "Legado local da origem a4a9ef5: 1146 caminhos presentes, 171 com bytes exatos e 974 equivalentes apos CRLF. Catalogo R6 diverge como JSON. Nada extraido ou publicado. Ver docs/specs/remaining-system-alignment/document-asset-review.md."
+    },
+    {
+      "id": "iter-f03-t01-20261019",
+      "type": "iteration",
+      "text": "Local F03/T01: 27 exports em 13 arquivos; MAX_STALE_MS preservado. Inversa literal; tipos core/web exit 0, core 8544 pass/2 skip, lab 650 pass, zero falhas. Dois eixos sem achados. Sem publicacao ou qualificacao operacional."
+    },
+    {
+      "id": "iter-f03-t02-20261019",
+      "type": "iteration",
+      "text": "Local F03/T02: sete arquivos, 11 marcadores e quatro trocas limitadas; tres chamadas de capacidade e valores preservados. Tipos core/web exit 0; core 8544 pass/2 skip, lab 650 pass, zero falhas. Dois eixos sem achados; sem publicacao."
+    },
+    {
+      "id": "iter-f04-t01-20261019",
+      "type": "iteration",
+      "text": "Proposta F04/T01: AUT-3 e anexo T17 de main preservados em dois docs, link real e inversa literal. Codigo intacto; tipos core/web exit 0; core 8357 pass/2 skip, web 3794, lab 647, zero falhas. Nao qualifica o runtime antigo."
+    },
+    {
+      "id": "iter-f05-t01-20261019",
+      "type": "iteration",
+      "text": "Revisao local F05/T01: 98 links em 19 docs, sem edicoes. 25 destinos contem corpo atual de main; tres apenas historico, 53 sem destino atual comprovado, 14 lacunas, duas referencias a cache e um alvo fora de main. Objetivo integral aberto."
+    },
+    {
+      "id": "iter-f05-t02-20261019",
+      "type": "iteration",
+      "text": "Proposta F05/T02: 25 destinos em seis docs, oito titulos/fragmentos convencionais e inversas conferidos; 73 casos preservados. Tipos exit 0; core 8357 pass/2 skip, web 3794, lab 647, zero falhas; dois eixos sem achados. Sem importacao ao candidato."
+    },
+    {
+      "id": "iter-f06-t01-20261019",
+      "type": "iteration",
+      "text": "Auditoria F06/T01: 26 citacoes em 12 fontes do ciclo atual. Sombra com executor null aceita Book injetado; servico e carteira real tem dependencias proprias. Codigo, protegidos e indices preservados; nao qualifica operacao ou rentabilidade."
+    },
+    {
+      "id": "iter-f06-t02-20261019",
+      "type": "iteration",
+      "text": "Sonda F06/T02: tres ciclos isolados, Book sintetico, mark/funding publicos ETH e Jev real. 3 respostas validas, 9 GETs e 3 POSTs HTTP 200; ciclo p50 404 ms. Tres repeticoes sem consulta; zero ordens. Nao mede carteira real, fills ou lucro."
+    },
+    {
+      "id": "iter-f07-t01-20261019",
+      "type": "iteration",
+      "text": "F07/T01: 32 alvos de 53 referencias auditados. 31 blobs source HEAD/main iguais; design T17 difere numa linha. Candidato conserva todos com igualdade LF. Variante R6 remove cinco referencias a cliente ainda presente no candidato. Codigo/proposta preservados."
+    },
+    {
+      "id": "iter-f07-t02-20261019",
+      "type": "iteration",
+      "text": "Proposta F07/T02: 51 URLs para 30 artefatos Git fixados, sem mudar rotulos/corpos. Coorte 98=51+25+22. Tipos exit0; core8357/2skip, web3794, lab647, desktop29, zero falhas atuais. Timeout inicial preservado e recuperado. Dois eixos sem achados; sem publicacao."
+    },
+    {
+      "id": "iter-f08-review-20261019",
+      "type": "iteration",
+      "text": "F08: diff fixo main-candidato de 148 caminhos e nove commits revisado. Tipos, core 8544/2skip, web3821 e lab650 passam. Um P3 de preferencia Bun.file aceito; H4 resolvido pelos logs finais. Main inalterada; sem Git ou producao."
+    },
+    {
+      "id": "iter-f09-limit-prepared-20261019",
+      "type": "iteration",
+      "text": "F09: dono pediu retirar teto artificial de engenharia. Consenso optional,8 chamadas. Proposta isolada passa31 testes e tipos; raiz regravada com16, core3falhas. Nao aplicado de forma estavel; preservar trabalho concorrente. Risco/live/provedor separados."
+    },
+    {
+      "id": "iter-f09-concurrent-block-20261019",
+      "type": "iteration",
+      "text": "F09 ativo: apos reaplicacao,30 focados e tipos passaram. Nova regravacao restaurou16 e invalidou o snapshot; runner proprio interrompido, sem passe core/lab. Proposta isolada31 testes/tipos e dois eixos aprovada; aplicacao bloqueada. Main inalterada."
+    },
+    {
+      "id": "iter-f10-links-proof-20261019",
+      "type": "iteration",
+      "text": "F10:22 links pesquisados e fontes conferidas.20 destinos historicos,2 caches ausentes. Diretorio ADR existe em main, corrigindo classificacao anterior. Lab antigo, catalogo variante e T17 separados.3557 fontes,1107 docs e3 indices preservados; nenhum reparo ou promocao."
     }
   ],
   "edges": [
@@ -4749,6 +4859,126 @@
       "from": "iter-prob-offline-20261018",
       "to": "iter-source-error-20261018",
       "seq": 1080
+    },
+    {
+      "from": "iter-source-error-20261018",
+      "to": "iter-cleanup-exports-20261018",
+      "seq": 1082
+    },
+    {
+      "from": "iter-cleanup-exports-20261018",
+      "to": "iter-root-bootstrap-20261018",
+      "seq": 1084
+    },
+    {
+      "from": "iter-root-bootstrap-20261018",
+      "to": "iter-lab-annex-alignment-20261018",
+      "seq": 1086
+    },
+    {
+      "from": "iter-lab-annex-alignment-20261018",
+      "to": "iter-doc-provenance-audit-20261018",
+      "seq": 1088
+    },
+    {
+      "from": "iter-doc-provenance-audit-20261018",
+      "to": "iter-export-surface-closure-20261018",
+      "seq": 1090
+    },
+    {
+      "from": "iter-export-surface-closure-20261018",
+      "to": "iter-core-browser-validation-20261018",
+      "seq": 1092
+    },
+    {
+      "from": "iter-core-browser-validation-20261018",
+      "to": "fato-porta-desktop-20261018",
+      "seq": 1094
+    },
+    {
+      "from": "fato-como-rodar",
+      "to": "fato-porta-desktop-20261018",
+      "seq": 1095
+    },
+    {
+      "from": "iter-core-browser-validation-20261018",
+      "to": "iter-export-consumer-alignment-20261018",
+      "seq": 1097
+    },
+    {
+      "from": "iter-export-consumer-alignment-20261018",
+      "to": "fato-legado-conferido-20261018",
+      "seq": 1099
+    },
+    {
+      "from": "iter-doc-provenance-audit-20261018",
+      "to": "fato-legado-conferido-20261018",
+      "seq": 1100
+    },
+    {
+      "from": "iter-export-consumer-alignment-20261018",
+      "to": "iter-f03-t01-20261019",
+      "seq": 1102
+    },
+    {
+      "from": "iter-f03-t01-20261019",
+      "to": "iter-f03-t02-20261019",
+      "seq": 1104
+    },
+    {
+      "from": "iter-f03-t02-20261019",
+      "to": "iter-f04-t01-20261019",
+      "seq": 1106
+    },
+    {
+      "from": "iter-f04-t01-20261019",
+      "to": "iter-f05-t01-20261019",
+      "seq": 1108
+    },
+    {
+      "from": "iter-f05-t01-20261019",
+      "to": "iter-f05-t02-20261019",
+      "seq": 1110
+    },
+    {
+      "from": "iter-f05-t02-20261019",
+      "to": "iter-f06-t01-20261019",
+      "seq": 1112
+    },
+    {
+      "from": "iter-f06-t01-20261019",
+      "to": "iter-f06-t02-20261019",
+      "seq": 1114
+    },
+    {
+      "from": "iter-f06-t02-20261019",
+      "to": "iter-f07-t01-20261019",
+      "seq": 1116
+    },
+    {
+      "from": "iter-f07-t01-20261019",
+      "to": "iter-f07-t02-20261019",
+      "seq": 1118
+    },
+    {
+      "from": "iter-f07-t02-20261019",
+      "to": "iter-f08-review-20261019",
+      "seq": 1120
+    },
+    {
+      "from": "iter-f08-review-20261019",
+      "to": "iter-f09-limit-prepared-20261019",
+      "seq": 1122
+    },
+    {
+      "from": "iter-f09-limit-prepared-20261019",
+      "to": "iter-f09-concurrent-block-20261019",
+      "seq": 1124
+    },
+    {
+      "from": "iter-f09-concurrent-block-20261019",
+      "to": "iter-f10-links-proof-20261019",
+      "seq": 1126
     }
   ],
   "retractions": [

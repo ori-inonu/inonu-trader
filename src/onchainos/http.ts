@@ -20,7 +20,7 @@ import { OnchainosError, pathOnly, sanitizeProviderText, type OnchainosErrorKind
 // ---------------------------------------------------------------------------
 
 export type Tier = "free" | "basic" | "premium" | "unknown" | "public";
-export const TIERS: readonly Tier[] = Object.freeze(["free", "basic", "premium", "unknown", "public"] as const);
+const TIERS: readonly Tier[] = Object.freeze(["free", "basic", "premium", "unknown", "public"] as const);
 export type HttpMethod = "GET" | "POST";
 
 export interface FetchInit {
@@ -510,8 +510,8 @@ export interface OnchainosHttpOptions extends HttpTuning {
   origin?: string;
 }
 
-export const DEFAULT_ONCHAINOS_ORIGIN = "https://web3.okx.com";
-export const ONCHAINOS_PATH_PATTERN = /^\/api\/v6(?:\/[A-Za-z0-9_-]+)+$/;
+const DEFAULT_ONCHAINOS_ORIGIN = "https://web3.okx.com";
+const ONCHAINOS_PATH_PATTERN = /^\/api\/v6(?:\/[A-Za-z0-9_-]+)+$/;
 
 const DEFAULTS = Object.freeze({ requestsPerSecond: 1, burst: 1, timeoutMs: 10_000, maxRetries: 2, backoffBaseMs: 1000, backoffMaxMs: 8000, maxResponseChars: 2_000_000 });
 const TIMEOUT_LIMITS = Object.freeze({ min: 1, max: 60_000 });

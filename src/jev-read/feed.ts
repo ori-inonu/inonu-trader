@@ -81,7 +81,7 @@ interface Memory {
 const DEFAULT_WS = "wss://ws.okx.com/ws/v5/public";
 const DEFAULT_REST = "https://www.okx.com";
 /** Local policy, not an exchange freshness guarantee. */
-export const DEFAULT_FUNDING_MAX_AGE_MS = 120_000;
+const DEFAULT_FUNDING_MAX_AGE_MS = 120_000;
 /** Longer than the 60 s flow window with margin; the hard cap only bounds memory against a flood. */
 const TRADE_RETAIN_MS = 120_000;
 const MAX_TRADES = 5_000;

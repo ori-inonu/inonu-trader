@@ -79,8 +79,8 @@ export const LEADERBOARD_TIME_FRAMES: Readonly<Record<LeaderboardTimeFrame, numb
 export type LeaderboardSort = "pnl" | "win_rate" | "tx_count" | "volume" | "roi";
 export const LEADERBOARD_SORTS: Readonly<Record<LeaderboardSort, number>> = Object.freeze({ pnl: 1, win_rate: 2, tx_count: 3, volume: 4, roi: 5 });
 
-export const MAX_SIGNALS_PER_CALL = 100;
-export const MAX_LEADERBOARD_ROWS = 20;
+const MAX_SIGNALS_PER_CALL = 100;
+const MAX_LEADERBOARD_ROWS = 20;
 const MAX_TOP_TOKENS = 3;
 
 export type SignalBodyShape = "array" | "object";

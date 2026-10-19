@@ -21,7 +21,7 @@ export interface Prep {
 }
 
 export const MAX_MISSING_SHARE = 0.95;
-export const MIN_INDICATOR_SHARE = 0.02;
+const MIN_INDICATOR_SHARE = 0.02;
 
 export function fitPrep(rows: readonly ArrayLike<number>[], names: readonly string[]): Prep {
   const n = rows.length;

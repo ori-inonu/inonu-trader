@@ -8,7 +8,7 @@ import type { OpportunityEvent } from "../decision-review/events";
 import { planKey, PROFILES, type PlanStore } from "./plans";
 import type { Book, Position } from "./types";
 
-export const EVENT_SOURCE = "guard_book";
+const EVENT_SOURCE = "guard_book";
 /** A position smaller than this is not worth a look of the model for a price move. */
 export const MIN_EVENT_POSITION_USD = 5;
 

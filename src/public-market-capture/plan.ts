@@ -1,6 +1,6 @@
 import { isAbsolute } from "node:path";
 
-export const SCHEMA = "okx-public-v5-2026-10-10";
+const SCHEMA = "okx-public-v5-2026-10-10";
 export const ENDPOINTS = Object.freeze({ rest: "https://www.okx.com", websocket: "wss://ws.okx.com/ws/v5/public" });
 export const CEILINGS = Object.freeze({ durationMs: 300000, messages: 10000, payloadBytes: 1048576, persistedBytes: 33554432, controlBytes: 2097152, segments: 32, connections: 3, metadataRequests: 3, attemptMs: 10000, ingressBytes: 8388608, pending: 16 });
 export interface Instrument { id: string; kind: "SPOT" | "SWAP" }

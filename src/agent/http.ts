@@ -29,7 +29,7 @@ const ALLOW_HEADERS = "content-type, x-inonu-intent";
 const LEDGER_DEFAULT = 50;
 const LEDGER_MAX = 200;
 
-export function isAgentPath(pathname: string): boolean {
+function isAgentPath(pathname: string): boolean {
  return pathname === "/agent" || pathname.startsWith("/agent/");
 }
 

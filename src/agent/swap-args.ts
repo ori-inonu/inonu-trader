@@ -69,7 +69,7 @@ const RAW = /^[1-9]\d*$/;
  * A dollar amount as the digits it is written with, cut DOWN to `places` decimals (never rounded up: a rounded-up amount could be one unit above what the wallet holds). The shortest decimal the number prints as is
  * used, so 0.3 is 0.3 and not 0.29999999999999998; a number that prints with an exponent is expanded first. Null for anything that is not a positive finite amount or that is zero after the cut.
  */
-export function decimalDigits(usd: number, places: number): { readonly whole: string; readonly fraction: string } | null {
+function decimalDigits(usd: number, places: number): { readonly whole: string; readonly fraction: string } | null {
   if (!Number.isFinite(usd) || usd <= 0 || !Number.isInteger(places) || places < 0 || places > 30) return null;
   const printed = /e/i.test(String(usd)) ? usd.toFixed(Math.min(30, places + 6)) : String(usd);
   const [whole = "0", fraction = ""] = printed.split(".");

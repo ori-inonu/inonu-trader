@@ -22,12 +22,12 @@ import { activeDevOrigins } from "./dev-origins";
 export const DEFAULT_PORT = 47321;
 /** What `/health` calls itself, so a second launch can tell a running Inonu from some other program on the port. */
 export const APP_ID = "inonu-trader";
-export const HEARTBEAT_PATH = "/__inonu/heartbeat.js";
+const HEARTBEAT_PATH = "/__inonu/heartbeat.js";
 /** Routes of the upstream console that the installed app does not serve. */
 const RETIRED_ROUTES: readonly string[] = ["/console"];
 const LIVE_PATH = "/__inonu/live";
 /** The Doctor report (T1.8). The page itself is /doctor; this is its data, in the core's own namespace. */
-export const DOCTOR_PATH = "/__inonu/doctor";
+const DOCTOR_PATH = "/__inonu/doctor";
 
 export type ApiHandler = (request: Request, remoteIp: string | null) => Response | Promise<Response>;
 

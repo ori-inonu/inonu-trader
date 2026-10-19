@@ -50,8 +50,8 @@ export interface Bar {
   readonly book: BookSnapshot | null;
 }
 
-export const DEFAULT_SPANS_MS = [1_000, 5_000, 60_000] as const;
-export const DEFAULT_MAX_TRADES = 5_000;
+const DEFAULT_SPANS_MS = [1_000, 5_000, 60_000] as const;
+const DEFAULT_MAX_TRADES = 5_000;
 
 interface Edge {
   readonly ts: number;

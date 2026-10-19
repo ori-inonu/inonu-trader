@@ -111,7 +111,7 @@ export class PaperSupervisorError extends Error {
   }
 }
 
-export function cloneSupervisorValue<T>(value: T): T {
+function cloneSupervisorValue<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
@@ -135,7 +135,7 @@ function envelopeBody(envelope: Omit<PaperSupervisorEnvelope, "sha256">): string
   return canonicalJson(envelope, true);
 }
 
-export function configSha256(config: PaperCapitalConfig): string {
+function configSha256(config: PaperCapitalConfig): string {
   return sha256(canonicalJson(config));
 }
 
@@ -316,7 +316,7 @@ export function assertFreshIntakeCapacity(envelope: PaperSupervisorEnvelope): vo
   assertByteEventCapacity(envelope);
 }
 
-export function assertByteEventCapacity(envelope: PaperSupervisorEnvelope): void {
+function assertByteEventCapacity(envelope: PaperSupervisorEnvelope): void {
   const snapshot = PaperCapital.restore(envelope.capital).snapshot();
   const reserved = snapshot.plans.filter((plan) => plan.status === "reserved").length;
   const inflight = snapshot.plans.filter((plan) => plan.status === "inflight");

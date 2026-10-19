@@ -14,7 +14,7 @@
 import { deriveLimits, medianWealthNoEdge, touchLiquidationProbability, type DerivedLimits, type PhaseId } from "../policy/envelope";
 import { isFreshReading, LEVERAGE_LADDER, SIDES, SYSTEM_ONE_SCHEMA_VERSION, type LeverageBrief, type LeverageCandidate, type MarketReading, type Side, type WalletReading } from "./types";
 
-export const DEFAULT_HORIZON_DAYS = 7;
+const DEFAULT_HORIZON_DAYS = 7;
 
 function round(value: number, decimals: number): number {
   const factor = 10 ** decimals;

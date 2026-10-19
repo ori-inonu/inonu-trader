@@ -26,7 +26,7 @@ export interface Collected<R> {
   stopReason: StopReason;
 }
 
-export const PAGING_CEILINGS = Object.freeze({ maxPages: 50, maxRows: 100_000 });
+const PAGING_CEILINGS = Object.freeze({ maxPages: 50, maxRows: 100_000 });
 
 function checkInteger(value: number, name: string, maximum: number): void {
   if (!Number.isInteger(value) || value < 1 || value > maximum) throw new OnchainosError("invalid_request", `${name} deve ser um inteiro de 1 a ${maximum}`);

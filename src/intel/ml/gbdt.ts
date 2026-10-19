@@ -210,7 +210,7 @@ export function trainGbdt(
   return { kind: "gbdt", bias, thresholds, trees: trees.slice(0, bestIteration), bestIteration };
 }
 
-export function rawScoreGbdt(model: GbdtModel, row: ArrayLike<number>): number {
+function rawScoreGbdt(model: GbdtModel, row: ArrayLike<number>): number {
   let s = model.bias;
   for (const tree of model.trees) {
     let k = 0;

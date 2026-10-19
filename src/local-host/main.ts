@@ -19,7 +19,7 @@ export function waitLocal(ms: number, signal: AbortSignal): Promise<void> {
 }
 
 /** Merely constructs the adapter. Importing this module never launches the real core or reads the vault. */
-export function localRuntime(appDir: string, home: string, report: LocalSupervisorDeps["report"], options: { readonly pulse?: boolean } = {}): LocalSupervisorDeps {
+function localRuntime(appDir: string, home: string, report: LocalSupervisorDeps["report"], options: { readonly pulse?: boolean } = {}): LocalSupervisorDeps {
   const plan = localCorePlan(appDir, home, process.env, options);
   return {
     probe: (signal) => probeLocal(signal, { tcp: tcpLocal, fetch }),

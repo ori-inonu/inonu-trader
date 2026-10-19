@@ -1,0 +1,818 @@
+{
+  "base": "e3759feb5e4684df5ec6df48ff3dab9da294e9a4",
+  "sourceFilesScanned": 1798,
+  "counts": {
+    "already_private_or_changed_declaration": 8,
+    "main_runtime_changed_needs_review": 28,
+    "eligible": 133,
+    "indirect_consumer_needs_review": 4,
+    "external_lexical_occurrence_needs_review": 13,
+    "fenced_or_reserved_area_preserved": 33,
+    "explicit_documentary_export_contract": 2
+  },
+  "replacements": [
+    {
+      "path": "src/agent/closing.ts",
+      "symbol": "CLOSING_VERSION",
+      "before": "export const CLOSING_VERSION",
+      "after": "const CLOSING_VERSION"
+    },
+    {
+      "path": "src/agent/entry-cost.ts",
+      "symbol": "IMPACT_BACKOFF_MS",
+      "before": "export const IMPACT_BACKOFF_MS",
+      "after": "const IMPACT_BACKOFF_MS"
+    },
+    {
+      "path": "src/agent/entry-cost.ts",
+      "symbol": "smallestOffered",
+      "before": "export function smallestOffered",
+      "after": "function smallestOffered"
+    },
+    {
+      "path": "src/agent/event-source.ts",
+      "symbol": "EVENT_SOURCE",
+      "before": "export const EVENT_SOURCE",
+      "after": "const EVENT_SOURCE"
+    },
+    {
+      "path": "src/agent/fees.ts",
+      "symbol": "FEE_SOURCES",
+      "before": "export const FEE_SOURCES",
+      "after": "const FEE_SOURCES"
+    },
+    {
+      "path": "src/agent/ledger.ts",
+      "symbol": "ORDER_STAGES",
+      "before": "export const ORDER_STAGES",
+      "after": "const ORDER_STAGES"
+    },
+    {
+      "path": "src/agent/mandate.ts",
+      "symbol": "MANDATE_OPTIONS",
+      "before": "export const MANDATE_OPTIONS",
+      "after": "const MANDATE_OPTIONS"
+    },
+    {
+      "path": "src/agent/momentum.ts",
+      "symbol": "MOMENTUM_MARK_LABEL",
+      "before": "export const MOMENTUM_MARK_LABEL",
+      "after": "const MOMENTUM_MARK_LABEL"
+    },
+    {
+      "path": "src/agent/plans.ts",
+      "symbol": "OFFER",
+      "before": "export const OFFER",
+      "after": "const OFFER"
+    },
+    {
+      "path": "src/agent/plans.ts",
+      "symbol": "PROFILE_LABEL",
+      "before": "export const PROFILE_LABEL",
+      "after": "const PROFILE_LABEL"
+    },
+    {
+      "path": "src/agent/protection.ts",
+      "symbol": "ORPHAN_AFTER_MS",
+      "before": "export const ORPHAN_AFTER_MS",
+      "after": "const ORPHAN_AFTER_MS"
+    },
+    {
+      "path": "src/agent/quote-facts.ts",
+      "symbol": "QUOTE_ACTIONS",
+      "before": "export const QUOTE_ACTIONS",
+      "after": "const QUOTE_ACTIONS"
+    },
+    {
+      "path": "src/agent/quote-facts.ts",
+      "symbol": "QUOTE_FIELDS",
+      "before": "export const QUOTE_FIELDS",
+      "after": "const QUOTE_FIELDS"
+    },
+    {
+      "path": "src/agent/shadow/variants.ts",
+      "symbol": "H2_DEFAULTS",
+      "before": "export const H2_DEFAULTS",
+      "after": "const H2_DEFAULTS"
+    },
+    {
+      "path": "src/agent/shadow/variants.ts",
+      "symbol": "H3_LEGEND",
+      "before": "export const H3_LEGEND",
+      "after": "const H3_LEGEND"
+    },
+    {
+      "path": "src/agent/shadow/variants.ts",
+      "symbol": "H5_DEFAULTS",
+      "before": "export const H5_DEFAULTS",
+      "after": "const H5_DEFAULTS"
+    },
+    {
+      "path": "src/agent/shadow/variants.ts",
+      "symbol": "THESIS_BREAK",
+      "before": "export const THESIS_BREAK",
+      "after": "const THESIS_BREAK"
+    },
+    {
+      "path": "src/agent/sizing-agent.ts",
+      "symbol": "AGENT_FRACTIONS",
+      "before": "export const AGENT_FRACTIONS",
+      "after": "const AGENT_FRACTIONS"
+    },
+    {
+      "path": "src/agent/sizing-agent.ts",
+      "symbol": "AGENT_FRACTION_PARTS",
+      "before": "export const AGENT_FRACTION_PARTS",
+      "after": "const AGENT_FRACTION_PARTS"
+    },
+    {
+      "path": "src/agent/sizing-agent.ts",
+      "symbol": "PROVIDER_LIMIT_SHARE",
+      "before": "export const PROVIDER_LIMIT_SHARE",
+      "after": "const PROVIDER_LIMIT_SHARE"
+    },
+    {
+      "path": "src/agent/swap-args.ts",
+      "symbol": "decimalDigits",
+      "before": "export function decimalDigits",
+      "after": "function decimalDigits"
+    },
+    {
+      "path": "src/agent/types.ts",
+      "symbol": "MODE_RANK",
+      "before": "export const MODE_RANK",
+      "after": "const MODE_RANK"
+    },
+    {
+      "path": "src/book.ts",
+      "symbol": "ammLevels",
+      "before": "export function ammLevels",
+      "after": "function ammLevels"
+    },
+    {
+      "path": "src/book.ts",
+      "symbol": "decodeL2Book",
+      "before": "export function decodeL2Book",
+      "after": "function decodeL2Book"
+    },
+    {
+      "path": "src/book.ts",
+      "symbol": "formatLevels",
+      "before": "export function formatLevels",
+      "after": "function formatLevels"
+    },
+    {
+      "path": "src/decision-review/event-evidence.ts",
+      "symbol": "EVENT_EVIDENCE_SCHEMA",
+      "before": "export const EVENT_EVIDENCE_SCHEMA",
+      "after": "const EVENT_EVIDENCE_SCHEMA"
+    },
+    {
+      "path": "src/decision-review/evolution/captured-memory.ts",
+      "symbol": "CAPTURED_MEMORY_LIMITS",
+      "before": "export const CAPTURED_MEMORY_LIMITS",
+      "after": "const CAPTURED_MEMORY_LIMITS"
+    },
+    {
+      "path": "src/decision-review/evolution/decision-journal.ts",
+      "symbol": "DECISION_JOURNALS",
+      "before": "export const DECISION_JOURNALS",
+      "after": "const DECISION_JOURNALS"
+    },
+    {
+      "path": "src/decision-review/evolution/engine.ts",
+      "symbol": "EVOLUTION_CODES",
+      "before": "export const EVOLUTION_CODES",
+      "after": "const EVOLUTION_CODES"
+    },
+    {
+      "path": "src/decision-review/evolution/financial-evidence.ts",
+      "symbol": "FINANCIAL_EVIDENCE_SCHEMA",
+      "before": "export const FINANCIAL_EVIDENCE_SCHEMA",
+      "after": "const FINANCIAL_EVIDENCE_SCHEMA"
+    },
+    {
+      "path": "src/decision-review/executions.ts",
+      "symbol": "decimalMinor",
+      "before": "export function decimalMinor",
+      "after": "function decimalMinor"
+    },
+    {
+      "path": "src/decision-review/research-contract.ts",
+      "symbol": "RESEARCH_CODES",
+      "before": "export const RESEARCH_CODES",
+      "after": "const RESEARCH_CODES"
+    },
+    {
+      "path": "src/decision-review/research-contract.ts",
+      "symbol": "RESEARCH_JSON_SCHEMA",
+      "before": "export const RESEARCH_JSON_SCHEMA",
+      "after": "const RESEARCH_JSON_SCHEMA"
+    },
+    {
+      "path": "src/decision-review/review.ts",
+      "symbol": "parseCursor",
+      "before": "export function parseCursor",
+      "after": "function parseCursor"
+    },
+    {
+      "path": "src/decision-shadow/shadow.ts",
+      "symbol": "jsonlShadowSink",
+      "before": "export function jsonlShadowSink",
+      "after": "function jsonlShadowSink"
+    },
+    {
+      "path": "src/desktop/core.ts",
+      "symbol": "HEARTBEAT_PATH",
+      "before": "export const HEARTBEAT_PATH",
+      "after": "const HEARTBEAT_PATH"
+    },
+    {
+      "path": "src/inonu/http.ts",
+      "symbol": "isInonuPath",
+      "before": "export function isInonuPath",
+      "after": "function isInonuPath"
+    },
+    {
+      "path": "src/intel/factors.ts",
+      "symbol": "ratioMilli",
+      "before": "export function ratioMilli",
+      "after": "function ratioMilli"
+    },
+    {
+      "path": "src/intel/ingest.ts",
+      "symbol": "DEFAULT_MAX_TRADES",
+      "before": "export const DEFAULT_MAX_TRADES",
+      "after": "const DEFAULT_MAX_TRADES"
+    },
+    {
+      "path": "src/intel/ingest.ts",
+      "symbol": "DEFAULT_SPANS_MS",
+      "before": "export const DEFAULT_SPANS_MS",
+      "after": "const DEFAULT_SPANS_MS"
+    },
+    {
+      "path": "src/intel/ml/gbdt.ts",
+      "symbol": "rawScoreGbdt",
+      "before": "export function rawScoreGbdt",
+      "after": "function rawScoreGbdt"
+    },
+    {
+      "path": "src/intel/ml/logistic.ts",
+      "symbol": "logitOf",
+      "before": "export const logitOf",
+      "after": "const logitOf"
+    },
+    {
+      "path": "src/intel/ml/prep.ts",
+      "symbol": "MIN_INDICATOR_SHARE",
+      "before": "export const MIN_INDICATOR_SHARE",
+      "after": "const MIN_INDICATOR_SHARE"
+    },
+    {
+      "path": "src/intel/onchain-risk.ts",
+      "symbol": "DEFAULT_RISK_THRESHOLDS",
+      "before": "export const DEFAULT_RISK_THRESHOLDS",
+      "after": "const DEFAULT_RISK_THRESHOLDS"
+    },
+    {
+      "path": "src/jev-read/http.ts",
+      "symbol": "parseOrigins",
+      "before": "export function parseOrigins",
+      "after": "function parseOrigins"
+    },
+    {
+      "path": "src/jev-read/http.ts",
+      "symbol": "readHeaders",
+      "before": "export function readHeaders",
+      "after": "function readHeaders"
+    },
+    {
+      "path": "src/local-host/main.ts",
+      "symbol": "localRuntime",
+      "before": "export function localRuntime",
+      "after": "function localRuntime"
+    },
+    {
+      "path": "src/okx-clock.ts",
+      "symbol": "OKX_CLOCK_APPLY_THRESHOLD_MS",
+      "before": "export const OKX_CLOCK_APPLY_THRESHOLD_MS",
+      "after": "const OKX_CLOCK_APPLY_THRESHOLD_MS"
+    },
+    {
+      "path": "src/okx-derivatives/adapter.ts",
+      "symbol": "API_VERSION",
+      "before": "export const API_VERSION",
+      "after": "const API_VERSION"
+    },
+    {
+      "path": "src/okx-derivatives/margin.ts",
+      "symbol": "MAX_LEVERAGE",
+      "before": "export const MAX_LEVERAGE",
+      "after": "const MAX_LEVERAGE"
+    },
+    {
+      "path": "src/onchainos/capture-sources.ts",
+      "symbol": "ONCHAINOS_KINDS",
+      "before": "export const ONCHAINOS_KINDS",
+      "after": "const ONCHAINOS_KINDS"
+    },
+    {
+      "path": "src/onchainos/capture-sources.ts",
+      "symbol": "PUBLIC_OKX_KINDS",
+      "before": "export const PUBLIC_OKX_KINDS",
+      "after": "const PUBLIC_OKX_KINDS"
+    },
+    {
+      "path": "src/onchainos/defi-read.ts",
+      "symbol": "DEFI_PRODUCT_GROUPS",
+      "before": "export const DEFI_PRODUCT_GROUPS",
+      "after": "const DEFI_PRODUCT_GROUPS"
+    },
+    {
+      "path": "src/onchainos/defi-read.ts",
+      "symbol": "DEFI_SEARCH_PAGE_SIZE",
+      "before": "export const DEFI_SEARCH_PAGE_SIZE",
+      "after": "const DEFI_SEARCH_PAGE_SIZE"
+    },
+    {
+      "path": "src/onchainos/defi-read.ts",
+      "symbol": "DEPTH_CHART_TYPES",
+      "before": "export const DEPTH_CHART_TYPES",
+      "after": "const DEPTH_CHART_TYPES"
+    },
+    {
+      "path": "src/onchainos/defi-read.ts",
+      "symbol": "DEPTH_TIME_RANGES",
+      "before": "export const DEPTH_TIME_RANGES",
+      "after": "const DEPTH_TIME_RANGES"
+    },
+    {
+      "path": "src/onchainos/defi-read.ts",
+      "symbol": "SERIES_TIME_RANGES",
+      "before": "export const SERIES_TIME_RANGES",
+      "after": "const SERIES_TIME_RANGES"
+    },
+    {
+      "path": "src/onchainos/defi-read.ts",
+      "symbol": "parseDefiChains",
+      "before": "export function parseDefiChains",
+      "after": "function parseDefiChains"
+    },
+    {
+      "path": "src/onchainos/defi-read.ts",
+      "symbol": "parseDefiPlatforms",
+      "before": "export function parseDefiPlatforms",
+      "after": "function parseDefiPlatforms"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "DEFAULT_CANDLES_PER_CALL",
+      "before": "export const DEFAULT_CANDLES_PER_CALL",
+      "after": "const DEFAULT_CANDLES_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "DEFAULT_INDEX_POINTS_PER_CALL",
+      "before": "export const DEFAULT_INDEX_POINTS_PER_CALL",
+      "after": "const DEFAULT_INDEX_POINTS_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "DEFAULT_TRADES_PER_CALL",
+      "before": "export const DEFAULT_TRADES_PER_CALL",
+      "after": "const DEFAULT_TRADES_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "INDEX_PERIODS",
+      "before": "export const INDEX_PERIODS",
+      "after": "const INDEX_PERIODS"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "MAX_INDEX_POINTS_PER_CALL",
+      "before": "export const MAX_INDEX_POINTS_PER_CALL",
+      "after": "const MAX_INDEX_POINTS_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "MAX_TOKENS_PER_PRICE_CALL",
+      "before": "export const MAX_TOKENS_PER_PRICE_CALL",
+      "after": "const MAX_TOKENS_PER_PRICE_CALL"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "MAX_TRADES_PER_CALL",
+      "before": "export const MAX_TRADES_PER_CALL",
+      "after": "const MAX_TRADES_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/market-price.ts",
+      "symbol": "parseIndexHistory",
+      "before": "export function parseIndexHistory",
+      "after": "function parseIndexHistory"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "ADVANCED_TAGS",
+      "before": "export const ADVANCED_TAGS",
+      "after": "const ADVANCED_TAGS"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "CLUSTER_TRENDS",
+      "before": "export const CLUSTER_TRENDS",
+      "after": "const CLUSTER_TRENDS"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "HOT_TOKEN_RANGE_KEYS",
+      "before": "export const HOT_TOKEN_RANGE_KEYS",
+      "after": "const HOT_TOKEN_RANGE_KEYS"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "HOT_TOKEN_RANK_BY",
+      "before": "export const HOT_TOKEN_RANK_BY",
+      "after": "const HOT_TOKEN_RANK_BY"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "MAX_CLUSTERS",
+      "before": "export const MAX_CLUSTERS",
+      "after": "const MAX_CLUSTERS"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "MAX_HOLDERS_LIMIT",
+      "before": "export const MAX_HOLDERS_LIMIT",
+      "after": "const MAX_HOLDERS_LIMIT"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "MAX_HOT_TOKEN_LIMIT",
+      "before": "export const MAX_HOT_TOKEN_LIMIT",
+      "after": "const MAX_HOT_TOKEN_LIMIT"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "MAX_POOLS",
+      "before": "export const MAX_POOLS",
+      "after": "const MAX_POOLS"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "MAX_SEARCH_LIMIT",
+      "before": "export const MAX_SEARCH_LIMIT",
+      "after": "const MAX_SEARCH_LIMIT"
+    },
+    {
+      "path": "src/onchainos/market-token.ts",
+      "symbol": "MAX_TOKENS_PER_BATCH",
+      "before": "export const MAX_TOKENS_PER_BATCH",
+      "after": "const MAX_TOKENS_PER_BATCH"
+    },
+    {
+      "path": "src/onchainos/paging.ts",
+      "symbol": "PAGING_CEILINGS",
+      "before": "export const PAGING_CEILINGS",
+      "after": "const PAGING_CEILINGS"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "DEFAULT_WALK_PAGE_SIZE",
+      "before": "export const DEFAULT_WALK_PAGE_SIZE",
+      "after": "const DEFAULT_WALK_PAGE_SIZE"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "MAX_BOOK_DEPTH",
+      "before": "export const MAX_BOOK_DEPTH",
+      "after": "const MAX_BOOK_DEPTH"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "MAX_FUNDING_HISTORY_PER_CALL",
+      "before": "export const MAX_FUNDING_HISTORY_PER_CALL",
+      "after": "const MAX_FUNDING_HISTORY_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "MAX_PUBLIC_CANDLES_PER_CALL",
+      "before": "export const MAX_PUBLIC_CANDLES_PER_CALL",
+      "after": "const MAX_PUBLIC_CANDLES_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "PUBLIC_MAX_REQUESTS_PER_SECOND",
+      "before": "export const PUBLIC_MAX_REQUESTS_PER_SECOND",
+      "after": "const PUBLIC_MAX_REQUESTS_PER_SECOND"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "PUBLIC_OKX_PATH_PATTERN",
+      "before": "export const PUBLIC_OKX_PATH_PATTERN",
+      "after": "const PUBLIC_OKX_PATH_PATTERN"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "parseOpenInterest",
+      "before": "export function parseOpenInterest",
+      "after": "function parseOpenInterest"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "readDecimalText",
+      "before": "export function readDecimalText",
+      "after": "function readDecimalText"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "readInstId",
+      "before": "export function readInstId",
+      "after": "function readInstId"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "readNonNegativeText",
+      "before": "export function readNonNegativeText",
+      "after": "function readNonNegativeText"
+    },
+    {
+      "path": "src/onchainos/public-okx.ts",
+      "symbol": "readPositiveText",
+      "before": "export function readPositiveText",
+      "after": "function readPositiveText"
+    },
+    {
+      "path": "src/onchainos/signals.ts",
+      "symbol": "MAX_LEADERBOARD_ROWS",
+      "before": "export const MAX_LEADERBOARD_ROWS",
+      "after": "const MAX_LEADERBOARD_ROWS"
+    },
+    {
+      "path": "src/onchainos/signals.ts",
+      "symbol": "MAX_SIGNALS_PER_CALL",
+      "before": "export const MAX_SIGNALS_PER_CALL",
+      "after": "const MAX_SIGNALS_PER_CALL"
+    },
+    {
+      "path": "src/onchainos/social.ts",
+      "symbol": "MAX_KOLS",
+      "before": "export const MAX_KOLS",
+      "after": "const MAX_KOLS"
+    },
+    {
+      "path": "src/onchainos/social.ts",
+      "symbol": "MAX_SENTIMENT_SYMBOLS",
+      "before": "export const MAX_SENTIMENT_SYMBOLS",
+      "after": "const MAX_SENTIMENT_SYMBOLS"
+    },
+    {
+      "path": "src/onchainos/social.ts",
+      "symbol": "MAX_TREND_POINTS",
+      "before": "export const MAX_TREND_POINTS",
+      "after": "const MAX_TREND_POINTS"
+    },
+    {
+      "path": "src/onchainos/values.ts",
+      "symbol": "MIN_PLAUSIBLE_EPOCH_MS",
+      "before": "export const MIN_PLAUSIBLE_EPOCH_MS",
+      "after": "const MIN_PLAUSIBLE_EPOCH_MS"
+    },
+    {
+      "path": "src/operator/candidates.ts",
+      "symbol": "SOLANA_NATIVE_PLACEHOLDER",
+      "before": "export const SOLANA_NATIVE_PLACEHOLDER",
+      "after": "const SOLANA_NATIVE_PLACEHOLDER"
+    },
+    {
+      "path": "src/operator/candidates.ts",
+      "symbol": "buildBridgeCandidates",
+      "before": "export async function buildBridgeCandidates",
+      "after": "async function buildBridgeCandidates"
+    },
+    {
+      "path": "src/operator/candidates.ts",
+      "symbol": "buildKuruMandate",
+      "before": "export function buildKuruMandate",
+      "after": "function buildKuruMandate"
+    },
+    {
+      "path": "src/operator/candidates.ts",
+      "symbol": "buildYieldCandidates",
+      "before": "export async function buildYieldCandidates",
+      "after": "async function buildYieldCandidates"
+    },
+    {
+      "path": "src/operator/config.ts",
+      "symbol": "REPO_ROOT",
+      "before": "export const REPO_ROOT",
+      "after": "const REPO_ROOT"
+    },
+    {
+      "path": "src/opportunity/scan.ts",
+      "symbol": "LIQUIDITY_RULES",
+      "before": "export const LIQUIDITY_RULES",
+      "after": "const LIQUIDITY_RULES"
+    },
+    {
+      "path": "src/opportunity/sizing.ts",
+      "symbol": "reserveOf",
+      "before": "export const reserveOf",
+      "after": "const reserveOf"
+    },
+    {
+      "path": "src/outcomes/labeler.ts",
+      "symbol": "REACTION_ATR",
+      "before": "export const REACTION_ATR",
+      "after": "const REACTION_ATR"
+    },
+    {
+      "path": "src/outcomes/labeler.ts",
+      "symbol": "STOP_ATR",
+      "before": "export const STOP_ATR",
+      "after": "const STOP_ATR"
+    },
+    {
+      "path": "src/outcomes/labeler.ts",
+      "symbol": "TARGET_ATR",
+      "before": "export const TARGET_ATR",
+      "after": "const TARGET_ATR"
+    },
+    {
+      "path": "src/outcomes/recorder.ts",
+      "symbol": "SNAPSHOT_EVERY_MS",
+      "before": "export const SNAPSHOT_EVERY_MS",
+      "after": "const SNAPSHOT_EVERY_MS"
+    },
+    {
+      "path": "src/outcomes/scoreboard.ts",
+      "symbol": "PRIMARY_HORIZON",
+      "before": "export const PRIMARY_HORIZON",
+      "after": "const PRIMARY_HORIZON"
+    },
+    {
+      "path": "src/outcomes/store.ts",
+      "symbol": "DEFAULT_MAX_BYTES",
+      "before": "export const DEFAULT_MAX_BYTES",
+      "after": "const DEFAULT_MAX_BYTES"
+    },
+    {
+      "path": "src/paper-decision-replay.ts",
+      "symbol": "PAPER_REPLAY_MAX_CANDIDATES",
+      "before": "export const PAPER_REPLAY_MAX_CANDIDATES",
+      "after": "const PAPER_REPLAY_MAX_CANDIDATES"
+    },
+    {
+      "path": "src/paper-decision-replay.ts",
+      "symbol": "PAPER_REPLAY_MAX_FRAMES",
+      "before": "export const PAPER_REPLAY_MAX_FRAMES",
+      "after": "const PAPER_REPLAY_MAX_FRAMES"
+    },
+    {
+      "path": "src/pilot/service.ts",
+      "symbol": "validatePilotRequest",
+      "before": "export function validatePilotRequest",
+      "after": "function validatePilotRequest"
+    },
+    {
+      "path": "src/portfolio-analytics/captured-report.ts",
+      "symbol": "CAPTURE_BAR_MS",
+      "before": "export const CAPTURE_BAR_MS",
+      "after": "const CAPTURE_BAR_MS"
+    },
+    {
+      "path": "src/pulse/pulse.ts",
+      "symbol": "DEFAULT_PULSE_INSTRUMENTS",
+      "before": "export const DEFAULT_PULSE_INSTRUMENTS",
+      "after": "const DEFAULT_PULSE_INSTRUMENTS"
+    },
+    {
+      "path": "src/quant/calibration.ts",
+      "symbol": "DEFAULT_EDGES",
+      "before": "export const DEFAULT_EDGES",
+      "after": "const DEFAULT_EDGES"
+    },
+    {
+      "path": "src/quant/evt.ts",
+      "symbol": "MIN_EXCESSES",
+      "before": "export const MIN_EXCESSES",
+      "after": "const MIN_EXCESSES"
+    },
+    {
+      "path": "src/quant/tail.ts",
+      "symbol": "CORNISH_MAX_ABS_SKEW",
+      "before": "export const CORNISH_MAX_ABS_SKEW",
+      "after": "const CORNISH_MAX_ABS_SKEW"
+    },
+    {
+      "path": "src/quant/tail.ts",
+      "symbol": "CORNISH_MAX_EXCESS_KURTOSIS",
+      "before": "export const CORNISH_MAX_EXCESS_KURTOSIS",
+      "after": "const CORNISH_MAX_EXCESS_KURTOSIS"
+    },
+    {
+      "path": "src/quant/tail.ts",
+      "symbol": "HEAVY_KURTOSIS",
+      "before": "export const HEAVY_KURTOSIS",
+      "after": "const HEAVY_KURTOSIS"
+    },
+    {
+      "path": "src/quant/tail.ts",
+      "symbol": "MIN_CORNISH_SAMPLE",
+      "before": "export const MIN_CORNISH_SAMPLE",
+      "after": "const MIN_CORNISH_SAMPLE"
+    },
+    {
+      "path": "src/quant/tail.ts",
+      "symbol": "MIN_HILL_SAMPLE",
+      "before": "export const MIN_HILL_SAMPLE",
+      "after": "const MIN_HILL_SAMPLE"
+    },
+    {
+      "path": "src/quant/tail.ts",
+      "symbol": "MIN_TAIL_COUNT",
+      "before": "export const MIN_TAIL_COUNT",
+      "after": "const MIN_TAIL_COUNT"
+    },
+    {
+      "path": "src/quant/touch.ts",
+      "symbol": "MAX_PATHS",
+      "before": "export const MAX_PATHS",
+      "after": "const MAX_PATHS"
+    },
+    {
+      "path": "src/quant/touch.ts",
+      "symbol": "MAX_WORK",
+      "before": "export const MAX_WORK",
+      "after": "const MAX_WORK"
+    },
+    {
+      "path": "src/quant/touch.ts",
+      "symbol": "MIN_PATHS",
+      "before": "export const MIN_PATHS",
+      "after": "const MIN_PATHS"
+    },
+    {
+      "path": "src/server/solana-receipts.ts",
+      "symbol": "swapMatches",
+      "before": "export function swapMatches",
+      "after": "function swapMatches"
+    },
+    {
+      "path": "src/system-one/brief.ts",
+      "symbol": "DEFAULT_HORIZON_DAYS",
+      "before": "export const DEFAULT_HORIZON_DAYS",
+      "after": "const DEFAULT_HORIZON_DAYS"
+    },
+    {
+      "path": "src/system-one/clock.ts",
+      "symbol": "OKX_PUBLIC_TIME_URL",
+      "before": "export const OKX_PUBLIC_TIME_URL",
+      "after": "const OKX_PUBLIC_TIME_URL"
+    },
+    {
+      "path": "src/system-one/readings.ts",
+      "symbol": "DEFAULT_BAR",
+      "before": "export const DEFAULT_BAR",
+      "after": "const DEFAULT_BAR"
+    },
+    {
+      "path": "src/system-one/readings.ts",
+      "symbol": "DEFAULT_INST_ID",
+      "before": "export const DEFAULT_INST_ID",
+      "after": "const DEFAULT_INST_ID"
+    },
+    {
+      "path": "src/trades.ts",
+      "symbol": "TRADE_EVENT_SIG",
+      "before": "export const TRADE_EVENT_SIG",
+      "after": "const TRADE_EVENT_SIG"
+    },
+    {
+      "path": "src/trades.ts",
+      "symbol": "TRADE_PRICE_DEC",
+      "before": "export const TRADE_PRICE_DEC",
+      "after": "const TRADE_PRICE_DEC"
+    },
+    {
+      "path": "src/trades.ts",
+      "symbol": "TRADE_TOPIC0",
+      "before": "export const TRADE_TOPIC0",
+      "after": "const TRADE_TOPIC0"
+    },
+    {
+      "path": "src/verdict/risk-plan.ts",
+      "symbol": "DEFAULT_TARGET_MULTIPLE",
+      "before": "export const DEFAULT_TARGET_MULTIPLE",
+      "after": "const DEFAULT_TARGET_MULTIPLE"
+    }
+  ],
+  "limits": [
+    "Identifier search is conservative and is not a full semantic usage proof.",
+    "Literal namespace, dynamic-import, require and star-reexport forms are reviewed; computed module paths are not exhaustively resolved.",
+    "No production behavior, value, dependency, risk, secret or wallet setting may change."
+  ]
+}

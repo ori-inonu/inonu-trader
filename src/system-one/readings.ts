@@ -15,8 +15,8 @@ import type { MarketReading, Side, WalletReading } from "./types";
 import { isFreshReading } from "./types";
 import { realizedVolatility } from "./volatility";
 
-export const DEFAULT_INST_ID = "MON-USDT-SWAP";
-export const DEFAULT_BAR = "15m";
+const DEFAULT_INST_ID = "MON-USDT-SWAP";
+const DEFAULT_BAR = "15m";
 export const BAR_MS: Readonly<Record<string, number>> = Object.freeze({ "1m": 60_000, "5m": 300_000, "15m": 900_000, "1H": 3_600_000, "4H": 14_400_000, "1D": 86_400_000 });
 
 function mulberry32(seed: number): () => number {
