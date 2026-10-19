@@ -48,6 +48,27 @@ describe("the return after a window comes only from prices that were really read
   test("the lag of the exit read is reported, so a stale cache is not mistaken for the window", () => {
     expect(forwardReturn(path, T0, WINDOWS_MS["1h"]).lagMs).toBe(MIN);
   });
+
+  test("synthetic finite prices whose ratio overflows remain unknown through outcomes and JSON summary", () => {
+    const rows = [row(T0, 1e-300), row(T0 + 61 * MIN, 1e300)];
+    const before = structuredClone(rows);
+    const index = buildPathIndex(rows);
+    expect(forwardReturn(index.get(KEY), T0, WINDOWS_MS["1h"])).toEqual({ ret: null, lagMs: null });
+    const outcomes = outcomesOf([answer()], index);
+    expect(outcomes).toHaveLength(1);
+    expect(outcomes[0]).toMatchObject({ cycleId: "cy-1", id: ID, requested: "skip", applied: "skip", preference: 0.23, returns: { "1h": null } });
+    const summary = summarize(outcomes, [{ name: "all", pick: () => true }], "1h");
+    expect(summary).toEqual([{ name: "all", known: 0, unknown: 1, meanPct: null, medianPct: null, shareUpPct: null }]);
+    expect(JSON.parse(JSON.stringify({ outcomes, summary }))).toEqual({ outcomes, summary });
+    expect(rows).toEqual(before);
+  });
+
+  test("synthetic finite positive, zero and negative returns retain their formula and measured lag", () => {
+    for (const price of [1.5, 1, 0.5]) {
+      const path = buildPathIndex([row(T0, 1), row(T0 + 61 * MIN, price)]).get(KEY);
+      expect(forwardReturn(path, T0, WINDOWS_MS["1h"])).toEqual({ ret: price - 1, lagMs: MIN });
+    }
+  });
 });
 
 describe("the windows of the cycle: 1 and 5 minutes, read close to the two instants", () => {
@@ -109,6 +130,28 @@ describe("every purchase the Jev was asked about gets an outcome, skipped or not
     const a = answer({}, {}, "skip");
     const none = { ...a, items: [{ ...a.items[0]!, probs: null }] };
     expect(outcomesOf([none], index)[0]!.preference).toBeNull();
+  });
+
+  test("synthetic malformed Choice vectors keep their outcomes but never become numeric preferences", () => {
+    const valid = answer();
+    const expected = { ...outcomesOf([valid], index)[0]!, preference: null };
+    const invalid: (Record<string, number> | null)[] = [null, {}, { skip: -3, buy_tenth: 4 }, { skip: 0.5, buy_tenth: 0.53 },
+      { skip: 0.1, buy_tenth: 0.1 }, { buy_tenth: 1 }, { skip: 0.77, buy_tenth: 0.23, extra: 0 },
+      { skip: 0.77, buy_tenth: NaN }, { skip: 0.77, buy_tenth: Infinity }];
+    for (const probs of invalid) {
+      const a = { ...valid, items: [{ ...valid.items[0]!, probs }] };
+      const before = structuredClone(a);
+      expect(outcomesOf([a], index)).toEqual([expected]);
+      expect(a).toEqual(before);
+    }
+  });
+
+  test("synthetic valid zero and rounded multi-buy Choice weights preserve max preference and returns", () => {
+    const a = answer({}, { skip: 1, buy_tenth: 0 });
+    const zero = outcomesOf([a], index)[0]!;
+    expect(zero.preference).toBe(0);
+    const multi = { ...a, items: [{ ...a.items[0]!, offered: ["skip", "buy_tenth", "buy_full"], probs: { skip: 0.34, buy_tenth: 0.33, buy_full: 0.34 } }] };
+    expect(outcomesOf([multi], index)).toEqual([{ ...zero, preference: 0.34 }]);
   });
 });
 

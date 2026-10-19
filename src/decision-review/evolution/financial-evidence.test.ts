@@ -91,6 +91,49 @@ test("source availability is original, future availability is incomplete and tim
   expect(normalized({ ...f, sources: [{ ...f.sources[0]!, availableAtMs: 1999 }] }).readiness).toBe("conflict");
 });
 
+test("synthetic zero marks stay unsupported, referenced or not, without rewriting reported evidence", () => {
+  const f = fixture();
+  const mark = { id: "zero_price", unit: TOKEN, numeraire: USD, numeratorMinor: "0", denominatorMinor: "1000000000000000000", marketAtMs: 1990, maxAgeMs: 20, sourceRef: "source1" };
+  for (const referenced of [false, true]) {
+    const g = withEvents({ ...f, marks: [mark], inventories: referenced
+      ? [f.inventories[0]!, { ...f.inventories[1]!, positions: [{ unit: TOKEN, quantityMinor: "1000000000000000000", markRef: mark.id }] }]
+      : f.inventories }, { marks: [mark.id] });
+    const v = normalized(g);
+    expect(v.readiness).toBe("incomplete");
+    expect(v.diagnostics).toContainEqual({ code: "mark_zero_unsupported", severity: "incomplete", ref: mark.id });
+    expect(v.frame.marks).toEqual([mark]);
+    expect(v.frame.inventories).toEqual(g.inventories.slice().sort((a, b) => a.id.localeCompare(b.id)));
+    const equivalent = { ...g, marks: [{ ...mark, numeratorMinor: "00" }], inventories: [...g.inventories].reverse(), coverage: [...g.coverage].reverse() };
+    expect(normalized(equivalent)).toEqual(v);
+    expect(v.sourceAuthenticated).toBe(false); expect(v.externalHashesAuthenticated).toBe(false);
+    expect(v.returnCalculated).toBe(false); expect(v.rewardCalculated).toBe(false); expect(v.promotionProven).toBe(false);
+    expect(normalized({ ...g, marks: [{ ...mark, numeratorMinor: "1" }] }).readiness).toBe("ready_for_calculation");
+    const unknown = normalized({ ...g, marks: [{ ...mark, numeratorMinor: null }] });
+    expect(unknown.readiness).toBe("incomplete");
+    expect(unknown.diagnostics.some(d => d.code === "mark_unknown")).toBe(true);
+    expect(unknown.diagnostics.some(d => d.code === "mark_zero_unsupported")).toBe(false);
+    for (const invalid of [{ ...mark, denominatorMinor: "0" }, { ...mark, marketAtMs: 2200 }]) {
+      const conflict = normalized({ ...g, marks: [invalid] });
+      expect(conflict.readiness).toBe("conflict");
+      expect(conflict.diagnostics).toContainEqual({ code: "mark_zero_unsupported", severity: "incomplete", ref: mark.id });
+      expect(conflict.diagnostics.some(d => d.code === "mark_time_or_ratio_conflict")).toBe(true);
+    }
+  }
+});
+
+test("synthetic zero quantities and known zero costs remain distinct from unsupported zero prices", () => {
+  const f = fixture();
+  const g = withEvents({ ...f,
+    inventories: [f.inventories[0]!, { ...f.inventories[1]!, positions: [{ unit: TOKEN, quantityMinor: "0", markRef: null }] }],
+    costs: [cost({ amountMinor: "0" })], receipts: [receipt()],
+  }, { costs: ["cost1"], receipts: ["receipt1"] });
+  const v = normalized(g);
+  expect(v.readiness).toBe("ready_for_calculation");
+  expect(v.knownTotals).toEqual([{ category: "costs", inclusion: "separate", unit: USD, amountMinor: "0" }]);
+  expect(v.diagnostics.some(d => d.code === "mark_zero_unsupported" || d.code === "mark_missing")).toBe(false);
+  expect(v.returnCalculated).toBe(false);
+});
+
 test("conflicting source IDs, units and receipt ownership are explicit diagnostics", () => {
   const f = fixture();
   expect(normalized({ ...f, sources: [...f.sources, { ...f.sources[0]!, hash: "d".repeat(64) }] }).readiness).toBe("conflict");

@@ -7,6 +7,7 @@
  * missing the return is UNKNOWN (null), counted apart and never averaged in as if the price had not moved. The lag of the exit read is reported, because the sources give no observation time and a cache can be older than its
  * row (recording.ts). The return is gross, before cost and impact: a counterfactual, never a result. Pure and read only.
  */
+import { choiceConfidence } from "../conviction";
 import { planKey } from "../plans";
 import type { AnswerRecord, PriceRow } from "../recording";
 
@@ -65,7 +66,9 @@ export function forwardReturn(path: readonly PricePoint[] | undefined, decisionA
   const due = decisionAtMs + windowMs;
   const exit = path.find((p) => p.atMs >= due);
   if (exit === undefined || exit.atMs - due > exitToleranceMs(windowMs)) return { ret: null, lagMs: null };
-  return { ret: exit.price / entry.price - 1, lagMs: exit.atMs - due };
+  const ret = exit.price / entry.price - 1;
+  if (!Number.isFinite(ret)) return { ret: null, lagMs: null };
+  return { ret, lagMs: exit.atMs - due };
 }
 
 export interface AnswerOutcome {
@@ -74,7 +77,7 @@ export interface AnswerOutcome {
   /** What the Jev asked for before any rule of the code. */
   readonly requested: string | null;
   readonly applied: string | null;
-  /** The highest probability its answer gave to an option that buys (the `pBuy` of the Placar and the preference of H2); null when the answer had none. */
+  /** The highest Choice weight of an offered buy option; null for absent or invalid vectors. Not a calibrated probability of profit. */
   readonly preference: number | null;
   readonly returns: Readonly<Record<WindowName, number | null>>;
 }
@@ -95,7 +98,8 @@ export function outcomesOf(answers: readonly AnswerRecord[], index: PathIndex): 
       if (key === null) continue;
       const path = index.get(key);
       const probs = item.probs;
-      const buyProbs = probs === null ? [] : Object.entries(probs).filter(([option]) => option.startsWith("buy")).map(([, p]) => p);
+      const validProbs = probs !== null && Object.keys(probs).length === item.offered.length && item.offered.every((option) => Object.hasOwn(probs, option)) && choiceConfidence(probs) !== null;
+      const buyProbs = !validProbs ? [] : Object.entries(probs).filter(([option]) => option.startsWith("buy")).map(([, p]) => p);
       const preference = probs === null || buyProbs.length === 0 ? null : Math.max(...buyProbs);
       const returns = Object.fromEntries(WINDOW_NAMES.map((w) => [w, forwardReturn(path, decisionAtMs, WINDOWS_MS[w]).ret])) as Record<WindowName, number | null>;
       out.push({ cycleId: a.cycleId, id: item.id, requested: item.requested, applied: item.applied, preference, returns });

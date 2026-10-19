@@ -203,6 +203,7 @@ function normalize(input: FinancialEvidenceInput): FinancialEvidenceFrame {
   }
   for (const m of frame.marks) {
     sourced(m.sourceRef);
+    if (m.numeratorMinor === "0") note("mark_zero_unsupported", "incomplete", m.id);
     if (!sameUnit(m.numeraire, frame.numeraire)) note("mark_unit_conflict", "conflict", m.id);
     if (m.numeratorMinor === null || m.denominatorMinor === null || m.marketAtMs === null || m.maxAgeMs === null) note("mark_unknown", "incomplete", m.id);
     else if (BigInt(m.denominatorMinor) === 0n || m.marketAtMs > frame.asOfMs) note("mark_time_or_ratio_conflict", "conflict", m.id);
