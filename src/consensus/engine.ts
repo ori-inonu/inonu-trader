@@ -112,20 +112,21 @@ const SENSITIVE: readonly [RegExp, string][] = [
   [/\b0x[0-9a-fA-F]{40}\b/, "endereco"],
   [/\b(api[_ -]?key|secret|password|private[_ -]?key|seed phrase|mnemonic)\b\s*[:=]/i, "segredo"],
   [/\bTYPESAFE[A-Z_]*\s*=/i, "segredo"],
-  [/\bsk-[A-Za-z0-9]{16,}\b/, "segredo"],
+  [/\bsk-[A-Za-z0-9]{8,}\b/, "segredo"],
 ];
 
-const scan = (text: string, where: string): void => {
+export const assertNoSensitiveText = (text: string, where: string): void => {
   for (const [pattern, kind] of SENSITIVE) if (pattern.test(text)) throw new Error(`spec_com_dado_sensivel: ${kind} em ${where}`);
 };
 
 /** Refuses a spec that carries an address, a key or a secret, or whose options cannot be told apart. Returns the spec when it is fit to be sent. */
 export function sanitizeSpec(spec: DecisionSpec): DecisionSpec {
-  scan(spec.goal, "goal");
-  for (const [k, v] of Object.entries(spec.facts)) scan(`${k} ${typeof v === "string" ? v : ""}`, `facts.${k}`);
-  spec.rails.forEach((r, i) => scan(r, `rails[${i}]`));
-  spec.options.forEach((o) => scan(`${o.id} ${o.label} ${o.what}`, `options.${o.id}`));
-  (spec.unknowns ?? []).forEach((u) => scan(`${u.id} ${u.ask}`, `unknowns.${u.id}`));
+  assertNoSensitiveText(spec.id, "id");
+  assertNoSensitiveText(spec.goal, "goal");
+  for (const [k, v] of Object.entries(spec.facts)) assertNoSensitiveText(`${k} ${typeof v === "string" ? v : ""}`, `facts.${k}`);
+  spec.rails.forEach((r, i) => assertNoSensitiveText(r, `rails[${i}]`));
+  spec.options.forEach((o) => assertNoSensitiveText(`${o.id} ${o.label} ${o.what}`, `options.${o.id}`));
+  (spec.unknowns ?? []).forEach((u) => assertNoSensitiveText(`${u.id} ${u.ask}`, `unknowns.${u.id}`));
   if (new Set(spec.options.map((o) => o.id)).size !== spec.options.length) throw new Error("opcoes_repetidas");
   if (spec.options.some((o) => o.id === "none_fits" || o.id === "none")) throw new Error("opcao_com_nome_reservado");
   return spec;
@@ -138,6 +139,12 @@ const stable = (value: unknown): string => {
   return `{${Object.keys(o).sort().map((k) => `${JSON.stringify(k)}:${stable(o[k])}`).join(",")}}`;
 };
 const hashOf = (value: unknown): string => createHash("sha256").update(stable(value)).digest("hex");
+
+/** The canonical identity used by receipts and matching plan/run requests. */
+export function specFingerprint(raw: DecisionSpec): string {
+  const spec = sanitizeSpec(raw);
+  return hashOf({ ...spec, forbidden: [...new Set(spec.forbidden ?? [])].sort() });
+}
 
 /** The most questions the procedure can ask: its rounds times its framings, one rail question per option and, with unknowns, the question of the missing fact. Known before any question is asked. */
 export function plannedCalls(spec: DecisionSpec, policy: typeof CONSENSUS_POLICY = CONSENSUS_POLICY): number {
@@ -210,7 +217,7 @@ export async function decide(rawSpec: DecisionSpec, judge: Judge, policy: typeof
   const forbidden = new Set(spec.forbidden ?? []);
   const removedByCode = spec.options.filter((o) => forbidden.has(o.id)).map((o) => o.id);
   let open = spec.options.filter((o) => !forbidden.has(o.id));
-  const base = { v: 1 as const, specId: spec.id, specHash: hashOf({ ...spec, forbidden: [...forbidden].sort() }), removedByCode, policy, disclaimer: DISCLAIMER };
+  const base = { v: 1 as const, specId: spec.id, specHash: specFingerprint(spec), removedByCode, policy, disclaimer: DISCLAIMER };
   let asked = 0;
   let failed = 0;
   const ask = async (q: JudgeQuestion): Promise<Readonly<Record<string, number>> | null> => {
